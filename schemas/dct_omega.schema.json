@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/dct_omega.schema.json",
+  "title": "DCT-Omega Card",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "status",
+    "evidence_gate",
+    "document",
+    "limits",
+    "risks",
+    "next_action",
+    "links"
+  ],
+  "properties": {
+    "id": {"type": "string"},
+    "name": {"type": "string"},
+    "domain": {"type": "string"},
+    "summary": {"type": "string"},
+    "status": {"type": "string", "enum": ["S", "E", "X", "D", "C", "A"]},
+    "evidence_gate": {"type": "string", "enum": ["S0", "S1", "S2", "S3", "S4", "S5", "S6"]},
+    "document": {"type": "string"},
+    "code_or_calculation": {"type": "string"},
+    "test": {"type": "string"},
+    "proof_or_validation": {"type": "string"},
+    "version": {"type": "string"},
+    "limits": {"type": "array", "items": {"type": "string"}},
+    "risks": {"type": "array", "items": {"type": "string"}},
+    "counterexamples_sought": {"type": "array", "items": {"type": "string"}},
+    "powerscore": {
+      "type": "object",
+      "properties": {
+        "fertility": {"type": "number", "minimum": 0, "maximum": 5},
+        "verifiability": {"type": "number", "minimum": 0, "maximum": 5},
+        "reusability": {"type": "number", "minimum": 0, "maximum": 5},
+        "impact": {"type": "number", "minimum": 0, "maximum": 5},
+        "canonical_compression": {"type": "number", "minimum": 0, "maximum": 5},
+        "stability": {"type": "number", "minimum": 0, "maximum": 5},
+        "complexity": {"type": "number", "minimum": 1, "maximum": 5},
+        "noise": {"type": "number", "minimum": 1, "maximum": 5},
+        "untested_speculation": {"type": "number", "minimum": 1, "maximum": 5},
+        "risk": {"type": "number", "minimum": 1, "maximum": 5},
+        "duplication": {"type": "number", "minimum": 1, "maximum": 5}
+      },
+      "additionalProperties": false
+    },
+    "next_action": {"type": "string"},
+    "links": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
