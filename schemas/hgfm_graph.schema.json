@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/hgfm_graph.schema.json",
+  "title": "HGFM Graph",
+  "type": "object",
+  "required": ["nodes", "hyperedges"],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "source", "type", "status", "human_status", "links"],
+        "properties": {
+          "id": {"type": "string"},
+          "label": {"type": "string"},
+          "source": {"type": "string", "enum": ["github", "drive", "upload", "manual"]},
+          "type": {"type": "string", "enum": ["claim", "document", "code", "test", "dataset", "prototype", "theorem", "risk", "invariant", "report", "workflow"]},
+          "status": {"type": "string", "enum": ["S0", "S1", "S2", "S3", "S4", "S5", "S6"]},
+          "human_status": {"type": "string", "enum": ["S", "E", "X", "D", "C", "A"]},
+          "powerscore": {"type": "number"},
+          "links": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "hyperedges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "nodes", "relation", "evidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "label": {"type": "string"},
+          "nodes": {"type": "array", "items": {"type": "string"}, "minItems": 2},
+          "relation": {"type": "string", "enum": ["supports", "depends_on", "contradicts", "duplicates", "generalizes", "tests", "implements", "limits", "bridges", "archives"]},
+          "evidence": {"type": "string", "enum": ["S0", "S1", "S2", "S3", "S4", "S5", "S6"]},
+          "description": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
