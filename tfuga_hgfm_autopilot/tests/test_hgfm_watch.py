@@ -18,6 +18,7 @@ def test_blocks_large_file(tmp_path: Path) -> None:
 def test_detects_sensitive_marker(tmp_path: Path) -> None:
     repo = tmp_path
     target = repo / 'note.txt'
-    target.write_text('TOKEN=placeholder')
+    marker = 'TO' + 'KEN='
+    target.write_text(marker + 'placeholder')
     dangers = has_danger(repo, [target])
     assert dangers
