@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from tfuga_hgfm_autopilot.scripts.hgfm_watch import is_blocked, has_danger
+import tfuga_hgfm_autopilot.scripts.hgfm_watch as hgfm_watch
+from tfuga_hgfm_autopilot.scripts.hgfm_watch import has_danger, is_blocked
 
 
 def test_blocks_env_file(tmp_path: Path) -> None:
@@ -9,9 +10,10 @@ def test_blocks_env_file(tmp_path: Path) -> None:
     assert is_blocked(target)
 
 
-def test_blocks_large_file(tmp_path: Path) -> None:
+def test_blocks_large_file_without_writing_large_blob(tmp_path: Path, monkeypatch) -> None:
     target = tmp_path / 'large.txt'
-    target.write_bytes(b'0' * (26 * 1024 * 1024))
+    target.write_text('small placeholder')
+    monkeypatch.setattr(hgfm_watch, 'MAX_FILE_MB', 0.000001)
     assert is_blocked(target)
 
 
