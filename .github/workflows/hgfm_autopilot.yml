@@ -34,6 +34,10 @@ jobs:
         run: |
           python -m pytest -q tfuga_hgfm_autopilot/tests
 
+      - name: Dry-run GHFMnD ouroboros
+        run: |
+          python tfuga_hgfm_autopilot/scripts/ouroboros_ghfm.py --root /tmp/ghfm --max-cycles 1 --raman-interval 0 --merkle-interval 0 --ms33-interval 0
+
       - name: Dry-run watcher
         run: |
           python tfuga_hgfm_autopilot/scripts/hgfm_watch.py . --once --dry-run
