@@ -7,12 +7,22 @@ from pathlib import Path
 
 BLOCKED_NAMES = {'.env', '.env.local'}
 BLOCKED_SUFFIXES = {'.pem', '.key', '.p12', '.sqlite', '.db'}
+IGNORED_DIRS = {'.git', '.pytest_cache', '__pycache__', '.mypy_cache', '.ruff_cache'}
+IGNORED_SUFFIXES = {'.pyc', '.pyo', '.log', '.tmp'}
 MAX_FILE_MB = 25
 SCAN_BYTES = 200000
 
 
 def run(cmd: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, cwd=str(cwd), text=True, capture_output=True, check=check)
+
+
+def should_ignore(path: Path) -> bool:
+    if set(path.parts).intersection(IGNORED_DIRS):
+        return True
+    if path.suffix.lower() in IGNORED_SUFFIXES:
+        return True
+    return False
 
 
 def changed_files(repo: Path) -> list[Path]:
@@ -24,7 +34,10 @@ def changed_files(repo: Path) -> list[Path]:
         path_text = line[3:].strip()
         if ' -> ' in path_text:
             path_text = path_text.split(' -> ', 1)[1]
-        files.append(repo / path_text)
+        candidate = repo / path_text
+        if should_ignore(candidate):
+            continue
+        files.append(candidate)
     return files
 
 
@@ -36,6 +49,8 @@ def relative_label(repo: Path, path: Path) -> str:
 
 
 def is_blocked(path: Path) -> bool:
+    if should_ignore(path):
+        return False
     name = path.name.lower()
     if name in BLOCKED_NAMES:
         return True
@@ -57,6 +72,8 @@ def has_danger(repo: Path, files: list[Path]) -> list[str]:
     dangers: list[str] = []
     markers = ['PRIVATE KEY', 'API_KEY=', 'TOKEN=', 'PASSWORD=']
     for file in files:
+        if should_ignore(file):
+            continue
         rel = relative_label(repo, file)
         if is_blocked(file):
             dangers.append(f'blocked file: {rel}')
