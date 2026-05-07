@@ -8,6 +8,7 @@ from pathlib import Path
 BLOCKED_NAMES = {'.env', '.env.local'}
 BLOCKED_SUFFIXES = {'.pem', '.key', '.p12', '.sqlite', '.db'}
 MAX_FILE_MB = 25
+SCAN_BYTES = 200000
 
 
 def run(cmd: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess:
@@ -27,6 +28,13 @@ def changed_files(repo: Path) -> list[Path]:
     return files
 
 
+def relative_label(repo: Path, path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(repo.resolve()))
+    except ValueError:
+        return str(path)
+
+
 def is_blocked(path: Path) -> bool:
     name = path.name.lower()
     if name in BLOCKED_NAMES:
@@ -40,16 +48,21 @@ def is_blocked(path: Path) -> bool:
     return False
 
 
+def read_scan_text(path: Path) -> str:
+    data = path.read_bytes()[:SCAN_BYTES]
+    return data.decode('utf-8', errors='ignore')
+
+
 def has_danger(repo: Path, files: list[Path]) -> list[str]:
     dangers: list[str] = []
     markers = ['PRIVATE KEY', 'API_KEY=', 'TOKEN=', 'PASSWORD=']
     for file in files:
-        rel = file.relative_to(repo) if str(file).startswith(str(repo)) else file
+        rel = relative_label(repo, file)
         if is_blocked(file):
             dangers.append(f'blocked file: {rel}')
+            continue
         if file.exists() and file.is_file():
-            text = file.read_text(errors='ignore')[:200000]
-            upper = text.upper()
+            upper = read_scan_text(file).upper()
             for marker in markers:
                 if marker in upper:
                     dangers.append(f'sensitive marker in: {rel}')
@@ -57,9 +70,19 @@ def has_danger(repo: Path, files: list[Path]) -> list[str]:
     return dangers
 
 
-def run_tests(repo: Path) -> bool:
+def pytest_targets(repo: Path) -> list[str]:
+    targets: list[str] = []
     if (repo / 'tests').exists():
-        result = run(['python', '-m', 'pytest', '-q'], repo, check=False)
+        targets.append('tests')
+    if (repo / 'tfuga_hgfm_autopilot' / 'tests').exists():
+        targets.append('tfuga_hgfm_autopilot/tests')
+    return targets
+
+
+def run_tests(repo: Path) -> bool:
+    targets = pytest_targets(repo)
+    if targets:
+        result = run(['python', '-m', 'pytest', '-q', *targets], repo, check=False)
         print(result.stdout)
         if result.returncode != 0:
             print(result.stderr)
@@ -85,13 +108,13 @@ def commit_once(repo: Path, push: bool, dry_run: bool) -> None:
         for danger in dangers:
             print(f'- {danger}')
         return
-    if dry_run:
-        print('Dry run: changes detected and guards passed.')
-        for file in files:
-            print(f'- {file.relative_to(repo)}')
-        return
     if not run_tests(repo):
         print('Commit cancelled: tests failed.')
+        return
+    if dry_run:
+        print('Dry run: changes detected, guards passed, and tests passed.')
+        for file in files:
+            print(f'- {relative_label(repo, file)}')
         return
     run(['git', 'add', '.'], repo)
     staged = run(['git', 'diff', '--cached', '--name-only'], repo).stdout.strip()
