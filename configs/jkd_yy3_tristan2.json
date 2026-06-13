@@ -1,0 +1,51 @@
+{
+  "name": "JKD-YY3-Tristan2",
+  "version": "0.1",
+  "oak_status": "prototype",
+  "dense_enumeration": false,
+  "principles": {
+    "jkd": "minimum verified movement for maximum fertile impact",
+    "yy3": "knowledge -> meta-knowledge -> generators of meta-knowledge",
+    "tristan2": "Tristan loop applied to itself under OAK"
+  },
+  "cycle": [
+    "load_memory",
+    "generate16",
+    "oak_attack",
+    "score_jyt2",
+    "select_top16",
+    "bury_bottom16",
+    "jkd_top1",
+    "decompress_codex",
+    "prototype_or_test",
+    "reinject_memory"
+  ],
+  "score": {
+    "numerator": ["fertility", "oak", "generator_value", "reuse", "prototype_value"],
+    "denominator": ["movement", "compute", "risk", "hype", "debt", "one"]
+  },
+  "promotion": {
+    "minimum_oak": 0.75,
+    "prototype_path_required": true,
+    "trace_required": true,
+    "memory_negative_update_required": true
+  },
+  "forbidden": [
+    "dense_enumeration",
+    "claim_without_trace",
+    "agent_vote_as_proof",
+    "prototype_free_promotion",
+    "external_paid_api_without_permission",
+    "unsafe_autonomous_action"
+  ],
+  "outputs": [
+    "top16",
+    "bottom16",
+    "top1_jkd",
+    "codex_1p",
+    "oak_report",
+    "prototype_or_test_plan",
+    "memory_update",
+    "next_generator"
+  ]
+}
