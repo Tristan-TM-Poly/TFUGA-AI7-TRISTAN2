@@ -1,4 +1,4 @@
-"""Smoke tests for FTPCI-Omega, AIT-Pantheon and JKD-YY3-Tristan² engines.
+"""Smoke tests for all Tristan prototype engines.
 
 These tests intentionally use only Python stdlib so they can run on free cloud
 CI and local machines without dependency setup.
@@ -11,6 +11,7 @@ import unittest
 from sage_tristan.auto_meta_generator import run_generation
 from sage_tristan.ait_pantheon import run_ait_cycle
 from sage_tristan.jkd_yy3_tristan2 import run_jyt2
+from sage_tristan.omega_mghfm_tgnt import run_cycle as run_omega_mghfm_tgnt
 
 
 class AutoMetaGenerationTests(unittest.TestCase):
@@ -53,6 +54,16 @@ class JKDYY3Tristan2Tests(unittest.TestCase):
         result = run_jyt2(cycles=1, salt="ordering")
         scores = [candidate["score"] for candidate in result["top16"]]
         self.assertEqual(scores, sorted(scores, reverse=True))
+
+
+class OmegaMGHFMTGNTIntegratedTests(unittest.TestCase):
+    def test_omega_mghfm_tgnt_cycle_is_present_in_main_suite(self) -> None:
+        result = run_omega_mghfm_tgnt(["prime tensor gaps", "LOG EXP", "OAK memory"])
+        self.assertEqual(result["engine"], "Omega-MGHFM-TGNT")
+        self.assertIn("X_next", result["mother_equation"])
+        self.assertIn("Lomega_minimal_fertile_signature", result["cycle"]["log_layers"])
+        self.assertIn("statuses", result["cycle"]["oak"])
+        self.assertGreaterEqual(len(result["cycle"]["jkd"]["top_jkd_actions"]), 1)
 
 
 if __name__ == "__main__":
