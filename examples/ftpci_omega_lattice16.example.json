@@ -1,0 +1,56 @@
+{
+  "id": "lattice16-example-001",
+  "cycle": 0,
+  "axes": {
+    "trace_quality": 12,
+    "compression_depth": 10,
+    "factor_rank": 6,
+    "sparsity_level": 13,
+    "invariant_preservation": 14,
+    "oak_attack_strength": 12,
+    "negative_memory_projection": 10,
+    "fertility_threshold": 11,
+    "decompression_depth": 4,
+    "codex_depth_2n": 3,
+    "prototype_minimality": 13,
+    "residual_search_intensity": 8,
+    "bridge_domain_count": 5,
+    "anti_hype_threshold": 14,
+    "reconstruction_tolerance": 7,
+    "compute_budget": 5
+  },
+  "objective": {
+    "fertility": 9.1,
+    "oak_score": 0.74,
+    "reuse": 8.4,
+    "prototype_value": 7.8,
+    "cost": 3.2,
+    "risk": 2.1,
+    "hype": 1.0,
+    "complexity": 4.0,
+    "total": 7.36
+  },
+  "oak": {
+    "traceable": true,
+    "safe": true,
+    "status": "selected",
+    "attacks": [
+      "Ensure compression does not erase minority high-value signals.",
+      "Require schema validation before codex decompression.",
+      "Keep external physics claims out of this optimization layer."
+    ]
+  },
+  "memory_negative": {
+    "similarity": 0.18,
+    "penalty": 0.4,
+    "matched_failures": [
+      "dense enumeration is forbidden",
+      "decompress-everything policy is forbidden"
+    ]
+  },
+  "decompression_policy": {
+    "allowed": true,
+    "targets": ["codex", "hgfm_map", "prototype", "residual_report"],
+    "reason": "High fertility, OAK-safe, traceable, low similarity to negative memory."
+  }
+}
