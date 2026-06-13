@@ -4,10 +4,14 @@ This module is intentionally small, deterministic, and dependency-free. It does
 not claim to prove physics. It creates candidate meta-theory configurations,
 scores them with OAK/fertility heuristics, keeps a top-16 beam, and records a
 bottom-16 negative-memory set.
+
+The optional ``salt`` parameter lets scheduled cloud runs explore different
+regions while staying reproducible for a given run identifier.
 """
 
 from __future__ import annotations
 
+import argparse
 from dataclasses import asdict, dataclass
 import hashlib
 import json
@@ -78,12 +82,12 @@ def _hash_int(text: str) -> int:
     return int(hashlib.sha256(text.encode("utf-8")).hexdigest()[:12], 16)
 
 
-def _axis_value(seed: str, cycle: int, axis: str, parent: str = "root") -> int:
-    return _hash_int(f"{parent}|{seed}|{cycle}|{axis}") % 16
+def _axis_value(seed: str, cycle: int, axis: str, parent: str = "root", salt: str = "") -> int:
+    return _hash_int(f"{salt}|{parent}|{seed}|{cycle}|{axis}") % 16
 
 
-def build_candidate(seed: str, cycle: int, parent: str = "root") -> Candidate:
-    axes = {axis: _axis_value(seed, cycle, axis, parent) for axis in AXES_16}
+def build_candidate(seed: str, cycle: int, parent: str = "root", salt: str = "") -> Candidate:
+    axes = {axis: _axis_value(seed, cycle, axis, parent, salt=salt) for axis in AXES_16}
 
     trace = axes["trace_quality"] / 15
     compression = axes["compression_depth"] / 15
@@ -126,7 +130,7 @@ def build_candidate(seed: str, cycle: int, parent: str = "root") -> Candidate:
     status = "selected" if total >= 5.0 and oak_score >= 0.55 else "quarantine"
     next_action = "decompress into codex/test/prototype" if status == "selected" else "keep compressed; attack or add to negative memory"
 
-    candidate_id = f"amg-{cycle:02d}-{_hash_int(seed + parent + str(cycle)) % 10000:04d}"
+    candidate_id = f"amg-{cycle:02d}-{_hash_int(seed + parent + str(cycle) + salt) % 10000:04d}"
     return Candidate(
         id=candidate_id,
         parent=parent,
@@ -147,23 +151,23 @@ def build_candidate(seed: str, cycle: int, parent: str = "root") -> Candidate:
     )
 
 
-def expand_beam(beam: Iterable[Candidate], cycle: int) -> List[Candidate]:
+def expand_beam(beam: Iterable[Candidate], cycle: int, salt: str = "") -> List[Candidate]:
     candidates: List[Candidate] = []
     for parent in beam:
         for seed in SEED_THEORIES:
             child_seed = f"{parent.seed} × {seed}"
-            candidates.append(build_candidate(child_seed, cycle, parent=parent.id))
+            candidates.append(build_candidate(child_seed, cycle, parent=parent.id, salt=salt))
     return candidates
 
 
-def run_generation(cycles: int = 16, beam_width: int = 16) -> Dict[str, object]:
-    beam = [build_candidate(seed, 0) for seed in SEED_THEORIES]
+def run_generation(cycles: int = 16, beam_width: int = 16, salt: str = "") -> Dict[str, object]:
+    beam = [build_candidate(seed, 0, salt=salt) for seed in SEED_THEORIES]
     beam = sorted(beam, key=lambda candidate: candidate.total, reverse=True)[:beam_width]
     negative_memory: List[Candidate] = []
     history: List[Dict[str, object]] = []
 
     for cycle in range(1, cycles + 1):
-        candidates = expand_beam(beam, cycle)
+        candidates = expand_beam(beam, cycle, salt=salt)
         ranked = sorted(candidates, key=lambda candidate: candidate.total, reverse=True)
         beam = ranked[:beam_width]
         failures = ranked[-beam_width:]
@@ -182,6 +186,8 @@ def run_generation(cycles: int = 16, beam_width: int = 16) -> Dict[str, object]:
         "engine": "FTPCI-Omega Auto Meta-Generation",
         "cycles": cycles,
         "beam_width": beam_width,
+        "salt": salt,
+        "evaluated_candidates_approx": len(SEED_THEORIES) + cycles * beam_width * len(SEED_THEORIES),
         "axes": list(AXES_16),
         "top16": [asdict(candidate) for candidate in beam],
         "negative_memory_bottom16": [
@@ -193,7 +199,12 @@ def run_generation(cycles: int = 16, beam_width: int = 16) -> Dict[str, object]:
 
 
 def main() -> None:
-    print(json.dumps(run_generation(), indent=2, ensure_ascii=False))
+    parser = argparse.ArgumentParser(description="Run FTPCI-Omega auto meta-generation.")
+    parser.add_argument("--cycles", type=int, default=16)
+    parser.add_argument("--beam-width", type=int, default=16)
+    parser.add_argument("--salt", default="")
+    args = parser.parse_args()
+    print(json.dumps(run_generation(args.cycles, args.beam_width, salt=args.salt), indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":
