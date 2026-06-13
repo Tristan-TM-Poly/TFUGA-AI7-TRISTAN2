@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/ait_contract.schema.json",
+  "title": "AIT Contract",
+  "description": "Contract packet for AIT-Omega 16-circ-n cycles: mission, tools, OAK, memory, outputs and limits.",
+  "type": "object",
+  "required": ["id", "mission", "inputs", "allowed_tools", "expected_outputs", "oak", "metrics", "limits", "next_action"],
+  "properties": {
+    "id": { "type": "string" },
+    "mission": { "type": "string" },
+    "inputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "allowed_tools": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["local_python", "github_actions", "github_contents", "markdown_reports", "json_memory", "public_data", "manual_review"] }
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_outputs": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["top16", "bottom16", "oak_report", "codex", "prototype_candidate", "test_plan", "github_artifact", "memory_update"] }
+    },
+    "oak": {
+      "type": "object",
+      "required": ["status", "trace_required", "prototype_required", "anti_hype_required"],
+      "properties": {
+        "status": { "type": "string", "enum": ["definition", "candidate", "prototype", "local_validation", "canon", "quarantine", "rejected"] },
+        "trace_required": { "type": "boolean" },
+        "prototype_required": { "type": "boolean" },
+        "anti_hype_required": { "type": "boolean" },
+        "minimum_oak_score": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["fertility", "oak", "reuse", "prototype_value", "impact", "transmission", "cost", "risk", "hype", "complexity", "debt"],
+      "properties": {
+        "fertility": { "type": "number" },
+        "oak": { "type": "number" },
+        "reuse": { "type": "number" },
+        "prototype_value": { "type": "number" },
+        "impact": { "type": "number" },
+        "transmission": { "type": "number" },
+        "cost": { "type": "number" },
+        "risk": { "type": "number" },
+        "hype": { "type": "number" },
+        "complexity": { "type": "number" },
+        "debt": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "limits": {
+      "type": "object",
+      "required": ["max_cycles", "dense_enumeration", "external_paid_api", "autonomous_external_action"],
+      "properties": {
+        "max_cycles": { "type": "integer", "minimum": 1 },
+        "dense_enumeration": { "type": "boolean" },
+        "external_paid_api": { "type": "boolean" },
+        "autonomous_external_action": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "memory": {
+      "type": "object",
+      "properties": {
+        "positive": { "type": "array", "items": { "type": "string" } },
+        "negative": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "next_action": { "type": "string" }
+  },
+  "additionalProperties": false
+}
