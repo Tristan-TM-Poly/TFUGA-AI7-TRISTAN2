@@ -1,5 +1,7 @@
+import json
 import unittest
 
+from sage_tristan.hgfm_prime_graph import build_hgfm_prime_graph, summarize_graph
 from sage_tristan.prime_tensors import (
     finite_prime_tensor_packet,
     gap_tensor,
@@ -47,6 +49,21 @@ class PrimeTensorTests(unittest.TestCase):
         self.assertEqual(packet['nodes'][0]['prime'], 2)
         self.assertEqual(packet['nodes'][1]['oak_status'], 'observed')
         self.assertIn('hyperedges', packet)
+
+    def test_hgfm_prime_graph_packet(self):
+        graph = build_hgfm_prime_graph(16, 2, 3)
+        self.assertEqual(graph["name"], "hgfm_prime_graph")
+        self.assertEqual(graph["metrics"]["node_count"], 16)
+        self.assertTrue(graph["metrics"]["checks_passed"])
+        self.assertIn("hyperedges", graph)
+        self.assertIn("nodes", graph)
+        json.dumps(graph)
+
+    def test_hgfm_prime_graph_summary(self):
+        graph = build_hgfm_prime_graph(12, 1, 2)
+        summary = summarize_graph(graph)
+        self.assertIn("nodes=12", summary)
+        self.assertIn("OAK=prototype", summary)
 
 
 if __name__ == '__main__':
