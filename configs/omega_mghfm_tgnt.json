@@ -1,0 +1,56 @@
+{
+  "name": "Omega-MGHFM-TGNT",
+  "version": "0.1",
+  "oak_status": "prototype",
+  "mother_equation": "X_next = EXP(OAK(TGNT(J(CVCD(LOG(HGFM(X)))))))",
+  "J": ["JKD", "YY3", "Tristan2"],
+  "cycle": [
+    "HGFM",
+    "LOG",
+    "CVCD",
+    "JKD",
+    "YY3",
+    "Tristan2",
+    "TGNT",
+    "OAK",
+    "EXP",
+    "archive"
+  ],
+  "log_layers": ["raw_data", "local_patterns", "invariants", "generative_rules", "meta_rules", "minimal_fertile_signature"],
+  "exp_layers": ["instances", "families", "hypergraphs", "theories", "meta_theories"],
+  "oak_statuses": ["observed", "anchored", "known", "speculative", "refuted", "noise"],
+  "fertility_components": {
+    "numerator": ["utility", "generativity", "oak_verifiability", "fertile_compression"],
+    "denominator": ["compute_cost", "noise_risk", "one"]
+  },
+  "negative_memory_rules": [
+    "prune_refuted_patterns",
+    "prune_sterile_patterns",
+    "prune_redundant_patterns",
+    "prune_over_costly_patterns"
+  ],
+  "prime_node_fields": [
+    "prime",
+    "primorial_tensor",
+    "modular_residues",
+    "gap_tensor",
+    "quotients",
+    "primorial_overflows",
+    "oak_status",
+    "fertility"
+  ],
+  "outputs": [
+    "enriched_hgfm",
+    "fertile_archive",
+    "negative_memory",
+    "derived_generators",
+    "codex",
+    "tests_or_prototypes"
+  ],
+  "forbidden": [
+    "claim_without_oak_status",
+    "dense_unbounded_enumeration",
+    "prototype_free_promotion",
+    "confusing_fertility_with_truth"
+  ]
+}
