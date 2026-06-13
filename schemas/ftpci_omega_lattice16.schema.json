@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/ftpci_omega_lattice16.schema.json",
+  "title": "FTPCI-Omega Lattice16 Candidate",
+  "description": "A sparse 16-axis optimization candidate for FTPCI-Omega testing and OAK/fertility scoring.",
+  "type": "object",
+  "required": ["id", "cycle", "axes", "objective", "oak", "memory_negative", "decompression_policy"],
+  "properties": {
+    "id": { "type": "string" },
+    "cycle": { "type": "integer", "minimum": 0 },
+    "axes": {
+      "type": "object",
+      "required": [
+        "trace_quality",
+        "compression_depth",
+        "factor_rank",
+        "sparsity_level",
+        "invariant_preservation",
+        "oak_attack_strength",
+        "negative_memory_projection",
+        "fertility_threshold",
+        "decompression_depth",
+        "codex_depth_2n",
+        "prototype_minimality",
+        "residual_search_intensity",
+        "bridge_domain_count",
+        "anti_hype_threshold",
+        "reconstruction_tolerance",
+        "compute_budget"
+      ],
+      "properties": {
+        "trace_quality": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "compression_depth": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "factor_rank": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "sparsity_level": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "invariant_preservation": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "oak_attack_strength": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "negative_memory_projection": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "fertility_threshold": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "decompression_depth": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "codex_depth_2n": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "prototype_minimality": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "residual_search_intensity": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "bridge_domain_count": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "anti_hype_threshold": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "reconstruction_tolerance": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "compute_budget": { "type": "integer", "minimum": 0, "maximum": 15 }
+      },
+      "additionalProperties": false
+    },
+    "objective": {
+      "type": "object",
+      "required": ["fertility", "oak_score", "reuse", "prototype_value", "cost", "risk", "hype", "complexity", "total"],
+      "properties": {
+        "fertility": { "type": "number" },
+        "oak_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "reuse": { "type": "number" },
+        "prototype_value": { "type": "number" },
+        "cost": { "type": "number", "minimum": 0 },
+        "risk": { "type": "number", "minimum": 0 },
+        "hype": { "type": "number", "minimum": 0 },
+        "complexity": { "type": "number", "minimum": 0 },
+        "total": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "oak": {
+      "type": "object",
+      "required": ["traceable", "safe", "status", "attacks"],
+      "properties": {
+        "traceable": { "type": "boolean" },
+        "safe": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["candidate", "quarantine", "rejected", "selected", "decompressed", "prototype"] },
+        "attacks": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "memory_negative": {
+      "type": "object",
+      "required": ["similarity", "penalty", "matched_failures"],
+      "properties": {
+        "similarity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "penalty": { "type": "number", "minimum": 0 },
+        "matched_failures": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "decompression_policy": {
+      "type": "object",
+      "required": ["allowed", "targets"],
+      "properties": {
+        "allowed": { "type": "boolean" },
+        "targets": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["codex", "hgfm_map", "prototype", "test", "paper_section", "residual_report"] }
+        },
+        "reason": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
