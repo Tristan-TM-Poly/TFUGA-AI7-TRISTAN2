@@ -18,9 +18,11 @@ on:
     paths:
       - "sage_tristan/auto_meta_generator.py"
       - "sage_tristan/prime_tensors.py"
+      - "sage_tristan/hgfm_prime_graph.py"
       - "scripts/run_auto_meta_generation.py"
       - "tests/test_prime_tensors.py"
       - "examples/prime_tensor_demo.py"
+      - "schemas/prime_tensor_packet.schema.json"
       - ".github/workflows/auto-meta-generation.yml"
 
 permissions:
@@ -51,15 +53,18 @@ jobs:
           python -m py_compile \
             sage_tristan/auto_meta_generator.py \
             sage_tristan/prime_tensors.py \
+            sage_tristan/hgfm_prime_graph.py \
             scripts/run_auto_meta_generation.py \
             examples/prime_tensor_demo.py
 
-      - name: Run prime tensor tests on pull requests
+      - name: Run prime tensor and HGFM graph tests on pull requests
         if: github.event_name == 'pull_request'
         run: |
           python -m unittest tests/test_prime_tensors.py
           python examples/prime_tensor_demo.py > /tmp/prime-tensor-demo.json
           python -m json.tool /tmp/prime-tensor-demo.json > /dev/null
+          python -m sage_tristan.hgfm_prime_graph --count 12 --max-jump 1 --prefix 2 --summary
+          python -m json.tool schemas/prime_tensor_packet.schema.json > /dev/null
 
       - name: Run dry check on pull requests
         if: github.event_name == 'pull_request'
