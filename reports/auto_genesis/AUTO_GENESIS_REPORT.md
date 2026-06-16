@@ -1,6 +1,6 @@
 # TTM Auto-Genesis OAK Report
 
-Generated: `2026-06-16T21:30:05+00:00`
+Generated: `2026-06-16T21:30:37+00:00`
 
 ## Verdict summary
 
@@ -38,6 +38,10 @@ Generated: `2026-06-16T21:30:05+00:00`
     "w0_rel_error": 0.003341407054514398
   },
   "extracted": {
+    "ffwt_dominant_level": 7.0,
+    "ffwt_energy_entropy": 0.4476892944675947,
+    "ffwt_mean_adjacent_coherence": 0.01777023413832191,
+    "fractal_ratio": 50.775159863644944,
     "gamma_eff": 0.4906276597757615,
     "w0_eff": 5.016707035272575
   },
@@ -46,7 +50,7 @@ Generated: `2026-06-16T21:30:05+00:00`
     "phi_true": 0.2,
     "w0_true": 5.0
   },
-  "notes": "gamma and w0 extracted from analytic envelope + FFT/phase fusion",
+  "notes": "gamma/w0 extracted with robust physics estimator; FFWT signatures attached as CVCD evidence",
   "oak_score": 93.89569562485231
 }
 ```
@@ -60,14 +64,18 @@ Generated: `2026-06-16T21:30:05+00:00`
 ```json
 {
   "errors": {
-    "Q_rel_error": 0.04979126153379131,
-    "alpha_rel_error": 0.051486879050975064,
+    "Q_rel_error": 0.04979126153379119,
+    "alpha_rel_error": 0.051486879050974904,
     "omega0_rel_error": 0.0008679791430694236,
     "wd_rel_error": 0.0011325706701640222
   },
   "extracted": {
-    "Q_eff": 6.787205274758584,
-    "alpha_eff": 0.36802040766789273,
+    "Q_eff": 6.787205274758585,
+    "alpha_eff": 0.3680204076678927,
+    "ffwt_dominant_level": 7.0,
+    "ffwt_energy_entropy": 0.37484954970458956,
+    "ffwt_mean_adjacent_coherence": 0.025893554181845642,
+    "fractal_ratio": 93.34020535608137,
     "omega0_eff": 4.995660104284652,
     "wd_eff": 4.982085994549
   },
@@ -80,7 +88,7 @@ Generated: `2026-06-16T21:30:05+00:00`
     "omega0_true": 5.0,
     "wd_true": 4.987734956871706
   },
-  "notes": "RLC parameters inferred from damped oscillatory mode",
+  "notes": "RLC parameters inferred from damped mode; FFWT multiscale evidence included",
   "oak_score": 89.91803274005001
 }
 ```
@@ -94,17 +102,49 @@ Generated: `2026-06-16T21:30:05+00:00`
 ```json
 {
   "errors": {
+    "D_ffwt_candidate_rel_error": 19.721326692252546,
     "D_rel_error": 0.07453875860404213
   },
   "extracted": {
     "D_eff": 1.6118081379061378,
+    "D_ffwt_candidate": 31.081990038398544,
     "D_var_control": 1.26785985306961,
-    "haar_detail_energy_L1": 0.003800438194022626,
-    "haar_detail_energy_L2": 0.0010340774014629454,
-    "haar_detail_energy_L3": 0.00030486504984560364,
-    "haar_detail_energy_L4": 0.00014919051027407424,
-    "haar_detail_energy_L5": 0.0002142651269254907,
-    "haar_residual_energy": 0.3603350606246709,
+    "ffwt_active_levels": 8.0,
+    "ffwt_coherence_L1_L2": 0.0045525684350419425,
+    "ffwt_coherence_L2_L3": 0.0005408192890938224,
+    "ffwt_coherence_L3_L4": 0.02668824663198152,
+    "ffwt_coherence_L4_L5": 0.17109352884660997,
+    "ffwt_coherence_L5_L6": 0.2132491354055563,
+    "ffwt_coherence_L6_L7": 0.24050452967177824,
+    "ffwt_coherence_L7_L8": 0.2619029478417725,
+    "ffwt_detail_energy_L1": 0.00647157712913261,
+    "ffwt_detail_energy_L2": 0.0036617681972935393,
+    "ffwt_detail_energy_L3": 0.002229412958624443,
+    "ffwt_detail_energy_L4": 0.002237681445167516,
+    "ffwt_detail_energy_L5": 0.006831658921345192,
+    "ffwt_detail_energy_L6": 0.024345402664201127,
+    "ffwt_detail_energy_L7": 0.09754286094137213,
+    "ffwt_detail_energy_L8": 0.36602521760638373,
+    "ffwt_dominant_level": 8.0,
+    "ffwt_dominant_relative_energy": 0.031684974070803465,
+    "ffwt_energy_entropy": 0.43074824321845073,
+    "ffwt_log_energy_slope": 0.63031722471434,
+    "ffwt_mean_adjacent_coherence": 0.13121882516026204,
+    "ffwt_reconstruction_energy": 11.552012534031443,
+    "ffwt_reconstruction_energy_error": 2.3065550277502123e-15,
+    "ffwt_relative_energy_L1": 0.0005602120937860627,
+    "ffwt_relative_energy_L2": 0.0003169809750903759,
+    "ffwt_relative_energy_L3": 0.00019298913951631708,
+    "ffwt_relative_energy_L4": 0.00019370490107896383,
+    "ffwt_relative_energy_L5": 0.0005913825752196489,
+    "ffwt_relative_energy_L6": 0.0021074598553698907,
+    "ffwt_relative_energy_L7": 0.008443798052851594,
+    "ffwt_relative_energy_L8": 0.031684974070803465,
+    "ffwt_residual_energy": 11.042666954167935,
+    "ffwt_residual_ratio": 0.9559084983362824,
+    "ffwt_total_detail_energy": 0.5093455798635202,
+    "ffwt_total_energy": 11.55201253403147,
+    "fractal_ratio": 48.823475781792,
     "mean_x_eff": 0.00783757224407755,
     "var_x_eff": 5.07143941227844
   },
@@ -112,7 +152,7 @@ Generated: `2026-06-16T21:30:05+00:00`
     "D_true": 1.5,
     "t_obs": 2.0
   },
-  "notes": "D extracted from robust spatial variance, using Var[x]=2Dt",
+  "notes": "D extracted from log-gaussian physics; FFWT fractal_ratio tracked as candidate diffusion invariant",
   "oak_score": 88.54612413959579
 }
 ```
