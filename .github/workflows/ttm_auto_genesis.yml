@@ -1,0 +1,67 @@
+name: TTM Auto-Genesis OAK Guarded Loop
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 5 * * 1'
+  push:
+    branches:
+      - main
+    paths:
+      - 'core/**'
+      - 'prototypes/**'
+      - 'docs/theories/**'
+      - '.github/workflows/ttm_auto_genesis.yml'
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ttm-auto-genesis-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  guarded-auto-genesis:
+    name: OAK guarded auto-genesis report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install runtime dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy
+
+      - name: Run guarded auto-genesis kernel
+        run: |
+          python core/genesis_kernel.py
+
+      - name: Show generated report summary
+        run: |
+          cat reports/auto_genesis/AUTO_GENESIS_REPORT.md
+
+      - name: Commit OAK reports only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/auto_genesis/ omega_max_oak_report.json || true
+          if git diff --cached --quiet; then
+            echo "No Auto-Genesis report changes to commit."
+          else
+            git commit -m "[OAK] Update guarded auto-genesis report"
+            git push
+          fi
