@@ -1,0 +1,9 @@
+{
+  "name": "AIT_TRISTAN_OMNI_MONOREPO_FUSION_v0_1",
+  "oak_status": "fusion_monorepo_functional_local",
+  "external_actions": "disabled_by_default",
+  "local_artifact": "AIT_TRISTAN_OMNI_MONOREPO_FUSION_v0_1.zip",
+  "local_file_count": 396,
+  "smoke_tests_exit": 0,
+  "modules": ["ait_manager_max", "ait_tristan_inf_autogovernance", "legalops_companies_can_qc", "official_publishing_manager", "quebec_public_services_infra", "omni_spectroscopy_analytical_physics", "tristan_math_algorithms_canon", "omni_physics_max", "omnimedia_youtube_max_oaksafe", "omega_foundry_total"]
+}
