@@ -5,12 +5,13 @@ TTM-TFUGA-AI7-TRISTAN2 :: Accumulation Cycle
 Local zero-deploy accumulation cycle:
 
 1. Omni tensor harvest, offline by default.
-2. HGFM accumulator.
-3. Auto-genesis report.
-4. SAGE dry-run diagnostic.
+2. Science-domain omni harvest across major science families.
+3. HGFM accumulator.
+4. Auto-genesis report.
+5. SAGE dry-run diagnostic.
 
 No publication, no deployment, no external write. Optional live public endpoints can
-be enabled only with --live.
+be enabled only with --live for the smaller omni harvester.
 """
 
 from __future__ import annotations
@@ -31,6 +32,7 @@ import genesis_kernel
 import hgfm_accumulator
 import omni_tensor_harvester
 import sage_orchestrator
+import science_domain_omni_harvester
 
 REPORT_PATH = ROOT / "reports" / "accumulation" / "accumulation_cycle_report.json"
 
@@ -39,6 +41,7 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
     parser = argparse.ArgumentParser(description="Run local AT-1 accumulation cycle")
     parser.add_argument("--live", action="store_true", help="allow public endpoint reads in omni harvester")
     parser.add_argument("--permutation-checks", type=int, default=8)
+    parser.add_argument("--science-permutation-checks", type=int, default=4)
     parser.add_argument("--hgfm-threshold", type=float, default=0.82)
     args = parser.parse_args(argv)
 
@@ -50,6 +53,7 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
         omni_args.append("--live")
 
     omni_report = omni_tensor_harvester.main(omni_args)
+    science_report = science_domain_omni_harvester.main(["--permutation-checks", str(args.science_permutation_checks)])
     hgfm_report = hgfm_accumulator.main(["--threshold", str(args.hgfm_threshold)])
     genesis_report = genesis_kernel.main()
     sage_code = sage_orchestrator.main(["--dry-run"])
@@ -59,11 +63,14 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
         "runtime_seconds": time.time() - started,
         "live": bool(args.live),
         "omni_axes": list(omni_report.get("axes", {}).keys()),
+        "science_domain_count": int(science_report.get("domain_count", 0)),
+        "science_families": sorted({payload.get("family", "unknown") for payload in science_report.get("domains", {}).values()}),
         "hgfm_summary": hgfm_report.get("summary", {}),
         "genesis_summary": genesis_report.get("summary", {}),
         "sage_exit_code": int(sage_code),
         "outputs": {
             "omni": "reports/jkd/omni_harvester_report.json",
+            "science": "reports/jkd/science_domain_omni_report.json",
             "hgfm": "reports/hgfm/hgfm_accumulator_report.json",
             "hgfm_m_minus": "reports/hgfm/hgfm_m_minus_compact.json",
             "genesis": "reports/auto_genesis/auto_genesis_report.json",
