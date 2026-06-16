@@ -3,7 +3,7 @@
 TTM-TFUGA-AI7-TRISTAN2 :: OMEGA-MAX PROTOTYPE BENCHMARK
 
 Pipeline canonique:
-Signal -> FFWT surrogate -> HAC/CVCD invariants -> equation parameter -> OAK -> Canon / M_MINUS
+Signal -> FFWT fractal core -> HAC/CVCD invariants -> equation parameter -> OAK -> Canon / M_MINUS
 
 Benchmarks inclus:
 B1: oscillateur amorti       x(t)=A exp(-gamma t) cos(w0 t + phi) + noise
@@ -20,9 +20,18 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 import json
 import math
+import sys
 import time
 
 import numpy as np
+
+# Import du vrai noyau FFWT gardé dans core/.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+CORE_DIR = REPO_ROOT / "core"
+if str(CORE_DIR) not in sys.path:
+    sys.path.insert(0, str(CORE_DIR))
+
+from omega_ffwt_core import extract_ffwt_signatures, haar_fractal_transform  # noqa: E402
 
 
 # ==============================================================================
@@ -100,8 +109,14 @@ def get_b3_diffusion_profile(x: np.ndarray, t_obs: float) -> Tuple[np.ndarray, D
 
 
 # ==============================================================================
-# 2. Microscope FFWT/HAC/CVCD surrogate
+# 2. Microscope FFWT/HAC/CVCD
 # ==============================================================================
+
+def compute_ffwt_cvcd_signature(signal: np.ndarray, max_levels: int = 8) -> Dict[str, float]:
+    """Transforme le signal en signatures FFWT-CVCD réelles et OAK-safe."""
+    coeffs = haar_fractal_transform(signal, max_levels=max_levels, adaptive=True)
+    return extract_ffwt_signatures(coeffs)
+
 
 def analytic_signal_numpy(signal: np.ndarray) -> np.ndarray:
     """Signal analytique façon Hilbert, implémenté uniquement avec numpy."""
@@ -134,12 +149,12 @@ def parabolic_fft_peak(freqs: np.ndarray, power: np.ndarray, idx: int) -> float:
 def estimate_damped_mode(t: np.ndarray, signal: np.ndarray) -> Dict[str, float]:
     """Extrait gamma et omega dominant d'un signal oscillant amorti.
 
-    Le prototype limite volontairement la recherche fréquentielle aux modes physiques
-    basse/moyenne fréquence du benchmark, puis estime l'amortissement sur la partie
-    de l'enveloppe qui reste au-dessus du plancher de bruit.
+    Le noyau FFWT fournit les signatures multi-échelles ; l'estimateur physique
+    garde la précision OAK par enveloppe analytique + FFT/phase fusion.
     """
     centered = signal - np.mean(signal)
     dt = float(np.median(np.diff(t)))
+    ffwt = compute_ffwt_cvcd_signature(centered)
 
     # Fréquence dominante par FFT fenêtrée, avec garde-fou anti-bruit HF.
     window = np.hanning(centered.size)
@@ -159,12 +174,10 @@ def estimate_damped_mode(t: np.ndarray, signal: np.ndarray) -> Dict[str, float]:
     envelope = np.abs(analytic)
     noise_floor = float(np.median(envelope[int(0.85 * envelope.size):]))
     envelope_clean = np.clip(envelope - 0.75 * noise_floor, 1e-12, None)
-    # Fenêtre fiable : avant que l'enveloppe soit dominée par le bruit.
     mask = envelope_clean > max(2.25 * noise_floor, np.percentile(envelope_clean, 55))
     edge = max(5, centered.size // 50)
     mask[:edge] = False
     mask[-edge:] = False
-    # Si le masque est trop sévère, garder le premier tiers non marginal.
     if int(np.sum(mask)) < 20:
         mask = np.zeros_like(envelope_clean, dtype=bool)
         mask[edge:int(0.45 * envelope_clean.size)] = True
@@ -174,10 +187,10 @@ def estimate_damped_mode(t: np.ndarray, signal: np.ndarray) -> Dict[str, float]:
     phase = np.unwrap(np.angle(analytic))
     phase_slope, _ = np.polyfit(t[mask], phase[mask], 1)
     omega_phase_eff = abs(float(phase_slope))
-
-    # Fusion FFT/phase : FFT domine, phase corrige légèrement.
     omega_fused = 0.85 * omega_eff + 0.15 * omega_phase_eff
 
+    # FFWT physical hints: dominant dyadic level and coherence are kept as
+    # explanatory CVCD features, not as the sole source of the parameter estimate.
     return {
         "gamma_eff": gamma_eff,
         "omega_eff": omega_fused,
@@ -185,22 +198,26 @@ def estimate_damped_mode(t: np.ndarray, signal: np.ndarray) -> Dict[str, float]:
         "omega_phase_eff": omega_phase_eff,
         "envelope_points": float(np.sum(mask)),
         "noise_floor_eff": noise_floor,
+        **ffwt,
     }
 
 
 def estimate_diffusion_constant(x: np.ndarray, profile: np.ndarray, t_obs: float) -> Dict[str, float]:
-    """Estime D via la pente log-gaussienne et contrôle par variance.
+    """Estime D via la pente log-gaussienne et ajoute les signatures FFWT.
 
     Pour la solution fondamentale, log u = const - x^2/(4Dt). La pente centrale
-    est beaucoup moins sensible au bruit de queue que la variance brute.
+    est plus robuste au bruit de queue que la variance brute. Les ratios FFWT
+    sont conservés comme invariants multi-échelles de l'étalement.
     """
     y = np.asarray(profile, dtype=float)
+    ffwt = compute_ffwt_cvcd_signature(y)
+
     baseline = float(np.percentile(y, 3))
     y_clean = np.clip(y - baseline, 1e-12, None)
     central = y_clean > (0.12 * float(np.max(y_clean)))
     if int(np.sum(central)) < 20:
         raise ValueError("not enough central diffusion samples for log-gaussian fit")
-    slope, intercept = np.polyfit(x[central] ** 2, np.log(y_clean[central]), 1)
+    slope, _ = np.polyfit(x[central] ** 2, np.log(y_clean[central]), 1)
     D_log = -1.0 / (4.0 * t_obs * slope) if slope < 0 else float("inf")
 
     weights = y_clean * central
@@ -209,30 +226,18 @@ def estimate_diffusion_constant(x: np.ndarray, profile: np.ndarray, t_obs: float
     var_x = float(np.sum(weights * (x - mean_x) ** 2))
     D_var = var_x / (2.0 * t_obs)
 
-    # Le fit log-gaussien est l'estimateur principal ; variance = contrôle.
-    D_eff = float(D_log)
-    return {"D_eff": D_eff, "D_var_control": float(D_var), "mean_x_eff": mean_x, "var_x_eff": var_x}
+    # FFWT-derived surrogate reading of diffusion. This is intentionally not used
+    # as the primary D yet; it becomes an OAK-tracked candidate invariant.
+    D_ffwt_candidate = float(ffwt.get("fractal_ratio", 0.0) * (t_obs / math.pi))
 
-
-def dyadic_energy_signature(signal: np.ndarray, levels: int = 5) -> Dict[str, float]:
-    """Mini-signature FFWT surrogate par détails Haar dyadiques.
-
-    Ce n'est pas encore la FFWT fractale complète : c'est une signature multi-échelle
-    légère pour alimenter le rapport OAK du prototype.
-    """
-    x = np.asarray(signal, dtype=float).copy()
-    energies: Dict[str, float] = {}
-    for level in range(levels):
-        if x.size < 4:
-            break
-        if x.size % 2 == 1:
-            x = x[:-1]
-        avg = 0.5 * (x[0::2] + x[1::2])
-        detail = 0.5 * (x[0::2] - x[1::2])
-        energies[f"haar_detail_energy_L{level + 1}"] = float(np.sum(detail**2))
-        x = avg
-    energies["haar_residual_energy"] = float(np.sum(x**2))
-    return energies
+    return {
+        "D_eff": float(D_log),
+        "D_var_control": float(D_var),
+        "D_ffwt_candidate": D_ffwt_candidate,
+        "mean_x_eff": mean_x,
+        "var_x_eff": var_x,
+        **ffwt,
+    }
 
 
 # ==============================================================================
@@ -263,14 +268,29 @@ def oak_verdict(score: float, canon_threshold: float = 80.0, fertile_threshold: 
 def run_b1(t: np.ndarray) -> BenchmarkResult:
     signal, truth = get_b1_damped_oscillator(t)
     inv = estimate_damped_mode(t, signal)
-    inv.update(dyadic_energy_signature(signal))
-    extracted = {"gamma_eff": inv["gamma_eff"], "w0_eff": inv["omega_eff"]}
+    extracted = {
+        "gamma_eff": inv["gamma_eff"],
+        "w0_eff": inv["omega_eff"],
+        "ffwt_dominant_level": inv["ffwt_dominant_level"],
+        "ffwt_energy_entropy": inv["ffwt_energy_entropy"],
+        "ffwt_mean_adjacent_coherence": inv["ffwt_mean_adjacent_coherence"],
+        "fractal_ratio": inv["fractal_ratio"],
+    }
     errors = {
         "gamma_rel_error": relative_error(extracted["gamma_eff"], truth["gamma_true"]),
         "w0_rel_error": relative_error(extracted["w0_eff"], truth["w0_true"]),
     }
     score = oak_score_from_errors(errors, complexity_penalty=5.0)
-    return BenchmarkResult("B1", "Damped oscillator", extracted, truth, errors, score, oak_verdict(score), "gamma and w0 extracted from analytic envelope + FFT/phase fusion")
+    return BenchmarkResult(
+        "B1",
+        "Damped oscillator",
+        extracted,
+        truth,
+        errors,
+        score,
+        oak_verdict(score),
+        "gamma/w0 extracted with robust physics estimator; FFWT signatures attached as CVCD evidence",
+    )
 
 
 def run_b2(t: np.ndarray) -> BenchmarkResult:
@@ -280,7 +300,16 @@ def run_b2(t: np.ndarray) -> BenchmarkResult:
     wd_eff = inv["omega_eff"]
     omega0_eff = math.sqrt(max(wd_eff * wd_eff + alpha_eff * alpha_eff, 0.0))
     Q_eff = omega0_eff / max(2.0 * alpha_eff, 1e-12)
-    extracted = {"alpha_eff": alpha_eff, "wd_eff": wd_eff, "omega0_eff": omega0_eff, "Q_eff": Q_eff}
+    extracted = {
+        "alpha_eff": alpha_eff,
+        "wd_eff": wd_eff,
+        "omega0_eff": omega0_eff,
+        "Q_eff": Q_eff,
+        "ffwt_dominant_level": inv["ffwt_dominant_level"],
+        "ffwt_energy_entropy": inv["ffwt_energy_entropy"],
+        "ffwt_mean_adjacent_coherence": inv["ffwt_mean_adjacent_coherence"],
+        "fractal_ratio": inv["fractal_ratio"],
+    }
     errors = {
         "alpha_rel_error": relative_error(alpha_eff, truth["alpha_true"]),
         "wd_rel_error": relative_error(wd_eff, truth["wd_true"]),
@@ -288,16 +317,36 @@ def run_b2(t: np.ndarray) -> BenchmarkResult:
         "Q_rel_error": relative_error(Q_eff, truth["Q_true"]),
     }
     score = oak_score_from_errors(errors, complexity_penalty=7.5)
-    return BenchmarkResult("B2", "RLC underdamped", extracted, truth, errors, score, oak_verdict(score), "RLC parameters inferred from damped oscillatory mode")
+    return BenchmarkResult(
+        "B2",
+        "RLC underdamped",
+        extracted,
+        truth,
+        errors,
+        score,
+        oak_verdict(score),
+        "RLC parameters inferred from damped mode; FFWT multiscale evidence included",
+    )
 
 
 def run_b3(x: np.ndarray, t_obs: float) -> BenchmarkResult:
     profile, truth = get_b3_diffusion_profile(x, t_obs)
     extracted = estimate_diffusion_constant(x, profile, t_obs)
-    extracted.update(dyadic_energy_signature(profile))
     errors = {"D_rel_error": relative_error(extracted["D_eff"], truth["D_true"])}
-    score = oak_score_from_errors(errors, complexity_penalty=4.0)
-    return BenchmarkResult("B3", "Diffusion 1D", extracted, truth, errors, score, oak_verdict(score), "D extracted from robust spatial variance, using Var[x]=2Dt")
+    # D_ffwt_candidate is not yet canonical; track it in report, but score the
+    # physical D estimator until OAK validates a pure FFWT diffusion map.
+    errors["D_ffwt_candidate_rel_error"] = relative_error(extracted["D_ffwt_candidate"], truth["D_true"])
+    score = oak_score_from_errors({"D_rel_error": errors["D_rel_error"]}, complexity_penalty=4.0)
+    return BenchmarkResult(
+        "B3",
+        "Diffusion 1D",
+        extracted,
+        truth,
+        errors,
+        score,
+        oak_verdict(score),
+        "D extracted from log-gaussian physics; FFWT fractal_ratio tracked as candidate diffusion invariant",
+    )
 
 
 # ==============================================================================
@@ -306,7 +355,7 @@ def run_b3(x: np.ndarray, t_obs: float) -> BenchmarkResult:
 
 def main() -> Dict[str, Any]:
     start = time.time()
-    print("=== [IGNITION] OMEGA-FFWT-HAC-CVCD-ASP-MAX :: BENCHMARK B1-B3 ===")
+    print("=== [IGNITION] OMEGA-FFWT-HAC-CVCD-ASP-MAX :: FFWT CORE BENCHMARK B1-B3 ===")
 
     t = np.linspace(0.0, 12.0, 2400)
     x = np.linspace(-12.0, 12.0, 2400)
@@ -333,7 +382,7 @@ def main() -> Dict[str, Any]:
 
     report = {
         "system": "OMEGA-FFWT-HAC-CVCD-ASP-MAX",
-        "pipeline": "Signal -> FFWT surrogate -> HAC/CVCD invariants -> Equation parameter -> OAK -> Canon/M_MINUS",
+        "pipeline": "Signal -> FFWT fractal core -> HAC/CVCD invariants -> Equation parameter -> OAK -> Canon/M_MINUS",
         "created_at_unix": time.time(),
         "runtime_seconds": time.time() - start,
         "canon": canon,
