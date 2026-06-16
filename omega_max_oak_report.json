@@ -1,8 +1,8 @@
 {
   "system": "OMEGA-FFWT-HAC-CVCD-ASP-MAX",
   "pipeline": "Signal -> FFWT fractal core -> HAC/CVCD invariants -> Equation parameter -> OAK -> Canon/M_MINUS",
-  "created_at_unix": 1781646677.3303232,
-  "runtime_seconds": 0.018784761428833008,
+  "created_at_unix": 1781646951.6021461,
+  "runtime_seconds": 0.01824498176574707,
   "canon": [
     {
       "benchmark": "B1",
