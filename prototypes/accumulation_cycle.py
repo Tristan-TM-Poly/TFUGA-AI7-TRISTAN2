@@ -9,8 +9,9 @@ Local zero-deploy accumulation cycle:
 3. Science-domain OAK micro-oracle benchmark suite.
 4. General HGFM accumulator.
 5. Science-domain HGFM accumulator.
-6. Auto-genesis report.
-7. SAGE dry-run diagnostic.
+6. Transversal Invariant Miner (TIM).
+7. Auto-genesis report.
+8. SAGE dry-run diagnostic.
 
 No publication, no deployment, no external write. Optional live public endpoints can
 be enabled only with --live for the smaller omni harvester.
@@ -37,6 +38,7 @@ import sage_orchestrator
 import science_domain_hgfm_accumulator
 import science_domain_oak_benchmark_suite
 import science_domain_omni_harvester
+import transversal_invariant_miner
 
 REPORT_PATH = ROOT / "reports" / "accumulation" / "accumulation_cycle_report.json"
 
@@ -48,6 +50,7 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
     parser.add_argument("--science-permutation-checks", type=int, default=4)
     parser.add_argument("--science-oak-permutation-checks", type=int, default=3)
     parser.add_argument("--hgfm-threshold", type=float, default=0.82)
+    parser.add_argument("--tim-threshold", type=float, default=0.88)
     args = parser.parse_args(argv)
 
     started = time.time()
@@ -62,6 +65,7 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
     science_oak_report = science_domain_oak_benchmark_suite.main(["--permutation-checks", str(args.science_oak_permutation_checks)])
     hgfm_report = hgfm_accumulator.main(["--threshold", str(args.hgfm_threshold)])
     science_hgfm_report = science_domain_hgfm_accumulator.main(["--threshold", str(args.hgfm_threshold)])
+    tim_report = transversal_invariant_miner.main(["--threshold", str(args.tim_threshold)])
     genesis_report = genesis_kernel.main()
     sage_code = sage_orchestrator.main(["--dry-run"])
 
@@ -75,6 +79,7 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
         "science_oak_summary": science_oak_report.get("summary", {}),
         "hgfm_summary": hgfm_report.get("summary", {}),
         "science_hgfm_summary": science_hgfm_report.get("summary", {}),
+        "transversal_summary": tim_report.get("summary", {}),
         "genesis_summary": genesis_report.get("summary", {}),
         "sage_exit_code": int(sage_code),
         "outputs": {
@@ -85,6 +90,8 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
             "hgfm_m_minus": "reports/hgfm/hgfm_m_minus_compact.json",
             "science_hgfm": "reports/hgfm/science_domain_hgfm_report.json",
             "science_hgfm_m_minus": "reports/hgfm/science_domain_m_minus_compact.json",
+            "transversal": "reports/transversal/transversal_invariants.json",
+            "transversal_m_minus": "reports/transversal/transversal_m_minus.json",
             "genesis": "reports/auto_genesis/auto_genesis_report.json",
             "sage": "reports/sage/sage_orchestrator_report.json",
         },
