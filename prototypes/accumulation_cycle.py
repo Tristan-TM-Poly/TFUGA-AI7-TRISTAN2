@@ -6,9 +6,10 @@ Local zero-deploy accumulation cycle:
 
 1. Omni tensor harvest, offline by default.
 2. Science-domain omni harvest across major science families.
-3. HGFM accumulator.
-4. Auto-genesis report.
-5. SAGE dry-run diagnostic.
+3. General HGFM accumulator.
+4. Science-domain HGFM accumulator.
+5. Auto-genesis report.
+6. SAGE dry-run diagnostic.
 
 No publication, no deployment, no external write. Optional live public endpoints can
 be enabled only with --live for the smaller omni harvester.
@@ -32,6 +33,7 @@ import genesis_kernel
 import hgfm_accumulator
 import omni_tensor_harvester
 import sage_orchestrator
+import science_domain_hgfm_accumulator
 import science_domain_omni_harvester
 
 REPORT_PATH = ROOT / "reports" / "accumulation" / "accumulation_cycle_report.json"
@@ -55,6 +57,7 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
     omni_report = omni_tensor_harvester.main(omni_args)
     science_report = science_domain_omni_harvester.main(["--permutation-checks", str(args.science_permutation_checks)])
     hgfm_report = hgfm_accumulator.main(["--threshold", str(args.hgfm_threshold)])
+    science_hgfm_report = science_domain_hgfm_accumulator.main(["--threshold", str(args.hgfm_threshold)])
     genesis_report = genesis_kernel.main()
     sage_code = sage_orchestrator.main(["--dry-run"])
 
@@ -66,6 +69,7 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
         "science_domain_count": int(science_report.get("domain_count", 0)),
         "science_families": sorted({payload.get("family", "unknown") for payload in science_report.get("domains", {}).values()}),
         "hgfm_summary": hgfm_report.get("summary", {}),
+        "science_hgfm_summary": science_hgfm_report.get("summary", {}),
         "genesis_summary": genesis_report.get("summary", {}),
         "sage_exit_code": int(sage_code),
         "outputs": {
@@ -73,6 +77,8 @@ def main(argv: list[str] | None = None) -> Dict[str, Any]:
             "science": "reports/jkd/science_domain_omni_report.json",
             "hgfm": "reports/hgfm/hgfm_accumulator_report.json",
             "hgfm_m_minus": "reports/hgfm/hgfm_m_minus_compact.json",
+            "science_hgfm": "reports/hgfm/science_domain_hgfm_report.json",
+            "science_hgfm_m_minus": "reports/hgfm/science_domain_m_minus_compact.json",
             "genesis": "reports/auto_genesis/auto_genesis_report.json",
             "sage": "reports/sage/sage_orchestrator_report.json",
         },
