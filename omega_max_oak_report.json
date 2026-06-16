@@ -1,0 +1,160 @@
+{
+  "system": "OMEGA-FFWT-HAC-CVCD-ASP-MAX",
+  "pipeline": "Signal -> FFWT surrogate -> HAC/CVCD invariants -> Equation parameter -> OAK -> Canon/M_MINUS",
+  "created_at_unix": 1781645122.1020982,
+  "runtime_seconds": 0.0206298828125,
+  "canon": [
+    {
+      "benchmark": "B1",
+      "relation_type": "Damped oscillator",
+      "extracted": {
+        "gamma_eff": 0.4906276597757615,
+        "w0_eff": 5.016707035272575
+      },
+      "ground_truth": {
+        "gamma_true": 0.5,
+        "w0_true": 5.0,
+        "phi_true": 0.2
+      },
+      "errors": {
+        "gamma_rel_error": 0.018744680448439504,
+        "w0_rel_error": 0.003341407054514398
+      },
+      "oak_score": 93.89569562485231,
+      "verdict": "CANON",
+      "notes": "gamma and w0 extracted from analytic envelope + FFT/phase fusion"
+    },
+    {
+      "benchmark": "B2",
+      "relation_type": "RLC underdamped",
+      "extracted": {
+        "alpha_eff": 0.36802040766789273,
+        "wd_eff": 4.982085994549,
+        "omega0_eff": 4.995660104284652,
+        "Q_eff": 6.787205274758584
+      },
+      "ground_truth": {
+        "L_true": 1.0,
+        "C_true": 0.04,
+        "R_true": 0.7,
+        "alpha_true": 0.35,
+        "wd_true": 4.987734956871706,
+        "omega0_true": 5.0,
+        "Q_true": 7.142857142857143
+      },
+      "errors": {
+        "alpha_rel_error": 0.051486879050975064,
+        "wd_rel_error": 0.0011325706701640222,
+        "omega0_rel_error": 0.0008679791430694236,
+        "Q_rel_error": 0.04979126153379131
+      },
+      "oak_score": 89.91803274005001,
+      "verdict": "CANON",
+      "notes": "RLC parameters inferred from damped oscillatory mode"
+    },
+    {
+      "benchmark": "B3",
+      "relation_type": "Diffusion 1D",
+      "extracted": {
+        "D_eff": 1.6118081379061378,
+        "D_var_control": 1.26785985306961,
+        "mean_x_eff": 0.00783757224407755,
+        "var_x_eff": 5.07143941227844,
+        "haar_detail_energy_L1": 0.003800438194022626,
+        "haar_detail_energy_L2": 0.0010340774014629454,
+        "haar_detail_energy_L3": 0.00030486504984560364,
+        "haar_detail_energy_L4": 0.00014919051027407424,
+        "haar_detail_energy_L5": 0.0002142651269254907,
+        "haar_residual_energy": 0.3603350606246709
+      },
+      "ground_truth": {
+        "D_true": 1.5,
+        "t_obs": 2.0
+      },
+      "errors": {
+        "D_rel_error": 0.07453875860404213
+      },
+      "oak_score": 88.54612413959579,
+      "verdict": "CANON",
+      "notes": "D extracted from robust spatial variance, using Var[x]=2Dt"
+    }
+  ],
+  "fertile": [],
+  "M_MINUS": [],
+  "results": [
+    {
+      "benchmark": "B1",
+      "relation_type": "Damped oscillator",
+      "extracted": {
+        "gamma_eff": 0.4906276597757615,
+        "w0_eff": 5.016707035272575
+      },
+      "ground_truth": {
+        "gamma_true": 0.5,
+        "w0_true": 5.0,
+        "phi_true": 0.2
+      },
+      "errors": {
+        "gamma_rel_error": 0.018744680448439504,
+        "w0_rel_error": 0.003341407054514398
+      },
+      "oak_score": 93.89569562485231,
+      "verdict": "CANON",
+      "notes": "gamma and w0 extracted from analytic envelope + FFT/phase fusion"
+    },
+    {
+      "benchmark": "B2",
+      "relation_type": "RLC underdamped",
+      "extracted": {
+        "alpha_eff": 0.36802040766789273,
+        "wd_eff": 4.982085994549,
+        "omega0_eff": 4.995660104284652,
+        "Q_eff": 6.787205274758584
+      },
+      "ground_truth": {
+        "L_true": 1.0,
+        "C_true": 0.04,
+        "R_true": 0.7,
+        "alpha_true": 0.35,
+        "wd_true": 4.987734956871706,
+        "omega0_true": 5.0,
+        "Q_true": 7.142857142857143
+      },
+      "errors": {
+        "alpha_rel_error": 0.051486879050975064,
+        "wd_rel_error": 0.0011325706701640222,
+        "omega0_rel_error": 0.0008679791430694236,
+        "Q_rel_error": 0.04979126153379131
+      },
+      "oak_score": 89.91803274005001,
+      "verdict": "CANON",
+      "notes": "RLC parameters inferred from damped oscillatory mode"
+    },
+    {
+      "benchmark": "B3",
+      "relation_type": "Diffusion 1D",
+      "extracted": {
+        "D_eff": 1.6118081379061378,
+        "D_var_control": 1.26785985306961,
+        "mean_x_eff": 0.00783757224407755,
+        "var_x_eff": 5.07143941227844,
+        "haar_detail_energy_L1": 0.003800438194022626,
+        "haar_detail_energy_L2": 0.0010340774014629454,
+        "haar_detail_energy_L3": 0.00030486504984560364,
+        "haar_detail_energy_L4": 0.00014919051027407424,
+        "haar_detail_energy_L5": 0.0002142651269254907,
+        "haar_residual_energy": 0.3603350606246709
+      },
+      "ground_truth": {
+        "D_true": 1.5,
+        "t_obs": 2.0
+      },
+      "errors": {
+        "D_rel_error": 0.07453875860404213
+      },
+      "oak_score": 88.54612413959579,
+      "verdict": "CANON",
+      "notes": "D extracted from robust spatial variance, using Var[x]=2Dt"
+    }
+  ]
+}
