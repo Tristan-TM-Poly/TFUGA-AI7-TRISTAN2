@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "omega_tfts_dctpp.schema.json",
+  "title": "Omega-TFTS DCT++ Research Card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "status",
+    "claim",
+    "geometry",
+    "physics_layers",
+    "oak_validation",
+    "cvcd"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "const": "omega-tfts"
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "exploratory",
+        "simulated",
+        "experimentally-supported",
+        "rejected",
+        "canonized"
+      ]
+    },
+    "claim": {
+      "type": "string"
+    },
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cantor_skeleton", "menger_support", "scale_n"],
+      "properties": {
+        "cantor_skeleton": {
+          "type": "string",
+          "description": "K_n sparse invariant skeleton."
+        },
+        "menger_support": {
+          "type": "string",
+          "description": "M_n connected tunnel support."
+        },
+        "scale_n": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "physics_layers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conductive", "superconducting", "magnetic", "spin_orbit", "topological"],
+      "properties": {
+        "conductive": {"type": "boolean"},
+        "superconducting": {"type": "boolean"},
+        "magnetic": {"type": "boolean"},
+        "spin_orbit": {"type": "boolean"},
+        "topological": {"type": "boolean"}
+      }
+    },
+    "oak_validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requires_delta",
+        "requires_gap",
+        "requires_nontrivial_invariant",
+        "requires_robust_modes",
+        "rejection_conditions"
+      ],
+      "properties": {
+        "requires_delta": {"type": "boolean"},
+        "requires_gap": {"type": "boolean"},
+        "requires_nontrivial_invariant": {"type": "boolean"},
+        "requires_robust_modes": {"type": "boolean"},
+        "rejection_conditions": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "cvcd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "D_f",
+        "density",
+        "beta_0",
+        "beta_1",
+        "beta_2",
+        "lambda_L",
+        "T_c",
+        "Delta",
+        "E_gap",
+        "I_c",
+        "nu",
+        "eta_edge",
+        "eta_vortex",
+        "kappa_robust"
+      ],
+      "properties": {
+        "D_f": {"type": ["number", "null"]},
+        "density": {"type": ["number", "null"]},
+        "beta_0": {"type": ["integer", "null"]},
+        "beta_1": {"type": ["integer", "null"]},
+        "beta_2": {"type": ["integer", "null"]},
+        "lambda_L": {"type": ["number", "null"]},
+        "T_c": {"type": ["number", "null"]},
+        "Delta": {"type": ["number", "null"]},
+        "E_gap": {"type": ["number", "null"]},
+        "I_c": {"type": ["number", "null"]},
+        "nu": {"type": ["number", "integer", "string", "null"]},
+        "eta_edge": {"type": ["number", "null"]},
+        "eta_vortex": {"type": ["number", "null"]},
+        "kappa_robust": {"type": ["number", "null"]}
+      }
+    }
+  }
+}
