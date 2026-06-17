@@ -1,0 +1,107 @@
+name: Autonomous Ecosystem Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Autopilot mode: scan, build, or full
+        required: false
+        default: scan
+      runner:
+        description: Runner target: portable or home-lab
+        required: false
+        default: portable
+  push:
+    branches:
+      - main
+      - 'codex/**'
+      - 'autopilot/**'
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: autonomous-ecosystem-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  portable-oak-cvcd-build:
+    name: Portable OAK/CVCD build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install lightweight test tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Run repository checks
+        run: |
+          set -o pipefail
+          if [ -d tests ]; then
+            python -m pytest -q
+          else
+            echo 'No tests/ directory found; running Python compile check instead.'
+            python -m compileall .
+          fi
+
+      - name: Generate autonomous OAK/CVCD report
+        run: |
+          python tools/autopilot/autonomous_builder.py --repo-root . --mode "${{ inputs.mode || 'scan' }}"
+
+      - name: Upload autonomous report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: autonomous-ecosystem-report
+          path: |
+            reports/autopilot/autonomous_build_report.json
+            reports/autopilot/autonomous_build_report.md
+            reports/autopilot/m_minus_latest.json
+          if-no-files-found: error
+
+  home-lab-oak-cvcd-build:
+    name: Home-lab OAK/CVCD build
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.runner == 'home-lab' }}
+    runs-on: [self-hosted, linux, x64, home-lab]
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Home runner identity
+        run: |
+          uname -a
+          whoami
+          docker --version || true
+          nvidia-smi || true
+
+      - name: Run autonomous full build on home PC
+        run: |
+          set -o pipefail
+          python3 tools/autopilot/autonomous_builder.py --repo-root . --mode full
+
+      - name: Upload home-lab autonomous report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: autonomous-home-lab-report
+          path: |
+            reports/autopilot/autonomous_build_report.json
+            reports/autopilot/autonomous_build_report.md
+            reports/autopilot/m_minus_latest.json
+          if-no-files-found: error
