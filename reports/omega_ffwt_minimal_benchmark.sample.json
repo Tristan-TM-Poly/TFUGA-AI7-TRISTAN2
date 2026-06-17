@@ -1,0 +1,32 @@
+{
+  "module": "omega_ffwt_hac_cvcd",
+  "status": "MVP / OAK-3 candidate",
+  "claim_boundary": "sample report only; synthetic signals only; no universal superiority claim",
+  "signals": [
+    "sine",
+    "chirp",
+    "step",
+    "white_noise",
+    "pink_like_noise",
+    "fractal_like"
+  ],
+  "metrics": [
+    "reconstruction_rmse",
+    "candidate_energy_concentration",
+    "dft_baseline_energy_concentration",
+    "baseline_delta",
+    "real_reconstruction_coherence",
+    "oak_score"
+  ],
+  "how_to_regenerate": "python examples/omega_ffwt_demo.py",
+  "oak_interpretation": {
+    "current_ceiling": "OAK-3",
+    "promotion_requires": [
+      "stored generated results from CI or local run",
+      "stronger baselines",
+      "failure logging in m_minus/",
+      "local-only claims",
+      "defect metrics for hyperalgebraic extensions"
+    ]
+  }
+}
