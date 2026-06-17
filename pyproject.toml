@@ -1,0 +1,15 @@
+[project]
+name = "tfuga-ai7-tristan2"
+version = "0.3.0"
+description = "Executable TFUGA / SAGE-TRISTAN canon kernel with OAK validation prototypes."
+requires-python = ">=3.10"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+  { name = "Tristan Tardif-Morency" }
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q"
