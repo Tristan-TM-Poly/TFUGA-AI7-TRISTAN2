@@ -1,0 +1,88 @@
+version: 1
+name: home-server-autonomous-builder
+created: '2026-06-17'
+repository: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+branch_policy:
+  default_branch: main
+  autonomous_write_branch_prefixes:
+    - autopilot/home-server
+    - codex/home-server
+  direct_main_writes: false
+  force_push: false
+  draft_pr_by_default: true
+runner_policy:
+  portable_runner: ubuntu-latest
+  home_runner_labels:
+    - self-hosted
+    - linux
+    - x64
+    - home-lab
+  gpu_runner_labels:
+    - self-hosted
+    - linux
+    - x64
+    - home-lab
+    - gpu
+permissions_policy:
+  github_actions_default:
+    contents: read
+    actions: read
+  pr_factory_required:
+    contents: write
+    pull_requests: write
+  secret_storage: external_only
+autonomy_levels:
+  L0_scan:
+    enabled: true
+    description: scan repo structure and generate report
+  L1_test:
+    enabled: true
+    description: run pytest when tests exist, otherwise compile Python modules
+  L2_generate:
+    enabled: true
+    description: generate JSON/Markdown OAK-CVCD reports
+  L3_branch_commit:
+    enabled: true
+    description: local agent may commit generated artifacts to an autopilot branch
+  L4_draft_pr:
+    enabled: true
+    description: local agent may open a draft PR for review
+  L5_automerge:
+    enabled: false
+    description: disabled until explicitly promoted by user
+  L6_infra_secret_mutation:
+    enabled: false
+    description: never mutate secrets or external infrastructure blindly
+modules:
+  oak_guard:
+    invariants:
+      - no names treated as proofs
+      - every generated output includes status and limits
+      - every failed command becomes negative memory
+      - no destructive default operation
+  cvcd_engine:
+    extracts:
+      - stable build signals
+      - missing tests
+      - documentation gaps
+      - reusable scripts
+      - next safe PR actions
+  sage_node:
+    roles:
+      - builder
+      - tester
+      - documenter
+      - verifier
+      - pr_factory
+negative_memory:
+  path: reports/autopilot/m_minus_latest.json
+  record:
+    - missing_dependencies
+    - missing_tests
+    - failed_commands
+    - unsafe_requests_blocked
+    - unavailable_home_runner
+outputs:
+  json_report: reports/autopilot/autonomous_build_report.json
+  markdown_report: reports/autopilot/autonomous_build_report.md
+  artifact_name: autonomous-ecosystem-report
