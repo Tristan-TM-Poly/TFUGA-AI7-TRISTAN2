@@ -60,9 +60,9 @@ jobs:
             python -m compileall .
           fi
 
-      - name: Generate autonomous OAK/CVCD report
+      - name: Generate OAK/CVCD report
         run: |
-          python tools/autopilot/autonomous_builder.py --repo-root . --mode "${{ inputs.mode || 'scan' }}"
+          python tools/autopilot/oak_cvcd_report.py --repo-root . --mode "${{ inputs.mode || 'scan' }}"
 
       - name: Upload autonomous report artifact
         uses: actions/upload-artifact@v4
@@ -91,10 +91,10 @@ jobs:
           docker --version || true
           nvidia-smi || true
 
-      - name: Run autonomous full build on home PC
+      - name: Run OAK/CVCD full report on home PC
         run: |
           set -o pipefail
-          python3 tools/autopilot/autonomous_builder.py --repo-root . --mode full
+          python3 tools/autopilot/oak_cvcd_report.py --repo-root . --mode full
 
       - name: Upload home-lab autonomous report artifact
         uses: actions/upload-artifact@v4
