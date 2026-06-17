@@ -1,0 +1,80 @@
+name: Theory Card
+about: Register a theory, module, invariant, or prototype candidate as a structured TFUGA card.
+title: "[THEORY] "
+labels: ["theory-card", "tfuga", "hgfm"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every fertile idea should become a card before it becomes canon.
+
+  - type: input
+    id: name
+    attributes:
+      label: Theory/module name
+      placeholder: Omega-FFWT-HAC-CVCD
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One paragraph. Separate vision from evidence.
+      placeholder: "This module aims to... Current status is..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Primary domain
+      options:
+        - math
+        - physics
+        - ai
+        - signal_processing
+        - software
+        - cognition
+        - economics
+        - publication
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: operators
+    attributes:
+      label: Operators
+      placeholder: "HGFM, LOG, CVCD, OAK, FFWT, HAC, YY3, JKD"
+    validations:
+      required: false
+
+  - type: textarea
+    id: invariants
+    attributes:
+      label: Candidate invariants
+      placeholder: "multiscale coherence, phase stability, commutator defect, reconstruction error"
+    validations:
+      required: false
+
+  - type: textarea
+    id: tests
+    attributes:
+      label: Required tests
+      value: |
+        - [ ] Definition complete
+        - [ ] Minimal example defined
+        - [ ] Baseline selected
+        - [ ] Metric selected
+        - [ ] M_MINUS risk listed
+    validations:
+      required: true
+
+  - type: textarea
+    id: next_actions
+    attributes:
+      label: Next actions
+      placeholder: "Define schema, implement minimal prototype, run synthetic benchmark."
+    validations:
+      required: true
