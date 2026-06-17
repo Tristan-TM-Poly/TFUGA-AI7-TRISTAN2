@@ -1,0 +1,13 @@
+{
+  "schema": "CVCD-CQC-RUN-v1",
+  "family_radiative": "F_3,3 hexagonal_crft x antenna",
+  "family_advanced": "F_3,8 hexagonal_crft candidate",
+  "lattice": "hexagonal",
+  "fractal_level_n": 3,
+  "stretch_det": 1.08,
+  "extraction_eta_out": 0.85,
+  "hyper_loops_beta1_proxy": 864,
+  "radiative_gain_g_sv_proxy": 28.637825,
+  "radiative_status": "VALIDATED_RADIATIVE_PROXY",
+  "advanced_status": "CANDIDATE_ONLY_REQUIRES_INVARIANT_AND_GAP"
+}
