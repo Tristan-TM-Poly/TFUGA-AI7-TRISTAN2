@@ -1,0 +1,91 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: HGFMNode
+type: object
+additionalProperties: false
+required:
+  - id
+  - type
+  - content
+  - layer
+  - scale
+  - oak_status
+properties:
+  id:
+    type: string
+    description: Stable unique node identifier.
+  type:
+    type: string
+    enum:
+      - trace
+      - idea
+      - axiom
+      - definition
+      - equation
+      - proof
+      - counterexample
+      - data
+      - code
+      - test
+      - agent
+      - task
+      - prototype
+      - residue
+      - memory
+      - m_plus
+      - m_minus
+      - value
+      - recognition
+      - theory_kernel
+      - validator
+      - invariant
+  content:
+    description: Node payload, usually Markdown/text, but can be structured.
+  layer:
+    type: string
+    description: Logical, mathematical, physical, algorithmic, agentic, memory, economic, recognition, or civilization layer.
+  scale:
+    type: string
+    enum: [micro, meso, macro, meta, meta2, omega]
+  time:
+    type: string
+    description: ISO date/time, branch name, version, or provenance marker.
+  oak_status:
+    type: string
+    enum: [TRACE, COHERENT, FERTILE, TESTABLE, TESTED, REPRODUCED, MEASURED, PROVEN, CANON, M_MINUS]
+  omegagate:
+    type: string
+    enum: [NEG, P0, ACTIVE, UNKNOWN, CERTIFIED]
+    default: UNKNOWN
+  evidence:
+    type: array
+    items:
+      type: string
+  residue:
+    type: array
+    items:
+      type: string
+  memory_refs:
+    type: array
+    items:
+      type: string
+  next_tests:
+    type: array
+    items:
+      type: string
+  scores:
+    type: object
+    additionalProperties:
+      type: number
+    properties:
+      logic: { type: number }
+      fertility: { type: number }
+      validation: { type: number }
+      utility: { type: number }
+      value: { type: number }
+      recognition: { type: number }
+      residue: { type: number }
+      risk: { type: number }
+      cost: { type: number }
+      hallucination: { type: number }
+      compression: { type: number }
+      stability: { type: number }
