@@ -1,0 +1,14 @@
+{
+  "repo": "TFUGA-AI7-TRISTAN2",
+  "role": "AI7 and theory-to-prototype bridge",
+  "status": "prototype",
+  "kernel_repo": "TTM-TFUGA-AI7-TRISTAN2",
+  "kernel_pr": 30,
+  "local_pr": 34,
+  "sync_files": [
+    "docs/CANON_ROLE_2026_06_18.md",
+    "docs/AI7_AGENT_INTERFACE_MAP.md",
+    "docs/TFUGA_TO_PROTOTYPE_BRIDGE.md"
+  ],
+  "next_action": "review bridge docs, then link future prototypes back to the kernel registry"
+}
