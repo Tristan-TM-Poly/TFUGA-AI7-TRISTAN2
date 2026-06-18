@@ -14,6 +14,49 @@ The operational pipeline is:
 raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -> prototype -> minimal fertile canon
 ```
 
+## OAK-strict public status
+
+This repository contains an ambitious research architecture, but it does **not** treat ambition as proof.
+
+Hard separation rules:
+
+```text
+FERTILE != PROVEN
+ACTIVE != CERTIFIED
+SIMULATED != MEASURED
+PREDICTED != REAL
+UNKNOWN != FALSE
+```
+
+Current strongest formal seed:
+
+```text
+Quaternionic HGFM hyper-Laplacian: L_H = B W B_dagger
+```
+
+Current most testable branches:
+
+- Raman / FFWT / CVCD spectral benchmark against classical baselines.
+- AIT-ChessMaster benchmark against perft, tablebases and Stockfish.
+- Passive LC/RLC resonance simulation with explicit limits.
+- Zero-touch OAK corpus analyzer for claims, residue and negative memory.
+
+Current non-claims:
+
+- No certified physical breakthrough is claimed here.
+- No perfect filtering or zero-residue claim is promoted without benchmark data.
+- No autonomous agent may promote a claim to canon.
+- No simulation is treated as measurement.
+
+Useful entry points:
+
+- `docs/analysis/systems_creations_oak_audit.md`
+- `docs/architecture/master_canon_to_action_forge.md`
+- `canon/tristan_canon_registry.seed.yml`
+- `paper/tristan_hypergraphs_preprint.md`
+- `docs/briefs/professor_brief_tristan_hypergraphs.md`
+- `docs/briefs/reviewer_oak_checklist.md`
+
 ## Core objects
 
 - `DCT++`: minimal research packet: Document, Code, Test, Data, Risk, Ethics, Status, Next, Links.
@@ -26,11 +69,14 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 
 ```text
 docs/       Manifest, roadmap, canon analysis, publication plan.
-schemas/    JSON schemas for DCT++, research cards, HGFM, status vectors.
+schemas/    Schemas for DCT++, research cards, HGFM, OAK reports and M_MINUS entries.
 sage_tristan/ Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
+src/hgfm/   Minimal THT/HGFM executable seed.
 tests/      Unit tests for the executable core.
-examples/   Example branches and DCT++ packets.
+examples/   Example branches, DCT++ packets, OAK reports and M_MINUS records.
 reports/    Generated audit and publication reports.
+canon/      Canon registry seeds and status maps.
+paper/      Preprint seeds and publication drafts.
 ```
 
 ## Scientific hygiene
@@ -46,6 +92,7 @@ Name makes callable. Formalization makes testable. Testing makes credible. Proof
 ```bash
 python -m pytest
 python -m sage_tristan.demo
+python scripts/analyze_all.py . --out oak_out
 ```
 
 ## Current canon layer
@@ -71,3 +118,20 @@ Crystallizable modules:
 - ImpactDashboard
 
 Exploratory branches stay labeled as exploratory until proven, simulated, or experimentally validated.
+
+## PR #21 execution graph
+
+The THT/HGFM OAK-strict canon work is tracked through PR #21 and issues #22-#33:
+
+- #22 quaternionic hyper-Laplacian proof sprint;
+- #23 Raman / FFWT / CVCD benchmark;
+- #24 AIT-ChessMaster benchmark;
+- #25 passive LC/RLC resonance protocol;
+- #26 zero-touch OAK corpus report;
+- #27 professor-ready brief;
+- #28 OAKReport and M_MINUS schemas;
+- #29 v0.2 execution roadmap;
+- #30 SAGE/AIT agent contracts;
+- #31 public README interface;
+- #32 zero-touch safety boundary;
+- #33 anti-overclaim M_MINUS registry.
