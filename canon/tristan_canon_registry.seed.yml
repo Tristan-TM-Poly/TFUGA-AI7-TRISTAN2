@@ -1,0 +1,169 @@
+# Tristan Canon Registry — seed v0.1
+# Purpose: one compact registry for concepts, claims, tests, risks and next actions.
+# Rule: fertile != proven, simulated != measured, active != certified.
+
+registry:
+  version: "0.1"
+  date: "2026-06-18"
+  oak_rule: "No canon without definition, evidence, attack, residue and reuse."
+
+statuses:
+  - NARRATIVE
+  - CONCEPT
+  - FORMALIZED
+  - SIMULATION_READY
+  - SIMULATED
+  - MEASUREMENT_READY
+  - MEASURED
+  - REPLICATED
+  - CERTIFIED
+  - M_MINUS
+
+constellations:
+  racines:
+    description: "OS R5, TM, TTM, pré-axiomes, maintien."
+  theorie:
+    description: "TFUGA, TGTM, TFU, axiomes, théorèmes récursifs."
+  mathematiques:
+    description: "FFWT, LOG/EXP, catégories, tenseurs, hyperalgèbres, Laplaciens."
+  structure:
+    description: "HGFM, THT, META-YGGDRASIL, projecteurs, hypergraphes."
+  verification:
+    description: "OAK, DCT, Counterexample-OAK, M_MINUS, statuts."
+  intelligence:
+    description: "AI-7, SAGE, AIT-PANTHEON, AIT-Traductor, agents."
+  matiere:
+    description: "Spectroscopie, cristaux, LC/RLC, capteurs, matériaux, énergie."
+  civilisation:
+    description: "Alexandrie, CICP, GAIA-R5, publication, transmission."
+
+modules:
+  - id: TM_TTM_ROOT
+    name: "TM / TTM"
+    constellation: racines
+    status: FORMALIZED
+    definition: "Racine pré-axiomatique : transformation, maintien, trace, tresse, mémoire."
+    evidence:
+      - "Corpus répète TM/TTM comme base avant TFUGA."
+    risks:
+      - "Rester trop abstrait sans exemples opératoires."
+    tests:
+      - "Transformer 10 idées du corpus en fiches Cell_Omega avec trace et statut."
+    next_action: "Créer docs/theory/tm_ttm_roots.md."
+
+  - id: OAK_DCT_M_MINUS
+    name: "OAK / DCT / M_MINUS"
+    constellation: verification
+    status: FORMALIZED
+    definition: "Système immunitaire épistémique : attaque, statuts, falsification, mémoire négative."
+    evidence:
+      - "Règles ACTIVE != CERTIFIED, UNKNOWN != FALSE, SIMULATED != MEASURED stabilisées."
+    risks:
+      - "Statuts non appliqués uniformément aux claims."
+    tests:
+      - "Chaque nouveau claim doit produire un OAKReport."
+    next_action: "Ajouter schema oak_report et script analyze_all."
+
+  - id: THT_HGFM
+    name: "Théorie des Hypergraphes de Tristan"
+    constellation: structure
+    status: FORMALIZED
+    definition: "Hypergraphe orienté, typé, fractal, multi-couche, multi-échelle, dynamique, avec mémoire positive/négative et validation."
+    evidence:
+      - "Codex THT/HGFM et moteur Python seed dans PR #21."
+    risks:
+      - "Confondre langage générateur et théorie prouvée."
+    tests:
+      - "Construire incidence, Omega score, OAK gate et M_MINUS sur un corpus réel."
+    next_action: "Relier docs/theory/tht_hgfm_codex.md au registry."
+
+  - id: QUATERNIONIC_HYPERLAPLACIAN
+    name: "Quaternionic HyperLaplacian"
+    constellation: mathematiques
+    status: SIMULATION_READY
+    definition: "Laplacien HGFM L = B W B† avec incidence quaternionique et poids réels positifs."
+    evidence:
+      - "Preuve manuscrite v0 : hermiticité et forme quadratique réelle positive."
+    risks:
+      - "Conventions des valeurs propres quaternioniques à préciser."
+    tests:
+      - "Test numérique via représentation complexe 2n x 2n."
+    next_action: "Durcir tests/test_quaternion_laplacian.py et formaliser les hypothèses."
+
+  - id: CVCD_LOGEXP
+    name: "CVCD / LOG-EXP"
+    constellation: mathematiques
+    status: CONCEPT
+    definition: "Extraction de composantes compressées fertiles et redéploiement en tests, prototypes, agents."
+    evidence:
+      - "Présent comme axe dominant du corpus."
+    risks:
+      - "Définition opérationnelle encore floue selon domaine."
+    tests:
+      - "Définir CVCDScore et le comparer sur spectres, graphes GitHub et positions d'échecs."
+    next_action: "Créer src/hgfm/cvcd.py avec métriques explicites."
+
+  - id: RAMAN_FFWT_CVCD
+    name: "Raman / FFWT / CVCD ProofSprint"
+    constellation: matiere
+    status: SIMULATION_READY
+    definition: "Pipeline spectral testable : dataset, baseline, FFWT/CVCD, negative control, métriques, OAKReport."
+    evidence:
+      - "Protocole Raman synthétique ajouté dans PR #21."
+    risks:
+      - "Surclaim de filtrage parfait ou résidu zéro."
+    tests:
+      - "Comparer à ALS réel, Savitzky-Golay, FFT/wavelets, PCA/SVD sur données publiques."
+    next_action: "Ingestion dataset public et baseline ALS réel."
+
+  - id: AIT_CHESSMASTER_OAK
+    name: "AIT-ChessMaster / OAK"
+    constellation: intelligence
+    status: PROTOTYPE
+    definition: "Banc d'essai avec perft, Stockfish/tablebases, divergence -> M_MINUS."
+    evidence:
+      - "Prototype logiciel repéré dans le corpus."
+    risks:
+      - "Évaluation subjective sans oracle."
+    tests:
+      - "perft, tablebases finales simples, Stockfish depth-fixed."
+    next_action: "Créer experiments/chessmaster_oak/ avec dataset FEN minimal."
+
+  - id: LC_RLC_FRACTAL_PASSIVE
+    name: "LC/RLC fractal passif"
+    constellation: matiere
+    status: SIMULATION_READY
+    definition: "Réseaux LC multi-échelle; viser résonances mesurables, pas claims d'énergie."
+    evidence:
+      - "Corpus contient équations de cascade de résonances."
+    risks:
+      - "Claims énergétiques prématurés."
+    tests:
+      - "Simulation SPICE, facteur Q, pertes, comparaison contrôle régulier/fractal."
+    next_action: "Créer protocole SPICE basse tension."
+
+  - id: AIT_TRADUCTOR
+    name: "AIT-Traductor"
+    constellation: intelligence
+    status: CONCEPT
+    definition: "Traducteur humain-machine-mémoire-preuve : idée -> structure -> code -> test -> rapport."
+    evidence:
+      - "Module central de transmission dans le corpus."
+    risks:
+      - "Confondre traduction, équivalence et certification."
+    tests:
+      - "Chaque traduction doit sortir code, tests, hypothèses, limites et statut."
+    next_action: "Créer docs/architecture/ait_traductor.md."
+
+m_minus_seed:
+  - id: OVERCLAIM_RESIDUE_ZERO
+    failed_claim: "Résidu zéro / filtrage parfait sans benchmark."
+    cause: "Confusion entre hypothèse mathématique fertile et mesure réelle."
+    guardrail: "Tout claim de performance doit avoir dataset, baseline, métriques et reproduction."
+    next_test: "Benchmark synthétique + données réelles."
+
+  - id: AUTO_CERTIFICATION_CANON
+    failed_claim: "Une théorie devient canon parce qu'elle est cohérente dans le texte."
+    cause: "Auto-certification."
+    guardrail: "Canon requires definition + evidence + attack + residue + reuse."
+    next_test: "OAKReport obligatoire."
