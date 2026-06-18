@@ -1,6 +1,6 @@
 # Théorème HGFM — Projection robuste du Laplacien quaternionique
 
-Statut : **OAK-4 cible / preuve formelle manuscrite v0**.  
+Statut : **OAK-4 numérique / preuve manuscrite v0 + tests CI**.  
 Branche : **HGFM mathématique / hyperalgèbres / projection robuste**.
 
 Ce document active le front formel du programme THT/HGFM : démontrer qu'un hypergraphe de Tristan dont les incidences vivent dans les quaternions peut néanmoins produire un Laplacien à spectre réel, sous hypothèses structurales explicites.
@@ -168,7 +168,31 @@ Car `X^†L_HX ∈ R_{≥0}`. La dynamique ne crée donc pas d'énergie positive
 
 ---
 
-## 5. Conditions critiques OAK
+## 5. Validation numérique ajoutée
+
+Implémentation :
+
+```text
+src/hgfm/quaternion_laplacian.py
+```
+
+Tests CI :
+
+```text
+tests/test_quaternion_laplacian.py
+```
+
+Les tests vérifient :
+
+1. construction de `L_H = B W B^†` avec incidences quaternioniques déterministes ;
+2. hermiticité numérique ;
+3. réalité de `x^† L_H x` ;
+4. non-négativité de l'énergie ;
+5. rejet explicite des poids réels négatifs.
+
+---
+
+## 6. Conditions critiques OAK
 
 Le théorème tient sous hypothèses strictes :
 
@@ -180,27 +204,27 @@ Le théorème tient sous hypothèses strictes :
 
 ---
 
-## 6. Résidu R
+## 7. Résidu R
 
 Résidus ouverts :
 
 - formaliser la version tenseur multi-couche `I_{v,e,λ,σ,t}` ;
 - prouver une version pour `W` hermitien quaternionique non diagonal ;
 - étudier les effets de non-commutativité sur les chemins orientés ;
-- construire un test numérique générant des matrices quaternioniques et vérifiant la projection réelle ;
+- remplacer le test numérique déterministe par une suite property-based plus large ;
 - établir une extension prudente aux octonions via projection réelle robuste et associateur mesurable.
 
 ---
 
-## 7. Verdict OAK provisoire
+## 8. Verdict OAK provisoire
 
 | Élément | Verdict |
 |---|---|
-| Cohérence interne | OAK-3/4 |
-| Preuve manuscrite | OAK-4 cible |
-| Test numérique | manquant |
+| Cohérence interne | OAK-4 partiel |
+| Preuve manuscrite | OAK-4 partiel |
+| Test numérique | OAK-4 partiel, via CI |
 | Formalisation Lean/Coq | manquante |
 | Extension octonion/sédénion | non couverte |
 | Canonisation | non encore |
 
-Conclusion : ce théorème peut devenir le premier noyau mathématique certifiable du module HGFM hyperalgébrique, mais il reste à ajouter un test numérique et, idéalement, une formalisation plus stricte.
+Conclusion : ce théorème devient le premier noyau mathématique partiellement validé du module HGFM hyperalgébrique. Il n'est pas encore CANON, mais il franchit le seuil d'une preuve interne accompagnée d'une friction numérique automatisée.
