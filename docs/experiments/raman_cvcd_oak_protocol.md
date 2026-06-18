@@ -1,9 +1,17 @@
 # Protocole OAK — Test empirique Raman / FFWT / CVCD
 
-Statut : **OAK-3 / TESTABLE**.  
+Statut : **OAK-3 / TESTABLE + seed exécutable synthétique**.  
 Branche : **HGFM scientifique / spectroscopie / compression fertile**.
 
 Ce protocole prépare l'épreuve empirique du théorème de compression fertile : vérifier si un pipeline `LOG -> FFWT -> CVCD -> OAK` extrait des invariants spectraux plus robustes qu'une méthode classique de correction de ligne de base, par exemple ALS.
+
+Un premier seed exécutable existe maintenant :
+
+```text
+experiments/raman_cvcd/synthetic_raman_cvcd.py
+```
+
+Il génère un spectre Raman synthétique, ajoute baseline et bruit, compare une baseline lisse classique à un extracteur CVCD-like multi-échelle, puis émet un rapport OAK JSON. Ce seed ne valide pas encore l'hypothèse Raman réelle : il sert de friction calculable minimale.
 
 ---
 
@@ -148,30 +156,19 @@ sur au moins un spectre synthétique contrôlé ou un dataset réel avec référ
 
 ---
 
-## 8. Pseudocode v0
+## 8. Seed exécutable v0
 
-```python
-x, y_raw, y_true = generate_or_load_raman_spectrum()
-
-# Baseline classique
-y_als = als_baseline_correction(y_raw)
-
-# Pipeline HGFM approximatif
-y_log = log_compress_spectrum(y_raw)
-coeffs = ffwt_or_wavelet_decompose(y_log)
-components = cvcd_select_persistent_components(coeffs)
-y_hgfm = reconstruct_from_components(components)
-
-metrics = compare_methods(
-    y_true=y_true,
-    y_raw=y_raw,
-    y_als=y_als,
-    y_hgfm=y_hgfm,
-    x=x,
-)
-
-oak_report = oak_decide(metrics)
+```bash
+python experiments/raman_cvcd/synthetic_raman_cvcd.py
 ```
+
+Sortie : rapport OAK JSON contenant :
+
+- `status` ;
+- `verdict` ;
+- métriques baseline ;
+- métriques HGFM/CVCD-like ;
+- résidus expérimentaux.
 
 ---
 
@@ -182,18 +179,12 @@ Manques actuels :
 - implémentation FFWT réelle ;
 - définition opérationnelle stricte de CVCD spectral ;
 - dataset Raman réel ;
-- comparaison à plusieurs baselines ;
+- comparaison à plusieurs baselines dont ALS réel ;
 - incertitude statistique ;
-- protocole de reproduction.
+- protocole de reproduction plus large.
 
 ---
 
 ## 10. Prochaine action minimale
 
-Créer un script :
-
-```text
-experiments/raman_cvcd/test_synthetic_raman_cvcd.py
-```
-
-qui génère un spectre synthétique, applique ALS et un premier extracteur CVCD approximatif, puis écrit un rapport OAK JSON.
+Remplacer le proxy baseline par un vrai ALS et ajouter une suite de tests statistiques sur plusieurs graines synthétiques.
