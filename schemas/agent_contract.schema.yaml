@@ -1,0 +1,50 @@
+title: AgentContract
+version: 0.1
+description: Operational contract for SAGE/AIT agents in the THT/HGFM ecosystem.
+required:
+  - id
+  - name
+  - mission
+  - inputs
+  - outputs
+  - tools
+  - review_policy
+  - memory_policy
+  - logging_policy
+  - next_action_policy
+fields:
+  id: string
+  name: string
+  mission: string
+  inputs: list_of_strings
+  outputs: list_of_strings
+  tools: list_of_strings
+  boundaries:
+    type: list_of_strings
+    description: Actions the agent must not perform without explicit review.
+  required_evidence:
+    type: list_of_strings
+  review_policy:
+    fields:
+      can_propose_status: boolean
+      can_promote_to_canon: boolean
+      required_report: string
+      required_reviewer: string
+  memory_policy:
+    fields:
+      writes_positive_memory: boolean
+      writes_negative_memory: boolean
+      append_only: boolean
+      required_fields: list_of_strings
+  logging_policy:
+    fields:
+      trace_required: boolean
+      record_inputs: boolean
+      record_outputs: boolean
+      record_residue: boolean
+  next_action_policy:
+    fields:
+      must_return_next_action: boolean
+      must_return_minimal_test: boolean
+      must_return_status: boolean
+rule: Agents may propose. OAK review decides promotion.
