@@ -190,6 +190,21 @@ jobs:
             echo 'skipped' > reports/github-autonomous-reactor/auto_genesis_status.txt
           fi
 
+      - name: Build GitHub Reactor dashboard
+        if: always()
+        run: |
+          mkdir -p reports/github-autonomous-reactor
+          if [ -f tools/github_reactor/dashboard.py ]; then
+            set +e
+            python tools/github_reactor/dashboard.py --repo-root . --out reports/github-autonomous-reactor 2>&1 | tee reports/github-autonomous-reactor/dashboard.log
+            status=${PIPESTATUS[0]}
+            set -e
+            echo "$status" > reports/github-autonomous-reactor/dashboard_status.txt
+          else
+            echo 'tools/github_reactor/dashboard.py not found; skipping.' | tee reports/github-autonomous-reactor/dashboard.log
+            echo 'skipped' > reports/github-autonomous-reactor/dashboard_status.txt
+          fi
+
       - name: Write reactor summary
         if: always()
         run: |
@@ -206,6 +221,7 @@ jobs:
           - validate reactor atlas files;
           - validate reactor claims;
           - score next actions with Bayes-Tristan;
+          - build a GitHub Reactor dashboard;
           - generate GitHub Reactor, propagation, OAK/CVCD and auto-genesis reports when scripts exist;
           - upload artifacts.
 
@@ -217,7 +233,7 @@ jobs:
           - deploy external infrastructure;
           - certify physical or official claims.
 
-          Test, schema, claims, reactor, propagation, Bayes-Tristan, OAK/CVCD, and auto-genesis failures are collected as audit artifacts instead of stopping report generation. Treat nonzero status files as OAK/M_MINUS signals.
+          Test, schema, claims, reactor, propagation, Bayes-Tristan, dashboard, OAK/CVCD, and auto-genesis failures are collected as audit artifacts instead of stopping report generation. Treat nonzero status files as OAK/M_MINUS signals.
           EOF
           printf '\n## Status files\n\n' >> reports/github-autonomous-reactor/README.md
           for f in reports/github-autonomous-reactor/*_status.txt; do
