@@ -1,0 +1,146 @@
+version: Omega-ST-v2-plus-ultra
+mission: "Transform every fertile idea into a verifiable trajectory: card, claim hygiene, OAK court, prototype, benchmark, residue, memory, canon, paper."
+
+supreme_laws:
+  - "Toute intuition est une graine."
+  - "Toute affirmation forte doit être transmutée."
+  - "Toute théorie doit connaître son statut."
+  - "Toute expérience doit produire un résidu."
+  - "Toute erreur devient anticorps."
+  - "Toute promotion doit passer une porte."
+  - "Le canon reste vivant."
+
+discovery_loop:
+  equation: "S_{t+1} = Canon(Memory(OAKCourt(Bench(Proto(BayesT^tensor(EXP(CVCD(LOG(HGFM(S_t,D_t,P_t,R_t))))))))))"
+  stages:
+    - idea
+    - ScienceOrganism
+    - HGFM
+    - LOG
+    - CVCD
+    - EXP
+    - BayesTristanTensor
+    - ClaimTransmuter
+    - MemoryMinusEngine
+    - OAKCourt
+    - PrototypeContract
+    - ExperimentContract
+    - Benchmark
+    - ResidueMiner
+    - CanonScore
+    - PaperForge
+
+score_models:
+  priority_score:
+    formula: "0.20*useful + 0.20*fertile + 0.20*testable + 0.15*safe + 0.15*valuable + 0.10*novel"
+    warning: "High priority is not high canon."
+  canon_score:
+    formula: "0.25*evidence + 0.20*reproducibility + 0.20*validated_prototype + 0.15*truth + 0.10*known_limits + 0.10*stability"
+    warning: "Canon requires evidence, reproduction, limits and stability."
+
+promotion_gates:
+  Omega_0_to_1:
+    requires: [name, branch, one_sentence_statement]
+    blocks_if: [no_clear_object]
+  Omega_1_to_2:
+    requires: [assumptions, predictions, falsifiers, mathematical_or_operational_form]
+    blocks_if: [poetic_only, no_testable_meaning]
+  Omega_2_to_3:
+    requires: [prototype_plan, baseline, metric, minimal_data_or_simulation]
+    blocks_if: [no_measurable_output]
+  Omega_3_to_4:
+    requires: [executed_test, benchmark_result, recorded_residue]
+    blocks_if: [prototype_not_run, no_comparison]
+  Omega_4_to_5:
+    requires: [repeated_runs, ablation, robustness_check]
+    blocks_if: [single_lucky_result]
+  Omega_5_to_6:
+    requires: [proof_or_strong_validation, limitations, external_comparison]
+    blocks_if: [no_independent_support]
+  Omega_6_to_7:
+    requires: [usable_tool, documentation, reproducible_example]
+    blocks_if: [not_usable_by_another_person]
+  Omega_7_to_8:
+    requires: [stable_integration, canonical_documentation, long_term_maintenance]
+    blocks_if: [abandoned_or_unstable]
+
+memory_minus_rules:
+  - id: M_MINUS_PHYS_001
+    name: no_material_claim_without_measurement
+    trigger:
+      branches: [physics, materials]
+      keywords: [superconductivity, superconducting, zero resistance, topological phase, infinite]
+    required_checks: [units, dimensional_analysis, physical_mechanism, measurable_prediction, baseline, falsifier, experimental_criterion]
+    actions: [transmute_claim, lower_oak_status, require_test]
+  - id: M_MINUS_MATH_001
+    name: no_theorem_without_definitions
+    trigger:
+      branches: [mathematics]
+      keywords: [theorem, proof, solves, demonstrates]
+    required_checks: [definitions, assumptions, domain, proof_steps, counterexample_search]
+    actions: [block_promotion_to_Omega_6]
+  - id: M_MINUS_ALG_001
+    name: no_exotic_algebra_without_invariant
+    trigger:
+      branches: [mathematics, signals, ffwt_hac_cvcd]
+      keywords: [quaternion, octonion, sedenion, hypernumber]
+    required_checks: [real_projection, invariant_measured, baseline_comparison, numerical_stability, interpretability]
+    actions: [require_ablation]
+  - id: M_MINUS_AI_001
+    name: no_agent_without_benchmark
+    trigger:
+      branches: [ait_sage]
+      keywords: [AIT, agent, autonomous, improves]
+    required_checks: [task, metric, baseline, failure_modes, evaluation_set]
+    actions: [require_benchmark]
+
+edge_types:
+  inspires: {strength: weak, promotes_oak: false}
+  analogizes: {strength: weak, promotes_oak: false}
+  formalizes: {strength: medium, promotes_oak: true}
+  predicts: {strength: medium, promotes_oak: true}
+  tests: {strength: strong, promotes_oak: true}
+  refutes: {strength: very_strong, promotes_oak: true}
+  prototypes: {strength: strong, promotes_oak: true}
+  reproduces: {strength: very_strong, promotes_oak: true}
+  canonizes: {strength: final_gate, promotes_oak: true}
+
+branch_dna:
+  mathematics:
+    required: [definitions, axioms, examples, non_examples, theorem_candidates, counterexample_search]
+    promotion_to_Omega_6: [proof, assumptions, edge_cases]
+  physics:
+    required: [units, mechanism, measurable_prediction, baseline, simulation_or_experiment, falsifier]
+    forbidden_without_evidence: [superconductivity, infinite_energy, guaranteed_topological_phase, violation_of_conservation_law]
+  signals:
+    required: [dataset, preprocessing, baseline, metric, ablation, robustness, runtime]
+  ait_sage:
+    required: [task, input_output, evaluation_metric, baseline_agent, failure_modes, memory_policy]
+
+root_prototypes:
+  - bayes_tristan_engine
+  - ait_oak_court
+  - claim_transmuter
+  - memory_minus_engine
+  - cvcd_invariant_extractor
+  - ffwt_hac_cvcd_benchmark
+  - fractal_rlc_lab
+  - theory_to_paper
+
+next_prs:
+  - "Add ClaimTransmuter for safe scientific reformulation"
+  - "Add OAKCourt multi-role review engine"
+  - "Add MemoryMinus anti-rule engine"
+  - "Add CanonScore and PromotionGate models"
+  - "Add ScienceCard JSON validation tests"
+  - "Add CLI rank/review/transmute/audit"
+  - "Add FFWT-HAC-CVCD benchmark scaffold"
+  - "Add Fractal RLC Lab graph simulator scaffold"
+  - "Add Materials CVCD Scanner scaffold"
+  - "Add Theory-to-Paper generator"
+  - "Add HGFM Corpus Mapper"
+  - "Add GitHub Actions CI"
+  - "Add portfolio dashboard report"
+  - "Add examples for physics/materials/math/AIT"
+  - "Add OAK negative-memory audit"
+  - "Add publication roadmap Volume I"
