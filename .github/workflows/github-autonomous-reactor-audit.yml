@@ -73,31 +73,52 @@ jobs:
 
       - name: Run pytest if tests exist
         run: |
+          mkdir -p reports/github-autonomous-reactor
           if [ -d tests ]; then
             python -m pip install --upgrade pip pytest
-            pytest -q
+            set +e
+            pytest -q 2>&1 | tee reports/github-autonomous-reactor/pytest.log
+            status=${PIPESTATUS[0]}
+            set -e
+            echo "$status" > reports/github-autonomous-reactor/pytest_status.txt
+            echo "pytest_status=$status"
           else
-            echo 'No tests/ directory found; skipping pytest.'
+            echo 'No tests/ directory found; skipping pytest.' | tee reports/github-autonomous-reactor/pytest.log
+            echo 'skipped' > reports/github-autonomous-reactor/pytest_status.txt
           fi
 
       - name: Run OAK/CVCD autopilot report if available
         run: |
+          mkdir -p reports/github-autonomous-reactor
           if [ -f tools/autopilot/oak_cvcd_report.py ]; then
-            python tools/autopilot/oak_cvcd_report.py --repo-root . --mode full
+            set +e
+            python tools/autopilot/oak_cvcd_report.py --repo-root . --mode full 2>&1 | tee reports/github-autonomous-reactor/oak_cvcd_report.log
+            status=${PIPESTATUS[0]}
+            set -e
+            echo "$status" > reports/github-autonomous-reactor/oak_cvcd_status.txt
           else
-            echo 'tools/autopilot/oak_cvcd_report.py not found; skipping.'
+            echo 'tools/autopilot/oak_cvcd_report.py not found; skipping.' | tee reports/github-autonomous-reactor/oak_cvcd_report.log
+            echo 'skipped' > reports/github-autonomous-reactor/oak_cvcd_status.txt
           fi
 
       - name: Run guarded auto-genesis if available
         run: |
+          mkdir -p reports/github-autonomous-reactor
           if [ -f core/genesis_kernel.py ]; then
-            python core/genesis_kernel.py
+            set +e
+            python core/genesis_kernel.py 2>&1 | tee reports/github-autonomous-reactor/auto_genesis.log
+            status=${PIPESTATUS[0]}
+            set -e
+            echo "$status" > reports/github-autonomous-reactor/auto_genesis_status.txt
           else
-            echo 'core/genesis_kernel.py not found; skipping.'
+            echo 'core/genesis_kernel.py not found; skipping.' | tee reports/github-autonomous-reactor/auto_genesis.log
+            echo 'skipped' > reports/github-autonomous-reactor/auto_genesis_status.txt
           fi
 
       - name: Write reactor summary
+        if: always()
         run: |
+          mkdir -p reports/github-autonomous-reactor
           cat > reports/github-autonomous-reactor/README.md <<'EOF'
           # GitHub Autonomous Reactor Audit
 
@@ -117,9 +138,17 @@ jobs:
           - merge PRs;
           - deploy external infrastructure;
           - certify physical or official claims.
+
+          Test, OAK/CVCD, and auto-genesis failures are collected as audit artifacts instead of stopping report generation. Treat nonzero status files as OAK/M_MINUS signals.
           EOF
+          printf '\n## Status files\n\n' >> reports/github-autonomous-reactor/README.md
+          for f in reports/github-autonomous-reactor/*_status.txt; do
+            [ -f "$f" ] || continue
+            echo "- $(basename "$f"): $(cat "$f")" >> reports/github-autonomous-reactor/README.md
+          done
 
       - name: Upload reactor reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: github-autonomous-reactor-reports
