@@ -1,0 +1,116 @@
+{
+  "cards": [
+    {
+      "id": "ST-H-0100",
+      "name": "Fractal RLC spectral signatures",
+      "kind": "hypothesis",
+      "branch": "physics",
+      "statement": "Conductive fractal RLC graphs may produce multi-scale frequency-response signatures distinguishable from regular and random baselines.",
+      "status_oak": "Omega_2",
+      "bayes_tristan": {
+        "true": 0.60,
+        "useful": 0.82,
+        "fertile": 0.92,
+        "testable": 0.92,
+        "safe": 0.92,
+        "compressible": 0.72,
+        "novel": 0.78,
+        "valuable": 0.76
+      },
+      "assumptions": [
+        "The graph topology affects the nodal admittance matrix.",
+        "RLC component values are physically meaningful.",
+        "Regular and random baselines are implemented fairly."
+      ],
+      "predictions": [
+        "Fractal graphs exhibit repeatable spectral signatures.",
+        "Some modes show localization or robustness under perturbation."
+      ],
+      "baselines": ["regular lattice", "random graph", "simple chain"],
+      "tests": [
+        {
+          "name": "fractal_rlc_spectral_response",
+          "metric": "peak distribution, eigenmode localization, response entropy",
+          "success_condition": "repeatable signatures distinguishable from baselines",
+          "falsifier": "no robust difference versus regular/random baselines",
+          "cost": "low-medium"
+        }
+      ],
+      "positive_memory": ["RLC graph simulation is a safe bridge from geometry to measurable response."],
+      "negative_memory": ["Do not treat spectral signatures as superconductivity evidence."],
+      "residues": ["Material interpretation remains untested."],
+      "links": [],
+      "next_actions": ["Build a minimal fractal_rlc_lab graph generator and frequency-response report."]
+    },
+    {
+      "id": "ST-H-0101",
+      "name": "Fractal conductor superconductivity overclaim guard",
+      "kind": "negative_memory",
+      "branch": "physics",
+      "statement": "Fractal conductor implies superconductivity should be transmuted into a testable RLC/topological-resonance hypothesis before any material claim is made.",
+      "status_oak": "Omega_3",
+      "bayes_tristan": {
+        "true": 0.95,
+        "useful": 0.96,
+        "fertile": 0.82,
+        "testable": 0.90,
+        "safe": 0.99,
+        "compressible": 0.88,
+        "novel": 0.55,
+        "valuable": 0.82
+      },
+      "assumptions": ["Scientific credibility requires separating geometry, simulation, material mechanisms and experimental criteria."],
+      "predictions": ["OAK review should block or transmute superconductivity claims without resistance, Meissner, gap and phase-coherence evidence."],
+      "baselines": ["unfiltered speculative claim generation"],
+      "tests": [
+        {
+          "name": "physics_claim_hygiene_audit",
+          "metric": "unsupported material claims after review",
+          "success_condition": "unsupported claims are transmuted into testable candidates",
+          "falsifier": "unsupported claims survive unchanged",
+          "cost": "low"
+        }
+      ],
+      "positive_memory": ["This anti-rule protects ambitious physics ideas from premature promotion."],
+      "negative_memory": ["No superconductivity claim without material measurements."],
+      "residues": [],
+      "links": [],
+      "next_actions": ["Apply MemoryMinusEngine and ClaimTransmuter to every physics/material card."]
+    },
+    {
+      "id": "ST-H-0102",
+      "name": "DimensionCheck for RLC equations",
+      "kind": "module",
+      "branch": "physics",
+      "statement": "Every physics equation in the Fractal RLC Lab should pass a dimensional consistency check before promotion.",
+      "status_oak": "Omega_2",
+      "bayes_tristan": {
+        "true": 0.90,
+        "useful": 0.94,
+        "fertile": 0.70,
+        "testable": 0.95,
+        "safe": 0.99,
+        "compressible": 0.80,
+        "novel": 0.40,
+        "valuable": 0.75
+      },
+      "assumptions": ["Unit consistency is necessary but not sufficient for physical validity."],
+      "predictions": ["Dimension checks reduce invalid equations in physics prototypes."],
+      "baselines": ["manual inspection"],
+      "tests": [
+        {
+          "name": "rlc_dimension_check",
+          "metric": "pass/fail unit consistency",
+          "success_condition": "L q_ddot, R q_dot and C^-1 q all reduce to volts",
+          "falsifier": "inconsistent dimensions remain undetected",
+          "cost": "low"
+        }
+      ],
+      "positive_memory": ["RLC models are good because they can be checked dimensionally."],
+      "negative_memory": ["Dimensional correctness does not prove experimental feasibility."],
+      "residues": [],
+      "links": [],
+      "next_actions": ["Add a minimal dimension_check helper for Fractal RLC equations."]
+    }
+  ]
+}
