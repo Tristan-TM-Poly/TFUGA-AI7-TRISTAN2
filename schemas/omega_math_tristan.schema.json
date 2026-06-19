@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/omega_math_tristan.schema.json",
+  "title": "Omega Math Tristan Claim Card",
+  "type": "object",
+  "required": ["id", "title", "statement", "branch", "oak_status", "bayes_tristan", "next_action"],
+  "properties": {
+    "id": {"type": "string"},
+    "title": {"type": "string"},
+    "statement": {"type": "string"},
+    "branch": {
+      "type": "string",
+      "enum": [
+        "HGFM",
+        "CVCD",
+        "LOG_EXP",
+        "Bayes_Tristan",
+        "OAK",
+        "PrimeTensor",
+        "GapTensor",
+        "AlgebraDefectLab",
+        "FFWT_HAC_CVCD",
+        "ResidueTopology",
+        "HyperProof",
+        "ComplexityFertile",
+        "TheoryTensor",
+        "MetaGenerator",
+        "Other"
+      ]
+    },
+    "oak_status": {
+      "type": "string",
+      "enum": ["OAK-0", "OAK-1", "OAK-2", "OAK-3", "OAK-4", "OAK-5", "OAK-6", "OAK-7", "OAK-8", "OAK-9", "OAK-10"]
+    },
+    "claim_type": {
+      "type": "string",
+      "enum": ["intuition", "definition", "conjecture", "theorem", "prototype", "test", "counterexample", "negative_memory", "canon"]
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "definitions": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "invariants": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "positive_memory": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "negative_memory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["failure_type", "lesson"],
+        "properties": {
+          "failure_type": {"type": "string"},
+          "counterexample": {"type": "string"},
+          "lesson": {"type": "string"},
+          "forbidden_pattern": {"type": "string"},
+          "replacement_rule": {"type": "string"}
+        }
+      }
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status"],
+        "properties": {
+          "name": {"type": "string"},
+          "status": {"type": "string", "enum": ["planned", "running", "passed", "failed", "blocked"]},
+          "baseline": {"type": "string"},
+          "result": {"type": "string"}
+        }
+      }
+    },
+    "bayes_tristan": {
+      "type": "object",
+      "required": ["probability", "utility", "fertility", "testability", "compressibility", "risk", "oak_maturity"],
+      "properties": {
+        "probability": {"type": "number", "minimum": 0, "maximum": 1},
+        "utility": {"type": "number", "minimum": 0, "maximum": 1},
+        "fertility": {"type": "number", "minimum": 0, "maximum": 1},
+        "testability": {"type": "number", "minimum": 0, "maximum": 1},
+        "compressibility": {"type": "number", "minimum": 0, "maximum": 1},
+        "risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "oak_maturity": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "residue": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "next_action": {
+      "type": "string",
+      "enum": [
+        "formalize_definition",
+        "write_theorem",
+        "search_counterexample",
+        "build_prototype",
+        "run_baseline",
+        "extract_invariant",
+        "audit_residue",
+        "write_negative_memory",
+        "promote_to_canon",
+        "demote_or_refute"
+      ]
+    },
+    "links": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "additionalProperties": false
+}
