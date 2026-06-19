@@ -1,0 +1,153 @@
+version: 0.1
+system: github_reactor_repository_atlas
+root: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+created_utc: '2026-06-19T00:00:00Z'
+
+repositories:
+  - name: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+    role: root_reactor
+    priority: P0
+    visibility: public
+    oak_status: FERTILE
+    current_strengths:
+      - autopilot_tools
+      - auto_genesis_kernel
+      - root_canon_prs
+      - github_reactor_pr36
+    first_packet:
+      type: root_reactor_kernel
+      target_pr: 36
+      action: review_then_merge_when_checks_are_understood
+    allowed_automation:
+      - scan
+      - compile_check
+      - pytest
+      - claim_hygiene_scan
+      - oak_cvcd_report
+      - auto_genesis_report
+      - artifact_upload
+      - branch
+      - draft_pr
+      - additive_docs
+      - schema_validation
+    blocked_automation:
+      - direct_main_rewrite
+      - auto_merge_without_review
+      - claim_certification_without_evidence
+
+  - name: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
+    role: deep_corpus_mine
+    priority: P0
+    visibility: public
+    oak_status: FERTILE
+    current_strengths:
+      - large_corpus
+      - ai7_continuous_audit
+      - u0_core_minimal_generator
+      - institutional_hyperatlas
+    first_packet:
+      type: corpus_audit_adapter
+      action: adapt continuous_audit outputs into reactor_oak_matrix format
+    allowed_automation:
+      - scan
+      - compile_check
+      - claim_hygiene_scan
+      - artifact_upload
+      - branch
+      - draft_pr
+      - additive_docs
+    blocked_automation:
+      - destructive_rewrite
+      - auto_merge_without_review
+      - claim_certification_without_evidence
+
+  - name: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG
+    role: ait_generator_package_layer
+    priority: P1
+    visibility: public
+    oak_status: OAK_TEST
+    current_strengths:
+      - pyproject_package
+      - ait2_cli_entrypoint
+      - pytest_config
+    first_packet:
+      type: package_readiness_card
+      action: run package metadata audit and add release-readiness status
+    allowed_automation:
+      - scan
+      - compile_check
+      - pytest
+      - artifact_upload
+      - branch
+      - draft_pr
+      - additive_docs
+    blocked_automation:
+      - package_publish_without_review
+      - auto_merge_without_review
+
+  - name: Tristan-TM-Poly/PEFA-FractalEnergySystem
+    role: pefa_energy_scaffold
+    priority: P1
+    visibility: private
+    oak_status: OAK_TEST
+    current_strengths:
+      - explicit_reproducibility_contract
+      - physical_claim_hygiene_rule
+      - clear_next_actions
+    first_packet:
+      type: conservation_stability_contract
+      action: add minimal equations assumptions conservation checks and tests plan
+    allowed_automation:
+      - scan
+      - compile_check
+      - artifact_upload
+      - branch
+      - draft_pr
+      - additive_docs
+    blocked_automation:
+      - physical_claim_promotion_without_measurement
+      - auto_merge_without_review
+
+  - name: Tristan-TM-Poly/TFACC
+    role: converted_canon_corpus
+    priority: P2
+    visibility: private
+    oak_status: OAK_TEST
+    current_strengths:
+      - converted_documents
+      - changelog
+      - existing_ci_artifact
+    first_packet:
+      type: corpus_classification_card
+      action: classify converted materials into claims status and reproducibility buckets
+    allowed_automation:
+      - scan
+      - claim_hygiene_scan
+      - artifact_upload
+      - branch
+      - draft_pr
+      - additive_docs
+    blocked_automation:
+      - claim_certification_without_evidence
+      - auto_merge_without_review
+
+  - name: Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2
+    role: mirror_or_variant_seed
+    priority: P2
+    visibility: public
+    oak_status: REPAIR
+    current_strengths:
+      - small_repository
+      - possible_sync_target
+    first_packet:
+      type: sync_policy_card
+      action: define whether this is a mirror fork variant archive or deployment seed
+    allowed_automation:
+      - scan
+      - artifact_upload
+      - branch
+      - draft_pr
+      - additive_docs
+    blocked_automation:
+      - blind_sync_overwrite
+      - auto_merge_without_review
