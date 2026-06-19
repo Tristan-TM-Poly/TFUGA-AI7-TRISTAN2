@@ -1,0 +1,130 @@
+name: GitHub Autonomous Reactor Audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 6 * * 1'
+  pull_request:
+    paths:
+      - 'core/**'
+      - 'tools/**'
+      - 'ops/autonomy/**'
+      - 'docs/ops/**'
+      - '.github/workflows/github-autonomous-reactor-audit.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-autonomous-reactor-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: Non-destructive reactor audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Repository inventory
+        run: |
+          mkdir -p reports/github-autonomous-reactor
+          python - <<'PY'
+          from pathlib import Path
+          from collections import Counter
+          import json
+          root = Path('.')
+          ignored = {'.git', '.venv', 'venv', 'node_modules', '__pycache__', '.pytest_cache'}
+          files = []
+          for path in root.rglob('*'):
+              if any(part in ignored for part in path.parts):
+                  continue
+              if path.is_file():
+                  files.append(path)
+          suffixes = Counter(path.suffix or '[no_suffix]' for path in files)
+          top_dirs = Counter((path.parts[0] if path.parts else '.') for path in files)
+          payload = {
+              'file_count': len(files),
+              'suffix_counts': suffixes.most_common(30),
+              'top_dirs': top_dirs.most_common(30),
+              'has_tests': Path('tests').exists(),
+              'has_docs': Path('docs').exists(),
+              'has_workflows': Path('.github/workflows').exists(),
+              'has_pyproject': Path('pyproject.toml').exists(),
+              'has_requirements': Path('requirements.txt').exists(),
+          }
+          Path('reports/github-autonomous-reactor/inventory.json').write_text(json.dumps(payload, indent=2), encoding='utf-8')
+          print(json.dumps(payload, indent=2))
+          PY
+
+      - name: Python compile check
+        run: |
+          python -m compileall core tools prototypes || python -m compileall .
+
+      - name: Run pytest if tests exist
+        run: |
+          if [ -d tests ]; then
+            python -m pip install --upgrade pip pytest
+            pytest -q
+          else
+            echo 'No tests/ directory found; skipping pytest.'
+          fi
+
+      - name: Run OAK/CVCD autopilot report if available
+        run: |
+          if [ -f tools/autopilot/oak_cvcd_report.py ]; then
+            python tools/autopilot/oak_cvcd_report.py --repo-root . --mode full
+          else
+            echo 'tools/autopilot/oak_cvcd_report.py not found; skipping.'
+          fi
+
+      - name: Run guarded auto-genesis if available
+        run: |
+          if [ -f core/genesis_kernel.py ]; then
+            python core/genesis_kernel.py
+          else
+            echo 'core/genesis_kernel.py not found; skipping.'
+          fi
+
+      - name: Write reactor summary
+        run: |
+          cat > reports/github-autonomous-reactor/README.md <<'EOF'
+          # GitHub Autonomous Reactor Audit
+
+          This workflow is intentionally non-destructive.
+
+          It may:
+          - scan repository structure;
+          - compile Python;
+          - run tests when present;
+          - generate OAK/CVCD and auto-genesis reports when scripts exist;
+          - upload artifacts.
+
+          It may not:
+          - write to main;
+          - push commits;
+          - force-push;
+          - merge PRs;
+          - deploy external infrastructure;
+          - certify physical or official claims.
+          EOF
+
+      - name: Upload reactor reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-autonomous-reactor-reports
+          path: |
+            reports/github-autonomous-reactor/**
+            reports/autopilot/**
+            reports/auto_genesis/**
+          if-no-files-found: warn
