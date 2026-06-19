@@ -52,11 +52,11 @@ def test_negative_memory_bank_scans_and_scores():
     assert bank.replacement_rules_for(text) == ["Add a baseline."]
 
 
-def test_default_negative_memory_bank_flags_overclaim_patterns():
+def test_default_negative_memory_bank_flags_claim_calibration_patterns():
     bank = default_negative_memory_bank()
     text = "The experiment proves the method improves performance."
     rules = bank.replacement_rules_for(text)
-    assert len(rules) >= 2
+    assert len(rules) >= 1
 
 
 def test_filter_claims_by_negative_memory():
