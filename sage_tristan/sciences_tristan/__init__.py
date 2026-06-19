@@ -2,6 +2,18 @@
 
 from .ait_oak import AITOAK, OAKReview
 from .bayes_tristan_engine import BayesTristanEngine
+from .hyper_best import (
+    BenchmarkArena,
+    BenchmarkArenaForge,
+    ImpactRoute,
+    ImpactRouter,
+    PaperForge,
+    PaperSeed,
+    PrototypeContract,
+    PrototypeForge,
+    TheoryReactor,
+    autonomous_research_loop,
+)
 from .science_card import BayesTristanVector, OAKStatus, ScienceCard, cards_from_mappings
 from .v2_extensions import (
     CanonScore,
@@ -42,4 +54,14 @@ __all__ = [
     "ResidueMiner",
     "ScienceOrganism",
     "portfolio_dashboard",
+    "BenchmarkArena",
+    "BenchmarkArenaForge",
+    "ImpactRoute",
+    "ImpactRouter",
+    "PaperForge",
+    "PaperSeed",
+    "PrototypeContract",
+    "PrototypeForge",
+    "TheoryReactor",
+    "autonomous_research_loop",
 ]
