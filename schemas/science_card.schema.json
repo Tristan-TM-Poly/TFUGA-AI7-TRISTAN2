@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/science_card.schema.json",
+  "title": "Science Card — Sciences de Tristan",
+  "description": "Canonical schema for Tristan science hypotheses, theories, prototypes, residues and agents.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "kind",
+    "branch",
+    "statement",
+    "status_oak",
+    "bayes_tristan",
+    "next_actions"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ST-[A-Z]+-[0-9]{4,}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "hypothesis",
+        "theory",
+        "prototype",
+        "experiment",
+        "residue",
+        "negative_memory",
+        "positive_memory",
+        "agent",
+        "paper",
+        "dataset",
+        "module"
+      ]
+    },
+    "branch": {
+      "type": "string",
+      "enum": [
+        "mathematics",
+        "physics",
+        "materials",
+        "signals",
+        "ffwt_hac_cvcd",
+        "hgfm",
+        "bayes_tristan",
+        "oak",
+        "ait_sage",
+        "cognition",
+        "negative_memory",
+        "science_os",
+        "publication",
+        "economics",
+        "corpus",
+        "other"
+      ]
+    },
+    "statement": {
+      "type": "string",
+      "description": "Clear statement of the claim, object, prototype or residue."
+    },
+    "status_oak": {
+      "type": "string",
+      "enum": [
+        "Omega_0",
+        "Omega_1",
+        "Omega_2",
+        "Omega_3",
+        "Omega_4",
+        "Omega_5",
+        "Omega_6",
+        "Omega_7",
+        "Omega_8"
+      ]
+    },
+    "bayes_tristan": {
+      "type": "object",
+      "required": [
+        "true",
+        "useful",
+        "fertile",
+        "testable",
+        "safe",
+        "compressible",
+        "novel",
+        "valuable"
+      ],
+      "properties": {
+        "true": { "type": "number", "minimum": 0, "maximum": 1 },
+        "useful": { "type": "number", "minimum": 0, "maximum": 1 },
+        "fertile": { "type": "number", "minimum": 0, "maximum": 1 },
+        "testable": { "type": "number", "minimum": 0, "maximum": 1 },
+        "safe": { "type": "number", "minimum": 0, "maximum": 1 },
+        "compressible": { "type": "number", "minimum": 0, "maximum": 1 },
+        "novel": { "type": "number", "minimum": 0, "maximum": 1 },
+        "valuable": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "predictions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "baselines": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "metric", "falsifier"],
+        "properties": {
+          "name": { "type": "string" },
+          "metric": { "type": "string" },
+          "success_condition": { "type": "string" },
+          "falsifier": { "type": "string" },
+          "cost": { "type": "string" }
+        },
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "positive_memory": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "negative_memory": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "residues": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "target"],
+        "properties": {
+          "type": { "type": "string" },
+          "target": { "type": "string" },
+          "reason": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "default": []
+    },
+    "next_actions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}
