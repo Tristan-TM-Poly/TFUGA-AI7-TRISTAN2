@@ -10,6 +10,8 @@ on:
       - 'tools/**'
       - 'ops/autonomy/**'
       - 'docs/ops/**'
+      - 'schemas/**'
+      - 'memory/**'
       - '.github/workflows/github-autonomous-reactor-audit.yml'
 
 permissions:
@@ -87,6 +89,20 @@ jobs:
             echo 'skipped' > reports/github-autonomous-reactor/pytest_status.txt
           fi
 
+      - name: Run GitHub Reactor kernel
+        run: |
+          mkdir -p reports/github-autonomous-reactor
+          if [ -f tools/github_reactor/repo_reactor_audit.py ]; then
+            set +e
+            python tools/github_reactor/repo_reactor_audit.py --repo-root . --out reports/github-autonomous-reactor 2>&1 | tee reports/github-autonomous-reactor/repo_reactor_audit.log
+            status=${PIPESTATUS[0]}
+            set -e
+            echo "$status" > reports/github-autonomous-reactor/repo_reactor_status.txt
+          else
+            echo 'tools/github_reactor/repo_reactor_audit.py not found; skipping.' | tee reports/github-autonomous-reactor/repo_reactor_audit.log
+            echo 'skipped' > reports/github-autonomous-reactor/repo_reactor_status.txt
+          fi
+
       - name: Run OAK/CVCD autopilot report if available
         run: |
           mkdir -p reports/github-autonomous-reactor
@@ -128,7 +144,7 @@ jobs:
           - scan repository structure;
           - compile Python;
           - run tests when present;
-          - generate OAK/CVCD and auto-genesis reports when scripts exist;
+          - generate GitHub Reactor, OAK/CVCD and auto-genesis reports when scripts exist;
           - upload artifacts.
 
           It may not:
@@ -139,7 +155,7 @@ jobs:
           - deploy external infrastructure;
           - certify physical or official claims.
 
-          Test, OAK/CVCD, and auto-genesis failures are collected as audit artifacts instead of stopping report generation. Treat nonzero status files as OAK/M_MINUS signals.
+          Test, reactor, OAK/CVCD, and auto-genesis failures are collected as audit artifacts instead of stopping report generation. Treat nonzero status files as OAK/M_MINUS signals.
           EOF
           printf '\n## Status files\n\n' >> reports/github-autonomous-reactor/README.md
           for f in reports/github-autonomous-reactor/*_status.txt; do
