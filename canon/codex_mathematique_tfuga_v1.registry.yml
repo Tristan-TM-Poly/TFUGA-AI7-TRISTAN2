@@ -1,0 +1,70 @@
+# Codex Mathématique TFUGA v1 — registry extension
+# Purpose: OAK-strict registry entries for the mathematical canon added in docs/theory/codex_mathematique_tfuga_v1.md.
+
+registry_extension:
+  id: CODEX_MATHEMATIQUE_TFUGA_V1
+  date: "2026-06-19"
+  source: "docs/theory/codex_mathematique_tfuga_v1.md"
+  oak_rule: "Fertile != proven; conjecture != theorem; every theorem requires assumptions, domain and residue."
+
+modules:
+  - id: CODEX_MATH_TFUGA_V1
+    name: "Codex Mathématique TFUGA v1"
+    constellation: mathematiques
+    status: FORMALIZED
+    definition: "Mathematical canon for TM/TTM, TFUGA, HGFM, CVCD/LOG-EXP, OAK, Noether-Tristan, Prime Tensor, tensor factorization, hyperalgebras and proof topology."
+    evidence:
+      - "docs/theory/codex_mathematique_tfuga_v1.md"
+    risks:
+      - "Overclaiming fertile conjectures as global proofs."
+      - "Confusing mathematical abstraction with physical measurement."
+    tests:
+      - "Convert each local theorem into a minimal formal example."
+      - "Add a proof sprint for CVCD conservation, Noether-Tristan and Prime Tensor CRT reconstruction."
+    next_action: "Create executable proof/demo scripts and add OAK reports for each theorem seed."
+
+  - id: NOETHER_TRISTAN_COMPRESSIONAL_INVARIANT
+    name: "Noether-Tristan compression invariant theorem"
+    constellation: mathematiques
+    status: FORMALIZED
+    definition: "If L(Gx)=L(x) and I factors through L as I=J∘L, then I(Gx)=I(x)."
+    evidence:
+      - "Proof by factorization in the Codex Mathématique TFUGA v1."
+    risks:
+      - "Misreading this as the physical Noether theorem."
+    tests:
+      - "Implement examples on finite sets, graphs and tensors."
+    next_action: "Add docs/proofs/noether_tristan.md with examples and counter-scope."
+
+  - id: PRIME_TENSOR_CRT_RECONSTRUCTION
+    name: "Prime Tensor CRT reconstruction"
+    constellation: mathematiques
+    status: FORMALIZED
+    definition: "The triangular residue signature (p_i mod p_j) for j<i reconstructs p_i for i>=4 under known signature length."
+    evidence:
+      - "CRT plus p_i < product_{j<i} p_j for i>=4."
+    risks:
+      - "Using the representation to imply unproven claims about Riemann, Goldbach or twin primes."
+    tests:
+      - "Generate signatures, reconstruct primes and compare to randomized controls."
+    next_action: "Add experiments/prime_tensor/ with reconstruction tests and entropy/correlation reports."
+
+  - id: CVCD_WEAK_CONSERVATION_THEOREM
+    name: "CVCD weak conservation theorem"
+    constellation: mathematiques
+    status: FORMALIZED
+    definition: "For K-Lipschitz f, |f(x)-f(E(L(x)))| <= K d(x,E(L(x)))."
+    evidence:
+      - "Direct proof from Lipschitz continuity and reconstruction residual."
+    risks:
+      - "Ignoring metric choice or applying outside Lipschitz observables."
+    tests:
+      - "Run finite metric-space examples and tensor reconstruction examples."
+    next_action: "Add tests for residual-bounded observables."
+
+m_minus_seed:
+  - id: MATH_OVERCLAIM_GLOBAL_PROOF
+    failed_claim: "A generative representation proves all major open problems automatically."
+    cause: "Confusion between encoding, conjecture generation and proof."
+    guardrail: "Every theorem needs explicit domain, assumptions, proof or counterexample search."
+    next_test: "Prime Tensor must stay representation/experiment until a formal theorem is proven."
