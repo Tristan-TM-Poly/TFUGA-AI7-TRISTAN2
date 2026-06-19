@@ -148,6 +148,20 @@ jobs:
             echo 'skipped' > reports/github-autonomous-reactor/propagation_planner_status.txt
           fi
 
+      - name: Run Bayes-Tristan scorer
+        run: |
+          mkdir -p reports/github-autonomous-reactor
+          if [ -f tools/github_reactor/bayes_tristan_scorer.py ]; then
+            set +e
+            python tools/github_reactor/bayes_tristan_scorer.py --repo-root . --out reports/github-autonomous-reactor 2>&1 | tee reports/github-autonomous-reactor/bayes_tristan_scorer.log
+            status=${PIPESTATUS[0]}
+            set -e
+            echo "$status" > reports/github-autonomous-reactor/bayes_tristan_scorer_status.txt
+          else
+            echo 'tools/github_reactor/bayes_tristan_scorer.py not found; skipping.' | tee reports/github-autonomous-reactor/bayes_tristan_scorer.log
+            echo 'skipped' > reports/github-autonomous-reactor/bayes_tristan_scorer_status.txt
+          fi
+
       - name: Run OAK/CVCD autopilot report if available
         run: |
           mkdir -p reports/github-autonomous-reactor
@@ -191,6 +205,7 @@ jobs:
           - run tests when present;
           - validate reactor atlas files;
           - validate reactor claims;
+          - score next actions with Bayes-Tristan;
           - generate GitHub Reactor, propagation, OAK/CVCD and auto-genesis reports when scripts exist;
           - upload artifacts.
 
@@ -202,7 +217,7 @@ jobs:
           - deploy external infrastructure;
           - certify physical or official claims.
 
-          Test, schema, claims, reactor, propagation, OAK/CVCD, and auto-genesis failures are collected as audit artifacts instead of stopping report generation. Treat nonzero status files as OAK/M_MINUS signals.
+          Test, schema, claims, reactor, propagation, Bayes-Tristan, OAK/CVCD, and auto-genesis failures are collected as audit artifacts instead of stopping report generation. Treat nonzero status files as OAK/M_MINUS signals.
           EOF
           printf '\n## Status files\n\n' >> reports/github-autonomous-reactor/README.md
           for f in reports/github-autonomous-reactor/*_status.txt; do
