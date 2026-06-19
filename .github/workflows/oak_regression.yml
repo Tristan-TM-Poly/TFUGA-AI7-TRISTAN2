@@ -15,5 +15,7 @@ jobs:
           python-version: "3.11"
       - name: Install pytest
         run: python -m pip install pytest
-      - name: Run HGFM tests
-        run: python -m pytest tests/test_hgfm_core.py tests/test_quaternion_laplacian.py
+      - name: Run OAK regression tests
+        run: python -m pytest tests/test_hgfm_core.py tests/test_quaternion_laplacian.py tests/test_prime_tensor.py
+      - name: Run Prime Tensor proof sprint smoke test
+        run: python experiments/prime_tensor/prime_tensor.py --count 16 --max-gap-step 2
