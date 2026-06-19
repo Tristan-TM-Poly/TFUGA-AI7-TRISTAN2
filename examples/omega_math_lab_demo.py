@@ -7,6 +7,15 @@ Run with:
 The demo avoids external dependencies and prints compact summaries.
 """
 
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from sage_tristan.algebra_defect_lab import complex_numbers_as_real_algebra
 from sage_tristan.hgfm_core import build_claim_test_graph
 from sage_tristan.negative_memory import default_negative_memory_bank
