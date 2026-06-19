@@ -1,0 +1,58 @@
+id: OMT-FFWT-HAC-CVCD-001
+title: FFWT-HAC-CVCD improves selected anomaly-detection tasks
+statement: >
+  Multi-scale fractal-wavelet coefficients combined with hyperalgebraic coherence
+  may expose structured relations not visible to scalar covariance alone, improving
+  anomaly detection on selected signal classes when compared against controlled baselines.
+branch: FFWT_HAC_CVCD
+oak_status: OAK-2
+claim_type: conjecture
+hypotheses:
+  - The input signal has meaningful multi-scale structure.
+  - The transform parameters are fixed before evaluation.
+  - Baselines include scalar covariance, FFT features, wavelet features and PCA/SVD features.
+  - Validation uses held-out data or cross-validation.
+definitions:
+  - C_X(j,k) = FFWT coefficient of signal X at scale j and location k.
+  - Cov_A(X,Y;j) = hyperalgebraic covariance of coefficients at scale j.
+  - HAC(X,Y) = weighted multi-scale coherence across j.
+invariants:
+  - real safe covariance projection
+  - phase/coherence signature
+  - scale persistence
+  - commutator defect when algebra is non-commutative
+  - associator defect when algebra is non-associative
+positive_memory:
+  - The branch is experimentally testable.
+  - The branch has clear baselines and measurable performance deltas.
+negative_memory:
+  - failure_type: numerical_artifact
+    counterexample: Apparent improvement disappears when train/test split is randomized correctly.
+    lesson: No performance claim without baseline, cross-validation and leakage checks.
+    forbidden_pattern: Treating feature richness as proof of predictive value.
+    replacement_rule: Require baseline comparison and residue audit before promotion.
+tests:
+  - name: synthetic_multiscale_signal_baseline
+    status: planned
+    baseline: FFT + scalar covariance + PCA features
+    result: pending
+  - name: anomaly_detection_cross_validation
+    status: planned
+    baseline: classical wavelet features
+    result: pending
+bayes_tristan:
+  probability: 0.42
+  utility: 0.88
+  fertility: 0.94
+  testability: 0.91
+  compressibility: 0.72
+  risk: 0.35
+  oak_maturity: 0.20
+residue:
+  - Need exact FFWT definition and reproducible implementation.
+  - Need robust handling of non-commutative and non-associative algebra choices.
+  - Need safe real projection to avoid over-claiming hyperalgebraic components.
+next_action: build_prototype
+links:
+  - docs/OMEGA_MATH_TRISTAN_CANON.md
+  - docs/OAK_BAYES_TRISTAN_PROTOCOL.md
