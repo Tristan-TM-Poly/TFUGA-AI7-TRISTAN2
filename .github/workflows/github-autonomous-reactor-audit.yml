@@ -91,6 +91,20 @@ jobs:
             echo 'skipped' > reports/github-autonomous-reactor/pytest_status.txt
           fi
 
+      - name: Run atlas schema validator
+        run: |
+          mkdir -p reports/github-autonomous-reactor
+          if [ -f tools/github_reactor/schema_validator.py ]; then
+            set +e
+            python tools/github_reactor/schema_validator.py --repo-root . --out reports/github-autonomous-reactor 2>&1 | tee reports/github-autonomous-reactor/schema_validator.log
+            status=${PIPESTATUS[0]}
+            set -e
+            echo "$status" > reports/github-autonomous-reactor/schema_validator_status.txt
+          else
+            echo 'tools/github_reactor/schema_validator.py not found; skipping.' | tee reports/github-autonomous-reactor/schema_validator.log
+            echo 'skipped' > reports/github-autonomous-reactor/schema_validator_status.txt
+          fi
+
       - name: Run GitHub Reactor kernel
         run: |
           mkdir -p reports/github-autonomous-reactor
@@ -160,6 +174,7 @@ jobs:
           - scan repository structure;
           - compile Python;
           - run tests when present;
+          - validate reactor atlas files;
           - generate GitHub Reactor, propagation, OAK/CVCD and auto-genesis reports when scripts exist;
           - upload artifacts.
 
@@ -171,7 +186,7 @@ jobs:
           - deploy external infrastructure;
           - certify physical or official claims.
 
-          Test, reactor, propagation, OAK/CVCD, and auto-genesis failures are collected as audit artifacts instead of stopping report generation. Treat nonzero status files as OAK/M_MINUS signals.
+          Test, schema, reactor, propagation, OAK/CVCD, and auto-genesis failures are collected as audit artifacts instead of stopping report generation. Treat nonzero status files as OAK/M_MINUS signals.
           EOF
           printf '\n## Status files\n\n' >> reports/github-autonomous-reactor/README.md
           for f in reports/github-autonomous-reactor/*_status.txt; do
