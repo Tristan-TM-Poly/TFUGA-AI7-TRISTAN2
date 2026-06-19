@@ -1,6 +1,6 @@
-"""Minimal HGFM core for Ω-MATH-TRISTAN.
+"""Minimal HGFM core for Omega Math Tristan.
 
-HGFM = HyperGraphe Fractal Mycélien: a typed directed hypergraph connecting
+HGFM = HyperGraphe Fractal Mycelien: a typed directed hypergraph connecting
 claims, definitions, proofs, prototypes, residues, tests and memory.
 """
 
@@ -142,7 +142,7 @@ def build_claim_test_graph(claim_id: str, test_id: str, result_id: str, *, passe
     graph = HGFMGraph()
     graph.add_node(HGFMNode(id=claim_id, label="claim", kind="claim", state=HGFMNodeState(fertility=0.7, testability=0.8, oak_maturity=0.2)))
     graph.add_node(HGFMNode(id=test_id, label="test", kind="test", state=HGFMNodeState(testability=1.0, oak_maturity=0.3)))
-    graph.add_node(HGFMNode(id=result_id, label="result", kind="result", state=HGFMNodeState(confidence=0.6 if passed else 0.2, oak_maturity=0.4 if passed else 0.1, risk=0.1 if passed else 0.8)))
+    graph.add_node(HGFMNode(id=result_id, label="result", kind="result", state=HGFMNodeState(confidence=0.7 if passed else 0.2, oak_maturity=0.5 if passed else 0.1, risk=0.1 if passed else 0.8)))
     graph.add_edge(HGFMHyperEdge(id=f"{claim_id}->{test_id}", sources=(claim_id,), targets=(test_id,), edge_type="tests", oak_status="OAK-3"))
-    graph.add_edge(HGFMHyperEdge(id=f"{test_id}->{result_id}", sources=(test_id,), targets=(result_id,), edge_type="promotes" if passed else "refutes", oak_status="OAK-4" if passed else "OAK-2"))
+    graph.add_edge(HGFMHyperEdge(id=f"{test_id}->{result_id}", sources=(test_id,), targets=(result_id,), edge_type="promotes" if passed else "refutes", oak_status="OAK-5" if passed else "OAK-2"))
     return graph
