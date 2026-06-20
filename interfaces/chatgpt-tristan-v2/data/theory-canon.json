@@ -1,0 +1,13 @@
+{
+  "version": "tristan-theory-canon.v2",
+  "entries": [
+    {"name": "TFUGA", "role": "generative theory root", "status": "canonical fertile", "risk": "overgeneralization", "next": "define executable claim cards"},
+    {"name": "HGFM", "role": "hypergraph fractal mycelial representation", "status": "operational scaffold", "risk": "metaphor without schema", "next": "export graph JSON and GraphML"},
+    {"name": "OAK", "role": "verification and falsification gates", "status": "core safety layer", "risk": "false promotion", "next": "automated claim matrix"},
+    {"name": "Bayes-Tristan", "role": "posterior tensor decision layer", "status": "canonical framework", "risk": "confusing fertility with proof", "next": "posterior card prototype"},
+    {"name": "FFWT-HAC-CVCD", "role": "spectroscopy and signal benchmark branch", "status": "high-priority prototype", "risk": "claim before baseline", "next": "Raman/FTIR benchmark"},
+    {"name": "Publication Atlas", "role": "public metadata publication mapping", "status": "OAK-4 engine", "risk": "match treated as endorsement", "next": "human-review dashboard"},
+    {"name": "Open Data Harvester", "role": "open-data search and bounded retrieval", "status": "OAK-4 engine", "risk": "license ambiguity", "next": "license radar and manifests"},
+    {"name": "AIT-Universe", "role": "recursive folder/hypergraph generator", "status": "OAK-4 engine", "risk": "unbounded recursion", "next": "safe node expansion"}
+  ]
+}
