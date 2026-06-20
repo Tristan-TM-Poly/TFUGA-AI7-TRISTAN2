@@ -1,0 +1,61 @@
+name: Omega Iteration Execution Pack
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_count:
+        description: "Candidate count"
+        required: false
+        default: "1024"
+      selected_batch_size:
+        description: "Selected execution batch size"
+        required: false
+        default: "16"
+  push:
+    paths:
+      - "scripts/omega_iteration_multiplier.py"
+      - "scripts/omega_iteration_batch_selector.py"
+      - "scripts/omega_iteration_execution_pack.py"
+      - "configs/omega_iteration_execution_pack.json"
+      - "tests/test_omega_iteration_execution_pack.py"
+      - "docs/automation/OMEGA_ITERATION_EXECUTION_PACK.md"
+      - "ops/iteration_execution/**"
+      - ".github/workflows/omega-iteration-execution-pack.yml"
+
+jobs:
+  execution-pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile chain
+        run: |
+          python -m py_compile scripts/omega_iteration_multiplier.py
+          python -m py_compile scripts/omega_iteration_batch_selector.py
+          python -m py_compile scripts/omega_iteration_execution_pack.py
+      - name: Run execution pack tests
+        run: python -m unittest tests/test_omega_iteration_execution_pack.py
+      - name: Generate candidates
+        run: |
+          python scripts/omega_iteration_multiplier.py \
+            --target-count "${{ github.event.inputs.target_count || '1024' }}" \
+            --batch-size 32 \
+            --out-dir artifacts/iteration_multiplier
+      - name: Select batch
+        run: |
+          python scripts/omega_iteration_batch_selector.py \
+            --manifest artifacts/iteration_multiplier/iteration_multiplier_manifest.json \
+            --batch-size "${{ github.event.inputs.selected_batch_size || '16' }}" \
+            --out-dir artifacts/iteration_selected_batch
+      - name: Build execution pack
+        run: |
+          python scripts/omega_iteration_execution_pack.py \
+            --selected-batch artifacts/iteration_selected_batch/selected_batch.json \
+            --out-dir artifacts/iteration_execution_pack
+      - name: Upload execution pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-iteration-execution-pack
+          path: |
+            artifacts/iteration_multiplier
+            artifacts/iteration_selected_batch
+            artifacts/iteration_execution_pack
