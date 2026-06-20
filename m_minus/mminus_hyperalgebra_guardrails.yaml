@@ -1,0 +1,17 @@
+id: mminus_hyperalgebra_guardrails_001
+date: 2026-06-17
+source_module: hypernumbers_hac
+claim: "Higher-dimensional hyperalgebras automatically improve coherence or classification."
+failure_type: OVERCLAIM
+truth_layer_before: T1
+oak_level_before: OAK-1
+counterexample: "Quaternions, octonions, and sedenions introduce non-commutativity, non-associativity, and zero-divisor risks that can destabilize interpretation if not measured."
+residue_observed: "No benchmark result is valid unless compared to real/complex baselines and reported with defect metrics."
+lesson: "Algebraic richness is not evidence by itself. Defects must become measured invariants."
+new_rule: "Every hyperalgebraic computation must return real projection, commutator defect, associator defect when applicable, zero-divisor risk when applicable, and baseline comparison."
+follow_up:
+  - implement defect metrics
+  - add real and complex baselines
+  - run synthetic signal benchmark
+  - restrict claims to domains where gain is measured
+status: active_guardrail

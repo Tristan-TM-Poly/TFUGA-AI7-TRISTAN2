@@ -1,0 +1,100 @@
+name: OAK Task
+about: Convert a TFUGA/SAGE idea into a falsifiable task, benchmark, or canon promotion.
+title: "[OAK] "
+labels: ["oak", "validation", "canon"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when a claim, theory, prototype, or experiment needs OAK classification.
+
+  - type: input
+    id: module
+    attributes:
+      label: Module / theory
+      description: Which module does this task belong to?
+      placeholder: omega_ffwt_hac_cvcd, hgfm, cvcd, sage-pantheon, ait-chessmaster
+    validations:
+      required: true
+
+  - type: dropdown
+    id: truth_layer
+    attributes:
+      label: Truth layer
+      options:
+        - T0 Vision
+        - T1 Definition
+        - T2 Formalization
+        - T3 Simulation
+        - T4 Prototype
+        - T5 Benchmark
+        - T6 Local validation
+        - T7 Canon
+        - T8 Publication grade
+        - T9 Generative system
+    validations:
+      required: true
+
+  - type: dropdown
+    id: oak_level
+    attributes:
+      label: Current OAK level
+      options:
+        - OAK-0 Raw intuition
+        - OAK-1 Definition
+        - OAK-2 Formalization
+        - OAK-3 Simulation
+        - OAK-4 Prototype
+        - OAK-5 Benchmark
+        - OAK-6 Local validation
+        - OAK-7 Canon
+        - OAK-8 Publication grade
+        - OAK-9 Generative canon
+    validations:
+      required: true
+
+  - type: textarea
+    id: claim
+    attributes:
+      label: Exact claim
+      description: State the claim in falsifiable language. Avoid universal claims unless evidence supports them.
+      placeholder: "This module improves X over baseline Y on dataset Z by metric M."
+    validations:
+      required: true
+
+  - type: textarea
+    id: falsifier
+    attributes:
+      label: What would falsify or weaken it?
+      placeholder: "If FFT/DWT/PCA/SVD outperforms it on metric M, restrict or reject the claim."
+    validations:
+      required: true
+
+  - type: textarea
+    id: baseline
+    attributes:
+      label: Baseline and metric
+      placeholder: "Baseline: FFT/DWT/PCA/SVD. Metric: reconstruction error, accuracy, compression ratio, stability."
+    validations:
+      required: true
+
+  - type: textarea
+    id: success
+    attributes:
+      label: Success criteria
+      value: |
+        - [ ] Minimal reproducible example exists
+        - [ ] Baseline comparison exists
+        - [ ] Results are saved
+        - [ ] Residues/failures are recorded
+        - [ ] M_MINUS updated if needed
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / overclaims / M_MINUS candidates
+      placeholder: "Overinterpretation, algebraic instability, measurement gap, non-reproducibility, scope error."
+    validations:
+      required: false

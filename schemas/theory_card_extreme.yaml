@@ -1,0 +1,116 @@
+# Theory Card Extreme Template
+# Purpose: make every TFUGA/SAGE/HGFM/CVCD/OAK idea comparable, testable, and canonizable.
+
+id: theory_unique_id
+name: Human readable theory name
+version: 0.1.0
+status: draft
+truth_layer: T0 # T0 vision, T1 definition, T2 formalization, T3 simulation, T4 prototype, T5 benchmark, T6 validation, T7 canon, T8 publication, T9 generative system
+oak_level: OAK-0
+
+summary: >
+  One paragraph describing the idea without overclaiming. Separate vision from proof.
+
+domain:
+  - math
+  - physics
+  - ai
+  - signal_processing
+  - software
+
+claims:
+  - id: claim_001
+    text: Claim stated in falsifiable language.
+    status: untested
+    truth_layer: T1
+    evidence: []
+    risks:
+      - overinterpretation
+
+axioms:
+  - id: axiom_001
+    text: Explicit assumption.
+    status: proposed
+
+operators:
+  - name: HGFM
+    role: Connect objects into hypergraph relations.
+  - name: LOG
+    role: Compress structure.
+  - name: CVCD
+    role: Extract invariants, residues, hypotheses, and prototypes.
+  - name: OAK
+    role: Validate, reject, or canonize.
+
+invariants:
+  - name: invariant_name
+    definition: What remains stable under which transformation.
+    measurement: How to compute or observe it.
+    expected_range: unknown
+
+residues:
+  - name: residue_name
+    definition: Difference between model and reality/data/baseline.
+    measurement: explicit metric
+
+inputs:
+  - type: document
+    description: Source text, theory note, dataset, code, signal, or experiment.
+
+outputs:
+  - type: markdown
+    description: Canon note, test report, prototype, benchmark, paper section.
+
+validation:
+  oak_score:
+    coherence: 0.0
+    testability: 0.0
+    reproducibility: 0.0
+    gain_vs_baseline: 0.0
+    compression: 0.0
+    fertility: 0.0
+    safety: 0.0
+    utility: 0.0
+    total: 0.0
+  verdict: HOLD
+  required_tests:
+    - Define a baseline.
+    - Build a minimal reproducible example.
+    - Measure residue.
+    - Record failure modes in M_MINUS.
+
+benchmarks:
+  - name: baseline_comparison
+    baseline: To define
+    metric: To define
+    success_criterion: To define
+
+prototype_plan:
+  minimum_viable_prototype:
+    - Create data fixture.
+    - Implement core operator.
+    - Add test.
+    - Compare to baseline.
+  files:
+    - src/module.py
+    - tests/test_module.py
+    - experiments/benchmark_module.py
+
+m_minus:
+  known_failures: []
+  rejected_claims: []
+  risk_rules:
+    - Do not promote beyond evidence.
+    - Keep speculative claims labeled.
+    - Always compare to a simple baseline.
+
+links:
+  github_issues: []
+  pull_requests: []
+  papers: []
+  notebooks: []
+
+next_actions:
+  top_1: Define the object precisely.
+  top_2: Build the smallest test.
+  top_3: Compare against baseline.
