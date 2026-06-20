@@ -1,0 +1,70 @@
+name: Omega Publication Package Factory
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "quebec or canada"
+        required: false
+        default: "quebec"
+      offline:
+        description: "true for offline template, false for public metadata APIs"
+        required: false
+        default: "true"
+      top_k:
+        description: "Max packages to generate"
+        required: false
+        default: "50"
+      min_score:
+        description: "Minimum heuristic match score"
+        required: false
+        default: "0"
+  push:
+    paths:
+      - "scripts/omega_publication_package_factory.py"
+      - "configs/tristan_publication_package_templates.json"
+      - "tests/test_omega_publication_package_factory.py"
+      - "docs/publications/OMEGA_PUBLICATION_PACKAGE_FACTORY.md"
+      - ".github/workflows/omega-publication-package-factory.yml"
+
+jobs:
+  publication-package-factory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile engines
+        run: |
+          python -m py_compile scripts/omega_tristan_publication_atlas.py
+          python -m py_compile scripts/omega_publication_package_factory.py
+      - name: Run unit tests
+        run: |
+          python -m unittest tests/test_omega_tristan_publication_atlas.py
+          python -m unittest tests/test_omega_publication_package_factory.py
+      - name: Build source atlas
+        run: |
+          OFFLINE_FLAG=""
+          if [ "${{ github.event.inputs.offline || 'true' }}" = "true" ]; then OFFLINE_FLAG="--offline"; fi
+          python scripts/omega_tristan_publication_atlas.py \
+            --config configs/tristan_publication_atlas.json \
+            --scope "${{ github.event.inputs.scope || 'quebec' }}" \
+            --max-institutions 20 \
+            --max-authors 3 \
+            --max-works 5 \
+            --top-k "${{ github.event.inputs.top_k || '50' }}" \
+            --out-dir artifacts/publication_atlas \
+            $OFFLINE_FLAG
+      - name: Build publication packages
+        run: |
+          python scripts/omega_publication_package_factory.py \
+            --atlas-manifest artifacts/publication_atlas/publication_atlas_manifest.json \
+            --templates configs/tristan_publication_package_templates.json \
+            --out-dir artifacts/publication_packages \
+            --min-score "${{ github.event.inputs.min_score || '0' }}" \
+            --top-k "${{ github.event.inputs.top_k || '50' }}"
+      - name: Upload publication packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-publication-packages
+          path: |
+            artifacts/publication_atlas
+            artifacts/publication_packages
