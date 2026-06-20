@@ -1,0 +1,23 @@
+{
+  "version": "omega.iteration_batch_selector.config.v1",
+  "default_batch_size": 16,
+  "diversity_axes": ["layer", "module", "action"],
+  "priority_weight": 0.45,
+  "diversity_weight": 0.35,
+  "oak_weight": 0.20,
+  "preferred_actions": [
+    "add_validator",
+    "add_test",
+    "add_workflow",
+    "add_schema",
+    "add_runbook",
+    "add_dashboard",
+    "add_safety_check",
+    "add_benchmark_plan"
+  ],
+  "oak_boundary": {
+    "select_batch_not_all_1024": true,
+    "maximize_diversity": true,
+    "keep_reviewable": true
+  }
+}
