@@ -10,7 +10,7 @@
 <body>
   <div class="app">
     <aside class="rail">
-      <div class="brand"><span>Ω</span><div><small>Tristan cockpit</small><strong>ChatGPT OS v2.1</strong></div></div>
+      <div class="brand"><span>Ω</span><div><small>Tristan cockpit</small><strong>ChatGPT OS v2.2</strong></div></div>
       <button data-tab="composer" class="active">Composer</button>
       <button data-tab="oak">OAK</button>
       <button data-tab="memory">M+ / M−</button>
@@ -19,13 +19,14 @@
       <button data-tab="data">Data</button>
       <button data-tab="publications">Publications</button>
       <button data-tab="v21">v2.1</button>
+      <button data-tab="v22">v2.2</button>
       <button data-tab="export">Export</button>
     </aside>
 
     <main>
       <header class="hero">
         <div>
-          <p class="eyebrow">Ω-CHATGPT-TRISTAN-OS v2.1</p>
+          <p class="eyebrow">Ω-CHATGPT-TRISTAN-OS v2.2</p>
           <h1>Interface personnelle pour transformer ChatGPT en opérateur OAK-safe de ton écosystème.</h1>
           <p>Session → prompt compilé → artifact intent → OAK card → mémoire M+/M− → export JSON → action GitHub/publication/data.</p>
         </div>
@@ -87,6 +88,14 @@
         <article class="card stack"><h2>v2.1 Safety Radar + Canonizer</h2><button id="safetyRadar">Scanner sécurité/OAK</button><button id="canonizeSession">Canoniser session</button><pre id="safetyReport"></pre></article>
       </section>
 
+      <section id="v22" class="tab grid two">
+        <article class="card stack"><h2>v2.2 Iteration Cockpit</h2><button id="buildIterationChainPrompt">Construire prompt chaîne ×1024 → batch → pack</button><button id="estimateImpact">Estimer impact session</button><pre id="iterationChainReport"></pre></article>
+        <article class="card stack"><h2>Execution Pack Paths</h2><pre id="executionPackPaths">artifacts/iteration_multiplier
+artifacts/iteration_selected_batch
+artifacts/iteration_execution_pack
+artifacts/response_impact_report.json</pre></article>
+      </section>
+
       <section id="export" class="tab grid two">
         <article class="card stack"><h2>Prompt compilé</h2><textarea id="prompt" rows="20" spellcheck="false"></textarea></article>
         <article class="card stack"><h2>Export center</h2><button id="saveLocal">Sauver local</button><button id="exportJson">Exporter session JSON</button><button id="exportOak">Exporter OAK card JSON</button><button id="clearLocal">Effacer local</button><div id="savedSessions" class="list"></div></article>
@@ -96,5 +105,6 @@
   <div id="toast"></div>
   <script src="app.js"></script>
   <script src="app.v21.js"></script>
+  <script src="app.v22.js"></script>
 </body>
 </html>
