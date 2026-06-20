@@ -1,0 +1,15 @@
+{
+  "version": "omega.open_data_harvester.config.v1",
+  "allowed_license_tokens": ["cc0", "cc-by", "cc-by-4.0", "cc-by-sa", "mit", "apache", "bsd", "public domain", "pddl"],
+  "default_sources": ["zenodo", "datacite", "openml", "rcsb", "arxiv"],
+  "theories": {
+    "omega_math_universe": {"queries": ["mathematical knowledge graph", "category theory dataset", "formal proof dataset"], "sources": ["zenodo", "datacite", "openml", "arxiv"]},
+    "omega_spectro_universe": {"queries": ["open spectroscopy dataset", "Raman spectroscopy dataset", "FTIR spectroscopy dataset"], "sources": ["zenodo", "datacite", "openml", "arxiv"]},
+    "omega_materials": {"queries": ["materials science dataset", "crystal structure dataset", "DFT dataset"], "sources": ["zenodo", "datacite", "openml", "arxiv"]},
+    "ait_dynamics": {"queries": ["dynamical systems dataset", "PDE dataset", "time series benchmark"], "sources": ["zenodo", "datacite", "openml", "arxiv"]},
+    "bayes_tristan": {"queries": ["Bayesian inference dataset", "uncertainty quantification benchmark", "probabilistic model dataset"], "sources": ["zenodo", "datacite", "openml", "arxiv"]},
+    "hgfm": {"queries": ["graph dataset", "knowledge graph dataset", "hypergraph dataset"], "sources": ["zenodo", "datacite", "openml", "arxiv"]},
+    "bio_hgfm": {"queries": ["protein structure", "molecular graph dataset", "bioinformatics graph dataset"], "sources": ["rcsb", "zenodo", "datacite", "openml", "arxiv"]},
+    "science_universe_atlas": {"queries": ["open science taxonomy dataset", "research classification dataset", "scientific discipline ontology"], "sources": ["zenodo", "datacite", "openml", "arxiv"]}
+  }
+}
