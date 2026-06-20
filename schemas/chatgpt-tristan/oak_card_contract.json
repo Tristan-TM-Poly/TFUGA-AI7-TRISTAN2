@@ -1,0 +1,22 @@
+{
+  "name": "OAK Card Contract",
+  "version": "oak-card.v1",
+  "required_fields": ["claim", "type", "oak", "residues"],
+  "claim_types": ["vision", "definition", "prototype", "measurement", "proof", "review"],
+  "oak_levels": ["OAK-1 idea", "OAK-2 definition", "OAK-3 scaffold", "OAK-4 prototype", "OAK-5 measurement", "OAK-6+ review"],
+  "fields": {
+    "claim": "string",
+    "type": "claim_types",
+    "oak": "oak_levels",
+    "evidence": "array[string]",
+    "tests": "array[string]",
+    "residues": "array[string]",
+    "next_actions": "array[string]"
+  },
+  "anti_illusion_rules": [
+    "prototype is not proof",
+    "dataset hit is not validation",
+    "professor match is not endorsement",
+    "fertility is not truth"
+  ]
+}
