@@ -1,0 +1,58 @@
+name: Omega Iteration Batch Selector
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_count:
+        description: "Candidate count to generate before selection"
+        required: false
+        default: "1024"
+      generated_batch_size:
+        description: "Multiplier batch size"
+        required: false
+        default: "32"
+      selected_batch_size:
+        description: "Selected reviewable batch size"
+        required: false
+        default: "16"
+  push:
+    paths:
+      - "scripts/omega_iteration_multiplier.py"
+      - "scripts/omega_iteration_batch_selector.py"
+      - "configs/omega_iteration_multiplier.json"
+      - "configs/omega_iteration_multiplier_batch_selector.json"
+      - "tests/test_omega_iteration_batch_selector.py"
+      - "docs/automation/OMEGA_ITERATION_BATCH_SELECTOR.md"
+      - ".github/workflows/omega-iteration-batch-selector.yml"
+
+jobs:
+  select-batch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile selector
+        run: |
+          python -m py_compile scripts/omega_iteration_multiplier.py
+          python -m py_compile scripts/omega_iteration_batch_selector.py
+      - name: Run selector tests
+        run: python -m unittest tests/test_omega_iteration_batch_selector.py
+      - name: Generate 1024 candidates
+        run: |
+          python scripts/omega_iteration_multiplier.py \
+            --target-count "${{ github.event.inputs.target_count || '1024' }}" \
+            --batch-size "${{ github.event.inputs.generated_batch_size || '32' }}" \
+            --out-dir artifacts/iteration_multiplier
+      - name: Select diverse batch
+        run: |
+          python scripts/omega_iteration_batch_selector.py \
+            --manifest artifacts/iteration_multiplier/iteration_multiplier_manifest.json \
+            --config configs/omega_iteration_multiplier_batch_selector.json \
+            --batch-size "${{ github.event.inputs.selected_batch_size || '16' }}" \
+            --out-dir artifacts/iteration_selected_batch
+      - name: Upload selected batch
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-selected-iteration-batch
+          path: |
+            artifacts/iteration_multiplier
+            artifacts/iteration_selected_batch
