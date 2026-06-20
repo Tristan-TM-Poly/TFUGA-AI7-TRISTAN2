@@ -1,0 +1,27 @@
+name: ChatGPT Tristan OS v2
+
+on:
+  push:
+    paths:
+      - "interfaces/chatgpt-tristan-v2/**"
+      - "schemas/chatgpt-tristan/**"
+      - "scripts/validate_chatgpt_tristan_v2.py"
+      - "docs/interfaces/CHATGPT_TRISTAN_V2.md"
+      - ".github/workflows/chatgpt-tristan-v2.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-v2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate v2 interface
+        run: python scripts/validate_chatgpt_tristan_v2.py
+      - name: Upload v2 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chatgpt-tristan-os-v2
+          path: |
+            interfaces/chatgpt-tristan-v2
+            schemas/chatgpt-tristan
+            docs/interfaces/CHATGPT_TRISTAN_V2.md
