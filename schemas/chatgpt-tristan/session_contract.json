@@ -1,0 +1,26 @@
+{
+  "name": "ChatGPT Tristan Session Contract",
+  "version": "chatgpt-tristan-session.v2",
+  "required_fields": ["version", "title", "mode", "intent", "oak_target", "mission", "branches"],
+  "fields": {
+    "version": "chatgpt-tristan-session.v2",
+    "title": "string",
+    "mode": "string",
+    "intent": "string",
+    "format": "string",
+    "oak_target": "string",
+    "mission": "string",
+    "constraints": "string",
+    "branches": "array[string]",
+    "github_actions": "array[string]",
+    "positive_memory": "array[string]",
+    "negative_memory": "array[string]",
+    "claims": "array[oak_card]",
+    "created_at": "string"
+  },
+  "oak_boundary": {
+    "review_only": true,
+    "no_official_chatgpt_modification_claim": true,
+    "human_review_for_external_action": true
+  }
+}
