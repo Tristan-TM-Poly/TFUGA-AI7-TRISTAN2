@@ -1,0 +1,48 @@
+name: Omega Iteration Multiplier
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_count:
+        description: "Number of candidate additions"
+        required: false
+        default: "1024"
+      batch_size:
+        description: "Candidates per batch"
+        required: false
+        default: "32"
+      focus:
+        description: "Optional module focus"
+        required: false
+        default: ""
+  push:
+    paths:
+      - "scripts/omega_iteration_multiplier.py"
+      - "configs/omega_iteration_multiplier.json"
+      - "tests/test_omega_iteration_multiplier.py"
+      - "docs/automation/OMEGA_ITERATION_MULTIPLIER.md"
+      - "ops/iteration_multiplier/**"
+      - ".github/workflows/omega-iteration-multiplier.yml"
+
+jobs:
+  iteration-multiplier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile multiplier
+        run: python -m py_compile scripts/omega_iteration_multiplier.py
+      - name: Run tests
+        run: python -m unittest tests/test_omega_iteration_multiplier.py
+      - name: Generate candidates
+        run: |
+          python scripts/omega_iteration_multiplier.py \
+            --config configs/omega_iteration_multiplier.json \
+            --target-count "${{ github.event.inputs.target_count || '1024' }}" \
+            --batch-size "${{ github.event.inputs.batch_size || '32' }}" \
+            --focus "${{ github.event.inputs.focus || '' }}" \
+            --out-dir artifacts/iteration_multiplier
+      - name: Upload iteration multiplier artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-iteration-multiplier
+          path: artifacts/iteration_multiplier
