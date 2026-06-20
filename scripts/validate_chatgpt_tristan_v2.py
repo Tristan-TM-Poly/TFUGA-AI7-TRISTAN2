@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate ChatGPT Tristan OS v2 static interface, v2.1 addons, and contracts."""
+"""Validate ChatGPT Tristan OS v2 static interface, v2.1/v2.2 addons, and contracts."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ REQUIRED_UI = [
     "styles.css",
     "app.js",
     "app.v21.js",
+    "app.v22.js",
     "data/theory-canon.json",
     "examples/session_spectro.json",
     "examples/session_publication.json",
@@ -59,9 +60,10 @@ def main() -> int:
     for rel in REQUIRED_CONTRACTS:
         require(SCHEMAS / rel)
 
-    contains(UI / "index.html", ["ChatGPT", "OAK", "HGFM", "prompt", "v2.1", "app.v21.js"])
+    contains(UI / "index.html", ["ChatGPT", "OAK", "HGFM", "prompt", "v2.1", "v2.2", "app.v21.js", "app.v22.js"])
     contains(UI / "app.js", ["compile", "Auto-OAK", "localStorage", "HGFM", "publication package"])
     contains(UI / "app.v21.js", ["Prompt Diff", "safetyRadar", "canonizeSession", "fertility_is_not_proof"])
+    contains(UI / "app.v22.js", ["Iteration Chain", "estimateImpact", "1024 candidates", "heuristic_score"])
     contains(UI / "styles.css", ["--a", "grid", "hero"])
 
     canon = load_json(UI / "data/theory-canon.json")
@@ -74,7 +76,7 @@ def main() -> int:
 
     validate_session(UI / "examples/session_spectro.json")
     validate_session(UI / "examples/session_publication.json")
-    print("ChatGPT Tristan OS v2.1 validation passed")
+    print("ChatGPT Tristan OS v2.2 validation passed")
     return 0
 
 
