@@ -1,0 +1,37 @@
+{
+  "version": "omega.iteration_execution_pack.v1",
+  "repo": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "count": 4,
+  "batch_summary": {
+    "count": 4,
+    "avg_priority": 88.25
+  },
+  "execution_prompt": "Execute only this bounded sample batch. Create reviewable artifacts, tests and OAK-safe residues. Verify created files with fetch_file.",
+  "file_plan": [
+    {"candidate_id": "sample_001", "path": "interfaces/chatgpt-tristan-v2/app.v23.js", "action": "add_dashboard", "module": "chatgpt_tristan_v2", "layer": "interface"},
+    {"candidate_id": "sample_002", "path": "tests/test_oak_prompt_boundaries.py", "action": "add_test", "module": "oak_verifier", "layer": "tests"},
+    {"candidate_id": "sample_003", "path": ".github/workflows/open-data-smoke.yml", "action": "add_workflow", "module": "open_data_harvester", "layer": "workflows"},
+    {"candidate_id": "sample_004", "path": "configs/publication_safety_guard.json", "action": "add_safety_check", "module": "publication_atlas", "layer": "oak"}
+  ],
+  "test_plan": [
+    {"candidate_id": "sample_001", "test": "validator_marker"},
+    {"candidate_id": "sample_002", "test": "unit_test"},
+    {"candidate_id": "sample_003", "test": "workflow_yaml"},
+    {"candidate_id": "sample_004", "test": "review_only_boundary"}
+  ],
+  "oak_gates": ["bounded_generation", "prototype_is_not_proof", "license_review_for_data", "human_review_for_external_action", "no_automatic_outreach"],
+  "residue_plan": ["browser_test_required", "network_variability", "human_review_required", "execution_not_yet_confirmed"],
+  "impact_input": {
+    "version": "omega.response_impact_input.v1",
+    "summary": "Sample execution pack for v2.3 score history dashboard.",
+    "artifacts": ["interfaces/chatgpt-tristan-v2/app.v23.js", "tests/test_oak_prompt_boundaries.py", ".github/workflows/open-data-smoke.yml", "configs/publication_safety_guard.json"],
+    "tests": ["validator_marker", "unit_test", "workflow_yaml", "review_only_boundary"],
+    "workflows": [".github/workflows/open-data-smoke.yml"],
+    "residues": ["execution_not_yet_confirmed"]
+  },
+  "oak_boundary": {
+    "bounded_batch": true,
+    "not_all_1024": true,
+    "prototype_is_not_proof": true
+  }
+}
