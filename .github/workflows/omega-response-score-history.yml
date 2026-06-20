@@ -1,0 +1,32 @@
+name: Omega Response Score History
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/omega_response_score_history.py"
+      - "configs/response_impact/**"
+      - "tests/test_omega_response_score_history.py"
+      - "docs/automation/OMEGA_RESPONSE_SCORE_HISTORY.md"
+      - "ops/response_score_history/**"
+      - ".github/workflows/omega-response-score-history.yml"
+
+jobs:
+  score-history:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile score history
+        run: python -m py_compile scripts/omega_response_score_history.py
+      - name: Run score history tests
+        run: python -m unittest tests/test_omega_response_score_history.py
+      - name: Build score history dashboard
+        run: |
+          python scripts/omega_response_score_history.py \
+            --inputs-dir configs/response_impact \
+            --out-dir artifacts/response_score_history
+      - name: Upload score history
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-response-score-history
+          path: artifacts/response_score_history
