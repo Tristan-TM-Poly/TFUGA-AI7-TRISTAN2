@@ -1,0 +1,11 @@
+{
+  "version": "omega.ait_universe.seed_pack.v1",
+  "root": "AIT-Universe",
+  "domains": [
+    {"id": "natural", "label": "Natural Sciences", "children": ["Physics", "Chemistry", "Biology"], "invariants": ["measurement", "model", "residue"]},
+    {"id": "human", "label": "Human Sciences", "children": ["Psychology", "Sociology", "History"], "invariants": ["context", "structure", "residue"]},
+    {"id": "formal", "label": "Formal Sciences", "children": ["Mathematics", "Logic", "Information"], "invariants": ["definition", "proof", "computation"]},
+    {"id": "applied", "label": "Applied Sciences", "children": ["Engineering", "Medicine", "Architecture"], "invariants": ["prototype", "constraint", "test"]}
+  ],
+  "global_invariants": ["OAK_boundary", "bounded_recursion", "deterministic_trace", "hypergraph_links", "mycelial_propagation", "residue_tracking"]
+}
