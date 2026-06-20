@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#080b12" />
+  <title>ChatGPT × Tristan OS</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="sigil">Ω</div>
+        <div>
+          <p class="eyebrow">Interface privée</p>
+          <h1>ChatGPT × Tristan OS</h1>
+        </div>
+      </div>
+      <nav id="modeList" class="mode-list" aria-label="Modes SAGE"></nav>
+      <section class="panel small">
+        <h2>OAK Status</h2>
+        <div class="oak-grid">
+          <button data-oak="OAK-2">OAK-2<br><span>définir</span></button>
+          <button data-oak="OAK-3">OAK-3<br><span>scaffold</span></button>
+          <button data-oak="OAK-4">OAK-4<br><span>prototype</span></button>
+          <button data-oak="OAK-5">OAK-5<br><span>mesurer</span></button>
+          <button data-oak="OAK-6+">OAK-6+<br><span>review</span></button>
+        </div>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Zero-touch prompt cockpit</p>
+          <h2>Composer des prompts ChatGPT pour ton écosystème TFUGA / HGFM / OAK / SAGE</h2>
+          <p>Interface locale, sans API par défaut. Elle assemble des instructions propres pour ChatGPT, mémorise les sessions dans le navigateur, exporte/importe JSON, et garde les frontières OAK.</p>
+        </div>
+        <div class="hero-actions">
+          <button id="copyPrompt" class="primary">Copier prompt</button>
+          <button id="newSession">Nouvelle session</button>
+        </div>
+      </header>
+
+      <section class="grid two">
+        <article class="panel">
+          <h3>Mission</h3>
+          <label>Nom de la session
+            <input id="sessionTitle" value="Ω-SAGE Session" />
+          </label>
+          <label>Objectif immédiat
+            <textarea id="mission" rows="5">Développer une branche de l’écosystème Tristan avec rigueur OAK, prototypes, fichiers GitHub et plans de validation.</textarea>
+          </label>
+          <label>Mode de sortie
+            <select id="outputMode">
+              <option>architecture + actions concrètes</option>
+              <option>code complet + tests + workflow</option>
+              <option>article scientifique + plan OAK</option>
+              <option>publication package + professor fit</option>
+              <option>dataset harvester + benchmark</option>
+              <option>théorie mathématique + preuves/prototypes</option>
+            </select>
+          </label>
+        </article>
+
+        <article class="panel">
+          <h3>Contraintes permanentes</h3>
+          <div class="chips" id="constraintChips"></div>
+          <label>Contraintes additionnelles
+            <textarea id="constraints" rows="5">ZÉRO-TOUCH autant que possible. Distinguer vision, formalisation, prototype, mesure et preuve. Ne pas sur-vendre. Garder mémoire négative M− des erreurs.</textarea>
+          </label>
+        </article>
+      </section>
+
+      <section class="grid three">
+        <article class="panel">
+          <h3>Branches Tristan</h3>
+          <div id="branchList" class="check-list"></div>
+        </article>
+        <article class="panel">
+          <h3>Actions repo</h3>
+          <div id="actionList" class="check-list"></div>
+        </article>
+        <article class="panel">
+          <h3>Qualité OAK</h3>
+          <div id="qualityList" class="check-list"></div>
+        </article>
+      </section>
+
+      <section class="panel prompt-panel">
+        <div class="panel-header">
+          <h3>Prompt généré pour ChatGPT</h3>
+          <div class="inline-actions">
+            <button id="saveSession">Sauver</button>
+            <button id="exportSession">Exporter JSON</button>
+            <label class="file-button">Importer JSON<input id="importSession" type="file" accept="application/json" /></label>
+          </div>
+        </div>
+        <textarea id="promptOutput" rows="18" spellcheck="false"></textarea>
+      </section>
+
+      <section class="grid two">
+        <article class="panel">
+          <h3>Sessions locales</h3>
+          <div id="sessionList" class="session-list"></div>
+        </article>
+        <article class="panel">
+          <h3>Command Palette</h3>
+          <div class="commands">
+            <button data-command="github">GitHub Build Mode</button>
+            <button data-command="publication">Publication Atlas Mode</button>
+            <button data-command="data">Open Data Harvester Mode</button>
+            <button data-command="proof">Math Proof Mode</button>
+            <button data-command="spectro">Spectro Benchmark Mode</button>
+          </div>
+          <p class="note">Astuce : cette interface ne remplace pas ChatGPT; elle prépare des prompts propres, vérifiables, exportables.</p>
+        </article>
+      </section>
+    </main>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
