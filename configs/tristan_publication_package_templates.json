@@ -1,0 +1,57 @@
+{
+  "version": "omega.publication_package_templates.v1",
+  "default_sections": [
+    "abstract_seed",
+    "problem_statement",
+    "related_public_work",
+    "tristan_contribution",
+    "methodology",
+    "data_plan",
+    "prototype_plan",
+    "oak_validation_plan",
+    "negative_memory_plan",
+    "submission_readiness"
+  ],
+  "readiness_thresholds": {
+    "weak": 2.0,
+    "promising": 5.0,
+    "strong": 8.0
+  },
+  "project_angles": {
+    "omega_math_universe": {
+      "claim_style": "formal scaffold plus executable validation",
+      "core_question": "Can generative mathematical structures be represented as OAK-auditable hypergraph traces?",
+      "prototype": "claim-card schema, theorem/conjecture bank, and proof-status classifier"
+    },
+    "omega_spectro_universe": {
+      "claim_style": "measurement-first signal pipeline",
+      "core_question": "Can FFWT/HAC/CVCD descriptors improve spectroscopy compression, classification, denoising, or anomaly detection?",
+      "prototype": "spectroscopy dataset manifest, feature extractor, baseline comparison, and residue audit"
+    },
+    "omega_materials": {
+      "claim_style": "candidate-materials scaffold, not phase discovery claim",
+      "core_question": "Can fractal/topological descriptors produce useful candidate features for materials datasets?",
+      "prototype": "crystal/graph descriptor pack, simple baselines, and falsification tests"
+    },
+    "ait_dynamics": {
+      "claim_style": "dynamics benchmark and reproducible simulator",
+      "core_question": "Can AIT-generated models produce testable dynamics benchmarks without overclaiming?",
+      "prototype": "ODE/PDE toy systems, conserved quantities, stability traces, and failure cases"
+    },
+    "bayes_tristan": {
+      "claim_style": "probabilistic decision layer",
+      "core_question": "Can hypotheses be scored over truth, utility, testability, safety, novelty, and compressibility without confusing fertility with proof?",
+      "prototype": "Bayes-Tristan posterior card, action selector, and negative-memory updater"
+    },
+    "hgfm": {
+      "claim_style": "hypergraph representation and graph-learning benchmark",
+      "core_question": "Can nested hypergraph/fractal/mycelial representations improve traceability across ideas, data, code, and validation?",
+      "prototype": "HGFM JSON schema, graph export, traversal metrics, and stability matrix"
+    },
+    "ait_code_science": {
+      "claim_style": "code-generation benchmark with strict validation",
+      "core_question": "Can math-to-code generation be made auditable through tests, schemas, manifests, and OAK gates?",
+      "prototype": "multi-language code generator, tests, CI artifacts, and correctness residues"
+    }
+  }
+}
