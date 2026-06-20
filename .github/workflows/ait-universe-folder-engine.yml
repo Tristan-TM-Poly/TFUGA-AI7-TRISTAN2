@@ -1,0 +1,48 @@
+name: AIT Universe Folder Engine
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_depth:
+        description: "Maximum bounded fractal depth"
+        required: false
+        default: "2"
+      branching:
+        description: "Children per node"
+        required: false
+        default: "3"
+      node_limit:
+        description: "Hard node cap"
+        required: false
+        default: "80"
+  push:
+    paths:
+      - "scripts/ait_universe_folder_engine.py"
+      - "configs/ait_universe_seed_pack.json"
+      - "tests/test_ait_universe_folder_engine.py"
+      - "docs/ait-universe/**"
+      - ".github/workflows/ait-universe-folder-engine.yml"
+
+jobs:
+  generate-ait-universe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile engine
+        run: python -m py_compile scripts/ait_universe_folder_engine.py
+      - name: Run unit tests
+        run: python -m unittest tests/test_ait_universe_folder_engine.py
+      - name: Generate bounded AIT-Universe artifact
+        run: |
+          python scripts/ait_universe_folder_engine.py \
+            --root artifacts/AIT-Universe \
+            --domain-pack configs/ait_universe_seed_pack.json \
+            --max-depth "${{ github.event.inputs.max_depth || '2' }}" \
+            --branching "${{ github.event.inputs.branching || '3' }}" \
+            --node-limit "${{ github.event.inputs.node_limit || '80' }}" \
+            --force
+      - name: Upload AIT-Universe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ait-universe-folder-engine
+          path: artifacts/AIT-Universe
