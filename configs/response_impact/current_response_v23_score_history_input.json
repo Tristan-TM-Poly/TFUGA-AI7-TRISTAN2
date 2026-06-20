@@ -1,0 +1,30 @@
+{
+  "version": "omega.response_impact_input.v1",
+  "summary": "Added score history dashboard, sample execution pack examples, UI v2.3 local history, tests, docs, runbook, workflow, and changelog.",
+  "artifacts": [
+    "scripts/omega_response_score_history.py",
+    "tests/test_omega_response_score_history.py",
+    "docs/automation/OMEGA_RESPONSE_SCORE_HISTORY.md",
+    "ops/response_score_history/runbook.md",
+    ".github/workflows/omega-response-score-history.yml",
+    "examples/iteration_execution/sample_selected_batch.json",
+    "examples/iteration_execution/sample_execution_pack.json",
+    "interfaces/chatgpt-tristan-v2/index.html",
+    "interfaces/chatgpt-tristan-v2/app.v23.js",
+    "interfaces/chatgpt-tristan-v2/CHANGELOG_V2_3.md",
+    "configs/response_impact/current_response_v23_score_history_input.json"
+  ],
+  "tests": [
+    "score history unit tests",
+    "sample execution pack JSON load",
+    "local score history UI smoke markers"
+  ],
+  "workflows": [
+    "omega-response-score-history"
+  ],
+  "residues": [
+    "main v2 validator update was blocked by connector filter",
+    "remote workflow execution not confirmed yet",
+    "local UI history still needs browser test"
+  ]
+}
