@@ -1,0 +1,17 @@
+{
+  "version": "chatgpt-tristan-session.v2",
+  "title": "Publication Atlas Quebec",
+  "mode": "Publication Atlas",
+  "intent": "publication package",
+  "format": "github-action",
+  "oak_target": "OAK-4 prototype",
+  "mission": "Générer un atlas Québec puis des packages de publication review-only pour projets Tristan, institutions, auteurs publics et travaux publics.",
+  "constraints": "Aucun envoi automatique. Match ne veut pas dire endorsement. Review humaine obligatoire.",
+  "branches": ["Publication Atlas", "Publication Package Factory", "OAK", "M−"],
+  "github_actions": ["create files", "add workflow", "upload artifact", "verify with fetch_file"],
+  "positive_memory": ["Publication Package Factory exists"],
+  "negative_memory": ["Do not contact professors automatically"],
+  "claims": [
+    {"claim": "A public metadata match can suggest a review candidate", "type": "review", "oak": "OAK-3 scaffold", "residues": ["human review required"]}
+  ]
+}
