@@ -1,0 +1,27 @@
+{
+  "version": "omega.iteration_execution_pack.config.v1",
+  "default_repo": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "max_items_per_pack": 16,
+  "required_sections": [
+    "batch_summary",
+    "execution_prompt",
+    "file_plan",
+    "test_plan",
+    "oak_gates",
+    "residue_plan",
+    "impact_input"
+  ],
+  "execution_rules": [
+    "execute bounded batch only",
+    "create tests when possible",
+    "verify created files with fetch_file",
+    "report quantitative impact after response",
+    "do not treat candidate plan as validation"
+  ],
+  "oak_boundary": {
+    "bounded_batch": true,
+    "candidate_plan_not_execution": true,
+    "human_review_for_external_action": true,
+    "prototype_is_not_proof": true
+  }
+}
