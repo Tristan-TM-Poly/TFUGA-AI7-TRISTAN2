@@ -1,0 +1,10 @@
+{
+  "name": "ChatGPT × Tristan OS",
+  "short_name": "TristanGPT",
+  "description": "Interface locale personnalisée pour composer des prompts ChatGPT OAK-safe pour l'écosystème Tristan.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#05070d",
+  "theme_color": "#080b12",
+  "icons": []
+}
