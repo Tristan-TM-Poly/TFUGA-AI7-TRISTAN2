@@ -1,0 +1,72 @@
+{
+  "version": "omega.iteration_selected_batch.v1",
+  "summary": {
+    "count": 4,
+    "layers": ["interface", "oak", "tests", "workflows"],
+    "modules": ["chatgpt_tristan_v2", "oak_verifier", "open_data_harvester"],
+    "actions": ["add_safety_check", "add_test", "add_workflow", "add_dashboard"],
+    "avg_priority": 88.25
+  },
+  "selected": [
+    {
+      "id": "sample_001",
+      "index": 1,
+      "batch": 1,
+      "layer": "interface",
+      "module": "chatgpt_tristan_v2",
+      "action": "add_dashboard",
+      "title": "Add score history dashboard to ChatGPT Tristan v2",
+      "intent": "Expose quantitative response history in the cockpit.",
+      "files": ["interfaces/chatgpt-tristan-v2/app.v23.js"],
+      "tests": ["validator_marker", "local_storage_roundtrip"],
+      "oak_gates": ["bounded_generation", "prototype_is_not_proof"],
+      "priority": 95,
+      "residues": ["browser_test_required"]
+    },
+    {
+      "id": "sample_002",
+      "index": 2,
+      "batch": 1,
+      "layer": "tests",
+      "module": "oak_verifier",
+      "action": "add_test",
+      "title": "Add anti-overclaim tests",
+      "intent": "Ensure OAK language remains present in generated prompts.",
+      "files": ["tests/test_oak_prompt_boundaries.py"],
+      "tests": ["unit_test", "negative_case"],
+      "oak_gates": ["claim_status_required", "prototype_is_not_proof"],
+      "priority": 90,
+      "residues": []
+    },
+    {
+      "id": "sample_003",
+      "index": 3,
+      "batch": 1,
+      "layer": "workflows",
+      "module": "open_data_harvester",
+      "action": "add_workflow",
+      "title": "Add bounded data harvest smoke workflow",
+      "intent": "Run a search-only data harvest smoke test.",
+      "files": [".github/workflows/open-data-smoke.yml"],
+      "tests": ["workflow_yaml", "search_only"],
+      "oak_gates": ["license_review_for_data", "bounded_generation"],
+      "priority": 86,
+      "residues": ["network_variability"]
+    },
+    {
+      "id": "sample_004",
+      "index": 4,
+      "batch": 1,
+      "layer": "oak",
+      "module": "publication_atlas",
+      "action": "add_safety_check",
+      "title": "Add publication review-only guard",
+      "intent": "Make external-action boundaries explicit in generated packages.",
+      "files": ["configs/publication_safety_guard.json"],
+      "tests": ["no_automatic_outreach", "review_only_boundary"],
+      "oak_gates": ["human_review_for_external_action", "no_automatic_outreach"],
+      "priority": 82,
+      "residues": ["human_review_required"]
+    }
+  ]
+}
