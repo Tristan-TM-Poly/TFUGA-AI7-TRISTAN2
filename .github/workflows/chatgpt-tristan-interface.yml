@@ -1,0 +1,22 @@
+name: ChatGPT Tristan Interface
+
+on:
+  push:
+    paths:
+      - "interfaces/chatgpt-tristan/**"
+      - "scripts/validate_chatgpt_tristan_interface.py"
+      - ".github/workflows/chatgpt-tristan-interface.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-interface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate static interface
+        run: python scripts/validate_chatgpt_tristan_interface.py
+      - name: Upload interface artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chatgpt-tristan-interface
+          path: interfaces/chatgpt-tristan
