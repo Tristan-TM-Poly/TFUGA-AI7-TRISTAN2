@@ -1,0 +1,53 @@
+name: Omega Open Data Harvester
+
+on:
+  workflow_dispatch:
+    inputs:
+      theory:
+        description: "Theory/science key or all"
+        required: false
+        default: "omega_spectro_universe"
+      mode:
+        description: "search or download"
+        required: false
+        default: "search"
+      max_results:
+        description: "Max results per query/source"
+        required: false
+        default: "3"
+      max_bytes_per_file:
+        description: "Max bytes per downloaded file"
+        required: false
+        default: "25000000"
+  push:
+    paths:
+      - "scripts/omega_open_data_harvester.py"
+      - "configs/omega_open_data_sources.json"
+      - "tests/test_omega_open_data_harvester.py"
+      - "docs/open-data/**"
+      - ".github/workflows/omega-open-data-harvester.yml"
+
+jobs:
+  open-data-harvest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile harvester
+        run: python -m py_compile scripts/omega_open_data_harvester.py
+      - name: Run unit tests
+        run: python -m unittest tests/test_omega_open_data_harvester.py
+      - name: Search or download open data
+        run: |
+          python scripts/omega_open_data_harvester.py \
+            --config configs/omega_open_data_sources.json \
+            --theory "${{ github.event.inputs.theory || 'omega_spectro_universe' }}" \
+            --mode "${{ github.event.inputs.mode || 'search' }}" \
+            --max-results "${{ github.event.inputs.max_results || '3' }}" \
+            --max-bytes-per-file "${{ github.event.inputs.max_bytes_per_file || '25000000' }}" \
+            --out-dir artifacts/open_data/files \
+            --manifest artifacts/open_data/open_data_manifest.json
+      - name: Upload open data manifest and files
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-open-data-harvest
+          path: artifacts/open_data
