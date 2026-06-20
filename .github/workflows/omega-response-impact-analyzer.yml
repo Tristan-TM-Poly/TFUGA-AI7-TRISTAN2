@@ -1,0 +1,39 @@
+name: Omega Response Impact Analyzer
+
+on:
+  workflow_dispatch:
+    inputs:
+      input_path:
+        description: "Impact input JSON"
+        required: false
+        default: "configs/response_impact/current_response_input.json"
+  push:
+    paths:
+      - "scripts/omega_response_impact_analyzer.py"
+      - "configs/omega_response_impact_axes.json"
+      - "configs/response_impact/**"
+      - "tests/test_omega_response_impact_analyzer.py"
+      - "docs/automation/OMEGA_RESPONSE_IMPACT_ANALYZER.md"
+      - "ops/response_impact/**"
+      - ".github/workflows/omega-response-impact-analyzer.yml"
+
+jobs:
+  response-impact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile analyzer
+        run: python -m py_compile scripts/omega_response_impact_analyzer.py
+      - name: Run analyzer tests
+        run: python -m unittest tests/test_omega_response_impact_analyzer.py
+      - name: Generate impact report
+        run: |
+          python scripts/omega_response_impact_analyzer.py \
+            --input "${{ github.event.inputs.input_path || 'configs/response_impact/current_response_input.json' }}" \
+            --axes configs/omega_response_impact_axes.json \
+            --out artifacts/response_impact_report.json
+      - name: Upload impact report
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-response-impact-report
+          path: artifacts/response_impact_report.json
