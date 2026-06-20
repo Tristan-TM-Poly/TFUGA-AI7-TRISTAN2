@@ -1,0 +1,25 @@
+{
+  "version": "omega.response_impact_axes.v1",
+  "max_score": 100,
+  "axes": [
+    {"key": "artifact_count", "weight": 18, "description": "Number of concrete repo artifacts created or updated."},
+    {"key": "diversity", "weight": 16, "description": "Distinct categories touched: code, tests, docs, workflow, config, ops, schema, examples."},
+    {"key": "oak_safety", "weight": 16, "description": "Presence of OAK boundaries, residues, anti-overclaim gates and review-only protections."},
+    {"key": "automation", "weight": 14, "description": "Workflows, validators, scripts and repeatable commands."},
+    {"key": "testability", "weight": 14, "description": "Unit tests, validation scripts and measurable outputs."},
+    {"key": "strategic_value", "weight": 12, "description": "Connection to high-value Tristan modules and future leverage."},
+    {"key": "reuse", "weight": 10, "description": "Reusable configs, manifests, templates, batch prompts, and examples."}
+  ],
+  "rating_scale": {
+    "0_20": "weak",
+    "21_40": "useful",
+    "41_60": "strong",
+    "61_80": "very_strong",
+    "81_100": "plus_ultra"
+  },
+  "oak_boundary": {
+    "candidate_scores_are_heuristics": true,
+    "score_is_not_scientific_validation": true,
+    "human_review_required_for_external_action": true
+  }
+}
