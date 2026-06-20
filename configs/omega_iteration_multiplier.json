@@ -1,0 +1,61 @@
+{
+  "version": "omega.iteration_multiplier.config.v1",
+  "target_count": 1024,
+  "batch_size": 32,
+  "layers": [
+    "interface",
+    "oak",
+    "memory",
+    "hgfm",
+    "github",
+    "data",
+    "publication",
+    "spectro",
+    "math",
+    "agents",
+    "docs",
+    "tests",
+    "workflows",
+    "schemas",
+    "benchmarks",
+    "ops"
+  ],
+  "modules": [
+    "chatgpt_tristan_v2",
+    "publication_atlas",
+    "publication_package_factory",
+    "open_data_harvester",
+    "ait_universe_folder_engine",
+    "omega_math_universe",
+    "omega_spectro_universe",
+    "bayes_tristan",
+    "hgfm_graph_engine",
+    "oak_verifier"
+  ],
+  "actions": [
+    "add_config",
+    "add_schema",
+    "add_validator",
+    "add_test",
+    "add_workflow",
+    "add_runbook",
+    "add_dashboard",
+    "add_example",
+    "add_prompt_template",
+    "add_oak_card",
+    "add_memory_entry",
+    "add_hgfm_edge",
+    "add_benchmark_plan",
+    "add_publication_package",
+    "add_data_manifest",
+    "add_safety_check"
+  ],
+  "oak_gates": [
+    "claim_status_required",
+    "human_review_for_external_action",
+    "no_automatic_outreach",
+    "license_review_for_data",
+    "prototype_is_not_proof",
+    "bounded_generation"
+  ]
+}
