@@ -1,0 +1,17 @@
+{
+  "version": "chatgpt-tristan-session.v2",
+  "title": "Spectro Lab FFWT-HAC-CVCD",
+  "mode": "Spectro Lab",
+  "intent": "benchmark",
+  "format": "github-action",
+  "oak_target": "OAK-4 prototype",
+  "mission": "Créer un benchmark Raman/FTIR avec dataset manifest, FFWT-HAC-CVCD feature extractor, baseline, tests, workflow et OAK report.",
+  "constraints": "Ne pas affirmer amélioration avant comparaison mesurée. Vérifier licence et provenance.",
+  "branches": ["FFWT-HAC-CVCD", "OAK", "Open Data Harvester", "Spectro Universe", "M−"],
+  "github_actions": ["create files", "add tests", "add workflow", "verify with fetch_file"],
+  "positive_memory": ["Spectroscopy branch is highly testable"],
+  "negative_memory": ["No performance claim before baseline"],
+  "claims": [
+    {"claim": "FFWT-HAC-CVCD may improve spectroscopy descriptors", "type": "prototype", "oak": "OAK-3 scaffold", "residues": ["needs dataset", "needs baseline"]}
+  ]
+}
