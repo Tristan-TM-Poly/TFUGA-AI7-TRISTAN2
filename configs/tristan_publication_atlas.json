@@ -1,0 +1,46 @@
+{
+  "version": "omega.tristan_publication_atlas.config.v1",
+  "scopes": {
+    "quebec": {
+      "country_code": "CA",
+      "institution_queries": [
+        "McGill University",
+        "Universite de Montreal",
+        "Universite Laval",
+        "Universite de Sherbrooke",
+        "Concordia University",
+        "Universite du Quebec a Montreal",
+        "Polytechnique Montreal",
+        "Ecole de technologie superieure",
+        "HEC Montreal",
+        "INRS",
+        "Bishop's University",
+        "Universite du Quebec a Trois-Rivieres",
+        "Universite du Quebec a Chicoutimi",
+        "Universite du Quebec a Rimouski",
+        "Universite du Quebec en Outaouais",
+        "Universite du Quebec en Abitibi-Temiscamingue",
+        "TELUQ"
+      ]
+    },
+    "canada": {
+      "country_code": "CA",
+      "institution_queries": [
+        "university Canada",
+        "polytechnic Canada",
+        "institute technology Canada",
+        "college university Canada"
+      ]
+    }
+  },
+  "tristan_projects": {
+    "omega_math_universe": {"title": "Omega Math Universe", "keywords": ["mathematics", "category theory", "logic", "proof", "information theory", "graph theory", "topology"]},
+    "omega_spectro_universe": {"title": "Omega Spectro Universe", "keywords": ["spectroscopy", "Raman", "FTIR", "NMR", "signal processing", "materials", "crystal"]},
+    "omega_materials": {"title": "Omega Materials", "keywords": ["materials science", "solid state", "DFT", "crystal structure", "condensed matter"]},
+    "ait_dynamics": {"title": "AIT Dynamics", "keywords": ["dynamical systems", "PDE", "SPDE", "time series", "chaos", "differential equations"]},
+    "bayes_tristan": {"title": "Bayes-Tristan", "keywords": ["Bayesian", "uncertainty", "probabilistic", "causal inference", "decision theory"]},
+    "hgfm": {"title": "Hypergraph Fractal Mycelial Framework", "keywords": ["hypergraph", "network science", "knowledge graph", "complex systems", "fractal"]},
+    "ait_code_science": {"title": "AIT Math-to-Code Science Engine", "keywords": ["scientific computing", "symbolic computation", "code generation", "machine learning", "optimization"]}
+  },
+  "publication_outputs": ["concept_note", "paper_outline", "dataset_plan", "prototype_plan", "oak_validation_plan"]
+}
