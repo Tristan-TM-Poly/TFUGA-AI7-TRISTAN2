@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05070d" />
+  <title>Ω ChatGPT × Tristan OS v2</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="rail">
+      <div class="brand"><span>Ω</span><div><small>Tristan cockpit</small><strong>ChatGPT OS v2</strong></div></div>
+      <button data-tab="composer" class="active">Composer</button>
+      <button data-tab="oak">OAK</button>
+      <button data-tab="memory">M+ / M−</button>
+      <button data-tab="graph">HGFM</button>
+      <button data-tab="github">GitHub</button>
+      <button data-tab="data">Data</button>
+      <button data-tab="publications">Publications</button>
+      <button data-tab="export">Export</button>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Ω-CHATGPT-TRISTAN-OS v2</p>
+          <h1>Interface personnelle pour transformer ChatGPT en opérateur OAK-safe de ton écosystème.</h1>
+          <p>Session → prompt compilé → artifact intent → OAK card → mémoire M+/M− → export JSON → action GitHub/publication/data.</p>
+        </div>
+        <div class="hero-actions">
+          <button id="compileBtn" class="primary">Compiler prompt</button>
+          <button id="copyBtn">Copier</button>
+          <button id="criticBtn">Auto-OAK critique</button>
+        </div>
+      </header>
+
+      <section id="composer" class="tab active grid two">
+        <article class="card stack">
+          <h2>Mission</h2>
+          <label>Titre<input id="title" value="Ω-SAGE v2 Session" /></label>
+          <label>Mode SAGE<select id="mode"></select></label>
+          <label>Artifact intent<select id="intent"></select></label>
+          <label>Mission<textarea id="mission" rows="7">Améliorer extrême l’écosystème Tristan avec architecture, fichiers GitHub, tests, workflows, schémas, OAK cards, M− et artifacts vérifiables.</textarea></label>
+        </article>
+        <article class="card stack">
+          <h2>Compilation</h2>
+          <div class="row"><label>Format<select id="format"><option>detailed</option><option>compact</option><option>github-action</option><option>research-paper</option><option>oak-review</option><option>no-tools</option></select></label><label>OAK cible<select id="oak"></select></label></div>
+          <label>Branches<div id="branches" class="chips"></div></label>
+          <label>Contraintes<textarea id="constraints" rows="6">ZÉRO-TOUCH. OAK boundary. M− negative memory. Ne pas confondre fertilité et preuve. Produire des artifacts vérifiables.</textarea></label>
+        </article>
+      </section>
+
+      <section id="oak" class="tab grid two">
+        <article class="card stack"><h2>OAK Card</h2><label>Claim<textarea id="claim" rows="4">Cette idée est fertile mais doit être testée avant toute affirmation forte.</textarea></label><label>Type<select id="claimType"><option>vision</option><option>definition</option><option>prototype</option><option>measurement</option><option>proof</option></select></label><button id="addOakCard">Ajouter OAK card</button></article>
+        <article class="card"><h2>Claims Matrix</h2><div id="claimsMatrix" class="list"></div></article>
+      </section>
+
+      <section id="memory" class="tab grid two">
+        <article class="card stack"><h2>M+ mémoire positive</h2><textarea id="mplus" rows="12">Interface v2 modulaire; OAK cards; prompt compiler; export JSON.</textarea></article>
+        <article class="card stack"><h2>M− mémoire négative</h2><textarea id="mminus" rows="12">Ne pas présenter une interface locale comme modification officielle de ChatGPT. Ne pas envoyer de messages automatiquement.</textarea></article>
+      </section>
+
+      <section id="graph" class="tab grid two">
+        <article class="card stack"><h2>HGFM local</h2><button id="buildGraph">Construire graph</button><pre id="graphText"></pre></article>
+        <article class="card"><h2>Graph view</h2><svg id="graphSvg" viewBox="0 0 900 520" role="img" aria-label="HGFM graph"></svg></article>
+      </section>
+
+      <section id="github" class="tab grid two">
+        <article class="card stack"><h2>GitHub Builder</h2><label>Repo cible<input id="repo" value="Tristan-TM-Poly/TFUGA-AI7-TRISTAN2" /></label><div id="githubActions" class="checks"></div></article>
+        <article class="card stack"><h2>Repo prompt</h2><button data-preset="github">Charger preset GitHub</button><p class="note">Génère un prompt qui demande fichiers, tests, workflows, docs, runbooks et vérification par fetch_file.</p></article>
+      </section>
+
+      <section id="data" class="tab grid two">
+        <article class="card stack"><h2>Open Data</h2><label>Théorie<select id="dataTheory"></select></label><label>Mode<select id="dataMode"><option>search only</option><option>download bounded</option><option>manifest only</option><option>benchmark-ready</option></select></label><button data-preset="data">Charger preset Data</button></article>
+        <article class="card"><h2>License radar</h2><div class="radar"><span>allowlisted</span><span>needs_review</span><span>blocked</span><span>unknown</span></div></article>
+      </section>
+
+      <section id="publications" class="tab grid two">
+        <article class="card stack"><h2>Publication Atlas</h2><label>Scope<select id="pubScope"><option>quebec</option><option>canada</option></select></label><label>Output<select id="pubOutput"><option>publication package</option><option>professor fit</option><option>paper outline</option><option>collaboration note review-only</option></select></label><button data-preset="publication">Charger preset Publication</button></article>
+        <article class="card"><h2>Boundary</h2><ul><li>Aucun envoi automatique.</li><li>Match ≠ endorsement.</li><li>Métadonnées publiques ≠ collaboration.</li><li>Review humaine obligatoire.</li></ul></article>
+      </section>
+
+      <section id="export" class="tab grid two">
+        <article class="card stack"><h2>Prompt compilé</h2><textarea id="prompt" rows="20" spellcheck="false"></textarea></article>
+        <article class="card stack"><h2>Export center</h2><button id="saveLocal">Sauver local</button><button id="exportJson">Exporter session JSON</button><button id="exportOak">Exporter OAK card JSON</button><button id="clearLocal">Effacer local</button><div id="savedSessions" class="list"></div></article>
+      </section>
+    </main>
+  </div>
+  <div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
