@@ -36,17 +36,26 @@ Règles strictes :
 ```text
 servicegraph_qc/
   README.md
+  ROADMAP.md
   service_model.yaml
   m_minus_registry.yaml
   oak_service_meter.py
   friction_map.py
+  batch_oak_report.py
+  tests/
+    test_servicegraph_qc.py
   examples/
     saaq_renew_license.yaml
     ramq_health_card.yaml
     revenu_quebec_notice.yaml
     education_financial_aid.yaml
+    justice_small_claims.yaml
+    immigration_francisation.yaml
+    municipal_building_permit.yaml
+    business_registration.yaml
   reports/
     reform_blueprint_qc.md
+    service_catalog_qc.md
 ```
 
 ## Utilisation rapide
@@ -54,6 +63,8 @@ servicegraph_qc/
 ```bash
 python servicegraph_qc/oak_service_meter.py servicegraph_qc/examples/saaq_renew_license.yaml
 python servicegraph_qc/friction_map.py servicegraph_qc/examples/saaq_renew_license.yaml
+python servicegraph_qc/batch_oak_report.py servicegraph_qc/examples
+PYTHONPATH=servicegraph_qc python -m unittest discover -s servicegraph_qc/tests
 ```
 
 Les scripts utilisent seulement la bibliothèque standard Python.
@@ -63,6 +74,24 @@ Les scripts utilisent seulement la bibliothèque standard Python.
 ```text
 Service_QC+ = besoin_resolu - friction - delai - erreur - opacite - humiliation + confiance + recours + accessibilite
 ```
+
+## Pipeline
+
+```text
+service réel -> ServiceGraph YAML -> FrictionMap -> OAK-ServiceMeter -> M⁻ -> correctif -> test -> déploiement progressif
+```
+
+## Sortie OAK attendue
+
+Chaque service modélisé doit produire :
+
+- un score OAK diagnostic;
+- une carte des frictions;
+- les pénalités principales;
+- les tests OAK à réaliser;
+- les règles M⁻ anti-répétition;
+- un mode humain de recours;
+- une recommandation de simplification.
 
 ## État visé
 
