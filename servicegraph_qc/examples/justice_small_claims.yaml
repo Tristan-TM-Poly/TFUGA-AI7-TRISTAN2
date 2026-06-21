@@ -1,0 +1,112 @@
+service_id: "justice_small_claims"
+service_name: "Justice Québec - petites créances et suivi de dossier"
+owner_organization: "Ministère de la Justice du Québec"
+public_need: "Permettre à une personne de comprendre, déposer et suivre une demande aux petites créances avec accès au droit clair et recours humain"
+
+channels:
+  - online
+  - phone
+  - courthouse_counter
+  - legal_information_services
+
+citizen_segments:
+  - citoyen sans avocat
+  - personne à faible littératie juridique
+  - petite entreprise
+  - personne âgée
+  - personne en région éloignée
+  - nouvel arrivant
+  - personne en situation de vulnérabilité
+
+legal_rules:
+  - compétence du tribunal
+  - montant admissible
+  - délais de prescription
+  - signification
+  - preuve documentaire
+  - médiation possible
+  - audience
+
+data_nodes:
+  - identity
+  - claim_amount
+  - defendant_identity
+  - evidence_documents
+  - filing_status
+  - hearing_date
+  - mediation_status
+
+process_steps:
+  - comprendre admissibilité
+  - préparer preuve
+  - déposer demande
+  - payer frais ou demander exemption
+  - signifier partie adverse
+  - suivre statut
+  - médiation ou audience
+  - recevoir décision
+
+friction_points:
+  - langage juridique difficile
+  - statut de dossier non visible
+  - documents ou preuves mal structurés
+  - délai d'audience opaque
+  - difficulté à comprendre recours
+  - anxiété liée au tribunal
+
+risks:
+  - demande rejetée pour erreur de forme
+  - délai dépassé
+  - exclusion numérique
+  - inégalité d'accès au droit
+  - perte de preuve
+  - mauvaise compréhension d'une décision
+
+oak_tests:
+  - test citoyen sans avocat
+  - test langage clair pour admissibilité
+  - test dépôt mobile
+  - test suivi de statut
+  - test lecteur d'écran
+  - test région éloignée
+  - test médiation
+  - test recours humain au palais de justice
+
+success_metrics:
+  - taux de demandes complètes au premier dépôt
+  - temps médian avant première étape utile
+  - taux de compréhension des prochaines étapes
+  - taux de médiation complétée
+  - nombre de contacts par dossier
+  - satisfaction citoyenne
+
+human_recourses:
+  - comptoir palais de justice
+  - centre de communication
+  - information juridique
+  - médiation
+  - plainte officielle
+
+m_minus_rules:
+  - ne pas transformer l'accès à la justice en labyrinthe numérique
+  - afficher délais et prochaines étapes
+  - vulgariser sans donner de conseil juridique personnalisé automatisé
+  - garder assistance humaine pour erreurs de forme
+
+metric_inputs:
+  resolution: 0.55
+  accessibility: 0.48
+  transparency: 0.42
+  security: 0.80
+  human_recourse: 0.62
+  interoperability: 0.38
+  cost_control: 0.58
+
+penalties:
+  outage_risk: 0.25
+  no_human_channel: 0.20
+  no_rollback: 0.35
+  no_accessibility_test: 0.60
+  opaque_status: 0.80
+  vendor_lock_in: 0.25
+  repeated_documents: 0.40
