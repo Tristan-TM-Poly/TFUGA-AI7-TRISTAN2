@@ -8,10 +8,14 @@ superiority; it is a reproducible target for future OAKBench work.
 from __future__ import annotations
 
 import json
+import sys
+from pathlib import Path
 
 import numpy as np
 
-from omega_transform_t import ffwt_1d, fractal_fertility_report
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from omega_transform_t import ffwt_1d, fractal_fertility_report  # noqa: E402
 
 
 def make_signal(n: int = 1024, seed: int = 7) -> tuple[np.ndarray, slice]:
