@@ -7,10 +7,14 @@ Usage:
 from __future__ import annotations
 
 import json
+import sys
+from pathlib import Path
 
 import numpy as np
 
-from omega_transform_t import compare_fwt_ffwt_thresholding, haar_fwt_1d, haar_ifwt_1d
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from omega_transform_t import compare_fwt_ffwt_thresholding, haar_fwt_1d, haar_ifwt_1d  # noqa: E402
 
 
 def make_signal(n: int = 2048, seed: int = 42) -> np.ndarray:
