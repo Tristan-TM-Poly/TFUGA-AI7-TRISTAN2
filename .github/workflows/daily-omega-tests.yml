@@ -9,6 +9,7 @@ on:
       - "docs/omega_daily_*.md"
       - "examples/daily_omega_*.py"
       - "examples/daily_omega_*.json"
+      - "examples/daily_omega_signals/*.json"
       - "scripts/daily_omega_*.py"
   push:
     paths:
@@ -18,6 +19,7 @@ on:
       - "docs/omega_daily_*.md"
       - "examples/daily_omega_*.py"
       - "examples/daily_omega_*.json"
+      - "examples/daily_omega_signals/*.json"
       - "scripts/daily_omega_*.py"
 
 jobs:
@@ -40,3 +42,6 @@ jobs:
 
       - name: Run reusable signal CLI smoke test
         run: python scripts/daily_omega_signal.py examples/daily_omega_signal_template.json --format json
+
+      - name: Run batch CLI smoke test
+        run: python scripts/daily_omega_batch.py examples/daily_omega_signals --date 2026-06-24 --output /tmp/daily_omega_batch
