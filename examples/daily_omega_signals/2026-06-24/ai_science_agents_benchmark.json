@@ -1,0 +1,38 @@
+{
+  "title": "AI agents for science benchmark reality check",
+  "topic_anchor": "ai_automation_agents",
+  "signal_type": ["opportunity", "paper", "tooling"],
+  "why_it_matters": "Scientific agents are highly aligned with SAGE/AIT, but they must be tested on reproducible tasks rather than promoted as generic AI scientists.",
+  "actionable_opportunity": "Create an Ω-SciAgentArena-T benchmark track for Tristan agents using science-task scoring, failure memory, and reproducibility checks.",
+  "oak_check": {
+    "claim_status": "reported_claim",
+    "risk": "The briefing source must be verified before this becomes a real research direction; agent benchmarks may overstate open-ended scientific reasoning.",
+    "limit": "Treat as a benchmark opportunity, not proof of autonomous scientific discovery.",
+    "falsification_route": "Find the primary benchmark source, run a small baseline, and reject the item if tasks are not reproducible or relevant to Tristan workflows.",
+    "m_minus_warning": "Do not claim AI scientist capability without measured task success, novelty, and reproducibility."
+  },
+  "sources": [
+    {
+      "title": "Source verification required: scientific-agent benchmark mentioned in chat briefing",
+      "source_type": "other",
+      "url_or_identifier": "source_required:science_agent_benchmark",
+      "source_quality": 1
+    }
+  ],
+  "next_action": "Verify the primary source, then create a small benchmark issue only if the tasks are reproducible.",
+  "business_funding_signal": "Could become an internal OAKBench product for scientific-agent evaluation.",
+  "ip_signal": "private_research",
+  "scores": {
+    "freshness": 4,
+    "credibility": 1,
+    "tristan_fit": 5,
+    "actionability": 4,
+    "leverage": 5,
+    "scarcity": 4,
+    "oak_clarity": 5,
+    "ip_revenue": 3,
+    "hype_penalty": 3,
+    "duplication_penalty": 0,
+    "source_penalty": 4
+  }
+}
