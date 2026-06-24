@@ -1,0 +1,33 @@
+name: Daily Omega Tests
+
+on:
+  pull_request:
+    paths:
+      - 'sage_tristan/daily_omega_*.py'
+      - 'tests/test_daily_omega_*.py'
+      - 'schemas/daily_omega_briefing.schema.json'
+      - 'docs/omega_daily_*.md'
+  push:
+    paths:
+      - 'sage_tristan/daily_omega_*.py'
+      - 'tests/test_daily_omega_*.py'
+      - 'schemas/daily_omega_briefing.schema.json'
+      - 'docs/omega_daily_*.md'
+
+jobs:
+  test-daily-omega:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install test dependencies
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Run Daily Omega tests
+        run: python -m pytest tests/test_daily_omega_briefing.py tests/test_daily_omega_router.py
