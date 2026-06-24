@@ -7,12 +7,18 @@ on:
       - 'tests/test_daily_omega_*.py'
       - 'schemas/daily_omega_briefing.schema.json'
       - 'docs/omega_daily_*.md'
+      - 'examples/daily_omega_*.py'
+      - 'examples/daily_omega_*.json'
+      - 'scripts/daily_omega_*.py'
   push:
     paths:
       - 'sage_tristan/daily_omega_*.py'
       - 'tests/test_daily_omega_*.py'
       - 'schemas/daily_omega_briefing.schema.json'
       - 'docs/omega_daily_*.md'
+      - 'examples/daily_omega_*.py'
+      - 'examples/daily_omega_*.json'
+      - 'scripts/daily_omega_*.py'
 
 jobs:
   test-daily-omega:
@@ -30,4 +36,7 @@ jobs:
         run: python -m pip install --upgrade pip pytest
 
       - name: Run Daily Omega tests
-        run: python -m pytest tests/test_daily_omega_briefing.py tests/test_daily_omega_router.py
+        run: python -m pytest tests/test_daily_omega_*.py
+
+      - name: Run reusable signal CLI smoke test
+        run: python scripts/daily_omega_signal.py examples/daily_omega_signal_template.json --format json
