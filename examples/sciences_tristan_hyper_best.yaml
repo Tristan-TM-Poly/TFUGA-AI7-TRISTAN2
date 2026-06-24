@@ -1,0 +1,111 @@
+version: Omega-ST++++
+mission: "Convert ambition into verifiable research trajectories and route validated outputs toward canon, papers, tools and impact."
+
+equation: "S_{t+1}=ImpactRouter(PaperForge(Canon(Memory(ResidueMycelium(BenchmarkArena(PrototypeForge(OAKCourt(BayesT^tensor(EXP(CVCD(LOG(HGFM(S_t,D_t,P_t,R_t))))))))))))"
+
+module_stack:
+  Omega_ST_plus: [ScienceCard, BayesTristan, AIT_OAK]
+  Omega_ST_plus_plus: [ClaimTransmuter, PromotionGates, CanonScore]
+  Omega_ST_plus_plus_plus: [OAKCourt, MemoryMinus, ResidueMiner, ScienceOrganism]
+  Omega_ST_plus_plus_plus_plus: [TheoryReactor, PrototypeForge, BenchmarkArena, ResidueMycelium, PaperForge, ImpactRouter, AutonomousResearchLoop]
+
+research_reactor:
+  input: raw_idea
+  outputs:
+    - child_hypotheses
+    - theory_genomes
+    - prototype_contracts
+    - experiment_contracts
+    - predicted_residues
+    - paper_seeds
+
+benchmark_arena:
+  required:
+    - baselines
+    - metrics
+    - ablations
+    - residue_policy
+  promote_if:
+    - beats_baseline
+    - survives_ablation
+    - interpretable_invariant
+    - residues_recorded
+  demote_if:
+    - no_measurable_gain
+    - numerical_instability
+    - decorative_complexity_only
+
+prototype_forge:
+  contract_fields:
+    - prototype_name
+    - files
+    - minimal_functions
+    - proves
+    - does_not_prove
+    - required_for_promotion
+    - expected_outputs
+
+impact_router:
+  omega_4:
+    - technical_report
+    - github_demo
+    - notebook
+    - blog_post
+  omega_5:
+    - paper_draft
+    - collaboration_pitch
+    - open_source_package
+    - reproduction_plan
+  omega_7:
+    - product_page
+    - course_module
+    - grant_seed
+    - release_plan
+
+priority_branches:
+  ffwt_hac_cvcd:
+    target: "benchmark scaffold"
+    files: [synthetic_data.py, features_real.py, features_complex.py, baselines.py, ablation.py, benchmark.py, report.py]
+    gate: "keep only what beats a baseline or explains a residue"
+  fractal_rlc_lab:
+    target: "frequency-response scaffold"
+    files: [graphs.py, components.py, admittance.py, spectrum.py, baselines.py, perturbation.py, report.py]
+    safe_claim: "fractal RLC graphs can be studied through testable frequency-response signatures"
+  hgfm_corpus_mapper:
+    target: "typed discovery graph"
+    nodes: [ideas, equations, cards, residues, prototypes, tests, papers, agents, branches]
+    edges: [inspires, formalizes, predicts, tests, refutes, prototypes, reproduces, canonizes]
+
+five_pr_plan:
+  - name: v2-cli-and-schemas
+    adds: [cli_v2.py, science_organism_schema, oak_court_review_schema, prototype_contract_schema, experiment_contract_schema]
+  - name: prototype-forge-and-contracts
+    adds: [prototype_contract.py, experiment_contract.py, prototype_forge.py, experiment_forge.py]
+  - name: fractal-rlc-lab-scaffold
+    adds: [graphs.py, dimension_check.py, admittance.py, spectrum.py, baselines.py, report.py]
+  - name: ffwt-hac-cvcd-benchmark-scaffold
+    adds: [synthetic_data.py, baseline_features.py, cvcd_features.py, ablation.py, benchmark.py, report.py]
+  - name: paperforge-impact-router
+    adds: [paper_forge.py, impact_router.py, grant_seed.py, publication_roadmap.md]
+
+operational_laws:
+  - "Every intuition becomes a card."
+  - "Every card becomes an organism."
+  - "Every strong claim is transmuted."
+  - "Every theory has OAK status."
+  - "Every promotion passes a gate."
+  - "Every experiment produces a residue."
+  - "Every residue becomes a node."
+  - "Every error becomes an antibody."
+  - "Every prototype needs a baseline."
+  - "Every exotic algebra needs real projection."
+  - "Every physical claim needs dimensions, mechanism and measurement."
+  - "Every mathematical claim needs definitions, assumptions and counterexamples."
+  - "Every AI claim needs a benchmark."
+  - "Every expansion without OAK remains a seed."
+  - "Every compression must be fertile."
+  - "Fertility remains distinct from truth."
+  - "Canon remains revisable."
+  - "A robust theory knows how it can fail."
+  - "Every success routes toward a fruit."
+  - "Every branch must produce a next test."

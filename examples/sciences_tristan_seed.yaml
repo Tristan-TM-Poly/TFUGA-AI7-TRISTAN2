@@ -1,0 +1,181 @@
+# Seed cards for Ω-ST — Sciences de Tristan
+# These examples are deliberately cautious: fertile ideas are not promoted as proven results.
+
+cards:
+  - id: ST-H-0001
+    name: FFWT-HAC-CVCD signal invariants
+    kind: hypothesis
+    branch: ffwt_hac_cvcd
+    statement: >
+      A multi-scale fractal wavelet pipeline enriched with algebra-aware covariance,
+      correlation and coherence features may improve anomaly detection, classification,
+      denoising or interpretability on structured signals compared with classical baselines.
+    status_oak: Omega_2
+    bayes_tristan:
+      true: 0.55
+      useful: 0.90
+      fertile: 0.95
+      testable: 0.90
+      safe: 0.95
+      compressible: 0.80
+      novel: 0.80
+      valuable: 0.85
+    assumptions:
+      - Multi-scale structure is present in the data.
+      - The chosen algebraic features encode measurable structure rather than decorative complexity.
+      - A real-valued robust projection is preserved for all hyperalgebraic measurements.
+    predictions:
+      - FFWT-HAC-CVCD should beat at least one baseline on at least one metric for a suitable dataset.
+      - Failure cases should identify which algebraic extensions are unnecessary.
+    baselines:
+      - FFT features
+      - classical wavelets
+      - STFT
+      - PCA/SVD
+      - statistical features
+    tests:
+      - name: synthetic_multiscale_classification
+        metric: accuracy, F1, robustness under noise
+        success_condition: beats at least one baseline with controlled cost
+        falsifier: no improvement on multiple datasets after ablation
+        cost: low
+      - name: anomaly_detection_ablation
+        metric: AUROC, precision at k, false positive rate
+        success_condition: multi-scale features add measurable value
+        falsifier: algebraic features add no value beyond real-valued features
+        cost: low-medium
+    positive_memory:
+      - FFWT-HAC-CVCD is a priority because it is testable with code and datasets.
+    negative_memory:
+      - Do not treat exotic algebra as useful without a metric gain or interpretable invariant.
+    residues:
+      - Which tasks truly benefit from quaternionic/octonionic features remains unknown.
+    links:
+      - type: supports
+        target: ST-P-0001
+        reason: prototype should operationalize the hypothesis
+    next_actions:
+      - Implement a minimal benchmark comparing FFWT-HAC-CVCD to FFT/wavelet/PCA baselines.
+
+  - id: ST-H-0002
+    name: Fractal RLC resonance laboratory
+    kind: hypothesis
+    branch: physics
+    statement: >
+      Conductive fractal graph geometries can produce distinctive multi-scale resonance
+      spectra, localized modes or band-gap-like signatures in LC/RLC network simulations.
+    status_oak: Omega_2
+    bayes_tristan:
+      true: 0.60
+      useful: 0.80
+      fertile: 0.90
+      testable: 0.90
+      safe: 0.90
+      compressible: 0.70
+      novel: 0.75
+      valuable: 0.75
+    assumptions:
+      - The graph topology meaningfully changes the circuit Laplacian or admittance matrix.
+      - Component assignments are physically interpretable.
+      - Comparisons are made against regular and random graph baselines.
+    predictions:
+      - Fractal graphs should exhibit recognizable spectral signatures.
+      - Some modes may be localized or robust to limited defects.
+    baselines:
+      - regular grid RLC network
+      - random graph RLC network
+      - simple chain or lattice
+    tests:
+      - name: graph_spectral_response
+        metric: eigenfrequency distribution, IPR localization, frequency response peaks
+        success_condition: fractal graph has repeatable distinguishable spectral features
+        falsifier: signatures vanish under baseline comparison or small perturbations
+        cost: low-medium
+    positive_memory:
+      - This branch is physically simulable before any material claim is made.
+    negative_memory:
+      - Resonant/topological signatures do not imply superconductivity.
+      - A superconductivity claim requires resistance, Meissner, gap and phase-coherence evidence.
+    residues:
+      - Which graph invariants best predict useful response remains open.
+    next_actions:
+      - Build fractal_rlc_lab and compare Sierpinski, triadic and baseline graphs.
+
+  - id: ST-H-0003
+    name: Bayes-Tristan hypothesis prioritization
+    kind: module
+    branch: bayes_tristan
+    statement: >
+      A tensor-valued probability vector can help prioritize hypotheses by separating
+      truth, usefulness, fertility, testability, safety, compressibility, novelty and value.
+    status_oak: Omega_2
+    bayes_tristan:
+      true: 0.70
+      useful: 0.95
+      fertile: 0.90
+      testable: 0.80
+      safe: 0.95
+      compressible: 0.85
+      novel: 0.70
+      valuable: 0.85
+    assumptions:
+      - Explicit multi-axis scoring reduces confusion between proof and fertility.
+      - The scoring rule is transparent enough to be audited.
+    predictions:
+      - Hypothesis portfolios should become easier to triage.
+      - OAK next-actions should become more concrete.
+    baselines:
+      - manual ranking
+      - truth-only ranking
+      - fertility-only ranking
+    tests:
+      - name: twenty_card_prioritization
+        metric: clarity of ranking, number of actionable next tests, duplicate-error reduction
+        success_condition: produces a defensible top-10 roadmap from at least 20 cards
+        falsifier: ranking is arbitrary or does not improve actionability
+        cost: low
+    positive_memory:
+      - Separating truth from fertility is central to the Tristan scientific hygiene layer.
+    negative_memory:
+      - Do not promote high-fertility speculation as high-truth evidence.
+    residues:
+      - Calibration of scores remains empirical.
+    next_actions:
+      - Implement bayes_tristan_engine.py with transparent weights and YAML ingestion.
+
+  - id: ST-M-0001
+    name: No material claim without measurement
+    kind: negative_memory
+    branch: negative_memory
+    statement: >
+      A geometry, analogy or topological intuition must not be promoted into a material
+      property claim without explicit physical criteria and tests.
+    status_oak: Omega_3
+    bayes_tristan:
+      true: 0.95
+      useful: 0.95
+      fertile: 0.80
+      testable: 0.90
+      safe: 0.98
+      compressible: 0.90
+      novel: 0.50
+      valuable: 0.80
+    assumptions:
+      - Scientific credibility depends on separating candidate mechanisms from measured properties.
+    predictions:
+      - Applying this anti-rule reduces overclaiming in physics/materials cards.
+    baselines:
+      - unfiltered speculative claim generation
+    tests:
+      - name: claim_hygiene_audit
+        metric: number of unsupported material claims after OAK review
+        success_condition: unsupported claims are recoded as candidates with tests
+        falsifier: unsupported claims survive unchanged
+        cost: low
+    positive_memory:
+      - OAK needs explicit safety rails for physics/materials branches.
+    negative_memory:
+      - Do not equate fractal topology with superconductivity without evidence.
+    residues: []
+    next_actions:
+      - Encode this as a reusable OAK anti-rule in the validation module.
