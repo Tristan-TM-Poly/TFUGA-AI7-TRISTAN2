@@ -1,0 +1,29 @@
+{
+  "date": "2026-06-24",
+  "status": "imported_from_chat_source_verification_required",
+  "description": "Five-item Daily Omega briefing imported as OAK-safe reviewable signals.",
+  "run_command": "python scripts/daily_omega_batch.py examples/daily_omega_signals/2026-06-24 --date 2026-06-24 --output reports/daily_omega/generated",
+  "promotion_ladder": [
+    "imported_from_chat",
+    "source_verified",
+    "oak_reviewed",
+    "issue_candidate",
+    "prototype_or_prior_art",
+    "validated_or_rejected",
+    "canon_candidate"
+  ],
+  "signals": [
+    "ai_science_agents_benchmark.json",
+    "robotops_humanoid_market_signal.json",
+    "battery_materials_opportunity.json",
+    "qc_regtech_rag_benchmark.json",
+    "compute_sovereignty_geopolitics.json"
+  ],
+  "oak_requirements": [
+    "replace source_required identifiers with real sources",
+    "update source_quality after verification",
+    "run batch CLI",
+    "select at most one item for a real supervised issue",
+    "add M+ or M- memory update"
+  ]
+}
