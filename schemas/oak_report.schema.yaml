@@ -1,0 +1,89 @@
+title: OAKReport
+version: 0.1
+description: Machine-readable claim review packet for THT/HGFM.
+required:
+  - id
+  - claim
+  - claim_type
+  - status_before
+  - challenge
+  - evidence
+  - residue
+  - verdict
+  - status_after
+  - next_test
+  - created_at
+fields:
+  id: string
+  claim: string
+  claim_type:
+    values:
+      - narrative
+      - definition
+      - theorem
+      - algorithm
+      - simulation
+      - measurement
+      - benchmark
+      - physics
+      - agent_action
+      - publication
+  scope: string
+  status_before:
+    values:
+      - NARRATIVE
+      - CONCEPT
+      - FORMALIZED
+      - SIMULATION_READY
+      - SIMULATED
+      - MEASUREMENT_READY
+      - MEASURED
+      - REPLICATED
+      - CERTIFIED
+      - M_MINUS
+  challenge:
+    fields:
+      questions: list_of_strings
+      counterexamples: list_of_strings
+      falsification_checks: list_of_strings
+      review_notes: list_of_strings
+  evidence:
+    fields:
+      artifacts: list_of_strings
+      tests: list_of_strings
+      data: list_of_strings
+      citations: list_of_strings
+      reproduction: list_of_strings
+  metrics: map
+  residue:
+    fields:
+      known_limits: list_of_strings
+      uncertainty: list_of_strings
+      unresolved_risks: list_of_strings
+      m_minus_links: list_of_strings
+  verdict:
+    values:
+      - reject
+      - downgrade
+      - keep_active
+      - promote_conditionally
+      - promote
+      - route_to_m_minus
+      - unknown
+  status_after:
+    values:
+      - NARRATIVE
+      - CONCEPT
+      - FORMALIZED
+      - SIMULATION_READY
+      - SIMULATED
+      - MEASUREMENT_READY
+      - MEASURED
+      - REPLICATED
+      - CERTIFIED
+      - M_MINUS
+  next_test: string
+  reviewer: string
+  created_at: string
+  links: list_of_strings
+promotion_rule: No claim can be promoted without evidence, challenge, residue and next_test.

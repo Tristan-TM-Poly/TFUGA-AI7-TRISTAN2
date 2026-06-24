@@ -1,0 +1,51 @@
+title: MMinusEntry
+version: 0.1
+description: Negative-memory entry for preserving failures, risky patterns and downgrade rules.
+required:
+  - id
+  - failed_claim
+  - cause
+  - context
+  - anti_pattern
+  - guardrail
+  - repeat_detector
+  - next_minimal_test
+  - created_at
+fields:
+  id: string
+  failed_claim: string
+  cause: string
+  context: string
+  anti_pattern:
+    values:
+      - residue_zero_without_benchmark
+      - perfect_filtering_without_dataset
+      - certified_without_review
+      - simulation_reported_as_measurement
+      - physics_claim_without_baseline
+      - agent_output_promoted_without_oak
+      - missing_reproduction
+      - unclear_status
+      - other
+  severity:
+    values:
+      - low
+      - medium
+      - high
+      - critical
+  guardrail: string
+  repeat_detector:
+    fields:
+      keywords: list_of_strings
+      regex_hint: string
+      affected_files: list_of_strings
+  downgrade_rule:
+    fields:
+      from_status: string
+      to_status: string
+      reason: string
+  next_minimal_test: string
+  owner: string
+  created_at: string
+  links: list_of_strings
+append_only_rule: M_MINUS entries should not be deleted; supersede them with a new entry if needed.
