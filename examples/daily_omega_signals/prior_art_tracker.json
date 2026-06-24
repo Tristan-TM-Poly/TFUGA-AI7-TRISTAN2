@@ -1,0 +1,38 @@
+{
+  "title": "Prior-art tracker for reusable IP protection",
+  "topic_anchor": "papers_patents",
+  "signal_type": ["patent", "paper", "opportunity"],
+  "why_it_matters": "A reusable invention pipeline needs a clean boundary between public prior art and private Tristan-generated ideas.",
+  "actionable_opportunity": "Turn every paper or patent signal into a prior-art note before promoting related prototypes or public disclosures.",
+  "oak_check": {
+    "claim_status": "prototype_opportunity",
+    "risk": "Public sources and private invention directions can be mixed too early without an explicit prior-art process.",
+    "limit": "This is an organizational safeguard, not legal advice.",
+    "falsification_route": "Pick one candidate invention and record at least three related public sources before promotion.",
+    "m_minus_warning": "Do not publish protectable mechanisms before IP posture is clarified."
+  },
+  "sources": [
+    {
+      "title": "Daily Omega prior-art tracker protocol",
+      "source_type": "technical_report",
+      "url_or_identifier": "data/prior_art/README.md",
+      "source_quality": 4
+    }
+  ],
+  "next_action": "Create the first prior-art entry and link it to a safe non-confidential briefing item.",
+  "business_funding_signal": "Improves licensing, publication, and company-formation readiness.",
+  "ip_signal": "prior_art_review",
+  "scores": {
+    "freshness": 4,
+    "credibility": 4,
+    "tristan_fit": 5,
+    "actionability": 5,
+    "leverage": 5,
+    "scarcity": 4,
+    "oak_clarity": 5,
+    "ip_revenue": 5,
+    "hype_penalty": 0,
+    "duplication_penalty": 0,
+    "source_penalty": 0
+  }
+}
