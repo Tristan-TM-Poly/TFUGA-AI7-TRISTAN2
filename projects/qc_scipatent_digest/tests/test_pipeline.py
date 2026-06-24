@@ -11,8 +11,8 @@ from qc_scipatent_digest.pipeline import DigestPipeline
 def test_plus_ultra_pipeline_outputs(tmp_path: Path) -> None:
     result = DigestPipeline().run(tmp_path)
     assert result.documents == 6
-    assert result.opportunities == 5
-    assert result.bridges >= 5
+    assert result.opportunities == 6
+    assert result.bridges == 9
     for relative in [
         "pipeline_summary.json",
         "documents.json",
@@ -26,7 +26,8 @@ def test_plus_ultra_pipeline_outputs(tmp_path: Path) -> None:
         assert (tmp_path / relative).exists(), relative
     payload = json.loads((tmp_path / "pipeline_summary.json").read_text(encoding="utf-8"))
     assert payload["documents"] == 6
-    assert payload["opportunities"] == 5
+    assert payload["opportunities"] == 6
+    assert payload["bridges"] == 9
 
 
 def test_cli_plus_ultra(tmp_path: Path) -> None:
