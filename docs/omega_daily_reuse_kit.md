@@ -1,13 +1,13 @@
 # Ω-DAILY Reuse Kit
 
-**Status:** reusable operating kit v0.1  
+**Status:** reusable operating kit v0.2  
 **Purpose:** make the Daily Ω Briefing / War Room portable across repositories, projects, agents, and future companies.
 
 ---
 
 ## 1. What is reusable now
 
-The system can now be reused as a five-part kit:
+The system can now be reused as a seven-part kit:
 
 ```text
 1. Briefing scorer
@@ -15,6 +15,8 @@ The system can now be reused as a five-part kit:
 3. IP/revenue posture classifier
 4. Issue-spec factory
 5. OAK supervisor
+6. JSON signal loader/exporter
+7. CLI dry-run reviewer
 ```
 
 This turns any signal into a reviewable artifact without forcing immediate publication or action.
@@ -24,12 +26,13 @@ This turns any signal into a reviewable artifact without forcing immediate publi
 ## 2. Reusable flow
 
 ```text
-Signal
+Signal JSON
 → BriefingItem
 → score_candidate / rank_items
 → route_item
 → make_issue_spec
 → supervise_issue_spec
+→ Markdown or JSON export
 → report / issue / memory / prior-art note
 ```
 
@@ -89,6 +92,17 @@ publication candidate
 open/public note
 ```
 
+### Mode E — Cross-repository portable review
+
+Use a single JSON signal object to generate consistent review artifacts in any repo:
+
+```text
+examples/daily_omega_signal_template.json
+→ scripts/daily_omega_signal.py
+→ Markdown/JSON decision
+→ optional issue spec
+```
+
 ---
 
 ## 4. Minimal code usage
@@ -97,19 +111,32 @@ open/public note
 from sage_tristan.daily_omega_briefing import rank_items
 from sage_tristan.daily_omega_router import make_issue_spec, route_item
 from sage_tristan.daily_omega_supervisor import supervise_issue_spec
+from sage_tristan.daily_omega_io import load_item_json, export_decision_json
 
-ranked = rank_items(items)
-for item in ranked:
-    route = route_item(item)
-    issue = make_issue_spec(item)
-    decision = supervise_issue_spec(item, dry_run=True)
+item = load_item_json("examples/daily_omega_signal_template.json")
+route = route_item(item)
+issue = make_issue_spec(item)
+decision = supervise_issue_spec(item, dry_run=True)
+print(export_decision_json(item))
 ```
 
 No GitHub issue is created by these functions. They return reviewable data.
 
 ---
 
-## 5. OAK-safe approval ladder
+## 5. CLI usage
+
+```bash
+python scripts/daily_omega_signal.py examples/daily_omega_signal_template.json
+python scripts/daily_omega_signal.py examples/daily_omega_signal_template.json --format json
+python scripts/daily_omega_signal.py examples/daily_omega_signal_template.json --create-mode
+```
+
+`--create-mode` evaluates the gates as if approval were being considered. It still does not call GitHub.
+
+---
+
+## 6. OAK-safe approval ladder
 
 ```text
 review_spec       = safe dry-run object
@@ -122,7 +149,7 @@ canon_candidate   = only after repeated value or test
 
 ---
 
-## 6. Portability contract
+## 7. Portability contract
 
 A signal is portable if it has:
 
@@ -141,7 +168,7 @@ A signal is not ready if it lacks source, action, OAK check, or IP posture.
 
 ---
 
-## 7. Disruptive leverage
+## 8. Disruptive leverage
 
 The reusable kit makes the system valuable beyond a single briefing:
 
@@ -160,18 +187,18 @@ This is the key multiplication effect: one input can create many controlled arti
 
 ---
 
-## 8. Next reusable upgrades
+## 9. Next reusable upgrades
 
-1. JSON loader for signal files.
-2. Markdown exporter for issue specs.
-3. Private IP notebook exporter.
-4. Prior-art manifest updater.
-5. Safe GitHub connector bridge with explicit approval.
-6. Cross-repository project router.
-7. Dashboard of open Daily Ω decisions.
+1. Private IP notebook exporter.
+2. Prior-art manifest updater.
+3. Safe GitHub connector bridge with explicit approval.
+4. Cross-repository project router.
+5. Dashboard of open Daily Ω decisions.
+6. Batch mode for folders of signal JSON files.
+7. Automatic report writer for `reports/daily_omega/YYYY-MM-DD.md`.
 
 ---
 
-## 9. OAK rule
+## 10. OAK rule
 
 Reusable does not mean automatic. Reusable means the same object can move through many safe paths while preserving source, risk, IP posture, and next action.
