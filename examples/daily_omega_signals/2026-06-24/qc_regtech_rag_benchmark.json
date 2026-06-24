@@ -1,0 +1,38 @@
+{
+  "title": "Québec regulated-domain RAG benchmark opportunity",
+  "topic_anchor": "quebec_canada_innovation",
+  "signal_type": ["opportunity", "paper", "dataset"],
+  "why_it_matters": "A Québec-specific regulated-domain benchmark can become a high-value niche for French compliance AI, insurance/legal RAG, and public-service modernization.",
+  "actionable_opportunity": "Prototype Ω-QC-RegTech-OAK as a RAG evaluator for Québec regulated documents with context-distraction tests and expert-like answer scoring.",
+  "oak_check": {
+    "claim_status": "reported_claim",
+    "risk": "The benchmark and performance numbers mentioned in the chat briefing require source verification before use.",
+    "limit": "This is a regulated-domain evaluation opportunity, not legal advice or a deployment-ready compliance product.",
+    "falsification_route": "Verify the benchmark source, reproduce a small subset, and test whether RAG improves or distracts across models.",
+    "m_minus_warning": "Do not deploy RAG in regulated domains without source-grounding, context-distraction checks, and human review."
+  },
+  "sources": [
+    {
+      "title": "Source verification required: Québec regulated-domain RAG benchmark mentioned in chat briefing",
+      "source_type": "other",
+      "url_or_identifier": "source_required:quebec_regtech_rag_benchmark",
+      "source_quality": 1
+    }
+  ],
+  "next_action": "Verify the benchmark source and create a small Québec RAG OAKBench issue if the source is credible.",
+  "business_funding_signal": "Potential niche for Québec/Canada regulated AI compliance services, benchmarks, and public-sector modernization.",
+  "ip_signal": "publication_candidate",
+  "scores": {
+    "freshness": 4,
+    "credibility": 1,
+    "tristan_fit": 5,
+    "actionability": 5,
+    "leverage": 5,
+    "scarcity": 5,
+    "oak_clarity": 5,
+    "ip_revenue": 4,
+    "hype_penalty": 2,
+    "duplication_penalty": 0,
+    "source_penalty": 4
+  }
+}
