@@ -1,0 +1,38 @@
+{
+  "title": "Sodium-ion and 3D-printed battery opportunity",
+  "topic_anchor": "physics_energy_materials",
+  "signal_type": ["opportunity", "paper", "market"],
+  "why_it_matters": "Battery chemistry and form-factor innovation connects Ω-BAT-T, Ω-ENERGY-T, MEMS, drones, wearables, and low-voltage prototype systems.",
+  "actionable_opportunity": "Build an OAK comparison matrix for Li-ion, sodium-ion, solid-state, and printed batteries across cost, safety, cycle life, Wh/kg, manufacturability, and prototype relevance.",
+  "oak_check": {
+    "claim_status": "reported_claim",
+    "risk": "Battery breakthrough claims often fail on cycle life, scale-up, temperature range, safety, or realistic cost assumptions.",
+    "limit": "Treat as a screening and comparison opportunity, not proof of superior battery technology.",
+    "falsification_route": "Collect primary datasheets or papers and reject any candidate lacking cycle-life, energy-density, safety, and scaling evidence.",
+    "m_minus_warning": "No battery claim should be promoted without cost, cycle, safety, and scaling checks."
+  },
+  "sources": [
+    {
+      "title": "Source verification required: sodium-ion and printed-battery item mentioned in chat briefing",
+      "source_type": "other",
+      "url_or_identifier": "source_required:battery_materials_signal",
+      "source_quality": 1
+    }
+  ],
+  "next_action": "Create a battery OAK matrix template and verify the primary sodium-ion / printed-battery sources.",
+  "business_funding_signal": "Could support energy-storage consulting, prototype selection, grants, or prior-art tracking.",
+  "ip_signal": "prior_art_review",
+  "scores": {
+    "freshness": 4,
+    "credibility": 1,
+    "tristan_fit": 5,
+    "actionability": 5,
+    "leverage": 5,
+    "scarcity": 3,
+    "oak_clarity": 5,
+    "ip_revenue": 4,
+    "hype_penalty": 3,
+    "duplication_penalty": 1,
+    "source_penalty": 4
+  }
+}
