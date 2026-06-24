@@ -1,0 +1,141 @@
+phase:
+  id: Omega-TFTS
+  name: Supraconducteur topologique fractal de Tristan candidat
+  status: OAK-1
+  claim_level: candidate
+  description: >
+    Candidate phase combining fractal/hyperloop geometry, pairing, spin-orbit coupling,
+    magnetic or Zeeman terms, and topological markers. This file intentionally encodes
+    the idea as a candidate, not as an experimental discovery.
+
+  geometry:
+    type: fractal_hyperloop_lattice
+    examples:
+      - Cantor_3D
+      - Sierpinski_carpet
+      - Menger_sponge
+      - cube_troue_fractal
+    parameters:
+      iteration_depth: n
+      fractal_dimension: D_f
+      lacunarity: lambda_lac
+      cycle_rank: beta_1
+    invariants:
+      - fractal_dimension
+      - spectral_dimension
+      - lacunarity
+      - cycle_rank
+      - hyperloop_hierarchy
+
+  hamiltonian:
+    terms:
+      - tight_binding
+      - spin_orbit
+      - zeeman
+      - bdg_pairing
+      - loop_flux
+      - disorder
+      - topological_marker
+    equations:
+      - H_T = H_frac + H_SOC + H_Z + H_Delta + H_loop + H_dis
+      - H_loop = sum_gamma J_gamma cos(theta_gamma + 2*pi*Phi_gamma/Phi_0)
+      - H_BdG = 1/2 Psi^dagger [[H_0-mu, Delta], [Delta^dagger, -H_0^*+mu]] Psi
+
+  invariants:
+    structural:
+      - lattice_connectivity
+      - defect_distribution
+      - porosity_control
+    spectral:
+      - density_of_states
+      - superconducting_gap_candidate
+      - edge_or_corner_mode_map
+    transport:
+      - R_T
+      - I_V
+      - critical_current
+      - critical_field
+    magnetic:
+      - Meissner_screening_candidate
+      - susceptibility_chi_T
+      - M_B_T
+    topological:
+      - real_space_chern_marker
+      - boundary_state_robustness
+      - corner_state_robustness
+    fractal:
+      - D_f
+      - spectral_dimension
+      - lacunarity
+    hyperloop:
+      - beta_1
+      - loop_flux_response
+      - impedance_resonance_tree
+    cvcd:
+      - ffwt_multiscale_coherence
+      - hac_cross_probe_coherence
+      - fertile_compression_score
+    algebraic:
+      - complex_impedance_phase
+      - quaternionic_spin_correlation
+      - octonionic_associator_residue
+      - sedenionic_zero_response_ratio
+
+  required_signatures:
+    simulation:
+      - gap_candidate
+      - edge_or_corner_modes
+      - robustness_to_disorder
+      - nontrivial_topological_marker
+      - finite_size_scaling
+    experiment:
+      - zero_resistance_or_strong_transport_evidence
+      - Meissner_effect_or_magnetic_screening
+      - spectroscopic_gap
+      - critical_current
+      - critical_field
+      - artifact_controls
+      - replicated_samples
+
+  oak:
+    promotion_rule: "claim_level <= evidence_level"
+    falsifiers:
+      - contact_short
+      - contamination
+      - filamentary_impurity_superconductivity
+      - ordinary_percolation_only
+      - dangling_bond_edge_states
+      - no_Meissner_signal
+      - no_gap
+      - non_replicated_signal
+    next_tests:
+      - generate_fractal_lattice_and_cycle_rank
+      - simulate_tight_binding_spectrum_and_IPR
+      - simulate_BdG_gap_and_edge_modes
+      - compute_real_space_topological_marker
+      - simulate_impedance_tree
+      - design_transport_and_magnetic_control_experiment
+    negative_memory_links:
+      - false_zero_resistance_from_contact_short
+      - resonance_artifact_from_parasitic_capacitance
+      - ordinary_porosity_misread_as_fractality
+
+  bayes_tristan:
+    posterior_dimensions:
+      - truth_probability
+      - utility
+      - fertility
+      - testability
+      - safety
+      - profitability
+      - compressibility
+      - replicability
+    priors:
+      truth_probability: 0.05
+      utility: 0.85
+      fertility: 0.95
+      testability: 0.75
+      safety: 0.80
+      profitability: 0.55
+      compressibility: 0.90
+      replicability: 0.30

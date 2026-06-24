@@ -21,6 +21,7 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `PowerScore`: log-stable maturity score balancing fertility, verifiability, reusability, impact, compression, and stability against complexity, noise, untested speculation, risk, and duplication.
 - `Omega6`: parallel HGFM64 architecture: 64 coupled crystals across 8 master hyperedges.
 - `AI-7`: metabolism of production, verification, testing, analysis, optimization, reproduction, integration, crystallization, stabilization, documentation, and promotion.
+- `Omega-PSPT++`: physics of Tristan solids and phases, combining Hamiltonians, fractal/hyperloop lattices, FFWT-HAC-CVCD invariants, Bayes-Tristan posteriors, and OAK falsification protocols.
 
 ## Repository structure
 
@@ -31,6 +32,17 @@ sage_tristan/ Minimal Python engine for scoring, cards, status, HGFM, claims, AI
 tests/      Unit tests for the executable core.
 examples/   Example branches and DCT++ packets.
 reports/    Generated audit and publication reports.
+```
+
+Omega-PSPT++ entry points:
+
+```text
+docs/omega_pspt/README.md              Solid-state/phase-matter canon.
+docs/omega_pspt/phase_table.md         Phase taxonomy and OAK status table.
+docs/omega_pspt/oak_protocols.md       Falsification and promotion protocols.
+schemas/omega_pspt_phase.schema.json   Machine-readable phase-card schema.
+examples/omega_pspt_tfts_phase.yaml    Omega-TFTS candidate example.
+sage_tristan/omega_pspt.py             Executable OAK/Bayes/hyperloop helpers.
 ```
 
 ## Scientific hygiene
@@ -64,6 +76,7 @@ Immediate canonizable modules:
 Crystallizable modules:
 
 - FractalLC
+- Omega-PSPT++
 - NavierTardif
 - FFWT-HGFM
 - CanonGenome

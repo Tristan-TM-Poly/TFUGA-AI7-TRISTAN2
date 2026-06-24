@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/omega_pspt_phase.schema.json",
+  "title": "Omega-PSPT Phase Card",
+  "description": "Machine-readable schema for Tristan solid-state phase candidates, with OAK claim control and Bayes-Tristan posterior dimensions.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "status",
+    "claim_level",
+    "geometry",
+    "hamiltonian",
+    "invariants",
+    "oak"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable phase identifier, e.g. Omega-TFTS."
+    },
+    "name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["OAK-0", "OAK-1", "OAK-2", "OAK-3", "OAK-4", "OAK-5", "OAK-6", "OAK-7"]
+    },
+    "claim_level": {
+      "type": "string",
+      "enum": [
+        "vision",
+        "candidate",
+        "simulated_candidate",
+        "predicted_candidate",
+        "measured_candidate",
+        "controlled_candidate",
+        "replicated_phase",
+        "canonized_phase"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "geometry": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string" },
+        "examples": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "invariants": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "hamiltonian": {
+      "type": "object",
+      "properties": {
+        "terms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "tight_binding",
+              "hubbard",
+              "electron_phonon",
+              "spin_orbit",
+              "zeeman",
+              "bdg_pairing",
+              "loop_flux",
+              "disorder",
+              "topological_marker",
+              "lc_rlc",
+              "phonon",
+              "magnon"
+            ]
+          }
+        },
+        "equations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "invariants": {
+      "type": "object",
+      "properties": {
+        "structural": { "type": "array", "items": { "type": "string" } },
+        "spectral": { "type": "array", "items": { "type": "string" } },
+        "transport": { "type": "array", "items": { "type": "string" } },
+        "magnetic": { "type": "array", "items": { "type": "string" } },
+        "topological": { "type": "array", "items": { "type": "string" } },
+        "fractal": { "type": "array", "items": { "type": "string" } },
+        "hyperloop": { "type": "array", "items": { "type": "string" } },
+        "cvcd": { "type": "array", "items": { "type": "string" } },
+        "algebraic": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "required_signatures": {
+      "type": "object",
+      "properties": {
+        "simulation": { "type": "array", "items": { "type": "string" } },
+        "experiment": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "oak": {
+      "type": "object",
+      "required": ["falsifiers", "next_tests"],
+      "properties": {
+        "falsifiers": { "type": "array", "items": { "type": "string" } },
+        "next_tests": { "type": "array", "items": { "type": "string" } },
+        "promotion_rule": { "type": "string" },
+        "negative_memory_links": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "bayes_tristan": {
+      "type": "object",
+      "properties": {
+        "posterior_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "truth_probability",
+              "utility",
+              "fertility",
+              "testability",
+              "safety",
+              "profitability",
+              "compressibility",
+              "replicability"
+            ]
+          }
+        },
+        "priors": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
