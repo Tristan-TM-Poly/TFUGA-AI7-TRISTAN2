@@ -1,0 +1,87 @@
+from datetime import date
+
+from sage_tristan.daily_omega_batch import (
+    build_batch_result,
+    discover_signal_files,
+    load_items_from_directory,
+    summarize_batch,
+    write_batch_outputs,
+)
+from sage_tristan.daily_omega_io import item_from_dict
+
+
+def make_signal(title: str, score: int):
+    return {
+        "title": title,
+        "topic_anchor": "ai_automation_agents",
+        "signal_type": ["opportunity"],
+        "why_it_matters": "This batch signal can be ranked and exported into a reusable report.",
+        "actionable_opportunity": "Generate a batch report and inspect the supervised decisions.",
+        "oak_check": {
+            "claim_status": "prototype_opportunity",
+            "risk": "The batch item may be too vague without a concrete source.",
+            "falsification_route": "Reject the item if the generated decision lacks a next action.",
+        },
+        "sources": [
+            {
+                "title": "Batch source",
+                "source_type": "technical_report",
+                "url_or_identifier": "example:batch",
+                "source_quality": 4,
+            }
+        ],
+        "next_action": "Create a supervised issue spec in dry-run mode.",
+        "scores": {
+            "freshness": score,
+            "credibility": score,
+            "tristan_fit": score,
+            "actionability": score,
+            "oak_clarity": score,
+        },
+    }
+
+
+def test_build_batch_result_ranks_and_exports_decisions():
+    low = item_from_dict(make_signal("Low batch signal", 2))
+    high = item_from_dict(make_signal("High batch signal", 5))
+
+    result = build_batch_result([low, high], briefing_date=date(2026, 6, 24))
+
+    assert result.items[0].title == "High batch signal"
+    assert "Daily Ω Briefing" in result.markdown_report
+    assert "Daily Ω War Room" in result.markdown_report
+    assert len(result.decisions) == 2
+    assert "High batch signal" in result.decisions_json()
+
+
+def test_discover_and_load_directory(tmp_path):
+    path = tmp_path / "signal.json"
+    path.write_text(__import__("json").dumps(make_signal("File signal", 4)), encoding="utf-8")
+
+    files = discover_signal_files(tmp_path)
+    items = load_items_from_directory(tmp_path)
+
+    assert files == [path]
+    assert items[0].title == "File signal"
+
+
+def test_write_batch_outputs(tmp_path):
+    item = item_from_dict(make_signal("Writable signal", 4))
+    result = build_batch_result([item], briefing_date=date(2026, 6, 24))
+
+    markdown_path, json_path = write_batch_outputs(result, tmp_path, stem="2026-06-24")
+
+    assert markdown_path.exists()
+    assert json_path.exists()
+    assert "Writable signal" in markdown_path.read_text(encoding="utf-8")
+    assert "Writable signal" in json_path.read_text(encoding="utf-8")
+
+
+def test_summarize_batch():
+    item = item_from_dict(make_signal("Summary signal", 4))
+    result = build_batch_result([item], briefing_date=date(2026, 6, 24))
+
+    summary = summarize_batch(result)
+
+    assert "Daily Omega batch" in summary
+    assert "Summary signal" in summary
