@@ -42,7 +42,7 @@ def make_signal(title: str, score: int):
     }
 
 
-def test_build_batch_result_ranks_and_exports_decisions():
+def test_build_batch_result_ranks_and_exports_decisions_and_genomes():
     low = item_from_dict(make_signal("Low batch signal", 2))
     high = item_from_dict(make_signal("High batch signal", 5))
 
@@ -51,8 +51,11 @@ def test_build_batch_result_ranks_and_exports_decisions():
     assert result.items[0].title == "High batch signal"
     assert "Daily Ω Briefing" in result.markdown_report
     assert "Daily Ω War Room" in result.markdown_report
+    assert "Daily Ω Intelligence OS" in result.markdown_report
     assert len(result.decisions) == 2
+    assert len(result.genomes) == 2
     assert "High batch signal" in result.decisions_json()
+    assert "source_ledger" in result.genomes_json()
 
 
 def test_discover_and_load_directory(tmp_path):
@@ -86,11 +89,14 @@ def test_write_batch_outputs(tmp_path):
     result = build_batch_result([item], briefing_date=date(2026, 6, 24))
 
     markdown_path, json_path = write_batch_outputs(result, tmp_path, stem="2026-06-24")
+    genomes_path = tmp_path / "2026-06-24.genomes.json"
 
     assert markdown_path.exists()
     assert json_path.exists()
+    assert genomes_path.exists()
     assert "Writable signal" in markdown_path.read_text(encoding="utf-8")
     assert "Writable signal" in json_path.read_text(encoding="utf-8")
+    assert "source_ledger" in genomes_path.read_text(encoding="utf-8")
 
 
 def test_summarize_batch():
