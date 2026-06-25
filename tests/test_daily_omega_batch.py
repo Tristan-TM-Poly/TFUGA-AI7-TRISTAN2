@@ -1,6 +1,7 @@
 from datetime import date
 
 from sage_tristan.daily_omega_batch import (
+    DEFAULT_TIMEZONE,
     build_batch_result,
     discover_signal_files,
     is_signal_json_file,
@@ -40,6 +41,14 @@ def make_signal(title: str, score: int):
             "oak_clarity": score,
         },
     }
+
+
+def test_default_timezone_is_europe_paris():
+    item = item_from_dict(make_signal("Paris timezone signal", 4))
+    result = build_batch_result([item], briefing_date=date(2026, 6, 24))
+
+    assert DEFAULT_TIMEZONE == "Europe/Paris"
+    assert "Timezone: `Europe/Paris`" in result.markdown_report
 
 
 def test_build_batch_result_ranks_and_exports_decisions_and_genomes():
