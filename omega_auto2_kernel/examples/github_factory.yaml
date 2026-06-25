@@ -1,0 +1,60 @@
+workflow:
+  id: omega_auto2_github_factory
+  name: Ω GitHub Factory
+  version: 0.1.0
+  owner: Tristan
+  purpose: Transformer une théorie de Tristan en dépôt ou module GitHub avec README, docs, schémas, tests, OAKBench et roadmap.
+  trigger:
+    type: manual
+    schedule: on_demand
+  inputs:
+    - theory_name
+    - canon_summary
+    - prototype_goal
+    - oak_constraints
+  steps:
+    - classify_ip_status
+    - generate_repo_tree
+    - write_readme
+    - write_theory_doc
+    - write_minimal_python_package
+    - write_tests
+    - write_oakbench
+    - prepare_pull_request_draft
+  outputs:
+    - repo_structure
+    - files_created
+    - oak_report
+    - next_actions
+  permissions:
+    read:
+      - local_context
+      - repository_metadata
+    write:
+      - feature_branch
+      - pull_request_draft
+    forbidden:
+      - delete_files
+      - public_publish
+      - external_email
+      - spend_money
+      - change_permissions
+      - ip_disclosure
+  oak:
+    required: true
+    checks:
+      - no_secrets
+      - ip_classification
+      - tests_present
+      - oak_status_present
+      - rollback_possible
+  rollback:
+    possible: true
+    method: close_pr_and_delete_branch_if_needed
+  telemetry:
+    track:
+      - files_created
+      - tests_added
+      - review_edits_needed
+      - time_saved
+  status: draft
