@@ -1,5 +1,9 @@
 from sage_tristan.daily_omega_briefing import BriefingItem, OakCheck, Source
 from sage_tristan.daily_omega_intelligence_os import (
+    build_claim_graph,
+    build_daily_dashboard,
+    build_evidence_matrix,
+    build_source_ledger,
     compile_many,
     compile_signal_genome,
     infer_canon_status,
@@ -13,6 +17,7 @@ def make_item(
     *,
     title="AgentTelemetry benchmark service",
     source_quality=4,
+    source_identifier="example:test",
     business="Audit service and report for agent telemetry.",
     next_action="Build a benchmark tracker in 2 hours.",
 ):
@@ -32,7 +37,7 @@ def make_item(
             Source(
                 title="Test source",
                 source_type="technical_report",
-                url_or_identifier="example:test",
+                url_or_identifier=source_identifier,
                 source_quality=source_quality,
             ),
         ),
@@ -71,6 +76,32 @@ def test_infer_canon_status_requires_source_for_low_quality():
     assert infer_canon_status(item) == "source_required"
 
 
+def test_source_ledger_detects_placeholder_sources():
+    item = make_item(source_quality=1, source_identifier="source_required:daily-omega")
+    ledger = build_source_ledger(item)
+
+    assert ledger[0].verification_status == "source_placeholder"
+    assert "Replace placeholder" in ledger[0].residue
+
+
+def test_claim_graph_separates_facts_inferences_and_guards():
+    graph = build_claim_graph(make_item())
+    claim_types = {claim.claim_type for claim in graph}
+
+    assert "factual_claim" in claim_types
+    assert "strategic_inference" in claim_types
+    assert "oak_risk" in claim_types
+    assert "falsification_route" in claim_types
+
+
+def test_evidence_matrix_is_bounded_and_contains_residue():
+    matrix = build_evidence_matrix(make_item())
+
+    assert 0 <= matrix.source <= 5
+    assert 0 <= matrix.prototype <= 5
+    assert matrix.residue
+
+
 def test_compile_signal_genome_is_json_safe():
     genome = compile_signal_genome(make_item())
     exported = genome.to_dict()
@@ -78,6 +109,11 @@ def test_compile_signal_genome_is_json_safe():
     assert exported["title"] == "AgentTelemetry benchmark service"
     assert exported["final_score"] > 0
     assert isinstance(exported["canon_branches"], list)
+    assert isinstance(exported["source_ledger"], list)
+    assert isinstance(exported["claim_graph"], list)
+    assert "evidence_matrix" in exported
+    assert "prototype_ladder" in exported
+    assert "revenue_physics" in exported
     assert exported["canon_status"] in {
         "raw_signal",
         "imported_signal",
@@ -95,12 +131,16 @@ def test_compile_signal_genome_is_json_safe():
     }
 
 
-def test_compile_many_and_render_markdown():
+def test_compile_many_dashboard_and_render_markdown():
     genomes = compile_many([make_item(), make_item(title="Second signal")])
+    dashboard = build_daily_dashboard(genomes)
     markdown = render_intelligence_os_markdown(genomes)
 
     assert len(genomes) == 2
+    assert dashboard["top_signal"] == "AgentTelemetry benchmark service"
     assert "Daily Ω Intelligence OS" in markdown
+    assert "Dashboard" in markdown
     assert "Prototype horizon" in markdown
     assert "Revenue routes" in markdown
+    assert "Revenue physics" in markdown
     assert "Second signal" in markdown
