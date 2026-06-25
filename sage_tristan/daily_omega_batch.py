@@ -19,6 +19,7 @@ from sage_tristan.daily_omega_intelligence_os import SignalGenome, compile_many,
 from sage_tristan.daily_omega_io import export_decision_dict, load_item_json
 from sage_tristan.daily_omega_router import render_war_room_markdown
 
+DEFAULT_TIMEZONE = "Europe/Paris"
 SIGNAL_REQUIRED_KEYS = frozenset(
     {
         "title",
@@ -92,7 +93,7 @@ def build_batch_result(
     items: Iterable[BriefingItem],
     *,
     briefing_date: date,
-    timezone: str = "Europe/Berlin",
+    timezone: str = DEFAULT_TIMEZONE,
     limit: int = 5,
     dry_run: bool = True,
 ) -> BatchResult:
@@ -112,7 +113,7 @@ def build_batch_from_directory(
     directory: str | Path,
     *,
     briefing_date: date,
-    timezone: str = "Europe/Berlin",
+    timezone: str = DEFAULT_TIMEZONE,
     limit: int = 5,
     dry_run: bool = True,
 ) -> BatchResult:
@@ -162,6 +163,7 @@ def summarize_batch(result: BatchResult) -> str:
 
 __all__ = [
     "BatchResult",
+    "DEFAULT_TIMEZONE",
     "SIGNAL_REQUIRED_KEYS",
     "build_batch_from_directory",
     "build_batch_result",
