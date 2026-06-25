@@ -3,6 +3,7 @@ from datetime import date
 from sage_tristan.daily_omega_batch import (
     build_batch_result,
     discover_signal_files,
+    is_signal_json_file,
     load_items_from_directory,
     summarize_batch,
     write_batch_outputs,
@@ -63,6 +64,21 @@ def test_discover_and_load_directory(tmp_path):
 
     assert files == [path]
     assert items[0].title == "File signal"
+
+
+def test_batch_loader_skips_manifest_and_non_signal_json(tmp_path):
+    signal_path = tmp_path / "signal.json"
+    manifest_path = tmp_path / "manifest.json"
+    notes_path = tmp_path / "notes.json"
+    signal_path.write_text(__import__("json").dumps(make_signal("Real signal", 4)), encoding="utf-8")
+    manifest_path.write_text(__import__("json").dumps({"date": "2026-06-24", "items": 1}), encoding="utf-8")
+    notes_path.write_text(__import__("json").dumps({"title": "Not enough keys"}), encoding="utf-8")
+
+    assert is_signal_json_file(signal_path)
+    assert not is_signal_json_file(manifest_path)
+    assert not is_signal_json_file(notes_path)
+    assert discover_signal_files(tmp_path) == [signal_path]
+    assert load_items_from_directory(tmp_path)[0].title == "Real signal"
 
 
 def test_write_batch_outputs(tmp_path):
