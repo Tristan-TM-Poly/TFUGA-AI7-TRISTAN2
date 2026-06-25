@@ -1,0 +1,44 @@
+{
+  "m_minus": [
+    {
+      "name": "automation_without_goal",
+      "rule": "Ne jamais automatiser une tâche dont l'objectif est flou."
+    },
+    {
+      "name": "too_many_outputs",
+      "rule": "Ne pas générer dix fichiers si un seul artefact suffit."
+    },
+    {
+      "name": "silent_failure",
+      "rule": "Toute erreur doit être visible, journalisée et exploitable."
+    },
+    {
+      "name": "permission_overreach",
+      "rule": "Appliquer le moindre privilège par défaut."
+    },
+    {
+      "name": "public_ip_leak",
+      "rule": "Bloquer toute publication si le risque brevet/secret commercial n'est pas classé."
+    },
+    {
+      "name": "false_productivity",
+      "rule": "Ne pas confondre activité générée et valeur réelle."
+    },
+    {
+      "name": "automation_sprawl",
+      "rule": "Fusionner ou supprimer les workflows inutilisés."
+    },
+    {
+      "name": "recursive_loop",
+      "rule": "Interdire les boucles sans limite de coût, temps et profondeur."
+    },
+    {
+      "name": "unverified_claims",
+      "rule": "Toute affirmation scientifique doit avoir un statut: hypothèse, test, preuve ou spéculation."
+    },
+    {
+      "name": "zero_touch_overreach",
+      "rule": "ZÉRO-TOUCH ne doit jamais annuler le contrôle humain."
+    }
+  ]
+}
