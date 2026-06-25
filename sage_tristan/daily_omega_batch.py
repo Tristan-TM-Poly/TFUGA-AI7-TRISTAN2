@@ -12,11 +12,25 @@ import json
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Iterable
 
 from sage_tristan.daily_omega_briefing import BriefingItem, rank_items, render_markdown
 from sage_tristan.daily_omega_io import export_decision_dict, load_item_json
 from sage_tristan.daily_omega_router import render_war_room_markdown
+
+SIGNAL_REQUIRED_KEYS = frozenset(
+    {
+        "title",
+        "topic_anchor",
+        "why_it_matters",
+        "actionable_opportunity",
+        "oak_check",
+        "sources",
+        "next_action",
+        "scores",
+    }
+)
+METADATA_FILE_NAMES = frozenset({"manifest.json", "metadata.json", "index.json"})
 
 
 @dataclass(frozen=True)
@@ -31,6 +45,24 @@ class BatchResult:
         return json.dumps(list(self.decisions), indent=indent, ensure_ascii=False)
 
 
+def is_signal_json_file(path: str | Path) -> bool:
+    """Return whether a JSON file appears to be a Daily Omega signal.
+
+    Dated signal directories can contain metadata files such as `manifest.json`.
+    Those files must not be loaded as signals. A valid signal needs the minimal
+    portable signal contract, otherwise it is skipped as metadata.
+    """
+
+    file_path = Path(path)
+    if file_path.name in METADATA_FILE_NAMES or not file_path.is_file() or file_path.suffix != ".json":
+        return False
+    try:
+        payload = json.loads(file_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return isinstance(payload, dict) and SIGNAL_REQUIRED_KEYS.issubset(payload.keys())
+
+
 def discover_signal_files(directory: str | Path) -> list[Path]:
     """Return JSON signal files from a directory in deterministic order."""
 
@@ -39,7 +71,7 @@ def discover_signal_files(directory: str | Path) -> list[Path]:
         raise FileNotFoundError(f"signal directory does not exist: {root}")
     if not root.is_dir():
         raise NotADirectoryError(f"signal path is not a directory: {root}")
-    return sorted(path for path in root.glob("*.json") if path.is_file())
+    return sorted(path for path in root.glob("*.json") if is_signal_json_file(path))
 
 
 def load_items_from_directory(directory: str | Path) -> list[BriefingItem]:
@@ -120,9 +152,11 @@ def summarize_batch(result: BatchResult) -> str:
 
 __all__ = [
     "BatchResult",
+    "SIGNAL_REQUIRED_KEYS",
     "build_batch_from_directory",
     "build_batch_result",
     "discover_signal_files",
+    "is_signal_json_file",
     "load_items_from_directory",
     "summarize_batch",
     "write_batch_outputs",
