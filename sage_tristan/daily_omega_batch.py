@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Iterable
 
 from sage_tristan.daily_omega_briefing import BriefingItem, rank_items, render_markdown
+from sage_tristan.daily_omega_intelligence_os import SignalGenome, compile_many, render_intelligence_os_markdown
 from sage_tristan.daily_omega_io import export_decision_dict, load_item_json
 from sage_tristan.daily_omega_router import render_war_room_markdown
 
@@ -40,9 +41,13 @@ class BatchResult:
     items: tuple[BriefingItem, ...]
     markdown_report: str
     decisions: tuple[dict, ...]
+    genomes: tuple[SignalGenome, ...]
 
     def decisions_json(self, *, indent: int = 2) -> str:
         return json.dumps(list(self.decisions), indent=indent, ensure_ascii=False)
+
+    def genomes_json(self, *, indent: int = 2) -> str:
+        return json.dumps([genome.to_dict() for genome in self.genomes], indent=indent, ensure_ascii=False)
 
 
 def is_signal_json_file(path: str | Path) -> bool:
@@ -96,9 +101,11 @@ def build_batch_result(
     ranked = tuple(rank_items(list(items), limit=limit))
     briefing = render_markdown(briefing_date, timezone, ranked)
     war_room = render_war_room_markdown(ranked)
-    markdown_report = briefing.rstrip() + "\n\n---\n\n" + war_room
+    genomes = tuple(compile_many(ranked, dry_run=dry_run))
+    intelligence_os = render_intelligence_os_markdown(genomes)
+    markdown_report = briefing.rstrip() + "\n\n---\n\n" + war_room.rstrip() + "\n\n---\n\n" + intelligence_os
     decisions = tuple(export_decision_dict(item, dry_run=dry_run) for item in ranked)
-    return BatchResult(items=ranked, markdown_report=markdown_report, decisions=decisions)
+    return BatchResult(items=ranked, markdown_report=markdown_report, decisions=decisions, genomes=genomes)
 
 
 def build_batch_from_directory(
@@ -128,15 +135,18 @@ def write_batch_outputs(
 ) -> tuple[Path, Path]:
     """Write Markdown report and JSON decisions to `output_directory`.
 
-    Returns `(markdown_path, json_path)`.
+    Returns `(markdown_path, json_path)` for backward compatibility. A third
+    SignalGenome++ export is also written as `{stem}.genomes.json`.
     """
 
     output = Path(output_directory)
     output.mkdir(parents=True, exist_ok=True)
     markdown_path = output / f"{stem}.md"
     json_path = output / f"{stem}.decisions.json"
+    genomes_path = output / f"{stem}.genomes.json"
     markdown_path.write_text(result.markdown_report, encoding="utf-8")
     json_path.write_text(result.decisions_json(), encoding="utf-8")
+    genomes_path.write_text(result.genomes_json(), encoding="utf-8")
     return markdown_path, json_path
 
 
