@@ -1,0 +1,48 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "AUTO2 Automation Genome"
+type: object
+required:
+  - automation_genome
+properties:
+  automation_genome:
+    type: object
+    required:
+      - name
+      - purpose
+      - inputs
+      - operations
+      - outputs
+      - risks
+      - permissions
+      - forbidden_actions
+      - oak_status
+    properties:
+      name:
+        type: string
+      purpose:
+        type: string
+      inputs:
+        type: array
+        items: { type: string }
+      operations:
+        type: array
+        items: { type: string }
+      outputs:
+        type: array
+        items: { type: string }
+      risks:
+        type: array
+        items: { type: string }
+      permissions:
+        type: array
+        items: { type: string }
+      forbidden_actions:
+        type: array
+        items: { type: string }
+      trust_level:
+        type: string
+        enum: [T0, T1, T2, T3, T4, T5]
+        default: T0
+      oak_status:
+        type: string
+        enum: [draft, dry_run_allowed, controlled, trusted_limited, blocked]
