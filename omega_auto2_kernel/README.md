@@ -17,7 +17,32 @@
 ## Boucle canonique
 
 ```text
-Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → Telemetry → M⁺/M⁻ → Regenerator
+Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → M⁺/M⁻ → Regenerator
+```
+
+## Couche MaxCap
+
+La couche **MaxCap** définit et dépasse les capacités de façon mesurée :
+
+```text
+Capacity Vector = [scope, autonomy, reversibility, safety, usefulness, reliability, cost_control, learning, integration, value_creation]
+```
+
+Elle produit :
+
+- un niveau de capacité `C0` à `C7`;
+- un score global normalisé;
+- un Anti-Chaos Index;
+- une liste de prochaines étapes de dépassement OAK-safe;
+- un blocage si un red lock est touché.
+
+Un dépassement est valide seulement si :
+
+```text
+capability_after > capability_before
+AND oak_score_after >= oak_score_before
+AND anti_chaos_after >= anti_chaos_before
+AND red_locks_violated = 0
 ```
 
 ## Modules inclus
@@ -29,12 +54,13 @@ omega_auto2_kernel/
 │   ├── friction.py        # score de priorité d’automatisation
 │   ├── workflow_synth.py  # génération workflow depuis tâche
 │   ├── oak_gate.py        # validation sécurité/OAK
+│   ├── capabilities.py    # MaxCap: capacité, dépassement, Anti-Chaos
 │   ├── memory.py          # M⁺/M⁻ minimal
 │   └── cli.py             # interface CLI prototype
 ├── schemas/               # contrats YAML
 ├── examples/              # workflows exemples
 ├── tests/                 # tests unitaires
-├── docs/                  # théorie canonique
+├── docs/                  # théorie canonique + MaxCap
 └── m_minus_registry.json  # anti-patterns initiaux
 ```
 
@@ -52,18 +78,16 @@ pytest
 python -m omega_auto2.cli forge "résumer chaque matin mes sujets importants et proposer 3 actions OAK-safe"
 ```
 
-Sortie attendue :
+Exemple Python MaxCap :
 
-```yaml
-workflow:
-  name: generated_workflow
-  mode: dry_run_first
-  oak_status: draft
-  human_approval_required_for:
-    - external_email
-    - public_publish
-    - delete_files
-    - spend_money
+```python
+from omega_auto2 import forge_workflow_from_task, assess_capability
+
+workflow = forge_workflow_from_task("créer un dépôt GitHub OAK-safe")
+assessment = assess_capability(workflow)
+print(assessment.level)
+print(assessment.vector.score())
+print(assessment.next_safe_exceed_steps)
 ```
 
 ## Règles rouges
@@ -81,7 +105,7 @@ Ce noyau ne doit jamais autoriser automatiquement :
 
 ## Roadmap
 
-1. **v0.1** : schéma + OAKGate + friction score + exemples.
+1. **v0.1** : schéma + OAKGate + friction score + exemples + MaxCap initial.
 2. **v0.2** : sandbox/dry-run avec diff preview.
 3. **v0.3** : générateur de tests automatique.
 4. **v0.4** : telemetry + preuve de workflow.
