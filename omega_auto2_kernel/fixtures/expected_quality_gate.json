@@ -1,0 +1,9 @@
+{
+  "quality_gate": {
+    "version_set": true,
+    "canonical_workflows_present": true,
+    "external_actions_added": false,
+    "safe_default": true
+  },
+  "passed": true
+}
