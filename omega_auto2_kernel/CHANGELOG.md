@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.0
+
+- Adds canonical benchmark snapshots.
+- Adds Markdown and JSON diff reports.
+- Adds CLI commands `auto2 snapshot canonical` and `auto2 diff canonical`.
+- Adds v0.7 snapshot fixture and expected diff report fixture.
+- Adds snapshot/diff tests and v0.8 docs.
+
 ## 0.7.0
 
 - Adds regression benchmark guard.
