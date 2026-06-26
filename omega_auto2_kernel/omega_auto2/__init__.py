@@ -1,4 +1,4 @@
-"""Ω-AUTO²-Kernel v0.1.
+"""Ω-AUTO²-Kernel v0.2.
 
 Prototype OAK-safe d'automatisation de l'automatisation pour Tristan.
 """
@@ -8,6 +8,7 @@ from .friction import compute_priority_score
 from .workflow_synth import forge_workflow_from_task
 from .oak_gate import evaluate_workflow
 from .capabilities import CapacityVector, CapabilityAssessment, assess_capability, infer_capacity_vector
+from .sandbox import DryRunReport, dry_run_workflow
 
 __all__ = [
     "FrictionTensor",
@@ -20,4 +21,6 @@ __all__ = [
     "CapabilityAssessment",
     "assess_capability",
     "infer_capacity_vector",
+    "DryRunReport",
+    "dry_run_workflow",
 ]
