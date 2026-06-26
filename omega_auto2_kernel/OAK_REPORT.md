@@ -2,15 +2,15 @@
 
 ## Version
 
-0.7.0
+0.8.0
 
 ## Added
 
-- Regression benchmark guard.
-- Score comparison helpers.
-- CLI compare command.
-- Baseline and regression policy fixtures.
-- Anti-regression tests.
+- Canonical benchmark snapshots.
+- Markdown and JSON diff reports.
+- CLI snapshot and diff commands.
+- Snapshot and expected diff fixtures.
+- Snapshot/diff tests.
 
 ## Red locks touched
 
@@ -44,9 +44,10 @@ Required checks before merge:
 - canonical workflows exist;
 - CLI quality-gate passes;
 - CLI compare passes;
+- CLI snapshot and diff pass;
 - tests pass;
 - README, CHANGELOG, OAK report, and M-minus report are present.
 
 ## OAK decision
 
-v0.7.0 is safe to merge if CI/tests pass because it adds local regression comparison only.
+v0.8.0 is safe to merge if CI/tests pass because it adds local snapshot and diff text outputs only.
