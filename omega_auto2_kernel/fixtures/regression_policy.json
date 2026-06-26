@@ -1,0 +1,10 @@
+{
+  "version": "0.7.0",
+  "rules": {
+    "preserve_workflow_count": true,
+    "preserve_pass_rate": true,
+    "preserve_cli": true,
+    "preserve_exports": true,
+    "external_actions_allowed": false
+  }
+}
