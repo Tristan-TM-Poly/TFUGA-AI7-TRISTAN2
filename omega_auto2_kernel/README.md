@@ -1,6 +1,6 @@
-# Ω-AUTO²-Kernel v0.3
+# Ω-AUTO²-Kernel v0.4
 
-**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, mémorisé, prouvé et amélioré en draft.
+**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré et benché.
 
 > ZÉRO-TOUCH maximal, jamais zéro-contrôle.
 
@@ -12,40 +12,34 @@
 | Niveau | Draft contrôlé |
 | Actions externes | Interdites par défaut |
 | Suppression / publication / email / argent | Verrou humain obligatoire |
-| Objectif | Générer des workflows OAK-safe à partir de descriptions de tâches |
+| Objectif | Générer, prévisualiser, mesurer et benchmarker des workflows OAK-safe |
 
 ## Boucle canonique
 
 ```text
-Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → ImproveDraft → M⁺/M⁻
+Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Report → ImproveDraft → M⁺/M⁻
 ```
 
-## Nouveautés v0.2-v0.3
+## Nouveautés v0.2-v0.4
 
-v0.2 ajoute :
+v0.2 ajoute `sandbox.py`, `dry_run_workflow`, tests sandbox, GitHub Actions CI et docs CI.
 
-- `sandbox.py` : preview dry-run sans effet externe;
-- export API `dry_run_workflow`;
-- tests sandbox;
-- GitHub Actions CI `omega-auto2-ci`;
-- documentation `docs/V0_2_SANDBOX_CI.md`.
+v0.3 ajoute `telemetry.py`, `proof.py`, `improver.py` et tests telemetry/proof/improver.
 
-v0.3 ajoute :
+v0.4 ajoute :
 
-- `telemetry.py` : mesures de succès, valeur, bruit, coût;
-- `proof.py` : Proof-of-Workflow minimal;
-- `improver.py` : amélioration draft sans exécution;
-- tests telemetry/proof/improver.
+- `bench.py` : `run_bench`, `run_suite`, `BenchResult`;
+- `report.py` : `build_markdown_report`;
+- tests bench/report;
+- documentation `docs/V0_4_BENCH_REPORTS.md`.
 
 ## Couche MaxCap
-
-La couche **MaxCap** définit et dépasse les capacités de façon mesurée :
 
 ```text
 Capacity Vector = [scope, autonomy, reversibility, safety, usefulness, reliability, cost_control, learning, integration, value_creation]
 ```
 
-Elle produit : niveau C0-C7, score global, Anti-Chaos Index, prochaines étapes OAK-safe et blocage si red lock.
+La capacité n'est canonique que si elle reste OAK-safe, mesurable, réversible ou contrôlée.
 
 ## Modules inclus
 
@@ -60,6 +54,8 @@ omega_auto2_kernel/
 │   ├── sandbox.py
 │   ├── telemetry.py
 │   ├── proof.py
+│   ├── bench.py
+│   ├── report.py
 │   ├── improver.py
 │   ├── memory.py
 │   └── cli.py
@@ -83,25 +79,19 @@ pytest
 ```python
 from omega_auto2 import (
     TelemetrySnapshot,
-    assess_capability,
-    dry_run_workflow,
+    build_markdown_report,
     forge_workflow_from_task,
-    improve_draft,
-    prove_workflow,
+    run_bench,
 )
 
 workflow = forge_workflow_from_task("créer un dépôt GitHub OAK-safe")
 telemetry = TelemetrySnapshot(runs=5, successes=5, manual_steps_removed=10, artifacts_created=4, time_saved_minutes=90)
 
-assessment = assess_capability(workflow)
-preview = dry_run_workflow(workflow)
-proof = prove_workflow(workflow, telemetry)
-improved = improve_draft(workflow)
+result = run_bench(workflow, telemetry)
+report = build_markdown_report([workflow], telemetry)
 
-print(assessment.level)
-print(preview.to_dict())
-print(proof.to_dict())
-print(len(improved.steps))
+print(result.to_dict())
+print(report)
 ```
 
 ## Règles rouges
@@ -113,6 +103,6 @@ Ce noyau ne doit jamais autoriser automatiquement : suppression sans backup, pub
 1. **v0.1** : schéma + OAKGate + friction score + exemples + MaxCap initial.
 2. **v0.2** : sandbox/dry-run + CI GitHub Actions.
 3. **v0.3** : telemetry + proof-of-workflow + draft improver.
-4. **v0.4** : OAKBench exécutable complet en modules courts.
-5. **v0.5** : intégration GitHub/Drive en mode draft only.
+4. **v0.4** : bench suite + markdown reports.
+5. **v0.5** : workflows canoniques benchés + exports JSON/Markdown enrichis.
 6. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.
