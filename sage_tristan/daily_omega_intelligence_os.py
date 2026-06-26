@@ -3,7 +3,7 @@
 This layer converts a BriefingItem into a reusable SignalGenome++: a compact,
 JSON-safe strategic object that connects source verification, claim separation,
 evidence scoring, OAK review, canon routing, IP posture, prototype ladder,
-revenue physics, memory notes, and canon status.
+revenue physics, v3 strategic risk ledgers, memory notes, and canon status.
 
 It performs no network calls and creates no public issues.
 """
@@ -144,6 +144,94 @@ class RevenuePhysics:
 
 
 @dataclass(frozen=True)
+class AgentSecurityLedger:
+    """Security posture for agentic or automation-related signals."""
+
+    permission_scope: str
+    human_approval_required: bool
+    rollback_required: bool
+    audit_logs_required: bool
+    abuse_cases: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "permission_scope": self.permission_scope,
+            "human_approval_required": self.human_approval_required,
+            "rollback_required": self.rollback_required,
+            "audit_logs_required": self.audit_logs_required,
+            "abuse_cases": list(self.abuse_cases),
+        }
+
+
+@dataclass(frozen=True)
+class ObservabilitySignal:
+    """Metrics required to know whether a signal becomes operational value."""
+
+    metrics: tuple[str, ...]
+    required: bool
+    first_metric_to_measure: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "metrics": list(self.metrics),
+            "required": self.required,
+            "first_metric_to_measure": self.first_metric_to_measure,
+        }
+
+
+@dataclass(frozen=True)
+class FundingSignal:
+    """Funding and business signal extracted from a briefing item."""
+
+    routes: tuple[str, ...]
+    strength: str
+    first_action: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {"routes": list(self.routes), "strength": self.strength, "first_action": self.first_action}
+
+
+@dataclass(frozen=True)
+class InfrastructureDependency:
+    """Hidden infrastructure dependencies behind an opportunity."""
+
+    dependencies: tuple[str, ...]
+    risk_level: str
+    first_check: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {"dependencies": list(self.dependencies), "risk_level": self.risk_level, "first_check": self.first_check}
+
+
+@dataclass(frozen=True)
+class CriticalMaterialDependency:
+    """Critical material dependencies for energy, photonics, compute, and hardware signals."""
+
+    materials: tuple[str, ...]
+    risk_level: str
+    first_check: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {"materials": list(self.materials), "risk_level": self.risk_level, "first_check": self.first_check}
+
+
+@dataclass(frozen=True)
+class OakValidationRoute:
+    """OAK checks required before promotion, publication, or productization."""
+
+    checks: tuple[str, ...]
+    blocking_check: str
+    promotion_allowed: bool
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "checks": list(self.checks),
+            "blocking_check": self.blocking_check,
+            "promotion_allowed": self.promotion_allowed,
+        }
+
+
+@dataclass(frozen=True)
 class SignalGenome:
     """Portable strategic genome for one Daily Omega signal."""
 
@@ -164,6 +252,13 @@ class SignalGenome:
     evidence_matrix: EvidenceMatrix
     prototype_ladder: PrototypeLadder
     revenue_physics: RevenuePhysics
+    agent_security_ledger: AgentSecurityLedger
+    observability_signal: ObservabilitySignal
+    funding_signal: FundingSignal
+    ip_risk_level: str
+    infrastructure_dependency: InfrastructureDependency
+    critical_material_dependency: CriticalMaterialDependency
+    oak_validation_route: OakValidationRoute
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -184,6 +279,13 @@ class SignalGenome:
             "evidence_matrix": self.evidence_matrix.to_dict(),
             "prototype_ladder": self.prototype_ladder.to_dict(),
             "revenue_physics": self.revenue_physics.to_dict(),
+            "agent_security_ledger": self.agent_security_ledger.to_dict(),
+            "observability_signal": self.observability_signal.to_dict(),
+            "funding_signal": self.funding_signal.to_dict(),
+            "ip_risk_level": self.ip_risk_level,
+            "infrastructure_dependency": self.infrastructure_dependency.to_dict(),
+            "critical_material_dependency": self.critical_material_dependency.to_dict(),
+            "oak_validation_route": self.oak_validation_route.to_dict(),
         }
 
 
@@ -201,8 +303,18 @@ def _text_blob(item: BriefingItem) -> str:
             item.ip_signal,
             item.next_action,
             " ".join(item.signal_type),
+            item.oak_check.risk,
+            item.oak_check.falsification_route,
         ]
     ).lower()
+
+
+def _dedupe(values: Iterable[str]) -> tuple[str, ...]:
+    deduped: list[str] = []
+    for value in values:
+        if value and value not in deduped:
+            deduped.append(value)
+    return tuple(deduped)
 
 
 def source_verification_status(source: Source) -> tuple[str, str]:
@@ -361,6 +473,176 @@ def build_revenue_physics(item: BriefingItem, routes: tuple[str, ...]) -> Revenu
     return RevenuePhysics(level=level, routes=routes, first_experiment=first)
 
 
+def build_agent_security_ledger(item: BriefingItem) -> AgentSecurityLedger:
+    """Infer the agent-security posture required by a signal."""
+
+    text = _text_blob(item)
+    is_agentic = any(token in text for token in ("agent", "automation", "workflow", "tool", "autonomous"))
+    external_action = any(token in text for token in ("payment", "transaction", "email", "external", "write", "deploy", "send"))
+    permission_scope = "none"
+    if is_agentic and external_action:
+        permission_scope = "write_limited"
+    elif is_agentic:
+        permission_scope = "read_only"
+    abuse_cases = ("tool_misuse", "hallucinated_action", "data_exfiltration") if is_agentic else ()
+    if external_action:
+        abuse_cases = abuse_cases + ("unauthorized_transaction",)
+    return AgentSecurityLedger(
+        permission_scope=permission_scope,
+        human_approval_required=bool(is_agentic),
+        rollback_required=bool(is_agentic),
+        audit_logs_required=bool(is_agentic),
+        abuse_cases=_dedupe(abuse_cases),
+    )
+
+
+def build_observability_signal(item: BriefingItem) -> ObservabilitySignal:
+    """Infer the operational metrics required to validate a signal."""
+
+    text = _text_blob(item)
+    metrics = ["source_traceability", "oak_residue_count"]
+    if any(token in text for token in ("agent", "automation", "workflow")):
+        metrics.extend(["task_success_rate", "hallucination_rate", "rollback_events", "human_correction_rate"])
+    if any(token in text for token in ("cost", "compute", "gpu", "cloud", "api")):
+        metrics.append("cost_per_task")
+    if "benchmark" in text or "prototype" in text:
+        metrics.append("baseline_delta")
+    first_metric = "source_traceability" if item.sources else "source_presence"
+    return ObservabilitySignal(metrics=_dedupe(metrics), required=True, first_metric_to_measure=first_metric)
+
+
+def build_funding_signal(item: BriefingItem) -> FundingSignal:
+    """Infer funding and business routes."""
+
+    text = _text_blob(item)
+    routes: list[str] = []
+    if any(token in text for token in ("grant", "subvention", "fund", "government", "canada", "quebec")):
+        routes.extend(["grant_possible", "government_program"])
+    if any(token in text for token in ("customer", "enterprise", "audit", "service", "compliance")):
+        routes.append("customer_budget_possible")
+    if any(token in text for token in ("startup", "venture", "series", "seed", "valuation")):
+        routes.append("venture_signal")
+    if any(token in text for token in ("research", "lab", "university", "paper")):
+        routes.append("research_contract")
+    if any(token in text for token in ("partner", "strategic", "supply", "critical")):
+        routes.append("strategic_partner")
+    routes_tuple = _dedupe(routes) or ("none",)
+    strength = "none" if routes_tuple == ("none",) else "medium"
+    if len(routes_tuple) >= 3:
+        strength = "high"
+    first_action = "Create a one-page eligibility/customer hypothesis before outreach." if routes_tuple != ("none",) else "Keep as research signal until a funding route appears."
+    return FundingSignal(routes=routes_tuple, strength=strength, first_action=first_action)
+
+
+def infer_ip_risk_level(item: BriefingItem, ip_classification: str) -> str:
+    """Classify public-disclosure/IP risk."""
+
+    text = _text_blob(item)
+    if any(token in text for token in ("do not disclose", "secret", "confidential invention")):
+        return "danger_do_not_disclose"
+    if ip_classification == "confidential_ip_review" or any(token in text for token in ("patentable", "invention", "trade secret")):
+        return "high_confidential_invention"
+    if ip_classification in {"prior_art_review", "publication_candidate"} or any(token in text for token in ("patent", "prior-art", "paper")):
+        return "medium_prior_art_needed"
+    return "low_public_signal"
+
+
+def build_infrastructure_dependency(item: BriefingItem) -> InfrastructureDependency:
+    """Infer hidden infrastructure dependencies."""
+
+    text = _text_blob(item)
+    keyword_map = {
+        "cloud": "cloud",
+        "gpu": "gpu",
+        "hbm": "hbm",
+        "memory": "hbm",
+        "energy": "energy",
+        "electricity": "energy",
+        "data center": "data_center",
+        "datacenter": "data_center",
+        "submarine": "submarine_cables",
+        "cable": "submarine_cables",
+        "jurisdiction": "jurisdiction",
+        "sanction": "sanctions",
+        "export": "export_controls",
+        "critical mineral": "critical_minerals",
+        "supply chain": "critical_minerals",
+    }
+    dependencies = _dedupe(dep for keyword, dep in keyword_map.items() if keyword in text)
+    if len(dependencies) >= 4:
+        risk_level = "high"
+    elif dependencies:
+        risk_level = "medium"
+    else:
+        risk_level = "low"
+    first_check = "Map compute, energy, jurisdiction, and supply-chain dependencies before promotion."
+    if risk_level == "low":
+        first_check = "No major infrastructure dependency detected; re-check during OAK review."
+    return InfrastructureDependency(dependencies=dependencies or ("none",), risk_level=risk_level, first_check=first_check)
+
+
+def build_critical_material_dependency(item: BriefingItem) -> CriticalMaterialDependency:
+    """Infer critical materials tied to an opportunity."""
+
+    text = _text_blob(item)
+    materials = _dedupe(
+        material
+        for material in (
+            "lithium",
+            "graphite",
+            "nickel",
+            "copper",
+            "gallium",
+            "germanium",
+            "indium",
+            "rare_earths",
+            "niobium",
+            "silicon",
+            "scandium",
+        )
+        if material.replace("_", " ") in text or material in text
+    )
+    if len(materials) >= 3:
+        risk_level = "high"
+    elif materials:
+        risk_level = "medium"
+    else:
+        risk_level = "low"
+    first_check = "Check material availability, supply concentration, substitutes, and ESG constraints."
+    if risk_level == "low":
+        first_check = "No explicit critical material dependency detected."
+    return CriticalMaterialDependency(materials=materials or ("none",), risk_level=risk_level, first_check=first_check)
+
+
+def build_oak_validation_route(item: BriefingItem, ip_risk_level: str) -> OakValidationRoute:
+    """Build the validation route needed before promotion."""
+
+    text = _text_blob(item)
+    checks = ["source_check", "oak_risk_check"]
+    if any(source.source_quality <= 2 or source.url_or_identifier.startswith("source_required:") for source in item.sources):
+        checks.append("source_upgrade_check")
+    if any(token in text for token in ("paper", "benchmark", "experiment", "research", "science")):
+        checks.extend(["reproduction_check", "baseline_check", "unit_check"])
+    if any(token in text for token in ("agent", "automation", "permission", "security")):
+        checks.extend(["safety_check", "permission_check", "observability_check"])
+    if ip_risk_level in {"medium_prior_art_needed", "high_confidential_invention", "danger_do_not_disclose"}:
+        checks.append("ip_check")
+    if any(token in text for token in ("customer", "revenue", "service", "audit", "grant")):
+        checks.append("customer_or_funding_check")
+    if item.final_score >= 20:
+        checks.append("prototype_check")
+    checks_tuple = _dedupe(checks)
+    blocking = "none"
+    if "source_upgrade_check" in checks_tuple:
+        blocking = "source_upgrade_check"
+    elif ip_risk_level in {"high_confidential_invention", "danger_do_not_disclose"}:
+        blocking = "ip_check"
+    elif "safety_check" in checks_tuple:
+        blocking = "safety_check"
+    promotion_allowed = blocking == "none"
+    return OakValidationRoute(checks=checks_tuple, blocking_check=blocking, promotion_allowed=promotion_allowed)
+
+
 def infer_canon_status(item: BriefingItem) -> str:
     """Infer conservative canon status from sources and OAK state."""
 
@@ -385,6 +667,7 @@ def compile_signal_genome(item: BriefingItem, *, dry_run: bool = True) -> Signal
     route = route_item(item)
     decision = supervise_issue_spec(item, dry_run=dry_run)
     routes = infer_revenue_routes(item)
+    ip_risk_level = infer_ip_risk_level(item, route.ip_classification)
     return SignalGenome(
         title=item.title,
         final_score=item.final_score,
@@ -403,6 +686,13 @@ def compile_signal_genome(item: BriefingItem, *, dry_run: bool = True) -> Signal
         evidence_matrix=build_evidence_matrix(item),
         prototype_ladder=build_prototype_ladder(item),
         revenue_physics=build_revenue_physics(item, routes),
+        agent_security_ledger=build_agent_security_ledger(item),
+        observability_signal=build_observability_signal(item),
+        funding_signal=build_funding_signal(item),
+        ip_risk_level=ip_risk_level,
+        infrastructure_dependency=build_infrastructure_dependency(item),
+        critical_material_dependency=build_critical_material_dependency(item),
+        oak_validation_route=build_oak_validation_route(item, ip_risk_level),
     )
 
 
@@ -413,7 +703,7 @@ def compile_many(items: Iterable[BriefingItem], *, dry_run: bool = True) -> list
 
 
 def build_daily_dashboard(genomes: Iterable[SignalGenome]) -> dict[str, Any]:
-    """Return the 7-field dashboard layer for compiled genomes."""
+    """Return the dashboard layer for compiled genomes."""
 
     ranked = sorted(list(genomes), key=lambda genome: genome.final_score, reverse=True)
     if not ranked:
@@ -425,6 +715,8 @@ def build_daily_dashboard(genomes: Iterable[SignalGenome]) -> dict[str, Any]:
             "top_oak_warning": None,
             "top_source_to_verify": None,
             "top_next_action": None,
+            "top_infrastructure_risk": None,
+            "top_agent_security_risk": None,
         }
     top = ranked[0]
     source_to_verify = next(
@@ -438,12 +730,16 @@ def build_daily_dashboard(genomes: Iterable[SignalGenome]) -> dict[str, Any]:
     )
     top_revenue = next((genome.title for genome in ranked if genome.revenue_routes != ("none",)), top.title)
     top_ip = next(
-        (
-            genome.title
-            for genome in ranked
-            if genome.ip_classification in {"confidential_ip_review", "prior_art_review", "publication_candidate"}
-        ),
+        (genome.title for genome in ranked if genome.ip_risk_level != "low_public_signal"),
         top.title,
+    )
+    infra = next(
+        (genome.title for genome in ranked if genome.infrastructure_dependency.risk_level in {"medium", "high"}),
+        None,
+    )
+    agent_security = next(
+        (genome.title for genome in ranked if genome.agent_security_ledger.permission_scope != "none"),
+        None,
     )
     return {
         "top_signal": top.title,
@@ -453,6 +749,8 @@ def build_daily_dashboard(genomes: Iterable[SignalGenome]) -> dict[str, Any]:
         "top_oak_warning": top.m_minus,
         "top_source_to_verify": source_to_verify,
         "top_next_action": top.next_action,
+        "top_infrastructure_risk": infra,
+        "top_agent_security_risk": agent_security,
     }
 
 
@@ -473,11 +771,17 @@ def render_intelligence_os_markdown(genomes: Iterable[SignalGenome]) -> str:
                 f"- **Canon status:** {genome.canon_status}",
                 f"- **Branches:** {', '.join(genome.canon_branches) or 'Unrouted'}",
                 f"- **IP:** {genome.ip_classification}",
+                f"- **IP risk:** {genome.ip_risk_level}",
                 f"- **Issue type:** {genome.issue_type}",
                 f"- **Supervisor:** {genome.supervision_mode}",
                 f"- **Prototype horizon:** {genome.prototype_horizon}",
                 f"- **Revenue routes:** {', '.join(genome.revenue_routes)}",
+                f"- **Funding signal:** {genome.funding_signal.strength} / {', '.join(genome.funding_signal.routes)}",
                 f"- **Revenue physics:** {genome.revenue_physics.level}",
+                f"- **Agent security:** {genome.agent_security_ledger.permission_scope}",
+                f"- **Infrastructure:** {genome.infrastructure_dependency.risk_level} / {', '.join(genome.infrastructure_dependency.dependencies)}",
+                f"- **Critical materials:** {genome.critical_material_dependency.risk_level} / {', '.join(genome.critical_material_dependency.materials)}",
+                f"- **OAK validation:** blocking={genome.oak_validation_route.blocking_check}; checks={', '.join(genome.oak_validation_route.checks)}",
                 f"- **Source status:** {', '.join(entry.verification_status for entry in genome.source_ledger)}",
                 f"- **Evidence residue:** {genome.evidence_matrix.residue}",
                 f"- **M-:** {genome.m_minus}",
@@ -492,21 +796,34 @@ __all__ = [
     "CANON_STATUS_LADDER",
     "PROTOTYPE_HORIZONS",
     "REVENUE_ROUTES",
+    "AgentSecurityLedger",
     "ClaimNode",
+    "CriticalMaterialDependency",
     "EvidenceMatrix",
+    "FundingSignal",
+    "InfrastructureDependency",
+    "OakValidationRoute",
+    "ObservabilitySignal",
     "PrototypeLadder",
     "RevenuePhysics",
     "SignalGenome",
     "SourceLedgerEntry",
+    "build_agent_security_ledger",
     "build_claim_graph",
+    "build_critical_material_dependency",
     "build_daily_dashboard",
     "build_evidence_matrix",
+    "build_funding_signal",
+    "build_infrastructure_dependency",
+    "build_oak_validation_route",
+    "build_observability_signal",
     "build_prototype_ladder",
     "build_revenue_physics",
     "build_source_ledger",
     "compile_many",
     "compile_signal_genome",
     "infer_canon_status",
+    "infer_ip_risk_level",
     "infer_prototype_horizon",
     "infer_revenue_routes",
     "render_intelligence_os_markdown",
