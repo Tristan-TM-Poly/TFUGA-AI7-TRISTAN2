@@ -1,4 +1,4 @@
-"""Ω-AUTO²-Kernel v0.4.
+"""Ω-AUTO²-Kernel v0.5.
 
 Prototype OAK-safe d'automatisation de l'automatisation pour Tristan.
 """
@@ -14,6 +14,8 @@ from .proof import ProofOfWorkflow, prove_workflow
 from .improver import improve_draft
 from .bench import BenchResult, run_bench, run_suite
 from .report import build_markdown_report
+from .canonical import CANONICAL_TASKS, canonical_workflow, canonical_workflows
+from .exporters import suite_json, suite_markdown
 
 __all__ = [
     "FrictionTensor",
@@ -36,4 +38,9 @@ __all__ = [
     "run_bench",
     "run_suite",
     "build_markdown_report",
+    "CANONICAL_TASKS",
+    "canonical_workflow",
+    "canonical_workflows",
+    "suite_json",
+    "suite_markdown",
 ]

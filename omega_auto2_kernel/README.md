@@ -1,6 +1,6 @@
-# Ω-AUTO²-Kernel v0.4
+# Ω-AUTO²-Kernel v0.5
 
-**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré et benché.
+**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché et exporté.
 
 > ZÉRO-TOUCH maximal, jamais zéro-contrôle.
 
@@ -12,34 +12,31 @@
 | Niveau | Draft contrôlé |
 | Actions externes | Interdites par défaut |
 | Suppression / publication / email / argent | Verrou humain obligatoire |
-| Objectif | Générer, prévisualiser, mesurer et benchmarker des workflows OAK-safe |
+| Objectif | Générer, prévisualiser, mesurer, benchmarker et exporter des workflows OAK-safe |
 
 ## Boucle canonique
 
 ```text
-Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Report → ImproveDraft → M⁺/M⁻
+Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Report → ImproveDraft → M⁺/M⁻
 ```
 
-## Nouveautés v0.2-v0.4
+## Nouveautés v0.5
 
-v0.2 ajoute `sandbox.py`, `dry_run_workflow`, tests sandbox, GitHub Actions CI et docs CI.
+v0.5 ajoute :
 
-v0.3 ajoute `telemetry.py`, `proof.py`, `improver.py` et tests telemetry/proof/improver.
+- `canonical.py` : workflows canoniques Daily, GitHub, MaxCap, DriveBrain;
+- `exporters.py` : exports JSON et Markdown;
+- tests canonical/export;
+- documentation `docs/V0_5_CANONICAL_BENCHMARKS.md`.
 
-v0.4 ajoute :
-
-- `bench.py` : `run_bench`, `run_suite`, `BenchResult`;
-- `report.py` : `build_markdown_report`;
-- tests bench/report;
-- documentation `docs/V0_4_BENCH_REPORTS.md`.
-
-## Couche MaxCap
+## Workflows canoniques
 
 ```text
-Capacity Vector = [scope, autonomy, reversibility, safety, usefulness, reliability, cost_control, learning, integration, value_creation]
+daily_briefing
+github_factory
+maxcap_assessment
+drivebrain_draft
 ```
-
-La capacité n'est canonique que si elle reste OAK-safe, mesurable, réversible ou contrôlée.
 
 ## Modules inclus
 
@@ -56,6 +53,8 @@ omega_auto2_kernel/
 │   ├── proof.py
 │   ├── bench.py
 │   ├── report.py
+│   ├── canonical.py
+│   ├── exporters.py
 │   ├── improver.py
 │   ├── memory.py
 │   └── cli.py
@@ -77,21 +76,14 @@ pytest
 ## Exemple d’usage
 
 ```python
-from omega_auto2 import (
-    TelemetrySnapshot,
-    build_markdown_report,
-    forge_workflow_from_task,
-    run_bench,
-)
+from omega_auto2 import canonical_workflows, suite_json, suite_markdown
 
-workflow = forge_workflow_from_task("créer un dépôt GitHub OAK-safe")
-telemetry = TelemetrySnapshot(runs=5, successes=5, manual_steps_removed=10, artifacts_created=4, time_saved_minutes=90)
+workflows = canonical_workflows()
+json_report = suite_json(workflows)
+markdown_report = suite_markdown(workflows)
 
-result = run_bench(workflow, telemetry)
-report = build_markdown_report([workflow], telemetry)
-
-print(result.to_dict())
-print(report)
+print(json_report)
+print(markdown_report)
 ```
 
 ## Règles rouges
@@ -105,4 +97,5 @@ Ce noyau ne doit jamais autoriser automatiquement : suppression sans backup, pub
 3. **v0.3** : telemetry + proof-of-workflow + draft improver.
 4. **v0.4** : bench suite + markdown reports.
 5. **v0.5** : workflows canoniques benchés + exports JSON/Markdown enrichis.
-6. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.
+6. **v0.6** : CLI bench canonique + fixtures de référence.
+7. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.
