@@ -48,12 +48,15 @@ def cmd_quality_gate(_: argparse.Namespace) -> int:
         "external_actions_added": False,
         "safe_default": True,
     }
-    payload = {
-        "quality_gate": checks,
-        "passed": all(value is True for value in checks.values() if isinstance(value, bool)) and not checks["external_actions_added"],
-    }
+    passed = (
+        checks["version_set"]
+        and checks["canonical_workflows_present"]
+        and not checks["external_actions_added"]
+        and checks["safe_default"]
+    )
+    payload = {"quality_gate": checks, "passed": passed}
     print(json.dumps(payload, ensure_ascii=False, indent=2))
-    return 0 if payload["passed"] else 1
+    return 0 if passed else 1
 
 
 def build_parser() -> argparse.ArgumentParser:
