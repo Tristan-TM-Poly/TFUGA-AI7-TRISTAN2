@@ -1,6 +1,6 @@
-# Ω-AUTO²-Kernel v0.8
+# Ω-AUTO²-Kernel v0.9
 
-**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché, exporté, comparé et documenté par snapshots/diffs.
+**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché, exporté, comparé, snapshoté et validé par pipeline local de release.
 
 > ZÉRO-TOUCH maximal, jamais zéro-contrôle.
 
@@ -9,30 +9,29 @@
 | Dimension | Statut |
 |---|---|
 | Nature | Prototype logiciel / architecture de recherche |
-| Version | 0.8.0 |
+| Version | 0.9.0 |
 | Niveau | Draft contrôlé |
 | Actions externes | Interdites par défaut |
 | Suppression / publication / email / argent | Verrou humain obligatoire |
-| Objectif | Générer, mesurer, benchmarker, comparer, snapshotter et rendre visibles les régressions |
+| Objectif | Unifier quality-gate, compare, snapshot et diff en un release-check local |
 
 ## Boucle canonique
 
 ```text
-Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Compare → Snapshot → DiffReport → RegressionGuard → CLI → M⁺/M⁻
+Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Compare → Snapshot → DiffReport → ReleaseCheck → CLI → M⁺/M⁻
 ```
 
-## Nouveautés v0.8
+## Nouveautés v0.9
 
-v0.8 ajoute :
+v0.9 ajoute :
 
-- version `0.8.0`;
-- `snapshot.py`;
-- `diff_report.py`;
-- CLI `auto2 snapshot canonical`;
-- CLI `auto2 diff canonical`;
-- fixtures `v0_7_canonical_snapshot.json` et `expected_diff_report.md`;
-- tests snapshot/diff;
-- documentation `docs/V0_8_DIFF_SNAPSHOTS.md`.
+- version `0.9.0`;
+- `release.py`;
+- CLI `auto2 release-check canonical`;
+- sortie release Markdown/JSON;
+- fixture `expected_release_pipeline.md`;
+- tests release pipeline;
+- documentation `docs/V0_9_RELEASE_PIPELINE.md`.
 
 ## Commandes CLI
 
@@ -44,8 +43,9 @@ auto2 bench canonical --format json
 auto2 compare canonical
 auto2 snapshot canonical
 auto2 diff canonical
-auto2 diff canonical --format json
-auto2 diff canonical --against fixtures/v0_7_canonical_snapshot.json
+auto2 release-check canonical
+auto2 release-check canonical --format json
+auto2 release-check canonical --against fixtures/v0_7_canonical_snapshot.json
 auto2 report canonical
 auto2 quality-gate
 ```

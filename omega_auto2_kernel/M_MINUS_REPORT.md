@@ -2,7 +2,7 @@
 
 ## Version
 
-0.8.0
+0.9.0
 
 ## Negative memory learned
 
@@ -17,6 +17,7 @@
 | M-007 | Packaging discovery failure | Keep setuptools discovery constrained to `omega_auto2*`. |
 | M-008 | Silent regression risk | Add baseline fixtures and score comparison before larger refactors. |
 | M-009 | Invisible benchmark drift | Preserve snapshots and diff reports as checked-in artifacts. |
+| M-010 | Fragmented release checks | Bundle quality-gate, compare, snapshot and diff into one local release-check. |
 
 ## Anti-rules
 
@@ -26,8 +27,7 @@
 - Do not create additional issues unless they are canonical and necessary.
 - Do not grow one giant file when the connector blocks content; split into small modules.
 - Do not accept a lower canonical workflow count or pass rate without explicit OAK review.
-- Do not rely only on raw JSON when a Markdown diff can make regression visible.
 
 ## Next M⁻ target
 
-v0.9 should add a local release pipeline that runs quality-gate, compare, snapshot, and diff together.
+v1.0 should stabilize an orchestrator/release-candidate layer without adding external effects.
