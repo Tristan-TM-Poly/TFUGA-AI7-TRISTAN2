@@ -1,9 +1,9 @@
-"""Ω-AUTO²-Kernel v0.8.
+"""Ω-AUTO²-Kernel v0.9.
 
 Prototype OAK-safe d'automatisation de l'automatisation pour Tristan.
 """
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 from .models import FrictionTensor, Workflow, OAKReport
 from .friction import compute_priority_score
@@ -22,6 +22,7 @@ from .score_compare import compare_scores
 from .regression import current_canonical_suite, regression_check
 from .snapshot import canonical_snapshot, snapshot_json, load_snapshot
 from .diff_report import build_diff_payload, diff_json, diff_markdown
+from .release import quality_gate, release_pipeline, release_markdown
 
 __all__ = [
     "__version__",
@@ -59,4 +60,7 @@ __all__ = [
     "build_diff_payload",
     "diff_json",
     "diff_markdown",
+    "quality_gate",
+    "release_pipeline",
+    "release_markdown",
 ]
