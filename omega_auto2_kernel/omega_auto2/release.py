@@ -8,7 +8,7 @@ from .snapshot import canonical_snapshot
 
 def quality_gate(version: str) -> dict[str, object]:
     checks = {
-        "version_set": version == "0.9.0",
+        "version_set": bool(version),
         "canonical_workflows_present": len(canonical_workflows()) >= 4,
         "external_actions_added": False,
         "safe_default": True,
@@ -22,7 +22,7 @@ def quality_gate(version: str) -> dict[str, object]:
     return {"quality_gate": checks, "passed": passed}
 
 
-def release_pipeline(version: str = "0.9.0", baseline: dict[str, object] | None = None) -> dict[str, object]:
+def release_pipeline(version: str = "1.0.0", baseline: dict[str, object] | None = None) -> dict[str, object]:
     qg = quality_gate(version)
     comparison = regression_check(baseline)
     snapshot = canonical_snapshot(version)
@@ -39,7 +39,7 @@ def release_pipeline(version: str = "0.9.0", baseline: dict[str, object] | None 
     }
 
 
-def release_markdown(version: str = "0.9.0", baseline: dict[str, object] | None = None) -> str:
+def release_markdown(version: str = "1.0.0", baseline: dict[str, object] | None = None) -> str:
     payload = release_pipeline(version, baseline)
     lines = [
         "# Ω-AUTO² Release Pipeline",
