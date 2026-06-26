@@ -1,4 +1,4 @@
-"""Ω-AUTO²-Kernel v0.3.
+"""Ω-AUTO²-Kernel v0.4.
 
 Prototype OAK-safe d'automatisation de l'automatisation pour Tristan.
 """
@@ -12,6 +12,8 @@ from .sandbox import DryRunReport, dry_run_workflow
 from .telemetry import TelemetrySnapshot
 from .proof import ProofOfWorkflow, prove_workflow
 from .improver import improve_draft
+from .bench import BenchResult, run_bench, run_suite
+from .report import build_markdown_report
 
 __all__ = [
     "FrictionTensor",
@@ -30,4 +32,8 @@ __all__ = [
     "ProofOfWorkflow",
     "prove_workflow",
     "improve_draft",
+    "BenchResult",
+    "run_bench",
+    "run_suite",
+    "build_markdown_report",
 ]
