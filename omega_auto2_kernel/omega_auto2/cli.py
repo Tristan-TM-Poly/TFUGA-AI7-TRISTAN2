@@ -4,12 +4,14 @@ import argparse
 import json
 
 from .canonical import canonical_workflows
+from .diff_report import diff_json, diff_markdown
 from .exporters import suite_json, suite_markdown
 from .oak_gate import evaluate_workflow
 from .regression import load_baseline, regression_check
+from .snapshot import load_snapshot, snapshot_json
 from .workflow_synth import forge_workflow_from_task
 
-VERSION = "0.7.0"
+VERSION = "0.8.0"
 
 
 def cmd_version(_: argparse.Namespace) -> int:
@@ -49,9 +51,23 @@ def cmd_compare(args: argparse.Namespace) -> int:
     return 0 if result["passed"] else 1
 
 
+def cmd_snapshot(args: argparse.Namespace) -> int:
+    print(snapshot_json(VERSION))
+    return 0
+
+
+def cmd_diff(args: argparse.Namespace) -> int:
+    baseline = load_snapshot(args.against) if args.against else None
+    if args.format == "json":
+        print(diff_json(baseline))
+    else:
+        print(diff_markdown(baseline))
+    return 0
+
+
 def cmd_quality_gate(_: argparse.Namespace) -> int:
     checks = {
-        "version_set": VERSION == "0.7.0",
+        "version_set": VERSION == "0.8.0",
         "canonical_workflows_present": len(canonical_workflows()) >= 4,
         "external_actions_added": False,
         "safe_default": True,
@@ -87,6 +103,16 @@ def build_parser() -> argparse.ArgumentParser:
     compare.add_argument("target", choices=["canonical"])
     compare.add_argument("--against", default=None)
     compare.set_defaults(func=cmd_compare)
+
+    snapshot = sub.add_parser("snapshot", help="Generate a canonical benchmark snapshot")
+    snapshot.add_argument("target", choices=["canonical"])
+    snapshot.set_defaults(func=cmd_snapshot)
+
+    diff = sub.add_parser("diff", help="Generate a benchmark diff report")
+    diff.add_argument("target", choices=["canonical"])
+    diff.add_argument("--against", default=None)
+    diff.add_argument("--format", choices=["json", "markdown"], default="markdown")
+    diff.set_defaults(func=cmd_diff)
 
     report = sub.add_parser("report", help="Generate reports")
     report.add_argument("target", choices=["canonical"])

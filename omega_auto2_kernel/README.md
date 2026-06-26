@@ -1,6 +1,6 @@
-# Ω-AUTO²-Kernel v0.7
+# Ω-AUTO²-Kernel v0.8
 
-**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché, exporté, commandable par CLI et protégé contre les régressions.
+**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché, exporté, comparé et documenté par snapshots/diffs.
 
 > ZÉRO-TOUCH maximal, jamais zéro-contrôle.
 
@@ -9,29 +9,30 @@
 | Dimension | Statut |
 |---|---|
 | Nature | Prototype logiciel / architecture de recherche |
-| Version | 0.7.0 |
+| Version | 0.8.0 |
 | Niveau | Draft contrôlé |
 | Actions externes | Interdites par défaut |
 | Suppression / publication / email / argent | Verrou humain obligatoire |
-| Objectif | Générer, mesurer, benchmarker, comparer et protéger des workflows OAK-safe |
+| Objectif | Générer, mesurer, benchmarker, comparer, snapshotter et rendre visibles les régressions |
 
 ## Boucle canonique
 
 ```text
-Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Compare → RegressionGuard → Report → CLI → M⁺/M⁻
+Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Compare → Snapshot → DiffReport → RegressionGuard → CLI → M⁺/M⁻
 ```
 
-## Nouveautés v0.7
+## Nouveautés v0.8
 
-v0.7 ajoute :
+v0.8 ajoute :
 
-- version `0.7.0`;
-- `score_compare.py`;
-- `regression.py`;
-- CLI `auto2 compare canonical`;
-- fixtures `v0_6_canonical_bench.json` et `regression_policy.json`;
-- tests anti-régression;
-- documentation `docs/V0_7_REGRESSION_BENCHMARKS.md`.
+- version `0.8.0`;
+- `snapshot.py`;
+- `diff_report.py`;
+- CLI `auto2 snapshot canonical`;
+- CLI `auto2 diff canonical`;
+- fixtures `v0_7_canonical_snapshot.json` et `expected_diff_report.md`;
+- tests snapshot/diff;
+- documentation `docs/V0_8_DIFF_SNAPSHOTS.md`.
 
 ## Commandes CLI
 
@@ -41,7 +42,10 @@ auto2 forge "créer un workflow GitHub OAK-safe"
 auto2 bench canonical --format markdown
 auto2 bench canonical --format json
 auto2 compare canonical
-auto2 compare canonical --against fixtures/v0_6_canonical_bench.json
+auto2 snapshot canonical
+auto2 diff canonical
+auto2 diff canonical --format json
+auto2 diff canonical --against fixtures/v0_7_canonical_snapshot.json
 auto2 report canonical
 auto2 quality-gate
 ```
@@ -60,4 +64,5 @@ Ce noyau ne doit jamais autoriser automatiquement : suppression sans backup, pub
 6. **v0.6** : CLI bench canonique + fixtures + changelog + OAK/M⁻ reports.
 7. **v0.7** : regression fixtures + score comparisons across versions.
 8. **v0.8** : generated diff reports + checked-in canonical benchmark snapshots.
-9. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.
+9. **v0.9** : local release pipeline quality-gate + compare + snapshot + diff.
+10. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.

@@ -2,7 +2,7 @@
 
 ## Version
 
-0.7.0
+0.8.0
 
 ## Negative memory learned
 
@@ -16,6 +16,7 @@
 | M-006 | Feature stacking without stabilization | Add quality gate, fixtures, changelog, and OAK report before new large features. |
 | M-007 | Packaging discovery failure | Keep setuptools discovery constrained to `omega_auto2*`. |
 | M-008 | Silent regression risk | Add baseline fixtures and score comparison before larger refactors. |
+| M-009 | Invisible benchmark drift | Preserve snapshots and diff reports as checked-in artifacts. |
 
 ## Anti-rules
 
@@ -25,7 +26,8 @@
 - Do not create additional issues unless they are canonical and necessary.
 - Do not grow one giant file when the connector blocks content; split into small modules.
 - Do not accept a lower canonical workflow count or pass rate without explicit OAK review.
+- Do not rely only on raw JSON when a Markdown diff can make regression visible.
 
 ## Next M⁻ target
 
-v0.8 should generate richer diff reports and preserve a checked-in canonical benchmark snapshot.
+v0.9 should add a local release pipeline that runs quality-gate, compare, snapshot, and diff together.
