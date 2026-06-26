@@ -8,10 +8,11 @@ from .diff_report import diff_json, diff_markdown
 from .exporters import suite_json, suite_markdown
 from .oak_gate import evaluate_workflow
 from .regression import load_baseline, regression_check
+from .release import quality_gate, release_markdown, release_pipeline
 from .snapshot import load_snapshot, snapshot_json
 from .workflow_synth import forge_workflow_from_task
 
-VERSION = "0.8.0"
+VERSION = "0.9.0"
 
 
 def cmd_version(_: argparse.Namespace) -> int:
@@ -65,22 +66,21 @@ def cmd_diff(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_release_check(args: argparse.Namespace) -> int:
+    baseline = load_snapshot(args.against) if args.against else None
+    if args.format == "json":
+        payload = release_pipeline(VERSION, baseline)
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0 if payload["passed"] else 1
+    text = release_markdown(VERSION, baseline)
+    print(text)
+    return 0 if "Passed: True" in text.splitlines()[3] else 1
+
+
 def cmd_quality_gate(_: argparse.Namespace) -> int:
-    checks = {
-        "version_set": VERSION == "0.8.0",
-        "canonical_workflows_present": len(canonical_workflows()) >= 4,
-        "external_actions_added": False,
-        "safe_default": True,
-    }
-    passed = (
-        checks["version_set"]
-        and checks["canonical_workflows_present"]
-        and not checks["external_actions_added"]
-        and checks["safe_default"]
-    )
-    payload = {"quality_gate": checks, "passed": passed}
+    payload = quality_gate(VERSION)
     print(json.dumps(payload, ensure_ascii=False, indent=2))
-    return 0 if passed else 1
+    return 0 if payload["passed"] else 1
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -113,6 +113,12 @@ def build_parser() -> argparse.ArgumentParser:
     diff.add_argument("--against", default=None)
     diff.add_argument("--format", choices=["json", "markdown"], default="markdown")
     diff.set_defaults(func=cmd_diff)
+
+    release_check = sub.add_parser("release-check", help="Run local release pipeline")
+    release_check.add_argument("target", choices=["canonical"])
+    release_check.add_argument("--against", default=None)
+    release_check.add_argument("--format", choices=["json", "markdown"], default="markdown")
+    release_check.set_defaults(func=cmd_release_check)
 
     report = sub.add_parser("report", help="Generate reports")
     report.add_argument("target", choices=["canonical"])
