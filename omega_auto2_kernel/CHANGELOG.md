@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.0
+
+- Adds local release pipeline.
+- Adds CLI command `auto2 release-check canonical`.
+- Adds release pipeline Markdown/JSON outputs.
+- Adds release pipeline tests and v0.9 docs.
+
 ## 0.8.0
 
 - Adds canonical benchmark snapshots.
