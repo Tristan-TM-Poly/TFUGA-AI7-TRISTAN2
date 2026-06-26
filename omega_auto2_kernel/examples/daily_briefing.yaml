@@ -1,0 +1,61 @@
+workflow:
+  id: omega_auto2_daily_briefing
+  name: Ω Daily Briefing
+  version: 0.1.0
+  owner: Tristan
+  purpose: Produire un briefing quotidien actionnable sur IA, agents, physique, énergie, matériaux, Québec/Canada innovation, startups, IP, revenus, papiers, brevets et géopolitique tech.
+  trigger:
+    type: daily
+    schedule: early_morning
+  inputs:
+    - topic_list
+    - trusted_sources
+    - current_news
+    - scientific_papers
+    - patents
+  steps:
+    - collect_sources
+    - compare_dates
+    - deduplicate
+    - summarize
+    - extract_breakthroughs
+    - extract_risks_limits_oak_checks
+    - extract_business_funding_signals
+    - generate_three_next_actions
+    - produce_source_list
+  outputs:
+    - briefing_markdown
+    - opportunity_list
+    - risk_list
+    - next_actions
+  permissions:
+    read:
+      - web
+      - user_preferences
+    write:
+      - local_draft
+    forbidden:
+      - external_email
+      - public_publish
+      - delete_files
+      - spend_money
+      - change_permissions
+      - ip_disclosure
+  oak:
+    required: true
+    checks:
+      - source_quality
+      - date_freshness
+      - claim_confidence
+      - citation_presence
+      - actionability
+  rollback:
+    possible: true
+    method: delete_generated_draft
+  telemetry:
+    track:
+      - usefulness
+      - false_positive_rate
+      - actions_taken
+      - time_saved
+  status: draft

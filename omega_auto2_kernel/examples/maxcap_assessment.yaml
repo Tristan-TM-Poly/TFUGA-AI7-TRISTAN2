@@ -1,0 +1,61 @@
+workflow:
+  id: omega_auto2_maxcap_assessment
+  name: Ω AUTO² MaxCap Assessment
+  version: 0.1.0
+  owner: Tristan
+  purpose: Définir, mesurer et dépasser les capacités d’un workflow sans réduire le score OAK ni augmenter le chaos.
+  trigger:
+    type: manual
+    schedule: on_demand
+  inputs:
+    - workflow_yaml
+    - oak_report
+    - telemetry_snapshot
+    - m_plus_m_minus_memory
+  steps:
+    - parse_workflow
+    - compute_capacity_vector
+    - infer_capability_level
+    - compute_anti_chaos_index
+    - detect_red_locks
+    - propose_safe_exceed_steps
+    - require_human_review_for_sensitive_actions
+    - log_to_m_plus_m_minus
+  outputs:
+    - capacity_report
+    - exceed_plan
+    - red_lock_report
+    - next_safe_actions
+  permissions:
+    read:
+      - local_context
+      - workflow_manifest
+      - telemetry_snapshot
+    write:
+      - local_draft
+    forbidden:
+      - delete_files
+      - public_publish
+      - external_email
+      - spend_money
+      - change_permissions
+      - ip_disclosure
+  oak:
+    required: true
+    checks:
+      - capability_after_greater_than_before
+      - oak_score_not_decreased
+      - anti_chaos_not_decreased
+      - no_red_locks
+      - human_approval_for_sensitive_actions
+  rollback:
+    possible: true
+    method: remove_generated_capacity_report
+  telemetry:
+    track:
+      - capacity_score
+      - oak_score
+      - anti_chaos_index
+      - manual_steps_removed
+      - errors_prevented
+  status: draft

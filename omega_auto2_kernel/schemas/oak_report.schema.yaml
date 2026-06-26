@@ -1,0 +1,39 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "AUTO2 OAK Report"
+type: object
+required:
+  - oak_report
+properties:
+  oak_report:
+    type: object
+    required:
+      - clarity
+      - safety
+      - reversibility
+      - usefulness
+      - cost_control
+      - legal_ip
+      - final_score
+      - status
+      - blockers
+      - warnings
+    properties:
+      clarity: { type: number, minimum: 0, maximum: 1 }
+      safety: { type: number, minimum: 0, maximum: 1 }
+      reversibility: { type: number, minimum: 0, maximum: 1 }
+      usefulness: { type: number, minimum: 0, maximum: 1 }
+      cost_control: { type: number, minimum: 0, maximum: 1 }
+      legal_ip: { type: number, minimum: 0, maximum: 1 }
+      final_score: { type: number, minimum: 0, maximum: 1 }
+      status:
+        type: string
+        enum: [blocked, draft_only, dry_run_allowed, controlled_deployment, trusted_limited]
+      blockers:
+        type: array
+        items: { type: string }
+      warnings:
+        type: array
+        items: { type: string }
+      human_approval_required_for:
+        type: array
+        items: { type: string }
