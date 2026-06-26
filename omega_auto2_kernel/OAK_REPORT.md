@@ -2,16 +2,15 @@
 
 ## Version
 
-0.6.0
+0.7.0
 
 ## Added
 
-- Canonical CLI.
-- Version bump.
-- Changelog.
-- M-minus report.
-- Reference fixtures.
-- CLI tests.
+- Regression benchmark guard.
+- Score comparison helpers.
+- CLI compare command.
+- Baseline and regression policy fixtures.
+- Anti-regression tests.
 
 ## Red locks touched
 
@@ -44,9 +43,10 @@ Required checks before merge:
 - package version matches CLI version;
 - canonical workflows exist;
 - CLI quality-gate passes;
+- CLI compare passes;
 - tests pass;
-- README, CHANGELOG, OAK report are present.
+- README, CHANGELOG, OAK report, and M-minus report are present.
 
 ## OAK decision
 
-v0.6.0 is safe to merge if CI/tests pass because it adds local commands and text reports only.
+v0.7.0 is safe to merge if CI/tests pass because it adds local regression comparison only.
