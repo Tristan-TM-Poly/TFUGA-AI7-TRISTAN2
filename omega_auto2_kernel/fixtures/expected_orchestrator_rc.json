@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "status": "release_candidate",
+  "release_passed": true,
+  "sovereignty_passed": true,
+  "next_stage": "manual_review_then_tag"
+}
