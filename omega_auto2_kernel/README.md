@@ -1,6 +1,6 @@
-# Ω-AUTO²-Kernel v0.5
+# Ω-AUTO²-Kernel v0.6
 
-**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché et exporté.
+**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché, exporté et commandable par CLI.
 
 > ZÉRO-TOUCH maximal, jamais zéro-contrôle.
 
@@ -9,25 +9,41 @@
 | Dimension | Statut |
 |---|---|
 | Nature | Prototype logiciel / architecture de recherche |
+| Version | 0.6.0 |
 | Niveau | Draft contrôlé |
 | Actions externes | Interdites par défaut |
 | Suppression / publication / email / argent | Verrou humain obligatoire |
-| Objectif | Générer, prévisualiser, mesurer, benchmarker et exporter des workflows OAK-safe |
+| Objectif | Générer, prévisualiser, mesurer, benchmarker, exporter et piloter des workflows OAK-safe |
 
 ## Boucle canonique
 
 ```text
-Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Report → ImproveDraft → M⁺/M⁻
+Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Report → ImproveDraft → CLI → M⁺/M⁻
 ```
 
-## Nouveautés v0.5
+## Nouveautés v0.6
 
-v0.5 ajoute :
+v0.6 ajoute :
 
-- `canonical.py` : workflows canoniques Daily, GitHub, MaxCap, DriveBrain;
-- `exporters.py` : exports JSON et Markdown;
-- tests canonical/export;
-- documentation `docs/V0_5_CANONICAL_BENCHMARKS.md`.
+- version `0.6.0` dans `pyproject.toml`;
+- `omega_auto2.__version__`;
+- CLI canonique `auto2`;
+- `CHANGELOG.md`;
+- `OAK_REPORT.md`;
+- `M_MINUS_REPORT.md`;
+- fixtures de référence;
+- tests CLI.
+
+## Commandes CLI
+
+```bash
+auto2 version
+auto2 forge "créer un workflow GitHub OAK-safe"
+auto2 bench canonical --format markdown
+auto2 bench canonical --format json
+auto2 report canonical
+auto2 quality-gate
+```
 
 ## Workflows canoniques
 
@@ -38,52 +54,12 @@ maxcap_assessment
 drivebrain_draft
 ```
 
-## Modules inclus
-
-```text
-omega_auto2_kernel/
-├── omega_auto2/
-│   ├── models.py
-│   ├── friction.py
-│   ├── workflow_synth.py
-│   ├── oak_gate.py
-│   ├── capabilities.py
-│   ├── sandbox.py
-│   ├── telemetry.py
-│   ├── proof.py
-│   ├── bench.py
-│   ├── report.py
-│   ├── canonical.py
-│   ├── exporters.py
-│   ├── improver.py
-│   ├── memory.py
-│   └── cli.py
-├── schemas/
-├── examples/
-├── tests/
-├── docs/
-└── m_minus_registry.json
-```
-
 ## Installation locale
 
 ```bash
 cd omega_auto2_kernel
 python -m pip install -e .
 pytest
-```
-
-## Exemple d’usage
-
-```python
-from omega_auto2 import canonical_workflows, suite_json, suite_markdown
-
-workflows = canonical_workflows()
-json_report = suite_json(workflows)
-markdown_report = suite_markdown(workflows)
-
-print(json_report)
-print(markdown_report)
 ```
 
 ## Règles rouges
@@ -97,5 +73,6 @@ Ce noyau ne doit jamais autoriser automatiquement : suppression sans backup, pub
 3. **v0.3** : telemetry + proof-of-workflow + draft improver.
 4. **v0.4** : bench suite + markdown reports.
 5. **v0.5** : workflows canoniques benchés + exports JSON/Markdown enrichis.
-6. **v0.6** : CLI bench canonique + fixtures de référence.
-7. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.
+6. **v0.6** : CLI bench canonique + fixtures + changelog + OAK/M⁻ reports.
+7. **v0.7** : regression fixtures + score comparisons across versions.
+8. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.
