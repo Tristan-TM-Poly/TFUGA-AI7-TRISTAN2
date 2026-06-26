@@ -6,9 +6,10 @@ import json
 from .canonical import canonical_workflows
 from .exporters import suite_json, suite_markdown
 from .oak_gate import evaluate_workflow
+from .regression import load_baseline, regression_check
 from .workflow_synth import forge_workflow_from_task
 
-VERSION = "0.6.0"
+VERSION = "0.7.0"
 
 
 def cmd_version(_: argparse.Namespace) -> int:
@@ -41,9 +42,16 @@ def cmd_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_compare(args: argparse.Namespace) -> int:
+    baseline = load_baseline(args.against) if args.against else None
+    result = regression_check(baseline)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0 if result["passed"] else 1
+
+
 def cmd_quality_gate(_: argparse.Namespace) -> int:
     checks = {
-        "version_set": VERSION == "0.6.0",
+        "version_set": VERSION == "0.7.0",
         "canonical_workflows_present": len(canonical_workflows()) >= 4,
         "external_actions_added": False,
         "safe_default": True,
@@ -74,6 +82,11 @@ def build_parser() -> argparse.ArgumentParser:
     bench.add_argument("target", choices=["canonical"])
     bench.add_argument("--format", choices=["json", "markdown"], default="markdown")
     bench.set_defaults(func=cmd_bench)
+
+    compare = sub.add_parser("compare", help="Compare current canonical suite against a baseline")
+    compare.add_argument("target", choices=["canonical"])
+    compare.add_argument("--against", default=None)
+    compare.set_defaults(func=cmd_compare)
 
     report = sub.add_parser("report", help="Generate reports")
     report.add_argument("target", choices=["canonical"])
