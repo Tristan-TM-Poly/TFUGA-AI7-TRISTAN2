@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omega-auto2-kernel"
-version = "0.6.0"
-description = "Ω-AUTO²-Kernel: OAK-safe automation-of-automation prototype for Tristan."
+version = "0.7.0"
+description = "OAK-safe automation-of-automation prototype."
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Tristan Tardif-Morency" }]

@@ -1,6 +1,6 @@
-# Ω-AUTO²-Kernel v0.6
+# Ω-AUTO²-Kernel v0.7
 
-**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché, exporté et commandable par CLI.
+**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché, exporté, commandable par CLI et protégé contre les régressions.
 
 > ZÉRO-TOUCH maximal, jamais zéro-contrôle.
 
@@ -9,30 +9,29 @@
 | Dimension | Statut |
 |---|---|
 | Nature | Prototype logiciel / architecture de recherche |
-| Version | 0.6.0 |
+| Version | 0.7.0 |
 | Niveau | Draft contrôlé |
 | Actions externes | Interdites par défaut |
 | Suppression / publication / email / argent | Verrou humain obligatoire |
-| Objectif | Générer, prévisualiser, mesurer, benchmarker, exporter et piloter des workflows OAK-safe |
+| Objectif | Générer, mesurer, benchmarker, comparer et protéger des workflows OAK-safe |
 
 ## Boucle canonique
 
 ```text
-Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Report → ImproveDraft → CLI → M⁺/M⁻
+Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Compare → RegressionGuard → Report → CLI → M⁺/M⁻
 ```
 
-## Nouveautés v0.6
+## Nouveautés v0.7
 
-v0.6 ajoute :
+v0.7 ajoute :
 
-- version `0.6.0` dans `pyproject.toml`;
-- `omega_auto2.__version__`;
-- CLI canonique `auto2`;
-- `CHANGELOG.md`;
-- `OAK_REPORT.md`;
-- `M_MINUS_REPORT.md`;
-- fixtures de référence;
-- tests CLI.
+- version `0.7.0`;
+- `score_compare.py`;
+- `regression.py`;
+- CLI `auto2 compare canonical`;
+- fixtures `v0_6_canonical_bench.json` et `regression_policy.json`;
+- tests anti-régression;
+- documentation `docs/V0_7_REGRESSION_BENCHMARKS.md`.
 
 ## Commandes CLI
 
@@ -41,25 +40,10 @@ auto2 version
 auto2 forge "créer un workflow GitHub OAK-safe"
 auto2 bench canonical --format markdown
 auto2 bench canonical --format json
+auto2 compare canonical
+auto2 compare canonical --against fixtures/v0_6_canonical_bench.json
 auto2 report canonical
 auto2 quality-gate
-```
-
-## Workflows canoniques
-
-```text
-daily_briefing
-github_factory
-maxcap_assessment
-drivebrain_draft
-```
-
-## Installation locale
-
-```bash
-cd omega_auto2_kernel
-python -m pip install -e .
-pytest
 ```
 
 ## Règles rouges
@@ -75,4 +59,5 @@ Ce noyau ne doit jamais autoriser automatiquement : suppression sans backup, pub
 5. **v0.5** : workflows canoniques benchés + exports JSON/Markdown enrichis.
 6. **v0.6** : CLI bench canonique + fixtures + changelog + OAK/M⁻ reports.
 7. **v0.7** : regression fixtures + score comparisons across versions.
-8. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.
+8. **v0.8** : generated diff reports + checked-in canonical benchmark snapshots.
+9. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.

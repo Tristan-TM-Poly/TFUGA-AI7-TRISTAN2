@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0
+
+- Adds regression benchmark guard.
+- Adds score comparison helpers.
+- Adds CLI command `auto2 compare canonical`.
+- Adds v0.6 baseline fixture and regression policy fixture.
+- Adds anti-regression tests and v0.7 docs.
+
 ## 0.6.0
 
 - Adds canonical CLI commands: `version`, `forge`, `bench canonical`, `report canonical`, `quality-gate`.
