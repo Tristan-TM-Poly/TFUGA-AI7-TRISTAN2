@@ -2,18 +2,19 @@
 
 ## Version
 
-0.9.0
+1.0.0
 
 ## Added
 
-- Local release pipeline.
-- CLI `release-check` command.
-- Release Markdown/JSON output.
-- Release pipeline tests.
+- Human Sovereignty Layer.
+- v1 orchestrator.
+- CLI `orchestrate` command.
+- Red-lock checks.
+- Orchestrator tests and fixture.
 
 ## Red locks touched
 
-None.
+None by default. Red locks are detected and blocked.
 
 ## External actions added
 
@@ -26,14 +27,13 @@ All additions are code, docs, tests, and local fixtures. They can be reverted by
 ## Required checks
 
 - package version matches CLI version;
-- canonical workflows exist;
 - quality-gate passes;
-- compare passes;
-- snapshot and diff pass;
 - release-check passes;
+- orchestrate passes with safe actions;
+- red-lock tests pass;
 - tests pass;
 - README, CHANGELOG, OAK report, and M-minus report are present.
 
 ## OAK decision
 
-v0.9.0 is safe to merge if CI/tests pass because it only aggregates local checks into a local report.
+v1.0.0 is safe to merge if CI/tests pass because it remains local/draft and blocks red-lock actions.

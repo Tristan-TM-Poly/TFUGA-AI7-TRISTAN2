@@ -7,12 +7,13 @@ from .canonical import canonical_workflows
 from .diff_report import diff_json, diff_markdown
 from .exporters import suite_json, suite_markdown
 from .oak_gate import evaluate_workflow
+from .orchestrator import run_orchestrator
 from .regression import load_baseline, regression_check
 from .release import quality_gate, release_markdown, release_pipeline
 from .snapshot import load_snapshot, snapshot_json
 from .workflow_synth import forge_workflow_from_task
 
-VERSION = "0.9.0"
+VERSION = "1.0.0"
 
 
 def cmd_version(_: argparse.Namespace) -> int:
@@ -32,16 +33,12 @@ def cmd_forge(args: argparse.Namespace) -> int:
 
 def cmd_bench(args: argparse.Namespace) -> int:
     workflows = canonical_workflows()
-    if args.format == "json":
-        print(suite_json(workflows))
-    else:
-        print(suite_markdown(workflows))
+    print(suite_json(workflows) if args.format == "json" else suite_markdown(workflows))
     return 0
 
 
 def cmd_report(args: argparse.Namespace) -> int:
-    workflows = canonical_workflows()
-    print(suite_markdown(workflows))
+    print(suite_markdown(canonical_workflows()))
     return 0
 
 
@@ -59,10 +56,7 @@ def cmd_snapshot(args: argparse.Namespace) -> int:
 
 def cmd_diff(args: argparse.Namespace) -> int:
     baseline = load_snapshot(args.against) if args.against else None
-    if args.format == "json":
-        print(diff_json(baseline))
-    else:
-        print(diff_markdown(baseline))
+    print(diff_json(baseline) if args.format == "json" else diff_markdown(baseline))
     return 0
 
 
@@ -75,6 +69,12 @@ def cmd_release_check(args: argparse.Namespace) -> int:
     text = release_markdown(VERSION, baseline)
     print(text)
     return 0 if "Passed: True" in text.splitlines()[3] else 1
+
+
+def cmd_orchestrate(args: argparse.Namespace) -> int:
+    result = run_orchestrator(VERSION, actions=args.actions or [])
+    print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))
+    return 0 if result.status == "release_candidate" else 1
 
 
 def cmd_quality_gate(_: argparse.Namespace) -> int:
@@ -119,6 +119,11 @@ def build_parser() -> argparse.ArgumentParser:
     release_check.add_argument("--against", default=None)
     release_check.add_argument("--format", choices=["json", "markdown"], default="markdown")
     release_check.set_defaults(func=cmd_release_check)
+
+    orchestrate = sub.add_parser("orchestrate", help="Run AUTO2 v1 orchestrator")
+    orchestrate.add_argument("target", choices=["canonical"])
+    orchestrate.add_argument("--actions", nargs="*", default=[])
+    orchestrate.set_defaults(func=cmd_orchestrate)
 
     report = sub.add_parser("report", help="Generate reports")
     report.add_argument("target", choices=["canonical"])

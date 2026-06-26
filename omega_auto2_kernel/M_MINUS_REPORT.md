@@ -2,7 +2,7 @@
 
 ## Version
 
-0.9.0
+1.0.0
 
 ## Negative memory learned
 
@@ -18,6 +18,7 @@
 | M-008 | Silent regression risk | Add baseline fixtures and score comparison before larger refactors. |
 | M-009 | Invisible benchmark drift | Preserve snapshots and diff reports as checked-in artifacts. |
 | M-010 | Fragmented release checks | Bundle quality-gate, compare, snapshot and diff into one local release-check. |
+| M-011 | Autonomous overreach risk | Add Human Sovereignty Layer and block red locks by default. |
 
 ## Anti-rules
 
@@ -26,8 +27,8 @@
 - Do not publish or send reports automatically.
 - Do not create additional issues unless they are canonical and necessary.
 - Do not grow one giant file when the connector blocks content; split into small modules.
-- Do not accept a lower canonical workflow count or pass rate without explicit OAK review.
+- Do not bypass red-lock checks.
 
 ## Next M⁻ target
 
-v1.0 should stabilize an orchestrator/release-candidate layer without adding external effects.
+Post-v1.0 should focus on refactor quality and documentation, not more autonomy.
