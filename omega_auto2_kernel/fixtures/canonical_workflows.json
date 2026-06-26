@@ -1,0 +1,9 @@
+{
+  "canonical_workflows": [
+    "daily_briefing",
+    "github_factory",
+    "maxcap_assessment",
+    "drivebrain_draft"
+  ],
+  "version": "0.6.0"
+}

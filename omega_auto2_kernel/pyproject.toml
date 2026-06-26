@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omega-auto2-kernel"
-version = "0.1.0"
+version = "0.6.0"
 description = "Ω-AUTO²-Kernel: OAK-safe automation-of-automation prototype for Tristan."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -18,6 +18,10 @@ dev = ["pytest>=8.0"]
 
 [project.scripts]
 auto2 = "omega_auto2.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["omega_auto2*"]
+exclude = ["tests*", "docs*", "examples*", "schemas*", "fixtures*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
