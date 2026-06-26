@@ -1,6 +1,6 @@
-# Ω-AUTO²-Kernel v0.9
+# Ω-AUTO²-Kernel v1.0
 
-**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, prouvé, amélioré, benché, exporté, comparé, snapshoté et validé par pipeline local de release.
+**Automatisation de l’Automatisation de TRISTAN** — noyau local OAK-safe pour transformer une friction répétée en workflow généré, simulé, validé, benché, snapshoté, comparé, puis préparé comme release candidate sous souveraineté humaine.
 
 > ZÉRO-TOUCH maximal, jamais zéro-contrôle.
 
@@ -9,45 +9,59 @@
 | Dimension | Statut |
 |---|---|
 | Nature | Prototype logiciel / architecture de recherche |
-| Version | 0.9.0 |
-| Niveau | Draft contrôlé |
+| Version | 1.0.0 |
+| Niveau | Release candidate local |
 | Actions externes | Interdites par défaut |
-| Suppression / publication / email / argent | Verrou humain obligatoire |
-| Objectif | Unifier quality-gate, compare, snapshot et diff en un release-check local |
+| Suppression / publication / email / argent | Red locks + verrou humain obligatoire |
+| Objectif | Orchestrer AUTO² localement sans effet externe autonome |
 
 ## Boucle canonique
 
 ```text
-Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Compare → Snapshot → DiffReport → ReleaseCheck → CLI → M⁺/M⁻
+Friction → WorkflowSynth → Sandbox → OAKGate → MaxCap → Telemetry → Proof → Bench → Export → Compare → Snapshot → DiffReport → ReleaseCheck → HumanSovereignty → Orchestrator → M⁺/M⁻
 ```
 
-## Nouveautés v0.9
+## Nouveautés v1.0
 
-v0.9 ajoute :
+v1.0 ajoute :
 
-- version `0.9.0`;
-- `release.py`;
-- CLI `auto2 release-check canonical`;
-- sortie release Markdown/JSON;
-- fixture `expected_release_pipeline.md`;
-- tests release pipeline;
-- documentation `docs/V0_9_RELEASE_PIPELINE.md`.
+- version `1.0.0`;
+- `sovereignty.py` : Human Sovereignty Layer;
+- `orchestrator.py` : orchestrateur release-candidate;
+- CLI `auto2 orchestrate canonical`;
+- red-lock checks;
+- fixture `expected_orchestrator_rc.json`;
+- tests orchestrator/sovereignty;
+- documentation `docs/V1_0_ORCHESTRATOR.md`.
 
 ## Commandes CLI
 
 ```bash
 auto2 version
 auto2 forge "créer un workflow GitHub OAK-safe"
-auto2 bench canonical --format markdown
 auto2 bench canonical --format json
 auto2 compare canonical
 auto2 snapshot canonical
 auto2 diff canonical
 auto2 release-check canonical
-auto2 release-check canonical --format json
-auto2 release-check canonical --against fixtures/v0_7_canonical_snapshot.json
-auto2 report canonical
+auto2 orchestrate canonical
+auto2 orchestrate canonical --actions local_report dry_run
+auto2 orchestrate canonical --actions public_publish
 auto2 quality-gate
+```
+
+## Red locks
+
+```text
+delete_files
+public_publish
+external_email
+spend_money
+change_permissions
+ip_disclosure
+legal_commitment
+medical_decision
+unsafe_physical_action
 ```
 
 ## Règles rouges
