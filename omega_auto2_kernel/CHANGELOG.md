@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0
+
+- Adds Human Sovereignty Layer.
+- Adds v1 orchestrator and release-candidate status.
+- Adds CLI command `auto2 orchestrate canonical`.
+- Adds red-lock checks and orchestrator tests.
+- Adds v1 docs and release-candidate fixture.
+
 ## 0.9.0
 
 - Adds local release pipeline.
