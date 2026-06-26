@@ -6,6 +6,7 @@ import json
 from .canonical import canonical_workflows
 from .diff_report import diff_json, diff_markdown
 from .exporters import suite_json, suite_markdown
+from .genesis import auto_genesis
 from .oak_gate import evaluate_workflow
 from .orchestrator import run_orchestrator
 from .regression import load_baseline, regression_check
@@ -13,7 +14,7 @@ from .release import quality_gate, release_markdown, release_pipeline
 from .snapshot import load_snapshot, snapshot_json
 from .workflow_synth import forge_workflow_from_task
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 
 def cmd_version(_: argparse.Namespace) -> int:
@@ -28,6 +29,13 @@ def cmd_forge(args: argparse.Namespace) -> int:
     payload.update(workflow.to_dict())
     payload.update(report.to_dict())
     print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_genesis(args: argparse.Namespace) -> int:
+    intent = args.intent or "AUTO-GENESIS canonical"
+    report = auto_genesis(intent, mode=args.mode)
+    print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2))
     return 0
 
 
@@ -93,6 +101,11 @@ def build_parser() -> argparse.ArgumentParser:
     forge = sub.add_parser("forge", help="Forge an OAK-safe workflow draft")
     forge.add_argument("task")
     forge.set_defaults(func=cmd_forge)
+
+    genesis = sub.add_parser("genesis", help="Generate an AUTO-GENESIS report")
+    genesis.add_argument("intent", nargs="?")
+    genesis.add_argument("--mode", default="max")
+    genesis.set_defaults(func=cmd_genesis)
 
     bench = sub.add_parser("bench", help="Run canonical benchmark suite")
     bench.add_argument("target", choices=["canonical"])
