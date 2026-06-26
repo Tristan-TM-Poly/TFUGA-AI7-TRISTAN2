@@ -1,0 +1,11 @@
+{
+  "version": "0.7.0",
+  "kind": "canonical_benchmark_snapshot",
+  "suite": {
+    "total": 4,
+    "passed": 0,
+    "failed": 4,
+    "pass_rate": 0.0,
+    "results": []
+  }
+}
