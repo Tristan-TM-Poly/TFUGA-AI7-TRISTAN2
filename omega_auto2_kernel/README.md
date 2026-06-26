@@ -1,6 +1,6 @@
-# Ω-AUTO²-Kernel v0.1
+# Ω-AUTO²-Kernel v0.3
 
-**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, mémorisé et régénéré.
+**Automatisation de l’Automatisation de TRISTAN** — noyau prototype pour transformer une friction répétée en workflow généré, simulé, validé par OAK, mesuré, mémorisé, prouvé et amélioré en draft.
 
 > ZÉRO-TOUCH maximal, jamais zéro-contrôle.
 
@@ -17,8 +17,25 @@
 ## Boucle canonique
 
 ```text
-Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → M⁺/M⁻ → Regenerator
+Friction → LOG/CVCD → Workflow DNA → WorkflowSynth → Sandbox/Dry-run → OAKGate → MaxCap → Telemetry → Proof → ImproveDraft → M⁺/M⁻
 ```
+
+## Nouveautés v0.2-v0.3
+
+v0.2 ajoute :
+
+- `sandbox.py` : preview dry-run sans effet externe;
+- export API `dry_run_workflow`;
+- tests sandbox;
+- GitHub Actions CI `omega-auto2-ci`;
+- documentation `docs/V0_2_SANDBOX_CI.md`.
+
+v0.3 ajoute :
+
+- `telemetry.py` : mesures de succès, valeur, bruit, coût;
+- `proof.py` : Proof-of-Workflow minimal;
+- `improver.py` : amélioration draft sans exécution;
+- tests telemetry/proof/improver.
 
 ## Couche MaxCap
 
@@ -28,40 +45,29 @@ La couche **MaxCap** définit et dépasse les capacités de façon mesurée :
 Capacity Vector = [scope, autonomy, reversibility, safety, usefulness, reliability, cost_control, learning, integration, value_creation]
 ```
 
-Elle produit :
-
-- un niveau de capacité `C0` à `C7`;
-- un score global normalisé;
-- un Anti-Chaos Index;
-- une liste de prochaines étapes de dépassement OAK-safe;
-- un blocage si un red lock est touché.
-
-Un dépassement est valide seulement si :
-
-```text
-capability_after > capability_before
-AND oak_score_after >= oak_score_before
-AND anti_chaos_after >= anti_chaos_before
-AND red_locks_violated = 0
-```
+Elle produit : niveau C0-C7, score global, Anti-Chaos Index, prochaines étapes OAK-safe et blocage si red lock.
 
 ## Modules inclus
 
 ```text
 omega_auto2_kernel/
 ├── omega_auto2/
-│   ├── models.py          # structures minimales
-│   ├── friction.py        # score de priorité d’automatisation
-│   ├── workflow_synth.py  # génération workflow depuis tâche
-│   ├── oak_gate.py        # validation sécurité/OAK
-│   ├── capabilities.py    # MaxCap: capacité, dépassement, Anti-Chaos
-│   ├── memory.py          # M⁺/M⁻ minimal
-│   └── cli.py             # interface CLI prototype
-├── schemas/               # contrats YAML
-├── examples/              # workflows exemples
-├── tests/                 # tests unitaires
-├── docs/                  # théorie canonique + MaxCap
-└── m_minus_registry.json  # anti-patterns initiaux
+│   ├── models.py
+│   ├── friction.py
+│   ├── workflow_synth.py
+│   ├── oak_gate.py
+│   ├── capabilities.py
+│   ├── sandbox.py
+│   ├── telemetry.py
+│   ├── proof.py
+│   ├── improver.py
+│   ├── memory.py
+│   └── cli.py
+├── schemas/
+├── examples/
+├── tests/
+├── docs/
+└── m_minus_registry.json
 ```
 
 ## Installation locale
@@ -74,40 +80,39 @@ pytest
 
 ## Exemple d’usage
 
-```bash
-python -m omega_auto2.cli forge "résumer chaque matin mes sujets importants et proposer 3 actions OAK-safe"
-```
-
-Exemple Python MaxCap :
-
 ```python
-from omega_auto2 import forge_workflow_from_task, assess_capability
+from omega_auto2 import (
+    TelemetrySnapshot,
+    assess_capability,
+    dry_run_workflow,
+    forge_workflow_from_task,
+    improve_draft,
+    prove_workflow,
+)
 
 workflow = forge_workflow_from_task("créer un dépôt GitHub OAK-safe")
+telemetry = TelemetrySnapshot(runs=5, successes=5, manual_steps_removed=10, artifacts_created=4, time_saved_minutes=90)
+
 assessment = assess_capability(workflow)
+preview = dry_run_workflow(workflow)
+proof = prove_workflow(workflow, telemetry)
+improved = improve_draft(workflow)
+
 print(assessment.level)
-print(assessment.vector.score())
-print(assessment.next_safe_exceed_steps)
+print(preview.to_dict())
+print(proof.to_dict())
+print(len(improved.steps))
 ```
 
 ## Règles rouges
 
-Ce noyau ne doit jamais autoriser automatiquement :
-
-- suppression sans backup;
-- publication publique sans OAK/IP check;
-- divulgation de secrets;
-- envoi externe sans consentement;
-- transaction financière;
-- boucle récursive non bornée;
-- expérimentation physique dangereuse;
-- décision médicale/légale autonome.
+Ce noyau ne doit jamais autoriser automatiquement : suppression sans backup, publication publique sans OAK/IP check, divulgation de secrets, envoi externe sans consentement, transaction financière, boucle récursive non bornée, expérimentation physique dangereuse, décision médicale/légale autonome.
 
 ## Roadmap
 
 1. **v0.1** : schéma + OAKGate + friction score + exemples + MaxCap initial.
-2. **v0.2** : sandbox/dry-run avec diff preview.
-3. **v0.3** : générateur de tests automatique.
-4. **v0.4** : telemetry + preuve de workflow.
+2. **v0.2** : sandbox/dry-run + CI GitHub Actions.
+3. **v0.3** : telemetry + proof-of-workflow + draft improver.
+4. **v0.4** : OAKBench exécutable complet en modules courts.
 5. **v0.5** : intégration GitHub/Drive en mode draft only.
 6. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.
