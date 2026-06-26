@@ -1,0 +1,5 @@
+{
+  "intention_decoded": "AUTO-GENESIS canonical",
+  "mode": "max",
+  "next_action": "open_auto_genesis_pr"
+}

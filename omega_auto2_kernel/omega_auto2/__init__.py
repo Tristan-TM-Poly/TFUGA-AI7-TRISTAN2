@@ -1,9 +1,9 @@
-"""Ω-AUTO²-Kernel v1.0.
+"""Ω-AUTO²-Kernel v1.1.
 
 Prototype OAK-safe d'automatisation de l'automatisation pour Tristan.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 from .models import FrictionTensor, Workflow, OAKReport
 from .friction import compute_priority_score
@@ -25,6 +25,10 @@ from .diff_report import build_diff_payload, diff_json, diff_markdown
 from .release import quality_gate, release_pipeline, release_markdown
 from .sovereignty import RED_LOCKS, SovereigntyDecision, human_sovereignty_check
 from .orchestrator import OrchestratorResult, run_orchestrator
+from .genesis import auto_genesis
+from .genesis_report import GenesisReport
+from .genesis_score import score_genesis_idea, rank_genesis_ideas
+from .genesis_tree import build_genesis_tree
 
 __all__ = [
     "__version__",
@@ -70,4 +74,9 @@ __all__ = [
     "human_sovereignty_check",
     "OrchestratorResult",
     "run_orchestrator",
+    "auto_genesis",
+    "GenesisReport",
+    "score_genesis_idea",
+    "rank_genesis_ideas",
+    "build_genesis_tree",
 ]

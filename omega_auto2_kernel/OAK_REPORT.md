@@ -2,19 +2,18 @@
 
 ## Version
 
-1.0.0
+1.1.0
 
 ## Added
 
-- Human Sovereignty Layer.
-- v1 orchestrator.
-- CLI `orchestrate` command.
-- Red-lock checks.
-- Orchestrator tests and fixture.
+- AUTO-GENESIS v0.1.
+- Genesis tree, scoring, report, and engine modules.
+- CLI `genesis` command.
+- Genesis tests, fixture, and docs.
 
 ## Red locks touched
 
-None by default. Red locks are detected and blocked.
+None by default. AUTO-GENESIS only creates local draft reports.
 
 ## External actions added
 
@@ -28,12 +27,10 @@ All additions are code, docs, tests, and local fixtures. They can be reverted by
 
 - package version matches CLI version;
 - quality-gate passes;
-- release-check passes;
-- orchestrate passes with safe actions;
-- red-lock tests pass;
+- genesis tests pass;
 - tests pass;
 - README, CHANGELOG, OAK report, and M-minus report are present.
 
 ## OAK decision
 
-v1.0.0 is safe to merge if CI/tests pass because it remains local/draft and blocks red-lock actions.
+v1.1.0 is safe to merge if CI/tests pass because it generates local draft Genesis reports only.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0
+
+- Adds AUTO-GENESIS v0.1.
+- Adds Genesis tree, scoring, report, and engine modules.
+- Adds CLI command `auto2 genesis`.
+- Adds Genesis tests, fixture, and docs.
+
 ## 1.0.0
 
 - Adds Human Sovereignty Layer.

@@ -6,7 +6,7 @@ from omega_auto2.cli import main
 def test_cli_version(capsys, monkeypatch):
     monkeypatch.setattr("sys.argv", ["auto2", "version"])
     assert main() == 0
-    assert capsys.readouterr().out.strip() == "1.0.0"
+    assert capsys.readouterr().out.strip() == "1.1.0"
 
 
 def test_cli_quality_gate(capsys, monkeypatch):
