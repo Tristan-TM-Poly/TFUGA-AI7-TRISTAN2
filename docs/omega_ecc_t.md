@@ -87,12 +87,31 @@ LLR = 2y / σ²
 
 This prepares BayesDecoder_T and min-sum/soft LDPC decoding. The first `reliability_cvcd()` extracts weak positions from LLR magnitudes.
 
+## Soft-decision min-sum phase
+
+`ecc_tristan.minsum.min_sum_decode()` implements the first soft-decision LDPC message-passing decoder:
+
+```text
+channel LLR -> variable-to-check messages -> check-to-variable min-sum -> posterior LLR -> hard decision -> syndrome/OAK
+```
+
+Supported controls:
+
+- `max_iterations` for OAK-bounded inference;
+- `normalize` for normalized min-sum;
+- `offset` for offset min-sum;
+- explicit `converged`, `max_iterations_residual`, and reliability outputs;
+- `weak_positions` from posterior LLR magnitudes.
+
+OAK-safe limit: this is a clean research decoder, not a production LDPC engine. Production-grade LDPC still needs real code construction, generator matrices, interleavers, puncturing/shortening, layered schedules, numerical stability, SIMD/GPU/hardware concerns, and comparison against mature libraries.
+
 ## OAKBench matrix
 
 `ecc_tristan.oakbench_matrix.default_oakbench_matrix()` now emits a small benchmark table over:
 
 - Hamming(7,4) on BSC at multiple flip probabilities;
-- toy LDPC on BSC with residual / false-accept accounting.
+- toy LDPC hard-decision bit-flip on BSC;
+- toy LDPC soft-decision min-sum on BPSK/AWGN.
 
 This is the seed of the full OAKBench matrix:
 
@@ -121,11 +140,12 @@ BSC, BEC, AWGN, burst, packet-loss, flash-like, DNA-like indel/loss, quantum dep
 - Deterministic benchmark: `bench_hamming74_bsc`.
 - `SparseLDPC` hard-decision decoder scaffold.
 - BPSK/AWGN soft-channel LLR primitive.
+- Soft-decision min-sum decoder over LLR messages.
 - `default_oakbench_matrix()` for deterministic comparison rows.
 
 ## Next expansions
 
-1. True LDPC sum-product / min-sum with soft LLR messages.
+1. True LDPC code construction with generator matrix and larger sparse ensembles.
 2. Reed-Solomon over GF(2^m) or a dependency-backed implementation.
 3. Polar code scaffold with successive cancellation.
 4. Fountain/erasure codes for packet loss.
@@ -145,3 +165,4 @@ Initial M⁻ constraints:
 - Fractal/mycelial topology must become a measurable parity structure, not only a metaphor.
 - The toy LDPC is a scaffold, not a production code or performance claim.
 - Hard-decision bit flipping can stall or converge to a wrong codeword; OAK must track residual and false-accept rate.
+- Soft-decision min-sum is not automatically better; it must beat hard-decision and external LDPC baselines under identical channel assumptions.
