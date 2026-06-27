@@ -33,7 +33,9 @@ class FFWTBenchmarkTest(unittest.TestCase):
         result = bench.evaluate_classifier(samples, "FFWT_PLUS_FFT", "synthetic", 0.02)
         self.assertGreaterEqual(result.accuracy, 0.0)
         self.assertLessEqual(result.accuracy, 1.0)
-        self.assertGreater(result.train_size, result.test_size)
+        self.assertGreater(result.train_size, 0)
+        self.assertGreater(result.test_size, 0)
+        self.assertEqual(result.train_size + result.test_size, len(samples))
 
     def test_benchmark_report_contains_required_oak_sections(self) -> None:
         report = bench.build_report([0.0, 0.05], include_fixture=True)
