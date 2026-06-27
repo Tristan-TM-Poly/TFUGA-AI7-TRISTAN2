@@ -8,10 +8,10 @@
 GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 ```
 
-Ω-GAME-T+++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable, démontrable, organisable et productisable.
+Ω-GAME-T+++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable, démontrable, organisable, productisable et améliorable par feedback.
 
 ```text
-Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> LaunchForge -> RevenueForge -> ProductBench -> M+/M- -> Better World
+Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> LaunchForge -> RevenueForge -> ProductBench -> FeedbackLoop -> M+/M- -> Better World
 ```
 
 ## MVP actuel
@@ -29,6 +29,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `LaunchForge`, `LaunchDraft`, `LandingPageDraft`, `PitchDraft`
 - `RevenueForge`, `RevenuePlan`, `OfferSpec`, `PricingHypothesis`, `ChannelMap`, `RevenueSignal`
 - `ProductBench`, `ProductBenchMetrics`, `ProductBenchResult`
+- `FeedbackLoop`, `FeedbackLoopResult`, `FeedbackSignal`, `FeedbackDecision`
 - `MPlusMemory` / `MMinusMemory`
 - `GameQualityScore`
 - `TextWorldEngine`
@@ -37,7 +38,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`, `RevenueForge-T`, `ProductBench-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`, `RevenueForge-T`, `ProductBench-T`, `FeedbackLoop-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -107,6 +108,10 @@ Générateur d'hypothèses de revenus OAK-safe. Il transforme un `ProductPlan` e
 
 Benchmark produit. Il mesure value, clarity, differentiation, feasibility, testability, revenue potential, strategic fit, risk, scope creep et IP uncertainty. Le score est un signal de priorisation, pas une preuve de marché.
 
+### FeedbackLoop-T
+
+Boucle de feedback OAK-safe. Elle transforme un `RevenuePlan` et des `FeedbackSignal` en `FeedbackLoopResult` : score de confiance, décision, prochaine version, M+, M-, contrôles OAK et prochaines actions. Elle ne contacte personne automatiquement.
+
 ## Structure
 
 ```text
@@ -115,6 +120,7 @@ omega_game_t/
     CIRCUIT_DUNGEON_T.md
     DEMO_FORGE_T.md
     ENERGY_CIVILIZATION_T.md
+    FEEDBACK_LOOP_T.md
     GM_COUNCIL_T.md
     ISSUE_FORGE_T.md
     LAUNCH_FORGE_T.md
@@ -134,6 +140,7 @@ omega_game_t/
     demo_plan.schema.json
     energy_colony.schema.json
     event.schema.json
+    feedback_loop.schema.json
     gm_vote.schema.json
     issue_set.schema.json
     launch_draft.schema.json
@@ -161,6 +168,7 @@ omega_game_t/
       circuit_dungeon_t_demo.py
       demo_forge_t_demo.py
       energy_civilization_t_demo.py
+      feedback_loop_t_demo.py
       gm_council_t_demo.py
       issue_forge_t_demo.py
       launch_forge_t_demo.py
@@ -174,6 +182,7 @@ omega_game_t/
       theory_compiler_t_demo.py
     forge/
       demo_forge.py
+      feedback_loop.py
       issue_forge.py
       launch_forge.py
       product_bench.py
@@ -187,6 +196,7 @@ omega_game_t/
     test_circuit_dungeon_t.py
     test_demo_forge_t.py
     test_energy_civilization_t.py
+    test_feedback_loop_t.py
     test_gm_council_t.py
     test_issue_forge_t.py
     test_launch_forge_t.py
