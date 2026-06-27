@@ -2,12 +2,15 @@
 
 from .boardgame import BoardGameEngine, BoardPiece, Position
 from .circuit_dungeon import CircuitAttemptResult, CircuitDoor, CircuitDungeonEngine
+from .code_dojo import CodeDojoEngine
 from .energy_civilization import (
     EnergyCivilizationEngine,
     EnergyColony,
     EnergyTurnInput,
     EnergyTurnResult,
 )
+from .process_alchemy import ProcessAlchemyEngine
+from .prototype_world import PrototypeWorldEngine
 from .science_sandbox import (
     MicrogridParams,
     MicrogridState,
@@ -25,6 +28,7 @@ __all__ = [
     "CircuitAttemptResult",
     "CircuitDoor",
     "CircuitDungeonEngine",
+    "CodeDojoEngine",
     "EnergyCivilizationEngine",
     "EnergyColony",
     "EnergyTurnInput",
@@ -33,6 +37,8 @@ __all__ = [
     "MicrogridState",
     "MicrogridStepResult",
     "Position",
+    "ProcessAlchemyEngine",
+    "PrototypeWorldEngine",
     "RLCParams",
     "RLCState",
     "RLCStepResult",
