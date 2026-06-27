@@ -5,7 +5,18 @@ Usage:
 """
 from __future__ import annotations
 
-from ecc_tristan import HyperParityGraph, SparseLDPC, bench_hamming74_bsc, decode, default_oakbench_matrix, encode, min_sum_decode
+from ecc_tristan import (
+    HyperParityGraph,
+    LinearBlockCode,
+    SparseLDPC,
+    bench_hamming74_bsc,
+    block_deinterleave,
+    block_interleave,
+    decode,
+    default_oakbench_matrix,
+    encode,
+    min_sum_decode,
+)
 from ecc_tristan.channels import burst_flip_channel
 from ecc_tristan.oak import gate_hamming74
 from ecc_tristan.soft_channels import bpsk_awgn_channel, sigma_from_ebn0_db
@@ -29,6 +40,17 @@ def main() -> None:
     ldpc = SparseLDPC.toy_6_3()
     print("toy_ldpc_hard", ldpc.bit_flip_decode([0, 0, 0, 1, 0, 0]))
     print("toy_ldpc_min_sum", min_sum_decode(ldpc, [5.0, 5.0, 5.0, -1.0, 5.0, 5.0]))
+
+    linear = LinearBlockCode.toy_6_3()
+    linear_message = [1, 0, 1]
+    linear_codeword = linear.encode(linear_message)
+    linear_received = list(linear_codeword)
+    linear_received[0] ^= 1
+    print("toy_linear_ml", linear.nearest_decode(linear_received))
+
+    burst_bits = [bit for block in [encode([1, 0, 1, 1]), encode([0, 1, 0, 1])] for bit in block]
+    interleaved = block_interleave(burst_bits, depth=2)
+    print("interleaver_roundtrip", block_deinterleave(interleaved, depth=2) == burst_bits)
 
     sigma = sigma_from_ebn0_db(rate=0.5, ebn0_db=3.0)
     soft = bpsk_awgn_channel([0, 1, 0, 1], sigma=sigma, seed=123)
