@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/gamemaster_academy.schema.json",
+  "title": "GameMasterAcademy Evaluation",
+  "type": "object",
+  "required": ["profile", "quest", "rubric", "passed", "next_level_hint", "m_plus", "m_minus", "next_quests"],
+  "properties": {
+    "profile": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "domain": { "type": "string" },
+        "level": { "type": "string" },
+        "average_skill": { "type": "number", "minimum": 0, "maximum": 1 },
+        "skills": { "type": "array", "items": { "type": "object" } },
+        "oak_rules": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "quest": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "domain": { "type": "string" },
+        "target_skill": { "type": "string" },
+        "difficulty": { "type": "number", "minimum": 0, "maximum": 1 },
+        "prompt": { "type": "string" },
+        "oak_checks": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "rubric": {
+      "type": "object",
+      "properties": {
+        "domain_skill": { "type": "number", "minimum": 0, "maximum": 1 },
+        "reasoning": { "type": "number", "minimum": 0, "maximum": 1 },
+        "safety": { "type": "number", "minimum": 0, "maximum": 1 },
+        "clarity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "memory": { "type": "number", "minimum": 0, "maximum": 1 },
+        "overclaim": { "type": "number", "minimum": 0, "maximum": 1 },
+        "drift": { "type": "number", "minimum": 0, "maximum": 1 },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "passed": { "type": "boolean" },
+    "next_level_hint": { "type": "string" },
+    "m_plus": { "type": "array", "items": { "type": "string" } },
+    "m_minus": { "type": "array", "items": { "type": "string" } },
+    "next_quests": { "type": "array", "items": { "type": "object" } }
+  }
+}
