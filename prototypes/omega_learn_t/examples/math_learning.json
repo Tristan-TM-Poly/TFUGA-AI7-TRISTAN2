@@ -1,0 +1,22 @@
+{
+  "skill": "Transformées de Fourier et ondelettes",
+  "goal": "Comprendre les invariants temps-fréquence-échelle et les relier à FFWT/FFWT-N.",
+  "tags": ["math", "FFWT", "CVCD"],
+  "notes": "Fourier décompose en fréquences globales, ondelettes ajoutent localisation temps-échelle, énergie Parseval, convolution, sparsité, débruitage, compression, scalogramme, reconstruction inverse",
+  "evidence": [
+    {"axis": "understanding", "successes": 3, "failures": 2},
+    {"axis": "recall", "successes": 2, "failures": 3},
+    {"axis": "generalization", "successes": 3, "failures": 1},
+    {"axis": "creativity", "successes": 4, "failures": 1},
+    {"axis": "safety", "successes": 2, "failures": 2}
+  ],
+  "errors": [
+    {
+      "name": "Confusion entre résolution fréquentielle et temporelle",
+      "cause": "Principe d'incertitude temps-fréquence mal appliqué",
+      "correction": "Comparer fenêtre courte/longue sur un chirp synthétique",
+      "future_test": "Tracer STFT et ondelette d'un signal chirp puis expliquer les différences",
+      "severity": 1.8
+    }
+  ]
+}
