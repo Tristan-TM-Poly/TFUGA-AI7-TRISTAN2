@@ -11,7 +11,7 @@ GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 Ω-GAME-T++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable et améliorable.
 
 ```text
-Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> M+/M- -> Better World
+Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> M+/M- -> Better World
 ```
 
 ## MVP actuel
@@ -25,6 +25,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `Productizer`, `ProductPlan`
 - `IssueForge`, `IssueSet`, `IssueSpec`
 - `SprintForge`, `SprintPlan`, `SprintTask`
+- `DemoForge`, `DemoPlan`, `DemoScene`
 - `MPlusMemory` / `MMinusMemory`
 - `GameQualityScore`
 - `TextWorldEngine`
@@ -33,7 +34,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -87,12 +88,17 @@ Générateur de roadmaps GitHub-ready. Il transforme un `ProductPlan` en `IssueS
 
 Générateur de sprint OAK-safe. Il transforme un `IssueSet` en `SprintPlan` : tâches priorisées, estimations, ordre d'exécution, OAK gates, Definition of Done et export Markdown. Il ne modifie pas de calendrier ni de projet externe.
 
+### DemoForge-T
+
+Générateur de démo interne OAK-safe. Il transforme un `ProductPlan` et un `SprintPlan` en `DemoPlan` : script, scènes, narration, preuves, checklist OAK, signaux de succès, répétition et export Markdown.
+
 ## Structure
 
 ```text
 omega_game_t/
   docs/
     CIRCUIT_DUNGEON_T.md
+    DEMO_FORGE_T.md
     ENERGY_CIVILIZATION_T.md
     GM_COUNCIL_T.md
     ISSUE_FORGE_T.md
@@ -107,6 +113,7 @@ omega_game_t/
   schemas/
     circuit_door.schema.json
     compiled_world.schema.json
+    demo_plan.schema.json
     energy_colony.schema.json
     event.schema.json
     gm_vote.schema.json
@@ -131,6 +138,7 @@ omega_game_t/
     examples/
       boardgame_t_demo.py
       circuit_dungeon_t_demo.py
+      demo_forge_t_demo.py
       energy_civilization_t_demo.py
       gm_council_t_demo.py
       issue_forge_t_demo.py
@@ -141,6 +149,7 @@ omega_game_t/
       sprint_forge_t_demo.py
       theory_compiler_t_demo.py
     forge/
+      demo_forge.py
       issue_forge.py
       sprint_forge.py
     gm_council.py
@@ -149,6 +158,7 @@ omega_game_t/
   tests/
     test_boardgame_t.py
     test_circuit_dungeon_t.py
+    test_demo_forge_t.py
     test_energy_civilization_t.py
     test_gm_council_t.py
     test_issue_forge_t.py
