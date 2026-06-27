@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/language_repair_loop.schema.json",
+  "title": "LanguageRepairLoopResult",
+  "type": "object",
+  "required": ["target_score", "converged", "final_run", "final_report", "attempts", "m_plus", "m_minus", "next_action"],
+  "properties": {
+    "target_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "converged": { "type": "boolean" },
+    "final_run": { "type": "object" },
+    "final_report": { "type": "object" },
+    "attempts": { "type": "array", "items": { "type": "object" } },
+    "m_plus": { "type": "array", "items": { "type": "string" } },
+    "m_minus": { "type": "array", "items": { "type": "string" } },
+    "next_action": { "type": "string" }
+  }
+}
