@@ -40,6 +40,45 @@ S_T = (parity, erasure, burst, graph, scale, channel, Bayes, M⁻)
 
 The goal is to make the smallest diagnostic object that is still sufficient for correction, rejection, or adaptation.
 
+## GF(2) algebra layer
+
+`ecc_tristan.gf2` provides the algebraic base that the first Ω-ECC-T PR was missing:
+
+- binary vector/matrix validation;
+- dot product, matrix-vector, vector-matrix multiplication over GF(2);
+- transpose;
+- RREF over GF(2);
+- rank;
+- nullspace basis;
+- Hamming weight and Hamming distance;
+- exhaustive binary vector generation for small OAK baselines.
+
+This turns parity-check intuition into executable algebra.
+
+## LinearBlockCode phase
+
+`ecc_tristan.linear_block_code.LinearBlockCode` adds true code construction:
+
+```text
+H -> nullspace(H) = generator matrix G
+message m -> codeword c = mG
+received y -> exhaustive nearest-codeword ML decode
+```
+
+Implemented scope:
+
+- construction from a generator matrix;
+- construction from parity checks via GF(2) nullspace;
+- encode;
+- syndrome;
+- codeword enumeration;
+- minimum distance for small codes;
+- rate calculation;
+- exhaustive maximum-likelihood nearest-codeword decoder;
+- explicit tie status: `nearest_tie_oak_uncertain`.
+
+OAK-safe limit: exhaustive decoding is only for small research codes and correctness baselines. It must not be treated as a scalable decoder.
+
 ## HyperParityGraph-T
 
 A parity-check matrix becomes a hypergraph:
@@ -105,13 +144,25 @@ Supported controls:
 
 OAK-safe limit: this is a clean research decoder, not a production LDPC engine. Production-grade LDPC still needs real code construction, generator matrices, interleavers, puncturing/shortening, layered schedules, numerical stability, SIMD/GPU/hardware concerns, and comparison against mature libraries.
 
+## Interleaver anti-burst phase
+
+`ecc_tristan.interleaver` adds block interleaving:
+
+```text
+encoded blocks -> interleave -> burst channel -> deinterleave -> decode blocks
+```
+
+The interleaver does not create information. It spreads a contiguous burst across multiple codewords so a small component code, such as Hamming(7,4), may correct the distributed damage. OAKBench now compares burst performance with and without interleaving.
+
 ## OAKBench matrix
 
 `ecc_tristan.oakbench_matrix.default_oakbench_matrix()` now emits a small benchmark table over:
 
 - Hamming(7,4) on BSC at multiple flip probabilities;
 - toy LDPC hard-decision bit-flip on BSC;
-- toy LDPC soft-decision min-sum on BPSK/AWGN.
+- toy LDPC soft-decision min-sum on BPSK/AWGN;
+- toy linear code exhaustive ML decoding on BSC;
+- Hamming(7,4) burst channel with and without block interleaving.
 
 This is the seed of the full OAKBench matrix:
 
@@ -129,23 +180,25 @@ BSC, BEC, AWGN, burst, packet-loss, flash-like, DNA-like indel/loss, quantum dep
 6. A correction with low confidence is an OAK rejection, not a success.
 7. Superiority requires measured BER/BLER/FER, rate, distance, latency, complexity, energy, and false-accept rate.
 
-## MVP implemented in this PR
+## Implemented executable layers
 
 - Hamming(7,4) encoder / decoder.
-- Binary symmetric, burst-flip, and erasure-like channels.
+- Binary symmetric, burst-flip, erasure-like, and BPSK/AWGN channels.
 - `ChannelReport.syndrome_hint()` as the first Syndrome-CVCD diagnostic.
+- GF(2) linear algebra.
+- `LinearBlockCode` with construction from parity checks and exhaustive ML decode.
 - `HyperParityGraph` with exhaustive nearest-codeword decoding for small binary graphs.
 - OAK gate for accepting/rejecting Hamming(7,4) corrections.
 - M⁻ JSONL event hook.
 - Deterministic benchmark: `bench_hamming74_bsc`.
 - `SparseLDPC` hard-decision decoder scaffold.
-- BPSK/AWGN soft-channel LLR primitive.
 - Soft-decision min-sum decoder over LLR messages.
+- Block interleaver / deinterleaver.
 - `default_oakbench_matrix()` for deterministic comparison rows.
 
 ## Next expansions
 
-1. True LDPC code construction with generator matrix and larger sparse ensembles.
+1. Larger LDPC code construction with generator matrix and sparse ensembles.
 2. Reed-Solomon over GF(2^m) or a dependency-backed implementation.
 3. Polar code scaffold with successive cancellation.
 4. Fountain/erasure codes for packet loss.
@@ -166,3 +219,5 @@ Initial M⁻ constraints:
 - The toy LDPC is a scaffold, not a production code or performance claim.
 - Hard-decision bit flipping can stall or converge to a wrong codeword; OAK must track residual and false-accept rate.
 - Soft-decision min-sum is not automatically better; it must beat hard-decision and external LDPC baselines under identical channel assumptions.
+- Exhaustive ML decoding is a correctness oracle for small codes, not a scalable solution.
+- Interleaving can mitigate bursts, but it adds latency and does not increase Shannon capacity.
