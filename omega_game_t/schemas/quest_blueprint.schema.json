@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/quest_blueprint.schema.json",
+  "title": "Ω-GAME-T QuestBlueprint",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["quest", "objective", "constraint", "reward", "consequence", "cvcd_tags"],
+  "properties": {
+    "quest": { "type": "string", "minLength": 1 },
+    "objective": { "type": "string", "minLength": 1 },
+    "constraint": { "type": "string", "minLength": 1 },
+    "reward": { "type": "string", "minLength": 1 },
+    "consequence": { "type": "string", "minLength": 1 },
+    "cvcd_tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "oak_risk": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "unknown"]
+    }
+  }
+}
