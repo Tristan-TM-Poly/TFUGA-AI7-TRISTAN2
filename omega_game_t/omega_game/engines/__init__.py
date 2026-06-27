@@ -9,6 +9,7 @@ from .energy_civilization import (
     EnergyTurnInput,
     EnergyTurnResult,
 )
+from .github_realm import GitHubRealmEngine, RepoQuest, RepoWorld, RepoZone, demo_repo_world
 from .process_alchemy import ProcessAlchemyEngine
 from .prototype_world import PrototypeWorldEngine
 from .science_sandbox import (
@@ -33,6 +34,11 @@ __all__ = [
     "EnergyColony",
     "EnergyTurnInput",
     "EnergyTurnResult",
+    "GitHubRealmEngine",
+    "RepoQuest",
+    "RepoWorld",
+    "RepoZone",
+    "demo_repo_world",
     "MicrogridParams",
     "MicrogridState",
     "MicrogridStepResult",
