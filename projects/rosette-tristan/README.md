@@ -39,6 +39,12 @@ PDF/TXT → Ingest → Extract → LaTeX Forge → Theory Graph → Code Forge �
 - `uncertain`: ambigu, garder en M⁻
 - `failed`: non fiable ou non reproductible
 
+## Documents produits
+
+- [`ROADMAP.md`](ROADMAP.md) : phases Rosette Fidelity, Theory Compiler, Code/Reproduction, RosetteBench et IP/Productization.
+- [`docs/OAK_SPEC.md`](docs/OAK_SPEC.md) : axiomes et gates OAK minimaux.
+- [`docs/ROSETTEBENCH.md`](docs/ROSETTEBENCH.md) : familles de benchmarks, métriques et acceptance gates.
+
 ## Zéro-touch / IP
 
 Ce dossier est ajouté dans le monorepo sous `projects/rosette-tristan/` pour isoler l’expérience. Avant toute publication externe ou usage commercial, vérifier licence, citations, droits d’auteur et brevetabilité.
