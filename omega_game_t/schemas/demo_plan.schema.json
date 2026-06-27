@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/demo_plan.schema.json",
+  "title": "DemoPlan",
+  "type": "object",
+  "required": ["title", "product_name", "target_engine", "audience", "opening_hook", "scenes", "oak_checklist", "success_signals", "rehearsal_steps"],
+  "properties": {
+    "title": { "type": "string" },
+    "product_name": { "type": "string" },
+    "target_engine": { "type": "string" },
+    "audience": { "type": "array", "items": { "type": "string" } },
+    "opening_hook": { "type": "string" },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "scene_id": { "type": "string" },
+          "title": { "type": "string" },
+          "narration": { "type": "string" },
+          "action": { "type": "string" },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "oak_notes": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "oak_checklist": { "type": "array", "items": { "type": "string" } },
+    "success_signals": { "type": "array", "items": { "type": "string" } },
+    "rehearsal_steps": { "type": "array", "items": { "type": "string" } }
+  }
+}
