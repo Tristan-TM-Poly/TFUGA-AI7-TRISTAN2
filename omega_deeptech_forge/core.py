@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from enum import Enum
-from typing import Iterable, Literal
+from pathlib import Path
+from typing import Any, Iterable, Literal
 
 
 class EvidenceLevel(str, Enum):
@@ -26,6 +29,19 @@ class OAKStatus(str, Enum):
     DRAFT_ONLY = "draft_only"
     REVIEW_REQUIRED = "review_required"
     SAFE_TO_EXPLORE = "safe_to_explore"
+
+
+HandoffRoute = Literal[
+    "blocked",
+    "draft_review",
+    "human_approval_required",
+    "offer_card_review",
+    "open_research_review",
+    "archive",
+]
+
+REDACTED_SUMMARY = "[REDACTED_FOR_IP_PROTECTION_SEE_PRIVATE_REVIEW_PACKET]"
+SENSITIVE_IP_CLASSES = {IPClass.PATENT_REVIEW, IPClass.TRADE_SECRET}
 
 
 @dataclass(frozen=True)
@@ -66,6 +82,51 @@ class ForgeDecision:
     negative_memory: tuple[str, ...] = field(default_factory=tuple)
 
 
+@dataclass(frozen=True)
+class HandoffPacket:
+    """Public-safe packet for the next workflow step.
+
+    The packet is intentionally safe-by-default: if a signal is routed to
+    patent review or trade-secret handling, the public summary and source list
+    are redacted. This keeps GitHub issues, CI logs, and review artifacts from
+    leaking potentially sensitive invention details.
+    """
+
+    generated_at: str
+    title: str
+    domain: str
+    evidence_level: EvidenceLevel
+    oak_status: OAKStatus
+    ip_class: IPClass
+    route: HandoffRoute
+    safe_summary: str
+    source_urls: tuple[str, ...]
+    next_actions: tuple[str, ...]
+    negative_memory: tuple[str, ...]
+    redacted: bool
+    risk_notes: tuple[str, ...] = field(default_factory=tuple)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "generated_at": self.generated_at,
+            "title": self.title,
+            "domain": self.domain,
+            "evidence_level": self.evidence_level.value,
+            "oak_status": self.oak_status.value,
+            "ip_class": self.ip_class.value,
+            "route": self.route,
+            "safe_summary": self.safe_summary,
+            "source_urls": list(self.source_urls),
+            "next_actions": list(self.next_actions),
+            "negative_memory": list(self.negative_memory),
+            "redacted": self.redacted,
+            "risk_notes": list(self.risk_notes),
+        }
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=2) + "\n"
+
+
 def _clamp01(value: float) -> float:
     return max(0.0, min(1.0, float(value)))
 
@@ -73,6 +134,10 @@ def _clamp01(value: float) -> float:
 def _has_any(tags: Iterable[str], keywords: Iterable[str]) -> bool:
     tagset = {t.lower() for t in tags}
     return any(k.lower() in tagset for k in keywords)
+
+
+def _utc_now_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
 def classify_ip(signal: Signal) -> IPClass:
@@ -163,3 +228,77 @@ def forge_decision(signal: Signal) -> ForgeDecision:
         next_actions=tuple(next_actions),
         negative_memory=tuple(m_minus),
     )
+
+
+def handoff_route(decision: ForgeDecision) -> HandoffRoute:
+    if decision.oak_status == OAKStatus.BLOCKED:
+        return "blocked"
+    if decision.oak_status == OAKStatus.DRAFT_ONLY:
+        return "draft_review"
+    if decision.ip_class in SENSITIVE_IP_CLASSES:
+        return "human_approval_required"
+    if decision.ip_class == IPClass.SERVICE_REVENUE:
+        return "offer_card_review"
+    if decision.ip_class == IPClass.OPEN_PUBLIC:
+        return "open_research_review"
+    return "archive"
+
+
+def build_handoff_packet(decision: ForgeDecision, *, generated_at: str | None = None) -> HandoffPacket:
+    """Build a public-safe handoff packet from a forge decision.
+
+    Sensitive IP routes are redacted. The packet can be placed in a GitHub issue,
+    CI artifact, or review queue without leaking invention details.
+    """
+
+    redacted = decision.ip_class in SENSITIVE_IP_CLASSES
+    risk_notes: list[str] = []
+
+    if redacted:
+        safe_summary = REDACTED_SUMMARY
+        safe_sources: tuple[str, ...] = ()
+        risk_notes.append("Sensitive IP route: summary and source URLs withheld from public handoff.")
+        risk_notes.append("Use a private vault or qualified review channel for full technical details.")
+    else:
+        safe_summary = decision.signal.summary
+        safe_sources = decision.signal.source_urls
+
+    if decision.oak_status in {OAKStatus.BLOCKED, OAKStatus.DRAFT_ONLY}:
+        risk_notes.append("Do not use externally before OAK repair and source verification.")
+
+    return HandoffPacket(
+        generated_at=generated_at or _utc_now_iso(),
+        title=decision.signal.title,
+        domain=decision.signal.domain,
+        evidence_level=decision.signal.evidence_level,
+        oak_status=decision.oak_status,
+        ip_class=decision.ip_class,
+        route=handoff_route(decision),
+        safe_summary=safe_summary,
+        source_urls=safe_sources,
+        next_actions=decision.next_actions,
+        negative_memory=decision.negative_memory,
+        redacted=redacted,
+        risk_notes=tuple(risk_notes),
+    )
+
+
+def dry_run_report(signal: Signal, *, generated_at: str | None = None) -> HandoffPacket:
+    """Run triage and return a safe handoff packet without writing files."""
+
+    return build_handoff_packet(forge_decision(signal), generated_at=generated_at)
+
+
+def write_handoff_packet(signal: Signal, output_path: str | Path, *, generated_at: str | None = None) -> Path:
+    """Write a safe JSON handoff packet to an explicit local path.
+
+    This function never chooses a public path automatically. Callers must pass the
+    destination deliberately so AUTO²/GitHub workflows can keep sensitive outputs
+    in private artifacts or local vaults when required.
+    """
+
+    packet = dry_run_report(signal, generated_at=generated_at)
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(packet.to_json(), encoding="utf-8")
+    return path
