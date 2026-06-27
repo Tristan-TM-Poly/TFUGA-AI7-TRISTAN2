@@ -21,6 +21,7 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `PowerScore`: log-stable maturity score balancing fertility, verifiability, reusability, impact, compression, and stability against complexity, noise, untested speculation, risk, and duplication.
 - `Omega6`: parallel HGFM64 architecture: 64 coupled crystals across 8 master hyperedges.
 - `AI-7`: metabolism of production, verification, testing, analysis, optimization, reproduction, integration, crystallization, stabilization, documentation, and promotion.
+- `Ω-DeepTech Intelligence Forge`: OAK-safe layer for deeptech signals -> IP triage -> prototype tasks -> revenue routing -> GitHub artifacts.
 
 ## Repository structure
 
@@ -28,6 +29,7 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 docs/       Manifest, roadmap, canon analysis, publication plan.
 schemas/    JSON schemas for DCT++, research cards, HGFM, status vectors.
 sage_tristan/ Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
+omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
 tests/      Unit tests for the executable core.
 examples/   Example branches and DCT++ packets.
 reports/    Generated audit and publication reports.
@@ -46,6 +48,7 @@ Name makes callable. Formalization makes testable. Testing makes credible. Proof
 ```bash
 python -m pytest
 python -m sage_tristan.demo
+python examples/omega_deeptech_forge_demo.py
 ```
 
 ## Current canon layer
@@ -60,6 +63,7 @@ Immediate canonizable modules:
 - StatusVector
 - ArtifactForge
 - ArchitectureAI7
+- Ω-DeepTech Intelligence Forge
 
 Crystallizable modules:
 
