@@ -11,6 +11,7 @@ from .interleaver import block_deinterleave, block_interleave
 from .ldpc import SparseLDPC
 from .linear_block_code import LinearBlockCode
 from .minsum import min_sum_decode
+from .reed_solomon import ReedSolomonErasureCode, erase_positions
 from .soft_channels import bpsk_awgn_channel, sigma_from_ebn0_db
 
 
@@ -200,9 +201,41 @@ def hamming74_burst_rows(
     ]
 
 
+def reed_solomon_erasure_row(erasures: int = 4, trials: int = 32) -> MatrixRow:
+    """Benchmark RS(10,6) erasure recovery with deterministic erasure patterns."""
+    code = ReedSolomonErasureCode(n=10, k=6)
+    successes = 0
+    residuals = 0
+    false_accepts = 0
+    for i in range(trials):
+        message = [((i * 17) + (j * 29)) % 256 for j in range(code.k)]
+        codeword = code.encode(message)
+        positions = [((i + j * 3) % code.n) for j in range(erasures)]
+        received = erase_positions(codeword, positions)
+        decoded = code.decode_erasures(received)
+        if decoded.recovered:
+            if decoded.message == message and decoded.codeword == codeword:
+                successes += 1
+            else:
+                false_accepts += 1
+        else:
+            residuals += 1
+    accepts = trials - residuals
+    return MatrixRow(
+        code="RS(10,6)_GF256_erasure",
+        channel="erasures",
+        parameter=float(erasures),
+        trials=trials,
+        success_rate=successes / trials,
+        residual_rate=residuals / trials,
+        false_accept_rate=false_accepts / max(1, accepts),
+    )
+
+
 def default_oakbench_matrix() -> List[MatrixRow]:
     return hamming_bsc_rows([0.0, 0.01, 0.05, 0.10], trials=64, seed=7) + [
         toy_ldpc_bsc_row(p=0.02, trials=64, seed=13),
         toy_ldpc_awgn_min_sum_row(ebn0_db=3.0, trials=64, seed=23),
         linear_code_ml_bsc_row(p=0.02, trials=64, seed=31),
+        reed_solomon_erasure_row(erasures=4, trials=32),
     ] + hamming74_burst_rows(burst_length=4, blocks=8, interleaver_depth=4)
