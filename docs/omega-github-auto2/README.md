@@ -19,7 +19,7 @@ Turn the Top64 / Top256 / Top1024 expansion matrix into deterministic GitHub art
 - repo routing manifest
 - GitHub label manifest
 
-The system is offline by default. It generates plans, queues, review artifacts, and evidence without contacting customers, activating billing, disclosing sensitive IP, or merging code automatically.
+The system is offline by default. It generates plans, queues, review artifacts, and evidence.
 
 ## Canonical strategy
 
@@ -42,6 +42,7 @@ Protect ECC until benchmarked.
 - `docs/omega-github-auto2/OAK_TRIBUNAL.md` — OAK tribunal.
 - `docs/omega-github-auto2/HUMAN_LOCKS.md` — human locks.
 - `docs/omega-github-auto2/ROADMAP.md` — roadmap.
+- `docs/omega-github-auto2/V2_CHANGELOG.md` — v2 change log.
 
 ## Run locally
 
@@ -60,18 +61,6 @@ python -m unittest tests/test_omega_github_auto2_factory.py
 - `dry-run`: validate invariants only.
 - `plan`: generate manifest, queues, dashboard, OAK report, dependency graph, labels, routing, and M-minus seed.
 - `materialize`: all of `plan`, plus issue drafts, PR drafts, and Codex task packs.
-
-## OAK locks
-
-Human review remains mandatory for:
-
-- merge to `main`
-- external outreach
-- patentable or trade-secret disclosure
-- production billing changes
-- regulated claims
-- destructive repository operations
-- customer/private data publication
 
 ## Expansion grammar
 
@@ -100,4 +89,4 @@ Each sector becomes 16 cards:
 No irreversible action from automation.
 ```
 
-The reactor may draft, rank, test, and recommend. It must not merge, publish sensitive IP, activate billing, or make regulated claims without approval.
+The reactor may draft, rank, test, and recommend. Consequential actions require approval.
