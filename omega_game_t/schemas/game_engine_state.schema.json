@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/game_engine_state.schema.json",
+  "title": "GameEngineOS WorldState",
+  "type": "object",
+  "required": ["name", "domain", "resources", "metrics", "memory", "constraints"],
+  "properties": {
+    "name": { "type": "string" },
+    "domain": { "type": "string" },
+    "resources": { "type": "object", "additionalProperties": { "type": "number" } },
+    "metrics": { "type": "object", "additionalProperties": { "type": "number" } },
+    "memory": { "type": "array", "items": { "type": "string" } },
+    "constraints": { "type": "array", "items": { "type": "string" } }
+  }
+}
