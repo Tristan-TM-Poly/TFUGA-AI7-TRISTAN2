@@ -32,7 +32,12 @@ jobs:
         run: python -m pip install --upgrade pip pytest
 
       - name: Run tests
-        run: python -m pytest tests/test_ffwt_hac_benchmark.py -q
+        run: |
+          set +e
+          python -m pytest tests/test_ffwt_hac_benchmark.py -q > /tmp/ffwt_pytest.log 2>&1
+          status=$?
+          cat /tmp/ffwt_pytest.log
+          exit $status
 
       - name: Generate benchmark reports
         run: |
