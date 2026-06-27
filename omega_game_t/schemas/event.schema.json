@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/event.schema.json",
+  "title": "Ω-GAME-T Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "kind", "description", "actors", "targets", "payload"],
+  "properties": {
+    "event_id": { "type": "string", "minLength": 1 },
+    "kind": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "actors": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "targets": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "fair": { "type": "boolean" },
+        "fun": { "type": "boolean" },
+        "agency": { "type": "number", "minimum": 0, "maximum": 1 },
+        "metric": { "type": "string" },
+        "expected_signal": { "type": "string" },
+        "risk_flags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}
