@@ -13,6 +13,19 @@ from .manifest import (
     write_checksum_registry,
     write_manifest,
 )
+from .pipeline import (
+    DigestBundle,
+    DigestRecord,
+    DigestStage,
+    Exporter,
+    ExportResult,
+    InMemoryAdapter,
+    JsonExporter,
+    MarkdownExporter,
+    SourceAdapter,
+    TopicScoreStage,
+    run_pipeline,
+)
 
 __all__ = [
     "DemoDataset",
@@ -28,4 +41,15 @@ __all__ = [
     "sha256_file",
     "write_checksum_registry",
     "write_manifest",
+    "DigestBundle",
+    "DigestRecord",
+    "DigestStage",
+    "Exporter",
+    "ExportResult",
+    "InMemoryAdapter",
+    "JsonExporter",
+    "MarkdownExporter",
+    "SourceAdapter",
+    "TopicScoreStage",
+    "run_pipeline",
 ]
