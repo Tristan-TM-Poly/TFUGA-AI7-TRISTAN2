@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/world_graph.schema.json",
+  "title": "Ω-GAME-T WorldGraph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entities", "relations", "hyperedges", "rules", "memory"],
+  "properties": {
+    "entities": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/entity" }
+    },
+    "relations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relation" }
+    },
+    "hyperedges": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 },
+        "uniqueItems": true
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "memory": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  },
+  "$defs": {
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entity_id", "kind", "name", "attributes"],
+      "properties": {
+        "entity_id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "attributes": { "type": "object" }
+      }
+    },
+    "relation": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "string", "minLength": 1 },
+        { "type": "string", "minLength": 1 },
+        { "type": "string", "minLength": 1 }
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    }
+  }
+}
