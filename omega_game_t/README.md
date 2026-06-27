@@ -11,7 +11,7 @@ GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 Ω-GAME-T++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable et améliorable.
 
 ```text
-Theory -> RuleGenome -> WorldDNA -> Engine -> OAKBench -> M+/M- -> Better World
+Theory -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> M+/M- -> Better World
 ```
 
 ## MVP actuel
@@ -20,6 +20,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 
 - `WorldGraph`, `Entity`, `Event`, `RuleKernel`
 - `GameMasterAgent`, `QuestCVCD`, `OAKGate`
+- `GMCouncil`, `GMVote`, `CouncilScores`
 - `MPlusMemory` / `MMinusMemory`
 - `GameQualityScore`
 - `TextWorldEngine`
@@ -28,7 +29,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -58,6 +59,10 @@ Jeu-puzzle virtuel au-dessus de `ScienceSandbox-T`. Les défis utilisent des cir
 
 Jeu-stratégie virtuel au-dessus de `MicrogridStep`. Une colonie possède une batterie, reçoit une production solaire, consomme une charge, subit des pertes, sert ou ne sert pas la demande, puis reçoit un score énergétique OAK.
 
+### GM-Council-T
+
+Conseil de GameMasters spécialisés : Narrator, Strategist, Teacher, Scientist, Economist, Mycelium, OAK et Memory. Chaque agent vote, le conseil choisit l'action pondérée, OAK valide, puis M+/M- apprend.
+
 ### OAKBench-GAME-T
 
 Benchmark commun pour mesurer les moteurs avec : fun, agency, coherence, learning, safety, novelty, fairness, replayability, friction, exploits, confusion, residue, compression gain et M-minus reduction.
@@ -69,6 +74,7 @@ omega_game_t/
   docs/
     CIRCUIT_DUNGEON_T.md
     ENERGY_CIVILIZATION_T.md
+    GM_COUNCIL_T.md
     OAKBENCH_GAME_T.md
     OMEGA_GAME_T_MANIFESTO.md
     OMEGA_GAME_T_PLUS_PLUS.md
@@ -78,6 +84,7 @@ omega_game_t/
     circuit_door.schema.json
     energy_colony.schema.json
     event.schema.json
+    gm_vote.schema.json
     oak_report.schema.json
     oakbench_result.schema.json
     quest_blueprint.schema.json
@@ -97,13 +104,16 @@ omega_game_t/
       boardgame_t_demo.py
       circuit_dungeon_t_demo.py
       energy_civilization_t_demo.py
+      gm_council_t_demo.py
       oakbench_game_t_demo.py
       quest_cvcd_demo.py
       science_sandbox_t_demo.py
+    gm_council.py
   tests/
     test_boardgame_t.py
     test_circuit_dungeon_t.py
     test_energy_civilization_t.py
+    test_gm_council_t.py
     test_oakbench_game_t.py
     test_omega_game_t.py
     test_science_sandbox_t.py
