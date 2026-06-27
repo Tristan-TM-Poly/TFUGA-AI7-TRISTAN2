@@ -1,17 +1,44 @@
 # Omega GAME T — Core Split
 
 Issue: #90  
-Status: small merge unit split from the larger GAME branch.
+Status: small merge units split from the larger GAME branch.
 
-## Scope
+## Scope already merged
 
-This PR adds only the first reviewable unit:
+The first reviewable unit added:
 
 - graph primitives;
 - event validation;
 - quality scoring;
 - OAK gate;
-- tests.
+- tests;
+- CI.
+
+## New split unit: PolyglotLanguageEngine-T
+
+This branch adds a small OAK-safe language engine for GameMaster training.
+
+It turns rough ideas into internal drafts for:
+
+- clear French;
+- clear English;
+- teaching explanations;
+- pitch drafts;
+- Markdown documentation;
+- JSON contracts;
+- YAML plans;
+- GitHub issue drafts;
+- IP caution notes.
+
+### Objects
+
+- `LanguageQuest`
+- `LanguageRun`
+- `PolyglotLanguageEngine`
+
+### Boundary
+
+PolyglotLanguageEngine-T is an internal drafting and simulation unit. It does not claim official translation, legal advice, patent advice, or external certification.
 
 ## Boundary
 
@@ -30,4 +57,5 @@ python -m pytest
 2. TextWorld engine;
 3. Quest-CVCD;
 4. tests and docs;
-5. GameQualityScore benchmark.
+5. GameQualityScore benchmark;
+6. PolyglotLanguageEngine follow-ups: language curriculum, LanguageGM rubric, Markdown/JSON/YAML validators.
