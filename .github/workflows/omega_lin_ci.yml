@@ -1,0 +1,38 @@
+name: omega-lin-ci
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/omega_lin_oakbench.py'
+      - 'tests/test_omega_lin_oakbench.py'
+      - 'docs/omega-lin/**'
+      - '.github/workflows/omega_lin_ci.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/omega_lin_oakbench.py'
+      - 'tests/test_omega_lin_oakbench.py'
+      - 'docs/omega-lin/**'
+      - '.github/workflows/omega_lin_ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run tests
+        run: python -m pytest tests/test_omega_lin_oakbench.py -q
+
+      - name: Generate example reports
+        run: |
+          python scripts/omega_lin_oakbench.py --system pendulum --output reports/omega-lin/pendulum.json --markdown-output reports/omega-lin/pendulum.md
+          python scripts/omega_lin_oakbench.py --system vanderpol --output reports/omega-lin/vanderpol.json --markdown-output reports/omega-lin/vanderpol.md
+          python scripts/omega_lin_oakbench.py --system duffing --output reports/omega-lin/duffing.json --markdown-output reports/omega-lin/duffing.md
