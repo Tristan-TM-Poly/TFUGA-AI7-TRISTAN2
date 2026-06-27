@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/repo_world.schema.json",
+  "title": "GitHubRealm RepoWorld",
+  "type": "object",
+  "required": ["repo_name", "zones", "quests", "oak_controls", "health"],
+  "properties": {
+    "repo_name": { "type": "string" },
+    "zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "health": { "type": "number", "minimum": 0, "maximum": 1 },
+          "notes": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "quests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "target_zone": { "type": "string" },
+          "expected_gain": { "type": "number", "minimum": 0, "maximum": 1 },
+          "risk": { "type": "number", "minimum": 0, "maximum": 1 },
+          "tags": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "oak_controls": { "type": "array", "items": { "type": "string" } },
+    "health": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}
