@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/circuit_door.schema.json",
+  "title": "Ω-GAME-T CircuitDoor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["door_id", "name", "params", "tolerance_ratio", "opened"],
+  "properties": {
+    "door_id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resistance_ohm", "inductance_henry", "capacitance_farad", "source_voltage_volt"],
+      "properties": {
+        "resistance_ohm": { "type": "number", "minimum": 0 },
+        "inductance_henry": { "type": "number", "exclusiveMinimum": 0 },
+        "capacitance_farad": { "type": "number", "exclusiveMinimum": 0 },
+        "source_voltage_volt": { "type": "number" }
+      }
+    },
+    "tolerance_ratio": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+    "opened": { "type": "boolean" },
+    "resonance_frequency_hz": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "description": "Optional materialized value computed from 1/(2π√LC)."
+    }
+  }
+}
