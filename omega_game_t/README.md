@@ -100,6 +100,19 @@ It validates:
 - `ValidationReport`
 - `LanguageValidators`
 
+## Split unit: LanguageRepairLoop-T
+
+This branch adds a deterministic improvement loop for LanguageGM drafts.
+
+It turns validation failures into targeted repair steps, revalidates, and returns convergence, M+/M-, and the next action.
+
+### Objects
+
+- `RepairAction`
+- `RepairAttempt`
+- `RepairLoopResult`
+- `LanguageRepairLoop`
+
 ## Boundary
 
 Omega GAME T is a game, simulation, and research lab. It is not a tool for manipulation, unfair automation, unsafe real-world instructions, or external certification.
@@ -118,4 +131,4 @@ python -m pytest
 3. Quest-CVCD;
 4. tests and docs;
 5. GameQualityScore benchmark;
-6. validator-driven repair quests.
+6. validator-driven language training datasets.
