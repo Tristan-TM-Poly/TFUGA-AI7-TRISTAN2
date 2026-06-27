@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/energy_colony.schema.json",
+  "title": "Ω-GAME-T EnergyColony",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["colony_id", "name", "state", "params", "population", "stability"],
+  "properties": {
+    "colony_id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["battery_energy_wh", "t_hour"],
+      "properties": {
+        "battery_energy_wh": { "type": "number", "minimum": 0 },
+        "t_hour": { "type": "number", "minimum": 0 }
+      }
+    },
+    "params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["battery_capacity_wh", "roundtrip_efficiency", "max_charge_power_w", "max_discharge_power_w"],
+      "properties": {
+        "battery_capacity_wh": { "type": "number", "exclusiveMinimum": 0 },
+        "roundtrip_efficiency": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "max_charge_power_w": { "type": "number", "minimum": 0 },
+        "max_discharge_power_w": { "type": "number", "minimum": 0 }
+      }
+    },
+    "population": { "type": "integer", "minimum": 0 },
+    "stability": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}
