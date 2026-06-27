@@ -2,6 +2,12 @@
 
 from .boardgame import BoardGameEngine, BoardPiece, Position
 from .circuit_dungeon import CircuitAttemptResult, CircuitDoor, CircuitDungeonEngine
+from .energy_civilization import (
+    EnergyCivilizationEngine,
+    EnergyColony,
+    EnergyTurnInput,
+    EnergyTurnResult,
+)
 from .science_sandbox import (
     MicrogridParams,
     MicrogridState,
@@ -19,6 +25,10 @@ __all__ = [
     "CircuitAttemptResult",
     "CircuitDoor",
     "CircuitDungeonEngine",
+    "EnergyCivilizationEngine",
+    "EnergyColony",
+    "EnergyTurnInput",
+    "EnergyTurnResult",
     "MicrogridParams",
     "MicrogridState",
     "MicrogridStepResult",
