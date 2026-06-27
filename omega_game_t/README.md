@@ -113,6 +113,18 @@ It turns validation failures into targeted repair steps, revalidates, and return
 - `RepairLoopResult`
 - `LanguageRepairLoop`
 
+## Split unit: LanguageDatasetForge-T
+
+This branch adds a small internal dataset forge for LanguageGM benchmarks.
+
+It stores quest, run, evaluation, validation, repair result, tags, score summary, M+ and M-.
+
+### Objects
+
+- `LanguageDatasetItem`
+- `LanguageDataset`
+- `LanguageDatasetForge`
+
 ## Boundary
 
 Omega GAME T is a game, simulation, and research lab. It is not a tool for manipulation, unfair automation, unsafe real-world instructions, or external certification.
@@ -131,4 +143,4 @@ python -m pytest
 3. Quest-CVCD;
 4. tests and docs;
 5. GameQualityScore benchmark;
-6. validator-driven language training datasets.
+6. dataset-driven LanguageGM benchmarks.
