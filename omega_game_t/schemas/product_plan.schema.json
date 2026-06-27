@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/product_plan.schema.json",
+  "title": "Ω-GAME-T ProductPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "product_name",
+    "source_theory",
+    "target_engine",
+    "audience",
+    "value_props",
+    "deliverables",
+    "revenue_paths",
+    "ip_classification",
+    "oak_controls",
+    "launch_steps",
+    "risks"
+  ],
+  "properties": {
+    "product_name": { "type": "string", "minLength": 1 },
+    "source_theory": { "type": "string", "minLength": 1 },
+    "target_engine": { "type": "string", "minLength": 1 },
+    "audience": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "value_props": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "deliverables": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "revenue_paths": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "ip_classification": { "type": "string", "minLength": 1 },
+    "oak_controls": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "launch_steps": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}
