@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/simulation_result.schema.json",
+  "title": "GameEngineOS SimulationResult",
+  "type": "object",
+  "required": ["engine", "before", "action", "after", "flow", "score", "oak_status", "m_plus", "m_minus", "notes"],
+  "properties": {
+    "engine": { "type": "string" },
+    "before": { "$ref": "game_engine_state.schema.json" },
+    "after": { "$ref": "game_engine_state.schema.json" },
+    "action": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "expected_flow": { "type": "object" },
+        "risk": { "type": "number", "minimum": 0, "maximum": 1 },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "flow": {
+      "type": "object",
+      "properties": {
+        "energy": { "type": "number" },
+        "matter": { "type": "number" },
+        "value": { "type": "number" },
+        "knowledge": { "type": "number" }
+      }
+    },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "oak_status": { "type": "string" },
+    "m_plus": { "type": "array", "items": { "type": "string" } },
+    "m_minus": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  }
+}
