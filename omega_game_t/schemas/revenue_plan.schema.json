@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/revenue_plan.schema.json",
+  "title": "RevenuePlan",
+  "type": "object",
+  "required": ["product_name", "target_engine", "status", "offers", "channel_map", "success_signals", "oak_controls", "product_bench", "next_actions"],
+  "properties": {
+    "product_name": { "type": "string" },
+    "target_engine": { "type": "string" },
+    "status": { "type": "string" },
+    "offers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "product_name": { "type": "string" },
+          "audience": { "type": "array", "items": { "type": "string" } },
+          "promise": { "type": "string" },
+          "deliverables": { "type": "array", "items": { "type": "string" } },
+          "pricing": { "type": "object" },
+          "oak_status": { "type": "string" }
+        }
+      }
+    },
+    "channel_map": {
+      "type": "object",
+      "properties": {
+        "private": { "type": "array", "items": { "type": "string" } },
+        "public_after_review": { "type": "array", "items": { "type": "string" } },
+        "blocked": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "success_signals": { "type": "array", "items": { "type": "object" } },
+    "oak_controls": { "type": "array", "items": { "type": "string" } },
+    "product_bench": { "$ref": "product_bench.schema.json" },
+    "next_actions": { "type": "array", "items": { "type": "string" } }
+  }
+}
