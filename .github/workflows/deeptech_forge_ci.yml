@@ -1,0 +1,38 @@
+name: omega-deeptech-forge-ci
+
+on:
+  pull_request:
+    paths:
+      - 'omega_deeptech_forge/**'
+      - 'tests/test_omega_deeptech*.py'
+      - 'docs/deeptech_company_os_bridge.md'
+      - '.github/workflows/deeptech_forge_ci.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'omega_deeptech_forge/**'
+      - 'tests/test_omega_deeptech*.py'
+      - 'docs/deeptech_company_os_bridge.md'
+      - '.github/workflows/deeptech_forge_ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Run tests
+        run: python -m pytest tests/test_omega_deeptech_forge.py tests/test_omega_deeptech_review_packets.py -q
+
+      - name: Run packet safety subset
+        run: python -m pytest tests/test_omega_deeptech_forge.py tests/test_omega_deeptech_review_packets.py -k "sensitive or public_safe or service" -q
