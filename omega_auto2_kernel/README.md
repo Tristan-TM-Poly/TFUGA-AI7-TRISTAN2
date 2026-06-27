@@ -37,6 +37,10 @@ v1.1 ajoute :
 
 ```bash
 auto2 version
+auto2 forge "préparer un paquet de revue local"
+auto2 task-draft "préparer un paquet de revue local"
+auto2 task-draft "préparer un paquet de revue local" --format json
+auto2 task-draft "préparer un paquet de revue local" --output reports/task_draft.md
 auto2 genesis
 auto2 genesis "créer un moteur de revenus"
 auto2 genesis "créer un protocole HEAL" --mode max
@@ -45,12 +49,22 @@ auto2 release-check canonical
 auto2 quality-gate
 ```
 
+## Task drafts
+
+`auto2 task-draft` prépare un brouillon local avec workflow, rapport OAK, labels suggérés, warnings et M⁻. Il ne crée rien dans un système externe. Il est conçu pour alimenter un humain ou un agent approuvé plus tard.
+
+## CI
+
+- `.github/workflows/omega_auto2_ci.yml` teste le package et les commandes CLI principales.
+- `.github/workflows/deeptech_forge_ci.yml` teste la DeepTech Forge et les review packets.
+
 ## OAK
 
-AUTO-GENESIS produit seulement des rapports locaux/draft. Toute action externe reste hors module et soumise à la souveraineté humaine.
+AUTO-GENESIS et les task drafts produisent seulement des rapports locaux/draft. Toute action externe reste hors module et soumise à la souveraineté humaine.
 
 ## Roadmap
 
 1. **v1.0** : AUTO²-Orchestrator avec Human Sovereignty Layer.
 2. **v1.1** : AUTO-GENESIS v0.1.
 3. **v1.2** : Genesis bundle Markdown/JSON et modes spécialisés.
+4. **v1.3** : Task drafts reliés à un registre d'approbation OAK.
