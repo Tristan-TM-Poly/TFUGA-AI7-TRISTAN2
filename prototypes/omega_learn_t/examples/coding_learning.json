@@ -1,0 +1,22 @@
+{
+  "skill": "Architecture Python testable",
+  "goal": "Transformer une idée de théorie en package Python avec tests, CLI et exemples reproductibles.",
+  "tags": ["code", "prototype", "ZERO-TOUCH"],
+  "notes": "dataclasses, fonctions pures, CLI argparse, tests pytest, JSON examples, séparation core/io, typage, erreurs explicites, documentation README, benchmark minimal, GitHub branch PR",
+  "evidence": [
+    {"axis": "understanding", "successes": 4, "failures": 1},
+    {"axis": "autonomy", "successes": 3, "failures": 2},
+    {"axis": "speed", "successes": 2, "failures": 3},
+    {"axis": "safety", "successes": 4, "failures": 1},
+    {"axis": "transfer", "successes": 3, "failures": 2}
+  ],
+  "errors": [
+    {
+      "name": "Prototype sans test exécutable",
+      "cause": "Création trop rapide sans OAKBench code",
+      "correction": "Chaque module doit avoir au moins un test minimal",
+      "future_test": "Lancer pytest avant commit et vérifier une commande CLI",
+      "severity": 2.2
+    }
+  ]
+}
