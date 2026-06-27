@@ -1,21 +1,24 @@
 # QC-DIGEST v0.5 Milestone Plan
 
 Issue: #59  
-Milestone: v0.5 Live Pilot + Product Surfaces
+Milestone: v0.5 Tristan-Owned Pilot + Product Surfaces
 
 ## Goal
 
-Move QC-DIGEST from a source-kernel scaffold toward a local pilot workflow that can produce a reviewed offline report from public metadata without committing generated outputs by default.
+Move QC-DIGEST from a source-kernel scaffold toward a local pilot workflow that can produce a reviewed offline report from Tristan-owned public metadata, Tristan-owned research directions, or explicitly selected open metadata without committing generated outputs by default.
+
+This milestone does not imply affiliation with Polytechnique or any external institution. The pilot is 100% Tristan-owned unless a source is explicitly marked otherwise.
 
 ## Target command
 
 ```bash
-python -m qc_digest plus-ultra --profile poly-live --dry-run --output outputs/poly_live
+python -m qc_digest plus-ultra --profile tristan-live --dry-run --output outputs/tristan_live
 ```
 
 The exact command may change as the CLI stabilizes, but v0.5 should preserve these properties:
 
 - dry-run or local-only mode by default;
+- Tristan-owned scope by default;
 - public metadata only unless explicitly configured;
 - source manifest generation;
 - checksums for generated outputs;
@@ -24,9 +27,9 @@ The exact command may change as the CLI stabilizes, but v0.5 should preserve the
 
 ## Scope
 
-### 1. Live Polytechnique pilot
+### 1. Tristan-owned local pilot
 
-Minimum public-metadata pilot around Polytechnique Montréal.
+Minimum local pilot around Tristan's own corpus, research directions, invention map, and selected public metadata sources.
 
 Deliverables:
 
@@ -34,9 +37,10 @@ Deliverables:
 - date and record limits;
 - source manifest;
 - reviewed offline report;
-- M-minus notes for ambiguity and false positives.
+- M-minus notes for ambiguity and false positives;
+- explicit ownership/scope label for every output.
 
-Related issue: #52.
+Related issue: #52 should be retargeted from an institution-specific pilot to a Tristan-owned pilot before implementation.
 
 ### 2. Adapter interfaces
 
@@ -60,13 +64,14 @@ Deliverables:
 - manifest writer;
 - checksum registry;
 - run metadata;
-- review state.
+- review state;
+- ownership/scope field.
 
 Related issue: #64.
 
 ### 4. Product surfaces
 
-Turn digest outputs into local artifacts that can feed reports, dashboards, and later services.
+Turn digest outputs into local artifacts that can feed Tristan-owned reports, dashboards, and later services.
 
 Deliverables:
 
@@ -88,7 +93,8 @@ Deliverables:
 - Markdown issue draft;
 - OAK status;
 - source references;
-- uncertainty and M-minus notes.
+- uncertainty and M-minus notes;
+- explicit label that drafts are Tristan-owned work items, not institutional claims.
 
 Related issue: #53.
 
@@ -101,6 +107,7 @@ A user can run one local command and receive:
 - checksums;
 - local output folder;
 - clear review state;
+- explicit Tristan-owned scope label;
 - no live output committed by default.
 
 ## OAK boundary
@@ -108,6 +115,7 @@ A user can run one local command and receive:
 - No legal advice.
 - No patentability claim.
 - No affiliation claim without source support.
+- No implied affiliation with Polytechnique or any external institution.
 - No live output release without review state.
 - No private notes in public commits.
 - Every generated claim keeps uncertainty and source trace.
@@ -120,7 +128,7 @@ A user can run one local command and receive:
 4. #49 public metadata adapters behind dry-run mode.
 5. #50 productized local output surfaces.
 6. #53 local issue export preview.
-7. #52 live Polytechnique dry-run pilot.
+7. #52 Tristan-owned local dry-run pilot.
 
 ## M-minus
 
@@ -129,3 +137,4 @@ A user can run one local command and receive:
 - Opportunity scoring is heuristic until validated.
 - Live outputs should remain local unless reviewed.
 - Generated reports are not evidence of commercial value by themselves.
+- The default ownership/scope is Tristan-owned; external institution framing must be opt-in and source-backed.
