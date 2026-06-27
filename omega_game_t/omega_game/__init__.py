@@ -4,6 +4,7 @@ Small, testable subset extracted from the larger GAME branch.
 """
 
 from .core import Entity, Event, RuleKernel, WorldGraph, GameQualityScore
+from .engines import LanguageQuest, LanguageRun, PolyglotLanguageEngine
 from .oak import OAKGate, OAKReport
 
 __all__ = [
@@ -12,6 +13,9 @@ __all__ = [
     "RuleKernel",
     "WorldGraph",
     "GameQualityScore",
+    "LanguageQuest",
+    "LanguageRun",
+    "PolyglotLanguageEngine",
     "OAKGate",
     "OAKReport",
 ]
