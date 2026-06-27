@@ -1,5 +1,6 @@
 import importlib.util
 import pathlib
+import unittest
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -15,28 +16,47 @@ def load_module():
     return module
 
 
-def test_top1024_invariant():
-    module = load_module()
-    config = module.load_config(str(CONFIG))
-    cards = module.build_cards(config)
-    assert len(cards) == 1024
-    assert len({card["slug"] for card in cards}) == 1024
+class OmegaGitHubAuto2FactoryTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.module = load_module()
+        cls.config = cls.module.load_config(str(CONFIG))
+        cls.cards = cls.module.build_cards(cls.config)
+
+    def test_top1024_invariant(self):
+        self.assertEqual(len(self.cards), 1024)
+        self.assertEqual(len({card["slug"] for card in self.cards}), 1024)
+
+    def test_top16_focus_cards_exist(self):
+        slugs = {card["slug"] for card in self.cards}
+        for slug in self.module.TOP16_FOCUS:
+            self.assertIn(slug, slugs)
+
+    def test_p0_cards_are_present(self):
+        p0 = [card for card in self.cards if card["priority"] == "P0"]
+        self.assertGreaterEqual(len(p0), 16)
+        self.assertTrue(any(card["sector"] == "api_gateway" for card in p0))
+        self.assertTrue(any(card["sector"] == "spike_removal" for card in p0))
+        self.assertTrue(any(card["sector"] == "pilot_proposals" for card in p0))
+
+    def test_human_review_for_stealth_and_pricing(self):
+        stealth = set(self.config["stealth_ip_sectors"])
+        self.assertTrue(all(card["human_review"] for card in self.cards if card["sector"] in stealth))
+        self.assertTrue(all(card["human_review"] for card in self.cards if card["atom"] == "pricing_meter"))
+
+    def test_oak_tribunal_passes_with_locks(self):
+        report = self.module.oak_tribunal(self.cards, self.config)
+        self.assertEqual(report["status"], "PASS_WITH_LOCKS")
+        self.assertTrue(report["judges"]["structure"])
+        self.assertTrue(report["judges"]["revenue_claim_safety"])
+        self.assertGreater(report["counts"]["human_review_cards"], 0)
+
+    def test_dependency_graph_points_to_slugs(self):
+        slugs = {card["slug"] for card in self.cards}
+        for card in self.cards:
+            for dep in card["depends_on"]:
+                self.assertIn(dep, slugs)
 
 
-def test_p0_cards_are_present():
-    module = load_module()
-    config = module.load_config(str(CONFIG))
-    cards = module.build_cards(config)
-    p0 = [card for card in cards if card["priority"] == "P0"]
-    assert len(p0) >= 16
-    assert any(card["sector"] == "api_gateway" for card in p0)
-    assert any(card["sector"] == "spike_removal" for card in p0)
-    assert any(card["sector"] == "pilot_proposals" for card in p0)
-
-
-def test_human_review_for_review_sectors_and_pricing():
-    module = load_module()
-    config = module.load_config(str(CONFIG))
-    cards = module.build_cards(config)
-    assert all(card["human_review"] for card in cards if card["sector"] in config["stealth_ip_sectors"])
-    assert all(card["human_review"] for card in cards if card["atom"] == "pricing_meter")
+if __name__ == "__main__":
+    unittest.main()
