@@ -1,6 +1,6 @@
 {
   "name": "Omega GitHub AUTO2 Top1024 Control Plane",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "oak_status": "OAK-2 scaffold / OAK-3 candidate after CI artifacts",
   "primary_repo": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
   "sibling_repos": [
@@ -11,6 +11,23 @@
     "Tristan-TM-Poly/TFACC"
   ],
   "strategic_rule": "Sell SPECTRA. Retain with LEARN/M-. Protect ECC until benchmarked.",
+  "labels": [
+    "omega-auto2",
+    "oak-pass",
+    "oak-lock",
+    "p0",
+    "p1",
+    "p2",
+    "p3-stealth-ip",
+    "spectra",
+    "learn-mminus",
+    "ecc-stealth",
+    "capital",
+    "needs-benchmark",
+    "needs-human-review",
+    "zero-touch"
+  ],
+  "disclosure_levels": ["public", "internal", "trade_secret", "patent_review", "never_publish_raw"],
   "human_locks": [
     "merge_to_main",
     "external_email_or_customer_outreach",
@@ -38,14 +55,16 @@
     "pricing_meter"
   ],
   "score_weights": {
-    "revenue_short_term": 0.20,
-    "proof_measurable": 0.15,
-    "moat_retention": 0.15,
-    "market_demand": 0.15,
+    "revenue_short_term": 0.14,
+    "proof_measurable": 0.12,
+    "moat_retention": 0.12,
+    "market_demand": 0.10,
     "ip_potential": 0.10,
     "zero_touch": 0.10,
-    "api_scalability": 0.10,
-    "b2b_compliance": 0.05
+    "api_scalability": 0.08,
+    "b2b_compliance": 0.08,
+    "time_to_value": 0.08,
+    "leverage": 0.08
   },
   "score_defaults": {
     "revenue_short_term": 50,
@@ -55,7 +74,9 @@
     "ip_potential": 45,
     "zero_touch": 80,
     "api_scalability": 70,
-    "b2b_compliance": 55
+    "b2b_compliance": 55,
+    "time_to_value": 70,
+    "leverage": 55
   },
   "p0_sectors": [
     "api_gateway",
