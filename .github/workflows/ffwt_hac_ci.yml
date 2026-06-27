@@ -34,5 +34,5 @@ jobs:
       - name: Run tests
         run: python -m pytest tests/test_ffwt_hac_benchmark.py -q
 
-      - name: Generate benchmark reports
-        run: python prototypes/omega_ffwt_hac_cvcd/run_ffwt_hac_benchmark.py --noise-levels 0.0,0.05,0.10 --output reports/omega-ffwt-hac-cvcd/benchmark.json --markdown-output reports/omega-ffwt-hac-cvcd/benchmark.md
+      - name: Generate light benchmark reports
+        run: python prototypes/omega_ffwt_hac_cvcd/run_ffwt_hac_benchmark.py --noise-levels 0.0 --output reports/omega-ffwt-hac-cvcd/benchmark.json --markdown-output reports/omega-ffwt-hac-cvcd/benchmark.md
