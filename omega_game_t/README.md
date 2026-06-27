@@ -82,6 +82,24 @@ It organizes tracks, levels, quests, progress, XP, M+/M-, and next quest suggest
 - `CurriculumProgress`
 - `LanguageCurriculum`
 
+## Split unit: LanguageValidators-T
+
+This branch adds lightweight structural validators for LanguageGM outputs.
+
+It validates:
+
+- Markdown docs;
+- JSON contracts;
+- YAML plans;
+- GitHub issue drafts;
+- generic language drafts.
+
+### Objects
+
+- `ValidationCheck`
+- `ValidationReport`
+- `LanguageValidators`
+
 ## Boundary
 
 Omega GAME T is a game, simulation, and research lab. It is not a tool for manipulation, unfair automation, unsafe real-world instructions, or external certification.
@@ -100,4 +118,4 @@ python -m pytest
 3. Quest-CVCD;
 4. tests and docs;
 5. GameQualityScore benchmark;
-6. Markdown/JSON/YAML validators.
+6. validator-driven repair quests.
