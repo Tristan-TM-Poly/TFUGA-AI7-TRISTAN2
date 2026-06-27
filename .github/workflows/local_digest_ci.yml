@@ -1,0 +1,26 @@
+name: local-digest-ci
+
+on:
+  pull_request:
+    paths:
+      - 'local_digest/**'
+      - 'tests/test_local_digest_demo_data.py'
+      - '.github/workflows/local_digest_ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Run tests
+        run: PYTHONPATH=. python -m pytest tests/test_local_digest_demo_data.py -q
