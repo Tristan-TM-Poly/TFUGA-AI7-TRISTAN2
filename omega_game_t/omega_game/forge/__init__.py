@@ -15,6 +15,7 @@ from .revenue_forge import (
     default_revenue_forge,
 )
 from .sprint_forge import SprintForge, SprintPlan, SprintTask, default_sprint_forge
+from .version_forge import ReleaseCriteria, VersionChange, VersionForge, VersionPlan, default_version_forge
 
 __all__ = [
     "DemoForge",
@@ -52,4 +53,9 @@ __all__ = [
     "SprintPlan",
     "SprintTask",
     "default_sprint_forge",
+    "ReleaseCriteria",
+    "VersionChange",
+    "VersionForge",
+    "VersionPlan",
+    "default_version_forge",
 ]
