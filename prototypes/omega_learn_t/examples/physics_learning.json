@@ -1,0 +1,29 @@
+{
+  "skill": "Oscillateurs harmoniques et résonance",
+  "goal": "Résoudre, expliquer et transférer les oscillateurs harmoniques vers circuits RLC, mécanique et lasers.",
+  "tags": ["physics", "RLC", "laser", "Noether-Tristan"],
+  "notes": "force de rappel F=-kx, énergie E=1/2kx^2+1/2mv^2, omega=sqrt(k/m), phase, amortissement, facteur Q, résonance, stabilité, analogie RLC, transfert vers Maxwell-Bloch réduit",
+  "evidence": [
+    {"axis": "understanding", "successes": 4, "failures": 1, "source": "problems"},
+    {"axis": "recall", "successes": 2, "failures": 2, "source": "active recall"},
+    {"axis": "transfer", "successes": 2, "failures": 3, "source": "RLC variants"},
+    {"axis": "speed", "successes": 1, "failures": 4, "source": "timed drills"},
+    {"axis": "safety", "successes": 3, "failures": 1, "source": "OAK checks"}
+  ],
+  "errors": [
+    {
+      "name": "Confusion entre fréquence f et fréquence angulaire omega",
+      "cause": "Unités mélangées",
+      "correction": "Toujours vérifier omega=2*pi*f et les unités rad/s vs Hz",
+      "future_test": "Convertir f en omega dans 5 problèmes mixtes mécanique/RLC",
+      "severity": 2.0
+    },
+    {
+      "name": "Oubli du régime transitoire amorti",
+      "cause": "Focalisation excessive sur solution stationnaire",
+      "correction": "Séparer homogène/transitoire et particulier/stationnaire",
+      "future_test": "Résoudre un oscillateur amorti avec conditions initiales non nulles",
+      "severity": 1.5
+    }
+  ]
+}
