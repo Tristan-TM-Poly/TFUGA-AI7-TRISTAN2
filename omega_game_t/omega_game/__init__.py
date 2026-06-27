@@ -14,8 +14,12 @@ from .engines import (
     LanguageQuest,
     LanguageRubricScores,
     LanguageRun,
+    LanguageValidators,
     PolyglotLanguageEngine,
+    ValidationCheck,
+    ValidationReport,
     default_language_curriculum,
+    default_language_validators,
 )
 from .oak import OAKGate, OAKReport
 
@@ -35,6 +39,10 @@ __all__ = [
     "LanguageQuest",
     "LanguageRubricScores",
     "LanguageRun",
+    "LanguageValidators",
+    "ValidationCheck",
+    "ValidationReport",
+    "default_language_validators",
     "PolyglotLanguageEngine",
     "OAKGate",
     "OAKReport",
