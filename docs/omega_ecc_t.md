@@ -57,6 +57,49 @@ G_T = (V, E, H, W, Σ, M⁻)
 
 LDPC is a special sparse case. Reed-Solomon is an algebraic reconstruction case. Fountain/RaptorQ is a generative erasure-recovery case. Quantum stabilizer codes are a syndrome-without-reading-the-state case.
 
+## SparseLDPC-T phase
+
+`ecc_tristan.ldpc.SparseLDPC` adds the first sparse parity-check scaffold:
+
+```text
+H sparse -> syndrome -> unsatisfied checks -> iterative bit flips -> OAK residual status
+```
+
+Implemented scope:
+
+- sparse binary parity-check matrix validation;
+- bit-to-check / check-to-bit adjacency maps;
+- syndrome calculation;
+- hard-decision Gallager-style bit-flip decoder;
+- explicit stalled / max-iteration failure statuses;
+- tiny `toy_6_3` code for deterministic tests.
+
+OAK-safe limit: this is not yet optimized LDPC belief propagation, sum-product, min-sum, normalized min-sum, offset min-sum, layered decoding, or hardware-aware decoding. It is a transparent scaffold for those next layers.
+
+## Soft channel phase
+
+`ecc_tristan.soft_channels` adds BPSK + AWGN log-likelihood ratios:
+
+```text
+bit 0 -> +1, bit 1 -> -1
+LLR = 2y / σ²
+```
+
+This prepares BayesDecoder_T and min-sum/soft LDPC decoding. The first `reliability_cvcd()` extracts weak positions from LLR magnitudes.
+
+## OAKBench matrix
+
+`ecc_tristan.oakbench_matrix.default_oakbench_matrix()` now emits a small benchmark table over:
+
+- Hamming(7,4) on BSC at multiple flip probabilities;
+- toy LDPC on BSC with residual / false-accept accounting.
+
+This is the seed of the full OAKBench matrix:
+
+```text
+BSC, BEC, AWGN, burst, packet-loss, flash-like, DNA-like indel/loss, quantum depolarizing
+```
+
 ## OAK rules
 
 1. No infinite correction.
@@ -76,15 +119,18 @@ LDPC is a special sparse case. Reed-Solomon is an algebraic reconstruction case.
 - OAK gate for accepting/rejecting Hamming(7,4) corrections.
 - M⁻ JSONL event hook.
 - Deterministic benchmark: `bench_hamming74_bsc`.
+- `SparseLDPC` hard-decision decoder scaffold.
+- BPSK/AWGN soft-channel LLR primitive.
+- `default_oakbench_matrix()` for deterministic comparison rows.
 
 ## Next expansions
 
-1. LDPC sparse graph + belief propagation / min-sum.
+1. True LDPC sum-product / min-sum with soft LLR messages.
 2. Reed-Solomon over GF(2^m) or a dependency-backed implementation.
 3. Polar code scaffold with successive cancellation.
 4. Fountain/erasure codes for packet loss.
 5. FFWT-noise profiler for burst/fractal/correlated errors.
-6. BayesDecoder_T with soft information.
+6. BayesDecoder_T with soft information and M⁻ priors.
 7. qLDPC / stabilizer-code exploratory notebook.
 8. OAKBench matrix: BSC, BEC, AWGN, burst, flash-like, DNA-like indel/loss, quantum depolarizing.
 
@@ -97,3 +143,5 @@ Initial M⁻ constraints:
 - Redundancy improves reliability but costs rate, energy, memory, and latency.
 - Correction is not authentication.
 - Fractal/mycelial topology must become a measurable parity structure, not only a metaphor.
+- The toy LDPC is a scaffold, not a production code or performance claim.
+- Hard-decision bit flipping can stall or converge to a wrong codeword; OAK must track residual and false-accept rate.
