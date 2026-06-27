@@ -6,7 +6,7 @@ It is a virtual learning/simulation layer only, not hardware guidance.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from math import pi, sqrt
 
 from ..core import Entity, Event, RuleKernel, WorldGraph
@@ -156,6 +156,7 @@ class CircuitDungeonEngine:
             oak_accepted=report.accepted,
             reasons=report.reasons,
         )
+        result_payload = asdict(result)
 
         if result.opened:
             door.opened = True
@@ -170,10 +171,10 @@ class CircuitDungeonEngine:
                     "oak": report.metrics,
                 }
             )
-            self.gm.m_plus.record("circuit_door_opened", result.__dict__.copy())
+            self.gm.m_plus.record("circuit_door_opened", result_payload)
         else:
             reason = "frequency_outside_tolerance" if report.accepted else "oak_rejected_circuit_attempt"
-            self.gm.m_minus.record(reason, result.__dict__.copy())
+            self.gm.m_minus.record(reason, result_payload)
             self.world.remember(
                 {
                     "type": "circuit_door_attempt_failed",
