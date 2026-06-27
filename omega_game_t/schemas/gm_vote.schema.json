@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/gm_vote.schema.json",
+  "title": "Ω-GAME-T GMVote",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agent", "action", "rationale", "scores", "total", "payload"],
+  "properties": {
+    "agent": { "type": "string", "minLength": 1 },
+    "action": { "type": "string", "minLength": 1 },
+    "rationale": { "type": "string", "minLength": 1 },
+    "total": { "type": "number", "minimum": 0, "maximum": 1 },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fun", "agency", "coherence", "learning", "safety", "novelty"],
+      "properties": {
+        "fun": { "type": "number", "minimum": 0, "maximum": 1 },
+        "agency": { "type": "number", "minimum": 0, "maximum": 1 },
+        "coherence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "learning": { "type": "number", "minimum": 0, "maximum": 1 },
+        "safety": { "type": "number", "minimum": 0, "maximum": 1 },
+        "novelty": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "payload": { "type": "object" }
+  }
+}
