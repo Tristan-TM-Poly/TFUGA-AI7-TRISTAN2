@@ -11,7 +11,7 @@ GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 Ω-GAME-T++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable et améliorable.
 
 ```text
-Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> M+/M- -> Better World
+Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> LaunchForge -> M+/M- -> Better World
 ```
 
 ## MVP actuel
@@ -26,6 +26,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `IssueForge`, `IssueSet`, `IssueSpec`
 - `SprintForge`, `SprintPlan`, `SprintTask`
 - `DemoForge`, `DemoPlan`, `DemoScene`
+- `LaunchForge`, `LaunchDraft`, `LandingPageDraft`, `PitchDraft`
 - `MPlusMemory` / `MMinusMemory`
 - `GameQualityScore`
 - `TextWorldEngine`
@@ -34,7 +35,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -92,6 +93,10 @@ Générateur de sprint OAK-safe. Il transforme un `IssueSet` en `SprintPlan` : t
 
 Générateur de démo interne OAK-safe. Il transforme un `ProductPlan` et un `SprintPlan` en `DemoPlan` : script, scènes, narration, preuves, checklist OAK, signaux de succès, répétition et export Markdown.
 
+### LaunchForge-T
+
+Générateur de brouillon de lancement interne. Il transforme un `ProductPlan` et un `DemoPlan` en `LaunchDraft` : landing page draft, pitch, audience, canaux privés, actifs de démo, blockers, checklist IP/OAK et export Markdown. Il ne publie rien automatiquement.
+
 ## Structure
 
 ```text
@@ -102,6 +107,7 @@ omega_game_t/
     ENERGY_CIVILIZATION_T.md
     GM_COUNCIL_T.md
     ISSUE_FORGE_T.md
+    LAUNCH_FORGE_T.md
     OAKBENCH_GAME_T.md
     OMEGA_GAME_T_MANIFESTO.md
     OMEGA_GAME_T_PLUS_PLUS.md
@@ -118,6 +124,7 @@ omega_game_t/
     event.schema.json
     gm_vote.schema.json
     issue_set.schema.json
+    launch_draft.schema.json
     oak_report.schema.json
     oakbench_result.schema.json
     product_plan.schema.json
@@ -142,6 +149,7 @@ omega_game_t/
       energy_civilization_t_demo.py
       gm_council_t_demo.py
       issue_forge_t_demo.py
+      launch_forge_t_demo.py
       oakbench_game_t_demo.py
       productizer_t_demo.py
       quest_cvcd_demo.py
@@ -151,6 +159,7 @@ omega_game_t/
     forge/
       demo_forge.py
       issue_forge.py
+      launch_forge.py
       sprint_forge.py
     gm_council.py
     productizer.py
@@ -162,6 +171,7 @@ omega_game_t/
     test_energy_civilization_t.py
     test_gm_council_t.py
     test_issue_forge_t.py
+    test_launch_forge_t.py
     test_oakbench_game_t.py
     test_omega_game_t.py
     test_productizer_t.py
