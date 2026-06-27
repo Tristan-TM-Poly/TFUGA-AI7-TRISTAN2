@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/launch_draft.schema.json",
+  "title": "LaunchDraft",
+  "type": "object",
+  "required": ["title", "product_name", "target_engine", "status", "public_release", "landing_page", "pitch", "audience", "channels", "demo_assets", "oak_checklist", "blockers", "next_review_actions"],
+  "properties": {
+    "title": { "type": "string" },
+    "product_name": { "type": "string" },
+    "target_engine": { "type": "string" },
+    "status": { "type": "string" },
+    "public_release": { "type": "string" },
+    "landing_page": {
+      "type": "object",
+      "properties": {
+        "headline": { "type": "string" },
+        "subheadline": { "type": "string" },
+        "bullets": { "type": "array", "items": { "type": "string" } },
+        "call_to_action": { "type": "string" },
+        "disclaimers": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "pitch": {
+      "type": "object",
+      "properties": {
+        "one_liner": { "type": "string" },
+        "problem": { "type": "string" },
+        "solution": { "type": "string" },
+        "proof_points": { "type": "array", "items": { "type": "string" } },
+        "next_ask": { "type": "string" }
+      }
+    },
+    "audience": { "type": "array", "items": { "type": "string" } },
+    "channels": { "type": "array", "items": { "type": "string" } },
+    "demo_assets": { "type": "array", "items": { "type": "string" } },
+    "oak_checklist": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "next_review_actions": { "type": "array", "items": { "type": "string" } }
+  }
+}
