@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/language_curriculum.schema.json",
+  "title": "LanguageCurriculum Progress",
+  "type": "object",
+  "required": ["quest", "evaluation", "passed", "xp", "level_hint", "m_plus", "m_minus", "next_quest_id"],
+  "properties": {
+    "quest": {
+      "type": "object",
+      "properties": {
+        "quest_id": { "type": "string" },
+        "track": { "type": "string" },
+        "level": { "type": "string" },
+        "source_text": { "type": "string" },
+        "audience": { "type": "string" },
+        "intent": { "type": "string" },
+        "pass_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "constraints": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "evaluation": { "$ref": "language_gm_evaluation.schema.json" },
+    "passed": { "type": "boolean" },
+    "xp": { "type": "integer", "minimum": 0 },
+    "level_hint": { "type": "string" },
+    "m_plus": { "type": "array", "items": { "type": "string" } },
+    "m_minus": { "type": "array", "items": { "type": "string" } },
+    "next_quest_id": { "type": "string" }
+  }
+}
