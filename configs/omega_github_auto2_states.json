@@ -1,0 +1,42 @@
+{
+  "name": "Omega AUTO2 State Machine",
+  "version": "0.2.0",
+  "states": [
+    "IDEA",
+    "DRAFTED",
+    "ISSUE_READY",
+    "ISSUE_OPENED",
+    "BRANCH_READY",
+    "PR_READY",
+    "CI_PASS",
+    "OAK_PASS",
+    "HUMAN_REVIEW",
+    "MERGE_READY",
+    "MERGED",
+    "ARCHIVED_M_MINUS"
+  ],
+  "allowed_transitions": {
+    "IDEA": ["DRAFTED", "ARCHIVED_M_MINUS"],
+    "DRAFTED": ["ISSUE_READY", "ARCHIVED_M_MINUS"],
+    "ISSUE_READY": ["ISSUE_OPENED", "ARCHIVED_M_MINUS"],
+    "ISSUE_OPENED": ["BRANCH_READY", "ARCHIVED_M_MINUS"],
+    "BRANCH_READY": ["PR_READY", "ARCHIVED_M_MINUS"],
+    "PR_READY": ["CI_PASS", "ARCHIVED_M_MINUS"],
+    "CI_PASS": ["OAK_PASS", "ARCHIVED_M_MINUS"],
+    "OAK_PASS": ["HUMAN_REVIEW", "MERGE_READY", "ARCHIVED_M_MINUS"],
+    "HUMAN_REVIEW": ["MERGE_READY", "ARCHIVED_M_MINUS"],
+    "MERGE_READY": ["MERGED", "ARCHIVED_M_MINUS"],
+    "MERGED": [],
+    "ARCHIVED_M_MINUS": []
+  },
+  "merge_ready_requires": ["CI_PASS", "OAK_PASS"],
+  "public_disclosure_requires": ["disclosure_level_public", "ip_review_for_ecc_or_patent_review_cards"],
+  "blocked_without_human_review": [
+    "merge_to_main",
+    "external_outreach",
+    "production_billing",
+    "regulated_claim",
+    "patentable_disclosure",
+    "destructive_repo_operation"
+  ]
+}
