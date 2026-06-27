@@ -11,7 +11,7 @@ GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 Ω-GAME-T++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable et améliorable.
 
 ```text
-Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> M+/M- -> Better World
+Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> M+/M- -> Better World
 ```
 
 ## MVP actuel
@@ -23,6 +23,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `GMCouncil`, `GMVote`, `CouncilScores`
 - `TheoryCompiler`, `TheorySpec`, `CompiledWorld`, `WorldDNA`, `RuleGenome`
 - `Productizer`, `ProductPlan`
+- `IssueForge`, `IssueSet`, `IssueSpec`
 - `MPlusMemory` / `MMinusMemory`
 - `GameQualityScore`
 - `TextWorldEngine`
@@ -31,7 +32,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -77,6 +78,10 @@ Compilateur de théories vers mondes jouables. Il transforme une branche Tristan
 
 Planificateur produit OAK-safe. Il transforme un `CompiledWorld` en `ProductPlan` : public cible, valeur, livrables, chemins de revenus, classification IP à revoir, contrôles OAK et étapes de lancement.
 
+### IssueForge-T
+
+Générateur de roadmaps GitHub-ready. Il transforme un `ProductPlan` en `IssueSet` : epic, milestone, labels, issues, critères d'acceptation, contrôles OAK et export Markdown. Il ne crée pas automatiquement de vraies issues.
+
 ## Structure
 
 ```text
@@ -85,6 +90,7 @@ omega_game_t/
     CIRCUIT_DUNGEON_T.md
     ENERGY_CIVILIZATION_T.md
     GM_COUNCIL_T.md
+    ISSUE_FORGE_T.md
     OAKBENCH_GAME_T.md
     OMEGA_GAME_T_MANIFESTO.md
     OMEGA_GAME_T_PLUS_PLUS.md
@@ -98,6 +104,7 @@ omega_game_t/
     energy_colony.schema.json
     event.schema.json
     gm_vote.schema.json
+    issue_set.schema.json
     oak_report.schema.json
     oakbench_result.schema.json
     product_plan.schema.json
@@ -119,11 +126,14 @@ omega_game_t/
       circuit_dungeon_t_demo.py
       energy_civilization_t_demo.py
       gm_council_t_demo.py
+      issue_forge_t_demo.py
       oakbench_game_t_demo.py
       productizer_t_demo.py
       quest_cvcd_demo.py
       science_sandbox_t_demo.py
       theory_compiler_t_demo.py
+    forge/
+      issue_forge.py
     gm_council.py
     productizer.py
     theory_compiler.py
@@ -132,6 +142,7 @@ omega_game_t/
     test_circuit_dungeon_t.py
     test_energy_civilization_t.py
     test_gm_council_t.py
+    test_issue_forge_t.py
     test_oakbench_game_t.py
     test_omega_game_t.py
     test_productizer_t.py
