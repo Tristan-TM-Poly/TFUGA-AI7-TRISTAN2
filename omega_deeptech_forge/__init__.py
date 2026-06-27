@@ -1,7 +1,7 @@
 """Omega DeepTech Intelligence Forge.
 
 A small OAK-safe scaffold for deeptech intelligence, IP triage,
-prototype routing, and revenue action extraction.
+prototype routing, revenue action extraction, and review packet generation.
 """
 
 from .core import (
@@ -19,6 +19,15 @@ from .core import (
     dry_run_report,
     write_handoff_packet,
 )
+from .review_packets import (
+    ReviewPacket,
+    ValueAxisScores,
+    build_review_packet,
+    build_offer_card,
+    build_prior_art_query_pack,
+    build_publication_note,
+    build_ip_disclosure_draft,
+)
 
 __all__ = [
     "EvidenceLevel",
@@ -34,4 +43,11 @@ __all__ = [
     "build_handoff_packet",
     "dry_run_report",
     "write_handoff_packet",
+    "ReviewPacket",
+    "ValueAxisScores",
+    "build_review_packet",
+    "build_offer_card",
+    "build_prior_art_query_pack",
+    "build_publication_note",
+    "build_ip_disclosure_draft",
 ]
