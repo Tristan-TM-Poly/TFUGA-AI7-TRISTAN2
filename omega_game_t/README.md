@@ -11,7 +11,7 @@ GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 Ω-GAME-T++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable et améliorable.
 
 ```text
-Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> M+/M- -> Better World
+Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> M+/M- -> Better World
 ```
 
 ## MVP actuel
@@ -24,6 +24,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `TheoryCompiler`, `TheorySpec`, `CompiledWorld`, `WorldDNA`, `RuleGenome`
 - `Productizer`, `ProductPlan`
 - `IssueForge`, `IssueSet`, `IssueSpec`
+- `SprintForge`, `SprintPlan`, `SprintTask`
 - `MPlusMemory` / `MMinusMemory`
 - `GameQualityScore`
 - `TextWorldEngine`
@@ -32,7 +33,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -82,6 +83,10 @@ Planificateur produit OAK-safe. Il transforme un `CompiledWorld` en `ProductPlan
 
 Générateur de roadmaps GitHub-ready. Il transforme un `ProductPlan` en `IssueSet` : epic, milestone, labels, issues, critères d'acceptation, contrôles OAK et export Markdown. Il ne crée pas automatiquement de vraies issues.
 
+### SprintForge-T
+
+Générateur de sprint OAK-safe. Il transforme un `IssueSet` en `SprintPlan` : tâches priorisées, estimations, ordre d'exécution, OAK gates, Definition of Done et export Markdown. Il ne modifie pas de calendrier ni de projet externe.
+
 ## Structure
 
 ```text
@@ -97,6 +102,7 @@ omega_game_t/
     OAK_GAME_PROTOCOL.md
     PRODUCTIZER_T.md
     SCIENCE_SANDBOX_T.md
+    SPRINT_FORGE_T.md
     THEORY_COMPILER_T.md
   schemas/
     circuit_door.schema.json
@@ -110,6 +116,7 @@ omega_game_t/
     product_plan.schema.json
     quest_blueprint.schema.json
     rule_genome.schema.json
+    sprint_plan.schema.json
     world_dna.schema.json
     world_graph.schema.json
   omega_game/
@@ -131,9 +138,11 @@ omega_game_t/
       productizer_t_demo.py
       quest_cvcd_demo.py
       science_sandbox_t_demo.py
+      sprint_forge_t_demo.py
       theory_compiler_t_demo.py
     forge/
       issue_forge.py
+      sprint_forge.py
     gm_council.py
     productizer.py
     theory_compiler.py
@@ -147,6 +156,7 @@ omega_game_t/
     test_omega_game_t.py
     test_productizer_t.py
     test_science_sandbox_t.py
+    test_sprint_forge_t.py
     test_theory_compiler_t.py
 ```
 
