@@ -1,6 +1,7 @@
 """Playable engines for Ω-GAME-T."""
 
 from .boardgame import BoardGameEngine, BoardPiece, Position
+from .circuit_dungeon import CircuitAttemptResult, CircuitDoor, CircuitDungeonEngine
 from .science_sandbox import (
     MicrogridParams,
     MicrogridState,
@@ -15,6 +16,9 @@ from .textworld import TextWorldEngine
 __all__ = [
     "BoardGameEngine",
     "BoardPiece",
+    "CircuitAttemptResult",
+    "CircuitDoor",
+    "CircuitDungeonEngine",
     "MicrogridParams",
     "MicrogridState",
     "MicrogridStepResult",
