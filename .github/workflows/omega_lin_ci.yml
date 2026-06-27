@@ -28,6 +28,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+
       - name: Run tests
         run: python -m pytest tests/test_omega_lin_oakbench.py -q
 
