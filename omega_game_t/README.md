@@ -1,6 +1,6 @@
 # Ω-GAME-T — GameEngines & GameMasters de Tristan
 
-**Statut :** branche canonique / MVP prototypable / OAK-safe / Ω-GAME-T++ en cours.
+**Statut :** branche canonique / MVP prototypable / OAK-safe / Ω-GAME-T+++ en cours.
 
 Ω-GAME-T transforme les jeux, simulations et mondes interactifs en laboratoires vivants de création, apprentissage, stratégie, physique, narration, économie, IA et falsification.
 
@@ -8,10 +8,10 @@
 GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 ```
 
-Ω-GAME-T++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable et améliorable.
+Ω-GAME-T+++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable, démontrable, organisable et productisable.
 
 ```text
-Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> LaunchForge -> M+/M- -> Better World
+Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> LaunchForge -> RevenueForge -> ProductBench -> M+/M- -> Better World
 ```
 
 ## MVP actuel
@@ -27,6 +27,8 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `SprintForge`, `SprintPlan`, `SprintTask`
 - `DemoForge`, `DemoPlan`, `DemoScene`
 - `LaunchForge`, `LaunchDraft`, `LandingPageDraft`, `PitchDraft`
+- `RevenueForge`, `RevenuePlan`, `OfferSpec`, `PricingHypothesis`, `ChannelMap`, `RevenueSignal`
+- `ProductBench`, `ProductBenchMetrics`, `ProductBenchResult`
 - `MPlusMemory` / `MMinusMemory`
 - `GameQualityScore`
 - `TextWorldEngine`
@@ -35,7 +37,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`, `RevenueForge-T`, `ProductBench-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -97,6 +99,14 @@ Générateur de démo interne OAK-safe. Il transforme un `ProductPlan` et un `Sp
 
 Générateur de brouillon de lancement interne. Il transforme un `ProductPlan` et un `DemoPlan` en `LaunchDraft` : landing page draft, pitch, audience, canaux privés, actifs de démo, blockers, checklist IP/OAK et export Markdown. Il ne publie rien automatiquement.
 
+### RevenueForge-T
+
+Générateur d'hypothèses de revenus OAK-safe. Il transforme un `ProductPlan` et un `LaunchDraft` en `RevenuePlan` : offres, prix à tester, canaux privés, signaux de revenu, contrôles OAK, ProductBench et prochaines actions. Il ne vend rien et n'envoie rien automatiquement.
+
+### ProductBench-T
+
+Benchmark produit. Il mesure value, clarity, differentiation, feasibility, testability, revenue potential, strategic fit, risk, scope creep et IP uncertainty. Le score est un signal de priorisation, pas une preuve de marché.
+
 ## Structure
 
 ```text
@@ -112,7 +122,9 @@ omega_game_t/
     OMEGA_GAME_T_MANIFESTO.md
     OMEGA_GAME_T_PLUS_PLUS.md
     OAK_GAME_PROTOCOL.md
+    PRODUCT_BENCH_T.md
     PRODUCTIZER_T.md
+    REVENUE_FORGE_T.md
     SCIENCE_SANDBOX_T.md
     SPRINT_FORGE_T.md
     THEORY_COMPILER_T.md
@@ -127,8 +139,10 @@ omega_game_t/
     launch_draft.schema.json
     oak_report.schema.json
     oakbench_result.schema.json
+    product_bench.schema.json
     product_plan.schema.json
     quest_blueprint.schema.json
+    revenue_plan.schema.json
     rule_genome.schema.json
     sprint_plan.schema.json
     world_dna.schema.json
@@ -151,8 +165,10 @@ omega_game_t/
       issue_forge_t_demo.py
       launch_forge_t_demo.py
       oakbench_game_t_demo.py
+      product_bench_t_demo.py
       productizer_t_demo.py
       quest_cvcd_demo.py
+      revenue_forge_t_demo.py
       science_sandbox_t_demo.py
       sprint_forge_t_demo.py
       theory_compiler_t_demo.py
@@ -160,6 +176,8 @@ omega_game_t/
       demo_forge.py
       issue_forge.py
       launch_forge.py
+      product_bench.py
+      revenue_forge.py
       sprint_forge.py
     gm_council.py
     productizer.py
@@ -174,7 +192,9 @@ omega_game_t/
     test_launch_forge_t.py
     test_oakbench_game_t.py
     test_omega_game_t.py
+    test_product_bench_t.py
     test_productizer_t.py
+    test_revenue_forge_t.py
     test_science_sandbox_t.py
     test_sprint_forge_t.py
     test_theory_compiler_t.py
