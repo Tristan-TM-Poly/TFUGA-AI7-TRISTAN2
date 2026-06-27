@@ -1,0 +1,15 @@
+[project]
+name = "omega-game-t"
+version = "0.1.0"
+description = "Ω-GAME-T — GameEngines & GameMasters de Tristan: OAK-safe playable-world MVP."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Tristan Tardif-Morency" }]
+license = { text = "Proprietary-Research-Prototype" }
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
