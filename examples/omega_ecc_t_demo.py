@@ -8,6 +8,7 @@ from __future__ import annotations
 from ecc_tristan import (
     HyperParityGraph,
     LinearBlockCode,
+    ReedSolomonErasureCode,
     SparseLDPC,
     bench_hamming74_bsc,
     block_deinterleave,
@@ -15,6 +16,7 @@ from ecc_tristan import (
     decode,
     default_oakbench_matrix,
     encode,
+    erase_positions,
     min_sum_decode,
 )
 from ecc_tristan.channels import burst_flip_channel
@@ -47,6 +49,12 @@ def main() -> None:
     linear_received = list(linear_codeword)
     linear_received[0] ^= 1
     print("toy_linear_ml", linear.nearest_decode(linear_received))
+
+    rs = ReedSolomonErasureCode(n=10, k=6)
+    rs_message = [10, 20, 30, 40, 50, 60]
+    rs_codeword = rs.encode(rs_message)
+    rs_received = erase_positions(rs_codeword, [0, 3, 5, 9])
+    print("reed_solomon_erasure", rs.decode_erasures(rs_received))
 
     burst_bits = [bit for block in [encode([1, 0, 1, 1]), encode([0, 1, 0, 1])] for bit in block]
     interleaved = block_interleave(burst_bits, depth=2)
