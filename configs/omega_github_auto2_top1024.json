@@ -1,0 +1,103 @@
+{
+  "name": "Omega GitHub AUTO2 Top1024 Control Plane",
+  "version": "0.1.0",
+  "oak_status": "OAK-2 scaffold / OAK-3 candidate after CI artifacts",
+  "primary_repo": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "sibling_repos": [
+    "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2",
+    "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+    "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG",
+    "Tristan-TM-Poly/PEFA-FractalEnergySystem",
+    "Tristan-TM-Poly/TFACC"
+  ],
+  "strategic_rule": "Sell SPECTRA. Retain with LEARN/M-. Protect ECC until benchmarked.",
+  "human_locks": [
+    "merge_to_main",
+    "external_email_or_customer_outreach",
+    "patent_or_trade_secret_disclosure",
+    "regulated_decision_claims",
+    "production_billing_changes",
+    "destructive_repo_operations"
+  ],
+  "card_template": [
+    "input_schema",
+    "output_schema",
+    "core_algorithm",
+    "validator",
+    "anomaly_detector",
+    "corrector_or_reconstructor",
+    "confidence_score",
+    "oak_gate",
+    "benchmark_suite",
+    "failure_mode_registry",
+    "mminus_logger",
+    "api_endpoint",
+    "batch_processor",
+    "dashboard_card",
+    "customer_report",
+    "pricing_meter"
+  ],
+  "score_weights": {
+    "revenue_short_term": 0.20,
+    "proof_measurable": 0.15,
+    "moat_retention": 0.15,
+    "market_demand": 0.15,
+    "ip_potential": 0.10,
+    "zero_touch": 0.10,
+    "api_scalability": 0.10,
+    "b2b_compliance": 0.05
+  },
+  "score_defaults": {
+    "revenue_short_term": 50,
+    "proof_measurable": 60,
+    "moat_retention": 55,
+    "market_demand": 60,
+    "ip_potential": 45,
+    "zero_touch": 80,
+    "api_scalability": 70,
+    "b2b_compliance": 55
+  },
+  "p0_sectors": [
+    "api_gateway",
+    "authentication_api_keys",
+    "usage_metering",
+    "billing_invoicing",
+    "axis_validation",
+    "schema_validation",
+    "spike_removal",
+    "baseline_correction",
+    "noise_estimation",
+    "sensor_drift_detection",
+    "lab_reports",
+    "roi_reports",
+    "failure_memory",
+    "customer_edge_case_memory",
+    "spectral_benchmarks",
+    "pilot_proposals"
+  ],
+  "stealth_ip_sectors": [
+    "classical_code_benchmarks",
+    "quantum_code_benchmarks",
+    "hft_low_latency_decoding",
+    "6g_storage_dna_error_models",
+    "ip_patent_manifests"
+  ],
+  "domains": [
+    {"name": "platform_api", "sectors": ["api_gateway", "authentication_api_keys", "usage_metering", "billing_invoicing"]},
+    {"name": "spectral_core", "sectors": ["axis_validation", "schema_validation", "metadata_validation", "unit_normalization"]},
+    {"name": "spectral_cleaning", "sectors": ["spike_removal", "baseline_correction", "noise_estimation", "saturation_artifact_handling"]},
+    {"name": "drift_iot", "sectors": ["sensor_drift_detection", "sensor_drift_correction", "fleet_calibration", "oem_firmware_integration"]},
+    {"name": "spectral_modalities", "sectors": ["raman", "ftir_ir", "nir_uvvis", "mass_spec_xrf_libs"]},
+    {"name": "pharma_pat_gmp", "sectors": ["raw_material_id", "batch_release_qc", "stability_degradation", "audit_trail_deviation_reporting"]},
+    {"name": "materials_petrochem_energy", "sectors": ["polymer_resin_qc", "fuel_lubricant_analysis", "catalyst_reaction_monitoring", "battery_energy_material_signatures"]},
+    {"name": "environmental_agriculture", "sectors": ["air_quality_sensors", "water_quality_sensors", "soil_agriculture_spectra", "municipal_distributed_sensor_networks"]},
+    {"name": "hyperspectral_imaging", "sectors": ["hsi_cube_validation", "bad_bands_dead_pixels", "spectral_unmixing_residues", "remote_sensing_inspection"]},
+    {"name": "learn_t_mminus", "sectors": ["failure_memory", "customer_edge_case_memory", "model_regression_memory", "institutional_learning_graph"]},
+    {"name": "sage_reports", "sectors": ["lab_reports", "executive_reports", "roi_reports", "root_cause_explanation_reports"]},
+    {"name": "ecc_applied", "sectors": ["missing_band_recovery", "packet_loss_reconstruction", "corrupted_signal_syndrome_mapping", "robust_streaming_codec"]},
+    {"name": "ecc_deep_ip", "sectors": ["classical_code_benchmarks", "quantum_code_benchmarks", "hft_low_latency_decoding", "6g_storage_dna_error_models"]},
+    {"name": "security_compliance", "sectors": ["tenant_isolation", "data_retention_deletion", "pii_metadata_redaction", "audit_integrity_access_control"]},
+    {"name": "oakbench_proof", "sectors": ["spectral_benchmarks", "drift_benchmarks", "ecc_benchmarks", "cost_time_saved_benchmarks"]},
+    {"name": "capital_ip_sales", "sectors": ["pitch_packs", "pilot_proposals", "ip_patent_manifests", "investor_data_room_acquisition_pack"]}
+  ]
+}
