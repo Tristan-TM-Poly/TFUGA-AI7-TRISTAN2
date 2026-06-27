@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/sprint_plan.schema.json",
+  "title": "SprintPlan",
+  "type": "object",
+  "required": ["name", "source_epic", "source_theory", "target_engine", "cadence", "total_points", "tasks", "oak_gates", "definition_of_done"],
+  "properties": {
+    "name": { "type": "string" },
+    "source_epic": { "type": "string" },
+    "source_theory": { "type": "string" },
+    "target_engine": { "type": "string" },
+    "cadence": { "type": "string" },
+    "total_points": { "type": "integer", "minimum": 1 },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "task_id": { "type": "string" },
+          "title": { "type": "string" },
+          "source_issue_title": { "type": "string" },
+          "priority": { "type": "string" },
+          "estimate_points": { "type": "integer" },
+          "execution_order": { "type": "integer" },
+          "acceptance_criteria": { "type": "array", "items": { "type": "string" } },
+          "oak_gates": { "type": "array", "items": { "type": "string" } },
+          "definition_of_done": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "oak_gates": { "type": "array", "items": { "type": "string" } },
+    "definition_of_done": { "type": "array", "items": { "type": "string" } }
+  }
+}
