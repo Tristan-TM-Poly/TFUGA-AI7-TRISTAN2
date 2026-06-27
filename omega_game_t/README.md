@@ -11,7 +11,7 @@ GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 Ω-GAME-T+++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable, démontrable, organisable, productisable et améliorable par feedback/version.
 
 ```text
-Theory -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> LaunchForge -> RevenueForge -> ProductBench -> FeedbackLoop -> VersionForge -> M+/M- -> Better World
+Creation -> GameEngineOS -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> LaunchForge -> RevenueForge -> ProductBench -> FeedbackLoop -> VersionForge -> M+/M- -> Better World
 ```
 
 ## MVP actuel
@@ -21,6 +21,8 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `WorldGraph`, `Entity`, `Event`, `RuleKernel`
 - `GameMasterAgent`, `QuestCVCD`, `OAKGate`
 - `GMCouncil`, `GMVote`, `CouncilScores`
+- `GameEngineKernel`, `WorldState`, `ResourceFlow`, `Action`, `SimulationResult`
+- `PrototypeWorldEngine`, `ProcessAlchemyEngine`, `CodeDojoEngine`
 - `TheoryCompiler`, `TheorySpec`, `CompiledWorld`, `WorldDNA`, `RuleGenome`
 - `Productizer`, `ProductPlan`
 - `IssueForge`, `IssueSet`, `IssueSpec`
@@ -39,10 +41,32 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`, `RevenueForge-T`, `ProductBench-T`, `FeedbackLoop-T`, `VersionForge-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `GameEngineOS-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`, `RevenueForge-T`, `ProductBench-T`, `FeedbackLoop-T`, `VersionForge-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
+
+## GameEngineOS-T
+
+GameEngineOS-T est le noyau commun pour transformer les créations de Tristan en mondes simulables. Il ajoute :
+
+- `WorldState` pour représenter un monde ;
+- `ResourceFlow` pour suivre énergie, matière, valeur et connaissance ;
+- `Action` pour représenter un choix simulé ;
+- `SimulationResult` pour produire score, OAK status, M+ et M- ;
+- `GameEngineKernel` pour orchestrer les moteurs.
+
+### PrototypeWorldEngine
+
+Simule les prototypes comme des mondes de décision : tests, démo, scope, clarté, testabilité, M+/M-.
+
+### ProcessAlchemyEngine
+
+Simule des procédés abstraits et sûrs : transformation conceptuelle, qualité, circularité et recyclage générique. Il ne produit aucun protocole réel.
+
+### CodeDojoEngine
+
+Transforme la programmation en quêtes : lire les invariants, ajouter des tests, faire un petit refactor, écrire la documentation.
 
 ## Moteurs inclus
 
@@ -126,6 +150,7 @@ omega_game_t/
     DEMO_FORGE_T.md
     ENERGY_CIVILIZATION_T.md
     FEEDBACK_LOOP_T.md
+    GAMEENGINEOS_T.md
     GM_COUNCIL_T.md
     ISSUE_FORGE_T.md
     LAUNCH_FORGE_T.md
@@ -147,6 +172,7 @@ omega_game_t/
     energy_colony.schema.json
     event.schema.json
     feedback_loop.schema.json
+    game_engine_state.schema.json
     gm_vote.schema.json
     issue_set.schema.json
     launch_draft.schema.json
@@ -157,6 +183,7 @@ omega_game_t/
     quest_blueprint.schema.json
     revenue_plan.schema.json
     rule_genome.schema.json
+    simulation_result.schema.json
     sprint_plan.schema.json
     version_plan.schema.json
     world_dna.schema.json
@@ -167,7 +194,10 @@ omega_game_t/
     engines/
       boardgame.py
       circuit_dungeon.py
+      code_dojo.py
       energy_civilization.py
+      process_alchemy.py
+      prototype_world.py
       science_sandbox.py
       textworld.py
     examples/
@@ -176,6 +206,7 @@ omega_game_t/
       demo_forge_t_demo.py
       energy_civilization_t_demo.py
       feedback_loop_t_demo.py
+      gameengineos_t_demo.py
       gm_council_t_demo.py
       issue_forge_t_demo.py
       launch_forge_t_demo.py
@@ -197,6 +228,10 @@ omega_game_t/
       revenue_forge.py
       sprint_forge.py
       version_forge.py
+    kernel/
+      game_kernel.py
+      resource_flow.py
+      world_state.py
     gm_council.py
     productizer.py
     theory_compiler.py
@@ -206,6 +241,7 @@ omega_game_t/
     test_demo_forge_t.py
     test_energy_civilization_t.py
     test_feedback_loop_t.py
+    test_gameengineos_t.py
     test_gm_council_t.py
     test_issue_forge_t.py
     test_launch_forge_t.py
