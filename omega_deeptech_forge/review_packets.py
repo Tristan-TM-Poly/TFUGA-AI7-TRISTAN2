@@ -173,6 +173,8 @@ def _review_status(kind: PacketKind, scores: ValueAxisScores) -> str:
         return "HUMAN_IP_REVIEW_REQUIRED"
     if kind == "negative_memory_archive":
         return "ARCHIVE_OR_OBSERVE"
+    if kind == "service_offer_card" and scores.mean >= 3.5:
+        return "REVIEW_READY"
     if scores.mean >= 4.0:
         return "REVIEW_READY"
     return "REWRITE_BEFORE_REVIEW"

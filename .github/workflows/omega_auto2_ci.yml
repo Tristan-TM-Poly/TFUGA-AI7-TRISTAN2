@@ -32,3 +32,11 @@ jobs:
 
       - name: Test
         run: pytest -q
+
+      - name: CLI smoke tests
+        run: |
+          auto2 version
+          auto2 forge "prepare a local review packet" > /tmp/auto2_forge.json
+          auto2 task-draft "prepare a local review packet" --format markdown > /tmp/auto2_task_draft.md
+          auto2 task-draft "prepare a local review packet" --format json > /tmp/auto2_task_draft.json
+          auto2 quality-gate

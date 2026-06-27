@@ -29,6 +29,7 @@ from .genesis import auto_genesis
 from .genesis_report import GenesisReport
 from .genesis_score import score_genesis_idea, rank_genesis_ideas
 from .genesis_tree import build_genesis_tree
+from .issue_draft import IssueDraft, build_issue_draft, render_issue_draft, write_issue_draft
 
 __all__ = [
     "__version__",
@@ -79,4 +80,8 @@ __all__ = [
     "score_genesis_idea",
     "rank_genesis_ideas",
     "build_genesis_tree",
+    "IssueDraft",
+    "build_issue_draft",
+    "render_issue_draft",
+    "write_issue_draft",
 ]
