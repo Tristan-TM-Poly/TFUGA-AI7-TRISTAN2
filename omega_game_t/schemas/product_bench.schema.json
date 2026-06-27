@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/product_bench.schema.json",
+  "title": "ProductBenchResult",
+  "type": "object",
+  "required": ["product_name", "target_engine", "score", "level", "metrics", "notes"],
+  "properties": {
+    "product_name": { "type": "string" },
+    "target_engine": { "type": "string" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "level": { "type": "string" },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "number", "minimum": 0, "maximum": 1 },
+        "clarity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "differentiation": { "type": "number", "minimum": 0, "maximum": 1 },
+        "feasibility": { "type": "number", "minimum": 0, "maximum": 1 },
+        "testability": { "type": "number", "minimum": 0, "maximum": 1 },
+        "revenue_potential": { "type": "number", "minimum": 0, "maximum": 1 },
+        "strategic_fit": { "type": "number", "minimum": 0, "maximum": 1 },
+        "risk": { "type": "number", "minimum": 0, "maximum": 1 },
+        "scope_creep": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ip_uncertainty": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  }
+}
