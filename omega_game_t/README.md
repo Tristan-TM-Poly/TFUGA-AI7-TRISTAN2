@@ -52,21 +52,45 @@ G_t = (V_t, E_t, H_t, R_t, M_t)
 - `R_t` : règles.
 - `M_t` : mémoire du monde.
 
-## MVP prioritaire
+## MVP actuel
 
 Ce dossier contient un MVP minimal Python pour transformer la théorie en artefact exécutable :
 
 - `WorldGraph`
 - `Entity`
+- `Event`
 - `RuleKernel`
 - `GameMasterAgent`
 - `QuestCVCD`
 - `OAKGate`
-- `MMinusMemory`
+- `MPlusMemory` / `MMinusMemory`
+- `GameQualityScore`
 - `TextWorldEngine`
-- exemple `Quest-CVCD`
+- `BoardGameEngine`
+- `ScienceSandboxEngine`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`
 - tests unitaires
-- protocole `GameQualityScore`
+- schémas JSON
+- CI GitHub Actions `pytest`
+
+## Moteurs inclus
+
+### TextWorld-T
+
+Moteur texte minimal pour générer des quêtes, événements et traces de monde via GameMaster + CVCD + OAK.
+
+### BoardGame-T
+
+Moteur grille/plateau générique pour roguelike, tactique, pathfinding, stratégie et futurs benchmarks AIT-ChessMaster.
+
+### ScienceSandbox-T
+
+Moteur de simulation jouable et OAK-safe pour transformer des théories scientifiques en expériences inspectables. Le MVP inclut :
+
+- `RLCStep` : circuit RLC série simplifié ;
+- `MicrogridStep` : bilan microgrid solaire/batterie/charge/pertes.
+
+Ces modèles sont pédagogiques et prototypables. Ils ne remplacent pas des solveurs physiques validés ni des mesures réelles.
 
 ## Structure
 
@@ -77,6 +101,12 @@ omega_game_t/
   docs/
     OMEGA_GAME_T_MANIFESTO.md
     OAK_GAME_PROTOCOL.md
+    SCIENCE_SANDBOX_T.md
+  schemas/
+    event.schema.json
+    oak_report.schema.json
+    quest_blueprint.schema.json
+    world_graph.schema.json
   omega_game/
     __init__.py
     core.py
@@ -86,11 +116,18 @@ omega_game_t/
     memory.py
     engines/
       __init__.py
+      boardgame.py
+      science_sandbox.py
       textworld.py
     examples/
+      __init__.py
+      boardgame_t_demo.py
       quest_cvcd_demo.py
+      science_sandbox_t_demo.py
   tests/
+    test_boardgame_t.py
     test_omega_game_t.py
+    test_science_sandbox_t.py
 ```
 
 ## Règle OAK
