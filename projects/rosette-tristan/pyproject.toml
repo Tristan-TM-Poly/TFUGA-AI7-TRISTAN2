@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rosette-tristan"
-version = "0.1.0"
+version = "0.1.1"
 description = "Ω-ROSETTE-T: document to LaTeX, theory graph, code skeleton, absorption and OAK report."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -18,6 +18,7 @@ dev = ["pytest>=8.0"]
 
 [project.scripts]
 rosette = "rosette_tristan.cli:main"
+rosette-fidelity = "rosette_tristan.fidelity_pipeline:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
