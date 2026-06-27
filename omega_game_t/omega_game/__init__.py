@@ -10,6 +10,14 @@ from .gm import GameMasterAgent, GMProposal
 from .gm_council import CouncilScores, GMCouncil, GMCouncilDecision, GMVote, default_gm_council
 from .memory import MMinusMemory, MPlusMemory
 from .oak import OAKGate, OAKReport
+from .theory_compiler import (
+    CompiledWorld,
+    RuleGenome,
+    TheoryCompiler,
+    TheorySpec,
+    WorldDNA,
+    default_theory_compiler,
+)
 
 __all__ = [
     "Entity",
@@ -31,4 +39,10 @@ __all__ = [
     "MPlusMemory",
     "OAKGate",
     "OAKReport",
+    "CompiledWorld",
+    "RuleGenome",
+    "TheoryCompiler",
+    "TheorySpec",
+    "WorldDNA",
+    "default_theory_compiler",
 ]
