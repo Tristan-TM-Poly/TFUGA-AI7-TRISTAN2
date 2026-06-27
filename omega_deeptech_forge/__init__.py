@@ -10,9 +10,14 @@ from .core import (
     OAKStatus,
     Signal,
     ForgeDecision,
+    HandoffPacket,
     classify_ip,
     oak_gate,
     forge_decision,
+    handoff_route,
+    build_handoff_packet,
+    dry_run_report,
+    write_handoff_packet,
 )
 
 __all__ = [
@@ -21,7 +26,12 @@ __all__ = [
     "OAKStatus",
     "Signal",
     "ForgeDecision",
+    "HandoffPacket",
     "classify_ip",
     "oak_gate",
     "forge_decision",
+    "handoff_route",
+    "build_handoff_packet",
+    "dry_run_report",
+    "write_handoff_packet",
 ]
