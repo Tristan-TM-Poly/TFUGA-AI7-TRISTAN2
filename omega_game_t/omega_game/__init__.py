@@ -10,6 +10,7 @@ from .gm import GameMasterAgent, GMProposal
 from .gm_council import CouncilScores, GMCouncil, GMCouncilDecision, GMVote, default_gm_council
 from .memory import MMinusMemory, MPlusMemory
 from .oak import OAKGate, OAKReport
+from .productizer import ProductPlan, Productizer, default_productizer
 from .theory_compiler import (
     CompiledWorld,
     RuleGenome,
@@ -39,6 +40,9 @@ __all__ = [
     "MPlusMemory",
     "OAKGate",
     "OAKReport",
+    "ProductPlan",
+    "Productizer",
+    "default_productizer",
     "CompiledWorld",
     "RuleGenome",
     "TheoryCompiler",
