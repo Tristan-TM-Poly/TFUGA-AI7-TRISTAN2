@@ -22,7 +22,8 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `GameMasterAgent`, `QuestCVCD`, `OAKGate`
 - `GMCouncil`, `GMVote`, `CouncilScores`
 - `GameEngineKernel`, `WorldState`, `ResourceFlow`, `Action`, `SimulationResult`
-- `PrototypeWorldEngine`, `ProcessAlchemyEngine`, `CodeDojoEngine`
+- `PrototypeWorldEngine`, `ProcessAlchemyEngine`, `CodeDojoEngine`, `GitHubRealmEngine`
+- `RepoWorld`, `RepoZone`, `RepoQuest`
 - `TheoryCompiler`, `TheorySpec`, `CompiledWorld`, `WorldDNA`, `RuleGenome`
 - `Productizer`, `ProductPlan`
 - `IssueForge`, `IssueSet`, `IssueSpec`
@@ -41,7 +42,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `GameEngineOS-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`, `RevenueForge-T`, `ProductBench-T`, `FeedbackLoop-T`, `VersionForge-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `GameEngineOS-T`, `GitHubRealmEngine-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`, `RevenueForge-T`, `ProductBench-T`, `FeedbackLoop-T`, `VersionForge-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -67,6 +68,10 @@ Simule des procédés abstraits et sûrs : transformation conceptuelle, qualité
 ### CodeDojoEngine
 
 Transforme la programmation en quêtes : lire les invariants, ajouter des tests, faire un petit refactor, écrire la documentation.
+
+### GitHubRealmEngine
+
+Transforme un dépôt en carte jouable de maintenance : zones docs/code/tests/schemas/examples/OAK, quêtes, score de santé repo, M+/M-. Il produit des recommandations simulées seulement.
 
 ## Moteurs inclus
 
@@ -151,6 +156,7 @@ omega_game_t/
     ENERGY_CIVILIZATION_T.md
     FEEDBACK_LOOP_T.md
     GAMEENGINEOS_T.md
+    GITHUB_REALM_ENGINE_T.md
     GM_COUNCIL_T.md
     ISSUE_FORGE_T.md
     LAUNCH_FORGE_T.md
@@ -181,6 +187,7 @@ omega_game_t/
     product_bench.schema.json
     product_plan.schema.json
     quest_blueprint.schema.json
+    repo_world.schema.json
     revenue_plan.schema.json
     rule_genome.schema.json
     simulation_result.schema.json
@@ -196,6 +203,7 @@ omega_game_t/
       circuit_dungeon.py
       code_dojo.py
       energy_civilization.py
+      github_realm.py
       process_alchemy.py
       prototype_world.py
       science_sandbox.py
@@ -207,6 +215,7 @@ omega_game_t/
       energy_civilization_t_demo.py
       feedback_loop_t_demo.py
       gameengineos_t_demo.py
+      github_realm_t_demo.py
       gm_council_t_demo.py
       issue_forge_t_demo.py
       launch_forge_t_demo.py
@@ -242,6 +251,7 @@ omega_game_t/
     test_energy_civilization_t.py
     test_feedback_loop_t.py
     test_gameengineos_t.py
+    test_github_realm_t.py
     test_gm_council_t.py
     test_issue_forge_t.py
     test_launch_forge_t.py
