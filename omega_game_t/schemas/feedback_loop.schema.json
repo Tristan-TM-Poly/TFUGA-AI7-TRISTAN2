@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/feedback_loop.schema.json",
+  "title": "FeedbackLoopResult",
+  "type": "object",
+  "required": ["product_name", "target_engine", "confidence_score", "decision", "feedback_signals", "m_plus", "m_minus", "oak_controls", "next_actions"],
+  "properties": {
+    "product_name": { "type": "string" },
+    "target_engine": { "type": "string" },
+    "confidence_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "decision": {
+      "type": "object",
+      "properties": {
+        "decision": { "type": "string" },
+        "confidence_score": { "type": "number" },
+        "rationale": { "type": "string" },
+        "next_version": { "type": "string" }
+      }
+    },
+    "feedback_signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "signal_type": { "type": "string" },
+          "strength": { "type": "string" },
+          "source": { "type": "string" },
+          "evidence": { "type": "string" },
+          "next_action": { "type": "string" },
+          "score": { "type": "number" }
+        }
+      }
+    },
+    "m_plus": { "type": "array", "items": { "type": "string" } },
+    "m_minus": { "type": "array", "items": { "type": "string" } },
+    "oak_controls": { "type": "array", "items": { "type": "string" } },
+    "next_actions": { "type": "array", "items": { "type": "string" } }
+  }
+}
