@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any, Dict, Iterable, List, Mapping, Optional
 
@@ -23,17 +23,14 @@ AXES: List[MasteryAxis] = list(MasteryAxis)
 
 @dataclass(frozen=True)
 class Evidence:
-    """Bayesian evidence for one mastery axis.
-
-    successes and failures are deliberately small integers. They can come from
-    quizzes, exercises, coding tasks, oral explanations, delayed recall, or OAK checks.
-    """
+    """Bayesian evidence for one mastery axis."""
 
     axis: MasteryAxis
     successes: int = 0
     failures: int = 0
     weight: float = 1.0
     source: str = "manual"
+    timestamp: str = ""
 
     @classmethod
     def from_mapping(cls, item: Mapping[str, Any]) -> "Evidence":
@@ -43,7 +40,13 @@ class Evidence:
             failures=int(item.get("failures", 0)),
             weight=float(item.get("weight", 1.0)),
             source=str(item.get("source", "manual")),
+            timestamp=str(item.get("timestamp", "")),
         )
+
+    def to_dict(self) -> dict:
+        data = asdict(self)
+        data["axis"] = self.axis.value
+        return data
 
 
 @dataclass
@@ -57,6 +60,7 @@ class ErrorRecord:
     context: str = ""
     severity: float = 1.0
     status_oak: str = "to_retest"
+    timestamp: str = ""
 
     @classmethod
     def from_mapping(cls, item: Mapping[str, Any]) -> "ErrorRecord":
@@ -68,7 +72,11 @@ class ErrorRecord:
             context=str(item.get("context", "")),
             severity=float(item.get("severity", 1.0)),
             status_oak=str(item.get("status_oak", "to_retest")),
+            timestamp=str(item.get("timestamp", "")),
         )
+
+    def to_dict(self) -> dict:
+        return asdict(self)
 
 
 @dataclass
@@ -96,6 +104,16 @@ class SkillSpec:
             tags=tags,
         )
 
+    def to_dict(self) -> dict:
+        return {
+            "skill": self.skill,
+            "goal": self.goal,
+            "notes": self.notes,
+            "evidence": [e.to_dict() for e in self.evidence],
+            "errors": [e.to_dict() for e in self.errors],
+            "tags": self.tags,
+        }
+
 
 @dataclass
 class LearningProfile:
@@ -111,14 +129,38 @@ class LearningProfile:
 
 
 @dataclass
+class LearningEvent:
+    """Persistable event in the Ω-LEARN-T log."""
+
+    event_type: str
+    skill: str
+    payload: Dict[str, Any]
+    timestamp: str
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+    @classmethod
+    def from_mapping(cls, payload: Mapping[str, Any]) -> "LearningEvent":
+        return cls(
+            event_type=str(payload.get("event_type", payload.get("type", "event"))),
+            skill=str(payload.get("skill", "")),
+            payload=dict(payload.get("payload", {})),
+            timestamp=str(payload.get("timestamp", "")),
+        )
+
+
+@dataclass
 class LearningState:
     """Mutable state that can later be serialized to a database or JSONL log."""
 
     spec: SkillSpec
-    events: List[Dict[str, Any]] = field(default_factory=list)
+    events: List[LearningEvent] = field(default_factory=list)
 
-    def log(self, event_type: str, **payload: Any) -> None:
-        self.events.append({"type": event_type, **payload})
+    def log(self, event_type: str, timestamp: str = "", **payload: Any) -> None:
+        self.events.append(
+            LearningEvent(event_type=event_type, skill=self.spec.skill, payload=payload, timestamp=timestamp)
+        )
 
 
 def clamp01(value: float) -> float:

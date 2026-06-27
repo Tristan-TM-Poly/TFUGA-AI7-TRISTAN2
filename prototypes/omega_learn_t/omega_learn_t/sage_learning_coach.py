@@ -7,15 +7,16 @@ from .core import LearningProfile, SkillSpec
 from .curriculum_cvcd import generate_curriculum
 from .cvcd import extract_invariants
 from .m_minus_registry import MMinusRegistry
-from .memory_codec import cards_from_errors, cards_from_invariants, schedule_cards
+from .memory_codec import cards_from_errors, cards_from_invariants, oak_cards, schedule_cards
 from .oakbench_learn import oak_questions, oakbench
+from .scheduler import build_review_queue
 
 
 class SageLearningCoach:
     """Zero-touch orchestrator for Ω-LEARN-T.
 
     It converts one skill specification into: CVCD invariants, Bayes mastery,
-    M⁻ registry, curriculum, memory cards, and OAKBench status.
+    M⁻ registry, curriculum, memory cards, scheduler queue, and OAKBench status.
     """
 
     def inspect(self, spec: SkillSpec) -> Dict[str, Any]:
@@ -36,9 +37,10 @@ class SageLearningCoach:
         return {
             "skill": spec.skill,
             "goal": spec.goal,
+            "tags": spec.tags,
             "mastery": {axis.value: round(score, 3) for axis, score in mastery.items()},
             "bayes_posteriors": {
-                axis.value: {"alpha": post.alpha, "beta": post.beta, "mean": round(post.mean, 3)}
+                axis.value: {"alpha": post.alpha, "beta": post.beta, "mean": round(post.mean, 3), "uncertainty": round(post.uncertainty, 3)}
                 for axis, post in update_mastery(spec.evidence).items()
             },
             "cvcd": {
@@ -54,12 +56,21 @@ class SageLearningCoach:
 
     def coach(self, spec: SkillSpec) -> Dict[str, Any]:
         report = self.inspect(spec)
-        cards = cards_from_invariants(spec.skill, report["cvcd"]["invariants"][:6])
-        cards.extend(cards_from_errors(spec.errors))
+        cards = cards_from_invariants(spec.skill, report["cvcd"]["invariants"][:6], spec.tags)
+        cards.extend(cards_from_errors(spec.errors, spec.tags))
+        cards.extend(oak_cards(spec.skill, oak_questions()[:3], spec.tags))
+        queue = build_review_queue(
+            skill=spec.skill,
+            mastery=mastery_vector(spec.evidence),
+            invariants=report["cvcd"]["invariants"],
+            errors=spec.errors,
+            tags=spec.tags,
+        )
         return {
             **report,
             "oak_questions": oak_questions(),
             "memory_cards_due": schedule_cards(cards, days_from_now=1),
+            "review_queue": [task.to_dict() for task in queue],
         }
 
     def summarize_markdown(self, spec: SkillSpec) -> str:
@@ -77,6 +88,9 @@ class SageLearningCoach:
         lines.append("\n## Next actions")
         for action in report["next_actions"]:
             lines.append(f"- {action}")
+        lines.append("\n## Review queue")
+        for task in report["review_queue"][:10]:
+            lines.append(f"- {task['due']} | p={task['priority']:.2f} | {task['prompt']}")
         lines.append("\n## OAK questions")
         for q in report["oak_questions"]:
             lines.append(f"- {q}")
