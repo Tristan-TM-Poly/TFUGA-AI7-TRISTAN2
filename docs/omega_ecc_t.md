@@ -55,6 +55,27 @@ The goal is to make the smallest diagnostic object that is still sufficient for 
 
 This turns parity-check intuition into executable algebra.
 
+## GF(256) / Reed-Solomon erasure phase
+
+`ecc_tristan.reed_solomon` adds a dependency-free Reed-Solomon erasure baseline over GF(256):
+
+```text
+message bytes -> polynomial coefficients -> evaluations at x=1..n -> erase known positions -> Lagrange interpolation -> OAK validation
+```
+
+Implemented scope:
+
+- GF(256) arithmetic using primitive polynomial `0x11D`;
+- polynomial add/multiply/scale/evaluate;
+- Lagrange interpolation over GF(256);
+- `ReedSolomonErasureCode(n, k)` for `1 <= k <= n <= 255`;
+- encode by polynomial evaluation;
+- erasure recovery from any `k` known symbols;
+- OAK rejection for insufficient known symbols;
+- OAK rejection for inconsistent known symbols when extra known points do not match the reconstructed codeword.
+
+OAK-safe limit: this is erasure recovery, not full unknown-error Reed-Solomon decoding. Unknown symbol corruption requires integrity checks or a future syndrome/Berlekamp-Welch layer.
+
 ## LinearBlockCode phase
 
 `ecc_tristan.linear_block_code.LinearBlockCode` adds true code construction:
@@ -162,6 +183,7 @@ The interleaver does not create information. It spreads a contiguous burst acros
 - toy LDPC hard-decision bit-flip on BSC;
 - toy LDPC soft-decision min-sum on BPSK/AWGN;
 - toy linear code exhaustive ML decoding on BSC;
+- RS(10,6) GF(256) erasure recovery;
 - Hamming(7,4) burst channel with and without block interleaving.
 
 This is the seed of the full OAKBench matrix:
@@ -186,6 +208,7 @@ BSC, BEC, AWGN, burst, packet-loss, flash-like, DNA-like indel/loss, quantum dep
 - Binary symmetric, burst-flip, erasure-like, and BPSK/AWGN channels.
 - `ChannelReport.syndrome_hint()` as the first Syndrome-CVCD diagnostic.
 - GF(2) linear algebra.
+- GF(256) Reed-Solomon erasure recovery.
 - `LinearBlockCode` with construction from parity checks and exhaustive ML decode.
 - `HyperParityGraph` with exhaustive nearest-codeword decoding for small binary graphs.
 - OAK gate for accepting/rejecting Hamming(7,4) corrections.
@@ -198,8 +221,8 @@ BSC, BEC, AWGN, burst, packet-loss, flash-like, DNA-like indel/loss, quantum dep
 
 ## Next expansions
 
-1. Larger LDPC code construction with generator matrix and sparse ensembles.
-2. Reed-Solomon over GF(2^m) or a dependency-backed implementation.
+1. Reed-Solomon unknown-error decoder via Berlekamp-Welch or syndrome/Berlekamp-Massey.
+2. Larger LDPC code construction with generator matrix and sparse ensembles.
 3. Polar code scaffold with successive cancellation.
 4. Fountain/erasure codes for packet loss.
 5. FFWT-noise profiler for burst/fractal/correlated errors.
@@ -221,3 +244,4 @@ Initial M⁻ constraints:
 - Soft-decision min-sum is not automatically better; it must beat hard-decision and external LDPC baselines under identical channel assumptions.
 - Exhaustive ML decoding is a correctness oracle for small codes, not a scalable solution.
 - Interleaving can mitigate bursts, but it adds latency and does not increase Shannon capacity.
+- The current Reed-Solomon layer recovers known erasures only; unknown errors must be rejected or handled by a future decoder.
