@@ -1,0 +1,13 @@
+# Sample Rosette Paper
+
+We propose a simple dynamical model for OAK-safe extraction. We show that a minimal state equation can be used as a reproducibility seed.
+
+The core equation is:
+
+$$
+\frac{dx}{dt} = -k x + u(t)
+$$
+
+Assume k > 0 and bounded input u(t). However, this sample has no real figure data and therefore cannot certify reproduction.
+
+Definition: A Rosette capsule is a structured transformation of a scientific document into source-traced claims, equations, code and OAK memory.

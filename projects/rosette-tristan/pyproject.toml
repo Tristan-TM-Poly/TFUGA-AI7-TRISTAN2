@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rosette-tristan"
+version = "0.1.0"
+description = "Ω-ROSETTE-T: document to LaTeX, theory graph, code skeleton, absorption and OAK report."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Tristan"}]
+dependencies = []
+
+[project.optional-dependencies]
+pdf = ["pymupdf>=1.24"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+rosette = "rosette_tristan.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["rosette_tristan*"]
