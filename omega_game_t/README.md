@@ -57,6 +57,31 @@ It scores LanguageRun outputs on:
 - `LanguageGMEvaluation`
 - `LanguageGMRubric`
 
+## Split unit: LanguageCurriculum-T
+
+This branch adds a progressive curriculum layer for LanguageGM.
+
+It organizes tracks, levels, quests, progress, XP, M+/M-, and next quest suggestions.
+
+### Tracks
+
+- `fr_clear`
+- `en_clear`
+- `teaching`
+- `markdown_doc`
+- `json_contract`
+- `yaml_plan`
+- `github_issue`
+- `pitch`
+- `ip_caution`
+
+### Objects
+
+- `CurriculumTrack`
+- `CurriculumQuest`
+- `CurriculumProgress`
+- `LanguageCurriculum`
+
 ## Boundary
 
 Omega GAME T is a game, simulation, and research lab. It is not a tool for manipulation, unfair automation, unsafe real-world instructions, or external certification.
@@ -75,4 +100,4 @@ python -m pytest
 3. Quest-CVCD;
 4. tests and docs;
 5. GameQualityScore benchmark;
-6. language curriculum and Markdown/JSON/YAML validators.
+6. Markdown/JSON/YAML validators.
