@@ -12,9 +12,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Generate Top1024 artifacts
-        run: python scripts/omega_github_auto2_factory.py --config configs/omega_github_auto2_top1024.json --out artifacts/omega_github_auto2 --issue-limit 16
+      - name: Generate Top1024 reactor artifacts
+        run: python scripts/omega_github_auto2_factory.py --config configs/omega_github_auto2_top1024.json --out artifacts/omega_github_auto2 --issue-limit 16 --mode materialize
       - name: Run AUTO2 tests
         run: python -m unittest tests/test_omega_github_auto2_factory.py
-      - name: Print execution queue
-        run: cat artifacts/omega_github_auto2/top64_execution_queue.md
+      - name: Print dashboard
+        run: cat artifacts/omega_github_auto2/dashboard.md
+      - name: Print OAK tribunal
+        run: cat artifacts/omega_github_auto2/oak_tribunal_report.json
