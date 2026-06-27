@@ -7,6 +7,9 @@ CVCD quest generation, memory, and text-world simulation.
 from .core import Entity, Event, GameQualityScore, RuleKernel, WorldGraph
 from .cvcd import CVCDState, QuestCVCD, WorldCompressor
 from .forge import (
+    DemoForge,
+    DemoPlan,
+    DemoScene,
     IssueForge,
     IssueSet,
     IssueSpec,
@@ -15,6 +18,7 @@ from .forge import (
     SprintForge,
     SprintPlan,
     SprintTask,
+    default_demo_forge,
     default_issue_forge,
     default_sprint_forge,
 )
@@ -41,6 +45,9 @@ __all__ = [
     "CVCDState",
     "QuestCVCD",
     "WorldCompressor",
+    "DemoForge",
+    "DemoPlan",
+    "DemoScene",
     "IssueForge",
     "IssueSet",
     "IssueSpec",
@@ -49,6 +56,7 @@ __all__ = [
     "SprintForge",
     "SprintPlan",
     "SprintTask",
+    "default_demo_forge",
     "default_issue_forge",
     "default_sprint_forge",
     "GameMasterAgent",
