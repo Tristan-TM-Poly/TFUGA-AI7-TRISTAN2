@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/oak_report.schema.json",
+  "title": "Ω-GAME-T OAKReport",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "coherent",
+    "fair",
+    "fun",
+    "safe",
+    "testable",
+    "non_exploitative",
+    "agency",
+    "reasons",
+    "metrics"
+  ],
+  "properties": {
+    "coherent": { "type": "boolean" },
+    "fair": { "type": "boolean" },
+    "fun": { "type": "boolean" },
+    "safe": { "type": "boolean" },
+    "testable": { "type": "boolean" },
+    "non_exploitative": { "type": "boolean" },
+    "agency": { "type": "number", "minimum": 0, "maximum": 1 },
+    "reasons": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "metrics": { "type": "object" },
+    "accepted": {
+      "type": "boolean",
+      "description": "Optional materialized value. In code this is derived from the OAK booleans and agency threshold."
+    }
+  }
+}
