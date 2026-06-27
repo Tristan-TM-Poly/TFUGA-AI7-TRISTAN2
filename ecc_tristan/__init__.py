@@ -2,7 +2,8 @@
 
 Executable MVP: Hamming(7,4), binary channels, HyperParityGraph-T,
 OAK gating, M⁻ failure memory hooks, small LDPC/OAKBench scaffolds,
-soft-decision min-sum decoding, GF(2) linear codes, and interleaving.
+soft-decision min-sum decoding, GF(2) linear codes, interleaving, and
+Reed-Solomon erasure recovery over GF(256).
 """
 
 from .hamming import DecodeResult, decode, encode, syndrome
@@ -11,6 +12,7 @@ from .interleaver import block_deinterleave, block_interleave, block_interleaver
 from .ldpc import LDPCDecodeResult, SparseLDPC
 from .linear_block_code import LinearBlockCode, MLDecodeResult
 from .minsum import SoftLDPCDecodeResult, hard_bits_from_llr, min_sum_decode
+from .reed_solomon import RSErasureDecodeResult, ReedSolomonErasureCode, erase_positions
 from .benchmarks import BenchmarkResult, bench_hamming74_bsc
 from .oakbench_matrix import MatrixRow, default_oakbench_matrix
 
@@ -22,6 +24,8 @@ __all__ = [
     "LinearBlockCode",
     "MLDecodeResult",
     "MatrixRow",
+    "RSErasureDecodeResult",
+    "ReedSolomonErasureCode",
     "SoftLDPCDecodeResult",
     "SparseLDPC",
     "bench_hamming74_bsc",
@@ -31,6 +35,7 @@ __all__ = [
     "decode",
     "default_oakbench_matrix",
     "encode",
+    "erase_positions",
     "hard_bits_from_llr",
     "min_sum_decode",
     "syndrome",
