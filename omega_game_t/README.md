@@ -11,7 +11,7 @@ GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 Ω-GAME-T+++ ajoute le concept de **Reality Compiler** : transformer une théorie en monde jouable, mesurable, démontrable, organisable, productisable et améliorable par feedback/version.
 
 ```text
-Creation -> GameEngineOS -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> LaunchForge -> RevenueForge -> ProductBench -> FeedbackLoop -> VersionForge -> M+/M- -> Better World
+Creation -> GameEngineOS -> GameMasterAcademy -> TheoryCompiler -> RuleGenome -> WorldDNA -> Engine -> GM-Council -> OAKBench -> Productizer -> IssueForge -> SprintForge -> DemoForge -> LaunchForge -> RevenueForge -> ProductBench -> FeedbackLoop -> VersionForge -> M+/M- -> Better World
 ```
 
 ## MVP actuel
@@ -24,6 +24,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `GameEngineKernel`, `WorldState`, `ResourceFlow`, `Action`, `SimulationResult`
 - `PrototypeWorldEngine`, `ProcessAlchemyEngine`, `CodeDojoEngine`, `GitHubRealmEngine`
 - `RepoWorld`, `RepoZone`, `RepoQuest`
+- `GameMasterAcademy`, `GameMasterProfile`, `TrainingQuest`, `EvaluationRubric`, `AcademyEvaluation`
 - `TheoryCompiler`, `TheorySpec`, `CompiledWorld`, `WorldDNA`, `RuleGenome`
 - `Productizer`, `ProductPlan`
 - `IssueForge`, `IssueSet`, `IssueSpec`
@@ -42,7 +43,7 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `CircuitDungeonEngine`
 - `EnergyCivilizationEngine`
 - `OAKBenchRunner`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `GameEngineOS-T`, `GitHubRealmEngine-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`, `RevenueForge-T`, `ProductBench-T`, `FeedbackLoop-T`, `VersionForge-T`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`, `OAKBench-GAME-T`, `GM-Council-T`, `GameEngineOS-T`, `GitHubRealmEngine-T`, `GameMasterAcademy-T`, `TheoryCompiler-T`, `Productizer-T`, `IssueForge-T`, `SprintForge-T`, `DemoForge-T`, `LaunchForge-T`, `RevenueForge-T`, `ProductBench-T`, `FeedbackLoop-T`, `VersionForge-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -72,6 +73,10 @@ Transforme la programmation en quêtes : lire les invariants, ajouter des tests,
 ### GitHubRealmEngine
 
 Transforme un dépôt en carte jouable de maintenance : zones docs/code/tests/schemas/examples/OAK, quêtes, score de santé repo, M+/M-. Il produit des recommandations simulées seulement.
+
+### GameMasterAcademy-T
+
+Forme des GameMasters spécialisés via profils, quêtes, skill scores, rubriques, M+/M- et prochaines quêtes. Le MVP inclut RepoGM, CodeGM, EnergyGM, ProcessGM, RevenueGM et LanguageGM. L'évaluation est interne et ne prétend pas produire une certification officielle externe.
 
 ## Moteurs inclus
 
@@ -156,6 +161,7 @@ omega_game_t/
     ENERGY_CIVILIZATION_T.md
     FEEDBACK_LOOP_T.md
     GAMEENGINEOS_T.md
+    GAMEMASTER_ACADEMY_T.md
     GITHUB_REALM_ENGINE_T.md
     GM_COUNCIL_T.md
     ISSUE_FORGE_T.md
@@ -179,6 +185,7 @@ omega_game_t/
     event.schema.json
     feedback_loop.schema.json
     game_engine_state.schema.json
+    gamemaster_academy.schema.json
     gm_vote.schema.json
     issue_set.schema.json
     launch_draft.schema.json
@@ -215,6 +222,7 @@ omega_game_t/
       energy_civilization_t_demo.py
       feedback_loop_t_demo.py
       gameengineos_t_demo.py
+      gamemaster_academy_t_demo.py
       github_realm_t_demo.py
       gm_council_t_demo.py
       issue_forge_t_demo.py
@@ -241,6 +249,8 @@ omega_game_t/
       game_kernel.py
       resource_flow.py
       world_state.py
+    masters/
+      academy.py
     gm_council.py
     productizer.py
     theory_compiler.py
@@ -251,6 +261,7 @@ omega_game_t/
     test_energy_civilization_t.py
     test_feedback_loop_t.py
     test_gameengineos_t.py
+    test_gamemaster_academy_t.py
     test_github_realm_t.py
     test_gm_council_t.py
     test_issue_forge_t.py
