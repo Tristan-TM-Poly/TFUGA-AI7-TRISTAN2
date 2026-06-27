@@ -1,0 +1,64 @@
+name: Omega AUTO2 Card
+
+description: Track one Omega AUTO2 generated card from draft to OAK pass.
+
+title: "Omega AUTO2: <card_slug>"
+
+labels:
+  - omega-auto2
+  - needs-human-review
+
+body:
+  - type: input
+    id: card_slug
+    attributes:
+      label: Card slug
+      description: Deterministic card identifier.
+      placeholder: api_gateway_core_algorithm_v1
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0
+        - P1
+        - P2
+        - P3_STEALTH_IP
+        - P4_RESEARCH
+    validations:
+      required: true
+  - type: dropdown
+    id: disclosure
+    attributes:
+      label: Disclosure level
+      options:
+        - public
+        - internal
+        - trade_secret
+        - patent_review
+        - never_publish_raw
+    validations:
+      required: true
+  - type: textarea
+    id: oak
+    attributes:
+      label: OAK proof rule
+      description: What must be true before this card can advance?
+    validations:
+      required: true
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Required deliverables
+      value: |
+        - [ ] Input/output schema
+        - [ ] Synthetic fixture
+        - [ ] Baseline or benchmark
+        - [ ] OAK pass/fail rule
+        - [ ] M-minus failure note
+        - [ ] API readiness note
+        - [ ] Customer-value or IP-safety note
+    validations:
+      required: true
