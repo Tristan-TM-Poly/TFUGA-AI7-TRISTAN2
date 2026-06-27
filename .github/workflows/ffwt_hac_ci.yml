@@ -1,0 +1,39 @@
+name: ffwt-hac-ci
+
+on:
+  pull_request:
+    paths:
+      - 'prototypes/omega_ffwt_hac_cvcd/**'
+      - 'tests/test_ffwt_hac_benchmark.py'
+      - 'docs/omega-ffwt-hac-cvcd/**'
+      - '.github/workflows/ffwt_hac_ci.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'prototypes/omega_ffwt_hac_cvcd/**'
+      - 'tests/test_ffwt_hac_benchmark.py'
+      - 'docs/omega-ffwt-hac-cvcd/**'
+      - '.github/workflows/ffwt_hac_ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Run tests
+        run: python -m pytest tests/test_ffwt_hac_benchmark.py -q
+
+      - name: Generate benchmark reports
+        run: |
+          python prototypes/omega_ffwt_hac_cvcd/run_ffwt_hac_benchmark.py --noise-levels 0.0,0.05,0.10 --output reports/omega-ffwt-hac-cvcd/benchmark.json --markdown-output reports/omega-ffwt-hac-cvcd/benchmark.md
