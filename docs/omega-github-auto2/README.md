@@ -38,6 +38,7 @@ Protect ECC until benchmarked.
 - `.github/workflows/omega-github-auto2-factory.yml` — manual workflow.
 - `.github/ISSUE_TEMPLATE/omega_auto2_card.yml` — card issue template.
 - `docs/omega-github-auto2/CARD_CONTRACT.md` — card contract.
+- `docs/omega-github-auto2/CAPITAL_SCORING.md` — E-cap scoring model.
 - `docs/omega-github-auto2/OAK_TRIBUNAL.md` — OAK tribunal.
 - `docs/omega-github-auto2/HUMAN_LOCKS.md` — human locks.
 - `docs/omega-github-auto2/ROADMAP.md` — roadmap.
