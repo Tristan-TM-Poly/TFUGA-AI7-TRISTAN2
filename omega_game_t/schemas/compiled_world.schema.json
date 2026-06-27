@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/compiled_world.schema.json",
+  "title": "Ω-GAME-T CompiledWorld",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["theory", "target_engine", "world_dna", "rule_genomes", "oak_notes", "product_path"],
+  "properties": {
+    "theory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "concepts", "constraints", "goal"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "concepts": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "goal": { "type": "string", "minLength": 1 }
+      }
+    },
+    "target_engine": { "type": "string", "minLength": 1 },
+    "world_dna": { "$ref": "world_dna.schema.json" },
+    "rule_genomes": {
+      "type": "array",
+      "items": { "$ref": "rule_genome.schema.json" },
+      "minItems": 1
+    },
+    "oak_notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "product_path": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    }
+  }
+}
