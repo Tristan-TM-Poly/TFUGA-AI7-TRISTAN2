@@ -7,6 +7,8 @@ from typing import Iterable, List
 from .benchmarks import bench_hamming74_bsc
 from .channels import binary_symmetric_channel
 from .ldpc import SparseLDPC
+from .minsum import min_sum_decode
+from .soft_channels import bpsk_awgn_channel, sigma_from_ebn0_db
 
 
 @dataclass(frozen=True)
@@ -65,7 +67,7 @@ def toy_ldpc_bsc_row(p: float = 0.02, trials: int = 64, seed: int = 13) -> Matri
             residuals += 1
     accepts = trials - residuals
     return MatrixRow(
-        code="toy_6_3_ldpc",
+        code="toy_6_3_ldpc_bit_flip",
         channel="BSC",
         parameter=p,
         trials=trials,
@@ -75,7 +77,43 @@ def toy_ldpc_bsc_row(p: float = 0.02, trials: int = 64, seed: int = 13) -> Matri
     )
 
 
+def toy_ldpc_awgn_min_sum_row(ebn0_db: float = 3.0, trials: int = 64, seed: int = 23) -> MatrixRow:
+    """Benchmark toy LDPC soft min-sum decoding on BPSK/AWGN.
+
+    The tiny code uses the all-zero codeword only; this measures decoder
+    convergence and OAK accounting, not a full production communication stack.
+    """
+    code = SparseLDPC.toy_6_3()
+    source = [0] * code.n
+    # The toy_6_3 scaffold has roughly rate 1/2: 3 constraints over 6 bits.
+    sigma = sigma_from_ebn0_db(rate=0.5, ebn0_db=ebn0_db)
+    successes = 0
+    residuals = 0
+    false_accepts = 0
+    for i in range(trials):
+        report = bpsk_awgn_channel(source, sigma=sigma, seed=seed + i)
+        decoded = min_sum_decode(code, report.llr, max_iterations=20, normalize=0.9)
+        if decoded.converged:
+            if decoded.decoded == source:
+                successes += 1
+            else:
+                false_accepts += 1
+        else:
+            residuals += 1
+    accepts = trials - residuals
+    return MatrixRow(
+        code="toy_6_3_ldpc_min_sum",
+        channel="BPSK_AWGN_EbN0_dB",
+        parameter=ebn0_db,
+        trials=trials,
+        success_rate=successes / trials,
+        residual_rate=residuals / trials,
+        false_accept_rate=false_accepts / max(1, accepts),
+    )
+
+
 def default_oakbench_matrix() -> List[MatrixRow]:
     return hamming_bsc_rows([0.0, 0.01, 0.05, 0.10], trials=64, seed=7) + [
-        toy_ldpc_bsc_row(p=0.02, trials=64, seed=13)
+        toy_ldpc_bsc_row(p=0.02, trials=64, seed=13),
+        toy_ldpc_awgn_min_sum_row(ebn0_db=3.0, trials=64, seed=23),
     ]
