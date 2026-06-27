@@ -12,10 +12,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Generate Top1024 reactor artifacts
+      - name: Validate JSON configs
+        run: |
+          python -m json.tool configs/omega_github_auto2_top1024.json > /tmp/top1024.json
+          python -m json.tool configs/omega_github_auto2_states.json > /tmp/states.json
+      - name: Compile Python sources
+        run: python -m compileall scripts tests
+      - name: Factory dry-run
+        run: python scripts/omega_github_auto2_factory.py --config configs/omega_github_auto2_top1024.json --out artifacts/omega_github_auto2 --issue-limit 16 --mode dry-run
+      - name: Factory plan mode
+        run: python scripts/omega_github_auto2_factory.py --config configs/omega_github_auto2_top1024.json --out artifacts/omega_github_auto2_plan --issue-limit 16 --mode plan
+      - name: Factory materialize mode
         run: python scripts/omega_github_auto2_factory.py --config configs/omega_github_auto2_top1024.json --out artifacts/omega_github_auto2 --issue-limit 16 --mode materialize
       - name: Run AUTO2 tests
         run: python -m unittest tests/test_omega_github_auto2_factory.py
+      - name: Verify generated artifacts
+        run: |
+          test -f artifacts/omega_github_auto2/top1024_manifest.json
+          test -f artifacts/omega_github_auto2/top16_execution_queue.md
+          test -f artifacts/omega_github_auto2/top64_execution_queue.md
+          test -f artifacts/omega_github_auto2/dashboard.md
+          test -f artifacts/omega_github_auto2/oak_tribunal_report.json
+          test -f artifacts/omega_github_auto2/dependency_graph.json
+          test -f artifacts/omega_github_auto2/mminus_registry.json
+          test -d artifacts/omega_github_auto2/issue_drafts
+          test -d artifacts/omega_github_auto2/pr_drafts
+          test -d artifacts/omega_github_auto2/codex_tasks
       - name: Print dashboard
         run: cat artifacts/omega_github_auto2/dashboard.md
       - name: Print OAK tribunal
