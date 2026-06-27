@@ -14,7 +14,7 @@ The first reviewable unit added:
 - tests;
 - CI.
 
-## New split unit: PolyglotLanguageEngine-T
+## Split unit: PolyglotLanguageEngine-T
 
 This branch adds a small OAK-safe language engine for GameMaster training.
 
@@ -28,7 +28,7 @@ It turns rough ideas into internal drafts for:
 - JSON contracts;
 - YAML plans;
 - GitHub issue drafts;
-- IP caution notes.
+- review-sensitive caution notes.
 
 ### Objects
 
@@ -36,13 +36,30 @@ It turns rough ideas into internal drafts for:
 - `LanguageRun`
 - `PolyglotLanguageEngine`
 
-### Boundary
+## Split unit: LanguageGM Rubric-T
 
-PolyglotLanguageEngine-T is an internal drafting and simulation unit. It does not claim official translation, legal advice, patent advice, or external certification.
+This branch also adds an internal evaluation layer for LanguageGM training.
+
+It scores LanguageRun outputs on:
+
+- clarity;
+- structure;
+- audience fit;
+- format fit;
+- OAK safety;
+- intent preservation;
+- drift;
+- hidden claims.
+
+### Objects
+
+- `LanguageRubricScores`
+- `LanguageGMEvaluation`
+- `LanguageGMRubric`
 
 ## Boundary
 
-Omega GAME T is a game, simulation, and research lab. It is not a tool for manipulation, unfair automation, or unsafe real-world instructions.
+Omega GAME T is a game, simulation, and research lab. It is not a tool for manipulation, unfair automation, unsafe real-world instructions, or external certification.
 
 ## Local test
 
@@ -58,4 +75,4 @@ python -m pytest
 3. Quest-CVCD;
 4. tests and docs;
 5. GameQualityScore benchmark;
-6. PolyglotLanguageEngine follow-ups: language curriculum, LanguageGM rubric, Markdown/JSON/YAML validators.
+6. language curriculum and Markdown/JSON/YAML validators.
