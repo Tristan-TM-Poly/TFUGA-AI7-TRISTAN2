@@ -145,7 +145,7 @@
       "status": "CANON"
     }
   ],
-  "generated_at": "2026-06-27T18:57:49+00:00",
+  "generated_at": "2026-06-27T19:22:21+00:00",
   "guardrails": {
     "allowed_output_dir": "reports/auto_genesis",
     "requires_human_review_for_code_changes": true,
