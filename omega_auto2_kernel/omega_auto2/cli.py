@@ -7,6 +7,7 @@ from .canonical import canonical_workflows
 from .diff_report import diff_json, diff_markdown
 from .exporters import suite_json, suite_markdown
 from .genesis import auto_genesis
+from .issue_draft import render_issue_draft, write_issue_draft
 from .oak_gate import evaluate_workflow
 from .orchestrator import run_orchestrator
 from .regression import load_baseline, regression_check
@@ -29,6 +30,15 @@ def cmd_forge(args: argparse.Namespace) -> int:
     payload.update(workflow.to_dict())
     payload.update(report.to_dict())
     print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_task_draft(args: argparse.Namespace) -> int:
+    if args.output:
+        path = write_issue_draft(args.task, args.output, output_format=args.format)
+        print(str(path))
+    else:
+        print(render_issue_draft(args.task, output_format=args.format), end="")
     return 0
 
 
@@ -101,6 +111,12 @@ def build_parser() -> argparse.ArgumentParser:
     forge = sub.add_parser("forge", help="Forge an OAK-safe workflow draft")
     forge.add_argument("task")
     forge.set_defaults(func=cmd_forge)
+
+    task_draft = sub.add_parser("task-draft", help="Generate a local task draft")
+    task_draft.add_argument("task")
+    task_draft.add_argument("--format", choices=["markdown", "json"], default="markdown")
+    task_draft.add_argument("--output", default=None)
+    task_draft.set_defaults(func=cmd_task_draft)
 
     genesis = sub.add_parser("genesis", help="Generate an AUTO-GENESIS report")
     genesis.add_argument("intent", nargs="?")
