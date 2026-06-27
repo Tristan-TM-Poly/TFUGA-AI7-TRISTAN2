@@ -6,7 +6,18 @@ CVCD quest generation, memory, and text-world simulation.
 
 from .core import Entity, Event, GameQualityScore, RuleKernel, WorldGraph
 from .cvcd import CVCDState, QuestCVCD, WorldCompressor
-from .forge import IssueForge, IssueSet, IssueSpec, LabelPlan, MilestonePlan, default_issue_forge
+from .forge import (
+    IssueForge,
+    IssueSet,
+    IssueSpec,
+    LabelPlan,
+    MilestonePlan,
+    SprintForge,
+    SprintPlan,
+    SprintTask,
+    default_issue_forge,
+    default_sprint_forge,
+)
 from .gm import GameMasterAgent, GMProposal
 from .gm_council import CouncilScores, GMCouncil, GMCouncilDecision, GMVote, default_gm_council
 from .memory import MMinusMemory, MPlusMemory
@@ -35,7 +46,11 @@ __all__ = [
     "IssueSpec",
     "LabelPlan",
     "MilestonePlan",
+    "SprintForge",
+    "SprintPlan",
+    "SprintTask",
     "default_issue_forge",
+    "default_sprint_forge",
     "GameMasterAgent",
     "GMProposal",
     "CouncilScores",
