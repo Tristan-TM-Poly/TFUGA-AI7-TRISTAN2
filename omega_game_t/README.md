@@ -8,12 +8,6 @@
 GameWorld_{t+1} = EXP(OAK(GM(CVCD(LOG(HGFM(GameWorld_t, Player_t, Rules_t))))))
 ```
 
-Traduction :
-
-```text
-Monde → compression de l'état → invariants fertiles → GameMaster → événements/quêtes/règles → validation OAK → monde suivant
-```
-
 ## MVP actuel
 
 Ce dossier contient un MVP Python pour transformer la théorie en artefact exécutable :
@@ -26,7 +20,8 @@ Ce dossier contient un MVP Python pour transformer la théorie en artefact exéc
 - `BoardGameEngine`
 - `ScienceSandboxEngine`
 - `CircuitDungeonEngine`
-- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`
+- `EnergyCivilizationEngine`
+- exemples `Quest-CVCD`, `BoardGame-T`, `ScienceSandbox-T`, `CircuitDungeon-T`, `EnergyCivilization-T`
 - tests unitaires
 - schémas JSON
 - CI GitHub Actions `pytest`
@@ -43,59 +38,53 @@ Moteur grille/plateau générique pour roguelike, tactique, pathfinding, straté
 
 ### ScienceSandbox-T
 
-Moteur de simulation jouable et OAK-safe pour transformer des théories scientifiques en expériences inspectables. Le MVP inclut :
+Moteur de simulation jouable et OAK-safe. Le MVP inclut :
 
 - `RLCStep` : circuit RLC série simplifié ;
 - `MicrogridStep` : bilan microgrid solaire/batterie/charge/pertes.
 
-Ces modèles sont pédagogiques et prototypables. Ils ne remplacent pas des solveurs physiques validés ni des mesures réelles.
-
 ### CircuitDungeon-T
 
-Jeu-puzzle virtuel au-dessus de `ScienceSandbox-T`. Les défis utilisent des circuits RLC et la fréquence de résonance pédagogique :
+Jeu-puzzle virtuel au-dessus de `ScienceSandbox-T`. Les défis utilisent des circuits RLC et une fréquence de résonance pédagogique.
 
-```text
-f0 = 1 / (2π√(LC))
-```
+### EnergyCivilization-T
 
-Le moteur enregistre les réussites dans M+, les erreurs dans M-, et garde OAK entre simulation pédagogique et réalité physique.
+Jeu-stratégie virtuel au-dessus de `MicrogridStep`. Une colonie possède une batterie, reçoit une production solaire, consomme une charge, subit des pertes, sert ou ne sert pas la demande, puis reçoit un score énergétique OAK.
 
 ## Structure
 
 ```text
 omega_game_t/
-  README.md
-  pyproject.toml
   docs/
     CIRCUIT_DUNGEON_T.md
+    ENERGY_CIVILIZATION_T.md
     OMEGA_GAME_T_MANIFESTO.md
     OAK_GAME_PROTOCOL.md
     SCIENCE_SANDBOX_T.md
   schemas/
     circuit_door.schema.json
+    energy_colony.schema.json
     event.schema.json
     oak_report.schema.json
     quest_blueprint.schema.json
     world_graph.schema.json
   omega_game/
-    core.py
-    cvcd.py
-    gm.py
-    oak.py
-    memory.py
     engines/
       boardgame.py
       circuit_dungeon.py
+      energy_civilization.py
       science_sandbox.py
       textworld.py
     examples/
       boardgame_t_demo.py
       circuit_dungeon_t_demo.py
+      energy_civilization_t_demo.py
       quest_cvcd_demo.py
       science_sandbox_t_demo.py
   tests/
     test_boardgame_t.py
     test_circuit_dungeon_t.py
+    test_energy_civilization_t.py
     test_omega_game_t.py
     test_science_sandbox_t.py
 ```
