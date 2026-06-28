@@ -1,0 +1,37 @@
+name: Omega AUTO2 P0 CI
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/omega_auto2_*_p0.py'
+      - 'omega_auto2_p0/**'
+      - 'tests/test_omega_auto2_*p0*.py'
+      - 'fixtures/omega_auto2/**'
+      - 'docs/omega-github-auto2/**'
+      - '.github/workflows/omega-auto2-p0-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p0-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile P0 sources
+        run: python -m compileall scripts omega_auto2_p0 tests
+
+      - name: Run API Gateway P0 tests
+        run: python -m unittest tests/test_omega_auto2_api_gateway_p0.py
+
+      - name: Run Usage Events P0 tests
+        run: python -m unittest tests/test_omega_auto2_usage_events_p0.py
+
+      - name: Run Spectral Core P0 tests
+        run: python -m unittest tests/test_omega_auto2_spectral_core_p0.py
+
+      - name: Run P0 integration tests
+        run: python -m unittest tests/test_omega_auto2_p0_integration.py
