@@ -1,0 +1,18 @@
+{
+  "request_id": "req_synth_001",
+  "namespace": "synthetic_lab",
+  "operation": "validate_spectrum",
+  "payload": {
+    "spectrum_id": "synthetic_spectrum_001",
+    "axis": [100.0, 101.0, 102.0],
+    "intensity": [0.1, 0.4, 0.2]
+  },
+  "metadata": {
+    "source": "synthetic_fixture",
+    "unit": "nm"
+  },
+  "oak_context": {
+    "mode": "offline_test",
+    "human_review_requested": false
+  }
+}
