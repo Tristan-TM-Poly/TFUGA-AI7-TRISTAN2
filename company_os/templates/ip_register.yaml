@@ -1,0 +1,69 @@
+# Ω-CORP-JARVIS-T initial IP register v1
+# Planning scaffold only. Ownership/assignment requires professional review and signed records.
+
+ip_register:
+  status: draft_inventory
+  default_rule: "Do not publicly disclose patentable or trade-secret material without IP review."
+  assets:
+    - id: IP001
+      name: "Ω-VTP-T++"
+      type: "software / method / tensor observable lift"
+      current_status: "prototype merged into repository"
+      proposed_container: "initial operating corporation after assignment or license"
+      disclosure_risk: medium
+      commercialization_paths:
+        - software package
+        - consulting tool
+        - licensing
+        - research collaboration
+    - id: IP002
+      name: "Ω-DE-TensorProd∞"
+      type: "software / method / nonlinear ODE-PDE linearization framework"
+      current_status: "prototype merged into repository"
+      proposed_container: "initial operating corporation after assignment or license"
+      disclosure_risk: high
+      commercialization_paths:
+        - simulation acceleration
+        - digital twins
+        - industrial optimization
+        - scientific tooling
+    - id: IP003
+      name: "Ω-ROI-OAK"
+      type: "financial decision framework / software module"
+      current_status: "prototype merged into repository"
+      proposed_container: "initial operating corporation after assignment or license"
+      disclosure_risk: medium
+      commercialization_paths:
+        - ROI audit
+        - enterprise reports
+        - SaaS decision layer
+    - id: IP004
+      name: "Datacenter Thermal OAK MVP"
+      type: "vertical application / optimization surrogate"
+      current_status: "prototype merged into repository"
+      proposed_container: "initial operating corporation"
+      disclosure_risk: medium
+      commercialization_paths:
+        - datacenter pilot
+        - energy optimization audit
+        - success-fee SaaS
+    - id: IP005
+      name: "Battery Residual Value OAK Engine"
+      type: "future vertical / BESS valuation and lifecycle optimization"
+      current_status: "concept / future prototype"
+      proposed_container: "future operating vertical or IP company"
+      disclosure_risk: high
+      commercialization_paths:
+        - BMS analytics
+        - asset acquisition diligence
+        - lifecycle optimization
+    - id: IP006
+      name: "Ω-CORP-JARVIS-T official"
+      type: "corporate operating system / workflow architecture"
+      current_status: "planning scaffold"
+      proposed_container: "initial operating corporation"
+      disclosure_risk: low_to_medium
+      commercialization_paths:
+        - internal operations
+        - founder OS product
+        - consulting methodology

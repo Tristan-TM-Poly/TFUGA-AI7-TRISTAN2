@@ -1,0 +1,82 @@
+# Ω-CORP-JARVIS-T automation workflow v1
+# This workflow prepares and tracks corporate actions. It does not perform legal filings automatically.
+
+corp_automation_workflow:
+  core_rule: "maximum zero-touch, never zero-control"
+  phases:
+    phase_0_prelegal:
+      status: active_in_chat_and_github
+      tasks:
+        - choose initial one-company architecture
+        - prepare formation packet
+        - prepare IP register
+        - prepare legal risk register
+        - prepare first offers
+        - prepare professional questions
+        - prepare official filing checklist
+      outputs:
+        - company_formation_packet.yaml
+        - ip_register.yaml
+        - legal_risk_register.yaml
+        - offers.yaml
+    phase_1_professional_review:
+      status: blocked_until_human_action
+      human_required: true
+      tasks:
+        - lawyer/accountant review of jurisdiction
+        - name search and name approval strategy
+        - share structure review
+        - tax/accounting setup advice
+        - IP assignment/licensing plan
+    phase_2_official_filing:
+      status: blocked_until_human_signature_and_payment
+      human_required: true
+      tasks:
+        - file incorporation or constitution
+        - pay official fees
+        - receive corporation number / NEQ if applicable
+        - file initial declaration if required
+    phase_3_post_formation:
+      status: after_official_creation
+      human_required: true
+      tasks:
+        - open bank account
+        - create bookkeeping system
+        - create minute book
+        - issue shares
+        - execute founder IP assignment or license
+        - set fiscal year
+        - register taxes if required
+    phase_4_operations:
+      status: after_bank_and_bookkeeping
+      tasks:
+        - create offer templates
+        - create lead tracker
+        - create proposal templates
+        - create invoice templates
+        - create OAK finance dashboard
+        - create validation reports
+    phase_5_scale:
+      status: trigger_based
+      triggers:
+        - first paid pilot
+        - signed LOI
+        - recurring SaaS revenue
+        - investor interest
+        - patent filing need
+      possible_actions:
+        - create subsidiary
+        - create holding/IP company
+        - raise financing
+        - file patents
+        - hire contractors/employees
+  forbidden_automation_without_explicit_human_approval:
+    - legal filing
+    - signature
+    - bank transaction
+    - tax registration
+    - contract execution
+    - IP transfer
+    - investor solicitation
+    - public financial claim
+    - patent disclosure

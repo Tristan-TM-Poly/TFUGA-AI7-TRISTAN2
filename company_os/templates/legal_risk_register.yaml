@@ -1,0 +1,52 @@
+# Ω-CORP-JARVIS-T M-minus legal/corporate risk register v1
+# This is an internal planning register, not legal advice.
+
+mminus_legal_corporate:
+  - id: L001
+    risk: "Creating too many companies too early"
+    consequence: "unnecessary legal, tax, accounting, and administrative overhead"
+    severity: high
+    mitigation: "start with one operating corporation; create subsidiaries only after triggers"
+    status: active_guardrail
+  - id: L002
+    risk: "Mixing personal and corporate finances"
+    consequence: "tax/accounting confusion and weakened corporate separation"
+    severity: high
+    mitigation: "separate bank account, bookkeeping, invoices, resolutions, expense policy"
+    status: active_guardrail
+  - id: L003
+    risk: "Publicly disclosing patentable or trade-secret material before IP strategy"
+    consequence: "loss of patent/trade-secret value or competitive advantage"
+    severity: high
+    mitigation: "IP review, invention disclosures, NDAs where appropriate, trade-secret classification"
+    status: active_guardrail
+  - id: L004
+    risk: "Unverified financial or performance claims"
+    consequence: "legal, customer, investor, and reputational exposure"
+    severity: high
+    mitigation: "Ω-ROI-OAK with verified value, costs, risk subtraction, and disclaimers"
+    status: active_guardrail
+  - id: L005
+    risk: "Contracts without liability limits, IP clauses, confidentiality, or scope boundaries"
+    consequence: "excess liability and IP leakage"
+    severity: high
+    mitigation: "lawyer-reviewed templates before external signature"
+    status: active_guardrail
+  - id: L006
+    risk: "Using external contractors without IP assignment"
+    consequence: "unclear ownership of code, docs, designs, or inventions"
+    severity: high
+    mitigation: "contractor agreements with IP assignment and confidentiality"
+    status: future_guardrail
+  - id: L007
+    risk: "Raising money without securities-law review"
+    consequence: "regulatory and investor-compliance issues"
+    severity: high
+    mitigation: "lawyer review before any investment solicitation"
+    status: active_guardrail
+  - id: L008
+    risk: "Automating official legal actions without human approval"
+    consequence: "incorrect filings, unauthorized obligations, compliance failures"
+    severity: high
+    mitigation: "human-in-the-loop locks for legal, tax, banking, contracts, IP"
+    status: active_guardrail

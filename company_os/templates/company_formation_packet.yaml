@@ -1,0 +1,71 @@
+# Ω-CORP-JARVIS-T official formation packet v1
+# Planning scaffold only. Requires human/legal/accounting review before official filing.
+
+formation_packet:
+  status: draft_for_review
+  jurisdiction_candidates:
+    - Quebec
+    - Canada federal plus Quebec registration if required
+  founder:
+    legal_name: "TODO"
+    residential_address: "TODO"
+    email: "TODO"
+    phone: "TODO"
+    roles:
+      - founder
+      - inventor
+      - initial director
+      - initial officer
+      - initial shareholder
+  company:
+    proposed_names:
+      - "Technologies Omega Tristan Inc."
+      - "Omega Tristan Technologies Inc."
+      - "Tensor Omega Systems Inc."
+    legal_form_candidate: "corporation / société par actions"
+    registered_office_address: "TODO"
+    business_purpose_short: "Software, AI, scientific R&D, optimization, licensing, consulting, and commercialization of intellectual property."
+    business_purpose_long: >
+      The corporation develops, owns, commercializes, and licenses software,
+      artificial-intelligence systems, scientific tools, simulation models,
+      optimization engines, automation architectures, data-analysis methods,
+      and related intellectual-property assets. It may provide R&D, consulting,
+      integration, training, prototyping, technical audit, energy optimization,
+      risk analysis, data management, software licensing, API, SaaS, and any
+      related activities permitted by law.
+  directors:
+    - name: "Tristan"
+      address: "TODO"
+      status: proposed
+  officers:
+    president: "Tristan"
+    secretary: "TODO or Tristan"
+    treasurer: "TODO or Tristan"
+  shareholders:
+    - name: "Tristan"
+      ownership_candidate_percent: 100
+      share_class: "common voting"
+  share_structure_candidates:
+    common_voting: "unlimited common voting shares"
+    preferred: "optional future investor/financing shares; professional review required"
+  fiscal_year_end_candidates:
+    - "December 31"
+    - "custom date recommended by accountant"
+  required_professional_questions:
+    - "Quebec or federal corporation for first entity?"
+    - "Do we need a holding company now or later?"
+    - "What share classes preserve flexibility for investors and IP?"
+    - "How should existing IP/code/theories be assigned or licensed to the company?"
+    - "Which assets should be trade secrets vs patent candidates?"
+    - "Which tax accounts are needed immediately?"
+    - "Which insurance is needed for software/AI/consulting?"
+    - "What liability limits should first contracts include?"
+  official_actions_human_required:
+    - name search
+    - incorporation/constitution filing
+    - payment of filing fees
+    - signatures
+    - tax account registrations
+    - bank account opening
+    - IP assignment execution
+    - contracts and NDAs
