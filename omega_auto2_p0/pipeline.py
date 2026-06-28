@@ -21,6 +21,21 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def normalize_spectral_payload(request: dict[str, Any]) -> dict[str, Any]:
+    """Return a spectrum-like payload compatible with the spectral core validator."""
+    payload = request.get("payload", {})
+    if not isinstance(payload, dict):
+        return {}
+    spectrum = dict(payload)
+    if "metadata" not in spectrum or not isinstance(spectrum.get("metadata"), dict):
+        request_metadata = request.get("metadata", {}) if isinstance(request.get("metadata"), dict) else {}
+        spectrum["metadata"] = {
+            "source": request_metadata.get("source", "synthetic_fixture"),
+            "axis_unit": request_metadata.get("axis_unit") or request_metadata.get("unit") or "index",
+        }
+    return spectrum
+
+
 def make_usage_event(request: dict[str, Any], gateway: dict[str, Any], spectral: dict[str, Any]) -> dict[str, Any]:
     """Create a synthetic usage event from a completed P0 request."""
     return {
@@ -54,7 +69,7 @@ def run_p0_pipeline(request: dict[str, Any]) -> dict[str, Any]:
         combined_status = OAK_FAIL
         next_action = "fix_gateway_input"
     else:
-        payload = request.get("payload", {})
+        payload = normalize_spectral_payload(request)
         spectral = spectral_oak_report(payload)
         spectral_env = envelope_from_module_report(
             {
