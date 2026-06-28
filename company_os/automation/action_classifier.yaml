@@ -1,0 +1,88 @@
+# Ω-AUTO²-CORP-JKD action classifier v1
+# Classifies actions by automation level. This file is a governance scaffold, not legal advice.
+
+action_classifier:
+  doctrine: "Automate what is safe; prefill what is blocked; queue what requires approval; never fake completion."
+  classes:
+    FULL_AUTO:
+      meaning: "Can be executed directly inside chat/GitHub/local docs without external legal or financial effect."
+      examples:
+        - generate documentation
+        - update GitHub files
+        - create checklists
+        - create reports
+        - classify IP inventory
+        - calculate ROI scenarios
+        - prepare draft templates
+        - create issue/backlog cards
+      default_outputs:
+        - generated_file
+        - report
+        - checklist
+        - mplus_or_mminus_entry
+    HUMAN_APPROVAL:
+      meaning: "Can be prepared fully but requires explicit human approval before external action."
+      examples:
+        - send email
+        - publish website or public claim
+        - contact client
+        - merge PR if ambiguous
+        - submit proposal draft
+        - schedule external meeting
+      default_outputs:
+        - approval_packet
+        - draft_message
+        - risk_summary
+        - next_minimal_human_action
+    LEGAL_SIGNATURE:
+      meaning: "Cannot be completed by automation alone because it requires signature, identity, payment, official authority, or legal capacity."
+      examples:
+        - incorporate company
+        - issue shares
+        - transfer IP
+        - sign NDA or contract
+        - open bank account
+        - apply for tax accounts
+      default_outputs:
+        - prefilled_packet
+        - signature_fields
+        - official_steps
+        - professional_review_flag
+    PROFESSIONAL_REVIEW:
+      meaning: "Requires lawyer, accountant, tax, IP, securities, insurance, or banking review."
+      examples:
+        - corporate structure choice
+        - tax registration strategy
+        - patent strategy
+        - investment or securities communication
+        - liability clauses
+        - employee/contractor agreements
+      default_outputs:
+        - professional_memo
+        - questions_list
+        - documents_to_review
+        - OAK_hold_status
+    FORBIDDEN_OR_UNSAFE:
+      meaning: "Must not be executed; redirect to safe alternative and record M-minus."
+      examples:
+        - forged signature
+        - false incorporation claim
+        - fake NEQ or corporation number
+        - guaranteed ROI or guaranteed trading profit
+        - misleading investor/customer claims
+        - unauthorized filing/payment/submission
+      default_outputs:
+        - refusal_reason
+        - safe_alternative
+        - mminus_entry
+  routing_rules:
+    - if: "external legal effect"
+      class: LEGAL_SIGNATURE
+    - if: "external communication but not legal filing"
+      class: HUMAN_APPROVAL
+    - if: "tax/legal/IP/securities uncertainty"
+      class: PROFESSIONAL_REVIEW
+    - if: "false claim or unauthorized action"
+      class: FORBIDDEN_OR_UNSAFE
+    - if: "internal docs/code/report only"
+      class: FULL_AUTO
