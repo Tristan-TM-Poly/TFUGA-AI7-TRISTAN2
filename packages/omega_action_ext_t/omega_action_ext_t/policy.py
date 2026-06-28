@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from .core import ActionDNA, AutonomyLevel, Decision, DryRunReport
+from .leak_scan import has_findings
 
 
 class OAKGate:
@@ -19,6 +20,12 @@ class OAKGate:
         reasons: list[str] = []
         approvals: list[str] = []
         blockers: list[str] = []
+
+        payload_text = str(action.metadata.get("payload_text", "")) if action.metadata else ""
+        if action.public and payload_text and has_findings(payload_text):
+            blockers.append("public_payload_leak_finding")
+            reasons.append("Public payload has obvious sensitive markers and must be blocked.")
+            return Decision.BLOCK, AutonomyLevel.L5_BLOCKED, reasons, approvals, blockers
 
         if action.destructive and not action.rollback:
             blockers.append("missing_rollback")
