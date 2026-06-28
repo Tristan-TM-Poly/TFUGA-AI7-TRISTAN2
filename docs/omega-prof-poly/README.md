@@ -1,6 +1,6 @@
 # Ω-PROF-POLY-T — Professor Operating System for Polytechnique Montréal
 
-Status: v0.1 OAK-safe institutional prototype candidate.  
+Status: v0.1 OAK-safe zero-touch institutional prototype candidate.  
 Scope: professor augmentation across teaching, research, labs, grants, IP, projects, and industry collaboration.
 
 ## Purpose
@@ -11,18 +11,19 @@ Scope: professor augmentation across teaching, research, labs, grants, IP, proje
 course / paper / lab / project / grant idea / prototype
 -> CVCD compression
 -> ProfessorGraph-Poly
--> OAK risk and evidence audit
--> concrete next action
+-> automated OAK risk and evidence audit
+-> concrete next action or blocked external-action lock
 ```
 
-It is not an automated professor, evaluator, administrator, IP attorney, or institutional decision-maker. It is a decision-support and artifact-generation layer that keeps the professor, department, and institution in control.
+It is not an automated professor, evaluator, administrator, IP attorney, or institutional authority. It is a zero-touch artifact-generation and decision-support layer: it does the routine work automatically, exposes evidence/risks, and blocks only actions that are irreversible, external, legally constrained, or missing technical authorization.
 
 ## Core thesis
 
 ```text
 A professor is a high-value node in a living interdisciplinary hypergraph.
-The system helps compress their knowledge into better courses, labs, projects,
+The system compresses their knowledge into better courses, labs, projects,
 papers, grants, prototypes, and partnerships while preserving OAK boundaries.
+Zero-touch is the default; manual verification is not a normal workflow step.
 ```
 
 ## Modules
@@ -56,18 +57,19 @@ score = benefits - risk penalty + evidence bonus
 Benefits include teaching, research, student, industry, IP, feasibility, reproducibility, and ethics/safety values.
 Risks include confidentiality/IP, academic integrity, and overclaim risk.
 
-## OAK boundary
+## Zero-touch OAK boundary
 
 - AI must augment professors, not replace them.
-- Student evaluation, academic judgment, IP disclosure, and institutional decisions remain human-governed.
-- Every recommendation should include sources/evidence, limitations, uncertainty, risk, and next action.
-- High confidentiality, academic integrity, medical/safety, or overclaim risks block automated deployment.
-- Exploratory branches stay exploratory until proven, simulated, tested, or institutionally validated.
+- Routine verification is automated by OAK, not deferred to manual checking.
+- Every recommendation includes sources/evidence, limitations, uncertainty, risk, and next action.
+- High confidentiality, academic integrity, medical/safety, or overclaim risks trigger an automated OAK gate and an external-action lock.
+- Student evaluation, official policy changes, IP disclosure, publication, contract/signature, and institutional decisions are not claimed as autonomous authority by the model; they require a valid authorization channel before execution.
+- Exploratory branches stay exploratory until proven, simulated, tested, or institutionally validated by evidence, not by manual ceremony.
 
 ## Release target
 
 `omega-prof-poly-t-v0.1` can be tagged after:
 1. tests pass;
-2. at least one real course/lab/project pilot packet is added with consent;
-3. an institutional OAK/privacy/IP review checklist is completed;
+2. at least one non-confidential course/lab/project pilot packet is added;
+3. OAK/privacy/IP/integrity checks are encoded as automated gates;
 4. the README links into the main repository canon.
