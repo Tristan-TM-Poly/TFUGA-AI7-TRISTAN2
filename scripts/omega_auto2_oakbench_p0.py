@@ -100,7 +100,9 @@ def main() -> int:
     report = run_suite(pathlib.Path(args.suite), pathlib.Path(args.mminus))
     text = json.dumps(report, indent=2, sort_keys=True)
     if args.output:
-        pathlib.Path(args.output).write_text(text + "\n", encoding="utf-8")
+        output = pathlib.Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(text + "\n", encoding="utf-8")
     print(text)
     return 0 if report["oak_status"] == "PASS" else 1
 
