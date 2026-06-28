@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rosette-tristan"
-version = "0.1.8"
+version = "0.1.9"
 description = "Ω-ROSETTE-T: document to LaTeX, theory graph, code skeleton, absorption and OAK report."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -28,6 +28,7 @@ rosette-source-crop = "rosette_tristan.source_crop_compare:main"
 rosette-visual-oak = "rosette_tristan.visual_oak:main"
 rosette-bench = "rosette_tristan.bench_runner:main"
 rosette-bench-corpus = "rosette_tristan.bench_corpus:main"
+rosette-corpus-bench = "rosette_tristan.corpus_bench_runner:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
