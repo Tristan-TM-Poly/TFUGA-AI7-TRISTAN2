@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from .models import InfoObject
@@ -37,8 +37,8 @@ class Info2Graph:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "nodes": [node.__dict__ for node in self.nodes.values()],
-            "edges": [edge.__dict__ for edge in self.edges],
+            "nodes": [asdict(node) for node in self.nodes.values()],
+            "edges": [asdict(edge) for edge in self.edges],
         }
 
     @classmethod
