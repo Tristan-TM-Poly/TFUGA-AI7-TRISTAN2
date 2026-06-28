@@ -1,0 +1,28 @@
+# AIT-Tristan2 Decision Card schema v1
+
+# Decision cards compress complex choices into minimal founder input.
+
+decision_card_schema:
+  id: "DEC-0000"
+  title: "string"
+  question: "string"
+  recommendation: "string"
+  options:
+    A:
+      label: "string"
+      effect: "string"
+      risk: "string"
+    B:
+      label: "string"
+      effect: "string"
+      risk: "string"
+    C:
+      label: "string"
+      effect: "string"
+      risk: "string"
+  default_option: "A | B | C"
+  founder_input_required: "A/B/C or yes/no"
+  time_budget_seconds: 30
+  oak_notes:
+    - "string"
+  next_execution_card: "EXEC-0000"

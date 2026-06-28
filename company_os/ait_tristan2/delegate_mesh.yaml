@@ -1,0 +1,65 @@
+# AIT-Tristan2 Delegate Mesh v1
+# Defines roles that can receive prepared packets and return proof of completion.
+
+delegate_mesh:
+  principle: "AIT prepares, delegate executes within scope, proof returns to OAK."
+  roles:
+    admin_delegate:
+      purpose: "Scheduling, document organization, follow-ups, and non-sensitive admin tasks."
+      allowed:
+        - organize documents
+        - prepare folders
+        - schedule meetings from approved instructions
+        - follow up on approved non-sensitive tasks
+      not_allowed:
+        - sign documents
+        - make payments
+        - submit official forms without explicit approval
+        - disclose confidential assets
+      proof_required:
+        - completion_note
+        - confirmation_email_or_screenshot
+    professional_review_delegate:
+      purpose: "Review sensitive structure, tax/accounting, asset, and contract questions."
+      input_packet:
+        - review_packet.md
+        - company_formation_packet.yaml
+        - ip_register.yaml
+        - legal_risk_register.yaml
+      output_required:
+        - written recommendation
+        - issues list
+        - approved next steps
+    registered_address_or_mail_delegate:
+      purpose: "Handle address/mail/document-reception workflows if selected."
+      allowed:
+        - receive mail
+        - scan or forward documents
+        - confirm receipt
+      proof_required:
+        - service confirmation
+        - received document record
+    banking_preparation_delegate:
+      purpose: "Prepare appointment/document checklist for account setup."
+      allowed:
+        - checklist preparation
+        - appointment scheduling after approval
+      proof_required:
+        - appointment confirmation
+        - required documents list
+    product_ops_delegate:
+      purpose: "Help move product docs, demos, and benchmark tasks forward."
+      allowed:
+        - documentation cleanup
+        - issue tracking
+        - dataset organization
+        - report formatting
+      proof_required:
+        - updated file
+        - completed checklist
+  universal_controls:
+    scope_required: true
+    confidentiality_required: true
+    spending_limit_required: true
+    approval_required_for_external_actions: true
+    proof_required_for_completion: true

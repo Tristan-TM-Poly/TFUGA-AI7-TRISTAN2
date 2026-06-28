@@ -1,0 +1,69 @@
+# AIT-Tristan2 FREEDOM-100 protocol v1
+# Goal: remove avoidable founder friction while preserving confirmation, authority, and safety gates.
+
+freedom_protocol:
+  status: LIVE_AUTO_FREEDOM
+  objective: "Eliminate avoidable founder friction through automation, delegation, approval queues, and proof collection."
+  human_input_budget:
+    target_minutes_per_week: 5
+    target_physical_actions_per_month: 0
+    target_unprepared_external_actions: 0
+    target_proof_collected_percent: 100
+  queues:
+    AUTO_NOW:
+      description: "Safe internal work that can be executed directly."
+      examples:
+        - generate docs
+        - update registers
+        - prepare reports
+        - create GitHub branches and PRs
+    APPROVE_ONE_TAP:
+      description: "Prepared actions that need a compressed approval."
+      examples:
+        - send prepared message
+        - select option A/B/C
+        - approve publication
+    DELEGATE:
+      description: "Tasks assigned to an authorized human or service."
+      examples:
+        - scheduling
+        - document handling
+        - physical mail
+        - administrative follow-up
+    REVIEW_GATE:
+      description: "Tasks requiring qualified review before action."
+      examples:
+        - entity setup
+        - tax/accounting setup
+        - asset transfer
+        - customer templates
+    WAITING_FOR_PROOF:
+      description: "External action claimed complete, proof required."
+      examples:
+        - confirmation email
+        - receipt
+        - PDF record
+        - official identifier
+    M_MINUS_HOLD:
+      description: "Unsafe, ambiguous, or blocked tasks."
+  operating_loop:
+    - ingest_task
+    - classify_action
+    - automate_or_prepare
+    - delegate_or_queue
+    - collect_proof
+    - update_registers
+    - archive_result
+    - record_mplus_or_mminus
+  forbidden_status_behavior:
+    - "Do not mark external actions confirmed without proof."
+    - "Do not represent candidate names, drafts, or packets as completed registrations."
+    - "Do not treat a prepared document as a signed document."
+  default_founder_interface:
+    decision_format: "A/B/C or yes/no"
+    max_context: "one screen"
+    include:
+      - recommendation
+      - risk
+      - default_safe_option
+      - next minimal action
