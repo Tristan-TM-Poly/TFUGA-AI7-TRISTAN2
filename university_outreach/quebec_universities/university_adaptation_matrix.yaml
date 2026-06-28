@@ -1,0 +1,191 @@
+# Quebec university adaptation matrix
+# Use this to customize the master email before any outreach.
+
+adaptation_matrix:
+  ETS:
+    name: "École de technologie supérieure (ÉTS)"
+    best_angle:
+      - engineering prototypes
+      - industrial optimization
+      - datacenter thermal OAK
+      - applied AI and digital twins
+    suggested_contact_type:
+      - research partnerships
+      - engineering labs
+      - innovation office
+  Polytechnique_Montreal:
+    name: "Polytechnique Montréal"
+    best_angle:
+      - systems engineering
+      - nonlinear dynamics
+      - optimization
+      - energy and materials
+    suggested_contact_type:
+      - research office
+      - engineering faculty
+      - technology transfer
+  INRS:
+    name: "Institut national de la recherche scientifique (INRS)"
+    best_angle:
+      - energy
+      - materials
+      - telecom
+      - water and environment
+      - research commercialization
+    suggested_contact_type:
+      - research partnerships
+      - technology transfer
+  Universite_Laval:
+    name: "Université Laval"
+    best_angle:
+      - AI scientific tooling
+      - energy systems
+      - optics/materials
+      - innovation and entrepreneurship
+    suggested_contact_type:
+      - vice-rectorat recherche
+      - technology transfer
+      - innovation office
+  Universite_de_Sherbrooke:
+    name: "Université de Sherbrooke"
+    best_angle:
+      - applied research
+      - quantum/AI/materials/energy where relevant
+      - engineering pilots
+      - valorization
+    suggested_contact_type:
+      - research partnerships
+      - innovation/transfer office
+  Universite_de_Montreal:
+    name: "Université de Montréal"
+    best_angle:
+      - AI and data science
+      - scientific discovery
+      - graph/tensor methods
+      - research digestion
+    suggested_contact_type:
+      - research office
+      - AI/data science groups
+  HEC_Montreal:
+    name: "HEC Montréal"
+    best_angle:
+      - ROI-OAK
+      - innovation management
+      - commercialization
+      - technology strategy
+    suggested_contact_type:
+      - entrepreneurship/innovation
+      - research chair/group
+  McGill:
+    name: "McGill University"
+    best_angle:
+      - scientific AI
+      - systems modeling
+      - materials/energy/bioengineering where relevant
+      - technology transfer
+    suggested_contact_type:
+      - research office
+      - tech transfer
+  Concordia:
+    name: "Concordia University"
+    best_angle:
+      - applied AI
+      - engineering systems
+      - sustainability/energy
+      - innovation ecosystem
+    suggested_contact_type:
+      - research partnerships
+      - engineering/computer science
+  UQTR:
+    name: "Université du Québec à Trois-Rivières (UQTR)"
+    best_angle:
+      - hydrogen/energy themes where relevant
+      - industrial systems
+      - regional innovation
+      - applied pilots
+    suggested_contact_type:
+      - research office
+      - innovation/partnerships
+  UQAC:
+    name: "Université du Québec à Chicoutimi (UQAC)"
+    best_angle:
+      - aluminum/materials
+      - regional industry
+      - energy and sensors
+      - applied AI
+    suggested_contact_type:
+      - research partnerships
+      - engineering/sciences
+  UQAM:
+    name: "Université du Québec à Montréal (UQAM)"
+    best_angle:
+      - data/science interfaces
+      - societal impact
+      - digital humanities where relevant
+      - knowledge graphs
+    suggested_contact_type:
+      - research office
+      - relevant departments
+  UQAR:
+    name: "Université du Québec à Rimouski (UQAR)"
+    best_angle:
+      - marine/environmental systems
+      - regional innovation
+      - sensors/data
+      - climate/ecology modeling
+    suggested_contact_type:
+      - research partnerships
+  UQO:
+    name: "Université du Québec en Outaouais (UQO)"
+    best_angle:
+      - applied AI
+      - regional development
+      - public-sector/innovation workflows
+    suggested_contact_type:
+      - research office
+  UQAT:
+    name: "Université du Québec en Abitibi-Témiscamingue (UQAT)"
+    best_angle:
+      - mining/materials/environment
+      - regional industry
+      - sensors and data
+      - energy systems
+    suggested_contact_type:
+      - research partnerships
+  ENAP:
+    name: "École nationale d'administration publique (ENAP)"
+    best_angle:
+      - governance
+      - public-sector AI
+      - services optimization
+      - OAK decision systems
+    suggested_contact_type:
+      - research groups
+      - public administration innovation
+  TELUQ:
+    name: "Université TÉLUQ"
+    best_angle:
+      - learning systems
+      - remote education
+      - AI tutoring/workflows
+      - knowledge compression
+    suggested_contact_type:
+      - research office
+      - education technology researchers
+  Bishops:
+    name: "Bishop's University"
+    best_angle:
+      - focused collaboration
+      - teaching/research prototypes
+      - data/science projects
+    suggested_contact_type:
+      - research office
+      - science departments
+  BCI:
+    name: "Bureau de coopération interuniversitaire (BCI)"
+    best_angle:
+      - interuniversity coordination
+      - research/innovation mapping
+      - Quebec-wide scientific and patent digest
+    suggested_contact_type:
+      - coordination/administration contact
