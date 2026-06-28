@@ -33,11 +33,11 @@ Exemples de questions traitées :
 
 ```text
 omega_unc2_t/
-  u2_types.py       # dataclasses U2Claim, U2Vector, EvidencePacket
-  scoring.py        # U1/U2/risk/maturity/priority/confidence-debt
-  oak_gate.py       # OAK-U²Gate et statuts BLACK/RED/ORANGE/YELLOW/GREEN/BLUE/GOLD
-  calibration.py    # ECE1, méta-ECE2, résidu de l’incertitude
-  unknown_unknown.py# radar d’inconnus inconnus
+  u2_types.py     # dataclasses U2Claim, EvidencePacket, OAKU2Result
+  scoring.py      # U1/U2/risk/maturity/priority/confidence-debt
+  oak_gate.py     # OAK-U²Gate et statuts BLACK/RED/ORANGE/YELLOW/GREEN/BLUE/GOLD
+  calibration.py  # ECE1, méta-ECE2, résidu de l’incertitude
+  domain_radar.py # score de prudence hors-domaine / source-gap / résidus anormaux
 ```
 
 ## Exemple minimal
