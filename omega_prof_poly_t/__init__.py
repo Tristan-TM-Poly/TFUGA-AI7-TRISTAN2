@@ -1,6 +1,7 @@
 """Omega-PROF-POLY-T package."""
 
 from .absorb_public_research import AbsorptionReport, absorb_public_records, demo_public_research_records
+from .claim_graph import ClaimGraph, ClaimNode, build_claim_graph
 from .core import (
     Evidence,
     OAKDecision,
@@ -14,7 +15,9 @@ from .course_memory_minus import CourseAntiError, CourseMemoryMinus, build_cours
 from .coursecvcd import CourseCVCDPacket, CourseInput, generate_coursecvcd
 from .grant_forge import GrantInput, GrantPacket, forge_grant, grant_score
 from .ip_oak_gate import IPGatePacket, IPInput, IPStatus, classify_ip
+from .json_exports import packet_digest, to_deterministic_json, to_plain_data
 from .lab_oakbench import LabInput, LabOAKBenchPacket, generate_lab_oakbench
+from .method_graph import MethodGraph, MethodNode, build_method_graph
 from .poly_research_twin import PolyResearchTwin, build_poly_research_twin
 from .prior_art_packet import PriorArtPacket, generate_prior_art_packet
 from .professor_genome import ProfessorResearchGenome, build_all_professor_genomes, build_professor_genome
@@ -22,12 +25,21 @@ from .professor_graph import HyperEdge, Node, ProfessorGraph, demo_professor_gra
 from .project_forge import ProjectInput, ProjectPacket, forge_project
 from .reports import render_packet_report
 from .research_atom import ResearchAtom, atom_from_public_record
+from .research_opportunity_compiler import (
+    ResearchOpportunityBundle,
+    ResearchOpportunityCompilation,
+    compile_atom_opportunities,
+    compile_research_opportunities,
+)
 from .zero_touch_oak import BlockedActionPacket, GateStatus, OAKCompileResult, compile_oak
 
 __all__ = [
     "AbsorptionReport",
     "absorb_public_records",
     "demo_public_research_records",
+    "ClaimGraph",
+    "ClaimNode",
+    "build_claim_graph",
     "Evidence",
     "OAKDecision",
     "OAKStatus",
@@ -49,9 +61,15 @@ __all__ = [
     "IPInput",
     "IPStatus",
     "classify_ip",
+    "packet_digest",
+    "to_deterministic_json",
+    "to_plain_data",
     "LabInput",
     "LabOAKBenchPacket",
     "generate_lab_oakbench",
+    "MethodGraph",
+    "MethodNode",
+    "build_method_graph",
     "PolyResearchTwin",
     "build_poly_research_twin",
     "PriorArtPacket",
@@ -69,6 +87,10 @@ __all__ = [
     "render_packet_report",
     "ResearchAtom",
     "atom_from_public_record",
+    "ResearchOpportunityBundle",
+    "ResearchOpportunityCompilation",
+    "compile_atom_opportunities",
+    "compile_research_opportunities",
     "BlockedActionPacket",
     "GateStatus",
     "OAKCompileResult",
