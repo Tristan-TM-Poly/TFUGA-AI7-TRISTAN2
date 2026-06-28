@@ -11,8 +11,9 @@ Living status board for the first Omega AUTO2 product spine.
 | Spectral Core | merged | OAK-3 synthetic | yes | #127-#128 | #131 |
 | P0 Integration Spine | merged | OAK-3 synthetic | yes | integration | #132 |
 | Spectral Cleaning | merged | OAK-3 synthetic | yes | cleaning batch | #135 |
-| P0 OAKBench / M-minus | this PR | OAK-3 candidate | yes | benchmark registry | this PR |
-| Demo Pack P0 | next | OAK-1 planned | planned | TBD | TBD |
+| P0 OAKBench / M-minus | merged | OAK-3 synthetic | yes | benchmark registry | #137 |
+| Demo Pack P0 | this PR | OAK-3 candidate | yes | demo report | this PR |
+| Review Pack P0 | next | OAK-1 planned | planned | TBD | TBD |
 
 ## P0 Product Spine
 
@@ -25,6 +26,7 @@ Request Envelope
 → Usage Event
 → Combined OAK Report
 → OAKBench Synthetic Report
+→ Demo Pack Before/After Report
 → Next Action
 ```
 
@@ -42,7 +44,7 @@ P0 does not claim production readiness. P0 makes the wedge testable, measurable,
 
 ## Next candidates
 
-1. `demo_pack_p0_v1`
-2. `before_after_report_v1`
+1. `review_pack_p0_v1`
+2. `before_after_markdown_report_v1`
 3. `mminus_registry_expansion_v1`
 4. `spectral_benchmarks_expansion_v1`

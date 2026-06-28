@@ -43,6 +43,9 @@ jobs:
       - name: Run OAKBench P0 tests
         run: python -m unittest tests/test_omega_auto2_oakbench_p0.py
 
+      - name: Run Demo Pack P0 tests
+        run: python -m unittest tests/test_omega_auto2_demo_pack_p0.py
+
       - name: Generate OAKBench P0 report
         run: |
           mkdir -p artifacts/omega_auto2
@@ -58,3 +61,9 @@ jobs:
           raise SystemExit(0 if report['oak_status'] == 'PASS' else 1)
           PY
           test -s artifacts/omega_auto2/oakbench_p0_report.json
+
+      - name: Generate Demo Pack P0 report
+        run: |
+          mkdir -p artifacts/omega_auto2
+          python scripts/omega_auto2_demo_pack_p0.py --output artifacts/omega_auto2/demo_pack_p0_report.json
+          test -s artifacts/omega_auto2/demo_pack_p0_report.json
