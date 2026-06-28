@@ -1,0 +1,11 @@
+{
+  "spectrum_id": "synthetic_cleaning_spectrum_001",
+  "axis": [100.0, 101.0, 102.0, 103.0, 104.0, 105.0, 106.0],
+  "intensity": [1.0, 1.1, 1.2, 8.5, 1.4, 1.5, 1.6],
+  "metadata": {
+    "source": "synthetic_fixture",
+    "axis_unit": "nm",
+    "instrument": "synthetic_generator",
+    "contains_customer_data": false
+  }
+}
