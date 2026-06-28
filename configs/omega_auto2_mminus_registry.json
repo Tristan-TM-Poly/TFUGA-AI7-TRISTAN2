@@ -1,0 +1,87 @@
+{
+  "registry_id": "omega_auto2_mminus_registry_p0",
+  "version": "0.1.0",
+  "status": "synthetic_p0",
+  "entries": [
+    {
+      "id": "mminus_gateway_missing_required_field_v1",
+      "module": "api_gateway",
+      "failure": "missing_required_field",
+      "detector": "validate_input_envelope",
+      "severity": "high",
+      "example_fixture": "fixtures/omega_auto2/api_gateway/invalid_request.json",
+      "anti_rule": "Never route an API gateway envelope before required fields are validated.",
+      "oak_action": "FAIL"
+    },
+    {
+      "id": "mminus_gateway_unsupported_operation_v1",
+      "module": "api_gateway",
+      "failure": "unsupported_operation",
+      "detector": "validate_input_envelope",
+      "severity": "high",
+      "example_fixture": "fixtures/omega_auto2/api_gateway/invalid_request.json",
+      "anti_rule": "Never route operations outside the explicit P0 allowlist.",
+      "oak_action": "FAIL"
+    },
+    {
+      "id": "mminus_usage_negative_units_v1",
+      "module": "usage_events",
+      "failure": "units_must_be_non_negative",
+      "detector": "validate_usage_event",
+      "severity": "medium",
+      "example_fixture": "fixtures/omega_auto2/usage_events/invalid_event.json",
+      "anti_rule": "Never normalize usage events with negative units.",
+      "oak_action": "FAIL"
+    },
+    {
+      "id": "mminus_axis_not_monotonic_v1",
+      "module": "spectral_core",
+      "failure": "axis_not_monotonic",
+      "detector": "validate_axis",
+      "severity": "medium",
+      "example_fixture": "fixtures/omega_auto2/spectral_core/invalid_spectrum.json",
+      "anti_rule": "Never assume spectral axis order; validate monotonicity first.",
+      "oak_action": "FAIL"
+    },
+    {
+      "id": "mminus_axis_unit_unsupported_v1",
+      "module": "spectral_core",
+      "failure": "unsupported_axis_unit",
+      "detector": "validate_axis",
+      "severity": "medium",
+      "example_fixture": "fixtures/omega_auto2/spectral_core/invalid_spectrum.json",
+      "anti_rule": "Never interpret a spectral axis without a supported unit or explicit warning.",
+      "oak_action": "FAIL"
+    },
+    {
+      "id": "mminus_intensity_value_invalid_v1",
+      "module": "spectral_core",
+      "failure": "intensity_value_not_finite_number",
+      "detector": "validate_spectrum_schema",
+      "severity": "high",
+      "example_fixture": "fixtures/omega_auto2/spectral_core/invalid_spectrum.json",
+      "anti_rule": "Never process intensity arrays before finite-number validation.",
+      "oak_action": "FAIL"
+    },
+    {
+      "id": "mminus_cleaning_schema_failure_v1",
+      "module": "spectral_cleaning",
+      "failure": "spectrum_schema_failure",
+      "detector": "clean_spectrum",
+      "severity": "high",
+      "example_fixture": "fixtures/omega_auto2/spectral_cleaning/invalid_cleaning_spectrum.json",
+      "anti_rule": "Never clean a spectrum that fails schema validation.",
+      "oak_action": "FAIL"
+    },
+    {
+      "id": "mminus_baseline_axis_mismatch_v1",
+      "module": "spectral_cleaning",
+      "failure": "baseline_requires_matching_axis_and_intensity",
+      "detector": "estimate_linear_baseline",
+      "severity": "medium",
+      "example_fixture": "fixtures/omega_auto2/spectral_cleaning/invalid_cleaning_spectrum.json",
+      "anti_rule": "Never estimate baseline when axis and intensity lengths differ.",
+      "oak_action": "FAIL"
+    }
+  ]
+}

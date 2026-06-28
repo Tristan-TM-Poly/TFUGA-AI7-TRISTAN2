@@ -1,0 +1,18 @@
+{
+  "suite_id": "omega_auto2_p0_benchmark_suite",
+  "version": "0.1.0",
+  "cases": [
+    {
+      "case_id": "gateway_valid_pipeline_pass",
+      "input_fixture": "fixtures/omega_auto2/api_gateway/valid_request.json",
+      "expected_oak_status": "PASS",
+      "expected_next_action": "ready_for_oakbench_p0"
+    },
+    {
+      "case_id": "gateway_invalid_pipeline_fail",
+      "input_fixture": "fixtures/omega_auto2/api_gateway/invalid_request.json",
+      "expected_oak_status": "FAIL",
+      "expected_next_action": "fix_gateway_input"
+    }
+  ]
+}

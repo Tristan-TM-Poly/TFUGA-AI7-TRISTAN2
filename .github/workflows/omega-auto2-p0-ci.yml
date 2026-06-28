@@ -7,6 +7,7 @@ on:
       - 'omega_auto2_p0/**'
       - 'tests/test_omega_auto2_*p0*.py'
       - 'fixtures/omega_auto2/**'
+      - 'configs/omega_auto2_mminus_registry.json'
       - 'docs/omega-github-auto2/**'
       - '.github/workflows/omega-auto2-p0-ci.yml'
   workflow_dispatch:
@@ -38,3 +39,22 @@ jobs:
 
       - name: Run P0 integration tests
         run: python -m unittest tests/test_omega_auto2_p0_integration.py
+
+      - name: Run OAKBench P0 tests
+        run: python -m unittest tests/test_omega_auto2_oakbench_p0.py
+
+      - name: Generate OAKBench P0 report
+        run: |
+          mkdir -p artifacts/omega_auto2
+          python - <<'PY'
+          import json
+          import pathlib
+          from scripts.omega_auto2_oakbench_p0 import run_suite
+
+          report = run_suite(repo_root=pathlib.Path.cwd())
+          output = pathlib.Path('artifacts/omega_auto2/oakbench_p0_report.json')
+          output.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps(report, indent=2, sort_keys=True))
+          raise SystemExit(0 if report['oak_status'] == 'PASS' else 1)
+          PY
+          test -s artifacts/omega_auto2/oakbench_p0_report.json
