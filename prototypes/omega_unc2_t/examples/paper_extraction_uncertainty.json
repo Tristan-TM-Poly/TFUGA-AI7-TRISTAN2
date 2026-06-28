@@ -1,0 +1,35 @@
+{
+  "claim": "Rosette-Tristan extracted an equation accurately from a scientific PDF.",
+  "estimate": "LaTeX extraction accepted by render-diff check",
+  "uncertainty_u1": {
+    "ocr_error": 0.18,
+    "layout_ambiguity": 0.25,
+    "symbol_confusion": 0.22,
+    "semantic_context": 0.35
+  },
+  "meta_uncertainty_u2": {
+    "single_extractor_risk": 0.60,
+    "bbox_alignment_uncertainty": 0.30,
+    "render_diff_reliability": 0.20,
+    "source_page_traceability": 0.10
+  },
+  "evidence_strength": 0.62,
+  "residual_score": 0.18,
+  "decision_cost": 0.50,
+  "reversibility": 0.90,
+  "fertility": 0.80,
+  "value": 0.75,
+  "domain_valid_when": ["page and bounding box are retained", "rendered LaTeX is compared against source image"],
+  "domain_invalid_when": ["OCR-only extraction without page trace", "using extracted equation as proof without verification"],
+  "counter_hypotheses": ["OCR may preserve visual form but alter mathematical meaning"],
+  "evidence": {
+    "sources": ["page:4", "bbox:[120,330,450,370]"],
+    "experiments": ["render-diff score below threshold", "dimensional check pass"],
+    "counterexamples": [],
+    "notes": ["High extraction confidence does not imply scientific claim truth."]
+  },
+  "metadata": {
+    "displayed_confidence": 0.86,
+    "oak_context": "Rosette-Tristan"
+  }
+}
