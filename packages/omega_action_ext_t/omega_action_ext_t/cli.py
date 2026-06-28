@@ -8,7 +8,10 @@ from pathlib import Path
 from typing import Any
 
 from .core import ActionDNA, RiskTensor
+from .manifest import ActionManifest
+from .oakbench import score_report
 from .policy import OAKGate
+from .validators import validate_payload
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -17,6 +20,10 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def action_from_dict(data: dict[str, Any]) -> ActionDNA:
+    errors = validate_payload(data)
+    if errors:
+        raise ValueError("invalid action payload: " + ", ".join(errors))
+
     risk_data = data.get("risk", {}) or {}
     risk = RiskTensor(
         legal=int(risk_data.get("legal", 0)),
@@ -48,16 +55,28 @@ def action_from_dict(data: dict[str, Any]) -> ActionDNA:
     )
 
 
+def build_output(action: ActionDNA) -> dict[str, Any]:
+    manifest = ActionManifest.compile(action, OAKGate())
+    report = manifest.dry_run
+    return {
+        "manifest": manifest.to_dict(),
+        "oakbench_score": score_report(report).to_dict(),
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if not argv:
         print("Usage: omega-action ACTION.json", file=sys.stderr)
         return 2
 
-    action = action_from_dict(_load_json(Path(argv[0])))
-    report = OAKGate().dry_run(action)
-    print(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
-    return 0
+    try:
+        action = action_from_dict(_load_json(Path(argv[0])))
+        print(json.dumps(build_output(action), indent=2, ensure_ascii=False, sort_keys=True))
+        return 0
+    except Exception as exc:  # CLI boundary: surface readable validation error.
+        print(f"omega-action error: {exc}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":
