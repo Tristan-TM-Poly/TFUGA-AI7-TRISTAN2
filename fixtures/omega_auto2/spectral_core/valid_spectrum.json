@@ -1,0 +1,10 @@
+{
+  "spectrum_id": "synthetic_spectrum_001",
+  "axis": [100.0, 101.0, 102.0, 103.0],
+  "intensity": [0.1, 0.4, 0.2, 0.3],
+  "metadata": {
+    "source": "synthetic_fixture",
+    "axis_unit": "nm",
+    "instrument": "synthetic_generator"
+  }
+}
