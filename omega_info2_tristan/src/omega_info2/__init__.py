@@ -20,6 +20,7 @@ from .models import (
     UncertaintyTensor,
 )
 from .oak_gate import OAKInfoGate
+from .pipeline import Info2Pipeline, Info2PipelineResult
 from .router import route_information
 from .source_trust import SourceTrustInput, score_source
 
@@ -32,6 +33,8 @@ __all__ = [
     "CVCDReport",
     "Claim",
     "EvidenceVector",
+    "Info2Pipeline",
+    "Info2PipelineResult",
     "InfoAction",
     "InfoObject",
     "InfoScores",
