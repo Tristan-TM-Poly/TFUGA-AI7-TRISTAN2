@@ -1,0 +1,10 @@
+{
+  "bundle_version": "1.3.0",
+  "source": "combined",
+  "files": [
+    {"path": "summary.json", "kind": "summary"},
+    {"path": "graph.graphml", "kind": "graphml"},
+    {"path": "status.md", "kind": "status"}
+  ],
+  "next_action": "route_bundle_to_report_or_repo"
+}
