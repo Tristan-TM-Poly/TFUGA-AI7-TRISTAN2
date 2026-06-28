@@ -1,0 +1,8 @@
+{
+  "version": "v0.9",
+  "mode": "demo_public_metadata",
+  "validation_clean": false,
+  "artifact_count": 3,
+  "roadmap_steps": 2,
+  "next_action": "persist_e2e_artifacts"
+}

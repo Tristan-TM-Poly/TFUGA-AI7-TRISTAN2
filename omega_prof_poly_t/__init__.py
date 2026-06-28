@@ -17,7 +17,9 @@ from .core import (
 )
 from .course_memory_minus import CourseAntiError, CourseMemoryMinus, build_course_memory_minus
 from .coursecvcd import CourseCVCDPacket, CourseInput, generate_coursecvcd
+from .department_bridge_report import DepartmentBridgeReport, render_department_bridge_report
 from .department_bridge_scoring import DepartmentBridgeScore, score_department_bridge, score_recommendation_bridge
+from .e2e_pipeline_v09 import EndToEndV09Result, run_v09_e2e_pipeline
 from .enriched_graph_exports import professor_graph_to_enriched_graphml
 from .fixture_artifact_generator import FixtureArtifactRun, generate_fixture_artifacts
 from .fixture_loader_v08 import combine_fixture_records, demo_combined_fixture_records
@@ -48,6 +50,8 @@ from .research_opportunity_compiler import (
     compile_atom_opportunities,
     compile_research_opportunities,
 )
+from .roadmap_compiler import RoadmapPlan, RoadmapStep, compile_portfolio_roadmap, render_roadmap_markdown
+from .source_record_validation import RecordValidationFinding, RecordValidationReport, validate_public_records
 from .zero_touch_oak import BlockedActionPacket, GateStatus, OAKCompileResult, compile_oak
 
 __all__ = [
@@ -79,9 +83,13 @@ __all__ = [
     "CourseCVCDPacket",
     "CourseInput",
     "generate_coursecvcd",
+    "DepartmentBridgeReport",
+    "render_department_bridge_report",
     "DepartmentBridgeScore",
     "score_department_bridge",
     "score_recommendation_bridge",
+    "EndToEndV09Result",
+    "run_v09_e2e_pipeline",
     "professor_graph_to_enriched_graphml",
     "FixtureArtifactRun",
     "generate_fixture_artifacts",
@@ -147,6 +155,13 @@ __all__ = [
     "ResearchOpportunityCompilation",
     "compile_atom_opportunities",
     "compile_research_opportunities",
+    "RoadmapPlan",
+    "RoadmapStep",
+    "compile_portfolio_roadmap",
+    "render_roadmap_markdown",
+    "RecordValidationFinding",
+    "RecordValidationReport",
+    "validate_public_records",
     "BlockedActionPacket",
     "GateStatus",
     "OAKCompileResult",
