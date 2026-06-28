@@ -18,11 +18,15 @@ from .ip_oak_gate import IPGatePacket, IPInput, IPStatus, classify_ip
 from .json_exports import packet_digest, to_deterministic_json, to_plain_data
 from .lab_oakbench import LabInput, LabOAKBenchPacket, generate_lab_oakbench
 from .method_graph import MethodGraph, MethodNode, build_method_graph
+from .opportunity_ranker import OpportunityRanking, RankedOpportunity, rank_opportunity_bundles, score_bundle
 from .poly_research_twin import PolyResearchTwin, build_poly_research_twin
 from .prior_art_packet import PriorArtPacket, generate_prior_art_packet
+from .professor_backlog_report import ProfessorBacklogReport, render_all_professor_backlogs, render_professor_backlog
 from .professor_genome import ProfessorResearchGenome, build_all_professor_genomes, build_professor_genome
 from .professor_graph import HyperEdge, Node, ProfessorGraph, demo_professor_graph
+from .professor_graph_integration import research_atoms_to_professor_graph
 from .project_forge import ProjectInput, ProjectPacket, forge_project
+from .public_metadata_adapters import GenericPublicMetadataAdapter, PublicMetadataAdapter
 from .reports import render_packet_report
 from .research_atom import ResearchAtom, atom_from_public_record
 from .research_opportunity_compiler import (
@@ -70,10 +74,17 @@ __all__ = [
     "MethodGraph",
     "MethodNode",
     "build_method_graph",
+    "OpportunityRanking",
+    "RankedOpportunity",
+    "rank_opportunity_bundles",
+    "score_bundle",
     "PolyResearchTwin",
     "build_poly_research_twin",
     "PriorArtPacket",
     "generate_prior_art_packet",
+    "ProfessorBacklogReport",
+    "render_all_professor_backlogs",
+    "render_professor_backlog",
     "ProfessorResearchGenome",
     "build_all_professor_genomes",
     "build_professor_genome",
@@ -81,9 +92,12 @@ __all__ = [
     "Node",
     "ProfessorGraph",
     "demo_professor_graph",
+    "research_atoms_to_professor_graph",
     "ProjectInput",
     "ProjectPacket",
     "forge_project",
+    "GenericPublicMetadataAdapter",
+    "PublicMetadataAdapter",
     "render_packet_report",
     "ResearchAtom",
     "atom_from_public_record",
