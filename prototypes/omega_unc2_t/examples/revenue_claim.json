@@ -1,0 +1,36 @@
+{
+  "claim": "A compact Ω-UNC²-T audit service could generate paid pilots for labs or startups.",
+  "estimate": "early revenue hypothesis",
+  "uncertainty_u1": {
+    "market_demand": 0.70,
+    "pricing": 0.65,
+    "acquisition_cost": 0.80,
+    "churn": 0.70,
+    "execution": 0.55
+  },
+  "meta_uncertainty_u2": {
+    "evidence_quality_uncertainty": 0.85,
+    "comparable_relevance_uncertainty": 0.65,
+    "sales_data_gap": 0.90,
+    "residual_volatility": 0.60
+  },
+  "evidence_strength": 0.20,
+  "residual_score": 0.50,
+  "decision_cost": 0.45,
+  "reversibility": 0.80,
+  "fertility": 0.85,
+  "value": 0.70,
+  "domain_valid_when": ["private pilot discovery", "small reversible sales experiments"],
+  "domain_invalid_when": ["claiming predictable monthly revenue without sales", "public investor-style promises"],
+  "counter_hypotheses": ["buyers may prefer generic risk/audit tools", "integration cost may exceed willingness to pay"],
+  "evidence": {
+    "sources": [],
+    "experiments": ["Run 3 paid-pilot conversations before building a SaaS."],
+    "counterexamples": [],
+    "notes": ["No revenue claim should be canonized without real sales evidence."]
+  },
+  "metadata": {
+    "displayed_confidence": 0.70,
+    "oak_context": "Ω-REV-T"
+  }
+}
