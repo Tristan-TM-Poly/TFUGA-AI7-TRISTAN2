@@ -1,0 +1,10 @@
+{
+  "spectrum_id": "",
+  "axis": [100.0, 102.0, 101.0, 101.0],
+  "intensity": [0.1, "bad", 0.2],
+  "metadata": {
+    "source": "synthetic_fixture",
+    "axis_unit": "unknown_unit",
+    "instrument": "synthetic_generator"
+  }
+}
