@@ -1,0 +1,63 @@
+# Quebec University Outreach Campaign — AIT-Tristan2 / Ω-DE-TensorProd∞ / Ω-ROI-OAK
+# Internal campaign plan. Drafts only; no mass sending without explicit approval and contact verification.
+
+campaign:
+  status: draft_for_review
+  objective: "Reach Quebec universities with a concise, credible collaboration proposal around AI for scientific prototyping, nonlinear systems, patent/research digestion, and OAK-safe commercialization."
+  core_positioning: >
+    AIT-Tristan2 / Ω-DE-TensorProd∞ / Ω-ROI-OAK is a prototype framework for converting complex scientific systems,
+    publications, patents, code, benchmarks, and industrial constraints into verifiable reports, prototypes, and risk-adjusted
+    collaboration opportunities.
+  oak_rules:
+    - "No unsupported performance or ROI claims."
+    - "No claim that the framework is industrially validated before benchmark evidence."
+    - "No mass email without verified contact list and approval."
+    - "Each outreach should target the correct office/person whenever possible."
+    - "Each reply creates an execution card and confirmation record."
+  primary_targets:
+    - vice_rector_research_or_innovation
+    - technology_transfer_or_research_partnerships
+    - engineering_or_computer_science_faculties
+    - AI_data_science_energy_materials_centres
+    - incubator_or_entrepreneurship_office
+  target_universities_operating:
+    priority_wave_1:
+      - "École de technologie supérieure (ÉTS)"
+      - "Polytechnique Montréal"
+      - "Institut national de la recherche scientifique (INRS)"
+      - "Université Laval"
+      - "Université de Sherbrooke"
+    priority_wave_2:
+      - "Université de Montréal"
+      - "HEC Montréal"
+      - "McGill University"
+      - "Concordia University"
+      - "Université du Québec à Trois-Rivières (UQTR)"
+      - "Université du Québec à Chicoutimi (UQAC)"
+    priority_wave_3:
+      - "Université du Québec à Montréal (UQAM)"
+      - "Université du Québec à Rimouski (UQAR)"
+      - "Université du Québec en Outaouais (UQO)"
+      - "Université du Québec en Abitibi-Témiscamingue (UQAT)"
+      - "École nationale d'administration publique (ENAP)"
+      - "Université TÉLUQ"
+      - "Bishop's University"
+  interuniversity_target:
+    - "Bureau de coopération interuniversitaire (BCI)"
+  send_waves:
+    wave_1:
+      size: 5
+      wait_days_before_wave_2: 7
+      goal: "learn response patterns and improve targeting"
+    wave_2:
+      size: 6
+      wait_days_before_wave_3: 7
+      goal: "expand after iteration"
+    wave_3:
+      size: "remaining"
+      goal: "complete coverage and BCI route"
+  response_routing:
+    interested: "create execution card for meeting and custom one-pager"
+    redirect: "record new contact and send short follow-up draft"
+    no_response_after_10_days: "prepare one follow-up only"
+    rejection: "record M-minus: reason, objection, improvement"
