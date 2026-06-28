@@ -1,0 +1,26 @@
+# AIT-Tristan2 Confirmation Record schema v1
+
+confirmation_record_schema:
+  record_id: "CONF-0000"
+  linked_execution_card: "EXEC-0000"
+  action_title: "string"
+  completion_source: "AIT-Tristan2 | delegate | founder | service"
+  record_type:
+    - note
+    - message_confirmation
+    - image_record
+    - receipt_record
+    - document_record
+    - source_record
+    - checklist_record
+  record_location:
+    path_or_url: "TODO"
+    storage_location: "company_os/confirmations/..."
+  review:
+    reviewed_by: "AIT-Tristan2 | founder | delegate"
+    reviewed_at: "TODO"
+    status: "accepted | rejected | needs_more_context"
+    reason: "TODO"
+  archive:
+    registered_in_log: false
+    memory_update: "none | M_plus | M_minus"
