@@ -23,6 +23,7 @@ ROSETTE_COMMANDS = [
     "rosette-bench-corpus",
     "rosette-corpus-bench",
     "rosette-doctor",
+    "rosette-atlas",
 ]
 
 OPTIONAL_MODULES = {
