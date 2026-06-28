@@ -1,0 +1,66 @@
+{
+  "schema_version": "omega_prof_poly_packet_v2_zero_touch",
+  "name": "CourseCVCD demo packet for signal processing",
+  "artifact_type": "course",
+  "departments": [
+    "genie physique",
+    "genie electrique",
+    "genie logiciel"
+  ],
+  "professor_roles": [
+    "course designer",
+    "lab architect",
+    "project integrator"
+  ],
+  "skill_tensor_demo": {
+    "math": 0.72,
+    "signal_processing": 0.68,
+    "python": 0.61,
+    "lab_rigor": 0.58,
+    "communication": 0.64
+  },
+  "evidence": [
+    {
+      "source": "demo/course_outline_signal_processing.md",
+      "claim": "Course has stable learning objectives and recurring misconception patterns.",
+      "confidence": 0.75
+    },
+    {
+      "source": "demo/lab_fft_uncertainty.md",
+      "claim": "A reproducible lab can connect FFT, noise, uncertainty, and sensor data.",
+      "confidence": 0.7
+    }
+  ],
+  "benefits": {
+    "teaching_value": 0.9,
+    "research_value": 0.55,
+    "student_value": 0.85,
+    "industry_value": 0.45,
+    "ip_value": 0.2,
+    "feasibility": 0.82,
+    "reproducibility": 0.72,
+    "ethics_safety": 0.88
+  },
+  "risks": {
+    "confidentiality_risk": 0.1,
+    "academic_integrity_risk": 0.32,
+    "overclaim_risk": 0.25,
+    "safety_risk": 0.15,
+    "privacy_risk": 0.1
+  },
+  "zero_touch_oak": {
+    "status": "prototype",
+    "gate": "auto_oak_check",
+    "external_action_locked": false,
+    "warnings": [
+      "Use as a non-confidential demo packet only.",
+      "Generated course policy text is a support artifact unless sourced to official policy."
+    ]
+  },
+  "next_action": "Generate CourseCVCD map, exercise bank, lab uncertainty checklist, and OAK report.",
+  "links": [
+    "docs/omega-prof-poly/README.md",
+    "docs/omega-prof-poly/ZERO_TOUCH_OVERRIDE.md",
+    "omega_prof_poly_t/core.py"
+  ]
+}
