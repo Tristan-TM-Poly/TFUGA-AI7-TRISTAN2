@@ -10,10 +10,12 @@ from .core import (
     RiskTensor,
 )
 from .incident_codex import IncidentRule, incident_rules
+from .leak_scan import LeakFinding, has_findings, scan_text
 from .ledger import LedgerRecord, ProofLedger
 from .manifest import ActionManifest
 from .oakbench import OAKBenchScore, score_report
 from .policy import OAKGate
+from .validators import validate_payload
 
 __all__ = [
     "ActionDNA",
@@ -24,12 +26,16 @@ __all__ = [
     "Decision",
     "DryRunReport",
     "IncidentRule",
+    "LeakFinding",
     "LedgerRecord",
     "OAKBenchScore",
     "OAKGate",
     "ProofLedger",
     "ProofOfExecution",
     "RiskTensor",
+    "has_findings",
     "incident_rules",
+    "scan_text",
     "score_report",
+    "validate_payload",
 ]
