@@ -20,8 +20,10 @@ from .course_memory_minus import CourseAntiError, CourseMemoryMinus, build_cours
 from .coursecvcd import CourseCVCDPacket, CourseInput, generate_coursecvcd
 from .department_bridge_report import DepartmentBridgeReport, render_department_bridge_report
 from .department_bridge_scoring import DepartmentBridgeScore, score_department_bridge, score_recommendation_bridge
+from .documentation_index import DocumentationEntry, DocumentationIndex, build_documentation_index, render_documentation_index
 from .e2e_pipeline_v09 import EndToEndV09Result, run_v09_e2e_pipeline
 from .enriched_graph_exports import professor_graph_to_enriched_graphml
+from .export_commands import ExportPayloads, build_export_payloads
 from .fixture_artifact_generator import FixtureArtifactRun, generate_fixture_artifacts
 from .fixture_loader_v08 import combine_fixture_records, demo_combined_fixture_records
 from .generated_report_artifacts import ArtifactManifest, GeneratedArtifact, build_report_artifacts
@@ -44,6 +46,7 @@ from .project_forge import ProjectInput, ProjectPacket, forge_project
 from .public_metadata_adapters import GenericPublicMetadataAdapter, PublicMetadataAdapter
 from .public_source_registry import PublicSource, PublicSourceRegistry, default_public_source_registry
 from .release_bundle import ReleaseBundle, build_release_bundle
+from .release_bundle_writer import ReleaseBundleWriteResult, WrittenBundleFile, write_release_bundle
 from .reports import render_packet_report
 from .research_atom import ResearchAtom, atom_from_public_record
 from .research_opportunity_compiler import (
@@ -93,9 +96,15 @@ __all__ = [
     "DepartmentBridgeScore",
     "score_department_bridge",
     "score_recommendation_bridge",
+    "DocumentationEntry",
+    "DocumentationIndex",
+    "build_documentation_index",
+    "render_documentation_index",
     "EndToEndV09Result",
     "run_v09_e2e_pipeline",
     "professor_graph_to_enriched_graphml",
+    "ExportPayloads",
+    "build_export_payloads",
     "FixtureArtifactRun",
     "generate_fixture_artifacts",
     "combine_fixture_records",
@@ -155,6 +164,9 @@ __all__ = [
     "default_public_source_registry",
     "ReleaseBundle",
     "build_release_bundle",
+    "ReleaseBundleWriteResult",
+    "WrittenBundleFile",
+    "write_release_bundle",
     "render_packet_report",
     "ResearchAtom",
     "atom_from_public_record",
