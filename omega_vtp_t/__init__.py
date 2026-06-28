@@ -20,6 +20,13 @@ from .bases import ScalingDomain, chebyshev_lift, chebyshev_values, infer_scalin
 from .closure_residual import ClosureReport, closure_residual
 from .conditioning import OAKScore, ResidualMetrics, matrix_condition_number, oak_score, residual_metrics
 from .cvcd_selector import CVCDSelection, FeatureFertility, feature_fertility_scores, select_cvcd_features
+from .datacenter_thermal import (
+    ThermalOptimizationReport,
+    ThermalZoneState,
+    datacenter_thermal_oak_report,
+    estimate_optimized_zone,
+    hotspot_risk_score,
+)
 from .de_tensorprod import (
     CarlemanResidualTerm,
     CarlemanTensorProdOperator,
@@ -43,6 +50,7 @@ from .koopman_tensorprod import KoopmanTensorProdFit, fit_koopman_tensorprod, pr
 from .lifted_solvers import LinearSolveReport, rk4_linear_step, solve_lifted_linear
 from .low_rank_operator import LowRankOperator, compress_operator_svd
 from .mminus_registry import MMinusEntry, MMinusRegistry, build_mminus_registry, entry_from_oak_status, merge_registries
+from .oak_report_builder import OAKDecision, OAKUnifiedReport, build_oak_decision, build_unified_oak_report
 from .pde_tensorprod import (
     PDEResidualReport,
     burgers_rhs_periodic,
@@ -109,8 +117,10 @@ __all__ = [
     "LowRankOperator",
     "MMinusEntry",
     "MMinusRegistry",
+    "OAKDecision",
     "OAKReport",
     "OAKScore",
+    "OAKUnifiedReport",
     "PDEResidualReport",
     "PolynomialODE",
     "ROIOAKReport",
@@ -121,12 +131,16 @@ __all__ = [
     "ScalingDomain",
     "SparseLiftResult",
     "SparseSelectionReport",
+    "ThermalOptimizationReport",
+    "ThermalZoneState",
     "TrainTestOAKReport",
     "ValueComponent",
     "adaptive_dynamic_lift_fit",
     "battery_revaluation_case",
     "build_carleman_operator",
     "build_mminus_registry",
+    "build_oak_decision",
+    "build_unified_oak_report",
     "burgers_rhs_periodic",
     "carleman_residual_on_samples",
     "chebyshev_lift",
@@ -136,8 +150,10 @@ __all__ = [
     "conservation_check",
     "custom_invariant_check",
     "datacenter_pue_case",
+    "datacenter_thermal_oak_report",
     "decompose_residuals",
     "entry_from_oak_status",
+    "estimate_optimized_zone",
     "evaluate_financial_case",
     "exp_template",
     "feature_count",
@@ -146,6 +162,7 @@ __all__ = [
     "fit_linear_operator",
     "gradient_1d_periodic",
     "hft_risk_engine_case",
+    "hotspot_risk_score",
     "infer_scaling_domain",
     "invariant_report",
     "l2_energy",
