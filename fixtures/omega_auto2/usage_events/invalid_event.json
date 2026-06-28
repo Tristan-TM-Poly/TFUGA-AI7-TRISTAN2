@@ -1,0 +1,14 @@
+{
+  "event_id": "",
+  "request_id": "req_synth_002",
+  "namespace": "synthetic_lab",
+  "operation": "activate_external_service",
+  "unit_type": "currency",
+  "units": -3,
+  "timestamp": "2026-01-01T00:00:00Z",
+  "oak_context": {
+    "mode": "offline_test",
+    "production_use": true,
+    "contains_customer_data": true
+  }
+}
