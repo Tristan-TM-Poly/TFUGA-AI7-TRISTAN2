@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/omega_prof_poly_t.schema.json",
+  "title": "Omega PROF POLY T DCT++ Packet",
+  "type": "object",
+  "required": ["name", "status", "artifact_type", "oak", "next_action"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human-readable name of the course, lab, project, grant, paper, or prototype."
+    },
+    "artifact_type": {
+      "type": "string",
+      "enum": ["course", "lab", "project", "paper", "grant", "prototype", "ip_triage", "policy", "dashboard"]
+    },
+    "departments": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Engineering departments or programs involved."
+    },
+    "professor_roles": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "student_skill_tensor": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "description": "Ethical, consented skill dimensions used for support/team formation, not hidden ranking."
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "claim"],
+        "properties": {
+          "source": { "type": "string" },
+          "claim": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "benefits": {
+      "type": "object",
+      "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+    },
+    "risks": {
+      "type": "object",
+      "properties": {
+        "confidentiality_risk": { "type": "number", "minimum": 0, "maximum": 1 },
+        "academic_integrity_risk": { "type": "number", "minimum": 0, "maximum": 1 },
+        "overclaim_risk": { "type": "number", "minimum": 0, "maximum": 1 },
+        "safety_risk": { "type": "number", "minimum": 0, "maximum": 1 },
+        "privacy_risk": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "oak": {
+      "type": "object",
+      "required": ["status", "warnings", "human_review_required"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["exploratory", "prototype", "canon", "blocked"]
+        },
+        "warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "human_review_required": { "type": "boolean" },
+        "ip_gate_required": { "type": "boolean" },
+        "academic_integrity_gate_required": { "type": "boolean" },
+        "privacy_gate_required": { "type": "boolean" }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["exploratory", "prototype", "canon", "blocked"]
+    },
+    "next_action": {
+      "type": "string"
+    },
+    "links": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}
