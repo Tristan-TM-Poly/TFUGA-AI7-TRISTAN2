@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omega-info2-tristan"
+version = "0.1.0"
+description = "Ω-INFO²-T: Information-of-information framework for provenance, uncertainty, OAK validation, and action routing."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Tristan Tardif-Morency" }]
+license = { text = "MIT" }
+keywords = ["information", "metadata", "provenance", "uncertainty", "OAK", "CVCD", "Tristan"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
+]
+
+[project.scripts]
+omega-info2 = "omega_info2.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

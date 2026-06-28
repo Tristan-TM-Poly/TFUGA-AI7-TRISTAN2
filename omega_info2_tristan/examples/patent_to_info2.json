@@ -1,0 +1,31 @@
+{
+  "id": "info2_patent_example_0001",
+  "raw_object": {
+    "type": "patent",
+    "location": "patents/example_patent.json",
+    "sha256": null,
+    "content_preview": "Patent claim mapped to novelty, risk, IP sensitivity and route."
+  },
+  "claims": [
+    {
+      "text": "A method routes information objects according to provenance, uncertainty, risk and actionability.",
+      "domain": "information_systems",
+      "source_id": "patent:example",
+      "evidence_ids": [],
+      "counterevidence_ids": ["prior_art:metadata_lineage_systems"],
+      "uncertainty": 0.55,
+      "oak_status": "IP-SENSITIVE",
+      "next_test": "Run prior-art scan and classify claim scope before publication."
+    }
+  ],
+  "scores": {
+    "truth": 0.60,
+    "utility": 0.78,
+    "fertility": 0.86,
+    "testability": 0.62,
+    "risk": 0.35,
+    "ip_sensitivity": 0.88,
+    "source_trust": 0.58
+  },
+  "recommended_route": "PATENT_HOLD"
+}
