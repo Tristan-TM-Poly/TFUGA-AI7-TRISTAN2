@@ -1,6 +1,7 @@
 """Omega-PROF-POLY-T package."""
 
 from .absorb_public_research import AbsorptionReport, absorb_public_records, demo_public_research_records
+from .backlog_packet_templates import BacklogPacket, render_backlog_packet
 from .claim_graph import ClaimGraph, ClaimNode, build_claim_graph
 from .core import (
     Evidence,
@@ -13,13 +14,17 @@ from .core import (
 )
 from .course_memory_minus import CourseAntiError, CourseMemoryMinus, build_course_memory_minus
 from .coursecvcd import CourseCVCDPacket, CourseInput, generate_coursecvcd
+from .generated_report_artifacts import ArtifactManifest, GeneratedArtifact, build_report_artifacts
 from .grant_forge import GrantInput, GrantPacket, forge_grant, grant_score
+from .graph_exports import professor_graph_to_graphml, professor_graph_to_json
 from .ip_oak_gate import IPGatePacket, IPInput, IPStatus, classify_ip
 from .json_exports import packet_digest, to_deterministic_json, to_plain_data
 from .lab_oakbench import LabInput, LabOAKBenchPacket, generate_lab_oakbench
 from .method_graph import MethodGraph, MethodNode, build_method_graph
 from .opportunity_ranker import OpportunityRanking, RankedOpportunity, rank_opportunity_bundles, score_bundle
+from .poly_public_adapters import ExpertiseLikeAdapter, PolyPublieLikeAdapter
 from .poly_research_twin import PolyResearchTwin, build_poly_research_twin
+from .portfolio_optimizer import PortfolioSelection, optimize_portfolio
 from .prior_art_packet import PriorArtPacket, generate_prior_art_packet
 from .professor_backlog_report import ProfessorBacklogReport, render_all_professor_backlogs, render_professor_backlog
 from .professor_genome import ProfessorResearchGenome, build_all_professor_genomes, build_professor_genome
@@ -41,6 +46,8 @@ __all__ = [
     "AbsorptionReport",
     "absorb_public_records",
     "demo_public_research_records",
+    "BacklogPacket",
+    "render_backlog_packet",
     "ClaimGraph",
     "ClaimNode",
     "build_claim_graph",
@@ -57,10 +64,15 @@ __all__ = [
     "CourseCVCDPacket",
     "CourseInput",
     "generate_coursecvcd",
+    "ArtifactManifest",
+    "GeneratedArtifact",
+    "build_report_artifacts",
     "GrantInput",
     "GrantPacket",
     "forge_grant",
     "grant_score",
+    "professor_graph_to_graphml",
+    "professor_graph_to_json",
     "IPGatePacket",
     "IPInput",
     "IPStatus",
@@ -78,8 +90,12 @@ __all__ = [
     "RankedOpportunity",
     "rank_opportunity_bundles",
     "score_bundle",
+    "ExpertiseLikeAdapter",
+    "PolyPublieLikeAdapter",
     "PolyResearchTwin",
     "build_poly_research_twin",
+    "PortfolioSelection",
+    "optimize_portfolio",
     "PriorArtPacket",
     "generate_prior_art_packet",
     "ProfessorBacklogReport",
