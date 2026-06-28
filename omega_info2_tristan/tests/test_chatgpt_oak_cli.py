@@ -1,6 +1,6 @@
 import json
 
-from omega_info2.chatgpt_oak_cli import context_from_mapping, main
+from omega_info2.chatgpt_oak_cli import PRESET_CONTEXTS, context_from_mapping, context_from_preset, main
 
 
 def test_context_from_mapping_coerces_booleans_and_ignores_unknowns():
@@ -21,6 +21,42 @@ def test_context_from_mapping_coerces_booleans_and_ignores_unknowns():
     assert context.mergeable is True
     assert context.merged is False
     assert context.checks_per_head_sha == 2
+
+
+def test_context_from_preset_green_not_merged_requires_merge():
+    context = context_from_preset("green-not-merged")
+    assert context.requested_go_github is True
+    assert context.ci_green is True
+    assert context.mergeable is True
+    assert context.merged is False
+
+
+def test_preset_catalog_contains_core_states():
+    assert set(PRESET_CONTEXTS) >= {"green-not-merged", "post-merge-success", "stale-summary", "real-blocker"}
+
+
+def test_cli_lists_presets(capsys):
+    code = main(["--list-presets"])
+    payload = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert "green-not-merged" in payload
+    assert "post-merge-success" in payload
+
+
+def test_cli_preset_green_not_merged_fails_gate(capsys):
+    code = main(["--preset", "green-not-merged"])
+    payload = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert payload["passed"] is False
+    assert "MCHATGPT001" in payload["failed_rules"]
+
+
+def test_cli_preset_post_merge_success_passes_gate(capsys):
+    code = main(["--preset", "post-merge-success"])
+    payload = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert payload["passed"] is True
+    assert payload["action"] == "POST_MERGE_SUMMARY"
 
 
 def test_cli_rules_prints_markdown(capsys):

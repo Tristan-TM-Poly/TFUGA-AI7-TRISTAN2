@@ -22,6 +22,42 @@ _BOOL_FIELDS = {
     "summary_after_merge",
 }
 
+PRESET_CONTEXTS: dict[str, dict[str, Any]] = {
+    "green-not-merged": {
+        "requested_go_github": True,
+        "pr_open": True,
+        "ci_green": True,
+        "mergeable": True,
+        "merged": False,
+        "used_fresh_head_sha": True,
+    },
+    "post-merge-success": {
+        "requested_go_github": True,
+        "pr_open": True,
+        "ci_green": True,
+        "mergeable": True,
+        "merged": True,
+        "used_fresh_head_sha": True,
+        "summary_after_merge": True,
+    },
+    "stale-summary": {
+        "requested_go_github": True,
+        "pr_open": True,
+        "ci_green": True,
+        "mergeable": True,
+        "merged": False,
+        "used_fresh_head_sha": False,
+    },
+    "real-blocker": {
+        "requested_go_github": True,
+        "pr_open": True,
+        "ci_green": True,
+        "mergeable": True,
+        "merged": False,
+        "real_blocker": "Missing permission or safety blocker.",
+    },
+}
+
 
 def context_from_mapping(data: dict[str, Any]) -> GitHubRunContext:
     """Build a GitHubRunContext from a dict, ignoring unknown keys."""
@@ -39,6 +75,15 @@ def context_from_mapping(data: dict[str, Any]) -> GitHubRunContext:
         else:
             cleaned[key] = value
     return GitHubRunContext(**cleaned)
+
+
+def context_from_preset(name: str) -> GitHubRunContext:
+    """Build a context from a named preset."""
+    try:
+        return context_from_mapping(PRESET_CONTEXTS[name])
+    except KeyError as exc:
+        available = ", ".join(sorted(PRESET_CONTEXTS))
+        raise ValueError(f"Unknown preset '{name}'. Available presets: {available}") from exc
 
 
 def _as_bool(value: Any) -> bool:
@@ -68,6 +113,8 @@ def _read_json(path: str | None) -> dict[str, Any]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Evaluate a Tristan Go GitHub workflow context with M-CHATGPT-OAK.")
     parser.add_argument("--context", help="Path to context JSON. Use '-' or omit to read stdin.")
+    parser.add_argument("--preset", choices=sorted(PRESET_CONTEXTS), help="Use a built-in context preset.")
+    parser.add_argument("--list-presets", action="store_true", help="Print preset names and exit.")
     parser.add_argument("--rules", action="store_true", help="Print the negative-memory rules as Markdown.")
     parser.add_argument("--exit-nonzero-on-fail", action="store_true", help="Exit with code 2 when the gate fails.")
     return parser
@@ -82,7 +129,14 @@ def main(argv: list[str] | None = None) -> int:
         print(gate.rules_as_markdown())
         return 0
 
-    context = context_from_mapping(_read_json(args.context))
+    if args.list_presets:
+        print(json.dumps(sorted(PRESET_CONTEXTS), ensure_ascii=False, indent=2))
+        return 0
+
+    if args.preset:
+        context = context_from_preset(args.preset)
+    else:
+        context = context_from_mapping(_read_json(args.context))
     decision = gate.evaluate_github_context(context)
     print(json.dumps(decision.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
     if args.exit_nonzero_on_fail and not decision.passed:
