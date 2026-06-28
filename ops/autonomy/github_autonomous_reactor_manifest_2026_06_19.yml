@@ -1,0 +1,177 @@
+version: 0.1
+system: GITHUB_AUTONOMOUS_REACTOR
+created_utc: '2026-06-19T00:00:00Z'
+owner: Tristan-TM-Poly
+root_repository: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+status: oak_safe_scaffold
+
+repositories:
+  - name: Tristan-TM-Poly/PEFA-FractalEnergySystem
+    role: pefa_fractal_energy_research_scaffold
+    visibility: private
+    default_branch: main
+    current_priority: add_equations_simulations_conservation_tests
+    risk_level: medium
+    allowed_automation:
+      - scan
+      - report
+      - additive_docs
+      - draft_pr
+    blocked_automation:
+      - auto_physical_claim_promotion
+      - auto_merge
+      - force_push
+  - name: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
+    role: legacy_deep_corpus_and_audit_mine
+    visibility: public
+    default_branch: main
+    current_priority: extract_canon_registry_and_standardize_ci
+    risk_level: medium
+    allowed_automation:
+      - scan
+      - compile_check
+      - antihype_scan
+      - hypergraph_proxy
+      - report
+      - draft_pr
+    blocked_automation:
+      - destructive_rewrite
+      - auto_merge
+      - force_push
+  - name: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG
+    role: ait_generator_package_layer
+    visibility: public
+    default_branch: main
+    current_priority: package_tests_release_path
+    risk_level: low_medium
+    allowed_automation:
+      - scan
+      - pytest
+      - package_metadata_check
+      - report
+      - draft_pr
+    blocked_automation:
+      - auto_publish_package
+      - auto_merge
+      - force_push
+  - name: Tristan-TM-Poly/TFACC
+    role: converted_canon_corpus_and_reports
+    visibility: private
+    default_branch: main
+    current_priority: classify_reproducibility_and_claim_status
+    risk_level: medium
+    allowed_automation:
+      - scan
+      - report
+      - additive_docs
+      - draft_pr
+    blocked_automation:
+      - auto_claim_certification
+      - auto_merge
+      - force_push
+  - name: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+    role: root_reactor_current_canon_and_autopilot_nucleus
+    visibility: public
+    default_branch: main
+    current_priority: unify_canon_schema_oak_cvcd_and_autonomous_reports
+    risk_level: medium
+    allowed_automation:
+      - scan
+      - pytest_if_present
+      - compile_check
+      - oak_cvcd_report
+      - auto_genesis_report
+      - artifact_upload
+      - branch
+      - draft_pr
+    blocked_automation:
+      - direct_main_rewrite
+      - auto_merge_without_review
+      - force_push
+      - secret_exfiltration
+  - name: Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2
+    role: mirror_or_variant_seed
+    visibility: public
+    default_branch: main
+    current_priority: define_sync_policy_with_root_reactor
+    risk_level: low_medium
+    allowed_automation:
+      - scan
+      - report
+      - additive_docs
+      - draft_pr
+    blocked_automation:
+      - blind_sync_overwrite
+      - auto_merge
+      - force_push
+
+reactor_loop:
+  - repo_inventory
+  - static_safety_audit
+  - package_and_workflow_detection
+  - oak_cvcd_classification
+  - m_minus_update
+  - build_or_compile_matrix
+  - improvement_queue_generation
+  - additive_branch_packet
+  - draft_pull_request
+  - checks_and_review
+  - canon_promotion_if_gated
+
+safe_permissions:
+  github_actions_default:
+    contents: read
+  elevated_write_only_when_needed:
+    contents: write
+    pull_requests: write
+  rules:
+    - prefer_artifacts_over_commits_for_scheduled_runs
+    - prefer_draft_pr_over_direct_main_push
+    - never_force_push
+    - never_merge_without_explicit_review
+    - never_print_secrets
+    - never_claim_physical_validation_without_measurements
+    - never_claim_official_submission_without_external_confirmation
+
+classification_labels:
+  CANON: validated_or_reproducibly_supported
+  FERTILE: promising_but_not_certified
+  OAK_TEST: needs_falsification_or_benchmark
+  REPAIR: valuable_but_has_residue
+  M_MINUS: failed_or_refuted_pattern_to_remember
+  ARCHIVE: low_current_value_or_duplicate
+
+required_repo_contract:
+  files_or_equivalents:
+    - docs/REPO_CANON_ROLE.md
+    - docs/claims.md
+    - reports/autopilot/README.md
+    - .github/workflows/repo-audit.yml
+  commands:
+    - python -m compileall .
+    - pytest
+    - python tools/autopilot/oak_cvcd_report.py --repo-root . --mode full
+
+m_minus_policy:
+  storage_target: memory/m_minus/github_m_minus_registry.jsonl
+  required_fields:
+    - timestamp
+    - repository
+    - finding_type
+    - severity
+    - evidence
+    - repair_rule
+    - future_penalty_pattern
+
+bayes_tristan_priority_function:
+  score: information_gain + cvcd_gain + prototype_value - cost - risk - m_minus_penalty
+  promote_when:
+    - oak_level_sufficient
+    - residue_low
+    - tests_pass
+    - no_unresolved_high_risk_claims
+  keep_fertile_when:
+    - proof_low
+    - fertility_high
+    - testability_high
+    - risk_controlled

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/tfuga-ai7/github_reactor_repo.schema.json",
+  "title": "GitHub Reactor Repository Card",
+  "type": "object",
+  "required": [
+    "name",
+    "role",
+    "priority",
+    "visibility",
+    "oak_status",
+    "allowed_automation",
+    "blocked_automation",
+    "next_actions"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "role": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2", "P3"]
+    },
+    "visibility": {
+      "type": "string",
+      "enum": ["public", "private", "internal", "unknown"]
+    },
+    "oak_status": {
+      "type": "string",
+      "enum": [
+        "CANON",
+        "FERTILE",
+        "OAK_TEST",
+        "REPAIR",
+        "M_MINUS",
+        "ARCHIVE"
+      ]
+    },
+    "allowed_automation": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "scan",
+          "compile_check",
+          "pytest",
+          "claim_hygiene_scan",
+          "oak_cvcd_report",
+          "auto_genesis_report",
+          "artifact_upload",
+          "branch",
+          "draft_pr",
+          "additive_docs",
+          "schema_validation"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "blocked_automation": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "next_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["priority", "action", "reason"],
+        "properties": {
+          "priority": {
+            "type": "string",
+            "enum": ["P0", "P1", "P2", "P3"]
+          },
+          "action": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

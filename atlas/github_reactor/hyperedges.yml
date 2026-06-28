@@ -1,0 +1,83 @@
+version: 0.1
+system: github_reactor_hyperedges
+root: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+created_utc: '2026-06-19T00:00:00Z'
+
+hyperedges:
+  - id: GHR-E-0001
+    label: ROOT_REACTOR_CONTROLS_AUDIT_STANDARD
+    sources:
+      - Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+    targets:
+      - Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
+      - Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG
+      - Tristan-TM-Poly/PEFA-FractalEnergySystem
+      - Tristan-TM-Poly/TFACC
+      - Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2
+    transformation: propagate_repo_contract_by_additive_draft_pr
+    oak_gate: review_required
+    cvcd_gain: high
+    risk: medium
+
+  - id: GHR-E-0002
+    label: DEEP_CORPUS_FEEDS_CANON
+    sources:
+      - Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
+    targets:
+      - Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+    transformation: extract_high_value_canon_cards_from_deep_corpus
+    oak_gate: claim_status_and_residue_required
+    cvcd_gain: very_high
+    risk: medium
+
+  - id: GHR-E-0003
+    label: PACKAGE_LAYER_FEEDS_AGENTS
+    sources:
+      - Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG
+    targets:
+      - Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+    transformation: convert_ait_generator_package_into_reusable_agent_module
+    oak_gate: pytest_and_package_metadata_required
+    cvcd_gain: high
+    risk: low_medium
+
+  - id: GHR-E-0004
+    label: ENERGY_SCAFFOLD_REQUIRES_OAK_PHYSICS
+    sources:
+      - Tristan-TM-Poly/PEFA-FractalEnergySystem
+    targets:
+      - Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+    transformation: promote_only_verified_simulation_and_conservation_results
+    oak_gate: assumptions_units_conservation_simulation_uncertainty_required
+    cvcd_gain: high
+    risk: high_without_gate
+
+  - id: GHR-E-0005
+    label: M_MINUS_FEEDBACK_LOOP
+    sources:
+      - reports/github-autonomous-reactor
+      - reports/autopilot
+      - reports/auto_genesis
+    targets:
+      - memory/m_minus
+      - claims
+      - docs/ops
+    transformation: convert_failures_into_repair_rules
+    oak_gate: no_failure_without_record
+    cvcd_gain: high
+    risk: low
+
+  - id: GHR-E-0006
+    label: BAYES_TRISTAN_NEXT_ACTION_ROUTER
+    sources:
+      - reactor_oak_matrix
+      - m_minus_registry
+      - repository_atlas
+    targets:
+      - draft_pr_queue
+      - issue_queue
+      - canon_queue
+    transformation: rank_actions_by_information_cvcd_value_minus_cost_risk
+    oak_gate: action_must_have_reason_and_status
+    cvcd_gain: very_high
+    risk: low_medium
