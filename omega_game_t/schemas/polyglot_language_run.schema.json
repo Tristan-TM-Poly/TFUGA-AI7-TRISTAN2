@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/polyglot_language_run.schema.json",
+  "title": "PolyglotLanguageRun",
+  "type": "object",
+  "required": ["target_style", "audience", "draft", "clarity_score", "safety_score", "structure_score", "oak_notes", "m_plus", "m_minus", "next_quest", "score"],
+  "properties": {
+    "target_style": { "type": "string" },
+    "audience": { "type": "string" },
+    "draft": { "type": "string" },
+    "clarity_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "safety_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "structure_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "oak_notes": { "type": "array", "items": { "type": "string" } },
+    "m_plus": { "type": "array", "items": { "type": "string" } },
+    "m_minus": { "type": "array", "items": { "type": "string" } },
+    "next_quest": { "type": "string" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}

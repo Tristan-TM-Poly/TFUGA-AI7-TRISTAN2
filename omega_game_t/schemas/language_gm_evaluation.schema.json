@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/language_gm_evaluation.schema.json",
+  "title": "LanguageGMEvaluation",
+  "type": "object",
+  "required": ["target_style", "audience", "score", "level", "scores", "m_plus", "m_minus", "next_training_quest"],
+  "properties": {
+    "target_style": { "type": "string" },
+    "audience": { "type": "string" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "level": { "type": "string" },
+    "scores": {
+      "type": "object",
+      "properties": {
+        "clarity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "structure": { "type": "number", "minimum": 0, "maximum": 1 },
+        "audience_fit": { "type": "number", "minimum": 0, "maximum": 1 },
+        "format_fit": { "type": "number", "minimum": 0, "maximum": 1 },
+        "oak_safety": { "type": "number", "minimum": 0, "maximum": 1 },
+        "intent_preservation": { "type": "number", "minimum": 0, "maximum": 1 },
+        "drift": { "type": "number", "minimum": 0, "maximum": 1 },
+        "hidden_claims": { "type": "number", "minimum": 0, "maximum": 1 },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "level": { "type": "string" }
+      }
+    },
+    "m_plus": { "type": "array", "items": { "type": "string" } },
+    "m_minus": { "type": "array", "items": { "type": "string" } },
+    "next_training_quest": { "type": "string" }
+  }
+}

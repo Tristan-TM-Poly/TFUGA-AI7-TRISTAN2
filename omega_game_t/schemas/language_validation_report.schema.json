@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/language_validation_report.schema.json",
+  "title": "LanguageValidationReport",
+  "type": "object",
+  "required": ["format_name", "valid", "score", "checks", "passed_checks", "failed_checks", "m_plus", "m_minus", "next_repair_quest"],
+  "properties": {
+    "format_name": { "type": "string" },
+    "valid": { "type": "boolean" },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "passed": { "type": "boolean" },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "passed_checks": { "type": "array", "items": { "type": "string" } },
+    "failed_checks": { "type": "array", "items": { "type": "string" } },
+    "m_plus": { "type": "array", "items": { "type": "string" } },
+    "m_minus": { "type": "array", "items": { "type": "string" } },
+    "next_repair_quest": { "type": "string" }
+  }
+}

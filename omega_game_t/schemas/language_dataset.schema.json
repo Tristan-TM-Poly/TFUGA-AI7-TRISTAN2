@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-game-t/language_dataset.schema.json",
+  "title": "LanguageDataset",
+  "type": "object",
+  "required": ["name", "items", "summary", "m_plus", "m_minus"],
+  "properties": {
+    "name": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string" },
+          "quest": { "type": "object" },
+          "run": { "type": "object" },
+          "evaluation": { "type": "object" },
+          "validation": { "type": "object" },
+          "repair": { "type": "object" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "score_summary": { "type": "object" }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "count": { "type": "integer", "minimum": 0 },
+        "average_repair_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "converged": { "type": "integer", "minimum": 0 },
+        "tracks": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "m_plus": { "type": "array", "items": { "type": "string" } },
+    "m_minus": { "type": "array", "items": { "type": "string" } }
+  }
+}
