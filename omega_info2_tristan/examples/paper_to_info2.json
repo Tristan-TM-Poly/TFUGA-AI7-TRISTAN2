@@ -1,0 +1,31 @@
+{
+  "id": "info2_paper_example_0001",
+  "raw_object": {
+    "type": "scientific_paper",
+    "location": "papers/example.pdf",
+    "sha256": null,
+    "content_preview": "Example paper converted into claims, provenance, uncertainty and OAK status."
+  },
+  "claims": [
+    {
+      "text": "The proposed method improves denoising relative to a wavelet baseline.",
+      "domain": "spectroscopy",
+      "source_id": "paper:example",
+      "evidence_ids": ["table:benchmark_1"],
+      "counterevidence_ids": [],
+      "uncertainty": 0.35,
+      "oak_status": "TESTABLE",
+      "next_test": "Reproduce benchmark against FFT/FWT/SVD baselines."
+    }
+  ],
+  "scores": {
+    "truth": 0.55,
+    "utility": 0.82,
+    "fertility": 0.88,
+    "testability": 0.90,
+    "risk": 0.22,
+    "ip_sensitivity": 0.40,
+    "source_trust": 0.62
+  },
+  "recommended_route": "PROTOTYPE"
+}
