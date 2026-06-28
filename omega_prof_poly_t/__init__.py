@@ -34,6 +34,7 @@ from .json_exports import packet_digest, to_deterministic_json, to_plain_data
 from .lab_oakbench import LabInput, LabOAKBenchPacket, generate_lab_oakbench
 from .method_graph import MethodGraph, MethodNode, build_method_graph
 from .opportunity_ranker import OpportunityRanking, RankedOpportunity, rank_opportunity_bundles, score_bundle
+from .package_status import PackageStatusReport, build_package_status_report
 from .poly_public_adapters import ExpertiseLikeAdapter, PolyPublieLikeAdapter
 from .poly_research_twin import PolyResearchTwin, build_poly_research_twin
 from .portfolio_optimizer import PortfolioSelection, optimize_portfolio
@@ -57,6 +58,7 @@ from .research_opportunity_compiler import (
 )
 from .roadmap_compiler import RoadmapPlan, RoadmapStep, compile_portfolio_roadmap, render_roadmap_markdown
 from .source_record_validation import RecordValidationFinding, RecordValidationReport, validate_public_records
+from .source_selection import available_demo_sources, select_demo_records
 from .version_manifest import VersionEntry, VersionManifest, build_version_manifest
 from .zero_touch_oak import BlockedActionPacket, GateStatus, OAKCompileResult, compile_oak
 
@@ -135,6 +137,8 @@ __all__ = [
     "RankedOpportunity",
     "rank_opportunity_bundles",
     "score_bundle",
+    "PackageStatusReport",
+    "build_package_status_report",
     "ExpertiseLikeAdapter",
     "PolyPublieLikeAdapter",
     "PolyResearchTwin",
@@ -181,6 +185,8 @@ __all__ = [
     "RecordValidationFinding",
     "RecordValidationReport",
     "validate_public_records",
+    "available_demo_sources",
+    "select_demo_records",
     "VersionEntry",
     "VersionManifest",
     "build_version_manifest",
