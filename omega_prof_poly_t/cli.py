@@ -19,7 +19,7 @@ from .release_bundle_writer import write_release_bundle
 from .research_opportunity_compiler import compile_research_opportunities
 from .roadmap_compiler import render_roadmap_markdown
 from .source_record_validation import validate_public_records
-from .source_selection import available_demo_sources
+from .source_selection import available_demo_sources, select_demo_records
 
 
 VERSION = "1.3.0"
@@ -93,13 +93,8 @@ def run_cli(argv: list[str] | None = None) -> str:
         report = validate_public_records(loaded.normalized_records)
         return render_validation_table(report)
     if args.command == "table":
-        payloads = build_export_payloads(args.source)
-        absorption = absorb_public_records([])
-        _ = payloads
-        result = run_v09_e2e_pipeline()
+        absorption = absorb_public_records(select_demo_records(args.source))
         ranking = rank_opportunity_bundles(compile_research_opportunities(absorption.atoms))
-        if not ranking.ranked:
-            ranking = rank_opportunity_bundles(compile_research_opportunities(absorb_public_records([]).atoms))
         return render_compact_table(ranking)
     result = run_v09_e2e_pipeline()
     if args.command == "roadmap":
