@@ -1,0 +1,15 @@
+[project]
+name = "omega-unc2-t"
+version = "0.1.0"
+description = "Ω-UNC²-T: uncertainty-of-uncertainty OAK-safe scoring prototype"
+requires-python = ">=3.10"
+authors = [{ name = "Tristan Tardif-Morency" }]
+readme = "README.md"
+license = { text = "Proprietary research prototype / OAK-safe canon scaffold" }
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
