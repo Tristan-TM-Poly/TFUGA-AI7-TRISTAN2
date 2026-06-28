@@ -1,0 +1,70 @@
+info_object:
+  id: string
+  raw_object:
+    type: string
+    location: string|null
+    sha256: string|null
+    content_preview: string|null
+  extracted_information:
+    claims:
+      - text: string
+        domain: string
+        source_id: string|null
+        evidence_ids: [string]
+        counterevidence_ids: [string]
+        uncertainty: float_0_1
+        oak_status: enum
+        next_test: string|null
+    concepts: [string]
+    equations: [string]
+    datasets: [string]
+    code_fragments: [string]
+  meta_information:
+    source: string|null
+    author: string|null
+    date_created: iso_date|null
+    date_accessed: iso_date|null
+    license: string
+    version: string
+    language: string
+    domain: string
+  provenance:
+    extraction_tool: string
+    extraction_version: string
+    transformations:
+      - operation: string
+        tool: string
+        tool_version: string
+        parameters: object
+        confidence: float_0_1
+        information_loss: float_0_1
+        errors_detected: [string]
+  uncertainty:
+    source_uncertainty: float_0_1
+    measurement_uncertainty: float_0_1
+    model_uncertainty: float_0_1
+    interpretation_uncertainty: float_0_1
+    temporal_uncertainty: float_0_1
+    license_uncertainty: float_0_1
+    action_uncertainty: float_0_1
+  scores:
+    truth: float_0_1
+    utility: float_0_1
+    fertility: float_0_1
+    novelty: float_0_1
+    testability: float_0_1
+    safety: float_0_1
+    risk: float_0_1
+    freshness: float_0_1
+    ip_sensitivity: float_0_1
+    compression_gain: float_0_1
+    source_trust: float_0_1
+  oak:
+    status: RAW|PARSED|COMPRESSED|LINKED|TESTABLE|TESTED|FALSIFIED|ROBUST|CANONICAL|DANGEROUS|IP-SENSITIVE
+    checks_passed: [string]
+    checks_failed: [string]
+    residue: [string]
+    next_test: string|null
+  action:
+    recommended_route: REJECT|KEEP_RAW|COMPRESS|TEST|LINK|PROTOTYPE|PATENT_HOLD|PUBLISH|MONETIZE|CANONIZE|FORGET|M_MINUS|ARCHIVE|OAK_REVIEW|CANON_CANDIDATE
+    next_action: string|null
