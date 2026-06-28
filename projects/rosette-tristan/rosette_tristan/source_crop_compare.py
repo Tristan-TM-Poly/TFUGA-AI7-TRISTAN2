@@ -63,6 +63,48 @@ def extract_pdf_crop_to_png(pdf_path: str | Path, page: int, bbox: tuple[float, 
     return out
 
 
+def _load_ink_mask(path: str | Path):
+    import numpy as np
+    import matplotlib.image as mpimg
+
+    image = mpimg.imread(path).astype(float)
+    if image.ndim == 3:
+        image = image[..., :3].mean(axis=2)
+    mask = image < 0.97
+    if not mask.any():
+        return mask
+    ys, xs = np.where(mask)
+    y0, y1 = max(0, ys.min() - 2), min(mask.shape[0], ys.max() + 3)
+    x0, x1 = max(0, xs.min() - 2), min(mask.shape[1], xs.max() + 3)
+    return mask[y0:y1, x0:x1]
+
+
+def _resize_mask(mask, height: int = 64, width: int = 256):
+    import numpy as np
+
+    if mask.size == 0:
+        return np.zeros((height, width), dtype=bool)
+    y_idx = np.linspace(0, mask.shape[0] - 1, height).astype(int)
+    x_idx = np.linspace(0, mask.shape[1] - 1, width).astype(int)
+    return mask[y_idx][:, x_idx]
+
+
+def ink_image_similarity(candidate_png: str | Path, source_crop_png: str | Path) -> float:
+    """Compare rendered ink masks instead of mostly-white backgrounds."""
+    import numpy as np
+
+    base = image_similarity(candidate_png, source_crop_png)
+    a = _resize_mask(_load_ink_mask(candidate_png))
+    b = _resize_mask(_load_ink_mask(source_crop_png))
+    union = np.logical_or(a, b).sum()
+    if union == 0:
+        ink_iou = 1.0
+    else:
+        ink_iou = float(np.logical_and(a, b).sum() / union)
+    score = (0.25 * base) + (0.75 * ink_iou)
+    return round(max(0.0, min(1.0, score)), 4)
+
+
 def compare_candidate_to_source_crop(candidate_latex: str, source_crop_png: str | Path, out_dir: str | Path = "out_source_crop", equation_id: str = "E1") -> SourceCropCompareResult:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -72,7 +114,7 @@ def compare_candidate_to_source_crop(candidate_latex: str, source_crop_png: str 
     memory_minus: list[str] = []
     try:
         render_mathtext_png(candidate_latex, candidate_png)
-        score = image_similarity(candidate_png, source_crop)
+        score = ink_image_similarity(candidate_png, source_crop)
         if score >= 0.92:
             status = "source_crop_match_not_certified"
         elif score >= 0.75:
