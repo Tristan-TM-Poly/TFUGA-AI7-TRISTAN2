@@ -1,0 +1,22 @@
+[
+  {
+    "id": "fixture-expertise-prof-demo",
+    "name": "Professor Demo",
+    "expertise": ["signal processing", "sensors", "photonics"],
+    "department": ["genie physique", "genie electrique"],
+    "summary": "Public expertise fixture for signal and sensor teaching projects.",
+    "url": "https://example.org/expertise/professor-demo",
+    "methods": ["FFT", "uncertainty estimation"],
+    "claims": ["Expertise can seed course-lab-project packets."]
+  },
+  {
+    "id": "fixture-expertise-prof-energy",
+    "name": "Professor Energy Demo",
+    "expertise": ["energy", "control", "model reduction"],
+    "department": ["genie electrique", "genie mecanique"],
+    "summary": "Public expertise fixture for energy systems projects.",
+    "url": "https://example.org/expertise/professor-energy-demo",
+    "methods": ["reduced-order modeling", "control simulation"],
+    "claims": ["Energy modeling can seed interdisciplinary projects."]
+  }
+]
