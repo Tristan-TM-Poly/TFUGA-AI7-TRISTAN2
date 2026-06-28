@@ -1,0 +1,31 @@
+{
+  "id": "info2_calibration_example_0001",
+  "raw_object": {
+    "type": "instrument_measurement",
+    "location": "lab/spectrometer/run_001.csv",
+    "sha256": null,
+    "content_preview": "Measurement interpreted through calibration, uncertainty and traceability."
+  },
+  "claims": [
+    {
+      "text": "This Raman peak shift is meaningful only if the instrument calibration and drift are within tolerance.",
+      "domain": "calibration",
+      "source_id": "instrument:spectrometer_001",
+      "evidence_ids": ["dcc:calibration_certificate_001"],
+      "counterevidence_ids": ["drift_log:warning_2026_06"],
+      "uncertainty": 0.45,
+      "oak_status": "TESTABLE",
+      "next_test": "Check reference material and drift residual before interpretation."
+    }
+  ],
+  "scores": {
+    "truth": 0.66,
+    "utility": 0.92,
+    "fertility": 0.74,
+    "testability": 0.85,
+    "risk": 0.28,
+    "ip_sensitivity": 0.10,
+    "source_trust": 0.71
+  },
+  "recommended_route": "TEST"
+}
