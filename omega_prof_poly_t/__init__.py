@@ -4,6 +4,7 @@ from .absorb_public_research import AbsorptionReport, absorb_public_records, dem
 from .artifact_summaries import ArtifactSummary, build_artifact_summary
 from .backlog_packet_templates import BacklogPacket, render_backlog_packet
 from .claim_graph import ClaimGraph, ClaimNode, build_claim_graph
+from .collaboration_markdown import CollaborationMarkdown, render_collaboration_markdown
 from .collaboration_recommender import CollaborationPlan, CollaborationRecommendation, recommend_collaborations
 from .core import (
     Evidence,
@@ -16,7 +17,10 @@ from .core import (
 )
 from .course_memory_minus import CourseAntiError, CourseMemoryMinus, build_course_memory_minus
 from .coursecvcd import CourseCVCDPacket, CourseInput, generate_coursecvcd
+from .department_bridge_scoring import DepartmentBridgeScore, score_department_bridge, score_recommendation_bridge
 from .enriched_graph_exports import professor_graph_to_enriched_graphml
+from .fixture_artifact_generator import FixtureArtifactRun, generate_fixture_artifacts
+from .fixture_loader_v08 import combine_fixture_records, demo_combined_fixture_records
 from .generated_report_artifacts import ArtifactManifest, GeneratedArtifact, build_report_artifacts
 from .grant_forge import GrantInput, GrantPacket, forge_grant, grant_score
 from .graph_exports import professor_graph_to_graphml, professor_graph_to_json
@@ -35,6 +39,7 @@ from .professor_graph import HyperEdge, Node, ProfessorGraph, demo_professor_gra
 from .professor_graph_integration import research_atoms_to_professor_graph
 from .project_forge import ProjectInput, ProjectPacket, forge_project
 from .public_metadata_adapters import GenericPublicMetadataAdapter, PublicMetadataAdapter
+from .public_source_registry import PublicSource, PublicSourceRegistry, default_public_source_registry
 from .reports import render_packet_report
 from .research_atom import ResearchAtom, atom_from_public_record
 from .research_opportunity_compiler import (
@@ -56,6 +61,8 @@ __all__ = [
     "ClaimGraph",
     "ClaimNode",
     "build_claim_graph",
+    "CollaborationMarkdown",
+    "render_collaboration_markdown",
     "CollaborationPlan",
     "CollaborationRecommendation",
     "recommend_collaborations",
@@ -72,7 +79,14 @@ __all__ = [
     "CourseCVCDPacket",
     "CourseInput",
     "generate_coursecvcd",
+    "DepartmentBridgeScore",
+    "score_department_bridge",
+    "score_recommendation_bridge",
     "professor_graph_to_enriched_graphml",
+    "FixtureArtifactRun",
+    "generate_fixture_artifacts",
+    "combine_fixture_records",
+    "demo_combined_fixture_records",
     "ArtifactManifest",
     "GeneratedArtifact",
     "build_report_artifacts",
@@ -123,6 +137,9 @@ __all__ = [
     "forge_project",
     "GenericPublicMetadataAdapter",
     "PublicMetadataAdapter",
+    "PublicSource",
+    "PublicSourceRegistry",
+    "default_public_source_registry",
     "render_packet_report",
     "ResearchAtom",
     "atom_from_public_record",
