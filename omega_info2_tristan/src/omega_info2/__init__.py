@@ -1,6 +1,14 @@
 """Ω-INFO²-T — Information de l'information de Tristan."""
 
 from .bayes_tristan import BayesTristanReport, BayesTristanUpdater, BayesTristanVector, EvidenceVector
+from .chatgpt_oak_gate import (
+    ChatGPTFailureRule,
+    ChatGPTOAKDecision,
+    ChatGPTOAKGate,
+    DEFAULT_FAILURE_RULES,
+    GitHubRunContext,
+    GitHubWorkflowState,
+)
 from .cvcd_compressor import CVCDCompressor, CVCDInvariant, CVCDReport
 from .graph import Info2Graph
 from .half_life import freshness_score, half_life_days
@@ -32,8 +40,14 @@ __all__ = [
     "CVCDCompressor",
     "CVCDInvariant",
     "CVCDReport",
+    "ChatGPTFailureRule",
+    "ChatGPTOAKDecision",
+    "ChatGPTOAKGate",
     "Claim",
+    "DEFAULT_FAILURE_RULES",
     "EvidenceVector",
+    "GitHubRunContext",
+    "GitHubWorkflowState",
     "Info2Pipeline",
     "Info2PipelineResult",
     "InfoAction",
