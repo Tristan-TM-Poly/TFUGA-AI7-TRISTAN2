@@ -1,0 +1,32 @@
+[
+  {
+    "identifier": "fixture-polypublie-sensor-001",
+    "dc.title": "Signal processing for low-cost sensor education",
+    "dc.creator": ["Professor Demo", "Student Demo"],
+    "dc.date": 2026,
+    "identifier_uri": "https://example.org/fixture-polypublie-sensor-001",
+    "dc.description": "Public fixture about signal processing, sensors, uncertainty, and teaching prototypes.",
+    "dc.subject": ["signal processing", "sensors", "uncertainty", "teaching"],
+    "division": ["genie physique", "genie electrique", "genie logiciel"],
+    "directors": ["Professor Demo"],
+    "claims": ["A compact sensor lab can connect signal processing and uncertainty."],
+    "methods": ["FFT", "uncertainty estimation", "residual audit"],
+    "limitations": ["Fixture metadata only."],
+    "datasets": ["fixture_sensor_dataset_stub"],
+    "code_links": ["examples/omega_absorb_poly_prof_v06_demo.py"]
+  },
+  {
+    "identifier": "fixture-polypublie-energy-002",
+    "dc.title": "Reduced energy systems modeling for project-based teaching",
+    "dc.creator": ["Professor Energy Demo"],
+    "dc.date": 2026,
+    "identifier_uri": "https://example.org/fixture-polypublie-energy-002",
+    "dc.description": "Public fixture about energy modeling, reduced models, and project-based engineering teaching.",
+    "dc.subject": ["energy", "model reduction", "projects", "control"],
+    "division": ["genie electrique", "genie mecanique", "genie industriel"],
+    "directors": ["Professor Energy Demo"],
+    "claims": ["Reduced models can make energy systems teachable in one term."],
+    "methods": ["reduced-order modeling", "control simulation", "OAK scoring"],
+    "limitations": ["Fixture metadata only."]
+  }
+]
