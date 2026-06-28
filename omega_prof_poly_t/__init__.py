@@ -4,6 +4,7 @@ from .absorb_public_research import AbsorptionReport, absorb_public_records, dem
 from .artifact_summaries import ArtifactSummary, build_artifact_summary
 from .backlog_packet_templates import BacklogPacket, render_backlog_packet
 from .claim_graph import ClaimGraph, ClaimNode, build_claim_graph
+from .cli import VERSION, run_cli
 from .collaboration_markdown import CollaborationMarkdown, render_collaboration_markdown
 from .collaboration_recommender import CollaborationPlan, CollaborationRecommendation, recommend_collaborations
 from .core import (
@@ -42,6 +43,7 @@ from .professor_graph_integration import research_atoms_to_professor_graph
 from .project_forge import ProjectInput, ProjectPacket, forge_project
 from .public_metadata_adapters import GenericPublicMetadataAdapter, PublicMetadataAdapter
 from .public_source_registry import PublicSource, PublicSourceRegistry, default_public_source_registry
+from .release_bundle import ReleaseBundle, build_release_bundle
 from .reports import render_packet_report
 from .research_atom import ResearchAtom, atom_from_public_record
 from .research_opportunity_compiler import (
@@ -52,6 +54,7 @@ from .research_opportunity_compiler import (
 )
 from .roadmap_compiler import RoadmapPlan, RoadmapStep, compile_portfolio_roadmap, render_roadmap_markdown
 from .source_record_validation import RecordValidationFinding, RecordValidationReport, validate_public_records
+from .version_manifest import VersionEntry, VersionManifest, build_version_manifest
 from .zero_touch_oak import BlockedActionPacket, GateStatus, OAKCompileResult, compile_oak
 
 __all__ = [
@@ -65,6 +68,8 @@ __all__ = [
     "ClaimGraph",
     "ClaimNode",
     "build_claim_graph",
+    "VERSION",
+    "run_cli",
     "CollaborationMarkdown",
     "render_collaboration_markdown",
     "CollaborationPlan",
@@ -148,6 +153,8 @@ __all__ = [
     "PublicSource",
     "PublicSourceRegistry",
     "default_public_source_registry",
+    "ReleaseBundle",
+    "build_release_bundle",
     "render_packet_report",
     "ResearchAtom",
     "atom_from_public_record",
@@ -162,6 +169,9 @@ __all__ = [
     "RecordValidationFinding",
     "RecordValidationReport",
     "validate_public_records",
+    "VersionEntry",
+    "VersionManifest",
+    "build_version_manifest",
     "BlockedActionPacket",
     "GateStatus",
     "OAKCompileResult",
