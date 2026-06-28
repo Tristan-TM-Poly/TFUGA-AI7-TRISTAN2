@@ -54,9 +54,12 @@ def validate_axis(axis: Any, unit: str | None = None) -> dict[str, Any]:
         errors.append("axis_must_have_at_least_two_points")
 
     numeric_values: list[float] = []
+    numeric_errors: list[str] = []
     for index, value in enumerate(axis):
         if not _is_number(value):
-            errors.append(f"axis_value_not_finite_number:{index}")
+            error = f"axis_value_not_finite_number:{index}"
+            errors.append(error)
+            numeric_errors.append(error)
         else:
             numeric_values.append(float(value))
 
@@ -65,7 +68,7 @@ def validate_axis(axis: Any, unit: str | None = None) -> dict[str, Any]:
     elif unit not in ALLOWED_AXIS_UNITS:
         errors.append(f"unsupported_axis_unit:{unit}")
 
-    if not errors and len(numeric_values) >= 2:
+    if not numeric_errors and len(numeric_values) >= 2:
         diffs = [numeric_values[i + 1] - numeric_values[i] for i in range(len(numeric_values) - 1)]
         if any(diff == 0 for diff in diffs):
             errors.append("axis_contains_duplicate_neighbors")
