@@ -7,7 +7,15 @@ Core safety rule:
     no linearization claim without a measured residual.
 """
 
+from .adaptive_de import AdaptiveDESelection, AdaptiveDEStep, select_ode_tensor_degree
 from .adaptive_tensorprod import AdaptiveLiftFit, AdaptiveStep, adaptive_dynamic_lift_fit
+from .auxiliary_variables import (
+    AuxiliaryVariableTemplate,
+    exp_template,
+    reciprocal_template,
+    sin_cos_template,
+    standard_auxiliary_templates,
+)
 from .bases import ScalingDomain, chebyshev_lift, chebyshev_values, infer_scaling_domain, scale_to_unit_interval
 from .closure_residual import ClosureReport, closure_residual
 from .conditioning import OAKScore, ResidualMetrics, matrix_condition_number, oak_score, residual_metrics
@@ -20,7 +28,21 @@ from .de_tensorprod import (
     carleman_residual_on_samples,
     lifted_time_derivative,
 )
+from .invariant_guards import (
+    InvariantCheck,
+    InvariantReport,
+    conservation_check,
+    custom_invariant_check,
+    invariant_report,
+    l2_energy,
+    monotone_decrease_check,
+    positivity_check,
+    positivity_error,
+)
 from .koopman_tensorprod import KoopmanTensorProdFit, fit_koopman_tensorprod, predict_lifted
+from .lifted_solvers import LinearSolveReport, rk4_linear_step, solve_lifted_linear
+from .low_rank_operator import LowRankOperator, compress_operator_svd
+from .mminus_registry import MMinusEntry, MMinusRegistry, build_mminus_registry, entry_from_oak_status, merge_registries
 from .pde_tensorprod import (
     PDEResidualReport,
     burgers_rhs_periodic,
@@ -31,6 +53,7 @@ from .pde_tensorprod import (
     periodic_boundary_residual,
     reaction_diffusion_rhs,
 )
+from .residual_decomposition import ResidualComponent, ResidualDecomposition, decompose_residuals, residual_dict
 from .sparse_tensorprod import (
     SparseLiftResult,
     SparseSelectionReport,
@@ -52,20 +75,31 @@ from .tensor_prod_lift import (
 from .train_test_oak import TrainTestOAKReport, train_test_koopman_oak
 
 __all__ = [
+    "AdaptiveDESelection",
+    "AdaptiveDEStep",
     "AdaptiveLiftFit",
     "AdaptiveStep",
+    "AuxiliaryVariableTemplate",
     "CVCDSelection",
     "CarlemanResidualTerm",
     "CarlemanTensorProdOperator",
     "ClosureReport",
     "FeatureFertility",
+    "InvariantCheck",
+    "InvariantReport",
     "KoopmanTensorProdFit",
     "LiftResult",
     "LinearOperatorFit",
+    "LinearSolveReport",
+    "LowRankOperator",
+    "MMinusEntry",
+    "MMinusRegistry",
     "OAKReport",
     "OAKScore",
     "PDEResidualReport",
     "PolynomialODE",
+    "ResidualComponent",
+    "ResidualDecomposition",
     "ResidualMetrics",
     "ScalingDomain",
     "SparseLiftResult",
@@ -73,35 +107,55 @@ __all__ = [
     "TrainTestOAKReport",
     "adaptive_dynamic_lift_fit",
     "build_carleman_operator",
+    "build_mminus_registry",
     "burgers_rhs_periodic",
     "carleman_residual_on_samples",
     "chebyshev_lift",
     "chebyshev_values",
     "closure_residual",
+    "compress_operator_svd",
+    "conservation_check",
+    "custom_invariant_check",
+    "decompose_residuals",
+    "entry_from_oak_status",
+    "exp_template",
     "feature_count",
     "feature_fertility_scores",
     "fit_koopman_tensorprod",
     "fit_linear_operator",
     "gradient_1d_periodic",
     "infer_scaling_domain",
+    "invariant_report",
+    "l2_energy",
     "laplacian_1d_periodic",
     "lifted_time_derivative",
     "mass",
     "matrix_condition_number",
+    "merge_registries",
+    "monotone_decrease_check",
     "multi_indices",
     "oak_score",
     "one_plus_lift",
     "pde_residual_euler",
     "periodic_boundary_residual",
     "polynomial_eval_from_lift",
+    "positivity_check",
+    "positivity_error",
     "predict_lifted",
     "reaction_diffusion_rhs",
+    "reciprocal_template",
+    "residual_dict",
     "residual_metrics",
+    "rk4_linear_step",
     "scale_to_unit_interval",
     "select_by_correlation_with_target",
     "select_by_variance",
     "select_cvcd_features",
+    "select_ode_tensor_degree",
+    "sin_cos_template",
+    "solve_lifted_linear",
     "sparse_tensor_prod_lift",
+    "standard_auxiliary_templates",
     "tensor_prod_lift",
     "train_test_koopman_oak",
 ]
