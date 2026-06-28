@@ -1,0 +1,26 @@
+{
+  "name": "Professor outreach draft",
+  "intent": "Prepare a collaboration email draft for a professor without sending it.",
+  "system": "gmail",
+  "action_type": "send_email",
+  "target": "professor@example.edu",
+  "approved": false,
+  "public": false,
+  "reversible": true,
+  "rollback": "delete_draft",
+  "touches_humans": true,
+  "touches_ip": true,
+  "risk": {
+    "legal": 1,
+    "ip": 2,
+    "finance": 0,
+    "safety": 0,
+    "privacy": 1,
+    "reputation": 2,
+    "irreversibility": 1
+  },
+  "metadata": {
+    "oak_rule": "send_email_without_approval_must_be_draft_only",
+    "expected_decision": "allow_draft"
+  }
+}
