@@ -29,10 +29,12 @@ class OmegaAuto2P0IntegrationTests(unittest.TestCase):
         self.assertEqual(report["oak_status"], OAK_PASS)
         self.assertEqual(report["module_statuses"]["gateway"], OAK_PASS)
         self.assertEqual(report["module_statuses"]["spectral_core"], OAK_PASS)
+        self.assertEqual(report["module_statuses"]["spectral_cleaning"], OAK_PASS)
         self.assertEqual(report["module_statuses"]["usage_events"], OAK_PASS)
+        self.assertIn("spectral_cleaning", report)
         self.assertFalse(report["external_actions_allowed"])
         self.assertFalse(report["production_use_allowed"])
-        self.assertEqual(report["next_action"], "ready_for_spectral_cleaning_p0")
+        self.assertEqual(report["next_action"], "ready_for_oakbench_p0")
 
     def test_invalid_request_stops_at_gateway(self):
         request = json.loads(INVALID_REQUEST.read_text(encoding="utf-8"))
@@ -40,6 +42,7 @@ class OmegaAuto2P0IntegrationTests(unittest.TestCase):
         self.assertEqual(report["oak_status"], OAK_FAIL)
         self.assertEqual(report["module_statuses"]["gateway"], OAK_FAIL)
         self.assertEqual(report["spectral_core"], {})
+        self.assertEqual(report["spectral_cleaning"], {})
         self.assertEqual(report["usage_events"], {})
         self.assertEqual(report["next_action"], "fix_gateway_input")
 
