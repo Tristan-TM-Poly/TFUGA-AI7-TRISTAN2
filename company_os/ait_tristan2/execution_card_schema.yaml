@@ -1,0 +1,30 @@
+# AIT-Tristan2 Execution Card schema v1
+
+execution_card_schema:
+  id: "EXEC-0000"
+  title: "string"
+  domain: "corporate | ip | product | sales | finance | admin | research"
+  action_type: "FULL_AUTO | APPROVE_ONE_TAP | DELEGATE | REVIEW_GATE | WAITING_FOR_PROOF | M_MINUS_HOLD"
+  owner: "AIT-Tristan2"
+  delegate_role: "optional"
+  human_friction:
+    expected_minutes: 0
+    required_input: "none | yes_no | A_B_C | signature | review"
+  packet_ready:
+    - "path/to/file"
+  next_action:
+    - "string"
+  proof_required:
+    - "completion_note"
+    - "confirmation_email"
+    - "receipt_or_pdf"
+  risk_flags:
+    - "string"
+  oak_status: "prepared_not_completed"
+  timestamps:
+    created_at: "TODO"
+    updated_at: "TODO"
+  completion:
+    confirmed: false
+    proof_links: []
+    notes: "TODO"
