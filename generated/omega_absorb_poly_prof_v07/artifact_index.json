@@ -1,0 +1,14 @@
+{
+  "artifact_count": 3,
+  "artifact_paths": [
+    "generated/omega_absorb_poly_prof_v07/professor_demo_backlog.md",
+    "generated/omega_absorb_poly_prof_v07/collaboration_seed.md",
+    "generated/omega_absorb_poly_prof_v07/artifact_index.json"
+  ],
+  "artifact_ids": [
+    "demo_professor_backlog",
+    "demo_collaboration_seed",
+    "demo_artifact_index"
+  ],
+  "data_mode": "demo_public_metadata"
+}

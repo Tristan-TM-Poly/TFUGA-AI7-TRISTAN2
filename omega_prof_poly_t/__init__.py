@@ -1,8 +1,10 @@
 """Omega-PROF-POLY-T package."""
 
 from .absorb_public_research import AbsorptionReport, absorb_public_records, demo_public_research_records
+from .artifact_summaries import ArtifactSummary, build_artifact_summary
 from .backlog_packet_templates import BacklogPacket, render_backlog_packet
 from .claim_graph import ClaimGraph, ClaimNode, build_claim_graph
+from .collaboration_recommender import CollaborationPlan, CollaborationRecommendation, recommend_collaborations
 from .core import (
     Evidence,
     OAKDecision,
@@ -14,6 +16,7 @@ from .core import (
 )
 from .course_memory_minus import CourseAntiError, CourseMemoryMinus, build_course_memory_minus
 from .coursecvcd import CourseCVCDPacket, CourseInput, generate_coursecvcd
+from .enriched_graph_exports import professor_graph_to_enriched_graphml
 from .generated_report_artifacts import ArtifactManifest, GeneratedArtifact, build_report_artifacts
 from .grant_forge import GrantInput, GrantPacket, forge_grant, grant_score
 from .graph_exports import professor_graph_to_graphml, professor_graph_to_json
@@ -46,11 +49,16 @@ __all__ = [
     "AbsorptionReport",
     "absorb_public_records",
     "demo_public_research_records",
+    "ArtifactSummary",
+    "build_artifact_summary",
     "BacklogPacket",
     "render_backlog_packet",
     "ClaimGraph",
     "ClaimNode",
     "build_claim_graph",
+    "CollaborationPlan",
+    "CollaborationRecommendation",
+    "recommend_collaborations",
     "Evidence",
     "OAKDecision",
     "OAKStatus",
@@ -64,6 +72,7 @@ __all__ = [
     "CourseCVCDPacket",
     "CourseInput",
     "generate_coursecvcd",
+    "professor_graph_to_enriched_graphml",
     "ArtifactManifest",
     "GeneratedArtifact",
     "build_report_artifacts",
