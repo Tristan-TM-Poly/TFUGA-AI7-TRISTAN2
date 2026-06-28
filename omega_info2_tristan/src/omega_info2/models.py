@@ -19,6 +19,19 @@ def clamp01(value: float) -> float:
         return 0.0
 
 
+def json_safe(value: Any) -> Any:
+    """Convert dataclass/enum payloads into JSON-safe values."""
+    if isinstance(value, Enum):
+        return value.value
+    if isinstance(value, dict):
+        return {str(k): json_safe(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [json_safe(item) for item in value]
+    if isinstance(value, tuple):
+        return [json_safe(item) for item in value]
+    return value
+
+
 class OAKStatus(str, Enum):
     RAW = "RAW"
     PARSED = "PARSED"
@@ -202,7 +215,7 @@ class InfoObject:
     action: InfoAction = field(default_factory=InfoAction)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        return json_safe(asdict(self))
 
     @classmethod
     def example(cls) -> "InfoObject":
