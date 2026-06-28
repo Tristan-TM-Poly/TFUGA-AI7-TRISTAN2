@@ -23,6 +23,8 @@ jobs:
       - run: pip install -e ".[dev]"
       - name: Unit tests
         run: pytest -q
+      - name: Rosette atlas
+        run: rosette-atlas --out out_atlas/command_atlas.json --markdown out_atlas/COMMAND_ATLAS.md
       - name: Rosette doctor
         run: rosette-doctor --out out_doctor/doctor_report.json --require-all-commands
       - name: Rosette CLI smoke benchmarks
@@ -36,6 +38,8 @@ jobs:
         with:
           name: rosette-ci-reports
           path: |
+            projects/rosette-tristan/out_atlas/command_atlas.json
+            projects/rosette-tristan/out_atlas/COMMAND_ATLAS.md
             projects/rosette-tristan/out_doctor/doctor_report.json
             projects/rosette-tristan/out_bench/rosette_bench_report.json
             projects/rosette-tristan/out_corpus/corpus_manifest.json
