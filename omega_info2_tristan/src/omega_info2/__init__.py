@@ -9,6 +9,7 @@ from .chatgpt_oak_gate import (
     GitHubRunContext,
     GitHubWorkflowState,
 )
+from .chatgpt_oak_reporter import GitHubWorkflowReport, build_post_merge_report
 from .cvcd_compressor import CVCDCompressor, CVCDInvariant, CVCDReport
 from .graph import Info2Graph
 from .half_life import freshness_score, half_life_days
@@ -47,6 +48,7 @@ __all__ = [
     "DEFAULT_FAILURE_RULES",
     "EvidenceVector",
     "GitHubRunContext",
+    "GitHubWorkflowReport",
     "GitHubWorkflowState",
     "Info2Pipeline",
     "Info2PipelineResult",
@@ -69,6 +71,7 @@ __all__ = [
     "SourceTrustInput",
     "UncertaintyTensor",
     "Info2Graph",
+    "build_post_merge_report",
     "rosette_to_info_object",
     "score_source",
     "route_information",
