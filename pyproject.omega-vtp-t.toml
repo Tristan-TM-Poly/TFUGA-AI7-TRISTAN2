@@ -1,0 +1,9 @@
+[project]
+name = "omega-vtp-t"
+version = "0.1.0"
+description = "Ω-VTP-T++ TensorProd-Lift prototype for polynomial tensor feature lifts and OAK residual checks."
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.22"]
+
+[tool.setuptools]
+packages = ["omega_vtp_t"]
