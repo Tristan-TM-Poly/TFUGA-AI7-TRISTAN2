@@ -16,6 +16,23 @@ CI green + mergeable + not merged = must merge
 omega-chatgpt-oak --rules
 ```
 
+## Built-in presets
+
+```bash
+omega-chatgpt-oak --list-presets
+omega-chatgpt-oak --preset green-not-merged
+omega-chatgpt-oak --preset post-merge-success
+omega-chatgpt-oak --preset stale-summary
+omega-chatgpt-oak --preset real-blocker
+```
+
+Preset meanings:
+
+- `green-not-merged`: catches the critical failure where a green mergeable PR is not merged.
+- `post-merge-success`: confirms a completed workflow can produce a final summary.
+- `stale-summary`: catches summaries that did not refresh the PR head/workflow state.
+- `real-blocker`: allows reporting a real blocker instead of merging.
+
 ## Evaluate context
 
 ```bash
@@ -39,6 +56,7 @@ Expected decision: gate fails and asks for merge.
 
 ```bash
 omega-chatgpt-oak --context context.json --exit-nonzero-on-fail
+omega-chatgpt-oak --preset green-not-merged --exit-nonzero-on-fail
 ```
 
 This exits with code `2` when the gate catches a workflow mistake.
