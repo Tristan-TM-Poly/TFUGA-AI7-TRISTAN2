@@ -10,8 +10,13 @@ from __future__ import annotations
 import argparse
 import json
 import pathlib
+import sys
 from datetime import datetime, timezone
 from typing import Any
+
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from omega_auto2_p0 import run_p0_pipeline
 
