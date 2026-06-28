@@ -19,6 +19,7 @@ classifiers = [
 
 [project.scripts]
 omega-info2 = "omega_info2.cli:main"
+omega-chatgpt-oak = "omega_info2.chatgpt_oak_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
