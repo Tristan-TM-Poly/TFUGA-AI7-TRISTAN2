@@ -1,0 +1,13 @@
+{
+  "request_id": "",
+  "namespace": "synthetic_lab",
+  "operation": "activate_billing",
+  "payload": [],
+  "metadata": {
+    "source": "synthetic_fixture",
+    "production_billing": true
+  },
+  "oak_context": {
+    "mode": "offline_test"
+  }
+}
