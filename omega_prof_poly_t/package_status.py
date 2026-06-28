@@ -1,4 +1,4 @@
-"""Package status report for Omega absorb v1.2."""
+"""Package status report for Omega absorb v1.3."""
 
 from __future__ import annotations
 
@@ -33,12 +33,18 @@ def build_package_status_report() -> PackageStatusReport:
         "graphml",
         "docs-index",
         "status",
+        "sources",
         "write-bundle",
+        "ingest-json",
+        "table",
+        "export-bundle",
+        "health",
+        "changelog",
     )
     lines = [
         "# Omega Absorb Package Status",
         "",
-        f"Version: 1.2.0",
+        "Version: 1.3.0",
         f"Manifest entries: {len(manifest.entries)}",
         f"Documentation entries: {len(docs.entries)}",
         f"Demo sources: {', '.join(available_demo_sources())}",
@@ -47,7 +53,7 @@ def build_package_status_report() -> PackageStatusReport:
     ]
     lines.extend(f"- {command}" for command in commands)
     return PackageStatusReport(
-        version="1.2.0",
+        version="1.3.0",
         version_count=len(manifest.entries),
         document_count=len(docs.entries),
         source_count=len(available_demo_sources()),

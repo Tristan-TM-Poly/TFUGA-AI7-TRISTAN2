@@ -1,0 +1,4 @@
+rank | atom_id | score | path | next
+--- | --- | --- | --- | ---
+1 | v08-poly-sensor | 0.7200 | course_module_packet | generate_ranked_backlog_item
+2 | v08-expertise-energy | 0.6800 | project_to_publication_packet | generate_ranked_backlog_item
