@@ -1,0 +1,99 @@
+# Ω-AUTO²-CORP-JKD live-auto backlog v1
+# Backlog of automatable corporate/productization tasks with approval gates.
+
+live_auto_backlog:
+  status: active
+  corp:
+    - id: CORP-001
+      task: "Finalize company name candidates"
+      automation_level: FULL_AUTO
+      outputs:
+        - ranked_name_list
+        - name_search_checklist
+    - id: CORP-002
+      task: "Prepare lawyer/accountant packet"
+      automation_level: FULL_AUTO
+      outputs:
+        - lawyer_accountant_packet.md
+    - id: CORP-003
+      task: "Prepare minute book skeleton"
+      automation_level: FULL_AUTO
+      outputs:
+        - minute_book_index.md
+    - id: CORP-004
+      task: "Prepare founder resolution draft"
+      automation_level: LEGAL_SIGNATURE
+      outputs:
+        - founder_resolution_draft.md
+      human_gate: signature_and_review
+    - id: CORP-005
+      task: "Prepare share subscription draft"
+      automation_level: LEGAL_SIGNATURE
+      outputs:
+        - share_subscription_draft.md
+      human_gate: lawyer_review_and_signature
+  ip:
+    - id: IP-001
+      task: "Classify all Ω assets"
+      automation_level: FULL_AUTO
+      outputs:
+        - ip_register.yaml
+    - id: IP-002
+      task: "Create invention disclosure template"
+      automation_level: FULL_AUTO
+      outputs:
+        - invention_disclosure_template.md
+    - id: IP-003
+      task: "Create IP assignment review packet"
+      automation_level: PROFESSIONAL_REVIEW
+      outputs:
+        - ip_assignment_review_packet.md
+      human_gate: ip_lawyer_review
+    - id: IP-004
+      task: "Create trade secret register"
+      automation_level: FULL_AUTO
+      outputs:
+        - trade_secret_register.yaml
+  sales:
+    - id: SALES-001
+      task: "Datacenter Thermal OAK one-page offer"
+      automation_level: FULL_AUTO
+      outputs:
+        - sales_offer_one_pagers.md
+    - id: SALES-002
+      task: "ROI-OAK audit proposal"
+      automation_level: FULL_AUTO
+      outputs:
+        - sales_offer_one_pagers.md
+    - id: SALES-003
+      task: "Outreach emails"
+      automation_level: HUMAN_APPROVAL
+      outputs:
+        - outreach_email_drafts.md
+      human_gate: approve_before_send
+    - id: SALES-004
+      task: "Proposal template"
+      automation_level: PROFESSIONAL_REVIEW
+      outputs:
+        - proposal_template_review_packet.md
+  finance:
+    - id: FIN-001
+      task: "Pricing model"
+      automation_level: FULL_AUTO
+      outputs:
+        - pricing_model.yaml
+    - id: FIN-002
+      task: "Invoice template draft"
+      automation_level: PROFESSIONAL_REVIEW
+      outputs:
+        - invoice_template_draft.md
+    - id: FIN-003
+      task: "Monthly OAK finance report"
+      automation_level: FULL_AUTO
+      outputs:
+        - monthly_oak_finance_report_template.md
+    - id: FIN-004
+      task: "Tax setup checklist"
+      automation_level: PROFESSIONAL_REVIEW
+      outputs:
+        - tax_setup_checklist.md
