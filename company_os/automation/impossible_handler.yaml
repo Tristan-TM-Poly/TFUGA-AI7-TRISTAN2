@@ -1,0 +1,72 @@
+# Ω-AUTO²-CORP-JKD impossible handler v1
+# Converts blocked or impossible direct actions into safe packets, queues, and M-minus learning.
+
+impossible_handler:
+  canonical_phrase: "The impossible is an API without permission; build the adapter."
+  detects:
+    - missing_authority
+    - missing_identity
+    - missing_signature
+    - missing_payment
+    - missing_official_account
+    - missing_professional_review
+    - missing_data
+    - missing_external_api_access
+    - unsafe_or_false_claim
+  transformations:
+    missing_authority:
+      produce:
+        - authority_gap_report
+        - approval_request
+        - safe_handoff_steps
+    missing_identity:
+      produce:
+        - identity_requirements_checklist
+        - fields_to_fill
+        - human_verification_gate
+    missing_signature:
+      produce:
+        - draft_document
+        - signature_blocks
+        - review_required_notice
+    missing_payment:
+      produce:
+        - fee_estimate_placeholder
+        - payment_step_checklist
+        - human_payment_gate
+    missing_official_account:
+      produce:
+        - account_setup_packet
+        - documents_needed
+        - appointment_or_application_checklist
+    missing_professional_review:
+      produce:
+        - professional_review_memo
+        - questions
+        - documents_bundle
+    missing_data:
+      produce:
+        - data_request
+        - assumptions_register
+        - sensitivity_analysis
+    missing_external_api_access:
+      produce:
+        - manual_step_packet
+        - connector_request
+        - fallback_workflow
+    unsafe_or_false_claim:
+      produce:
+        - refusal_reason
+        - corrected_claim
+        - mminus_entry
+  output_schema:
+    action_id: "AUTO-XXXX"
+    original_task: "string"
+    blocker_type: "enum"
+    safe_transformation: "string"
+    generated_outputs: []
+    human_gate: true
+    professional_review_required: false
+    next_minimal_action: []
+    oak_status: "prepared_not_completed"
+    mminus_if_any: []
