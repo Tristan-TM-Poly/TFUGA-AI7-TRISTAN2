@@ -1,0 +1,76 @@
+# Ω-CORP-JARVIS-T initial commercial offers v1
+# Candidate pricing and deliverables. Validate market, legal terms, taxes, and capacity before selling.
+
+initial_offers:
+  - id: OFFER001
+    name: "OAK Technical Audit"
+    price_candidate_cad: "2500-15000"
+    target_customers:
+      - startups
+      - research labs
+      - industrial teams
+      - energy/data infrastructure teams
+    deliverables:
+      - technical model review
+      - residual and risk map
+      - ROI hypothesis
+      - pilot plan
+      - M-minus risk register
+    oak_requirements:
+      - no guaranteed performance claims
+      - written scope
+      - confidentiality terms
+      - liability limit
+  - id: OFFER002
+    name: "Datacenter Thermal OAK Pilot"
+    price_candidate_cad: "25000-150000"
+    target_customers:
+      - datacenters
+      - compute clusters
+      - AI infrastructure operators
+      - facilities engineering teams
+    deliverables:
+      - baseline thermal model
+      - PUE proxy analysis
+      - hotspot risk score
+      - savings estimate
+      - A/B test protocol
+      - Ω-ROI-OAK report
+    oak_requirements:
+      - measured baseline
+      - safety/operations approval
+      - no autonomous control without facility approval
+  - id: OFFER003
+    name: "Quebec Scientific Patent Digest"
+    price_candidate_cad: "5000-50000"
+    target_customers:
+      - startups
+      - investors
+      - university labs
+      - innovation teams
+    deliverables:
+      - papers/patents map
+      - opportunity scoring
+      - IP risk matrix
+      - commercialization candidates
+      - source-linked evidence graph
+    oak_requirements:
+      - cite sources
+      - distinguish facts, claims, hypotheses, and IP risks
+  - id: OFFER004
+    name: "ROI-OAK Commercialization Report"
+    price_candidate_cad: "2500-25000"
+    target_customers:
+      - founders
+      - R&D teams
+      - energy operators
+      - investors
+    deliverables:
+      - ROI/ROAK model
+      - costs and risks
+      - risk-adjusted scenarios
+      - go/no-go or pilot decision
+    oak_requirements:
+      - no ROI guarantee
+      - validated assumptions table
+      - sensitivity analysis
