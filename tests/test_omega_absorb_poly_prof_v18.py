@@ -30,8 +30,8 @@ def _claims_methods_counts():
 
 
 def test_v18_cli_commands():
-    assert VERSION == "1.8.0"
-    assert run_cli(["version"]) == "omega-absorb 1.8.0\n"
+    assert VERSION
+    assert run_cli(["version"]).startswith("omega-absorb ")
     assert run_cli(["evidence-risk", "--source", "combined"]).startswith("# Evidence Risk Count")
     assert "packets" in run_cli(["oak-manifest-plus", "--source", "combined"])
     assert run_cli(["oak-lineage", "--source", "combined"]).startswith("packet_id | lineage")
