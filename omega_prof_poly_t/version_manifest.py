@@ -1,4 +1,4 @@
-"""Version manifest for Omega absorb v1.9."""
+"""Version manifest for Omega Absorb OS v2.0."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ class VersionManifest:
 
 def build_version_manifest() -> VersionManifest:
     return VersionManifest(
-        release="1.9.0",
+        release="2.0.0",
         entries=(
             VersionEntry("0.3", "public research atoms", ("research_atom", "professor_genome", "poly_research_twin"), "merged"),
             VersionEntry("0.4", "claim and method graph compiler", ("claim_graph", "method_graph", "research_opportunity_compiler"), "merged"),
@@ -41,7 +41,8 @@ def build_version_manifest() -> VersionManifest:
             VersionEntry("1.6", "adapter router, source policies, ingestion v2, action packets and work bundles", ("adapter_router", "source_oak_policy", "ingest_json_pipeline_v2", "action_packet_writer", "github_work_bundle"), "merged"),
             VersionEntry("1.7", "weighted tensors, twin answers, department matrix and route dashboard", ("professor_tensor_weights", "poly_research_twin_v3", "twin_answer_engine", "department_strategy_matrix", "route_confidence_dashboard"), "merged"),
             VersionEntry("1.8", "OAK manifest plus, lineage ledger, evidence risk and M-minus rules", ("oak_packet_manifest_plus", "oak_lineage_ledger", "evidence_risk_counter", "mminus_rules_engine", "oak_ledger_cli"), "merged"),
-            VersionEntry("1.9", "report atlas, report writer, release intelligence, changelog plus and CI plan", ("report_atlas", "report_writer", "release_intelligence", "generated_changelog_plus", "package_ci_plan"), "current"),
+            VersionEntry("1.9", "report atlas, report writer, release intelligence, changelog plus and CI plan", ("report_atlas", "report_writer", "release_intelligence", "generated_changelog_plus", "package_ci_plan"), "merged"),
+            VersionEntry("2.0", "Omega Absorb OS v2 layout, contract, workflow and command groups", ("package_layout_v2", "report_bundle_contract", "workflow_seed", "cli_command_groups", "omega_absorb_os_v2"), "current"),
         ),
-        next_action="publish_release_notes_packet",
+        next_action="publish_os_v2_release_packet",
     )
