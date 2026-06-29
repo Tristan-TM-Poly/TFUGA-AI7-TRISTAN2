@@ -1,0 +1,52 @@
+# M+ / M- Learning Loop — Ω-ACTION-LOOP-T
+
+learning_loop:
+  purpose: convert every action result into reusable memory
+  M_plus:
+    definition: successful pattern that should be reused
+    records:
+      - action_type
+      - context
+      - proof
+      - why_it_worked
+      - reusable_template
+      - next_scale_opportunity
+    examples:
+      docs_only_PR_merged:
+        lesson: small additive documentation/config PRs can be merged safely when checks are clean
+      GREEN_FORM_READY:
+        lesson: official form route is better than guessed email
+      datacenter_packet_ready:
+        lesson: proof packets make outreach more concrete
+  M_minus:
+    definition: failure, blocker, false assumption, or unsafe pattern that should not repeat
+    records:
+      - failure_class
+      - context
+      - observed_blocker
+      - why_action_was_unsafe_or_unproductive
+      - anti_repetition_rule
+      - safer_next_action
+    common_patterns:
+      checks_pending:
+        anti_repetition_rule: do not merge until checks are clean or status is unambiguous
+        safer_next_action: wait or repair if failure becomes concrete
+      draft_PR:
+        anti_repetition_rule: do not merge draft PRs
+        safer_next_action: wait for explicit ready state
+      guessed_email:
+        anti_repetition_rule: official route only
+        safer_next_action: use form packet or deeper official search
+      message_too_abstract:
+        anti_repetition_rule: attach concrete microbenchmark only when contextually relevant
+        safer_next_action: use Datacenter Energy OAK or another proof packet
+      repeated_no_reply:
+        anti_repetition_rule: do not keep following up blindly
+        safer_next_action: retarget, improve proof, or pause
+  compression:
+    rule: summarize repeated M- patterns into one anti-pattern with a clear fix
+  output_files:
+    suggested:
+      - orchestration/mplus_registry.yaml
+      - orchestration/mminus_registry.yaml
+      - orchestration/action_loop_lessons.md
