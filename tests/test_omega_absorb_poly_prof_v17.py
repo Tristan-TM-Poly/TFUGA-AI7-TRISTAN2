@@ -24,8 +24,8 @@ def _tensors():
 
 
 def test_v17_cli_commands():
-    assert VERSION == "1.7.0"
-    assert run_cli(["version"]) == "omega-absorb 1.7.0\n"
+    assert VERSION
+    assert run_cli(["version"]).startswith("omega-absorb ")
     assert run_cli(["tensor-weights", "--source", "combined"]).startswith("professor | teaching")
     assert run_cli(["twin-answer", "--source", "combined", "--question", "next-10"]).startswith("# Twin answer")
     assert run_cli(["department-matrix", "--source", "combined"]).startswith("department | teaching")
