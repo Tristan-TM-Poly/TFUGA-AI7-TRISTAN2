@@ -1,4 +1,4 @@
-"""Version manifest for Omega absorb v1.5."""
+"""Version manifest for Omega absorb v1.6."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ class VersionManifest:
 
 def build_version_manifest() -> VersionManifest:
     return VersionManifest(
-        release="1.5.0",
+        release="1.6.0",
         entries=(
             VersionEntry("0.3", "public research atoms", ("research_atom", "professor_genome", "poly_research_twin"), "merged"),
             VersionEntry("0.4", "claim and method graph compiler", ("claim_graph", "method_graph", "research_opportunity_compiler"), "merged"),
@@ -37,7 +37,8 @@ def build_version_manifest() -> VersionManifest:
             VersionEntry("1.2", "source selection and GraphML exports", ("source_selection", "package_status", "export_commands"), "merged"),
             VersionEntry("1.3", "local JSON input, compact tables, bundles, health and changelog", ("local_json_loader", "compact_table_report", "export_bundle", "package_health", "changelog_generator"), "merged"),
             VersionEntry("1.4", "strict schemas, claim tests, method reproduction, M-minus and GitHub packets", ("source_registry_schema", "claim_oak_plus", "method_reproduction_packet", "mminus_registry", "github_packet_generator"), "merged"),
-            VersionEntry("1.5", "professor tensors, research twin v2, bridge optimizer and OAK packet manifest", ("professor_tensor", "poly_research_twin_v2", "department_bridge_optimizer", "next_actions_engine", "oak_packet_manifest"), "current"),
+            VersionEntry("1.5", "professor tensors, research twin v2, bridge optimizer and OAK packet manifest", ("professor_tensor", "poly_research_twin_v2", "department_bridge_optimizer", "next_actions_engine", "oak_packet_manifest"), "merged"),
+            VersionEntry("1.6", "adapter router, source policies, ingestion v2, action packets and work bundles", ("adapter_router", "source_oak_policy", "ingest_json_pipeline_v2", "action_packet_writer", "github_work_bundle"), "current"),
         ),
         next_action="publish_release_notes_packet",
     )
