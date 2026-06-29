@@ -1,0 +1,38 @@
+name: Canon Extreme v2 Guardrail
+
+on:
+  pull_request:
+    paths:
+      - 'docs/canon-extreme-v2.md'
+      - 'docs/oak-levels-extreme.md'
+      - 'docs/m-minus-protocol.md'
+      - 'schemas/theory_card_extreme.yaml'
+      - '.github/workflows/canon-extreme-v2.yml'
+  workflow_dispatch:
+
+jobs:
+  canon-extreme-v2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify canon documentation guardrails
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files = [
+              'docs/canon-extreme-v2.md',
+              'docs/oak-levels-extreme.md',
+              'docs/m-minus-protocol.md',
+              'schemas/theory_card_extreme.yaml',
+          ]
+          required = ['OAK', 'M_MINUS', 'prototype', 'canon']
+          text = '\n'.join(Path(p).read_text(encoding='utf-8') for p in files)
+          missing = [term for term in required if term not in text]
+          if missing:
+              raise SystemExit(f'Missing canon guardrail terms: {missing}')
+          for path in files:
+              if len(Path(path).read_text(encoding='utf-8').strip()) < 80:
+                  raise SystemExit(f'{path} is unexpectedly short')
+          PY
