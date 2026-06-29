@@ -1,0 +1,37 @@
+# Dashboard Report Generator Manifest
+
+dashboard_report_generator_manifest:
+  status: executable_seed
+  module: tools/action_dashboard/dashboard_report_generator.py
+  sample_snapshot: examples/action_dashboard/sample_cycle_snapshot.json
+  documentation: docs/OMEGA_DASHBOARD_REPORT_GENERATOR.md
+  outputs:
+    - ACTION_DASHBOARD_REPORT.md
+    - ACTION_DASHBOARD_REPORT.json
+  inputs:
+    required:
+      - JSON dashboard snapshot
+    optional:
+      - provided metrics
+      - lane states
+      - M_plus_M_minus_memory
+      - external_action_governor
+  functions:
+    - load_snapshot
+    - rank_next_best_actions
+    - compute_metrics
+    - normalize_dashboard
+    - render_markdown
+    - write_dashboard_report
+  OAK_rules:
+    - read_only_generator
+    - no_external_actions
+    - no_network_calls
+    - no_claims_without_snapshot_evidence
+    - rewards_proof_capital_over_activity_volume
+  next_upgrades:
+    - action_dashboard_snapshot_collector
+    - report_trend_comparator
+    - proof_capital_history
+    - friction_burn_rate_history
+    - GitHub_CI_for_dashboard_generator

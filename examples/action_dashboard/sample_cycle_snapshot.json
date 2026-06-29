@@ -1,0 +1,75 @@
+{
+  "dashboard_id": "omega-action-dashboard-sample",
+  "generated_at": "2026-06-29T13:55:00Z",
+  "cycle_window": {
+    "start": "2026-06-29T12:55:00Z",
+    "end": "2026-06-29T13:55:00Z"
+  },
+  "active_loops": [
+    {"loop_id": "All-GitHub Action Loop", "cadence": "hourly", "status": "active"},
+    {"loop_id": "University Action Loop", "cadence": "weekly", "status": "active"}
+  ],
+  "top_blockers": [
+    {"blocker_class": "pending_checks", "affected_lane": "github", "safest_next_action": "WAIT_COOLDOWN"},
+    {"blocker_class": "draft_PR", "affected_lane": "github", "safest_next_action": "WAIT_READY"}
+  ],
+  "next_best_actions": [
+    {
+      "action_id": "build_dashboard_report_generator",
+      "lane": "dashboard",
+      "title": "Generate executable dashboard report",
+      "score": 0.94,
+      "decision": "ACT_NOW_INTERNAL_SAFE",
+      "expected_output": "Markdown and JSON dashboard reports"
+    },
+    {
+      "action_id": "complete_paper_to_code_packet",
+      "lane": "proof_packets",
+      "title": "Complete Paper-to-Code OAK packet",
+      "score": 0.78,
+      "decision": "PREPARE_OR_REPAIR",
+      "expected_output": "Reusable academic proof packet"
+    }
+  ],
+  "lanes": {
+    "github": {
+      "open_PRs": 3,
+      "mergeable_clean_PRs": 0,
+      "draft_PRs": 1,
+      "pending_checks": 1,
+      "merged_PRs": 1
+    },
+    "universities": {
+      "GREEN_EMAIL": 4,
+      "GREEN_FORM": 1,
+      "YELLOW_RESEARCH": 14,
+      "RED_REJECTED": 0,
+      "replies_pending_action": 0
+    },
+    "proof_packets": {
+      "ready_packets": 1,
+      "seed_packets": 2,
+      "missing_examples": 2,
+      "routed_targets": 7
+    }
+  },
+  "proof_assets": ["Datacenter Energy OAK packet"],
+  "merged_PRs": ["PR 188"],
+  "demo_packets": ["Datacenter Energy OAK", "Paper-to-Code OAK", "Patent-to-Opportunity OAK"],
+  "official_routes": ["INRS", "Laval", "Sherbrooke", "Polytechnique", "ETS form"],
+  "actions_attempted": ["scan", "create_packet", "merge_PR", "generate_dashboard"],
+  "safe_actions": ["scan", "create_packet", "merge_PR", "generate_dashboard"],
+  "loop_upgrades": ["dashboard_schema", "report_generator"],
+  "assets_created": ["dashboard_generator", "sample_snapshot"],
+  "frictions_burned": ["no_dashboard_generator", "no_sample_snapshot"],
+  "M_plus_new": ["docs/config PRs merge cleanly when OAK-safe"],
+  "M_minus_new": ["do not merge draft PRs", "wait for queued checks"],
+  "anti_repetition_rules_added": ["WAIT_COOLDOWN for pending checks"],
+  "external_action_governor": {
+    "internal_auto": ["dashboard generator PR"],
+    "external_prepared": [],
+    "external_approved": [],
+    "external_executed": [],
+    "blocked_until_approval": []
+  }
+}
