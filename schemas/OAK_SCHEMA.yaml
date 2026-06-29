@@ -1,0 +1,101 @@
+schema_version: 0.1
+name: OAK_SCHEMA
+status: ACTIVE
+purpose: >
+  Verification and status discipline for TFUGA / SAGE-TRISTAN / AI-7 / AIT.
+  OAK separates ideas, formal definitions, simulations, measurements, proofs,
+  and certified claims.
+
+statuses:
+  IDEA:
+    meaning: Raw intuition or note. No formal definition required yet.
+    promotion_requires:
+      - short written claim
+      - domain tag
+      - first risk note
+  ACTIVE:
+    meaning: Fertile candidate worth developing. Not proven or certified.
+    promotion_requires:
+      - explicit objects
+      - assumptions
+      - next verification step
+  FORMALIZED:
+    meaning: Definitions, variables, hypotheses, equations, or algorithms exist.
+    promotion_requires:
+      - dimensional or type consistency when applicable
+      - reproducible statement
+      - test or proof plan
+  SIMULATED:
+    meaning: Computational result exists, but is not necessarily experimentally measured.
+    promotion_requires:
+      - reproducible code or notebook
+      - input parameters
+      - output data
+      - limitations
+  MEASURED:
+    meaning: Experimental or empirical data exists.
+    promotion_requires:
+      - measurement protocol
+      - calibration or uncertainty notes
+      - raw or summarized data
+  CERTIFIED_MATH:
+    meaning: Mathematical proof checked against definitions and assumptions.
+    promotion_requires:
+      - proof
+      - definitions
+      - hypotheses
+      - peer or automated verification when possible
+  CERTIFIED_COMPUTATIONAL:
+    meaning: Reproducible computational result or benchmark.
+    promotion_requires:
+      - code
+      - tests
+      - environment
+      - benchmark outputs
+  CERTIFIED_PHYSICS:
+    meaning: Physical claim validated by measurement and comparison to established models.
+    promotion_requires:
+      - unit consistency
+      - derivation
+      - reproducible experiment or reliable dataset
+      - uncertainty
+      - comparison to known physics
+  REFUTED:
+    meaning: Known false, failed, contradicted, or superseded.
+    promotion_requires: []
+  ARCHIVED:
+    meaning: Preserved for history but not active.
+    promotion_requires: []
+
+required_fields:
+  - id
+  - title
+  - domain
+  - status
+  - claim
+  - evidence
+  - risks
+  - next_test
+
+domains:
+  - math
+  - physics
+  - ai
+  - ait
+  - energy
+  - climate
+  - circuits
+  - materials
+  - computation
+  - cognition
+  - governance
+  - prototype
+
+promotion_rule: >
+  A claim cannot skip directly from IDEA or ACTIVE to CERTIFIED_PHYSICS.
+  It must pass through formalization, simulation or measurement, and verification.
+
+safety_rule: >
+  Any energy, health, climate, or physics claim must be phrased as conceptual,
+  simulated, or measured according to evidence. Do not present speculative modules
+  as physically certified.
