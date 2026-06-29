@@ -1,0 +1,50 @@
+# Packet Router — Quebec University Outreach
+
+packet_router:
+  objective: choose the right proof packet for each contact, reply, or wave
+  packets:
+    datacenter_energy_oak:
+      path: demo_packets/datacenter_energy_oak/
+      status: ready_for_review_and_use_when_requested
+      use_for:
+        - energy
+        - datacenters
+        - optimization
+        - digital_twins
+        - engineering
+        - ROI_OAK
+        - applied_AI
+      primary_targets:
+        - ETS
+        - Polytechnique_Montreal
+        - INRS
+        - Universite_de_Sherbrooke
+        - Universite_Laval
+        - Concordia
+        - McGill
+      evidence_files:
+        - demo_packets/datacenter_energy_oak/README.md
+        - demo_packets/datacenter_energy_oak/microbenchmark_one_pager.md
+        - demo_packets/datacenter_energy_oak/oak_report_example.md
+        - demo_packets/datacenter_energy_oak/university_fit_matrix.yaml
+        - demo_packets/datacenter_energy_oak/send_when_requested_email_fr.md
+      related_code:
+        - omega_vtp_t/datacenter_thermal.py
+        - examples/datacenter_oak_demo.py
+  routing_logic:
+    first_contact:
+      action: use_short_microbenchmark_email_only
+      attach_packet: false
+    after_interest_or_request:
+      action: send_or_reference_relevant_packet
+      attach_packet: datacenter_energy_oak_if_energy_or_engineering_fit
+    after_redirect:
+      action: adapt_packet_to_new_office_or_lab
+    no_reply:
+      action: one_polite_followup_only_without_packet_unless_relevant
+  OAK_safety:
+    - packet_is_demo_not_claim
+    - no_industrial_savings_claim_without_pilot
+    - no_CFD_replacement_claim
+    - no_attachment_spam
+    - send_packet_only_when_contextually_relevant
