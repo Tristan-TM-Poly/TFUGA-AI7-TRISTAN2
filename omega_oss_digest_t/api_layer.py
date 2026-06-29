@@ -5,7 +5,10 @@ import json
 import os
 import re
 import time
-import tomllib
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - exercised on Python 3.10 when tomli is installed
+    import tomli as tomllib
 import urllib.error
 import urllib.parse
 import urllib.request
