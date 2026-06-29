@@ -1,0 +1,17 @@
+SP_CUBE_GAIA_SAT_v0_5:
+  status: ACTIVE_SIMULATED_NOT_CERTIFIED
+  finance: NOT_REVENUE_NOT_INVESTMENT_CERTIFIED
+  certification_gate:
+    idea_to_simulated: "equations and data generated"
+    simulated_to_measured: "real measurements required"
+    measured_to_certified: "external verification required"
+  forbidden_claims:
+    - energy_from_vacuum
+    - guaranteed_revenue
+    - certified_credit_without_MRV
+    - passive_transparent_blackbody_same_band
+  allowed_claims:
+    - simulated_gross_climate_impact_value
+    - mrv_dependent_scenario_value
+    - radiative_cooling_hypothesis_to_measure
+    - Ark_SP_CUBE_low_power_thermal_architecture
