@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/prime_tensor_packet.schema.json",
+  "title": "Prime Tensor Packet",
+  "type": "object",
+  "required": ["name", "oak_status", "primes", "nodes", "hyperedges", "checks", "limits"],
+  "properties": {
+    "name": { "const": "prime_tensor_packet" },
+    "oak_status": { "enum": ["observed", "anchored", "known", "speculative", "refuted", "noise", "prototype"] },
+    "limits": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "primes": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 2 }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["index", "prime", "primorial_digits", "residues", "gap_digits", "modular_gaps", "oak_status", "fertility"],
+        "properties": {
+          "index": { "type": "integer", "minimum": 1 },
+          "prime": { "type": "integer", "minimum": 2 },
+          "primorial_digits": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+          "residues": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+          "gap_digits": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "integer", "minimum": 0 } } },
+          "modular_gaps": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "integer", "minimum": 0 } } },
+          "oak_status": { "enum": ["observed", "anchored", "known", "speculative", "refuted", "noise", "prototype"] },
+          "fertility": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "hyperedges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "signature", "node_indices", "oak_status"],
+        "properties": {
+          "kind": { "type": "string" },
+          "signature": { "type": "array", "items": { "type": "integer" } },
+          "node_indices": { "type": "array", "items": { "type": "integer", "minimum": 1 } },
+          "oak_status": { "enum": ["observed", "anchored", "known", "speculative", "refuted", "noise", "prototype"] }
+        }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "required": ["residue_gap_identity", "reconstruction"],
+      "properties": {
+        "residue_gap_identity": { "type": "boolean" },
+        "reconstruction": { "type": "boolean" }
+      }
+    }
+  }
+}

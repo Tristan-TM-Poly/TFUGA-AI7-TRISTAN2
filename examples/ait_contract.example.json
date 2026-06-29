@@ -1,0 +1,70 @@
+{
+  "id": "ait-contract-omega-001",
+  "mission": "Run one AIT-Omega 16-circ-n cycle that generates, attacks, scores, selects and decompresses candidate AIT modules into traceable GitHub artifacts.",
+  "inputs": [
+    "AIT-Omega 16-circ-n canon",
+    "FTPCI-Omega auto meta-generation results",
+    "current repository memory and reports"
+  ],
+  "allowed_tools": [
+    "local_python",
+    "github_actions",
+    "github_contents",
+    "markdown_reports",
+    "json_memory",
+    "manual_review"
+  ],
+  "forbidden_actions": [
+    "Use paid external APIs without explicit permission.",
+    "Create accounts or cloud resources outside GitHub.",
+    "Make physical-world claims canon without tests.",
+    "Run dense 16^n enumeration."
+  ],
+  "expected_outputs": [
+    "top16",
+    "bottom16",
+    "oak_report",
+    "codex",
+    "prototype_candidate",
+    "test_plan",
+    "github_artifact",
+    "memory_update"
+  ],
+  "oak": {
+    "status": "prototype",
+    "trace_required": true,
+    "prototype_required": true,
+    "anti_hype_required": true,
+    "minimum_oak_score": 0.65
+  },
+  "metrics": {
+    "fertility": 9.0,
+    "oak": 0.72,
+    "reuse": 8.4,
+    "prototype_value": 7.8,
+    "impact": 8.1,
+    "transmission": 8.9,
+    "cost": 3.0,
+    "risk": 2.0,
+    "hype": 1.5,
+    "complexity": 4.0,
+    "debt": 2.0
+  },
+  "limits": {
+    "max_cycles": 16,
+    "dense_enumeration": false,
+    "external_paid_api": false,
+    "autonomous_external_action": false
+  },
+  "memory": {
+    "positive": [
+      "Use GitHub Actions as free bounded cloud runner.",
+      "Keep all outputs traceable as JSON and Markdown."
+    ],
+    "negative": [
+      "Do not confuse swarm voting with truth.",
+      "Do not promote untested physical claims."
+    ]
+  },
+  "next_action": "Generate top16 AIT modules and decompress the best into a one-page codex plus test plan."
+}

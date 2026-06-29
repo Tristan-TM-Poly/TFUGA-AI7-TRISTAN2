@@ -1,0 +1,65 @@
+{
+  "name": "AIT-PANTHEON-OMEGA",
+  "mode": "16_circ_n",
+  "dense_enumeration": false,
+  "beam_width": 16,
+  "bottom_memory": 16,
+  "cycles": 16,
+  "roles": [
+    "Trace Extractor",
+    "Canon Compiler",
+    "OAK Attacker",
+    "Math Formalizer",
+    "Physics Residual Finder",
+    "Code Builder",
+    "Test Generator",
+    "Prototype Forge",
+    "Data Scout",
+    "Literature Scout",
+    "HGFM Mapper",
+    "Memory Curator",
+    "Negative Memory Guardian",
+    "Codex Generator",
+    "Strategy Optimizer",
+    "GitHub Operator"
+  ],
+  "modes": [
+    "fast",
+    "deep",
+    "skeptical",
+    "creative",
+    "mathematical",
+    "experimental",
+    "software",
+    "business",
+    "pedagogical",
+    "compression",
+    "decompression",
+    "adversarial",
+    "benchmark",
+    "safety",
+    "synthesis",
+    "meta_generation"
+  ],
+  "required_outputs": [
+    "top16",
+    "bottom16",
+    "oak_report",
+    "codex",
+    "prototype_candidate",
+    "github_artifact"
+  ],
+  "forbidden": [
+    "untraceable_claims",
+    "no_status_outputs",
+    "dense_16_power_explosion",
+    "external_paid_api_without_permission",
+    "unsafe_autonomous_actions"
+  ],
+  "promote_if": {
+    "oak_score_min": 0.75,
+    "prototype_path": true,
+    "traceable": true,
+    "hype_max": 3.0
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "id": "ftpci-omega-example-001",
+  "source": {
+    "kind": "manual",
+    "title": "FTPCI-Omega TATI core seed",
+    "path": "docs/canon/FTPCI-OMEGA-TATI-CORE-v0.1.md",
+    "page": null,
+    "line_start": null,
+    "line_end": null
+  },
+  "trace": {
+    "claim": "A corpus can be transformed into a sparse tensor core, computed on minimally, attacked by OAK, then decompressed into fertile codices and prototypes.",
+    "concepts": ["FTPCI-Omega", "TATI", "tensor factorization", "fertile compression", "OAK", "negative memory", "codex 2^n"],
+    "definition": "FTPCI-Omega is an iterative engine for proper tensor factorization, compression, minimal calculation, selective decompression, verification, and memory reinjection.",
+    "equation": "T_{k+1}=(I-Proj_{M^-}) Decompress_Omega Select_{Phi,OAK} Compute Factorize Compress(T_k)",
+    "hypotheses": [
+      "Traces can be represented as structured packets.",
+      "Useful invariants survive compression.",
+      "OAK can reject or quarantine weak claims before expensive decompression."
+    ],
+    "risks": [
+      "Compression may erase important minority signals.",
+      "Factor labels may become opaque without traceability.",
+      "Fertility score can over-prioritize generative but unverified branches."
+    ],
+    "applications": ["Large PDF codex generation", "HGFM knowledge map construction", "Research triage", "Prototype prioritization", "Theory gap detection"]
+  },
+  "tensor_coordinates": {
+    "axiom": "finite intelligence requires compression",
+    "domain": "knowledge architecture",
+    "invariant": "trace -> compression -> OAK -> decompression -> memory",
+    "operator": "FTPCI-Omega",
+    "prototype": "Codex 2^n generator",
+    "oak_status": "prototype",
+    "fertility_band": "omega",
+    "memory_band": "mixed"
+  },
+  "factorization": {
+    "core_id": "G_FTPCI_001",
+    "factors": ["U_axioms", "U_domains", "U_invariants", "U_equations", "U_prototypes", "U_oak", "U_fertility", "U_memory"],
+    "residual_notes": "Residual should be searched for contradictions, missing theories, and weakly explained high-fertility zones.",
+    "compression_ratio": 0.08
+  },
+  "oak": {
+    "status": "prototype",
+    "confidence": 0.64,
+    "attacks": [
+      "Define measurable fertility before automated prioritization.",
+      "Validate tensor packet extraction on a small PDF corpus before scaling.",
+      "Add tests that memory-negative projections do not remove true positives."
+    ],
+    "limits": [
+      "This is an architectural theorem inside the Tristan framework, not a proof about external physics.",
+      "The schema is a v0.1 representation and may need simplification after first implementation."
+    ],
+    "next_verification": "Implement loader plus schema validation on 10 representative packets."
+  },
+  "fertility": {
+    "score": 9.2,
+    "descendants": ["Canon Compiler", "OAK Attack Engine", "HGFM Knowledge Map", "Codex 2^n Generator", "Missing Theory Finder"],
+    "cost": 3.0,
+    "bridge_domains": ["AI", "mathematics", "scientific computing", "research management", "education"]
+  },
+  "memory": {
+    "positive": ["Fits existing DCT-Omega and HGFM canon direction.", "Keeps speculative claims separated from executable architecture."],
+    "negative": ["Do not promote grand physical claims without separate protocol.", "Do not decompress everything by default."],
+    "version": "v0.1"
+  },
+  "decompression_targets": ["one_page_codex", "hgfm_map", "prototype", "roadmap"],
+  "next_action": "Build a minimal validator and score runner for FTPCI-Omega packets."
+}

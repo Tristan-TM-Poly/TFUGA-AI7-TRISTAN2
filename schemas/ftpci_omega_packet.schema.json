@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/ftpci_omega_packet.schema.json",
+  "title": "FTPCI-Omega Packet",
+  "description": "Canonical packet for tensorized traces, factors, OAK status, fertility, decompression targets, and memory updates.",
+  "type": "object",
+  "required": ["id", "source", "trace", "tensor_coordinates", "oak", "fertility", "memory", "next_action"],
+  "properties": {
+    "id": { "type": "string" },
+    "source": {
+      "type": "object",
+      "required": ["kind", "title"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["pdf", "note", "code", "audio", "image", "web", "experiment", "manual"] },
+        "title": { "type": "string" },
+        "path": { "type": "string" },
+        "page": { "type": ["integer", "null"], "minimum": 1 },
+        "line_start": { "type": ["integer", "null"], "minimum": 1 },
+        "line_end": { "type": ["integer", "null"], "minimum": 1 }
+      },
+      "additionalProperties": true
+    },
+    "trace": {
+      "type": "object",
+      "required": ["claim", "concepts"],
+      "properties": {
+        "claim": { "type": "string" },
+        "concepts": { "type": "array", "items": { "type": "string" } },
+        "definition": { "type": "string" },
+        "equation": { "type": "string" },
+        "hypotheses": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "items": { "type": "string" } },
+        "applications": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "tensor_coordinates": {
+      "type": "object",
+      "required": ["axiom", "domain", "invariant", "operator", "prototype", "oak_status", "fertility_band", "memory_band"],
+      "properties": {
+        "axiom": { "type": "string" },
+        "domain": { "type": "string" },
+        "invariant": { "type": "string" },
+        "operator": { "type": "string" },
+        "prototype": { "type": "string" },
+        "oak_status": { "type": "string" },
+        "fertility_band": { "type": "string", "enum": ["low", "medium", "high", "omega"] },
+        "memory_band": { "type": "string", "enum": ["positive", "negative", "mixed", "unknown"] }
+      },
+      "additionalProperties": false
+    },
+    "factorization": {
+      "type": "object",
+      "properties": {
+        "core_id": { "type": "string" },
+        "factors": { "type": "array", "items": { "type": "string" } },
+        "residual_notes": { "type": "string" },
+        "compression_ratio": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "oak": {
+      "type": "object",
+      "required": ["status", "confidence", "attacks", "limits"],
+      "properties": {
+        "status": { "type": "string", "enum": ["definition", "hypothesis", "conjecture", "heuristic", "simulation", "prototype", "local_validation", "canon", "rejected"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "attacks": { "type": "array", "items": { "type": "string" } },
+        "limits": { "type": "array", "items": { "type": "string" } },
+        "next_verification": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "fertility": {
+      "type": "object",
+      "required": ["score", "descendants", "cost"],
+      "properties": {
+        "score": { "type": "number" },
+        "descendants": { "type": "array", "items": { "type": "string" } },
+        "cost": { "type": "number", "minimum": 0 },
+        "bridge_domains": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "memory": {
+      "type": "object",
+      "required": ["positive", "negative"],
+      "properties": {
+        "positive": { "type": "array", "items": { "type": "string" } },
+        "negative": { "type": "array", "items": { "type": "string" } },
+        "version": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "decompression_targets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["one_page_codex", "two_page_codex", "hgfm_map", "test", "prototype", "paper_section", "missing_theory", "roadmap"]
+      }
+    },
+    "next_action": { "type": "string" }
+  },
+  "additionalProperties": false
+}

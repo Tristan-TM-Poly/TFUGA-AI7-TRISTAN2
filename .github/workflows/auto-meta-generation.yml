@@ -1,0 +1,102 @@
+name: FTPCI-Omega Auto Meta-Generation
+
+on:
+  workflow_dispatch:
+    inputs:
+      cycles:
+        description: "Number of meta-generation cycles"
+        required: false
+        default: "16"
+      beam_width:
+        description: "Beam width for top/bottom selection"
+        required: false
+        default: "16"
+  schedule:
+    # Free, bounded, non-abusive cadence. Runs after this workflow is merged to the default branch.
+    - cron: "17 5 * * *"
+  pull_request:
+    paths:
+      - "sage_tristan/auto_meta_generator.py"
+      - "sage_tristan/prime_tensors.py"
+      - "sage_tristan/hgfm_prime_graph.py"
+      - "scripts/run_auto_meta_generation.py"
+      - "tests/test_prime_tensors.py"
+      - "examples/prime_tensor_demo.py"
+      - "schemas/prime_tensor_packet.schema.json"
+      - ".github/workflows/auto-meta-generation.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ftpci-omega-auto-meta-generation
+  cancel-in-progress: false
+
+jobs:
+  auto-meta-generation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile stdlib-only engines
+        run: |
+          python -m py_compile \
+            sage_tristan/auto_meta_generator.py \
+            sage_tristan/prime_tensors.py \
+            sage_tristan/hgfm_prime_graph.py \
+            scripts/run_auto_meta_generation.py \
+            examples/prime_tensor_demo.py
+
+      - name: Run prime tensor and HGFM graph tests on pull requests
+        if: github.event_name == 'pull_request'
+        run: |
+          python -m unittest tests/test_prime_tensors.py
+          python examples/prime_tensor_demo.py > /tmp/prime-tensor-demo.json
+          python -m json.tool /tmp/prime-tensor-demo.json > /dev/null
+          python -m sage_tristan.hgfm_prime_graph --count 12 --max-jump 1 --prefix 2 --summary
+          python -m json.tool schemas/prime_tensor_packet.schema.json > /dev/null
+
+      - name: Run dry check on pull requests
+        if: github.event_name == 'pull_request'
+        run: |
+          python -m sage_tristan.auto_meta_generator --cycles 2 --beam-width 4 --salt "pr-${{ github.event.pull_request.number }}-${{ github.sha }}" > /tmp/auto-meta-pr-check.json
+          python - <<'PY'
+          import json
+          data = json.load(open('/tmp/auto-meta-pr-check.json', encoding='utf-8'))
+          assert data['top16'], 'top beam is empty'
+          assert data['negative_memory_bottom16'], 'negative memory beam is empty'
+          print('dry-check-ok', data['top16'][0]['id'], data['top16'][0]['total'])
+          PY
+
+      - name: Run scheduled auto meta-generation
+        if: github.event_name != 'pull_request'
+        env:
+          FTPCI_CYCLES: ${{ github.event.inputs.cycles || '16' }}
+          FTPCI_BEAM_WIDTH: ${{ github.event.inputs.beam_width || '16' }}
+          FTPCI_RUN_LABEL: ${{ github.event_name }}-${{ github.run_number }}
+          FTPCI_RUN_SALT: ${{ github.run_id }}-${{ github.run_attempt }}-${{ github.sha }}
+        run: |
+          python scripts/run_auto_meta_generation.py
+
+      - name: Commit generated reports
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/auto_meta_generation_latest.json reports/auto_meta_generation_latest.md examples/auto_meta_generation_latest.summary.json
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+          else
+            git commit -m "Run FTPCI-Omega auto meta-generation"
+            git push
+          fi

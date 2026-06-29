@@ -1,0 +1,43 @@
+{
+  "engine": "FTPCI-Omega Auto Meta-Generation",
+  "run_id": "auto-meta-generation-run-0001",
+  "cycles": 16,
+  "beam_width": 16,
+  "evaluated_candidates_approx": 4112,
+  "oak_note": "Architectural search output; not a physical proof. Promote only after tests, predictions, and validation.",
+  "top_attractors": [
+    {
+      "rank": 1,
+      "score": 19.092,
+      "oak_score": 0.763,
+      "seed_chain": "Vacuum Local-Global Recollement × OAK Adversarial Physics Engine × Neutrino Flavor Tensor × Projective Dark Sector × Residual Physics Finder",
+      "decision": "decompress first"
+    },
+    {
+      "rank": 2,
+      "score": 15.016,
+      "oak_score": 0.65,
+      "seed_chain": "Projective Dark Sector × Fertility Gradient Router × Projective Regime Recollement × FTPCI-Omega Lattice16",
+      "decision": "decompress second"
+    },
+    {
+      "rank": 3,
+      "score": 14.483,
+      "oak_score": 0.697,
+      "seed_chain": "Projective Dark Sector × Fertility Gradient Router × Projective Regime Recollement × FTPCI-Omega Lattice16 × Residual Physics Finder",
+      "decision": "convert to residual-physics prototype"
+    }
+  ],
+  "negative_memory_rules": [
+    "Reject dense enumeration of 16^m candidates.",
+    "Reject high-hype low-OAK decompressions.",
+    "Reject configurations that cannot produce a codex, test, prototype, or data comparison.",
+    "Quarantine theories with low trace quality and high decompression depth."
+  ],
+  "next_actions": [
+    "Generate one-page codex for the top attractor.",
+    "Generate 16 testable hypotheses from the top16.",
+    "Add unit tests for deterministic scoring and beam selection.",
+    "Connect run output to the lattice16 schema."
+  ]
+}
