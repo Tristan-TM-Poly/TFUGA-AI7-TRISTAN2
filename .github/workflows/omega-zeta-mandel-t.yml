@@ -25,17 +25,18 @@ jobs:
           python -m pip install --upgrade pip pytest
           python -m pytest -q prototypes/omega_zeta_mandel_t/test_omega_zeta_mandel.py
 
-      - name: Verify OAK guardrail text
+      - name: Verify bilingual OAK guardrail text
         run: |
           python - <<'PY'
           from pathlib import Path
-          doc = Path('docs/OMEGA_ZETA_MANDEL_T.md').read_text(encoding='utf-8')
-          required = [
-              'not proofs',
-              'Riemann',
-              'OAK',
+          doc = Path('docs/OMEGA_ZETA_MANDEL_T.md').read_text(encoding='utf-8').lower()
+          required_groups = [
+              ('riemann',),
+              ('oak',),
+              ('preuve', 'proof'),
+              ('ne constitue pas une preuve', 'not a proof', 'not proofs'),
           ]
-          missing = [term for term in required if term not in doc]
+          missing = [group for group in required_groups if not any(term in doc for term in group)]
           if missing:
-              raise SystemExit(f'Missing OAK guardrail terms: {missing}')
+              raise SystemExit(f'Missing OAK guardrail term group(s): {missing}')
           PY
