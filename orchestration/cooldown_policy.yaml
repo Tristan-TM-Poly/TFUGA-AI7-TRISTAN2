@@ -1,0 +1,46 @@
+# Cooldown Policy — Ω-ACTION-LOOP-T
+
+cooldown_policy:
+  purpose: prevent dumb repetition, spam, premature merges, and unsafe forcing
+  policies:
+    github_pending_checks:
+      observation: PR mergeable but checks queued or in_progress
+      action: WAIT_COOLDOWN
+      retry_after: hourly
+      M_minus_if_repeated: pending_checks_blocker
+    github_draft_PR:
+      observation: PR is draft
+      action: HUMAN_APPROVAL_REQUIRED_or_WAIT_READY
+      retry_after: only_after_ready_for_review
+      M_minus_if_forced: draft_merge_attempt
+    github_not_mergeable:
+      observation: PR is not mergeable
+      action: REPAIR_SAFE_if_possible_else_BLOCK_M_MINUS
+      retry_after: hourly_or_after_repair
+    university_no_reply:
+      observation: no reply after first outreach
+      action: one_polite_follow_up_only
+      retry_after: 7_to_10_days
+      max_followups_without_invitation: 1
+    university_no_official_route:
+      observation: contact route not official or incomplete
+      action: YELLOW_RESEARCH
+      retry_after: weekly
+      forbidden: guessed_email_send
+    official_form_route:
+      observation: official contact form exists
+      action: GREEN_FORM_READY
+      retry_after: after_submission_confirmation
+      proof_required:
+        - confirmation_screen_or_email
+        - submitted_message_copy
+        - timestamp
+    proof_packet_seed:
+      observation: packet exists but lacks example proof
+      action: PREPARE_PACKET
+      retry_after: next_work_cycle
+    sensitive_action:
+      observation: legal, financial, public, health, safety, IP-sensitive, or human-impacting action
+      action: HUMAN_APPROVAL_REQUIRED
+      retry_after: after_explicit_approval
+  anti_loop_rule: "If the same action fails twice for the same reason, convert to M- and change strategy."
