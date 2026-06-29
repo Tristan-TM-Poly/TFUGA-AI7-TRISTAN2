@@ -1,0 +1,71 @@
+# Parallel Execution Manifest — Tristan Omega System
+
+parallel_execution_manifest:
+  status: active_design
+  created_from_command: "Fait tout en parallèle"
+  principle: "Run safe internal lanes in parallel; external actions require verified route, OAK gate, and proof."
+  lanes:
+    github_all_forge:
+      objective: "Scan all accessible GitHub PRs and merge only clean/OAK-safe candidates."
+      immediate_findings:
+        - repo: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
+          pr: 59
+          title: "Add reusable OAK OS branch-card, report, CLI, and CI system"
+          status: mergeable_but_checks_pending_or_in_progress
+          action: do_not_merge_now
+          reason: workflows queued/in_progress; auto-merge unavailable on repo
+        - repo: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
+          pr: 87
+          title: "Add Ω-PR-OAK-GATE and M⁻ direct-main rule"
+          status: not_mergeable
+          action: repair_or_wait_for_forge
+        - repo: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
+          pr: 89
+          title: "MVP Ω-CHATGIT-T"
+          status: draft
+          action: do_not_merge
+          reason: draft PRs require explicit readiness
+    university_replies:
+      objective: "Check Gmail for Wave 1 replies."
+      immediate_finding: "No inbox replies found for AIT-Tristan2 / Ω-DE-TensorProd / proposition / microbenchmark keywords in the last 14 days."
+      next_action: "Wait for scheduled follow-up run or run reply scan on demand."
+    datacenter_demo_packet:
+      objective: "Use the Datacenter Energy OAK packet as concrete proof for Wave 2 and interested replies."
+      status: merged
+      packet_path: demo_packets/datacenter_energy_oak/
+      next_action: "Route to energy/engineering/innovation contacts only when contextually relevant."
+    wave2_greenify:
+      objective: "Convert remaining universities to GREEN_EMAIL or GREEN_FORM using official sources only."
+      status: active_queue
+      next_targets:
+        - Universite_de_Montreal
+        - McGill
+        - Concordia
+        - HEC_Montreal
+        - UQTR
+        - UQAC
+        - UQAM
+        - UQAR
+        - UQO
+        - UQAT
+        - ENAP
+        - TELUQ
+        - Bishops
+        - BCI
+    packet_router:
+      objective: "Select proof packet by university axis and reply intent."
+      default_rule: "Short first contact; packet only after interest or clear relevance."
+    oak_gate:
+      objective: "Block unsafe actions."
+      hard_locks:
+        - guessed_email
+        - mass_sending
+        - unsupported_industrial_savings_claim
+        - draft_PR_merge
+        - pending_or_ambiguous_checks_merge
+        - sensitive_external_action_without_approval
+  global_next_actions:
+    - continue_all_github_pr_forge_hourly
+    - run_university_route_scan_weekly
+    - use_datacenter_packet_for_energy_engineering_replies
+    - build_next_demo_packets_for_paper_to_code_and_patent_to_opportunity
