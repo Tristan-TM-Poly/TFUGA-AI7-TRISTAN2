@@ -1,4 +1,4 @@
-"""Stable CLI for Omega absorb v1.6."""
+"""Stable CLI for Omega absorb v1.7."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from .claim_oak_plus import build_claim_oak_plus
 from .collaboration_recommender import recommend_collaborations
 from .compact_table_report import render_compact_table, render_validation_table
 from .department_bridge_optimizer import optimize_department_bridges
+from .department_strategy_matrix import build_department_strategy_matrix, render_department_strategy_matrix
 from .documentation_index import render_documentation_index
 from .e2e_pipeline_v09 import run_v09_e2e_pipeline
 from .export_bundle import build_export_bundle
@@ -30,18 +31,22 @@ from .opportunity_ranker import rank_opportunity_bundles
 from .package_health import build_package_health_report
 from .package_status import build_package_status_report
 from .poly_research_twin_v2 import build_poly_research_twin_v2
+from .poly_research_twin_v3 import build_poly_research_twin_v3
 from .professor_genome import build_all_professor_genomes
 from .professor_tensor import build_professor_tensors
+from .professor_tensor_weights import render_tensor_weights_table, weight_professor_tensors
 from .release_bundle_writer import write_release_bundle
 from .research_opportunity_compiler import compile_research_opportunities
 from .roadmap_compiler import render_roadmap_markdown
+from .route_confidence_dashboard import build_route_confidence_dashboard, render_route_confidence_dashboard
 from .source_oak_policy import apply_source_oak_policy
 from .source_record_validation import validate_public_records
 from .source_registry_schema import validate_records_against_schema
 from .source_selection import available_demo_sources, select_demo_records
+from .twin_answer_engine import answer_twin_question, render_twin_answer
 
 
-VERSION = "1.6.0"
+VERSION = "1.7.0"
 
 
 def _atoms_and_genomes(source: str):
@@ -69,15 +74,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "command",
         choices=(
-            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet", "tensor", "twin-v2", "bridge-opt", "next-actions", "oak-manifest", "route-source", "policy-check", "ingest-json-v2", "write-actions", "github-bundle",
+            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet", "tensor", "twin-v2", "bridge-opt", "next-actions", "oak-manifest", "route-source", "policy-check", "ingest-json-v2", "write-actions", "github-bundle", "tensor-weights", "twin-answer", "department-matrix", "route-dashboard",
         ),
         help="Command to run",
     )
     parser.add_argument("--source", default="combined", choices=available_demo_sources(), help="Demo source family")
     parser.add_argument("--input", default="", help="Local JSON input path")
     parser.add_argument("--input-source", default="generic", help="Adapter for local JSON input")
+    parser.add_argument("--question", default="next-10", help="Twin v3 local question")
     parser.add_argument("--feature", default="omega_absorb_next", help="Feature name for packet generation")
-    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v16", help="Output directory")
+    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v17", help="Output directory")
     return parser
 
 
@@ -100,6 +106,19 @@ def run_cli(argv: list[str] | None = None) -> str:
         return render_mminus_markdown()
     if args.command == "github-packet":
         return render_github_packet_markdown(generate_github_work_packet(args.feature))
+    if args.command == "tensor-weights":
+        _, genomes = _atoms_and_genomes(args.source)
+        return render_tensor_weights_table(weight_professor_tensors(build_professor_tensors(genomes)))
+    if args.command == "twin-answer":
+        twin = build_poly_research_twin_v3(select_demo_records(args.source))
+        return render_twin_answer(answer_twin_question(twin, args.question))
+    if args.command == "department-matrix":
+        _, genomes = _atoms_and_genomes(args.source)
+        matrix = build_department_strategy_matrix(build_professor_tensors(genomes))
+        return render_department_strategy_matrix(matrix)
+    if args.command == "route-dashboard":
+        dashboard = build_route_confidence_dashboard(_load_or_demo_records(args.input, args.source))
+        return render_route_confidence_dashboard(dashboard)
     if args.command == "route-source":
         routed = route_records(_load_or_demo_records(args.input, args.source), args.input_source if args.input else None)
         return f"source_id={routed.route.source_id} adapter={routed.route.adapter_name} confidence={routed.route.confidence:.2f}\n"
