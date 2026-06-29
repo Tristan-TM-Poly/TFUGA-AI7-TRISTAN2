@@ -1,4 +1,4 @@
-"""Package health score for Omega absorb v1.7."""
+"""Package health score for Omega absorb v1.8."""
 
 from __future__ import annotations
 
@@ -30,11 +30,11 @@ def build_package_health_report() -> PackageHealthReport:
     missing = []
     if len(available_demo_sources()) < 3:
         missing.append("demo_sources")
-    if len(status.cli_commands) < 30:
+    if len(status.cli_commands) < 35:
         missing.append("cli_surface")
-    if len(docs.entries) < 15:
+    if len(docs.entries) < 16:
         missing.append("doc_lineage")
-    score = round(min(1.0, 0.25 + 0.022 * len(status.cli_commands) + 0.02 * len(docs.entries) + 0.02 * len(manifest.entries) - 0.05 * len(missing)), 4)
+    score = round(min(1.0, 0.25 + 0.02 * len(status.cli_commands) + 0.02 * len(docs.entries) + 0.02 * len(manifest.entries) - 0.05 * len(missing)), 4)
     lines = ["# Omega Absorb Health", "", f"score: {score:.4f}", f"versions: {len(manifest.entries)}", f"docs: {len(docs.entries)}", f"cli commands: {len(status.cli_commands)}", f"sources: {len(available_demo_sources())}", "", "## Missing"]
     lines.extend(f"- {item}" for item in (missing or ["none"]))
-    return PackageHealthReport("1.7.0", score, len(manifest.entries), len(docs.entries), len(status.cli_commands), len(available_demo_sources()), tuple(missing), "\n".join(lines).strip() + "\n", "use_health_report_to_prioritize_next_release")
+    return PackageHealthReport("1.8.0", score, len(manifest.entries), len(docs.entries), len(status.cli_commands), len(available_demo_sources()), tuple(missing), "\n".join(lines).strip() + "\n", "use_health_report_to_prioritize_next_release")
