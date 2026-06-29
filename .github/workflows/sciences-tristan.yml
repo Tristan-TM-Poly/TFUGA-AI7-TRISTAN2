@@ -1,0 +1,45 @@
+name: Sciences de Tristan Tests
+
+on:
+  pull_request:
+    paths:
+      - 'docs/SCIENCES_DE_TRISTAN*.md'
+      - 'examples/sciences_tristan_seed.*'
+      - 'sage_tristan/sciences_tristan/**'
+      - 'schemas/science_card.schema.json'
+      - 'tests/test_sciences_tristan_core.py'
+      - '.github/workflows/sciences-tristan.yml'
+  workflow_dispatch:
+
+jobs:
+  sciences-tristan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run executable core tests
+        run: |
+          python -m pip install --upgrade pip pytest
+          python -m pytest -q tests/test_sciences_tristan_core.py
+
+      - name: Run CLI smoke tests
+        run: |
+          python -m sage_tristan.sciences_tristan rank examples/sciences_tristan_seed.json
+          python -m sage_tristan.sciences_tristan review examples/sciences_tristan_seed.json
+
+      - name: Verify OAK scientific hygiene terms
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('docs/SCIENCES_DE_TRISTAN.md').read_text(encoding='utf-8')
+          required = ['OAK', 'prototype', 'proof', 'measured', 'speculation']
+          missing = [term for term in required if term not in text]
+          if missing:
+              raise SystemExit(f'Missing Sciences de Tristan guardrail terms: {missing}')
+          PY
