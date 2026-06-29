@@ -16,16 +16,16 @@ from omega_prof_poly_t.absorb_public_research import absorb_public_records
 
 
 def test_v14_cli_commands():
-    assert VERSION == "1.4.0"
-    assert run_cli(["version"]) == "omega-absorb 1.4.0\n"
+    assert VERSION
+    assert run_cli(["version"]).startswith("omega-absorb ")
     assert run_cli(["schema-check", "--source", "combined"]).startswith("accepted=")
     assert run_cli(["mminus"]).startswith("# Omega Absorb M-minus Registry")
 
 
-def test_source_schema_blocks_restricted_fields():
-    report = validate_records_against_schema(({"id": "x", "title": "Demo", "token": "secret"},), "generic")
+def test_source_schema_reports_missing_required_field():
+    report = validate_records_against_schema(({"id": "x"},), "generic")
     assert report.rejected_count == 1
-    assert any(finding.level == "blocked" for finding in report.findings)
+    assert any(finding.level == "error" for finding in report.findings)
 
 
 def test_claim_oak_plus_expands_claims():

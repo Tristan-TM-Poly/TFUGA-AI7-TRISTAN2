@@ -1,4 +1,4 @@
-"""Stable CLI for Omega absorb v1.4."""
+"""Stable CLI for Omega absorb v1.5."""
 
 from __future__ import annotations
 
@@ -8,7 +8,9 @@ from .absorb_public_research import absorb_public_records
 from .changelog_generator import generate_changelog
 from .claim_graph import build_claim_graph
 from .claim_oak_plus import build_claim_oak_plus
+from .collaboration_recommender import recommend_collaborations
 from .compact_table_report import render_compact_table, render_validation_table
+from .department_bridge_optimizer import optimize_department_bridges
 from .documentation_index import render_documentation_index
 from .e2e_pipeline_v09 import run_v09_e2e_pipeline
 from .export_bundle import build_export_bundle
@@ -18,9 +20,14 @@ from .local_json_loader import load_and_normalize_local_json
 from .method_graph import build_method_graph
 from .method_reproduction_packet import build_method_reproduction_set
 from .mminus_registry import render_mminus_markdown
+from .next_actions_engine import compile_top_next_actions, render_next_actions_markdown
+from .oak_packet_manifest import build_oak_packet_manifest
 from .opportunity_ranker import rank_opportunity_bundles
 from .package_health import build_package_health_report
 from .package_status import build_package_status_report
+from .poly_research_twin_v2 import build_poly_research_twin_v2
+from .professor_genome import build_all_professor_genomes
+from .professor_tensor import build_professor_tensors
 from .release_bundle_writer import write_release_bundle
 from .research_opportunity_compiler import compile_research_opportunities
 from .roadmap_compiler import render_roadmap_markdown
@@ -29,7 +36,18 @@ from .source_registry_schema import validate_records_against_schema
 from .source_selection import available_demo_sources, select_demo_records
 
 
-VERSION = "1.4.0"
+VERSION = "1.5.0"
+
+
+def _atoms_and_genomes(source: str):
+    atoms = absorb_public_records(select_demo_records(source)).atoms
+    genomes = build_all_professor_genomes(atoms)
+    return atoms, genomes
+
+
+def _bridge_plan(source: str):
+    _, genomes = _atoms_and_genomes(source)
+    return optimize_department_bridges(recommend_collaborations(genomes).recommendations)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -37,7 +55,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "command",
         choices=(
-            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet",
+            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet", "tensor", "twin-v2", "bridge-opt", "next-actions", "oak-manifest",
         ),
         help="Command to run",
     )
@@ -45,7 +63,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--input", default="", help="Local JSON input path")
     parser.add_argument("--input-source", default="generic", help="Adapter for local JSON input")
     parser.add_argument("--feature", default="omega_absorb_next", help="Feature name for packet generation")
-    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v14", help="Output directory")
+    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v15", help="Output directory")
     return parser
 
 
@@ -68,6 +86,23 @@ def run_cli(argv: list[str] | None = None) -> str:
         return render_mminus_markdown()
     if args.command == "github-packet":
         return render_github_packet_markdown(generate_github_work_packet(args.feature))
+    if args.command == "tensor":
+        _, genomes = _atoms_and_genomes(args.source)
+        return f"professor_tensors={len(build_professor_tensors(genomes))}\n"
+    if args.command == "twin-v2":
+        twin = build_poly_research_twin_v2(select_demo_records(args.source))
+        return f"twin_tensors={len(twin.tensors)} bridge_score={twin.bridge_score:.4f} actions={len(twin.next_10_actions())}\n"
+    if args.command == "bridge-opt":
+        plan = _bridge_plan(args.source)
+        return f"optimized_bridges={len(plan.bridges)}\n"
+    if args.command == "next-actions":
+        twin = build_poly_research_twin_v2(select_demo_records(args.source))
+        actions = compile_top_next_actions(twin, _bridge_plan(args.source).bridges)
+        return render_next_actions_markdown(actions)
+    if args.command == "oak-manifest":
+        twin = build_poly_research_twin_v2(select_demo_records(args.source))
+        actions = compile_top_next_actions(twin, _bridge_plan(args.source).bridges)
+        return build_oak_packet_manifest(actions.actions).manifest_json
     if args.command in {"summary-json", "validation-json", "graph-json", "graphml"}:
         payloads = build_export_payloads(args.source)
         if args.command == "summary-json":

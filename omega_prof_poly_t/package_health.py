@@ -1,4 +1,4 @@
-"""Package health score for Omega absorb v1.4."""
+"""Package health score for Omega absorb v1.5."""
 
 from __future__ import annotations
 
@@ -29,23 +29,12 @@ def build_package_health_report() -> PackageHealthReport:
     status = build_package_status_report()
     missing = []
     if len(available_demo_sources()) < 3:
-        missing.append("at_least_three_demo_sources")
-    if len(status.cli_commands) < 15:
-        missing.append("fifteen_cli_commands")
-    if len(docs.entries) < 12:
-        missing.append("documentation_lineage_v14")
-    score = round(
-        min(
-            1.0,
-            0.20
-            + 0.08 * min(5, len(available_demo_sources()))
-            + 0.04 * min(15, len(status.cli_commands))
-            + 0.025 * min(12, len(docs.entries))
-            + 0.025 * min(12, len(manifest.entries))
-            - 0.05 * len(missing),
-        ),
-        4,
-    )
+        missing.append("demo_sources")
+    if len(status.cli_commands) < 20:
+        missing.append("cli_surface")
+    if len(docs.entries) < 13:
+        missing.append("doc_lineage")
+    score = round(min(1.0, 0.25 + 0.03 * len(status.cli_commands) + 0.02 * len(docs.entries) + 0.02 * len(manifest.entries) - 0.05 * len(missing)), 4)
     lines = [
         "# Omega Absorb Health",
         "",
@@ -59,7 +48,7 @@ def build_package_health_report() -> PackageHealthReport:
     ]
     lines.extend(f"- {item}" for item in (missing or ["none"]))
     return PackageHealthReport(
-        version="1.4.0",
+        version="1.5.0",
         score=score,
         version_count=len(manifest.entries),
         doc_count=len(docs.entries),

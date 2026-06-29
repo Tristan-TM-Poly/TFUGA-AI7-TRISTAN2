@@ -1,0 +1,7 @@
+{
+  "version": "1.5.0",
+  "entries": [
+    {"packet_id": "oak-1-course_packet", "kind": "course_packet", "score": 0.72},
+    {"packet_id": "oak-2-project_packet", "kind": "project_packet", "score": 0.70}
+  ]
+}
