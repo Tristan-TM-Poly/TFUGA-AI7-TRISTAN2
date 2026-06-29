@@ -13,7 +13,13 @@ creates issues or canon promotions.
 from __future__ import annotations
 
 import argparse
+import sys
 from datetime import date
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from sage_tristan.daily_omega_batch import DEFAULT_TIMEZONE
 from sage_tristan.daily_omega_verify import build_verification_from_directory, render_verification_markdown
