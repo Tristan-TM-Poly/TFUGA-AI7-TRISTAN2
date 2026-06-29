@@ -1,0 +1,40 @@
+# Quebec University Outreach — Wave 1 Green Status
+
+wave1_green_status:
+  updated_after_command: "Fait tout pour moi, go"
+  status_summary:
+    total_targets: 5
+    green_sent: 4
+    green_form_ready: 1
+    yellow_remaining: 0
+    red_used: 0
+  targets:
+    INRS:
+      status: GREEN_SENT
+      route: verified_email
+      gmail_message_id: "19f1228d0de8270e"
+      follow_up: scheduled_or_pending_after_7_to_10_days
+    Universite_Laval:
+      status: GREEN_SENT
+      route: verified_email
+      gmail_message_id: "19f12fe9b33c0b4c"
+      follow_up: scheduled_or_pending_after_7_to_10_days
+    Universite_de_Sherbrooke:
+      status: GREEN_SENT
+      route: verified_email
+      gmail_message_id: "19f12fedbb04ea81"
+      follow_up: scheduled_or_pending_after_7_to_10_days
+    Polytechnique_Montreal:
+      status: GREEN_SENT
+      route: verified_email
+      gmail_message_id: "19f130715600efd7"
+      follow_up: scheduled_or_pending_after_7_to_10_days
+    ETS:
+      status: GREEN_FORM_READY
+      route: official_contact_form
+      packet: "ets_green_form_packet_fr.md"
+      follow_up: after_submission_confirmation_only
+  oak_decision:
+    - "Polytechnique moved from YELLOW to GREEN_SENT after verified institutional email route."
+    - "ÉTS moved from YELLOW to GREEN_FORM_READY because official form route is verified but no official raw email is exposed."
+    - "No guessed email was used."
