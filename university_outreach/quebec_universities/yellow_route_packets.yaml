@@ -1,0 +1,41 @@
+# Quebec University Outreach — YELLOW Route Packets
+# For official routes where direct verified email is not available or not yet confirmed.
+
+yellow_route_packets:
+  ETS_BIP:
+    university: "École de technologie supérieure (ÉTS)"
+    status: ready_for_form_packet
+    route_type: official_form_or_contact_page
+    target_unit: "Bureau des initiatives partenariales"
+    subject_candidate: "Proposition de collaboration — IA scientifique, R-D appliquée et systèmes non linéaires"
+    message_source: "short_message_fr.md or master_email_fr.md adapted for ÉTS"
+    adaptation:
+      opening_angle: "génie appliqué, R-D industrielle, optimisation, datacenters, jumeaux numériques"
+      ask: "identifier la bonne personne pour une discussion exploratoire ou un protocole de benchmark"
+    proof_required_after_submission:
+      - confirmation_screen
+      - timestamp
+      - submitted_message_copy
+    oak_status: pending_form_submission_confirmation
+  Polytechnique_research_partnerships:
+    university: "Polytechnique Montréal"
+    status: ready_for_deeper_search_or_form_packet
+    route_type: official_research_partnership_page_or_directory
+    target_unit: "Recherche en partenariat / développement des affaires"
+    known_people:
+      - "Najoua Bejaoui"
+      - "Emeline Benoit"
+    subject_candidate: "Proposition de collaboration — IA scientifique, génie et systèmes non linéaires"
+    message_source: "short_message_fr.md or master_email_fr.md adapted for Polytechnique"
+    adaptation:
+      opening_angle: "génie, systèmes dynamiques, optimisation, énergie, matériaux, transfert technologique"
+      ask: "identifier le bon contact pour évaluer un mini-protocole de benchmark ou une collaboration exploratoire"
+    next_actions:
+      - official_directory_search
+      - official_form_packet_if_no_email
+      - no_guessed_email
+    proof_required_after_submission:
+      - confirmation_screen_or_message
+      - timestamp
+      - submitted_message_copy
+    oak_status: pending_verified_route

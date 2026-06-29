@@ -1,0 +1,76 @@
+# Quebec University Outreach — Wave 1 Execution Log
+# Records confirmed sends, pending routes, and follow-up rules.
+
+wave1_execution_log:
+  status: active
+  created_from_command: "GO ENVOIE GREEN WAVE 1"
+  oak_rule: "Only verified GREEN contacts were emailed. YELLOW routes remain pending for form packet or deeper official-contact search."
+  sent:
+    - id: W1-INRS-001
+      university: "Institut national de la recherche scientifique (INRS)"
+      target_unit: "Centre Énergie Matériaux Télécommunications"
+      to: "info.emt@inrs.ca"
+      confidence: GREEN_SENT
+      subject: "Proposition de collaboration — IA scientifique, énergie, matériaux et systèmes non linéaires"
+      gmail_message_id: "19f1228d0de8270e"
+      status: sent
+      follow_up_rule: "If no reply after 7-10 days, prepare one polite follow-up."
+      angle:
+        - energy
+        - materials
+        - telecommunications
+        - applied research
+    - id: W1-LAVAL-001
+      university: "Université Laval"
+      target_unit: "VRRCI / valorisation, propriété intellectuelle, ententes"
+      to: "najat.aattouri@vrr.ulaval.ca"
+      confidence: GREEN_SENT
+      subject: "Proposition de collaboration — IA scientifique, valorisation et systèmes non linéaires"
+      gmail_message_id: "19f12fe9b33c0b4c"
+      status: sent
+      follow_up_rule: "If no reply after 7-10 days, prepare one polite follow-up."
+      angle:
+        - valorisation
+        - intellectual_property
+        - research_agreements
+        - scientific_ai
+    - id: W1-SHERBROOKE-001
+      university: "Université de Sherbrooke"
+      target_unit: "Research / partnerships route"
+      to: "recherche@USherbrooke.ca"
+      confidence: GREEN_SENT
+      subject: "Proposition de collaboration — IA scientifique, partenariats et systèmes non linéaires"
+      gmail_message_id: "19f12fedbb04ea81"
+      status: sent
+      follow_up_rule: "If no reply after 7-10 days, prepare one polite follow-up."
+      angle:
+        - research_partnerships
+        - applied_innovation
+        - scientific_ai
+        - valorisation
+  pending_yellow:
+    - id: W1-ETS-001
+      university: "École de technologie supérieure (ÉTS)"
+      route: "Bureau des initiatives partenariales / official contact form"
+      confidence: YELLOW
+      status: form_packet_needed
+      send_email_now: false
+      next_action:
+        - prepare_form_submission_packet
+        - attach_or_reference_one_pager
+        - capture confirmation record after submission
+    - id: W1-POLY-001
+      university: "Polytechnique Montréal"
+      route: "Research partnerships page / named contacts without clearly exposed email"
+      confidence: YELLOW
+      status: deeper_official_contact_search_needed
+      send_email_now: false
+      next_action:
+        - search_official_directory
+        - prepare_form_or_phone_packet
+        - do_not_guess_email
+  response_routing:
+    interested: "create meeting decision card and custom one-pager"
+    redirect: "record new contact and send short follow-up draft"
+    no_response_after_10_days: "prepare one polite follow-up only"
+    rejection: "record M-minus reason and improve positioning"
