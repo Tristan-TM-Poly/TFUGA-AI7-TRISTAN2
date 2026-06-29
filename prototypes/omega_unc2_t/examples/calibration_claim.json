@@ -1,0 +1,36 @@
+{
+  "claim": "A calibration certificate supports using instrument readings in the stated range.",
+  "estimate": "bounded measurement correction",
+  "uncertainty_u1": {
+    "instrument_noise": 0.18,
+    "reference_uncertainty": 0.22,
+    "environmental_conditions": 0.30,
+    "operator_procedure": 0.20,
+    "drift_since_certificate": 0.45
+  },
+  "meta_uncertainty_u2": {
+    "certificate_age_uncertainty": 0.55,
+    "drift_model_uncertainty": 0.60,
+    "lab_traceability_uncertainty": 0.20,
+    "domain_validity_uncertainty": 0.35
+  },
+  "evidence_strength": 0.70,
+  "residual_score": 0.25,
+  "decision_cost": 0.75,
+  "reversibility": 0.55,
+  "fertility": 0.70,
+  "value": 0.80,
+  "domain_valid_when": ["same range", "same environmental conditions", "within recalibration window"],
+  "domain_invalid_when": ["different range", "unknown thermal drift", "expired or missing certificate"],
+  "counter_hypotheses": ["instrument drift may dominate stated certificate uncertainty"],
+  "evidence": {
+    "sources": ["calibration certificate", "instrument passport"],
+    "experiments": ["repeatability check", "residual trend check"],
+    "counterexamples": [],
+    "notes": ["Calibration is not truth; it is a traceable correction plus uncertainty tensor."]
+  },
+  "metadata": {
+    "displayed_confidence": 0.78,
+    "oak_context": "Ω-CALIB-T"
+  }
+}

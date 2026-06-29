@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/omega_unc2_t/u2_claim.schema.json",
+  "title": "U2Claim",
+  "type": "object",
+  "required": ["claim", "uncertainty_u1", "meta_uncertainty_u2"],
+  "additionalProperties": true,
+  "properties": {
+    "claim": { "type": "string", "minLength": 1 },
+    "estimate": {},
+    "uncertainty_u1": {
+      "type": "object",
+      "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+    },
+    "meta_uncertainty_u2": {
+      "type": "object",
+      "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+    },
+    "evidence_strength": { "type": "number", "minimum": 0, "maximum": 1, "default": 0 },
+    "residual_score": { "type": "number", "minimum": 0, "maximum": 1, "default": 0 },
+    "decision_cost": { "type": "number", "minimum": 0, "maximum": 1, "default": 0 },
+    "reversibility": { "type": "number", "minimum": 0, "maximum": 1, "default": 1 },
+    "fertility": { "type": "number", "minimum": 0, "maximum": 1, "default": 0 },
+    "value": { "type": "number", "minimum": 0, "maximum": 1, "default": 0 },
+    "domain_valid_when": { "type": "array", "items": { "type": "string" } },
+    "domain_invalid_when": { "type": "array", "items": { "type": "string" } },
+    "counter_hypotheses": { "type": "array", "items": { "type": "string" } },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "sources": { "type": "array", "items": { "type": "string" } },
+        "experiments": { "type": "array", "items": { "type": "string" } },
+        "counterexamples": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "metadata": { "type": "object", "additionalProperties": true }
+  }
+}
