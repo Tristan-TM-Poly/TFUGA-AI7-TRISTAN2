@@ -1,0 +1,101 @@
+# Microbenchmark Protocols — Ω-UNI-QC
+
+microbenchmark_protocols:
+  default_offer:
+    duration: 2_to_4_weeks
+    input_options:
+      - article
+      - patent
+      - dataset
+      - equation_or_model
+      - lightweight_industrial_problem
+    outputs:
+      - structured_summary
+      - hypothesis_evidence_residue_graph
+      - code_or_notebook_if_possible
+      - baseline_comparison
+      - residual_map
+      - OAK_report
+      - collaboration_decision
+    OAK_limits:
+      - prototype_not_industrial_validation
+      - no_performance_claim_without_benchmark
+      - no_ROI_claim_without_cost_model_and_baseline
+      - IP_review_before_sensitive_disclosure
+  protocols:
+    nonlinear_system_benchmark:
+      title: Nonlinear System Tensor-Lift Benchmark
+      input: EDO/EDP/model/data
+      output: tensor lift, baseline, residual, stability notes, OAK report
+      compatible_universities:
+        - Polytechnique_Montreal
+        - ETS
+        - Universite_de_Sherbrooke
+        - McGill
+        - Concordia
+      omega_branches:
+        - Omega_DE_TensorProd
+        - Omega_LIN_T
+        - Omega_VTP_T
+    paper_to_code_digest:
+      title: Publication to Code/OAK Digest
+      input: scientific paper
+      output: structured summary, equations, reproduction notes, prototype code if feasible, limitations
+      compatible_universities: all
+      omega_branches:
+        - Omega_ROSETTE_T
+        - Omega_INFO2_T
+        - Omega_TRANSFORM_T
+    patent_to_opportunity_graph:
+      title: Patent to Opportunity Graph
+      input: patent or patent portfolio
+      output: invention-market-risk-license-prototype graph
+      compatible_universities:
+        - Universite_Laval
+        - Universite_de_Sherbrooke
+        - HEC_Montreal
+        - McGill
+        - Polytechnique_Montreal
+        - BCI
+      omega_branches:
+        - Omega_SCI_PATENT_QC_DIGEST_T
+        - Omega_ROI_OAK
+        - Omega_CORP_JARVIS_T
+    datacenter_energy_oak:
+      title: Datacenter / Energy OAK Benchmark
+      input: thermal model, simulated data, or energy optimization case
+      output: PUE proxy, optimization benchmark, ROI-OAK, limits and risk report
+      compatible_universities:
+        - ETS
+        - Polytechnique_Montreal
+        - INRS
+        - Universite_de_Sherbrooke
+        - Universite_Laval
+        - Concordia
+      omega_branches:
+        - Omega_ENERGY_T
+        - Omega_VTP_T
+        - Omega_ROI_OAK
+    university_research_map:
+      title: University Research and Valorisation Map
+      input: publications + patents + research centres
+      output: opportunity map for collaboration, valorisation, and microbenchmarks
+      compatible_universities:
+        - BCI
+        - HEC_Montreal
+        - Universite_Laval
+        - Universite_du_Quebec_network
+      omega_branches:
+        - Omega_WEBSEARCH_T
+        - Omega_SCI_PATENT_QC_DIGEST_T
+        - Omega_INFO2_T
+  MicroBenchmarkCard_schema:
+    fields:
+      - title
+      - university_fit
+      - input_needed
+      - baseline
+      - expected_output
+      - OAK_risks
+      - IP_sensitivity
+      - next_action
