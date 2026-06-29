@@ -13,6 +13,7 @@ from .compact_table_report import render_compact_table, render_portfolio_table, 
 from .core import Evidence, OAKDecision, OAKStatus, ProfessorSignal, build_project_forge_prompt, evaluate_signal, rank_signals
 from .course_memory_minus import CourseAntiError, CourseMemoryMinus, build_course_memory_minus
 from .coursecvcd import CourseCVCDPacket, CourseInput, generate_coursecvcd
+from .department_bridge_optimizer import DepartmentBridgeOptimization, OptimizedBridge, optimize_department_bridges
 from .department_bridge_report import DepartmentBridgeReport, render_department_bridge_report
 from .department_bridge_scoring import DepartmentBridgeScore, score_department_bridge, score_recommendation_bridge
 from .documentation_index import DocumentationEntry, DocumentationIndex, build_documentation_index, render_documentation_index
@@ -33,17 +34,21 @@ from .local_json_loader import LocalJSONLoadResult, load_and_normalize_local_jso
 from .method_graph import MethodGraph, MethodNode, build_method_graph
 from .method_reproduction_packet import MethodReproductionPacket, MethodReproductionSet, build_method_reproduction_packet, build_method_reproduction_set
 from .mminus_registry import MMinusEntry, MMinusRegistry, default_mminus_registry, render_mminus_markdown
+from .next_actions_engine import NextAction, NextActionPlan, compile_top_next_actions, render_next_actions_markdown
+from .oak_packet_manifest import OAKPacketEntry, OAKPacketManifest, build_oak_packet_manifest
 from .opportunity_ranker import OpportunityRanking, RankedOpportunity, rank_opportunity_bundles, score_bundle
 from .package_health import PackageHealthReport, build_package_health_report
 from .package_status import PackageStatusReport, build_package_status_report
 from .poly_public_adapters import ExpertiseLikeAdapter, PolyPublieLikeAdapter
 from .poly_research_twin import PolyResearchTwin, build_poly_research_twin
+from .poly_research_twin_v2 import PolyResearchTwinV2, build_poly_research_twin_v2
 from .portfolio_optimizer import PortfolioSelection, optimize_portfolio
 from .prior_art_packet import PriorArtPacket, generate_prior_art_packet
 from .professor_backlog_report import ProfessorBacklogReport, render_all_professor_backlogs, render_professor_backlog
 from .professor_genome import ProfessorResearchGenome, build_all_professor_genomes, build_professor_genome
 from .professor_graph import HyperEdge, Node, ProfessorGraph, demo_professor_graph
 from .professor_graph_integration import research_atoms_to_professor_graph
+from .professor_tensor import ProfessorTensor, build_professor_tensor, build_professor_tensors
 from .project_forge import ProjectInput, ProjectPacket, forge_project
 from .public_metadata_adapters import GenericPublicMetadataAdapter, PublicMetadataAdapter
 from .public_source_registry import PublicSource, PublicSourceRegistry, default_public_source_registry
