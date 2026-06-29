@@ -5,6 +5,7 @@ on:
     paths:
       - 'tools/action_dashboard/**'
       - 'tests/test_dashboard_report_generator.py'
+      - 'tests/test_snapshot_collector.py'
       - 'examples/action_dashboard/**'
       - '.github/workflows/action-dashboard-ci.yml'
   push:
@@ -13,6 +14,7 @@ on:
     paths:
       - 'tools/action_dashboard/**'
       - 'tests/test_dashboard_report_generator.py'
+      - 'tests/test_snapshot_collector.py'
       - 'examples/action_dashboard/**'
       - '.github/workflows/action-dashboard-ci.yml'
   workflow_dispatch:
@@ -38,8 +40,8 @@ jobs:
       - name: Install test dependency
         run: python -m pip install --upgrade pytest
 
-      - name: Run dashboard generator unit tests
-        run: python -m pytest -q tests/test_dashboard_report_generator.py
+      - name: Run dashboard unit tests
+        run: python -m pytest -q tests/test_dashboard_report_generator.py tests/test_snapshot_collector.py
 
       - name: Run dashboard generator CLI smoke test
         run: |
@@ -50,6 +52,20 @@ jobs:
           test -s /tmp/ACTION_DASHBOARD_REPORT.md
           test -s /tmp/ACTION_DASHBOARD_REPORT.json
           grep -q "Ω Action Dashboard Report" /tmp/ACTION_DASHBOARD_REPORT.md
+
+      - name: Run collector to generator smoke test
+        run: |
+          python tools/action_dashboard/snapshot_collector.py \
+            --root . \
+            --out /tmp/ACTION_DASHBOARD_SNAPSHOT.json
+          test -s /tmp/ACTION_DASHBOARD_SNAPSHOT.json
+          python tools/action_dashboard/dashboard_report_generator.py \
+            /tmp/ACTION_DASHBOARD_SNAPSHOT.json \
+            --markdown-out /tmp/ACTION_DASHBOARD_COLLECTED_REPORT.md \
+            --json-out /tmp/ACTION_DASHBOARD_COLLECTED_REPORT.json
+          test -s /tmp/ACTION_DASHBOARD_COLLECTED_REPORT.md
+          test -s /tmp/ACTION_DASHBOARD_COLLECTED_REPORT.json
+          grep -q "Ω Action Dashboard Report" /tmp/ACTION_DASHBOARD_COLLECTED_REPORT.md
 
       - name: OAK read-only guard
         run: |
