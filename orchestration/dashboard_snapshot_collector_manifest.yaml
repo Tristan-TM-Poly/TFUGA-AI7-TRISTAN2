@@ -1,0 +1,41 @@
+# Dashboard Snapshot Collector Manifest
+
+dashboard_snapshot_collector_manifest:
+  status: executable_seed
+  module: tools/action_dashboard/snapshot_collector.py
+  documentation: docs/OMEGA_DASHBOARD_SNAPSHOT_COLLECTOR.md
+  output:
+    - ACTION_DASHBOARD_SNAPSHOT.json
+  pipeline:
+    - collect_local_repository_snapshot
+    - pass_snapshot_to_dashboard_report_generator
+    - emit_markdown_and_json_report
+  scans:
+    - demo_packets
+    - docs
+    - orchestration
+    - tools
+    - omega_vtp_t
+    - tests
+    - github_workflows
+    - university_outreach_quebec_universities
+  OAK_properties:
+    - local_read_only
+    - stdlib_only
+    - no_network_calls
+    - no_external_actions
+    - no_secret_access
+    - snapshot_is_operational_not_authoritative_external_truth
+  CI:
+    workflow: .github/workflows/action-dashboard-ci.yml
+    tests:
+      - tests/test_snapshot_collector.py
+      - tests/test_dashboard_report_generator.py
+    smoke_pipeline:
+      - snapshot_collector_to_json
+      - dashboard_report_generator_to_markdown_and_json
+  next_upgrades:
+    - connector_backed_GitHub_snapshot
+    - Gmail_reply_snapshot
+    - university_route_evidence_snapshot
+    - dashboard_trend_history

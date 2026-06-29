@@ -32,6 +32,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install test dependency
+        run: python -m pip install --upgrade pytest
+
       - name: Run dashboard generator tests
         run: python -m pytest -q tests/test_dashboard_report_generator.py
 
