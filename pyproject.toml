@@ -6,6 +6,7 @@ requires-python = ">=3.10"
 
 [project.scripts]
 omega-absorb = "omega_prof_poly_t.cli:main"
+oss-digest = "omega_oss_digest_t.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
