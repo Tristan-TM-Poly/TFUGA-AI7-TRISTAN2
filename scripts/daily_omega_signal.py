@@ -13,6 +13,12 @@ The default is dry-run Markdown. The script never calls GitHub APIs.
 from __future__ import annotations
 
 import argparse
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from sage_tristan.daily_omega_io import export_decision_json, export_decision_markdown, load_item_json
 
