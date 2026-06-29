@@ -1,0 +1,68 @@
+name: OAK Action Loop Report CI
+
+on:
+  pull_request:
+    paths:
+      - "orchestration/oak_action_loop_reports/**"
+      - ".github/workflows/oak-action-loop-report-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "orchestration/oak_action_loop_reports/**"
+      - ".github/workflows/oak-action-loop-report-ci.yml"
+
+jobs:
+  validate-oak-action-loop-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate report files are bounded and non-empty
+        shell: python
+        run: |
+          from pathlib import Path
+          import sys
+
+          root = Path("orchestration/oak_action_loop_reports")
+          files = sorted(root.glob("*.md")) if root.exists() else []
+          if not files:
+              print("No OAK action-loop report files found.")
+              sys.exit(1)
+
+          required_markers = [
+              "Observe",
+              "Decide",
+              "Act",
+              "Verify",
+              "Learn",
+              "M+",
+              "M-",
+          ]
+          forbidden_markers = [
+              "BEGIN RSA PRIVATE KEY",
+              "BEGIN OPENSSH PRIVATE KEY",
+              "ghp_",
+              "github_pat_",
+              "sk-",
+          ]
+
+          failed = False
+          for path in files:
+              text = path.read_text(encoding="utf-8")
+              if len(text.strip()) < 200:
+                  print(f"FAIL {path}: report is too small")
+                  failed = True
+              for marker in required_markers:
+                  if marker not in text:
+                      print(f"FAIL {path}: missing marker {marker!r}")
+                      failed = True
+              for marker in forbidden_markers:
+                  if marker in text:
+                      print(f"FAIL {path}: forbidden sensitive marker {marker!r}")
+                      failed = True
+
+          if failed:
+              sys.exit(1)
+          print(f"Validated {len(files)} OAK action-loop report file(s).")
