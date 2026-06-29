@@ -1,4 +1,4 @@
-"""Package health score for Omega absorb v1.5."""
+"""Package health score for Omega absorb v1.6."""
 
 from __future__ import annotations
 
@@ -30,31 +30,11 @@ def build_package_health_report() -> PackageHealthReport:
     missing = []
     if len(available_demo_sources()) < 3:
         missing.append("demo_sources")
-    if len(status.cli_commands) < 20:
+    if len(status.cli_commands) < 25:
         missing.append("cli_surface")
-    if len(docs.entries) < 13:
+    if len(docs.entries) < 14:
         missing.append("doc_lineage")
-    score = round(min(1.0, 0.25 + 0.03 * len(status.cli_commands) + 0.02 * len(docs.entries) + 0.02 * len(manifest.entries) - 0.05 * len(missing)), 4)
-    lines = [
-        "# Omega Absorb Health",
-        "",
-        f"score: {score:.4f}",
-        f"versions: {len(manifest.entries)}",
-        f"docs: {len(docs.entries)}",
-        f"cli commands: {len(status.cli_commands)}",
-        f"sources: {len(available_demo_sources())}",
-        "",
-        "## Missing",
-    ]
+    score = round(min(1.0, 0.25 + 0.025 * len(status.cli_commands) + 0.02 * len(docs.entries) + 0.02 * len(manifest.entries) - 0.05 * len(missing)), 4)
+    lines = ["# Omega Absorb Health", "", f"score: {score:.4f}", f"versions: {len(manifest.entries)}", f"docs: {len(docs.entries)}", f"cli commands: {len(status.cli_commands)}", f"sources: {len(available_demo_sources())}", "", "## Missing"]
     lines.extend(f"- {item}" for item in (missing or ["none"]))
-    return PackageHealthReport(
-        version="1.5.0",
-        score=score,
-        version_count=len(manifest.entries),
-        doc_count=len(docs.entries),
-        cli_command_count=len(status.cli_commands),
-        source_count=len(available_demo_sources()),
-        missing_items=tuple(missing),
-        markdown="\n".join(lines).strip() + "\n",
-        next_action="use_health_report_to_prioritize_next_release",
-    )
+    return PackageHealthReport("1.6.0", score, len(manifest.entries), len(docs.entries), len(status.cli_commands), len(available_demo_sources()), tuple(missing), "\n".join(lines).strip() + "\n", "use_health_report_to_prioritize_next_release")
