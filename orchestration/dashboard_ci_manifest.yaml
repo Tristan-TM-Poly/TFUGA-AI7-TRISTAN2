@@ -1,0 +1,28 @@
+# Dashboard CI Manifest
+
+dashboard_ci_manifest:
+  status: active_ci_seed
+  workflow: .github/workflows/action-dashboard-ci.yml
+  target_module: tools/action_dashboard/dashboard_report_generator.py
+  tests:
+    - tests/test_dashboard_report_generator.py
+  sample_input:
+    - examples/action_dashboard/sample_cycle_snapshot.json
+  outputs_checked:
+    - ACTION_DASHBOARD_REPORT.md
+    - ACTION_DASHBOARD_REPORT.json
+  triggers:
+    - pull_request_on_dashboard_paths
+    - push_to_main_on_dashboard_paths
+    - workflow_dispatch
+  OAK_properties:
+    - read_only
+    - no_network_commands_in_guarded_workflow_body
+    - no_secret_reference_in_guarded_workflow_body
+    - no_external_action
+    - validates_cli_smoke_output
+  next_upgrades:
+    - upload_dashboard_report_artifacts
+    - add_snapshot_collector_tests
+    - add_trend_comparison_tests
+    - run_dashboard_CI_in_all_action_loop_PRs
