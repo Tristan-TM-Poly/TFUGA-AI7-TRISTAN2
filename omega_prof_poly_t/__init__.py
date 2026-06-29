@@ -18,6 +18,7 @@ from .coursecvcd import CourseCVCDPacket, CourseInput, generate_coursecvcd
 from .department_bridge_optimizer import DepartmentBridgeOptimization, OptimizedBridge, optimize_department_bridges
 from .department_bridge_report import DepartmentBridgeReport, render_department_bridge_report
 from .department_bridge_scoring import DepartmentBridgeScore, score_department_bridge, score_recommendation_bridge
+from .department_strategy_matrix import DepartmentStrategyCell, DepartmentStrategyMatrix, build_department_strategy_matrix, render_department_strategy_matrix
 from .documentation_index import DocumentationEntry, DocumentationIndex, build_documentation_index, render_documentation_index
 from .e2e_pipeline_v09 import EndToEndV09Result, run_v09_e2e_pipeline
 from .enriched_graph_exports import professor_graph_to_enriched_graphml
@@ -46,6 +47,7 @@ from .package_status import PackageStatusReport, build_package_status_report
 from .poly_public_adapters import ExpertiseLikeAdapter, PolyPublieLikeAdapter
 from .poly_research_twin import PolyResearchTwin, build_poly_research_twin
 from .poly_research_twin_v2 import PolyResearchTwinV2, build_poly_research_twin_v2
+from .poly_research_twin_v3 import PolyResearchTwinV3, build_poly_research_twin_v3
 from .portfolio_optimizer import PortfolioSelection, optimize_portfolio
 from .prior_art_packet import PriorArtPacket, generate_prior_art_packet
 from .professor_backlog_report import ProfessorBacklogReport, render_all_professor_backlogs, render_professor_backlog
@@ -53,6 +55,7 @@ from .professor_genome import ProfessorResearchGenome, build_all_professor_genom
 from .professor_graph import HyperEdge, Node, ProfessorGraph, demo_professor_graph
 from .professor_graph_integration import research_atoms_to_professor_graph
 from .professor_tensor import ProfessorTensor, build_professor_tensor, build_professor_tensors
+from .professor_tensor_weights import ProfessorTensorWeights, render_tensor_weights_table, weight_professor_tensor, weight_professor_tensors
 from .project_forge import ProjectInput, ProjectPacket, forge_project
 from .public_metadata_adapters import GenericPublicMetadataAdapter, PublicMetadataAdapter
 from .public_source_registry import PublicSource, PublicSourceRegistry, default_public_source_registry
@@ -62,10 +65,12 @@ from .reports import render_packet_report
 from .research_atom import ResearchAtom, atom_from_public_record
 from .research_opportunity_compiler import ResearchOpportunityBundle, ResearchOpportunityCompilation, compile_atom_opportunities, compile_research_opportunities
 from .roadmap_compiler import RoadmapPlan, RoadmapStep, compile_portfolio_roadmap, render_roadmap_markdown
+from .route_confidence_dashboard import RouteConfidenceDashboard, RouteConfidenceRow, build_route_confidence_dashboard, render_route_confidence_dashboard
 from .source_oak_policy import SourceOAKPolicy, SourceOAKPolicyReport, apply_source_oak_policy, default_source_oak_policies
 from .source_record_validation import RecordValidationFinding, RecordValidationReport, validate_public_records
 from .source_registry_schema import SourceSchema, SourceSchemaFinding, SourceSchemaReport, default_source_schemas, validate_records_against_schema
 from .source_selection import available_demo_sources, select_demo_records
+from .twin_answer_engine import TwinAnswer, answer_twin_question, render_twin_answer
 from .version_manifest import VersionEntry, VersionManifest, build_version_manifest
 from .zero_touch_oak import BlockedActionPacket, GateStatus, OAKCompileResult, compile_oak
 
