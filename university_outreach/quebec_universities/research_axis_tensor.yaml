@@ -1,0 +1,116 @@
+# Research Axis Tensor — Quebec Universities x Omega Branches
+
+research_axis_tensor:
+  strategic_buckets:
+    Engineering_Industrial:
+      universities:
+        - ETS
+        - Polytechnique_Montreal
+        - Universite_de_Sherbrooke
+        - Concordia
+        - McGill
+      omega_branches:
+        - Omega_DE_TensorProd
+        - Omega_LIN_T
+        - Omega_VTP_T
+        - Omega_ENERGY_T
+        - Omega_CIRCUITS_T
+        - Omega_CPUFMT
+      pitch: microbenchmark in engineering, nonlinear systems, optimization, energy, datacenters, digital twins
+    AI_Data_Scientific:
+      universities:
+        - Universite_de_Montreal
+        - McGill
+        - Concordia
+        - Universite_Laval
+        - UQAM
+      omega_branches:
+        - Omega_LEARN_T
+        - Omega_ROSETTE_T
+        - Omega_WEBSEARCH_T
+        - Omega_INFO2_T
+        - Omega_VTP_T
+      pitch: scientific AI, graphs, tensors, paper digestion, verifiable models
+    Energy_Materials_Environment:
+      universities:
+        - INRS
+        - Universite_Laval
+        - Universite_de_Sherbrooke
+        - UQTR
+        - UQAC
+        - UQAT
+        - UQAR
+      omega_branches:
+        - Omega_ENERGY_T
+        - Omega_BAT_T
+        - Omega_OEMMTD_T
+        - Omega_NATSCI_T
+        - Omega_TRANSFORM_T
+      pitch: energy, batteries, materials, sensors, environment, optimization
+    Valorisation_IP_Business:
+      universities:
+        - HEC_Montreal
+        - Universite_Laval
+        - Universite_de_Sherbrooke
+        - McGill
+        - Polytechnique_Montreal
+        - BCI
+      omega_branches:
+        - Omega_SCI_PATENT_QC_DIGEST_T
+        - Omega_COMP_REV_IP_PUB_AUTOSEND
+        - Omega_CORP_JARVIS_T
+        - Omega_ROI_OAK
+      pitch: patents, transfer, ROI-OAK, opportunity mapping
+    Governance_Public_Services:
+      universities:
+        - ENAP
+        - UQAM
+        - UQO
+        - TELUQ
+      omega_branches:
+        - Omega_SERVICES_QC_T
+        - Omega_SHUM_T
+        - Omega_ACTION_EXT_T
+        - Omega_AUTO2_T
+      pitch: public services, OAK decisions, responsible automation, governance
+    Learning_Knowledge:
+      universities:
+        - TELUQ
+        - UQAM
+        - Bishops
+        - Universite_Laval
+      omega_branches:
+        - Omega_LEARN_T
+        - Omega_ROSETTE_T
+        - Omega_INFO2_T
+        - Omega_TRANSFORM_T
+      pitch: learning, paper digestion, AI tutoring, knowledge compression
+  scoring_dimensions:
+    - scientific_fit
+    - official_route_quality
+    - microbenchmark_feasibility
+    - IP_or_publication_potential
+    - revenue_or_funding_potential
+    - OAK_risk
+    - follow_up_priority
+  output_cards:
+    UniversityCard:
+      fields:
+        - university
+        - website
+        - research_office
+        - partnership_office
+        - tech_transfer_route
+        - contact_score
+        - best_research_axes
+        - best_Tristan_branches
+        - best_message_variant
+        - status
+        - next_action
+    ResearchAxisCard:
+      fields:
+        - axis
+        - universities_ranked
+        - match_score
+        - route
+        - microbenchmark_candidate
