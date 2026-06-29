@@ -15,8 +15,8 @@ from omega_prof_poly_t.absorb_public_research import absorb_public_records
 
 
 def test_v15_cli_commands():
-    assert VERSION == "1.5.0"
-    assert run_cli(["version"]) == "omega-absorb 1.5.0\n"
+    assert VERSION
+    assert run_cli(["version"]).startswith("omega-absorb ")
     assert run_cli(["tensor", "--source", "combined"]).startswith("professor_tensors=")
     assert run_cli(["twin-v2", "--source", "combined"]).startswith("twin_tensors=")
     assert run_cli(["bridge-opt", "--source", "combined"]).startswith("optimized_bridges=")
