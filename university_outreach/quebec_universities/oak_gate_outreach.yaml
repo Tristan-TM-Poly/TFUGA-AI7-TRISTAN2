@@ -1,0 +1,53 @@
+# OAK Gate — University Outreach
+
+OAKGate_Outreach:
+  purpose: prevent spam, hype, unsafe claims, and unverified contacts
+  hard_locks:
+    guessed_email:
+      decision: block
+      reason: contact must be official and verifiable
+    unsupported_performance_claim:
+      decision: block
+      reason: benchmark required before claim
+    unsupported_ROI_claim:
+      decision: block
+      reason: cost model and baseline required
+    public_partnership_claim_without_confirmation:
+      decision: block
+      reason: written confirmation required
+    sensitive_IP_disclosure:
+      decision: block_until_IP_review
+      reason: avoid destroying patentability or confidential value
+    mass_sending:
+      decision: block
+      reason: targeted outreach only
+  soft_checks:
+    message_short_enough:
+      target: under_250_words_when_possible
+    value_clear:
+      target: microbenchmark_or_specific_next_step
+    recipient_fit:
+      target: research_or_partnership_or_technology_transfer_route
+    trace_recorded:
+      target: source_url_or_gmail_id_or_form_confirmation
+  allowed_actions:
+    - send_GREEN_EMAIL_after_approval_or_existing_campaign_rule
+    - prepare_GREEN_FORM_packet
+    - search_official_routes
+    - record_reply_and_next_action
+    - send_one_follow_up_if_no_reply
+    - create_GitHub_docs_or_issue
+  blocked_actions:
+    - guessed_contact_send
+    - scraping_private_data
+    - impersonation
+    - claiming_endorsement
+    - bypassing_university_forms
+    - repeated_followups_without_invitation
+  M_minus_patterns:
+    - route_not_official
+    - no_email_exposed
+    - too_broad_message
+    - wrong_office
+    - no_reply_after_followup
+    - overclaim_detected
