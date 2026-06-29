@@ -1,4 +1,4 @@
-"""Packaged documentation index for Omega absorb v1.3."""
+"""Packaged documentation index for Omega absorb v1.4."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ def build_documentation_index() -> DocumentationIndex:
             path=f"docs/omega-prof-poly/ABSORB_POLY_PROF_V{version.replace('.', '_')}.md",
             version=version,
         )
-        for version in ("0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0", "1.1", "1.2", "1.3")
+        for version in ("0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0", "1.1", "1.2", "1.3", "1.4")
     )
     return DocumentationIndex(entries=entries, next_action="render_documentation_index")
 

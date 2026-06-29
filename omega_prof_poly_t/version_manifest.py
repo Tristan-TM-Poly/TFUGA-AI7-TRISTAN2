@@ -1,4 +1,4 @@
-"""Version manifest for Omega absorb v1.3."""
+"""Version manifest for Omega absorb v1.4."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ class VersionManifest:
 
 def build_version_manifest() -> VersionManifest:
     return VersionManifest(
-        release="1.3.0",
+        release="1.4.0",
         entries=(
             VersionEntry("0.3", "public research atoms", ("research_atom", "professor_genome", "poly_research_twin"), "merged"),
             VersionEntry("0.4", "claim and method graph compiler", ("claim_graph", "method_graph", "research_opportunity_compiler"), "merged"),
@@ -35,7 +35,8 @@ def build_version_manifest() -> VersionManifest:
             VersionEntry("1.0", "stable local CLI and release bundle", ("cli", "version_manifest", "release_bundle"), "merged"),
             VersionEntry("1.1", "CLI exports and documentation index", ("export_commands", "documentation_index", "release_bundle_writer"), "merged"),
             VersionEntry("1.2", "source selection and GraphML exports", ("source_selection", "package_status", "export_commands"), "merged"),
-            VersionEntry("1.3", "local JSON input, compact tables, bundles, health and changelog", ("local_json_loader", "compact_table_report", "export_bundle", "package_health", "changelog_generator"), "current"),
+            VersionEntry("1.3", "local JSON input, compact tables, bundles, health and changelog", ("local_json_loader", "compact_table_report", "export_bundle", "package_health", "changelog_generator"), "merged"),
+            VersionEntry("1.4", "strict schemas, claim tests, method reproduction, M-minus and GitHub packets", ("source_registry_schema", "claim_oak_plus", "method_reproduction_packet", "mminus_registry", "github_packet_generator"), "current"),
         ),
         next_action="publish_release_notes_packet",
     )
