@@ -1,27 +1,8 @@
 # Omega MGHFM TGNT Prime Tensor Canon
 
-Status: exploratory formalization scaffold with executable prototype.
+Status: exploratory formalization scaffold.
 
 This document records a compact formal layer for prime tensors, gap tensors, HGFM relations, LOG/EXP compression-expansion, CVCD controlled decompression, JKD minimal action, YY3 triple flow, and OAK verification.
-
-## Executable layer
-
-The definitions in this file are now backed by a stdlib-only prototype:
-
-- `sage_tristan/prime_tensors.py`
-- `tests/test_prime_tensors.py`
-- `examples/prime_tensor_demo.py`
-- `reports/prime_tensor_oak_report.md`
-
-Local validation before push:
-
-```bash
-PYTHONPATH=/tmp python -m unittest test_prime_tensors.py
-PYTHONPATH=/tmp python -m sage_tristan.prime_tensors --count 6 --max-jump 2 > /tmp/packet.json
-python -m json.tool /tmp/packet.json
-```
-
-Result: 5 tests passed and the JSON OAK packet was valid.
 
 ## Prime coordinate tensor
 
@@ -132,10 +113,12 @@ Every motif is classified as:
 
 ## Prototype path
 
-Suggested next implementation files:
+Suggested implementation files:
 
+- sage_tristan/prime_tensors.py
 - sage_tristan/hgfm_prime_graph.py
-- schemas/prime_tensor_packet.schema.json
+- tests/test_prime_tensors.py
+- examples/prime_tensor_demo.py
 - reports/prime_tensor_oak_report.md
 
 ## Canon summary
