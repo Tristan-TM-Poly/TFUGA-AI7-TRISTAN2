@@ -12,7 +12,7 @@ def load_synthetic_documents() -> list[DigestDocument]:
     v0.3 local demo counts: 6 documents, 6 opportunities, 9 bridges.
     """
     return [
-        DigestDocument("sci-001", "science", "Synthetic photonic materials note", 2025, "Polytechnique Montreal", ["A. Researcher", "B. Collaborator"], ["materials", "photonics", "optimization"]),
+        DigestDocument("sci-001", "science", "Synthetic photonic materials note", 2025, "Polytechnique Montreal", ["A. Researcher", "B. Collaborator"], ["materials", "photonics"]),
         DigestDocument("sci-002", "science", "Synthetic energy storage note", 2025, "Universite de Montreal", ["C. Researcher"], ["energy", "storage", "diagnostics", "sensors"]),
         DigestDocument("sci-003", "science", "Synthetic robotics perception note", 2024, "Universite Laval", ["D. Researcher"], ["robotics", "perception", "sensors"]),
         DigestDocument("ip-001", "patent", "Synthetic optical device filing", 2025, "Quebec Assignee A", ["A. Inventor"], ["materials", "photonics", "device", "sensors"]),
