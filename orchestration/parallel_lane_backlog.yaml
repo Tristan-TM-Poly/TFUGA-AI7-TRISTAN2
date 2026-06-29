@@ -1,0 +1,40 @@
+# Parallel Lane Backlog — Tristan Omega System
+
+parallel_lane_backlog:
+  github_lane:
+    active:
+      - inspect_open_PRs_across_accessible_repos
+      - merge_only_clean_green_non_draft_PRs
+      - record_M_minus_for_pending_checks_or_drafts
+    blocked_now:
+      - PR_59_checks_pending
+      - PR_87_not_mergeable
+      - PR_89_draft
+  outreach_lane:
+    active:
+      - monitor_wave1_replies
+      - prepare_wave2_route_discovery
+      - update_contact_register_with_official_routes_only
+    blocked_now:
+      - no_wave1_replies_detected
+      - remaining_universities_need_official_route_search
+  proof_packet_lane:
+    active:
+      - datacenter_energy_oak_ready
+      - packet_router_ready
+    next_packets:
+      - paper_to_code_oak_packet
+      - patent_to_opportunity_packet
+      - nonlinear_tensor_lift_packet
+  automation_lane:
+    active:
+      - All_GitHub_PR_Forge_hourly
+      - University_Route_Scan_weekly
+      - University_Followups_one_time
+    constraint: max_active_tasks_limit
+  OAK_lane:
+    active:
+      - no_mass_send
+      - no_guess_email
+      - no_merge_pending_or_draft
+      - no_industrial_claim_without_validation
