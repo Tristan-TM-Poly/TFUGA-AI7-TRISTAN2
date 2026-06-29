@@ -1,0 +1,40 @@
+# Friction Burn Rate — Ω-ACTION-DASHBOARD-T
+
+friction_burn_rate:
+  definition: "Rate at which operational blockers are removed or transformed into reusable assets."
+  friction_classes:
+    no_official_route:
+      burn_event: GREEN_EMAIL_or_GREEN_FORM_created
+      weight: 5
+    no_proof_packet:
+      burn_event: packet_created_or_seeded
+      weight: 4
+    message_too_abstract:
+      burn_event: concrete_demo_packet_routed
+      weight: 3
+    PR_blocked_by_missing_docs:
+      burn_event: docs_added
+      weight: 2
+    PR_blocked_by_missing_tests:
+      burn_event: tests_added
+      weight: 4
+    checks_pending:
+      burn_event: checks_completed_or_blocker_classified
+      weight: 1
+    draft_PR:
+      burn_event: marked_ready_by_owner_or_reclassified_wait
+      weight: 1
+    no_reply:
+      burn_event: one_followup_sent_or_retarget_decided
+      weight: 2
+    overclaim_risk:
+      burn_event: OAK_limits_added
+      weight: 4
+  formula: |
+    FBR = sum(weight(friction_class) for each burned_friction) / cycle_duration
+  dashboard_outputs:
+    - friction_burned_total
+    - friction_burned_by_lane
+    - top_remaining_frictions
+    - repeated_friction_patterns
+  OAK_rule: "Do not count a friction as burned if it was bypassed unsafely rather than resolved or rerouted."
