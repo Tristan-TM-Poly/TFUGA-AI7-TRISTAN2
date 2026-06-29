@@ -1,0 +1,74 @@
+# Action Loop State Machine — Ω-ACTION-LOOP-T
+
+action_loop_state_machine:
+  states:
+    OBSERVE:
+      description: collect current state
+      transitions:
+        - to: DECIDE
+          condition: observations_collected
+    DECIDE:
+      description: classify safest next action
+      transitions:
+        - to: ACT
+          condition: decision_in_ALLOWED_ACTIONS
+        - to: WAIT_COOLDOWN
+          condition: pending_or_immature_state
+        - to: BLOCK_M_MINUS
+          condition: hard_lock_or_repeated_failure
+        - to: HUMAN_APPROVAL_REQUIRED
+          condition: sensitive_or_high_impact_action
+    ACT:
+      description: perform allowed micro-action
+      transitions:
+        - to: VERIFY
+          condition: action_attempted
+    VERIFY:
+      description: verify OAK and proof conditions
+      transitions:
+        - to: LEARN_M_PLUS
+          condition: action_succeeded_and_proof_recorded
+        - to: LEARN_M_MINUS
+          condition: action_failed_or_risk_detected
+        - to: WAIT_COOLDOWN
+          condition: external_state_pending
+    LEARN_M_PLUS:
+      description: store success pattern
+      transitions:
+        - to: REPRIORITIZE
+          condition: M_plus_recorded
+    LEARN_M_MINUS:
+      description: store blocker pattern and anti-repetition rule
+      transitions:
+        - to: REPRIORITIZE
+          condition: M_minus_recorded
+    WAIT_COOLDOWN:
+      description: pause until appropriate cadence
+      transitions:
+        - to: OBSERVE
+          condition: cooldown_elapsed
+    BLOCK_M_MINUS:
+      description: stop unsafe repeated action and preserve failure lesson
+      transitions:
+        - to: REPRIORITIZE
+          condition: blocker_recorded
+    HUMAN_APPROVAL_REQUIRED:
+      description: wait for explicit approval or route to review packet
+      transitions:
+        - to: ACT
+          condition: explicit_approval_received
+        - to: REPRIORITIZE
+          condition: approval_not_available
+    REPRIORITIZE:
+      description: update backlog and choose next lane
+      transitions:
+        - to: OBSERVE
+          condition: next_cycle
+  hard_locks:
+    - draft_PR_merge
+    - pending_or_ambiguous_checks_merge
+    - guessed_email_send
+    - mass_send
+    - sensitive_external_action_without_approval
+    - unsupported_claim
+  invariant: "No loop may trade safety or proof quality for speed."
