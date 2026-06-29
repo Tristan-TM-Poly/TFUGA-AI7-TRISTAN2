@@ -1,0 +1,7 @@
+{
+  "version": "1.8.0",
+  "lineage": ["source", "adapter", "policy", "atom", "action"],
+  "packets": [
+    {"packet_id": "oak-plus-1-course_packet", "source_id": "combined", "policy_status": "allow_with_warnings"}
+  ]
+}

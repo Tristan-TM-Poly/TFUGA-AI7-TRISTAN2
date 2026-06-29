@@ -1,4 +1,4 @@
-"""Stable CLI for Omega absorb v1.7."""
+"""Stable CLI for Omega absorb v1.8."""
 
 from __future__ import annotations
 
@@ -16,6 +16,7 @@ from .department_bridge_optimizer import optimize_department_bridges
 from .department_strategy_matrix import build_department_strategy_matrix, render_department_strategy_matrix
 from .documentation_index import render_documentation_index
 from .e2e_pipeline_v09 import run_v09_e2e_pipeline
+from .evidence_risk_counter import count_evidence_risk, render_evidence_risk_count
 from .export_bundle import build_export_bundle
 from .export_commands import build_export_payloads
 from .github_packet_generator import generate_github_work_packet, render_github_packet_markdown
@@ -25,8 +26,12 @@ from .local_json_loader import load_and_normalize_local_json, load_local_json_re
 from .method_graph import build_method_graph
 from .method_reproduction_packet import build_method_reproduction_set
 from .mminus_registry import render_mminus_markdown
+from .mminus_rules_engine import apply_mminus_rules, render_mminus_decision
 from .next_actions_engine import compile_top_next_actions, render_next_actions_markdown
+from .oak_ledger_cli import build_oak_ledger_bundle, render_oak_ledger_bundle
+from .oak_lineage_ledger import build_oak_lineage_ledger, render_oak_lineage_ledger
 from .oak_packet_manifest import build_oak_packet_manifest
+from .oak_packet_manifest_plus import build_oak_packet_manifest_plus
 from .opportunity_ranker import rank_opportunity_bundles
 from .package_health import build_package_health_report
 from .package_status import build_package_status_report
@@ -46,7 +51,7 @@ from .source_selection import available_demo_sources, select_demo_records
 from .twin_answer_engine import answer_twin_question, render_twin_answer
 
 
-VERSION = "1.7.0"
+VERSION = "1.8.0"
 
 
 def _atoms_and_genomes(source: str):
@@ -65,6 +70,14 @@ def _top_actions(source: str):
     return compile_top_next_actions(twin, _bridge_plan(source).bridges)
 
 
+def _claims_methods_counts(source: str):
+    atoms = absorb_public_records(select_demo_records(source)).atoms
+    claims = build_claim_oak_plus(build_claim_graph(atoms))
+    methods = build_method_reproduction_set(build_method_graph(atoms))
+    counts = count_evidence_risk(claims, methods)
+    return claims, methods, counts
+
+
 def _load_or_demo_records(path: str, source: str):
     return load_local_json_records(path) if path else select_demo_records(source)
 
@@ -74,7 +87,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "command",
         choices=(
-            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet", "tensor", "twin-v2", "bridge-opt", "next-actions", "oak-manifest", "route-source", "policy-check", "ingest-json-v2", "write-actions", "github-bundle", "tensor-weights", "twin-answer", "department-matrix", "route-dashboard",
+            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet", "tensor", "twin-v2", "bridge-opt", "next-actions", "oak-manifest", "route-source", "policy-check", "ingest-json-v2", "write-actions", "github-bundle", "tensor-weights", "twin-answer", "department-matrix", "route-dashboard", "evidence-risk", "oak-manifest-plus", "oak-lineage", "mminus-apply", "oak-ledger",
         ),
         help="Command to run",
     )
@@ -83,7 +96,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--input-source", default="generic", help="Adapter for local JSON input")
     parser.add_argument("--question", default="next-10", help="Twin v3 local question")
     parser.add_argument("--feature", default="omega_absorb_next", help="Feature name for packet generation")
-    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v17", help="Output directory")
+    parser.add_argument("--mminus-context", default="", help="M-minus context key")
+    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v18", help="Output directory")
     return parser
 
 
@@ -104,6 +118,21 @@ def run_cli(argv: list[str] | None = None) -> str:
         return generate_changelog()
     if args.command == "mminus":
         return render_mminus_markdown()
+    if args.command == "mminus-apply":
+        key = args.mminus_context or "unknown_source"
+        return render_mminus_decision(apply_mminus_rules({key: True}))
+    if args.command == "evidence-risk":
+        _, _, counts = _claims_methods_counts(args.source)
+        return render_evidence_risk_count(counts)
+    if args.command == "oak-manifest-plus":
+        _, _, counts = _claims_methods_counts(args.source)
+        return build_oak_packet_manifest_plus(_top_actions(args.source).actions, counts, source_id=args.source).manifest_json
+    if args.command == "oak-lineage":
+        _, _, counts = _claims_methods_counts(args.source)
+        manifest = build_oak_packet_manifest_plus(_top_actions(args.source).actions, counts, source_id=args.source)
+        return render_oak_lineage_ledger(build_oak_lineage_ledger(manifest))
+    if args.command == "oak-ledger":
+        return render_oak_ledger_bundle(build_oak_ledger_bundle(args.source))
     if args.command == "github-packet":
         return render_github_packet_markdown(generate_github_work_packet(args.feature))
     if args.command == "tensor-weights":
