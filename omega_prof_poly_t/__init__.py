@@ -1,6 +1,8 @@
 """Omega-PROF-POLY-T package."""
 
 from .absorb_public_research import AbsorptionReport, absorb_public_records, demo_public_research_records
+from .action_packet_writer import ActionPacketWriteResult, WrittenActionPacket, render_action_packet, write_action_packets
+from .adapter_router import AdapterRoute, RoutedRecords, detect_source_family, route_records
 from .artifact_summaries import ArtifactSummary, build_artifact_summary
 from .backlog_packet_templates import BacklogPacket, render_backlog_packet
 from .changelog_generator import generate_changelog, generate_release_notes
@@ -25,8 +27,10 @@ from .fixture_artifact_generator import FixtureArtifactRun, generate_fixture_art
 from .fixture_loader_v08 import combine_fixture_records, demo_combined_fixture_records
 from .generated_report_artifacts import ArtifactManifest, GeneratedArtifact, build_report_artifacts
 from .github_packet_generator import GitHubFilePacket, GitHubWorkPacket, generate_github_work_packet, render_github_packet_markdown
+from .github_work_bundle import GitHubWorkBundle, build_github_work_bundle, write_github_work_bundle
 from .grant_forge import GrantInput, GrantPacket, forge_grant, grant_score
 from .graph_exports import professor_graph_to_graphml, professor_graph_to_json
+from .ingest_json_pipeline_v2 import IngestJSONPipelineResult, run_ingest_json_pipeline_v2
 from .ip_oak_gate import IPGatePacket, IPInput, IPStatus, classify_ip
 from .json_exports import packet_digest, to_deterministic_json, to_plain_data
 from .lab_oakbench import LabInput, LabOAKBenchPacket, generate_lab_oakbench
@@ -58,6 +62,7 @@ from .reports import render_packet_report
 from .research_atom import ResearchAtom, atom_from_public_record
 from .research_opportunity_compiler import ResearchOpportunityBundle, ResearchOpportunityCompilation, compile_atom_opportunities, compile_research_opportunities
 from .roadmap_compiler import RoadmapPlan, RoadmapStep, compile_portfolio_roadmap, render_roadmap_markdown
+from .source_oak_policy import SourceOAKPolicy, SourceOAKPolicyReport, apply_source_oak_policy, default_source_oak_policies
 from .source_record_validation import RecordValidationFinding, RecordValidationReport, validate_public_records
 from .source_registry_schema import SourceSchema, SourceSchemaFinding, SourceSchemaReport, default_source_schemas, validate_records_against_schema
 from .source_selection import available_demo_sources, select_demo_records
