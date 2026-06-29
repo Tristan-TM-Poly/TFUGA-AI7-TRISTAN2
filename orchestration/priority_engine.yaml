@@ -1,0 +1,51 @@
+# Priority Engine — Ω-ACTION-LOOP-T
+
+priority_engine:
+  formula: "Priority = Impact * Urgency * Feasibility * ProofStrength / max(Risk, 0.05)"
+  dimensions:
+    impact:
+      range: 0_to_1
+      meaning: value created if action succeeds
+    urgency:
+      range: 0_to_1
+      meaning: time sensitivity or opportunity half-life
+    feasibility:
+      range: 0_to_1
+      meaning: probability that the action can be completed safely now
+    proof_strength:
+      range: 0_to_1
+      meaning: how much evidence supports the action
+    risk:
+      range: 0_to_1
+      meaning: technical, legal, reputational, IP, safety, or operational downside
+  thresholds:
+    act_now_if_safe: ">= 0.85"
+    prepare_packet_or_PR: "0.60_to_0.84"
+    backlog_or_watch: "0.30_to_0.59"
+    block_or_wait: "< 0.30 or hard_lock_present"
+  examples:
+    clean_docs_PR:
+      impact: 0.5
+      urgency: 0.4
+      feasibility: 0.95
+      proof_strength: 0.9
+      risk: 0.05
+      decision: MERGE_NOW_if_checks_green
+    university_no_official_route:
+      impact: 0.7
+      urgency: 0.3
+      feasibility: 0.4
+      proof_strength: 0.2
+      risk: 0.4
+      decision: WAIT_COOLDOWN_or_RESEARCH_MORE
+    interested_university_reply:
+      impact: 0.95
+      urgency: 0.9
+      feasibility: 0.8
+      proof_strength: 0.9
+      risk: 0.2
+      decision: RESPONSE_ACTION_REQUIRED
+    draft_PR:
+      hard_lock: true
+      decision: HUMAN_APPROVAL_REQUIRED_or_WAIT_READY
+  ranking_rule: "Prefer actions that create proof assets and reduce future friction."
