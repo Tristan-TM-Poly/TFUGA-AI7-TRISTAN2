@@ -1,0 +1,82 @@
+# Action Loop Kernel — Ω-ACTION-LOOP-T
+
+action_loop_kernel:
+  version: 0.1
+  status: canonical_design
+  cycle:
+    observe:
+      description: gather current state from allowed sources
+      inputs:
+        - github_prs
+        - github_checks
+        - github_branches
+        - repository_files
+        - gmail_replies
+        - official_university_pages
+        - proof_packets
+        - OAK_registers
+        - M_plus_M_minus_ledgers
+    decide:
+      description: classify each item into the safest next action
+      outputs:
+        - MERGE_NOW
+        - REPAIR_SAFE
+        - PREPARE_PACKET
+        - WAIT_COOLDOWN
+        - BLOCK_M_MINUS
+        - HUMAN_APPROVAL_REQUIRED
+    act:
+      description: execute only allowed micro-actions
+      allowed:
+        - create_docs
+        - create_tests
+        - create_schemas
+        - create_validators
+        - create_OAK_reports
+        - create_or_update_registers
+        - prepare_emails_or_form_packets
+        - create_non_destructive_PRs
+        - merge_clean_green_non_draft_PRs
+      forbidden:
+        - force_push
+        - delete_branch_without_explicit_approval
+        - credential_or_private_key_disclosure
+        - weaken_checks
+        - bypass_protection
+        - merge_draft_PR
+        - merge_pending_or_ambiguous_checks
+        - guessed_email_send
+        - mass_send
+        - unapproved_external_sensitive_action
+    verify:
+      description: confirm that the action improved proof capital and did not violate OAK
+      checks:
+        - diff_is_non_destructive
+        - source_is_official_when_required
+        - proof_record_exists
+        - credential_hygiene_preserved
+        - no_unsupported_claim
+        - no_sensitive_action_without_approval
+        - mergeability_and_checks_clean_for_merges
+    learn:
+      description: update M+ and M- memory
+      outputs:
+        - success_pattern
+        - blocker_pattern
+        - anti_repetition_rule
+        - next_best_action
+    repeat:
+      description: re-enter loop after cooldown and reprioritization
+      rule: prefer small safe cumulative steps over large risky actions
+  output_requirement:
+    every_cycle_must_produce_one_of:
+      - proof
+      - code
+      - docs
+      - tests
+      - validated_route
+      - packet
+      - merged_PR
+      - OAK_report
+      - M_minus_entry
+      - easier_next_action

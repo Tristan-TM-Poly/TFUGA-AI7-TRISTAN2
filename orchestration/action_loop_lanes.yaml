@@ -1,0 +1,75 @@
+# Action Loop Lanes — Ω-ACTION-LOOP-T
+
+action_loop_lanes:
+  github_action_loop:
+    cadence: hourly
+    automation_title: All-GitHub Action Loop
+    primary_outputs:
+      - merged_PR
+      - repaired_blocker
+      - docs_tests_schemas
+      - M_minus_PR_blocker
+    OAK_focus:
+      - clean_checks
+      - non_draft
+      - non_destructive
+      - additive_repairs
+  university_action_loop:
+    cadence: weekly
+    automation_title: University Action Loop
+    primary_outputs:
+      - GREEN_EMAIL_READY
+      - GREEN_FORM_READY
+      - YELLOW_RESEARCH
+      - contact_route_register_update
+      - form_packet
+      - M_minus_outreach_pattern
+    OAK_focus:
+      - official_sources_only
+      - no_guess_email
+      - no_mass_send
+      - proof_before_volume
+  reply_action_loop:
+    cadence: on_followup_run_or_on_demand
+    primary_outputs:
+      - response_card
+      - meeting_decision_card
+      - targeted_reply_draft
+      - packet_routing_decision
+    OAK_focus:
+      - one_followup_only
+      - no_false_partnership_claim
+      - route_updates_with_proof
+  demo_packet_loop:
+    cadence: per_work_cycle
+    primary_outputs:
+      - proof_packet
+      - one_pager
+      - OAK_report_example
+      - university_fit_matrix
+    OAK_focus:
+      - explicit_limits
+      - no_industrial_validation_claim_without_pilot
+      - reproducibility_path
+  value_loop:
+    cadence: after_proof_or_reply
+    primary_outputs:
+      - asset_card
+      - IP_review_packet
+      - prototype_branch_plan
+      - ROI_OAK_case
+    OAK_focus:
+      - IP_sensitivity
+      - legal_review_if_needed
+      - no_unverified_valuation
+  oak_learning_loop:
+    cadence: every_cycle
+    primary_outputs:
+      - M_plus_success_pattern
+      - M_minus_blocker_pattern
+      - anti_repetition_rule
+      - next_best_action
+    OAK_focus:
+      - cumulative_learning
+      - failure_compression
+      - safe_rerouting

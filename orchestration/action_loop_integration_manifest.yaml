@@ -1,0 +1,36 @@
+# Action Loop Integration Manifest
+
+integration_manifest:
+  status: ready
+  connects_to_existing_artifacts:
+    - orchestration/parallel_execution_manifest.yaml
+    - orchestration/parallel_lane_backlog.yaml
+    - github_ops/all_github_omega_forge.yaml
+    - github_ops/repo_card_schema.yaml
+    - university_outreach/quebec_universities/all_university_research_engine.yaml
+    - university_outreach/quebec_universities/research_contact_discovery_protocol.yaml
+    - university_outreach/quebec_universities/packet_router.yaml
+    - demo_packets/datacenter_energy_oak/README.md
+    - demo_packets/paper_to_code_oak/README.md
+    - demo_packets/patent_to_opportunity_oak/README.md
+  active_automation_alignment:
+    All_GitHub_Action_Loop:
+      uses:
+        - action_loop_kernel
+        - priority_engine
+        - cooldown_policy
+        - mplus_mminus_learning_loop
+        - action_loop_state_machine
+    University_Action_Loop:
+      uses:
+        - action_loop_kernel
+        - priority_engine
+        - cooldown_policy
+        - mplus_mminus_learning_loop
+        - action_loop_state_machine
+  next_github_upgrades:
+    - add_action_loop_report_generator
+    - add_machine_readable_M_plus_M_minus_registries
+    - add_repo_card_generation_from_accessible_repos
+    - add_demo_packet_status_dashboard
+    - add_university_route_status_dashboard
