@@ -1,0 +1,71 @@
+# Reply Router — Quebec Universities
+
+reply_router:
+  objective: convert every university reply into an OAK-safe next action
+  Gmail_search_targets:
+    - INRS
+    - Universite_Laval
+    - Universite_de_Sherbrooke
+    - Polytechnique_Montreal
+    - future_GREEN_EMAIL_contacts
+  classifications:
+    interested:
+      signals:
+        - meeting_invitation
+        - asks_for_more_details
+        - asks_for_examples
+        - offers_redirect_to_lab_or_office
+      actions:
+        - create_meeting_decision_card
+        - prepare_three_microbenchmark_options
+        - draft_concise_reply
+        - propose_calendar_slots_only_if_requested_or_appropriate
+        - create_GitHub_issue_or_execution_card
+    redirect:
+      signals:
+        - wrong_contact
+        - suggests_another_office
+        - forwards_or_names_contact
+      actions:
+        - update_contact_route_register
+        - send_targeted_follow_up_to_new_official_route
+        - record_chain_of_custody
+    request_more_info:
+      signals:
+        - asks_for_documentation
+        - asks_for_project_details
+        - asks_for_GitHub_or_one_pager
+      actions:
+        - send_microbenchmark_one_pager
+        - send_example_OAK_report_if_available
+        - avoid_unverified_claims
+    rejection:
+      signals:
+        - not_relevant
+        - no_capacity
+        - no_interest
+      actions:
+        - record_M_minus_reason
+        - improve_message_or_targeting
+        - do_not_follow_up_unless_invited
+    no_reply:
+      actions:
+        - send_one_polite_follow_up_after_7_to_10_days
+        - do_not_send_second_follow_up_without_invitation
+  ResponseCard_schema:
+    fields:
+      - sender
+      - university
+      - thread_id
+      - classification
+      - summary
+      - next_action
+      - draft_reply
+      - deadline
+      - M_plus
+      - M_minus
+  safety:
+    - no_false_partnership_claim
+    - no_external_disclosure_of_sensitive_IP_without_review
+    - no_pressure_or_spam
+    - every_action_must_record_source_thread_or_confirmation

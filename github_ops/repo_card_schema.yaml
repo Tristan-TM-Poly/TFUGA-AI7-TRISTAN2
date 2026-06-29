@@ -1,0 +1,50 @@
+# Repo Card Schema — All-GitHub Omega Forge
+
+RepoCard_schema:
+  required_fields:
+    repo: string
+    owner: string
+    visibility: public_or_private_or_unknown
+    purpose: string
+    primary_omega_branches: list
+    active_branches: list
+    open_PRs: list
+    recent_commits: list
+    docs_status: complete_partial_missing
+    tests_status: passing_failing_missing_unknown
+    benchmarks_status: present_missing_unknown
+    package_status: prototype_library_app_docs_only_unknown
+    IP_sensitivity: low_medium_high_unknown
+    revenue_potential: none_low_medium_high_unknown
+    OAK_status: green_yellow_red_unknown
+    best_next_PR: string
+    safest_next_action: string
+  PRCard_schema:
+    fields:
+      - repo
+      - pr_number
+      - title
+      - state
+      - draft
+      - mergeable
+      - checks_status
+      - OAK_risk
+      - blocker_class
+      - safe_fix_plan
+      - merge_policy_decision
+      - M_minus_if_blocked
+  OAK_blocker_classes:
+    - failing_tests
+    - pending_checks
+    - merge_conflict
+    - missing_tests
+    - missing_docs
+    - sensitive_change
+    - destructive_change
+    - branch_protection
+    - ambiguous_status
+    - unknown_external_ci
+  output_registers:
+    - github_ops/repo_cards/
+    - github_ops/pr_cards/
+    - github_ops/mminus_github_blockers.yaml

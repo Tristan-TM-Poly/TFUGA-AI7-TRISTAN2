@@ -1,0 +1,60 @@
+# All-GitHub Omega Forge
+
+AllGitHubOmegaForge:
+  status: active_design
+  objective: use every accessible Tristan GitHub repository as an operational brain for research, prototypes, outreach, IP, revenue, and OAK validation
+  scan_scope:
+    - all_accessible_repositories
+    - repositories_owned_by_Tristan_TM_Poly_first
+    - open_pull_requests
+    - stale_branches
+    - missing_docs
+    - missing_tests
+    - missing_registries
+    - prototypes_ready_to_productize
+    - issues_or_PRs_with_OAK_blockers
+  RepoCard_outputs:
+    - repo
+    - purpose
+    - active_branches
+    - open_PRs
+    - best_next_PR
+    - missing_docs
+    - missing_tests
+    - missing_benchmarks
+    - revenue_potential
+    - IP_sensitivity
+    - OAK_status
+    - safest_next_action
+  safe_actions:
+    - create_additive_docs
+    - create_registries
+    - create_tests
+    - repair_imports
+    - repair_schema_or_validator_files
+    - create_OAK_reports
+    - create_non_destructive_PRs
+    - merge_PRs_only_when_clean_green_and_OAK_safe
+  forbidden_actions:
+    - force_push
+    - delete_branches_without_explicit_approval
+    - expose_secrets
+    - weaken_checks
+    - bypass_branch_protection
+    - destructive_scripts
+    - public_claim_without_OAK
+    - legal_financial_or_sensitive_external_actions_without_approval
+  merge_policy:
+    allowed_if:
+      - PR_open
+      - not_draft
+      - mergeable_clean
+      - required_checks_green_or_GitHub_clean_status
+      - no_sensitive_or_destructive_changes_without_approval
+    prefer: enable_auto_merge
+    fallback: squash_merge_with_expected_head_sha
+  outputs:
+    - merged_PR_report
+    - blocked_PR_report
+    - M_minus_blocker_patterns
+    - next_autonomous_repair_attempts
