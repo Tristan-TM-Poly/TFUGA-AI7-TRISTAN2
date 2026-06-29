@@ -1,0 +1,53 @@
+name: Omega Math Tristan Tests
+
+on:
+  pull_request:
+    paths:
+      - 'docs/OAK_BAYES_TRISTAN_PROTOCOL.md'
+      - 'docs/OMEGA_MATH_*.md'
+      - 'examples/omega_math_*'
+      - 'sage_tristan/**'
+      - 'tests/test_omega_math_tristan.py'
+      - 'tests/test_algebra_defect_lab.py'
+      - 'tests/test_hgfm_negative_memory.py'
+      - 'tests/test_prime_tensors.py'
+      - '.github/workflows/omega-math-tristan.yml'
+  workflow_dispatch:
+
+jobs:
+  omega-math-tristan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run dependency-free unit tests
+        run: |
+          python -m pip install --upgrade pip pytest
+          python -m pytest -q \
+            tests/test_omega_math_tristan.py \
+            tests/test_algebra_defect_lab.py \
+            tests/test_hgfm_negative_memory.py \
+            tests/test_prime_tensors.py
+
+      - name: Verify OAK anti-overclaim guardrails
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = '\n'.join(
+              Path(path).read_text(encoding='utf-8')
+              for path in [
+                  'docs/OMEGA_MATH_TRISTAN_CANON.md',
+                  'docs/OAK_BAYES_TRISTAN_PROTOCOL.md',
+              ]
+          )
+          required = ['OAK', 'conjecture', 'prototype', 'proof', 'canon']
+          missing = [term for term in required if term not in text]
+          if missing:
+              raise SystemExit(f'Missing OAK guardrail terms: {missing}')
+          PY
