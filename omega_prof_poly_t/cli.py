@@ -1,4 +1,4 @@
-"""Stable CLI for Omega absorb v1.9."""
+"""Stable CLI for Omega Absorb OS v2.0."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from .adapter_router import route_records
 from .changelog_generator import generate_changelog
 from .claim_graph import build_claim_graph
 from .claim_oak_plus import build_claim_oak_plus
+from .cli_command_groups import render_cli_command_groups
 from .collaboration_recommender import recommend_collaborations
 from .compact_table_report import render_compact_table, render_validation_table
 from .department_bridge_optimizer import optimize_department_bridges
@@ -33,9 +34,11 @@ from .oak_ledger_cli import build_oak_ledger_bundle, render_oak_ledger_bundle
 from .oak_lineage_ledger import build_oak_lineage_ledger, render_oak_lineage_ledger
 from .oak_packet_manifest import build_oak_packet_manifest
 from .oak_packet_manifest_plus import build_oak_packet_manifest_plus
+from .omega_absorb_os_v2 import render_omega_absorb_os_v2
 from .opportunity_ranker import rank_opportunity_bundles
 from .package_ci_plan import render_package_ci_plan
 from .package_health import build_package_health_report
+from .package_layout_v2 import render_package_layout_v2
 from .package_status import build_package_status_report
 from .poly_research_twin_v2 import build_poly_research_twin_v2
 from .poly_research_twin_v3 import build_poly_research_twin_v3
@@ -45,6 +48,7 @@ from .professor_tensor_weights import render_tensor_weights_table, weight_profes
 from .release_bundle_writer import write_release_bundle
 from .release_intelligence import render_release_intelligence
 from .report_atlas import render_report_atlas
+from .report_bundle_contract import render_report_bundle_contract
 from .report_writer import write_reports
 from .research_opportunity_compiler import compile_research_opportunities
 from .roadmap_compiler import render_roadmap_markdown
@@ -54,9 +58,10 @@ from .source_record_validation import validate_public_records
 from .source_registry_schema import validate_records_against_schema
 from .source_selection import available_demo_sources, select_demo_records
 from .twin_answer_engine import answer_twin_question, render_twin_answer
+from .workflow_seed import render_workflow_seed
 
 
-VERSION = "1.9.0"
+VERSION = "2.0.0"
 
 
 def _atoms_and_genomes(source: str):
@@ -92,7 +97,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "command",
         choices=(
-            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet", "tensor", "twin-v2", "bridge-opt", "next-actions", "oak-manifest", "route-source", "policy-check", "ingest-json-v2", "write-actions", "github-bundle", "tensor-weights", "twin-answer", "department-matrix", "route-dashboard", "evidence-risk", "oak-manifest-plus", "oak-lineage", "mminus-apply", "oak-ledger", "reports", "write-reports", "release-intel", "changelog-plus", "ci-plan",
+            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet", "tensor", "twin-v2", "bridge-opt", "next-actions", "oak-manifest", "route-source", "policy-check", "ingest-json-v2", "write-actions", "github-bundle", "tensor-weights", "twin-answer", "department-matrix", "route-dashboard", "evidence-risk", "oak-manifest-plus", "oak-lineage", "mminus-apply", "oak-ledger", "reports", "write-reports", "release-intel", "changelog-plus", "ci-plan", "layout-v2", "report-contract", "workflow-seed", "command-groups", "absorb-os",
         ),
         help="Command to run",
     )
@@ -102,7 +107,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--question", default="next-10", help="Twin v3 local question")
     parser.add_argument("--feature", default="omega_absorb_next", help="Feature name for packet generation")
     parser.add_argument("--mminus-context", default="", help="M-minus context key")
-    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v19", help="Output directory")
+    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v20", help="Output directory")
     return parser
 
 
@@ -111,6 +116,16 @@ def run_cli(argv: list[str] | None = None) -> str:
     args = parser.parse_args(argv)
     if args.command == "version":
         return f"omega-absorb {VERSION}\n"
+    if args.command == "layout-v2":
+        return render_package_layout_v2()
+    if args.command == "report-contract":
+        return render_report_bundle_contract()
+    if args.command == "workflow-seed":
+        return render_workflow_seed()
+    if args.command == "command-groups":
+        return render_cli_command_groups()
+    if args.command == "absorb-os":
+        return render_omega_absorb_os_v2()
     if args.command == "reports":
         return render_report_atlas()
     if args.command == "write-reports":
