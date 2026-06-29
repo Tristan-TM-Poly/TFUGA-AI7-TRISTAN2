@@ -1,11 +1,33 @@
 from __future__ import annotations
 
-import json
 from dataclasses import asdict
+from pathlib import Path
+import json
+
+try:
+    import yaml  # type: ignore
+except Exception:  # pragma: no cover
+    yaml = None
 
 from .license_gate import classify_license
 from .oak_runner import oak_decision
 from .scorer import DigestScore
+
+
+def load_source(path: str | Path) -> dict:
+    p = Path(path)
+    text = p.read_text(encoding="utf-8")
+    if p.suffix.lower() in {".yaml", ".yml"} and yaml:
+        return yaml.safe_load(text)
+    if p.suffix.lower() in {".yaml", ".yml"} and not yaml:
+        data = {}
+        for line in text.splitlines():
+            if not line.strip() or line.lstrip().startswith("#") or ":" not in line:
+                continue
+            key, value = line.split(":", 1)
+            data[key.strip()] = value.strip().strip('"')
+        return data
+    return json.loads(text)
 
 
 def markdown_report(source: dict) -> str:
