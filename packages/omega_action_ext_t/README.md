@@ -32,6 +32,8 @@ Le comportement par défaut est prudent :
 | `ledger.py` | ledger JSONL append-only avec hash chain |
 | `incident_codex.py` | mémoire négative M⁻ en anti-règles testables |
 | `oakbench.py` | scoring heuristique de sûreté/fertilité |
+| `green_builder.py` | planner PR Build-To-Green : blockers → étapes sûres |
+| `pr_green_pipeline.py` | packets PR : plan + manifest + rapport batch |
 | `connectors/` | plans de connecteurs sans mutation externe |
 
 ## Exemple CLI
@@ -62,6 +64,36 @@ print(manifest.dry_run.decision.value)
 # allow_draft
 
 print(score_report(manifest.dry_run).to_dict())
+```
+
+## PR Build-To-Green
+
+Le pipeline `PR Build-To-Green` automatise la construction progressive des PRs vers l'état vert sans forcer les merges.
+
+```python
+from omega_action_ext_t import PRGreenState, build_green_packet
+
+state = PRGreenState(
+    number=45,
+    title="Daily Ω Briefing",
+    draft=False,
+    mergeable=True,
+    checks_state="failure",
+    changed_files=("sage_tristan/daily_omega.py",),
+)
+
+packet = build_green_packet(state)
+print(packet.plan.decision)
+# auto_enrich
+print(packet.report_markdown)
+```
+
+Règle mère :
+
+```text
+Construire jusqu'au vert = ajouter tests/docs/validators/guardrails/repair reports.
+Jamais affaiblir les checks, jamais force-push, jamais résoudre sémantiquement un conflit sans humain.
+Merger seulement si non-draft + clean + mergeable + expected head SHA.
 ```
 
 ## Statut OAK
