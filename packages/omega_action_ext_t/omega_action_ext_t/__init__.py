@@ -40,6 +40,14 @@ from .pr_green_pipeline import (
 from .rollback import RollbackRecipe, recipe_for, recipes
 from .router import ConnectorRouter
 from .validators import validate_payload
+from .zero_manual_forge import (
+    FailureMemory,
+    ForgeDecision,
+    RepairTactic,
+    ZeroManualPlan,
+    plan_zero_manual_forge,
+    render_zero_manual_report,
+)
 
 __all__ = [
     "ActionDNA",
@@ -57,6 +65,8 @@ __all__ = [
     "ConnectorRouter",
     "Decision",
     "DryRunReport",
+    "FailureMemory",
+    "ForgeDecision",
     "GreenPlan",
     "GreenStep",
     "IncidentRule",
@@ -69,8 +79,10 @@ __all__ = [
     "PRGreenState",
     "ProofLedger",
     "ProofOfExecution",
+    "RepairTactic",
     "RiskTensor",
     "RollbackRecipe",
+    "ZeroManualPlan",
     "action_for_plan",
     "build_green_packet",
     "build_green_packets",
@@ -79,10 +91,12 @@ __all__ = [
     "has_findings",
     "incident_rules",
     "plan_build_to_green",
+    "plan_zero_manual_forge",
     "recipe_for",
     "recipes",
     "render_batch_report",
     "render_plan_markdown",
+    "render_zero_manual_report",
     "risk_for_plan",
     "scan_text",
     "score_report",
