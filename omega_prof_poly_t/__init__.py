@@ -9,6 +9,7 @@ from .changelog_generator import generate_changelog, generate_release_notes
 from .claim_graph import ClaimGraph, ClaimNode, build_claim_graph
 from .claim_oak_plus import ClaimOAKPlusGraph, ClaimOAKPlusNode, build_claim_oak_plus, expand_claim_oak_plus_node
 from .cli import VERSION, run_cli
+from .cli_command_groups import CLICommandGroup, CLICommandGroups, build_cli_command_groups, render_cli_command_groups
 from .collaboration_markdown import CollaborationMarkdown, render_collaboration_markdown
 from .collaboration_recommender import CollaborationPlan, CollaborationRecommendation, recommend_collaborations
 from .compact_table_report import render_compact_table, render_portfolio_table, render_ranked_items_table, render_validation_table
@@ -47,9 +48,11 @@ from .oak_ledger_cli import OAKLedgerBundle, build_oak_ledger_bundle, render_oak
 from .oak_lineage_ledger import OAKLineageEntry, OAKLineageLedger, build_oak_lineage_ledger, render_oak_lineage_ledger
 from .oak_packet_manifest import OAKPacketEntry, OAKPacketManifest, build_oak_packet_manifest
 from .oak_packet_manifest_plus import OAKPacketManifestPlus, OAKPacketPlusEntry, build_oak_packet_manifest_plus
+from .omega_absorb_os_v2 import OmegaAbsorbOSV2, build_omega_absorb_os_v2, render_omega_absorb_os_v2
 from .opportunity_ranker import OpportunityRanking, RankedOpportunity, rank_opportunity_bundles, score_bundle
 from .package_ci_plan import CIPipelineStep, PackageCIPlan, build_package_ci_plan, render_package_ci_plan
 from .package_health import PackageHealthReport, build_package_health_report
+from .package_layout_v2 import LayoutSection, PackageLayoutV2, build_package_layout_v2, render_package_layout_v2
 from .package_status import PackageStatusReport, build_package_status_report
 from .poly_public_adapters import ExpertiseLikeAdapter, PolyPublieLikeAdapter
 from .poly_research_twin import PolyResearchTwin, build_poly_research_twin
@@ -70,6 +73,7 @@ from .release_bundle import ReleaseBundle, build_release_bundle
 from .release_bundle_writer import ReleaseBundleWriteResult, WrittenBundleFile, write_release_bundle
 from .release_intelligence import ReleaseIntelligence, build_release_intelligence, render_release_intelligence
 from .report_atlas import ReportAtlas, ReportAtlasEntry, build_report_atlas, render_report_atlas
+from .report_bundle_contract import ReportBundleContract, build_report_bundle_contract, render_report_bundle_contract
 from .report_writer import ReportWriteResult, WrittenReport, default_report_contents, write_reports
 from .reports import render_packet_report
 from .research_atom import ResearchAtom, atom_from_public_record
@@ -82,6 +86,7 @@ from .source_registry_schema import SourceSchema, SourceSchemaFinding, SourceSch
 from .source_selection import available_demo_sources, select_demo_records
 from .twin_answer_engine import TwinAnswer, answer_twin_question, render_twin_answer
 from .version_manifest import VersionEntry, VersionManifest, build_version_manifest
+from .workflow_seed import WorkflowSeed, WorkflowSeedStep, build_workflow_seed, render_workflow_seed
 from .zero_touch_oak import BlockedActionPacket, GateStatus, OAKCompileResult, compile_oak
 
 __all__ = [name for name in globals() if not name.startswith("_")]
