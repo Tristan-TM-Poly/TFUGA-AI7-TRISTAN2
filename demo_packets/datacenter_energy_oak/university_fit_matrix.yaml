@@ -1,0 +1,105 @@
+# University Fit Matrix — Datacenter Energy OAK Packet
+
+packet: datacenter_energy_oak
+status: ready_for_review_and_use_when_requested
+
+fit_matrix:
+  ETS:
+    fit: PRIME
+    why:
+      - applied_engineering
+      - industrial_R_and_D
+      - optimization
+      - datacenters_and_digital_twins
+    suggested_route: GREEN_FORM_READY
+    message_variant: engineering_applied_datacenter
+  Polytechnique_Montreal:
+    fit: PRIME
+    why:
+      - engineering_systems
+      - optimization
+      - energy
+      - technology_transfer
+    suggested_route: GREEN_EMAIL_SENT
+    message_variant: engineering_systems_datacenter
+  INRS:
+    fit: PRIME
+    why:
+      - energy
+      - materials
+      - telecommunications
+      - applied_research
+    suggested_route: GREEN_EMAIL_SENT
+    message_variant: energy_materials_datacenter
+  Universite_de_Sherbrooke:
+    fit: PRIME
+    why:
+      - applied_innovation
+      - research_partnerships
+      - engineering_energy
+      - valorisation
+    suggested_route: GREEN_EMAIL_SENT
+    message_variant: partnership_energy_datacenter
+  Universite_Laval:
+    fit: STRONG
+    why:
+      - valorisation
+      - optics_energy_materials
+      - research_agreements
+      - innovation
+    suggested_route: GREEN_EMAIL_SENT
+    message_variant: valorisation_energy_datacenter
+  Concordia:
+    fit: STRONG
+    why:
+      - engineering_systems
+      - sustainability
+      - building_energy
+      - applied_AI
+    suggested_route: TO_DISCOVER
+    message_variant: sustainability_datacenter
+  McGill:
+    fit: STRONG
+    why:
+      - scientific_AI
+      - engineering
+      - energy_systems
+      - tech_transfer
+    suggested_route: TO_DISCOVER
+    message_variant: scientific_ai_energy_datacenter
+  UQTR:
+    fit: WATCHLIST
+    why:
+      - hydrogen_energy
+      - industrial_systems
+      - applied_pilots
+    suggested_route: TO_DISCOVER
+    message_variant: energy_industrial_systems
+  UQAC:
+    fit: WATCHLIST
+    why:
+      - materials
+      - regional_industry
+      - energy
+      - sensors
+    suggested_route: TO_DISCOVER
+    message_variant: materials_energy_surrogate
+  HEC_Montreal:
+    fit: WATCHLIST
+    why:
+      - ROI_OAK
+      - innovation_management
+      - technology_strategy
+    suggested_route: TO_DISCOVER
+    message_variant: ROI_business_case
+
+routing_rule:
+  use_packet_when:
+    - recipient_asks_for_example
+    - recipient_asks_for_documentation
+    - recipient_is_energy_engineering_or_innovation_route
+    - Wave_2_needs_concrete_proof_of_work
+  do_not_use_when:
+    - first_contact_must_be_short
+    - recipient_is_not_energy_engineering_or_innovation_related
+    - sensitive_claims_would_be_implied
