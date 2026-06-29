@@ -1,0 +1,29 @@
+# Follow-up Automation Protocol — Quebec Universities
+
+follow_up_automation_protocol:
+  status: active_protocol
+  rule: "One polite follow-up after 7-10 days if no reply, unless recipient already answered."
+  wave1_sent_contacts:
+    - university: INRS
+      sent_to: "info.emt@inrs.ca"
+      gmail_message_id: "19f1228d0de8270e"
+    - university: Universite_Laval
+      sent_to: "najat.aattouri@vrr.ulaval.ca"
+      gmail_message_id: "19f12fe9b33c0b4c"
+    - university: Universite_de_Sherbrooke
+      sent_to: "recherche@USherbrooke.ca"
+      gmail_message_id: "19f12fedbb04ea81"
+    - university: Polytechnique_Montreal
+      sent_to: "brcdt@polymtl.ca"
+      gmail_message_id: "19f130715600efd7"
+  check_logic:
+    - search_gmail_for_replies_in_threads
+    - if_reply_found_create_meeting_or_redirect_execution_card
+    - if_no_reply_prepare_or_send_single_follow_up
+    - record_confirmation_or_mminus
+  follow_up_template: "follow_up_template_fr.md"
+  safety:
+    - no_second_follow_up_without_invitation
+    - no mass sending
+    - no unsupported claims
+    - no partnership claim without written confirmation
