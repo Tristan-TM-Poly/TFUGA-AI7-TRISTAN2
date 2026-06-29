@@ -1,0 +1,50 @@
+name: Omega PSPT Tests
+
+on:
+  pull_request:
+    paths:
+      - 'docs/omega_pspt/**'
+      - 'examples/omega_pspt_*'
+      - 'sage_tristan/omega_pspt*.py'
+      - 'schemas/omega_pspt_phase.schema.json'
+      - 'tests/test_omega_pspt*.py'
+      - '.github/workflows/omega-pspt.yml'
+  workflow_dispatch:
+
+jobs:
+  omega-pspt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run PSPT prototype tests
+        run: |
+          python -m pip install --upgrade pip pytest
+          python -m pytest -q \
+            tests/test_omega_pspt.py \
+            tests/test_omega_pspt_geometry.py \
+            tests/test_omega_pspt_spectral.py \
+            tests/test_omega_pspt_transport.py
+
+      - name: Run minimal demo
+        run: python examples/omega_pspt_minimal_demo.py
+
+      - name: Verify scientific OAK guardrails
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = '\n'.join(Path(p).read_text(encoding='utf-8') for p in [
+              'docs/omega_pspt/README.md',
+              'docs/omega_pspt/oak_protocols.md',
+          ])
+          required = ['candidate', 'OAK', 'evidence', 'negative']
+          missing = [term for term in required if term not in text]
+          if missing:
+              raise SystemExit(f'Missing PSPT OAK guardrail terms: {missing}')
+          PY
