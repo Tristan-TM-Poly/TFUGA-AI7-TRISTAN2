@@ -1,0 +1,38 @@
+{
+  "title": "Humanoid robotics and RobotOps market signal",
+  "topic_anchor": "startups_ip_revenues",
+  "signal_type": ["market", "opportunity", "risk"],
+  "why_it_matters": "Embodied automation connects AI agents, logistics, industrial workflows, safety, and company strategy. It is a useful signal for moving from software agents to RobotOps systems.",
+  "actionable_opportunity": "Prototype Ω-RobotOps-T as a warehouse/factory workflow simulator with agent supervision, safety checks, and unit-economics assumptions.",
+  "oak_check": {
+    "claim_status": "reported_claim",
+    "risk": "Market claims around humanoid robotics can be strongly promotional, especially around financing or public-market narratives.",
+    "limit": "Treat this as a market-signal candidate, not proof of deployment scale or profitability.",
+    "falsification_route": "Verify customers, deployments, safety records, unit economics, and financing details from primary or high-quality sources before creating a product issue.",
+    "m_minus_warning": "Do not confuse robotics fundraising or SPAC narratives with validated operational value."
+  },
+  "sources": [
+    {
+      "title": "Source verification required: humanoid robotics market item mentioned in chat briefing",
+      "source_type": "other",
+      "url_or_identifier": "source_required:humanoid_robotics_market_signal",
+      "source_quality": 1
+    }
+  ],
+  "next_action": "Verify the robotics market source and create a dry-run RobotOps issue only if deployments and economics are credible.",
+  "business_funding_signal": "Potential service/product angle for robotics workflow simulation and operational OAK evaluation.",
+  "ip_signal": "private_research",
+  "scores": {
+    "freshness": 4,
+    "credibility": 1,
+    "tristan_fit": 4,
+    "actionability": 4,
+    "leverage": 4,
+    "scarcity": 3,
+    "oak_clarity": 5,
+    "ip_revenue": 4,
+    "hype_penalty": 4,
+    "duplication_penalty": 0,
+    "source_penalty": 4
+  }
+}

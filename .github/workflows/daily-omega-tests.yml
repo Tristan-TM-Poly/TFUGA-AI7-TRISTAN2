@@ -1,0 +1,52 @@
+name: Daily Omega Tests
+
+on:
+  pull_request:
+    paths:
+      - "sage_tristan/daily_omega_*.py"
+      - "tests/test_daily_omega_*.py"
+      - "schemas/daily_omega_briefing.schema.json"
+      - "docs/omega_daily_*.md"
+      - "examples/daily_omega_*.py"
+      - "examples/daily_omega_*.json"
+      - "examples/daily_omega_signals/*.json"
+      - "examples/daily_omega_signals/**/*.json"
+      - "scripts/daily_omega_*.py"
+  push:
+    paths:
+      - "sage_tristan/daily_omega_*.py"
+      - "tests/test_daily_omega_*.py"
+      - "schemas/daily_omega_briefing.schema.json"
+      - "docs/omega_daily_*.md"
+      - "examples/daily_omega_*.py"
+      - "examples/daily_omega_*.json"
+      - "examples/daily_omega_signals/*.json"
+      - "examples/daily_omega_signals/**/*.json"
+      - "scripts/daily_omega_*.py"
+
+jobs:
+  test-daily-omega:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependencies
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Run Daily Omega tests
+        run: python -m pytest tests/test_daily_omega_*.py
+
+      - name: Run reusable signal CLI smoke test
+        run: python scripts/daily_omega_signal.py examples/daily_omega_signal_template.json --format json
+
+      - name: Run Intelligence OS CLI smoke test
+        run: python scripts/daily_omega_intelligence_os.py examples/daily_omega_signal_template.json --format json
+
+      - name: Run batch CLI smoke test
+        run: python scripts/daily_omega_batch.py examples/daily_omega_signals --date 2026-06-24 --output /tmp/daily_omega_batch

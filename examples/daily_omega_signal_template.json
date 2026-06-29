@@ -1,0 +1,38 @@
+{
+  "title": "Example reusable Daily Omega signal",
+  "topic_anchor": "ai_automation_agents",
+  "signal_type": ["opportunity", "tooling"],
+  "why_it_matters": "Explain why this signal matters for Tristan research, prototypes, IP, revenues, publications, or companies.",
+  "actionable_opportunity": "State the smallest useful action that can be taken from this signal.",
+  "oak_check": {
+    "claim_status": "prototype_opportunity",
+    "risk": "State the main risk, uncertainty, or weak point.",
+    "limit": "State the boundary of validity.",
+    "falsification_route": "State the smallest test that could reject or downgrade this signal.",
+    "m_minus_warning": "State the anti-error lesson to remember."
+  },
+  "sources": [
+    {
+      "title": "Source title",
+      "source_type": "technical_report",
+      "url_or_identifier": "source:identifier",
+      "source_quality": 3
+    }
+  ],
+  "next_action": "Create a dry-run issue spec and review it with OAK/IP criteria.",
+  "business_funding_signal": "State the grant, customer, product, licensing, or revenue angle if relevant.",
+  "ip_signal": "State public_open, private_research, prior_art_review, confidential_ip_review, publication_candidate, or revenue_experiment if known.",
+  "scores": {
+    "freshness": 3,
+    "credibility": 3,
+    "tristan_fit": 5,
+    "actionability": 4,
+    "leverage": 4,
+    "scarcity": 3,
+    "oak_clarity": 4,
+    "ip_revenue": 3,
+    "hype_penalty": 1,
+    "duplication_penalty": 0,
+    "source_penalty": 1
+  }
+}

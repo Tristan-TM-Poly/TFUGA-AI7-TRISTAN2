@@ -1,0 +1,38 @@
+{
+  "title": "AI chips, compute sovereignty, and geopolitics signal",
+  "topic_anchor": "world_tech_geopolitics",
+  "signal_type": ["geopolitical", "market", "risk", "opportunity"],
+  "why_it_matters": "Compute supply chains, chips, energy, export controls, and sovereign AI infrastructure shape what AI systems, startups, and national innovation strategies can actually deploy.",
+  "actionable_opportunity": "Create Ω-SovereignCompute-T as a tracker for Canada/Québec compute, chips, energy availability, quantum, patents, export controls, and procurement signals.",
+  "oak_check": {
+    "claim_status": "reported_claim",
+    "risk": "Geopolitical and chip-market narratives can mix hard facts with political framing or speculative deal reporting.",
+    "limit": "Treat as a strategic tracking direction, not as a confirmed market forecast.",
+    "falsification_route": "Verify primary sources for chip deals, export controls, energy constraints, procurement, and patent activity before promotion.",
+    "m_minus_warning": "Separate political narrative from hard indicators: fabs, patents, export controls, procurement, power, and deployment capacity."
+  },
+  "sources": [
+    {
+      "title": "Source verification required: compute sovereignty and geopolitics item mentioned in chat briefing",
+      "source_type": "other",
+      "url_or_identifier": "source_required:compute_sovereignty_signal",
+      "source_quality": 1
+    }
+  ],
+  "next_action": "Create a source-backed compute-sovereignty tracker only after verifying the deal and policy sources.",
+  "business_funding_signal": "Could identify Canada/Québec opportunities around compute infrastructure, energy, grants, procurement, and chip-adjacent innovation.",
+  "ip_signal": "private_research",
+  "scores": {
+    "freshness": 4,
+    "credibility": 1,
+    "tristan_fit": 4,
+    "actionability": 4,
+    "leverage": 5,
+    "scarcity": 4,
+    "oak_clarity": 5,
+    "ip_revenue": 4,
+    "hype_penalty": 3,
+    "duplication_penalty": 0,
+    "source_penalty": 4
+  }
+}

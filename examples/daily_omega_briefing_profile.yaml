@@ -1,0 +1,115 @@
+profile: daily_omega_briefing
+version: 0.1
+owner: Tristan / SAGE-TRISTAN
+cadence: daily
+time_window: early_morning
+timezone: Europe/Berlin
+
+mission: >
+  Compress fresh external signals into five source-backed, OAK-filtered,
+  actionable opportunities for Tristan's research, prototypes, IP,
+  publications, and company ecosystem.
+
+topic_anchors:
+  ai_automation_agents:
+    weight: 5
+    examples:
+      - coding agents
+      - workflow automation
+      - model/tool releases
+      - AI safety and evaluation
+  physics_energy_materials:
+    weight: 5
+    examples:
+      - photonics
+      - batteries
+      - solar
+      - plasmas and fluids
+      - MEMS and semiconductors
+      - spectroscopy and crystals
+  quebec_canada_innovation:
+    weight: 4
+    examples:
+      - Quebec universities
+      - Canada grants
+      - public sector modernization
+      - NRC / IRAP / NSERC / SR&ED signals
+  startups_ip_revenues:
+    weight: 4
+    examples:
+      - fundraises
+      - licensing
+      - venture studios
+      - procurement
+      - productizable open source
+  papers_patents:
+    weight: 5
+    examples:
+      - arXiv
+      - IEEE / ACM / ACS / APS / Optica
+      - patent filings
+      - tech transfer offices
+  world_tech_geopolitics:
+    weight: 3
+    examples:
+      - chips
+      - critical minerals
+      - energy policy
+      - export controls
+      - cyber and AI regulation
+
+item_contract:
+  max_items: 5
+  required_fields:
+    - title
+    - topic
+    - why_it_matters
+    - actionable_opportunity
+    - oak_check
+    - source
+    - business_funding_signal
+    - next_action
+
+scoring:
+  positive_axes:
+    freshness: 0-5
+    credibility: 0-5
+    tristan_fit: 0-5
+    actionability: 0-5
+    leverage: 0-5
+    scarcity: 0-5
+    oak_clarity: 0-5
+    ip_revenue: 0-5
+  penalty_axes:
+    hype_penalty: 0-5
+    duplication_penalty: 0-5
+    source_penalty: 0-5
+  formula: sum_positive_axes - sum_penalty_axes
+
+oak_gates:
+  downgrade_when:
+    - source is weak or missing
+    - action is vague
+    - claim confuses speculation with proof
+    - public disclosure may be premature
+    - risk or failure mode is not stated
+  promote_when:
+    - source is primary or highly credible
+    - action can become a prototype, issue, paper, or prior-art note
+    - limits and falsification route are clear
+    - opportunity aligns with Tristan canon branches
+
+output_synthesis:
+  include:
+    - invariant_of_the_day
+    - best_prototype_candidate
+    - best_ip_revenue_candidate
+    - main_m_minus_warning
+    - one_action_today
+
+next_milestones:
+  - create GitHub issue factory from selected briefing items
+  - add prior-art and paper manifest support
+  - add JSON validation in tests
+  - add report output under reports/daily_omega
+  - connect validated items to DCT++ packets

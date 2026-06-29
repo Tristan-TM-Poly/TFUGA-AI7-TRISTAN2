@@ -1,0 +1,38 @@
+{
+  "title": "Agentic workflow benchmark for reusable automation",
+  "topic_anchor": "ai_automation_agents",
+  "signal_type": ["opportunity", "tooling"],
+  "why_it_matters": "Reusable automation becomes valuable only when repeated workflows show measurable time savings and lower error rates.",
+  "actionable_opportunity": "Create a benchmark for one repeated ChatGPT-to-GitHub workflow and compare it against the manual baseline.",
+  "oak_check": {
+    "claim_status": "prototype_opportunity",
+    "risk": "Agentic automation can look powerful while hiding manual cleanup or unstable permissions.",
+    "limit": "Only repeated workflow measurements count as productivity evidence.",
+    "falsification_route": "Run the same workflow ten times and compare time saved, failure rate, and correction burden.",
+    "m_minus_warning": "Do not count automation as progress unless zero-touch friction is actually reduced."
+  },
+  "sources": [
+    {
+      "title": "Daily Omega War Room demo context",
+      "source_type": "technical_report",
+      "url_or_identifier": "examples/daily_omega_war_room_demo.py",
+      "source_quality": 4
+    }
+  ],
+  "next_action": "Create an OAKBench issue for one repeated automation workflow.",
+  "business_funding_signal": "Could become a reusable automation service or internal company operating primitive.",
+  "ip_signal": "private_research",
+  "scores": {
+    "freshness": 5,
+    "credibility": 4,
+    "tristan_fit": 5,
+    "actionability": 5,
+    "leverage": 5,
+    "scarcity": 3,
+    "oak_clarity": 5,
+    "ip_revenue": 4,
+    "hype_penalty": 1,
+    "duplication_penalty": 0,
+    "source_penalty": 0
+  }
+}
