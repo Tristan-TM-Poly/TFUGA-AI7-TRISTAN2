@@ -1,0 +1,59 @@
+# External Action Governor — Ω-ACTION-DASHBOARD-T
+
+external_action_governor:
+  purpose: separate internal automation from external-world actions
+  action_classes:
+    internal_auto:
+      description: safe internal repository or planning work
+      examples:
+        - create_docs
+        - create_tests
+        - create_schema
+        - create_demo_packet
+        - create_OAK_report
+        - update_register
+      approval_required: false
+    external_prepared:
+      description: external action packet prepared but not executed
+      examples:
+        - draft_email
+        - form_packet
+        - meeting_card
+        - IP_review_packet
+      approval_required: depends_on_context
+    external_approved:
+      description: external action with explicit approval or pre-approved campaign rule
+      examples:
+        - send_GREEN_EMAIL_message
+        - one_polite_followup
+        - submit_form_with_confirmation_path
+      approval_required: already_satisfied
+    external_executed:
+      description: external action completed and proof recorded
+      required_proof:
+        - message_id_or_confirmation
+        - timestamp
+        - route_source
+        - content_copy
+    blocked_until_approval:
+      description: action cannot proceed without explicit human approval
+      examples:
+        - legal_commitment
+        - financial_transaction
+        - public_claim
+        - sensitive_IP_disclosure
+        - repeated_followup
+        - unverified_route
+  OAK_rules:
+    - no_external_action_without_route_or_approval
+    - no_false_partnership_claim
+    - no_repeated_followup_without_invitation
+    - no_sensitive_disclosure_without_review
+    - no_volume_metric_over_safety_metric
+  dashboard_outputs:
+    - internal_auto_count
+    - external_prepared_count
+    - external_approved_count
+    - external_executed_count
+    - blocked_until_approval_count
+    - oldest_blocked_action
