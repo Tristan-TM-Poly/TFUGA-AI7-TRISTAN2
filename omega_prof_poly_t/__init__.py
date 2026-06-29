@@ -27,6 +27,7 @@ from .export_bundle import ExportBundleFile, ExportBundleResult, build_export_bu
 from .export_commands import ExportPayloads, build_export_payloads
 from .fixture_artifact_generator import FixtureArtifactRun, generate_fixture_artifacts
 from .fixture_loader_v08 import combine_fixture_records, demo_combined_fixture_records
+from .generated_changelog_plus import generate_changelog_plus
 from .generated_report_artifacts import ArtifactManifest, GeneratedArtifact, build_report_artifacts
 from .github_packet_generator import GitHubFilePacket, GitHubWorkPacket, generate_github_work_packet, render_github_packet_markdown
 from .github_work_bundle import GitHubWorkBundle, build_github_work_bundle, write_github_work_bundle
@@ -47,6 +48,7 @@ from .oak_lineage_ledger import OAKLineageEntry, OAKLineageLedger, build_oak_lin
 from .oak_packet_manifest import OAKPacketEntry, OAKPacketManifest, build_oak_packet_manifest
 from .oak_packet_manifest_plus import OAKPacketManifestPlus, OAKPacketPlusEntry, build_oak_packet_manifest_plus
 from .opportunity_ranker import OpportunityRanking, RankedOpportunity, rank_opportunity_bundles, score_bundle
+from .package_ci_plan import CIPipelineStep, PackageCIPlan, build_package_ci_plan, render_package_ci_plan
 from .package_health import PackageHealthReport, build_package_health_report
 from .package_status import PackageStatusReport, build_package_status_report
 from .poly_public_adapters import ExpertiseLikeAdapter, PolyPublieLikeAdapter
@@ -66,6 +68,9 @@ from .public_metadata_adapters import GenericPublicMetadataAdapter, PublicMetada
 from .public_source_registry import PublicSource, PublicSourceRegistry, default_public_source_registry
 from .release_bundle import ReleaseBundle, build_release_bundle
 from .release_bundle_writer import ReleaseBundleWriteResult, WrittenBundleFile, write_release_bundle
+from .release_intelligence import ReleaseIntelligence, build_release_intelligence, render_release_intelligence
+from .report_atlas import ReportAtlas, ReportAtlasEntry, build_report_atlas, render_report_atlas
+from .report_writer import ReportWriteResult, WrittenReport, default_report_contents, write_reports
 from .reports import render_packet_report
 from .research_atom import ResearchAtom, atom_from_public_record
 from .research_opportunity_compiler import ResearchOpportunityBundle, ResearchOpportunityCompilation, compile_atom_opportunities, compile_research_opportunities
