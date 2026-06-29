@@ -56,8 +56,8 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           workflow = Path('.github/workflows/action-dashboard-ci.yml').read_text(encoding='utf-8')
-          forbidden = ['secrets.', 'curl ', 'wget ', 'git push', 'gh pr merge']
-          hits = [item for item in forbidden if item in workflow]
+          blocked_terms = ['secret' + 's.', 'cu' + 'rl ', 'wg' + 'et ', 'git ' + 'push', 'gh ' + 'pr merge']
+          hits = [item for item in blocked_terms if item in workflow]
           if hits:
               raise SystemExit(f'OAK read-only guard failed: {hits}')
           print('OAK read-only guard passed')
