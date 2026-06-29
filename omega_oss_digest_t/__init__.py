@@ -3,6 +3,7 @@
 from .license_gate import LicenseDecision, classify_license
 from .scorer import DigestScore, score_source
 from .oak_runner import OakDecision, oak_decision
+from .api_layer import GitHubApiClient, GitHubSearchIntent, StackExchangeApiClient
 
 __all__ = [
     "LicenseDecision",
@@ -11,6 +12,9 @@ __all__ = [
     "score_source",
     "OakDecision",
     "oak_decision",
+    "GitHubApiClient",
+    "GitHubSearchIntent",
+    "StackExchangeApiClient",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
