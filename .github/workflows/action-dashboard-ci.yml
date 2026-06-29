@@ -1,0 +1,64 @@
+name: Ω Action Dashboard CI
+
+on:
+  pull_request:
+    paths:
+      - 'tools/action_dashboard/**'
+      - 'tests/test_dashboard_report_generator.py'
+      - 'examples/action_dashboard/**'
+      - '.github/workflows/action-dashboard-ci.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'tools/action_dashboard/**'
+      - 'tests/test_dashboard_report_generator.py'
+      - 'examples/action_dashboard/**'
+      - '.github/workflows/action-dashboard-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dashboard-generator:
+    name: Dashboard generator tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install test dependency
+        run: python -m pip install --upgrade pytest
+
+      - name: Run dashboard generator unit tests
+        run: python -m pytest -q tests/test_dashboard_report_generator.py
+
+      - name: Run dashboard generator CLI smoke test
+        run: |
+          python tools/action_dashboard/dashboard_report_generator.py \
+            examples/action_dashboard/sample_cycle_snapshot.json \
+            --markdown-out /tmp/ACTION_DASHBOARD_REPORT.md \
+            --json-out /tmp/ACTION_DASHBOARD_REPORT.json
+          test -s /tmp/ACTION_DASHBOARD_REPORT.md
+          test -s /tmp/ACTION_DASHBOARD_REPORT.json
+          grep -q "Ω Action Dashboard Report" /tmp/ACTION_DASHBOARD_REPORT.md
+
+      - name: OAK read-only guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          workflow = Path('.github/workflows/action-dashboard-ci.yml').read_text(encoding='utf-8')
+          forbidden = ['secrets.', 'curl ', 'wget ', 'git push', 'gh pr merge']
+          hits = [item for item in forbidden if item in workflow]
+          if hits:
+              raise SystemExit(f'OAK read-only guard failed: {hits}')
+          print('OAK read-only guard passed')
+          PY
