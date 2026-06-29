@@ -1,0 +1,74 @@
+# All Quebec University Contact Routes
+# Canonical register for official routes. Do not infer an email from a naming convention.
+
+route_register:
+  scoring:
+    GREEN_EMAIL:
+      meaning: official institutional email verified on an official page or official directory
+      send_allowed: true
+    GREEN_FORM:
+      meaning: official contact form or portal verified
+      send_allowed: false
+      required_action: submit_form_packet_with_confirmation_record
+    YELLOW_RESEARCH:
+      meaning: official route exists but contact needs deeper search
+      send_allowed: false
+    RED_REJECTED:
+      meaning: guessed, unofficial, stale, or irrelevant route
+      send_allowed: false
+  wave1:
+    INRS:
+      status: GREEN_EMAIL_SENT
+      route: info.emt@inrs.ca
+      unit: Centre Energie Materiaux Telecommunications
+      gmail_message_id: 19f1228d0de8270e
+    Universite_Laval:
+      status: GREEN_EMAIL_SENT
+      route: najat.aattouri@vrr.ulaval.ca
+      unit: VRRCI / valorisation / PI / ententes
+      gmail_message_id: 19f12fe9b33c0b4c
+    Universite_de_Sherbrooke:
+      status: GREEN_EMAIL_SENT
+      route: recherche@USherbrooke.ca
+      unit: Recherche / partnerships route
+      gmail_message_id: 19f12fedbb04ea81
+    Polytechnique_Montreal:
+      status: GREEN_EMAIL_SENT
+      route: brcdt@polymtl.ca
+      unit: Bureau de la recherche
+      gmail_message_id: 19f130715600efd7
+    ETS:
+      status: GREEN_FORM_READY
+      route: official BIP / collaboration contact form
+      packet: ets_green_form_packet_fr.md
+  remaining_to_greenify:
+    - Universite_de_Montreal
+    - HEC_Montreal
+    - McGill
+    - Concordia
+    - UQTR
+    - UQAC
+    - UQAM
+    - UQAR
+    - UQO
+    - UQAT
+    - ENAP
+    - TELUQ
+    - Bishops
+    - BCI
+  record_schema:
+    fields:
+      - university
+      - official_route_type
+      - office_or_unit
+      - email_if_public
+      - form_url_if_public
+      - named_contact_if_public
+      - source_url
+      - source_title
+      - date_found
+      - confidence_score
+      - message_variant
+      - execution_status
+      - proof_record
+      - next_action
