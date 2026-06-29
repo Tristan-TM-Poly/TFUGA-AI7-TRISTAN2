@@ -1,10 +1,12 @@
-"""Stable CLI for Omega absorb v1.5."""
+"""Stable CLI for Omega absorb v1.6."""
 
 from __future__ import annotations
 
 import argparse
 
 from .absorb_public_research import absorb_public_records
+from .action_packet_writer import write_action_packets
+from .adapter_router import route_records
 from .changelog_generator import generate_changelog
 from .claim_graph import build_claim_graph
 from .claim_oak_plus import build_claim_oak_plus
@@ -16,7 +18,9 @@ from .e2e_pipeline_v09 import run_v09_e2e_pipeline
 from .export_bundle import build_export_bundle
 from .export_commands import build_export_payloads
 from .github_packet_generator import generate_github_work_packet, render_github_packet_markdown
-from .local_json_loader import load_and_normalize_local_json
+from .github_work_bundle import build_github_work_bundle, write_github_work_bundle
+from .ingest_json_pipeline_v2 import run_ingest_json_pipeline_v2
+from .local_json_loader import load_and_normalize_local_json, load_local_json_records
 from .method_graph import build_method_graph
 from .method_reproduction_packet import build_method_reproduction_set
 from .mminus_registry import render_mminus_markdown
@@ -31,12 +35,13 @@ from .professor_tensor import build_professor_tensors
 from .release_bundle_writer import write_release_bundle
 from .research_opportunity_compiler import compile_research_opportunities
 from .roadmap_compiler import render_roadmap_markdown
+from .source_oak_policy import apply_source_oak_policy
 from .source_record_validation import validate_public_records
 from .source_registry_schema import validate_records_against_schema
 from .source_selection import available_demo_sources, select_demo_records
 
 
-VERSION = "1.5.0"
+VERSION = "1.6.0"
 
 
 def _atoms_and_genomes(source: str):
@@ -50,12 +55,21 @@ def _bridge_plan(source: str):
     return optimize_department_bridges(recommend_collaborations(genomes).recommendations)
 
 
+def _top_actions(source: str):
+    twin = build_poly_research_twin_v2(select_demo_records(source))
+    return compile_top_next_actions(twin, _bridge_plan(source).bridges)
+
+
+def _load_or_demo_records(path: str, source: str):
+    return load_local_json_records(path) if path else select_demo_records(source)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="omega-absorb", description="Omega absorb public research pipeline")
     parser.add_argument(
         "command",
         choices=(
-            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet", "tensor", "twin-v2", "bridge-opt", "next-actions", "oak-manifest",
+            "version", "demo", "roadmap", "summary-json", "validation-json", "graph-json", "graphml", "docs-index", "status", "sources", "write-bundle", "ingest-json", "table", "export-bundle", "health", "changelog", "schema-check", "claim-oak", "method-packets", "mminus", "github-packet", "tensor", "twin-v2", "bridge-opt", "next-actions", "oak-manifest", "route-source", "policy-check", "ingest-json-v2", "write-actions", "github-bundle",
         ),
         help="Command to run",
     )
@@ -63,7 +77,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--input", default="", help="Local JSON input path")
     parser.add_argument("--input-source", default="generic", help="Adapter for local JSON input")
     parser.add_argument("--feature", default="omega_absorb_next", help="Feature name for packet generation")
-    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v15", help="Output directory")
+    parser.add_argument("--output-dir", default="generated/omega_absorb_poly_prof_v16", help="Output directory")
     return parser
 
 
@@ -86,6 +100,25 @@ def run_cli(argv: list[str] | None = None) -> str:
         return render_mminus_markdown()
     if args.command == "github-packet":
         return render_github_packet_markdown(generate_github_work_packet(args.feature))
+    if args.command == "route-source":
+        routed = route_records(_load_or_demo_records(args.input, args.source), args.input_source if args.input else None)
+        return f"source_id={routed.route.source_id} adapter={routed.route.adapter_name} confidence={routed.route.confidence:.2f}\n"
+    if args.command == "policy-check":
+        routed = route_records(_load_or_demo_records(args.input, args.source), args.input_source if args.input else None)
+        report = apply_source_oak_policy(routed.records, routed.route.source_id)
+        return f"status={report.status} warnings={len(report.warnings)} blocked={len(report.blocked_fields)}\n"
+    if args.command == "ingest-json-v2":
+        if not args.input:
+            raise ValueError("--input is required for ingest-json-v2")
+        result = run_ingest_json_pipeline_v2(args.input, args.input_source)
+        return f"route={result.source_route.source_id} atoms={result.atom_count} actions={result.action_count}\n"
+    if args.command == "write-actions":
+        result = write_action_packets(_top_actions(args.source).actions, args.output_dir)
+        return f"action_files={len(result.files)} manifest={result.manifest_path}\n"
+    if args.command == "github-bundle":
+        bundle = build_github_work_bundle(_top_actions(args.source).actions)
+        files = write_github_work_bundle(bundle, args.output_dir)
+        return f"github_bundle_files={len(files)}\n"
     if args.command == "tensor":
         _, genomes = _atoms_and_genomes(args.source)
         return f"professor_tensors={len(build_professor_tensors(genomes))}\n"
@@ -96,13 +129,9 @@ def run_cli(argv: list[str] | None = None) -> str:
         plan = _bridge_plan(args.source)
         return f"optimized_bridges={len(plan.bridges)}\n"
     if args.command == "next-actions":
-        twin = build_poly_research_twin_v2(select_demo_records(args.source))
-        actions = compile_top_next_actions(twin, _bridge_plan(args.source).bridges)
-        return render_next_actions_markdown(actions)
+        return render_next_actions_markdown(_top_actions(args.source))
     if args.command == "oak-manifest":
-        twin = build_poly_research_twin_v2(select_demo_records(args.source))
-        actions = compile_top_next_actions(twin, _bridge_plan(args.source).bridges)
-        return build_oak_packet_manifest(actions.actions).manifest_json
+        return build_oak_packet_manifest(_top_actions(args.source).actions).manifest_json
     if args.command in {"summary-json", "validation-json", "graph-json", "graphml"}:
         payloads = build_export_payloads(args.source)
         if args.command == "summary-json":
