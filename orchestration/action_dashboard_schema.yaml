@@ -1,0 +1,72 @@
+# Action Dashboard Schema — Ω-ACTION-DASHBOARD-T
+
+action_dashboard_schema:
+  version: 0.1
+  dashboard_id: string
+  generated_at: datetime
+  cycle_window:
+    start: datetime
+    end: datetime
+  executive_state:
+    active_loops:
+      - loop_id
+      - cadence
+      - status
+      - last_result
+    top_blockers:
+      - blocker_id
+      - blocker_class
+      - affected_lane
+      - age
+      - safest_next_action
+    next_best_actions:
+      - action_id
+      - lane
+      - score
+      - decision
+      - expected_output
+      - OAK_risk
+  lanes:
+    github:
+      open_PRs: integer
+      mergeable_clean_PRs: integer
+      draft_PRs: integer
+      pending_checks: integer
+      repaired_blockers: integer
+      merged_PRs: integer
+    universities:
+      GREEN_EMAIL: integer
+      GREEN_FORM: integer
+      YELLOW_RESEARCH: integer
+      RED_REJECTED: integer
+      replies_pending_action: integer
+      followups_due: integer
+    proof_packets:
+      ready_packets: integer
+      seed_packets: integer
+      missing_examples: integer
+      routed_targets: integer
+    assets:
+      code_assets: integer
+      docs_assets: integer
+      proof_packets: integer
+      OAK_reports: integer
+      route_assets: integer
+      IP_review_packets: integer
+  metrics:
+    proof_capital: number
+    proof_capital_delta: number
+    friction_burn_rate: number
+    OAK_safety_ratio: number
+    loop_upgrade_rate: number
+    asset_conversion_rate: number
+  memory:
+    M_plus_new: list
+    M_minus_new: list
+    anti_repetition_rules_added: list
+  external_action_governor:
+    internal_auto: list
+    external_prepared: list
+    external_approved: list
+    external_executed: list
+    blocked_until_approval: list

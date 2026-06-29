@@ -1,0 +1,72 @@
+# Proof Capital Metrics — Ω-ACTION-DASHBOARD-T
+
+proof_capital_metrics:
+  definition: "Sum of reusable evidence assets that make future actions safer, faster, or more credible."
+  components:
+    tests:
+      weight: 3
+      examples:
+        - unit_tests
+        - integration_tests
+        - OAK_gate_tests
+    benchmarks:
+      weight: 5
+      examples:
+        - datacenter_energy_oak
+        - nonlinear_tensor_lift
+        - paper_to_code_reproduction
+    OAK_reports:
+      weight: 5
+      examples:
+        - residual_report
+        - invariant_report
+        - no_go_report
+        - pilot_candidate_report
+    external_replies:
+      weight: 6
+      examples:
+        - interested_reply
+        - official_redirect
+        - meeting_offer
+    official_routes:
+      weight: 4
+      examples:
+        - GREEN_EMAIL
+        - GREEN_FORM
+    merged_PRs:
+      weight: 4
+      examples:
+        - docs_PR
+        - code_PR
+        - packet_PR
+        - test_PR
+    demo_packets:
+      weight: 5
+      examples:
+        - Datacenter_Energy_OAK
+        - Paper_to_Code_OAK
+        - Patent_to_Opportunity_OAK
+    source_citations:
+      weight: 2
+      examples:
+        - official_university_page
+        - public_patent_source
+        - open_access_paper
+    documented_failures:
+      weight: 2
+      examples:
+        - M_minus_route_failure
+        - M_minus_pending_checks
+        - M_minus_overclaim_risk
+  formula: |
+    ProofCapital = sum(weight(component) * count(valid_component))
+  quality_multiplier:
+    verified: 1.0
+    partially_verified: 0.5
+    stale_or_uncertain: 0.2
+    rejected: 0.0
+  dashboard_outputs:
+    - proof_capital_total
+    - proof_capital_delta_per_cycle
+    - proof_capital_by_lane
+    - top_missing_proof_assets

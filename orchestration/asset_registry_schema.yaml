@@ -1,0 +1,73 @@
+# Asset Registry Schema — Ω-ACTION-DASHBOARD-T
+
+asset_registry_schema:
+  purpose: convert outputs into reusable assets rather than one-off actions
+  asset_types:
+    code_asset:
+      examples:
+        - module
+        - CLI
+        - validator
+        - simulator
+        - benchmark
+    proof_asset:
+      examples:
+        - OAK_report
+        - test_result
+        - benchmark_result
+        - official_source_record
+        - external_reply
+    packet_asset:
+      examples:
+        - one_pager
+        - demo_packet
+        - form_packet
+        - email_template
+    relationship_asset:
+      examples:
+        - GREEN_EMAIL_route
+        - GREEN_FORM_route
+        - official_redirect
+        - meeting_card
+    IP_asset:
+      examples:
+        - invention_card
+        - patent_map
+        - prior_art_note
+        - IP_review_packet
+    revenue_asset:
+      examples:
+        - offer_card
+        - pilot_proposal
+        - ROI_OAK_case
+        - pricing_hypothesis
+    memory_asset:
+      examples:
+        - M_plus_pattern
+        - M_minus_pattern
+        - anti_repetition_rule
+  required_fields:
+    - asset_id
+    - asset_type
+    - title
+    - source
+    - proof_level
+    - OAK_status
+    - reuse_path
+    - risk_notes
+    - next_best_action
+    - created_at
+    - updated_at
+  proof_levels:
+    idea: 0
+    draft: 1
+    prototype: 2
+    tested_local: 3
+    externally_reviewed: 4
+    validated_or_revenue_ready: 5
+  registry_outputs:
+    - asset_count_by_type
+    - high_value_assets
+    - stale_assets
+    - assets_missing_OAK_status
+    - assets_ready_for_packet_or_offer

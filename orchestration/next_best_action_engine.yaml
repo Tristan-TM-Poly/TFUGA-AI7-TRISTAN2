@@ -1,0 +1,60 @@
+# Next Best Action Engine — Ω-ACTION-DASHBOARD-T
+
+next_best_action_engine:
+  purpose: choose the safest highest-leverage next action per cycle
+  scoring_formula: |
+    NBA = Impact * Feasibility * ProofStrength * LoopUpgradePotential / max(Risk, 0.05)
+  dimensions:
+    Impact:
+      range: 0_to_1
+      meaning: expected value if action succeeds
+    Feasibility:
+      range: 0_to_1
+      meaning: can be done safely with current tools/evidence
+    ProofStrength:
+      range: 0_to_1
+      meaning: supporting evidence and route quality
+    LoopUpgradePotential:
+      range: 0_to_1
+      meaning: how much this action improves future actions
+    Risk:
+      range: 0_to_1
+      meaning: downside across technical, legal, reputational, IP, safety, or relationship dimensions
+  decision_bands:
+    ACT_NOW_INTERNAL_SAFE: ">= 0.85 and no hard lock"
+    PREPARE_OR_REPAIR: "0.60_to_0.84"
+    WATCH_OR_BACKLOG: "0.30_to_0.59"
+    WAIT_OR_BLOCK: "< 0.30 or hard lock"
+  hard_locks:
+    - unverified_external_contact
+    - repeated_followup_without_invitation
+    - draft_PR_merge
+    - pending_or_ambiguous_checks_merge
+    - high_IP_sensitivity_without_review
+    - public_claim_without_proof
+  output_card:
+    fields:
+      - action_id
+      - lane
+      - title
+      - expected_artifact
+      - score
+      - decision_band
+      - risk_notes
+      - proof_requirements
+      - cooldown
+      - M_plus_if_success
+      - M_minus_if_failure
+  examples:
+    create_demo_packet:
+      decision_band: ACT_NOW_INTERNAL_SAFE
+      reason: creates reusable proof asset with low external risk
+    send_first_contact_to_official_email:
+      decision_band: PREPARE_OR_REVIEW
+      reason: external action needs route evidence and OAK message check
+    merge_clean_docs_PR:
+      decision_band: ACT_NOW_INTERNAL_SAFE
+      reason: low-risk internal improvement if checks are clean
+    merge_draft_PR:
+      decision_band: WAIT_OR_BLOCK
+      reason: hard lock

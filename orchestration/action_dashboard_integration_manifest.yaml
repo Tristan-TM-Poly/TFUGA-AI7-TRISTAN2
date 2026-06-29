@@ -1,0 +1,34 @@
+# Action Dashboard Integration Manifest
+
+action_dashboard_integration_manifest:
+  status: ready
+  connects_to:
+    - docs/OMEGA_ACTION_LOOP_T.md
+    - orchestration/action_loop_kernel.yaml
+    - orchestration/priority_engine.yaml
+    - orchestration/cooldown_policy.yaml
+    - orchestration/mplus_mminus_learning_loop.yaml
+    - orchestration/action_loop_state_machine.yaml
+    - orchestration/action_loop_lanes.yaml
+    - orchestration/parallel_execution_manifest.yaml
+    - orchestration/parallel_lane_backlog.yaml
+    - github_ops/all_github_omega_forge.yaml
+    - university_outreach/quebec_universities/all_university_research_engine.yaml
+    - university_outreach/quebec_universities/packet_router.yaml
+    - demo_packets/datacenter_energy_oak/README.md
+    - demo_packets/paper_to_code_oak/README.md
+    - demo_packets/patent_to_opportunity_oak/README.md
+  dashboard_cycle:
+    - ingest_loop_outputs
+    - compute_metrics
+    - rank_next_best_actions
+    - update_asset_registry
+    - update_external_action_governor
+    - emit_OAK_dashboard_report
+  next_upgrades:
+    - executable_dashboard_report_generator
+    - GitHub_repo_card_autogenerator
+    - university_route_status_snapshot
+    - proof_packet_readiness_report
+    - asset_registry_instance
+    - M_plus_M_minus_instance_files
