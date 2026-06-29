@@ -1,0 +1,258 @@
+# All Quebec University Research Outreach Engine
+# Internal automation scaffold. Do not send externally without verified contact route and OAK approval.
+
+engine:
+  name: AIT-Tristan2 Quebec University Research Engine
+  status: active_scaffold
+  objective: >
+    Automate discovery, scoring, message adaptation, routing, response tracking, and follow-up
+    for every Quebec university and their relevant research/innovation directions.
+  source_basis:
+    - "Quebec university network includes 18 universities."
+    - "The Universite du Quebec network includes 10 institutions."
+    - "BCI coordinates voluntary cooperation among Quebec universities."
+  core_offer: "micro-benchmark OAK-safe, 2-4 weeks, no unsupported claims"
+  contact_scoring:
+    GREEN_EMAIL:
+      send_allowed: true
+      condition: "official institutional email from current university page or official directory"
+    GREEN_FORM:
+      send_allowed: false
+      condition: "official university form or contact portal; requires form submission record"
+    YELLOW:
+      send_allowed: false
+      condition: "official route exists but specific email/form still needs deeper search"
+    RED:
+      send_allowed: false
+      condition: "guessed, third-party, stale, or non-institutional contact"
+  workflow:
+    - discover_official_research_pages
+    - extract_research_axes_and_contacts
+    - score_route_GREEN_EMAIL_GREEN_FORM_YELLOW_RED
+    - adapt_microbenchmark_message
+    - send_GREEN_EMAIL_only_after_command_or_approval
+    - prepare_GREEN_FORM_packets
+    - record_sent_or_submission_confirmation
+    - monitor_replies
+    - send_one_follow_up_after_7_to_10_days_if_no_reply
+    - route_interested_replies_to_meeting_decision_cards
+    - record_mplus_mminus
+
+universities:
+  ETS:
+    name: "École de technologie supérieure"
+    wave: 1
+    current_status: GREEN_FORM_READY
+    primary_route: "Bureau des initiatives partenariales / official contact form"
+    research_angles:
+      - engineering_applied_research
+      - industrial_R_and_D
+      - optimization
+      - datacenters
+      - digital_twins
+      - energy
+    next_action: submit_official_form_packet
+  Polytechnique_Montreal:
+    name: "Polytechnique Montréal"
+    wave: 1
+    current_status: GREEN_EMAIL_SENT
+    primary_route: "Bureau de la recherche / brcdt@polymtl.ca"
+    research_angles:
+      - engineering
+      - nonlinear_systems
+      - optimization
+      - energy
+      - materials
+      - technology_transfer
+    gmail_message_id: "19f130715600efd7"
+  INRS:
+    name: "Institut national de la recherche scientifique"
+    wave: 1
+    current_status: GREEN_EMAIL_SENT
+    primary_route: "Centre Énergie Matériaux Télécommunications / info.emt@inrs.ca"
+    research_angles:
+      - energy
+      - materials
+      - telecommunications
+      - nanotechnology
+      - photonics
+      - applied_research
+    gmail_message_id: "19f1228d0de8270e"
+  Universite_Laval:
+    name: "Université Laval"
+    wave: 1
+    current_status: GREEN_EMAIL_SENT
+    primary_route: "VRRCI / najat.aattouri@vrr.ulaval.ca"
+    research_angles:
+      - valorisation
+      - intellectual_property
+      - research_agreements
+      - scientific_ai
+      - energy
+      - optics_materials
+    gmail_message_id: "19f12fe9b33c0b4c"
+  Universite_de_Sherbrooke:
+    name: "Université de Sherbrooke"
+    wave: 1
+    current_status: GREEN_EMAIL_SENT
+    primary_route: "Recherche / recherche@USherbrooke.ca"
+    research_angles:
+      - research_partnerships
+      - applied_innovation
+      - scientific_ai
+      - energy
+      - materials
+      - valorisation
+    gmail_message_id: "19f12fedbb04ea81"
+  Universite_de_Montreal:
+    name: "Université de Montréal"
+    wave: 2
+    current_status: TO_DISCOVER
+    research_angles:
+      - AI
+      - data_science
+      - scientific_discovery
+      - health_ai
+      - knowledge_graphs
+      - technology_transfer
+    next_action: discover_research_and_transfer_route
+  HEC_Montreal:
+    name: "HEC Montréal"
+    wave: 2
+    current_status: TO_DISCOVER
+    research_angles:
+      - innovation_management
+      - commercialization
+      - ROI_OAK
+      - technology_strategy
+      - decision_sciences
+    next_action: discover_research_or_innovation_route
+  McGill:
+    name: "McGill University"
+    wave: 2
+    current_status: TO_DISCOVER
+    research_angles:
+      - scientific_ai
+      - systems_modeling
+      - materials
+      - energy
+      - bioengineering
+      - tech_transfer
+    next_action: discover_research_and_innovation_route
+  Concordia:
+    name: "Concordia University"
+    wave: 2
+    current_status: TO_DISCOVER
+    research_angles:
+      - applied_ai
+      - engineering_systems
+      - sustainability
+      - energy
+      - innovation
+    next_action: discover_research_partnership_route
+  UQTR:
+    name: "Université du Québec à Trois-Rivières"
+    wave: 2
+    current_status: TO_DISCOVER
+    research_angles:
+      - hydrogen_energy
+      - industrial_systems
+      - regional_innovation
+      - applied_pilots
+    next_action: discover_research_partnership_route
+  UQAC:
+    name: "Université du Québec à Chicoutimi"
+    wave: 2
+    current_status: TO_DISCOVER
+    research_angles:
+      - aluminum_materials
+      - regional_industry
+      - energy
+      - sensors
+      - applied_ai
+    next_action: discover_research_partnership_route
+  UQAM:
+    name: "Université du Québec à Montréal"
+    wave: 3
+    current_status: TO_DISCOVER
+    research_angles:
+      - data_science
+      - knowledge_graphs
+      - digital_humanities
+      - societal_impact
+      - research_creation
+    next_action: discover_research_office_route
+  UQAR:
+    name: "Université du Québec à Rimouski"
+    wave: 3
+    current_status: TO_DISCOVER
+    research_angles:
+      - marine_systems
+      - environmental_systems
+      - sensors_data
+      - climate_ecology_modeling
+      - regional_innovation
+    next_action: discover_research_partnership_route
+  UQO:
+    name: "Université du Québec en Outaouais"
+    wave: 3
+    current_status: TO_DISCOVER
+    research_angles:
+      - applied_ai
+      - public_sector_innovation
+      - regional_development
+      - decision_systems
+    next_action: discover_research_office_route
+  UQAT:
+    name: "Université du Québec en Abitibi-Témiscamingue"
+    wave: 3
+    current_status: TO_DISCOVER
+    research_angles:
+      - mining
+      - materials
+      - environment
+      - sensors
+      - energy_systems
+      - regional_industry
+    next_action: discover_research_partnership_route
+  ENAP:
+    name: "École nationale d'administration publique"
+    wave: 3
+    current_status: TO_DISCOVER
+    research_angles:
+      - governance
+      - public_sector_ai
+      - services_optimization
+      - OAK_decision_systems
+    next_action: discover_research_or_partnership_route
+  TELUQ:
+    name: "Université TÉLUQ"
+    wave: 3
+    current_status: TO_DISCOVER
+    research_angles:
+      - learning_systems
+      - remote_education
+      - AI_tutoring
+      - knowledge_compression
+      - learning_analytics
+    next_action: discover_research_office_route
+  Bishops:
+    name: "Bishop's University"
+    wave: 3
+    current_status: TO_DISCOVER
+    research_angles:
+      - focused_collaboration
+      - teaching_research_prototypes
+      - data_science_projects
+      - regional_innovation
+    next_action: discover_research_office_route
+  BCI:
+    name: "Bureau de coopération interuniversitaire"
+    wave: 3
+    current_status: TO_DISCOVER
+    research_angles:
+      - interuniversity_coordination
+      - research_mapping
+      - innovation_mapping
+      - Quebec_scientific_patent_digest
+    next_action: discover_committee_or_general_contact_route

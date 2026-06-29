@@ -1,0 +1,70 @@
+# Research Contact Discovery Protocol — All Quebec Universities
+
+contact_discovery_protocol:
+  status: active_scaffold
+  objective: "Find official research/innovation/partnership routes for every Quebec university without guessing emails."
+  allowed_sources:
+    - official_university_website
+    - official_research_office_page
+    - official_partnerships_page
+    - official_technology_transfer_page
+    - official_directory_page
+    - official_contact_form
+    - official_BCI_or_network_page
+  rejected_sources:
+    - guessed_email_patterns
+    - personal_email_not_listed_officially
+    - third_party_contact_scrapes
+    - outdated_cached_pages_without_confirmation
+    - generic social media unless linked from official page
+  search_queries_per_university:
+    official_research:
+      - "{university} recherche nous joindre"
+      - "{university} vice-rectorat recherche contact"
+      - "{university} partenariats recherche"
+      - "{university} valorisation recherche"
+      - "{university} transfert technologique"
+    domain_scoped:
+      - "site:{domain} recherche contact courriel"
+      - "site:{domain} partenariats courriel"
+      - "site:{domain} valorisation courriel"
+      - "site:{domain} innovation contact"
+      - "site:{domain} bureau recherche contact"
+    faculty_or_centre:
+      - "site:{domain} génie recherche partenariat"
+      - "site:{domain} informatique recherche partenariat"
+      - "site:{domain} énergie matériaux recherche"
+      - "site:{domain} intelligence artificielle recherche contact"
+  extraction_fields:
+    - university
+    - office_or_unit
+    - email_if_public
+    - form_url_if_public
+    - named_contact_if_public
+    - phone_if_public
+    - source_url
+    - source_title
+    - date_found
+    - confidence_score
+    - recommended_message_variant
+  confidence_rules:
+    GREEN_EMAIL:
+      criteria:
+        - email_on_official_domain
+        - email_visible_on_official_page
+        - office_relevance_high_or_medium
+      action: "send_allowed_after_approval"
+    GREEN_FORM:
+      criteria:
+        - official_form_available
+        - form_route_relevance_high_or_medium
+      action: "prepare_form_packet"
+    YELLOW:
+      criteria:
+        - official_route_but_unclear_contact
+      action: "deeper_search_or_generic_office_query"
+    RED:
+      criteria:
+        - guessed_or_unofficial_or_irrelevant
+      action: "discard"
+  output_register: "all_university_contact_routes.yaml"
