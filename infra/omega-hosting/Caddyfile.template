@@ -1,0 +1,19 @@
+# Ω-HOSTING-T Caddy reverse proxy template
+# Replace n8n.example.com on the VPS after DNS is ready.
+# Keep n8n bound to localhost in Docker Compose.
+
+n8n.example.com {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:5678
+
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    log {
+        output file /var/log/caddy/n8n-access.log
+        format json
+    }
+}
