@@ -1,0 +1,13 @@
+{
+  "action_id": "OHT-20260630-001",
+  "timestamp_utc": "2026-06-30T00:00:00Z",
+  "actor": "Tristan + ChatGPT",
+  "intent": "Prepare VPS infrastructure before purchase",
+  "asset_class": "public_marketing",
+  "risk_level": "medium",
+  "approval_status": "approved",
+  "rollback_plan": "Revert PR or restore prior compose files before deployment",
+  "proof": "GitHub PR checks green before purchase",
+  "residual_risk": "Provider pricing, renewal terms, region, snapshots, and OS choice still require human verification",
+  "links": []
+}
