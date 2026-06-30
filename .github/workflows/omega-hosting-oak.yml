@@ -1,0 +1,59 @@
+name: Ω-HOSTING-T OAK
+
+on:
+  pull_request:
+    paths:
+      - "docs/OMEGA_HOSTING_T.md"
+      - "infra/omega-hosting/**"
+      - "tools/omega_hosting_t/**"
+      - ".github/workflows/omega-hosting-oak.yml"
+  workflow_dispatch:
+
+jobs:
+  oak-hosting-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile OAK gate
+        run: python -m py_compile tools/omega_hosting_t/oak_hosting_gate.py
+
+      - name: Score public landing page profile
+        run: |
+          python tools/omega_hosting_t/oak_hosting_gate.py \
+            --component-type landing_page \
+            --asset-class public_marketing \
+            --public-exposure true \
+            --rollback-defined true
+
+      - name: Score n8n VPS profile
+        run: |
+          python tools/omega_hosting_t/oak_hosting_gate.py \
+            --component-type n8n \
+            --asset-class public_marketing \
+            --stores-state true \
+            --uses-external-actions true \
+            --rollback-defined true \
+            --backups-defined true \
+            --human-approval-gate true
+
+      - name: Ensure dangerous public IP profile is blocked
+        run: |
+          set +e
+          python tools/omega_hosting_t/oak_hosting_gate.py \
+            --component-type landing_page \
+            --asset-class confidential_ip \
+            --public-exposure true \
+            --reveals-unreviewed-ip true
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo "Expected confidential public IP profile to be blocked."
+            exit 1
+          fi
