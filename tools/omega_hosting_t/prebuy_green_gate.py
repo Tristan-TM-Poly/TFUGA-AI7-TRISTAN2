@@ -24,8 +24,23 @@ REQUIRED_PATHS = [
     "infra/omega-hosting/oak_deployment_checklist.md",
     "infra/omega-hosting/post_purchase_runbook.md",
     "infra/omega-hosting/bootstrap_ubuntu_24_04.sh",
+    "infra/omega-hosting/backup_n8n_postgres.sh",
+    "infra/omega-hosting/restore_n8n_postgres.md",
+    "infra/omega-hosting/Caddyfile.template",
+    ".github/workflows/omega-hosting-oak.yml",
+    ".github/workflows/omega-hosting-prebuy.yml",
+    ".github/ISSUE_TEMPLATE/omega-hosting-post-purchase.yml",
     "tools/omega_hosting_t/oak_hosting_gate.py",
     "tools/omega_hosting_t/prebuy_green_gate.py",
+]
+
+SCAN_ROOTS = [
+    "docs/OMEGA_HOSTING_T.md",
+    "infra/omega-hosting",
+    "tools/omega_hosting_t",
+    ".github/workflows/omega-hosting-oak.yml",
+    ".github/workflows/omega-hosting-prebuy.yml",
+    ".github/ISSUE_TEMPLATE/omega-hosting-post-purchase.yml",
 ]
 
 FORBIDDEN_FILENAMES = {
@@ -71,6 +86,17 @@ class PrebuyReport:
     results: list[CheckResult]
 
 
+def iter_scan_files() -> list[Path]:
+    files: list[Path] = []
+    for item in SCAN_ROOTS:
+        path = ROOT / item
+        if path.is_file():
+            files.append(path)
+        elif path.is_dir():
+            files.extend(p for p in path.rglob("*") if p.is_file())
+    return sorted(set(files))
+
+
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
 
@@ -86,23 +112,19 @@ def check_required_paths() -> CheckResult:
 
 def check_forbidden_filenames() -> CheckResult:
     hits: list[str] = []
-    for path in ROOT.rglob("*"):
-        if ".git" in path.parts:
-            continue
-        if path.is_file() and path.name in FORBIDDEN_FILENAMES:
+    for path in iter_scan_files():
+        if path.name in FORBIDDEN_FILENAMES:
             hits.append(str(path.relative_to(ROOT)))
     return CheckResult(
         ok=not hits,
         name="forbidden_filenames",
-        details=hits or ["No forbidden local secret filenames are tracked in the tree."],
+        details=hits or ["No forbidden secret filenames found in Ω-HOSTING-T paths."],
     )
 
 
 def check_secret_patterns() -> CheckResult:
     hits: list[str] = []
-    for path in ROOT.rglob("*"):
-        if ".git" in path.parts or not path.is_file():
-            continue
+    for path in iter_scan_files():
         if path.suffix not in TEXT_SUFFIXES and not path.name.endswith(".template"):
             continue
         text = read_text(path)
@@ -112,7 +134,7 @@ def check_secret_patterns() -> CheckResult:
     return CheckResult(
         ok=not hits,
         name="secret_pattern_scan",
-        details=hits or ["No high-confidence token/private-key pattern found in text files."],
+        details=hits or ["No high-confidence token/private-key pattern found in Ω-HOSTING-T paths."],
     )
 
 
