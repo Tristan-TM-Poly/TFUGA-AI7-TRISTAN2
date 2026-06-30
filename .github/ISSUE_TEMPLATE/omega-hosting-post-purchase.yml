@@ -1,0 +1,59 @@
+name: Ω-HOSTING-T Post-Purchase Intake
+description: Non-sensitive VPS details after buying Hostinger KVM 8
+title: "Ω-HOSTING-T / VPS intake"
+labels: ["omega-hosting", "infra", "oak"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this only after purchase. Do not include credentials, payment details, private keys, tokens, cookies, or recovery codes.
+  - type: input
+    id: plan
+    attributes:
+      label: Purchased plan
+      description: Example: Hostinger KVM 8
+      placeholder: Hostinger KVM 8
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS version
+      description: Example: Ubuntu 24.04 LTS
+      placeholder: Ubuntu 24.04 LTS
+    validations:
+      required: true
+  - type: input
+    id: region
+    attributes:
+      label: Datacenter or region
+      placeholder: e.g. Europe / North America / specific region shown by provider
+    validations:
+      required: false
+  - type: input
+    id: public_ip
+    attributes:
+      label: Public IP
+      description: Public server IP only. No SSH keys or passwords.
+      placeholder: x.x.x.x
+    validations:
+      required: true
+  - type: input
+    id: domain
+    attributes:
+      label: Domain or subdomain
+      description: Example n8n.example.com
+      placeholder: n8n.example.com
+    validations:
+      required: false
+  - type: checkboxes
+    id: oak_ack
+    attributes:
+      label: OAK safety confirmation
+      options:
+        - label: I did not include credentials or payment/private access details.
+          required: true
+        - label: I understand external actions must remain human-approved until explicitly changed.
+          required: true
+        - label: I want the next PR to generate deployment-specific config from these non-sensitive details.
+          required: true
