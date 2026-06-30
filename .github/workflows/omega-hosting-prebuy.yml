@@ -1,0 +1,38 @@
+name: Ω-HOSTING-T Prebuy
+
+on:
+  pull_request:
+    paths:
+      - "docs/OMEGA_HOSTING_T.md"
+      - "infra/omega-hosting/**"
+      - "tools/omega_hosting_t/**"
+      - ".github/workflows/omega-hosting-prebuy.yml"
+  workflow_dispatch:
+
+jobs:
+  prebuy-green-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile tools
+        run: |
+          python -m py_compile tools/omega_hosting_t/oak_hosting_gate.py
+          python -m py_compile tools/omega_hosting_t/prebuy_green_gate.py
+
+      - name: Run pre-buy green gate
+        run: python tools/omega_hosting_t/prebuy_green_gate.py
+
+      - name: Validate shell scripts
+        run: |
+          bash -n infra/omega-hosting/bootstrap_ubuntu_24_04.sh
+          bash -n infra/omega-hosting/backup_n8n_postgres.sh
+
+      - name: Confirm post-purchase runbook exists
+        run: test -s infra/omega-hosting/post_purchase_runbook.md
