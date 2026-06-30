@@ -36,7 +36,8 @@ jobs:
 
       - name: Validate compose templates render structurally
         run: |
-          docker compose -f infra/omega-hosting/docker-compose.n8n.yml config >/tmp/n8n-compose.out
+          POSTGRES_PASSWORD=placeholder N8N_ENCRYPTION_KEY=placeholder N8N_HOST=n8n.example.com WEBHOOK_URL=https://n8n.example.com/ N8N_BASIC_AUTH_USER=admin N8N_BASIC_AUTH_PASSWORD=placeholder \
+            docker compose -f infra/omega-hosting/docker-compose.n8n.yml config >/tmp/n8n-compose.out
           POSTGRES_PASSWORD=placeholder N8N_ENCRYPTION_KEY=placeholder N8N_HOST=n8n.example.com WEBHOOK_URL=https://n8n.example.com/ \
             docker compose -f infra/omega-hosting/docker-compose.production.template.yml config >/tmp/prod-compose.out
 
