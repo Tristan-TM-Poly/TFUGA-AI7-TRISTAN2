@@ -1,0 +1,200 @@
+schema: omega-hosting-t/v1
+name: omega-hosting-t
+status: blueprint
+owner: Tristan-TM-Poly
+repository: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+
+mission:
+  one_line: "Publier vite les systèmes Tristan sans exposer secrets, IP sensible, données privées ou calcul lourd au mauvais endroit."
+  doctrine: "Hostinger comme façade publique et VPS léger; GitHub comme cerveau du code; Supabase/Postgres comme données; GPU/cloud spécialisé pour calcul lourd; OAK comme garde."
+
+layers:
+  public_layer:
+    purpose: "site, blog, pages produits, documentation publique"
+    allowed_hosts:
+      - hostinger_web
+      - hostinger_cloud
+      - vercel
+      - cloudflare_pages
+    allowed_assets:
+      - public_open
+      - public_marketing
+    forbidden_assets:
+      - confidential_ip
+      - private_personal
+      - regulated_sensitive
+      - secrets
+    oak_level: medium
+
+  code_layer:
+    purpose: "source de vérité code, docs, issues, PR, releases"
+    allowed_hosts:
+      - github
+    forbidden_assets:
+      - plaintext_secrets
+      - unfiltered_private_data
+    oak_level: high
+
+  automation_layer:
+    purpose: "n8n, webhooks, cron, agents légers"
+    allowed_hosts:
+      - hostinger_vps
+      - railway
+      - render
+      - fly_io
+    allowed_actions:
+      - read_public_data
+      - create_drafts
+      - create_github_issues
+      - low_risk_webhooks
+    approval_required_for:
+      - send_email
+      - publish_publicly
+      - payment
+      - legal_commitment
+      - contact_external_humans
+      - delete_data
+    oak_level: high
+
+  data_layer:
+    purpose: "Postgres, Auth, Storage, Vector, backups"
+    allowed_hosts:
+      - supabase
+      - managed_postgres
+      - encrypted_object_storage
+    forbidden_hosts:
+      - simple_shared_web_hosting
+    oak_level: critical
+
+  compute_layer:
+    purpose: "IA lourde, simulations, OCR/PDF massif, GPU"
+    allowed_hosts:
+      - cloud_gpu
+      - local_gpu
+      - dedicated_compute
+    forbidden_hosts:
+      - shared_web_hosting
+      - low_resource_vps
+    oak_level: high
+
+  oak_layer:
+    purpose: "classification, permissions, logs, rollback, preuves"
+    records:
+      - action_manifest
+      - risk_score
+      - approval_status
+      - proof_of_execution
+      - rollback_recipe
+      - incident_record
+    oak_level: critical
+
+asset_classes:
+  public_open:
+    publishable: true
+    examples: ["README", "page théorie filtrée", "article vulgarisé", "docs API publiques"]
+  public_marketing:
+    publishable: true
+    examples: ["landing page", "pitch public", "page produit sans secret"]
+  confidential_ip:
+    publishable: false
+    examples: ["invention brevetable", "algorithme propriétaire", "détails non déposés"]
+  private_personal:
+    publishable: false
+    examples: ["données personnelles", "emails", "calendrier", "identité privée"]
+  regulated_sensitive:
+    publishable: false
+    examples: ["santé", "finance", "juridique", "sécurité physique"]
+  secrets:
+    publishable: false
+    examples: ["API keys", "tokens", "passwords", "cookies", "private keys"]
+
+hostinger_fit:
+  web:
+    fit_score: 7
+    best_for:
+      - portfolio
+      - landing_pages
+      - blog
+      - documentation_public
+      - email_domain
+    not_for:
+      - gpu_compute
+      - critical_databases
+      - secrets_vault
+      - autonomous_sensitive_agents
+  cloud:
+    fit_score: 7
+    best_for:
+      - higher_traffic_sites
+      - wordpress
+      - public_apps_light
+    not_for:
+      - heavy_ai
+      - regulated_data_core
+  vps:
+    fit_score: 8
+    best_for:
+      - n8n
+      - webhooks
+      - dockerized_small_services
+      - cron_jobs
+      - internal_tools_light
+    duties:
+      - patching
+      - backups
+      - firewall
+      - ssl
+      - log_rotation
+      - secret_management
+
+minimum_vps_profile:
+  n8n_light:
+    vcpu: 2
+    ram_gb: 4
+    disk_gb: 40
+    notes: "Minimum pratique pour n8n + Postgres léger. Monter si workflows nombreux."
+  n8n_plus_agents:
+    vcpu: 4
+    ram_gb: 8
+    disk_gb: 80
+    notes: "Préférable pour webhooks, agents légers, logs et backups."
+
+risk_gates:
+  block_if:
+    - contains_plaintext_secret
+    - contains_unreviewed_personal_data
+    - reveals_patentable_details_without_ip_review
+    - autonomous_external_action_without_approval
+    - no_rollback_path
+    - no_backup_for_stateful_service
+  require_human_approval_if:
+    - sends_email
+    - charges_money
+    - signs_or_accepts_terms
+    - deletes_data
+    - contacts_external_people
+    - changes_public_reputation
+    - publishes_unreviewed_research_claim
+
+rollback_recipes:
+  public_site:
+    - revert_github_commit
+    - redeploy_previous_build
+    - purge_cache_if_needed
+  vps_n8n:
+    - stop_workflow
+    - restore_previous_docker_image
+    - restore_database_snapshot
+    - rotate_exposed_secrets
+  data_layer:
+    - freeze_writes
+    - restore_backup
+    - compare_integrity
+    - document_incident
+
+next_actions:
+  - "Créer la landing page Tristan Systems."
+  - "Ajouter un workflow secret-scan/OAK check."
+  - "Créer le schéma Supabase minimal assets/actions/oak_checks/deployments."
+  - "Créer un modèle GitHub Issue pour demande de déploiement."
+  - "Connecter formulaire public à création de draft, jamais à envoi direct."
