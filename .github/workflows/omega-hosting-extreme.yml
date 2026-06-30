@@ -1,0 +1,52 @@
+name: Ω-HOSTING-T Extreme
+
+on:
+  pull_request:
+    paths:
+      - "infra/omega-hosting/**"
+      - "tools/omega_hosting_t/**"
+      - ".github/workflows/omega-hosting-extreme.yml"
+  workflow_dispatch:
+
+jobs:
+  extreme-hardening-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile Python tools
+        run: |
+          python -m py_compile tools/omega_hosting_t/oak_hosting_gate.py
+          python -m py_compile tools/omega_hosting_t/prebuy_green_gate.py
+          python -m py_compile tools/omega_hosting_t/vps_readiness_doctor.py
+
+      - name: Run pre-buy green gate
+        run: python tools/omega_hosting_t/prebuy_green_gate.py
+
+      - name: Validate shell syntax
+        run: |
+          bash -n infra/omega-hosting/bootstrap_ubuntu_24_04.sh
+          bash -n infra/omega-hosting/backup_n8n_postgres.sh
+
+      - name: Validate compose templates render structurally
+        run: |
+          docker compose -f infra/omega-hosting/docker-compose.n8n.yml config >/tmp/n8n-compose.out
+          POSTGRES_PASSWORD=placeholder N8N_ENCRYPTION_KEY=placeholder N8N_HOST=n8n.example.com WEBHOOK_URL=https://n8n.example.com/ \
+            docker compose -f infra/omega-hosting/docker-compose.production.template.yml config >/tmp/prod-compose.out
+
+      - name: Validate JSON files
+        run: |
+          python -m json.tool infra/omega-hosting/oak_ledger_schema.json >/dev/null
+          python -m json.tool infra/omega-hosting/example_oak_ledger_entry.json >/dev/null
+
+      - name: Confirm hardening docs
+        run: |
+          test -s infra/omega-hosting/security_hardening.md
+          test -s infra/omega-hosting/purchase_decision_matrix.md
+          test -s infra/omega-hosting/post_purchase_runbook.md
