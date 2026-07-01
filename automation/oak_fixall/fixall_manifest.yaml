@@ -1,0 +1,101 @@
+schema_version: 0.1.0
+system: OMEGA_AUTO2_OAK_FIXALL_T
+status: oak_safe_scaffold
+owner_priority:
+  - Tristan-TM-Poly/*
+cycle:
+  - Observe
+  - Decide
+  - Act
+  - Verify
+  - Learn
+observe:
+  repos:
+    include_accessible: true
+    prioritize_owned: true
+  signals:
+    - open_prs
+    - draft_prs
+    - stale_branches
+    - queued_checks
+    - failing_checks
+    - missing_docs
+    - missing_tests
+    - missing_benchmarks
+    - duplicate_blockers
+    - newly_merged_work
+classifiers:
+  blockers:
+    - DRAFT_BLOCKER
+    - MERGEABLE_FALSE
+    - CI_RED
+    - CI_RED_PYTEST_MISSING
+    - CI_RED_NO_NETWORK
+    - EXTERNAL_STATUS_RED
+    - VERCEL_S881_RED
+    - SCOPE_MISMATCH
+    - LARGE_PR_NO_BODY
+    - CONFLICT_WITH_MAIN
+    - ABSENT_WORKFLOWS
+    - SENSITIVE_EXTERNAL_ACTION
+    - HUMAN_SCOPE_REQUIRED
+  safe_repair_types:
+    - docs
+    - tests
+    - schemas
+    - validators
+    - reports
+    - runbooks
+    - registry_updates
+    - conflict_preserving_synthesis_files
+    - bounded_fixtures
+    - no_network_smoke_tests
+    - ci_dependency_installation
+forbidden_actions:
+  - force_push
+  - delete_branch
+  - weaken_checks
+  - expose_secrets
+  - bypass_protections
+  - mark_draft_ready
+  - legal_submission
+  - financial_action
+  - public_sensitive_external_action
+  - send_email_or_messages_without_explicit_approval
+merge_gate:
+  required:
+    open: true
+    draft: false
+    mergeable: true
+    checks: green_or_clean
+    sensitive_risk: none
+    diff_risk: low
+    scope: coherent
+    head_sha_locked: true
+  reject_if:
+    - draft_true
+    - mergeable_false
+    - checks_red
+    - checks_queued
+    - workflows_absent_when_required
+    - external_required_status_red
+    - secrets_detected
+    - scope_mismatch
+    - broad_or_sensitive_without_approval
+decisions:
+  MERGE_NOW:
+    description: Merge only clean, low-risk, coherent PRs.
+  REPAIR_SAFE:
+    description: Apply additive, non-destructive fixes that preserve evidence.
+  WAIT_COOLDOWN:
+    description: Wait for checks, mergeability, or human draft intent.
+  BLOCK_M_MINUS:
+    description: Record repeated blocker and anti-repetition rule.
+  HUMAN_APPROVAL_REQUIRED:
+    description: Require explicit human approval for broad, ambiguous, sensitive, or external-action work.
+learn:
+  outputs:
+    - M_PLUS_success_patterns
+    - M_MINUS_blocker_patterns
+    - anti_repetition_rules
+    - next_safe_slice_candidates

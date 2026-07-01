@@ -1,0 +1,36 @@
+{
+  "repo": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+  "item_type": "pull_request",
+  "item_id": "hyperatlas-safe-extraction-example",
+  "head_sha": "example_head_sha",
+  "observed_state": {
+    "open": true,
+    "draft": false,
+    "mergeable": true,
+    "checks_state": "mixed",
+    "external_status_state": "red",
+    "scope_coherent": false,
+    "sensitive_risk": "medium"
+  },
+  "blockers": [
+    "CI_RED_NO_NETWORK",
+    "VERCEL_S881_RED",
+    "SCOPE_MISMATCH"
+  ],
+  "decision": "BLOCK_M_MINUS",
+  "oak_constraints": {
+    "non_destructive": true,
+    "no_secret_exposure": true,
+    "no_bypass": true,
+    "human_sensitive_safe": true
+  },
+  "next_action": "Create a small safe extraction slice with coherent bounded generators, no-network fixtures, validation docs, and synthesis notes. Preserve larger experimental material separately.",
+  "m_plus": [
+    "bounded deterministic generators prevent combinatorial CI failures",
+    "synthesis reports preserve experimental material without forcing broad merges"
+  ],
+  "m_minus": [
+    "do not merge a PR whose declared scope and diff scope disagree",
+    "do not treat a red required status as clean"
+  ]
+}

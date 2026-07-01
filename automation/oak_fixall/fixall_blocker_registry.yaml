@@ -1,0 +1,54 @@
+schema_version: 0.1.0
+registry: OMEGA_AUTO2_OAK_FIXALL_BLOCKERS
+blockers:
+  DRAFT_BLOCKER:
+    decision: WAIT_COOLDOWN
+    reason: Draft state is intentional human control. Do not mark ready automatically.
+    anti_repetition: Never merge or mark ready when draft=true.
+  MERGEABLE_FALSE:
+    decision: BLOCK_M_MINUS
+    reason: GitHub reports branch cannot be merged cleanly.
+    anti_repetition: Do not merge or force-update. Use synthesis file or human rebase/resolve.
+  CI_RED_PYTEST_MISSING:
+    decision: REPAIR_SAFE
+    reason: Workflow invokes pytest without installing it.
+    safe_fix: Add python -m pip install --upgrade pytest before pytest invocation.
+  CI_RED_NO_NETWORK:
+    decision: REPAIR_SAFE
+    reason: Tests must not depend on live network.
+    safe_fix: Add fixtures, mocks, cached examples, or no-network smoke tests.
+  ABSENT_WORKFLOWS:
+    decision: BLOCK_M_MINUS
+    reason: Absence of statuses is not evidence of success.
+    safe_fix: Add a narrow CI workflow or wait for checks to appear.
+  VERCEL_S881_RED:
+    decision: HUMAN_APPROVAL_REQUIRED
+    reason: External deployment/status context is red and may be repo-protection relevant.
+    anti_repetition: Do not ignore external red statuses unless a human explicitly scopes them out.
+  SCOPE_MISMATCH:
+    decision: BLOCK_M_MINUS
+    reason: PR title/body and diff contents disagree.
+    safe_fix: Add synthesis report, split safe slice, preserve experimental subtree separately.
+  LARGE_PR_NO_BODY:
+    decision: HUMAN_APPROVAL_REQUIRED
+    reason: Large diff without clear scope is not auditable.
+    safe_fix: Add PR body, runbook, risk notes, validation summary, and remaining blockers.
+  CONFLICT_WITH_MAIN:
+    decision: HUMAN_APPROVAL_REQUIRED
+    reason: Conflict resolution may require semantic choices.
+    safe_fix: Add conflict-preserving synthesis notes; do not overwrite.
+  SENSITIVE_EXTERNAL_ACTION:
+    decision: HUMAN_APPROVAL_REQUIRED
+    reason: Could affect money, law, health, safety, privacy, reputation, IP, public messaging, or humans.
+    anti_repetition: Dry-run only until explicit approval and rollback plan exist.
+known_patterns:
+  - pattern: pytest_command_not_found
+    m_plus_fix: install pytest explicitly in workflow
+  - pattern: pythonpath_import_failure
+    m_plus_fix: use PYTHONPATH=src when repo layout requires it
+  - pattern: tensor_explosion
+    m_plus_fix: bounded deterministic generator fixtures
+  - pattern: hidden_experimental_subtree
+    m_minus_rule: split experimental work into draft or synthesis PR
+  - pattern: absent_status_false_green
+    m_minus_rule: absent workflows are not green

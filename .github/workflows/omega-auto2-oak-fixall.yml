@@ -1,0 +1,64 @@
+name: Ω-AUTO2-OAK-FIXALL validation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/canon/OMEGA_AUTO2_OAK_FIXALL_T.md'
+      - 'automation/oak_fixall/**'
+      - '.github/workflows/omega-auto2-oak-fixall.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/canon/OMEGA_AUTO2_OAK_FIXALL_T.md'
+      - 'automation/oak_fixall/**'
+      - '.github/workflows/omega-auto2-oak-fixall.yml'
+
+jobs:
+  validate-fixall-scaffold:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate JSON and YAML scaffold
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          required = [
+              Path('docs/canon/OMEGA_AUTO2_OAK_FIXALL_T.md'),
+              Path('automation/oak_fixall/fixall_manifest.yaml'),
+              Path('automation/oak_fixall/fixall_blocker_registry.yaml'),
+              Path('automation/oak_fixall/fixall_decision.schema.json'),
+              Path('automation/oak_fixall/FIXALL_RUNBOOK.md'),
+              Path('automation/oak_fixall/examples/hyperatlas_safe_extraction.decision.json'),
+          ]
+          missing = [str(path) for path in required if not path.exists()]
+          if missing:
+              raise SystemExit(f'Missing required files: {missing}')
+
+          for path in [
+              Path('automation/oak_fixall/fixall_decision.schema.json'),
+              Path('automation/oak_fixall/examples/hyperatlas_safe_extraction.decision.json'),
+          ]:
+              json.loads(path.read_text(encoding='utf-8'))
+
+          for path in [
+              Path('automation/oak_fixall/fixall_manifest.yaml'),
+              Path('automation/oak_fixall/fixall_blocker_registry.yaml'),
+          ]:
+              text = path.read_text(encoding='utf-8')
+              for needle in ['schema_version', 'decision', 'BLOCK_M_MINUS']:
+                  if needle not in text:
+                      raise SystemExit(f'{path} missing expected marker: {needle}')
+
+          canon = Path('docs/canon/OMEGA_AUTO2_OAK_FIXALL_T.md').read_text(encoding='utf-8')
+          for marker in ['MERGE_NOW', 'REPAIR_SAFE', 'WAIT_COOLDOWN', 'BLOCK_M_MINUS', 'HUMAN_APPROVAL_REQUIRED']:
+              if marker not in canon:
+                  raise SystemExit(f'Canon missing decision marker: {marker}')
+
+          print('Ω-AUTO2-OAK-FIXALL scaffold validation passed')
+          PY

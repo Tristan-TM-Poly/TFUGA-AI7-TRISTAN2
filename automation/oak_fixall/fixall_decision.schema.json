@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega-auto2-oak-fixall-decision.schema.json",
+  "title": "Omega Auto2 OAK FixAll Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "repo",
+    "item_type",
+    "item_id",
+    "observed_state",
+    "blockers",
+    "decision",
+    "oak_constraints",
+    "next_action"
+  ],
+  "properties": {
+    "repo": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
+    "item_type": {"type": "string", "enum": ["pull_request", "branch", "workflow", "repository"]},
+    "item_id": {"type": "string"},
+    "head_sha": {"type": "string"},
+    "observed_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "open": {"type": "boolean"},
+        "draft": {"type": "boolean"},
+        "mergeable": {"type": ["boolean", "null"]},
+        "checks_state": {"type": "string", "enum": ["green", "red", "queued", "absent", "mixed", "unknown"]},
+        "external_status_state": {"type": "string", "enum": ["green", "red", "absent", "unknown", "not_applicable"]},
+        "scope_coherent": {"type": "boolean"},
+        "sensitive_risk": {"type": "string", "enum": ["none", "low", "medium", "high", "unknown"]}
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "DRAFT_BLOCKER",
+          "MERGEABLE_FALSE",
+          "CI_RED",
+          "CI_RED_PYTEST_MISSING",
+          "CI_RED_NO_NETWORK",
+          "EXTERNAL_STATUS_RED",
+          "VERCEL_S881_RED",
+          "SCOPE_MISMATCH",
+          "LARGE_PR_NO_BODY",
+          "CONFLICT_WITH_MAIN",
+          "ABSENT_WORKFLOWS",
+          "SENSITIVE_EXTERNAL_ACTION",
+          "HUMAN_SCOPE_REQUIRED"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["MERGE_NOW", "REPAIR_SAFE", "WAIT_COOLDOWN", "BLOCK_M_MINUS", "HUMAN_APPROVAL_REQUIRED"]
+    },
+    "oak_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["non_destructive", "no_secret_exposure", "no_bypass", "human_sensitive_safe"],
+      "properties": {
+        "non_destructive": {"type": "boolean"},
+        "no_secret_exposure": {"type": "boolean"},
+        "no_bypass": {"type": "boolean"},
+        "human_sensitive_safe": {"type": "boolean"}
+      }
+    },
+    "next_action": {"type": "string"},
+    "m_plus": {"type": "array", "items": {"type": "string"}},
+    "m_minus": {"type": "array", "items": {"type": "string"}}
+  }
+}
