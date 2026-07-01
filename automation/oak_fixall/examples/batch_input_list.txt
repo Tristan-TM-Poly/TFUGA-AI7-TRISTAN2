@@ -1,0 +1,4 @@
+automation/oak_fixall/examples/clean_merge_candidate.decision.json
+automation/oak_fixall/examples/draft_wait_candidate.decision.json
+automation/oak_fixall/examples/red_ci_blocker.decision.json
+automation/oak_fixall/examples/hyperatlas_safe_extraction.decision.json
