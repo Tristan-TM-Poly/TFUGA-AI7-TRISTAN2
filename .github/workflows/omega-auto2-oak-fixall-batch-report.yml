@@ -1,0 +1,28 @@
+name: FixAll batch report validation
+
+on:
+  pull_request:
+    paths:
+      - 'automation/oak_fixall/**'
+      - '.github/workflows/omega-auto2-oak-fixall-batch-report.yml'
+
+jobs:
+  validate-batch-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run FixAll tests
+        run: |
+          python -m pip install --upgrade pytest
+          python -m pytest -q automation/oak_fixall/tests
+      - name: Generate dry-run batch report
+        run: |
+          python automation/oak_fixall/batch_report.py \
+            automation/oak_fixall/examples/hyperatlas_safe_extraction.decision.json \
+            --json-out reports/oak_fixall/example_summary.json \
+            --md-out reports/oak_fixall/example_summary.md
+          test -s reports/oak_fixall/example_summary.json
+          test -s reports/oak_fixall/example_summary.md
