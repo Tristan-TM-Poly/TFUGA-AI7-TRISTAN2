@@ -1,0 +1,23 @@
+name: FixAll executable validation
+
+on:
+  pull_request:
+    paths:
+      - 'automation/oak_fixall/**'
+      - '.github/workflows/omega-auto2-oak-fixall-executable.yml'
+
+jobs:
+  validate-executable-layer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run validator tests
+        run: |
+          python -m pip install --upgrade pytest
+          python -m pytest -q automation/oak_fixall/tests
+      - name: Validate example decision
+        run: |
+          python automation/oak_fixall/validate_decision.py automation/oak_fixall/examples/hyperatlas_safe_extraction.decision.json
