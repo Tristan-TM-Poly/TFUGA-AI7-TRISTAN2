@@ -1,0 +1,69 @@
+registry: "M_MINUS_SERVICES_QC"
+version: "0.1"
+purpose: >
+  Transformer les fiascos, erreurs et signaux faibles des services publics en règles
+  anti-répétition obligatoires pour les prochains projets.
+
+entries:
+  - id: "M-001"
+    pattern: "Lancement massif sans tests complets"
+    anti_rule: "Déploiement progressif obligatoire avec OAKGate charge, accessibilité, sécurité et rollback"
+    severity: "critique"
+    detects:
+      - "tests incomplets"
+      - "absence de pilote"
+      - "go-live big bang"
+  - id: "M-002"
+    pattern: "Coûts, risques ou retards non communiqués clairement"
+    anti_rule: "Tableau de bord coûts-risques-livrables avec signalement indépendant"
+    severity: "critique"
+    detects:
+      - "indicateurs verts malgré risques rouges"
+      - "livrables abandonnés sans décision explicite"
+  - id: "M-003"
+    pattern: "Dépendance excessive au fournisseur externe"
+    anti_rule: "Architecture critique, données, documentation et capacité d'audit conservées par l'État"
+    severity: "critique"
+    detects:
+      - "verrouillage fournisseur"
+      - "faible expertise interne"
+      - "contrat opaque"
+  - id: "M-004"
+    pattern: "Citoyens forcés dans un canal numérique unique"
+    anti_rule: "Omnicanal obligatoire : web, téléphone, comptoir, accompagnement et recours humain"
+    severity: "élevé"
+    detects:
+      - "fermeture comptoir"
+      - "pas d'alternative téléphone"
+      - "personnes vulnérables exclues"
+  - id: "M-005"
+    pattern: "Statut de demande opaque"
+    anti_rule: "Tout service critique doit exposer où est la demande, pourquoi ça bloque, délai prévu et recours"
+    severity: "élevé"
+    detects:
+      - "aucun suivi"
+      - "appel nécessaire pour connaître l'état"
+      - "délai inconnu"
+  - id: "M-006"
+    pattern: "Formulaires redondants et preuves redemandées"
+    anti_rule: "Préremplissage, réutilisation contrôlée des données et minimisation des pièces demandées"
+    severity: "moyen"
+    detects:
+      - "même adresse demandée plusieurs fois"
+      - "documents déjà détenus par l'État redemandés"
+  - id: "M-007"
+    pattern: "Absence de plan de continuité"
+    anti_rule: "Chaque service critique doit avoir un mode dégradé, papier/agent et rollback opérationnel"
+    severity: "critique"
+    detects:
+      - "panne bloquante"
+      - "aucun contournement"
+      - "files massives"
+  - id: "M-008"
+    pattern: "IA ou automatisation sans explication ni recours"
+    anti_rule: "IA seulement comme orientation/vérification; décision sensible avec humain responsable et appel"
+    severity: "critique"
+    detects:
+      - "décision opaque"
+      - "source non citée"
+      - "pas d'appel"

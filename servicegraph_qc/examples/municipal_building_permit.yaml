@@ -1,0 +1,111 @@
+service_id: "municipal_building_permit"
+service_name: "Municipalité - permis de construction/rénovation"
+owner_organization: "Municipalité locale"
+public_need: "Permettre à un citoyen ou entrepreneur de demander et suivre un permis municipal sans opacité, retours inutiles et délais imprévisibles"
+
+channels:
+  - online
+  - phone
+  - city_counter
+  - mail
+
+citizen_segments:
+  - propriétaire résidentiel
+  - entrepreneur
+  - personne âgée
+  - nouvel acheteur
+  - petite entreprise locale
+  - citoyen sans compétence technique en plans
+
+legal_rules:
+  - zonage
+  - usage du bâtiment
+  - plans requis
+  - normes de sécurité
+  - patrimoine si applicable
+  - environnement si applicable
+  - paiement de frais
+
+data_nodes:
+  - property_address
+  - cadastral_lot
+  - applicant_identity
+  - zoning_rules
+  - plans
+  - inspection_status
+  - payment_status
+
+process_steps:
+  - comprendre admissibilité
+  - rassembler plans et documents
+  - déposer demande
+  - payer frais
+  - révision urbanisme
+  - correction si incomplet
+  - inspection si applicable
+  - délivrance permis
+
+friction_points:
+  - langage réglementaire difficile
+  - documents ou plans demandés plusieurs fois
+  - statut de demande non visible
+  - délai opaque
+  - règles de zonage difficiles à trouver
+  - difficulté à parler au bon responsable
+
+risks:
+  - travaux retardés
+  - coûts privés imprévus
+  - refus mal compris
+  - favoritisme perçu
+  - surcharge des inspecteurs
+  - incohérence entre règlements et portail
+
+oak_tests:
+  - test propriétaire sans expertise technique
+  - test entrepreneur pressé par échéancier
+  - test projet patrimonial
+  - test demande incomplète
+  - test suivi de statut
+  - test carte zonage
+  - test appel humain
+  - test inspection terrain
+
+success_metrics:
+  - délai médian par type de permis
+  - taux de demandes complètes au premier dépôt
+  - nombre de corrections demandées
+  - taux de statut visible
+  - satisfaction citoyenne
+  - temps d'escalade vers responsable
+
+human_recourses:
+  - comptoir municipal
+  - inspecteur ou urbaniste
+  - appel téléphonique
+  - comité applicable
+  - plainte ou révision administrative
+
+m_minus_rules:
+  - ne pas laisser le citoyen deviner les règles applicables
+  - afficher statut et responsable de l'étape
+  - expliquer refus et corrections en langage clair
+  - publier délais par type de permis
+
+metric_inputs:
+  resolution: 0.60
+  accessibility: 0.52
+  transparency: 0.44
+  security: 0.70
+  human_recourse: 0.68
+  interoperability: 0.35
+  cost_control: 0.50
+
+penalties:
+  outage_risk: 0.20
+  no_human_channel: 0.10
+  no_rollback: 0.25
+  no_accessibility_test: 0.55
+  opaque_status: 0.78
+  vendor_lock_in: 0.40
+  repeated_documents: 0.80
