@@ -1,0 +1,27 @@
+schema_version: 0.1.0
+module: OMEGA_AUTO2_OAK_FIXALL_BATCH_REPORT
+status: dry_run_only
+inputs:
+  - decision_json_files
+outputs:
+  - json_summary
+  - markdown_summary
+guards:
+  - no_github_api_calls
+  - no_branch_mutations
+  - no_merge_authorization
+  - local_files_only
+required_live_merge_checks:
+  - open_true
+  - draft_false
+  - mergeable_true
+  - checks_green
+  - scope_coherent
+  - risk_low
+  - head_sha_locked
+m_plus:
+  - local batch summaries reduce repeated manual blocker inspection
+  - fixture-driven tests preserve OAK invariants
+m_minus:
+  - generated reports are not merge permissions
+  - stale decision files must not override live GitHub state
