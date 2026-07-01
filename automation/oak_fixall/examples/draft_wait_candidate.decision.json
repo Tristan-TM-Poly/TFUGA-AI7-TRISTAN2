@@ -1,0 +1,30 @@
+{
+  "repo": "Tristan-TM-Poly/example",
+  "item_type": "pull_request",
+  "item_id": "draft-wait-candidate-example",
+  "head_sha": "example_head_sha",
+  "observed_state": {
+    "open": true,
+    "draft": true,
+    "mergeable": true,
+    "checks_state": "green",
+    "external_status_state": "absent",
+    "scope_coherent": true,
+    "sensitive_risk": "none"
+  },
+  "blockers": [
+    "DRAFT_BLOCKER"
+  ],
+  "decision": "WAIT_COOLDOWN",
+  "oak_constraints": {
+    "non_destructive": true,
+    "no_secret_exposure": true,
+    "no_bypass": true,
+    "human_sensitive_safe": true
+  },
+  "next_action": "Wait for human draft intent. Do not mark ready automatically.",
+  "m_plus": [],
+  "m_minus": [
+    "draft items are not merge-ready"
+  ]
+}
