@@ -1,0 +1,30 @@
+{
+  "repo": "Tristan-TM-Poly/example",
+  "item_type": "pull_request",
+  "item_id": "red-ci-blocker-example",
+  "head_sha": "example_head_sha",
+  "observed_state": {
+    "open": true,
+    "draft": false,
+    "mergeable": true,
+    "checks_state": "red",
+    "external_status_state": "absent",
+    "scope_coherent": true,
+    "sensitive_risk": "none"
+  },
+  "blockers": [
+    "CI_RED"
+  ],
+  "decision": "BLOCK_M_MINUS",
+  "oak_constraints": {
+    "non_destructive": true,
+    "no_secret_exposure": true,
+    "no_bypass": true,
+    "human_sensitive_safe": true
+  },
+  "next_action": "Record M_MINUS and repair additively before any merge attempt.",
+  "m_plus": [],
+  "m_minus": [
+    "red CI is not clean even when mergeable is true"
+  ]
+}
