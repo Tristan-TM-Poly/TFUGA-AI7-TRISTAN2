@@ -1,0 +1,10 @@
+{
+  "modules": 12,
+  "probe_passed": 12,
+  "needs_review": 0,
+  "tensor_shape": [12, 48, 7],
+  "top_capabilities": [["oak", 7.680829072681705], ["CVCD", 5.03510947368421], ["EXP", 5.03510947368421], ["FTPCI", 5.03510947368421], ["HGFM", 5.03510947368421], ["LOG", 5.03510947368421], ["prime_tensor", 5.03510947368421], ["consensus", 4.993442807017544]],
+  "hgfm_nodes": 76,
+  "hgfm_hyperedges": 63,
+  "elapsed_s": 0.19219183921813965
+}
