@@ -1,0 +1,171 @@
+version: 0.1.0
+name: omega_universal_auto2_os_t
+status: oak_safe_scaffold
+mother_equation:
+  - Univers
+  - Observation
+  - Compression LOG
+  - Tensorisation HGFM
+  - CVCD
+  - OAK
+  - Decision
+  - Simulation
+  - Bounded artifact
+  - Measure
+  - Repair
+  - Learn
+  - Canon
+  - New capability
+statuses:
+  allowed:
+    - AUTO_DO
+    - AUTO_REPAIR_SAFE
+    - AUTO_WAIT_CHECKS
+    - AUTO_WAIT_DRAFT
+    - AUTO_BLOCK_M_MINUS
+    - AUTO_BLOCK_SENSITIVE_SCOPE
+    - AUTO_NOISE_SUPPRESS
+  forbidden_default_changes:
+    - force history rewrite
+    - remove branch protections
+    - reduce required checks
+    - publish private information
+    - expose credentials
+    - perform irreversible external operations
+    - treat red or pending checks as green
+engine_contract:
+  required_methods:
+    - observe
+    - compress
+    - plan
+    - simulate
+    - produce_bounded_artifact
+    - verify
+    - learn
+    - teach
+  required_metadata:
+    - owner
+    - domain
+    - allowed_artifacts
+    - blocked_scopes
+    - oak_gates
+    - rollback
+    - m_plus
+    - m_minus
+engine_families:
+  repository:
+    - name: AIT-GitHub
+      domain: github
+      allowed_artifacts: [docs, tests, validators, schemas, reports, safe_prs]
+      blocked_scopes: [history_rewrite, protection_bypass, draft_transition]
+      oak_gates: [checks_green, non_draft, mergeable_clean, bounded_diff, no_sensitive_scope]
+      rollback: revert_pr_or_repair_pr
+      m_plus: []
+      m_minus: [mergeable_false_blocks_merge, draft_blocks_merge]
+    - name: AIT-CI
+      domain: continuous_integration
+      allowed_artifacts: [log_summary, failure_signature, safe_patch, rerun_request]
+      blocked_scopes: [check_weakening, failure_hiding]
+      oak_gates: [logs_observed, cause_hypothesis_recorded, patch_bounded]
+      rollback: revert_ci_patch
+      m_plus: []
+      m_minus: [red_or_pending_checks_block_merge]
+  memory:
+    - name: AIT-M-Plus
+      domain: success_memory
+      allowed_artifacts: [success_pattern, reusable_template, receipt]
+      blocked_scopes: [claim_inflation, uncertainty_erasure]
+      oak_gates: [evidence_present, reproducible_pattern]
+      rollback: supersede_receipt
+      m_plus: [green_ci_safe_merge_pattern]
+      m_minus: []
+    - name: AIT-M-Minus
+      domain: negative_memory
+      allowed_artifacts: [failure_signature, detector_plan, anti_repetition_rule]
+      blocked_scopes: [duplicate_noise, unsupported_blame]
+      oak_gates: [new_information, cause_or_residue_recorded]
+      rollback: annotate_superseded
+      m_plus: []
+      m_minus: [duplicate_reports_are_noise]
+  knowledge:
+    - name: AIT-Rosette
+      domain: pdf_to_latex_code_theory
+      allowed_artifacts: [structure_summary, latex_skeleton, code_stub, theory_card]
+      blocked_scopes: [copyright_overcopying, unsupported_claims]
+      oak_gates: [source_attribution, uncertainty_marked]
+      rollback: remove_generated_packet
+      m_plus: []
+      m_minus: []
+    - name: AIT-OSS
+      domain: open_source_digest
+      allowed_artifacts: [license_scan, provenance_record, pattern_summary, safe_digest]
+      blocked_scopes: [unlicensed_reuse, missing_attribution]
+      oak_gates: [license_gate, provenance_gate, security_gate]
+      rollback: remove_unsafe_digest
+      m_plus: []
+      m_minus: [no_license_blocks_direct_reuse]
+  theory:
+    - name: AIT-Theory
+      domain: canonization
+      allowed_artifacts: [canon, schema, oakbench, prototype_seed]
+      blocked_scopes: [speculation_as_proof]
+      oak_gates: [status_distinction, falsifiability, residues_recorded]
+      rollback: demote_claim_status
+      m_plus: []
+      m_minus: [metaphor_is_not_proof]
+    - name: AIT-Math
+      domain: mathematical_claims
+      allowed_artifacts: [definitions, examples, counterexample_search_plan, tests]
+      blocked_scopes: [visual_pattern_as_theorem]
+      oak_gates: [definitions_clear, proof_status_explicit, numerical_uncertainty]
+      rollback: mark_conjecture
+      m_plus: []
+      m_minus: [visual_coincidence_not_proof]
+  build:
+    - name: AIT-Compiler
+      domain: idea_to_artifact
+      allowed_artifacts: [docs, schema, tests, cli_stub]
+      blocked_scopes: [unbounded_external_operation]
+      oak_gates: [bounded_scope, tests_present, rollback_present]
+      rollback: revert_generated_artifact
+      m_plus: []
+      m_minus: []
+    - name: AIT-Green
+      domain: green_by_construction
+      allowed_artifacts: [validator, preflight, green_score, failure_signature]
+      blocked_scopes: [hidden_failures, skipped_tests]
+      oak_gates: [explicit_checks, reproducible_commands]
+      rollback: revert_green_patch
+      m_plus: [checks_green_by_construction]
+      m_minus: [green_must_not_mean_hidden_checks]
+  risk:
+    - name: AIT-OAK
+      domain: verification_gate
+      allowed_artifacts: [risk_classification, block_record, evidence_request, uncertainty_score]
+      blocked_scopes: [sensitive_scope_auto_allow]
+      oak_gates: [risk_tensor_complete, decision_recorded]
+      rollback: stricter_gate
+      m_plus: []
+      m_minus: [sensitive_scope_blocks_auto_merge]
+    - name: AIT-IP
+      domain: intellectual_property
+      allowed_artifacts: [public_private_triage, prior_art_query_pack, redacted_packet]
+      blocked_scopes: [private_invention_public_detail]
+      oak_gates: [ip_class, redaction, provenance]
+      rollback: remove_public_detail
+      m_plus: []
+      m_minus: [ip_uncertainty_blocks_public_action]
+seed_m_plus:
+  - id: green_ci_safe_merge_pattern
+    statement: OAKBench plus tests plus docs plus CI green plus IP and public-action guards can be safely merged when diff is bounded.
+  - id: declared_projection_validation
+    statement: Canon-enriched axes can keep extra entries while validators use declared effective Top64 projections.
+seed_m_minus:
+  - id: mergeable_false_blocks_merge
+    statement: mergeable=false blocks automatic merge.
+  - id: draft_blocks_merge
+    statement: draft=true blocks readiness transition and merge.
+  - id: sensitive_scope_blocks_auto_merge
+    statement: Drive, credentials, scheduled workflows, public or external actions, and IP-sensitive scope block auto-merge even with green checks.
+  - id: duplicate_reports_are_noise
+    statement: Do not add duplicate blocker reports unless new evidence or repair is included.
