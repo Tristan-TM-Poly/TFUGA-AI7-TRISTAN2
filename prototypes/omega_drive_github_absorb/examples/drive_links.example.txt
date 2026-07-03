@@ -1,0 +1,9 @@
+# Ω-DRIVE-GITHUB-ABSORB-T example input
+# Do not commit private or sensitive Google Drive links into a public repository.
+# Replace these placeholders locally only.
+
+https://drive.google.com/file/d/EXAMPLE_FILE_ID/view?usp=sharing
+https://drive.google.com/drive/folders/EXAMPLE_FOLDER_ID
+https://docs.google.com/document/d/EXAMPLE_DOC_ID/edit
+https://docs.google.com/spreadsheets/d/EXAMPLE_SHEET_ID/edit
+https://docs.google.com/presentation/d/EXAMPLE_SLIDES_ID/edit
