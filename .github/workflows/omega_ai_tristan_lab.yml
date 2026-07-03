@@ -1,0 +1,31 @@
+name: Ω-AI-Tristan Lab
+
+on:
+  pull_request:
+    paths:
+      - "omega_ai_tristan_lab/**"
+      - ".github/workflows/omega_ai_tristan_lab.yml"
+  push:
+    branches:
+      - omega-ai-tristan-lab
+    paths:
+      - "omega_ai_tristan_lab/**"
+      - ".github/workflows/omega_ai_tristan_lab.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package
+        working-directory: omega_ai_tristan_lab
+        run: python -m pip install -e ".[dev]"
+      - name: Run tests
+        working-directory: omega_ai_tristan_lab
+        run: python -m pytest -q
+      - name: Smoke test CLI
+        working-directory: omega_ai_tristan_lab
+        run: python -m omega_ai_tristan_lab.cli --idea "Agent IA OAK-safe pour transformer une idée en prototype" --pretty
