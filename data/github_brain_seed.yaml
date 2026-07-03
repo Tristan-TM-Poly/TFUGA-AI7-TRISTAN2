@@ -1,0 +1,106 @@
+name: omega_github_brain_t
+status: oak_safe_scaffold
+lobes:
+  - name: Math lobe
+    domain: mathematics
+    repositories:
+      - Tristan-TM-Poly/TFACC
+    oak_role: theorem hygiene and proof status separation
+    green_focus: [definitions, proof_dependencies, counterexamples, theorem_index]
+  - name: Energy lobe
+    domain: energy systems
+    repositories:
+      - Tristan-TM-Poly/PEFA-FractalEnergySystem
+    oak_role: conservation, units, residuals, validation protocols
+    green_focus: [energy_balance, assumptions, validation, toy_tests]
+  - name: Kernel lobe
+    domain: cognitive operating system
+    repositories:
+      - Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+    oak_role: canon, green-by-construction, memory
+    green_focus: [canon, manifests, tests, m_plus, m_minus]
+  - name: Harness lobe
+    domain: github planning
+    repositories:
+      - Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2
+    oak_role: inventory, repository atlas, safe planning
+    green_focus: [dry_run, repository_manifest, atlas_generation, fail_closed]
+green_tensor_axes:
+  - documentation
+  - tests
+  - ci
+  - benchmarks
+  - schemas
+  - json
+  - yaml
+  - python
+  - type_hints
+  - coverage
+  - complexity
+  - security
+  - oak
+  - cvcd
+  - hgfm
+  - rollback
+  - observability
+  - reproducibility
+  - m_plus
+  - m_minus
+theory_card_fields:
+  - name
+  - version
+  - author
+  - domain
+  - subdomains
+  - relations
+  - dependencies
+  - hypotheses
+  - status
+  - oak
+  - cvcd
+  - hgfm
+  - validation
+  - experiments
+  - proofs
+  - residues
+  - risks
+  - uncertainties
+  - rollback
+  - next_experiment
+  - next_pr
+repository_genome_fields:
+  - mission
+  - role
+  - interfaces
+  - dependencies
+  - standards
+  - quality
+  - oak
+  - m_plus
+  - m_minus
+  - history
+  - roadmap
+  - modules
+  - risks
+oak_gates:
+  - status_separation
+  - provenance_required
+  - bounded_scope
+  - rollback_note
+  - green_checks_explicit
+m_plus:
+  - id: pr_210_cognitive_os_canon
+    statement: Cognitive OS canon integrated through docs, structured data, and dependency-free tests.
+  - id: pr_209_oakbench_scoring
+    statement: OAKBench scoring becomes useful when paired with tests and explicit gates.
+  - id: pr_25_effective_projection_validation
+    statement: Rich canon can coexist with bounded effective validation views.
+m_minus:
+  - id: draft_blocks_merge
+    statement: Draft pull requests are observation targets, not automatic merge candidates.
+  - id: mergeable_false_blocks_merge
+    statement: Non-mergeable pull requests are blockers, not merge candidates.
+  - id: sensitive_scope_blocks_automatic_integration
+    statement: Sensitive scope requires explicit gates and verification before integration.
+  - id: metaphor_not_proof
+    statement: Brain and organism language remains metaphor unless formalized and validated.
