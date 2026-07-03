@@ -2,7 +2,7 @@
 
 A small OAK-safe scaffold for deeptech intelligence, IP triage,
 prototype routing, revenue action extraction, review packet generation,
-and OAKBench action scoring.
+OAKBench action scoring, and public-safe GitHub issue drafting.
 """
 
 from .core import (
@@ -35,6 +35,11 @@ from .oakbench import (
     rank_signals,
     run_oakbench,
 )
+from .github_issue_generator import (
+    GitHubIssueDraft,
+    build_github_issue_draft,
+    build_many_github_issue_drafts,
+)
 
 __all__ = [
     "EvidenceLevel",
@@ -61,4 +66,7 @@ __all__ = [
     "OAKBenchWeights",
     "rank_signals",
     "run_oakbench",
+    "GitHubIssueDraft",
+    "build_github_issue_draft",
+    "build_many_github_issue_drafts",
 ]
