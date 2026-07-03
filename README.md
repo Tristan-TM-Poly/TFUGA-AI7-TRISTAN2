@@ -23,6 +23,7 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `AI-7`: metabolism of production, verification, testing, analysis, optimization, reproduction, integration, crystallization, stabilization, documentation, and promotion.
 - `Ω-DeepTech Intelligence Forge`: OAK-safe layer for deeptech signals -> IP triage -> prototype tasks -> revenue routing -> GitHub artifacts.
 - `Ω-ECC-T`: OAK-safe error-correction lab: Hamming(7,4), channel models, Syndrome-CVCD, HyperParityGraph-T, M⁻ hooks, and deterministic OAKBench.
+- `Ω-PDF-HYPERGRAPH-GITHUB-T`: OAK-safe universal absorber for PDF/ZIP/text/code corpora -> chunks -> claim candidates -> HGFM/CVCD hypergraph -> GitHub-ready artifacts.
 
 ## Repository structure
 
@@ -32,6 +33,7 @@ schemas/    JSON schemas for DCT++, research cards, HGFM, status vectors.
 sage_tristan/ Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
 omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
 ecc_tristan/ Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
+omega_prof_poly_t/ Omega absorb systems, including the universal corpus absorber.
 tests/      Unit tests for the executable core.
 examples/   Example branches and DCT++ packets.
 reports/    Generated audit and publication reports.
@@ -52,6 +54,24 @@ python -m pytest
 python -m sage_tristan.demo
 python examples/omega_deeptech_forge_demo.py
 python examples/omega_ecc_t_demo.py
+python examples/omega_universal_absorber_demo.py
+```
+
+Universal corpus absorption dry-run:
+
+```bash
+omega-corpus-absorb path/to/corpus_or_zip --output-dir generated/omega_corpus
+```
+
+Outputs:
+
+```text
+manifest.json
+chunks.jsonl
+claims.jsonl
+hypergraph.json
+hypergraph.graphml
+oak_report.json
 ```
 
 ## Current canon layer
@@ -68,6 +88,7 @@ Immediate canonizable modules:
 - ArchitectureAI7
 - Ω-DeepTech Intelligence Forge
 - Ω-ECC-T / Error Correction Codes de Tristan
+- Ω-PDF-HYPERGRAPH-GITHUB-T / AIT-Frédéric
 
 Crystallizable modules:
 
@@ -80,5 +101,8 @@ Crystallizable modules:
 - HyperParityGraph-T
 - Syndrome-CVCD
 - BayesDecoder_T
+- PDF Rosette Extractor
+- Claim-Evidence-Residue Graph
+- Drive↔GitHub OAK Sync
 
 Exploratory branches stay labeled as exploratory until proven, simulated, or experimentally validated.
