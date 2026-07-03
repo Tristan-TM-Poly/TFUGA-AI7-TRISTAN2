@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/omega_absorber_manifest.schema.json",
+  "title": "Omega Absorber Manifest v1",
+  "type": "object",
+  "required": ["schema", "input", "mode", "objects"],
+  "properties": {
+    "schema": {
+      "const": "omega_absorber_manifest_v1"
+    },
+    "input": {
+      "type": "string"
+    },
+    "mode": {
+      "const": "dry_run_oak_safe"
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "path", "suffix", "sha256", "size_bytes"],
+        "properties": {
+          "source_id": {"type": "string"},
+          "path": {"type": "string"},
+          "suffix": {"type": "string"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "size_bytes": {"type": "integer", "minimum": 0},
+          "container": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}
