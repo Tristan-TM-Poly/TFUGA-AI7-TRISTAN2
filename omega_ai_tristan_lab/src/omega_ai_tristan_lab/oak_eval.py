@@ -47,6 +47,10 @@ class OAKEvaluator:
             negative_memory.append("No tests: keep status at IDEA/MODEL, not proof.")
         if not card.risks:
             negative_memory.append("No explicit risks: add failure modes before public claims.")
+        if not negative_memory:
+            negative_memory.append(
+                "Provisional pass only: keep searching for counterexamples, baselines, and hidden failure modes."
+            )
 
         score = max(0.0, min(1.0, score))
         status = self._infer_status(score, card)
