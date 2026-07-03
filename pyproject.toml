@@ -1,12 +1,15 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "2.1.0"
+version = "2.2.0"
 description = "Omega absorb public research tooling"
 requires-python = ">=3.10"
 
 [project.scripts]
 omega-absorb = "omega_prof_poly_t.cli:main"
 omega-corpus-absorb = "omega_prof_poly_t.universal_absorber:main"
+omega-absorb-query = "omega_prof_poly_t.absorb_query:main"
+omega-drive-manifest = "omega_prof_poly_t.drive_manifest_adapter:main"
+omega-mminus-absorb = "omega_prof_poly_t.mminus_absorber:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
