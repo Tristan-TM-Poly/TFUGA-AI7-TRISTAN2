@@ -38,7 +38,7 @@ class TheoryPrototypeFactory:
         ]
         risks = [
             "Hallucinated capabilities if claims are not benchmarked.",
-            "IP leakage if patentable details are published before classification.",
+            "Original or confidential details should be classified before public release.",
         ]
         revenue = [
             "Consulting/audit if the prototype solves a real workflow.",
