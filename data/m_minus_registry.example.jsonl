@@ -1,0 +1,4 @@
+{"risk_id": "M-OSS-001", "pattern": "Treating open source as permissionless copy-paste", "countermeasure": "LicenseGate before integration; provenance ledger before reuse.", "severity": "critical"}
+{"risk_id": "M-OSS-002", "pattern": "Publishing secret findings in public PRs/issues", "countermeasure": "Redact by default; never expose actual tokens or private credentials.", "severity": "critical"}
+{"risk_id": "M-OSS-003", "pattern": "StackOverflow snippet reuse without attribution/share-alike review", "countermeasure": "Use explanation/pattern-first mode; direct snippet only with attribution and compatibility.", "severity": "high"}
+{"risk_id": "M-OSS-004", "pattern": "Ignoring rate limits/backoff and causing API throttling", "countermeasure": "Cache, conditional requests, one-minute semantic interval for StackExchange.", "severity": "medium"}
