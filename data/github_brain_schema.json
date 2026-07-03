@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/github_brain_schema.json",
+  "title": "Omega GitHub Brain Seed",
+  "type": "object",
+  "required": ["name", "status", "lobes", "green_tensor_axes", "theory_card_fields", "repository_genome_fields", "oak_gates", "m_plus", "m_minus"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "enum": ["oak_safe_scaffold", "prototype", "measured", "validated"]},
+    "lobes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "domain", "repositories", "oak_role", "green_focus"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "domain": {"type": "string", "minLength": 1},
+          "repositories": {"type": "array", "items": {"type": "string"}},
+          "oak_role": {"type": "string", "minLength": 1},
+          "green_focus": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "green_tensor_axes": {"type": "array", "minItems": 5, "items": {"type": "string"}},
+    "theory_card_fields": {"type": "array", "minItems": 5, "items": {"type": "string"}},
+    "repository_genome_fields": {"type": "array", "minItems": 5, "items": {"type": "string"}},
+    "oak_gates": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "m_plus": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "m_minus": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}
