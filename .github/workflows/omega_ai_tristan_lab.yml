@@ -26,6 +26,16 @@ jobs:
       - name: Run tests
         working-directory: omega_ai_tristan_lab
         run: python -m pytest -q
-      - name: Smoke test CLI
+      - name: Smoke test CLI JSON
         working-directory: omega_ai_tristan_lab
         run: python -m omega_ai_tristan_lab.cli --idea "Agent IA OAK-safe pour transformer une idée en prototype" --pretty
+      - name: Smoke test CLI workspace
+        working-directory: omega_ai_tristan_lab
+        run: |
+          python -m omega_ai_tristan_lab.cli \
+            --idea "Agent OAK-safe qui ingère un manifeste et produit des rapports" \
+            --ingest omega_ai_manifesto.md docs/curriculum.md \
+            --context-query "OAK IP revenue prototype" \
+            --output-dir omega_runs
+          test -n "$(find omega_runs -name report.json -print -quit)"
+          test -n "$(find omega_runs -name report.md -print -quit)"
