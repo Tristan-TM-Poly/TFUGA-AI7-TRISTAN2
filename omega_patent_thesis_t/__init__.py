@@ -6,6 +6,7 @@ claim tree, review-risk map, prototype plan, and value hypothesis.
 
 from .seed import PatentThesisSeed, example_seed
 from .claim_tree import claim_tree
+from .gitpack import gitpack_paths
 from .risk import risk_level
 from .value_map import value_map
 
@@ -13,6 +14,7 @@ __all__ = [
     "PatentThesisSeed",
     "claim_tree",
     "example_seed",
+    "gitpack_paths",
     "risk_level",
     "value_map",
 ]
