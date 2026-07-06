@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_gov_qc_t/product_card.schema.json",
+  "title": "Ω-GOV-QC-T ProductCard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["product_id", "name", "mission", "target_users", "input_data", "outputs", "risk_level", "maturity", "oak_requirements"],
+  "properties": {
+    "product_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "mission": {"type": "string", "minLength": 1},
+    "target_users": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "input_data": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "outputs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "risk_level": {"type": "string", "enum": ["low", "medium", "high", "blocked"]},
+    "maturity": {"type": "string", "enum": ["P0", "P1", "P2", "P3", "P4", "P5"]},
+    "oak_requirements": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "monetization_hypothesis": {"type": "string"},
+    "next_milestone": {"type": "string"},
+    "is_demo_ready": {"type": "boolean"},
+    "requires_strict_review": {"type": "boolean"},
+    "notes": {"type": "string"},
+    "metadata": {"type": "object"}
+  }
+}
