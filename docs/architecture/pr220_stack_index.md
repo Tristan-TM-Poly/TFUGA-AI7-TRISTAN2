@@ -21,15 +21,18 @@
 
 This PR is intentionally draft-only. It creates a large OAK-safe architecture and should be split into focused follow-up PRs after review.
 
-## Smoke-test progress
+## Smoke-test and CI progress
 
 - Import smoke test exists: `tests/test_pr220_import_smoke.py`
 - Focused matrix exists: `configs/pr220_focused_test_matrix.yaml`
-- Progress report exists: `docs/oak_reports/pr220_import_smoke_progress.md`
+- Import smoke progress report exists: `docs/oak_reports/pr220_import_smoke_progress.md`
+- Focused CI workflow exists: `.github/workflows/pr220-focused-tests.yml`
+- Focused CI progress report exists: `docs/oak_reports/pr220_focused_ci_progress.md`
 
 ## Safe next work
 
-- Run focused pytest groups in a controlled CI or local sandbox.
+- Observe focused CI results when available.
+- Convert failing groups into self-repair packets and focused patch plans.
 - Split packages by layer after review.
 - Normalize fallback filenames created due to connector filtering.
 - Keep no-auto-merge policy.
