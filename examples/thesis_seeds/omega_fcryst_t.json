@@ -1,0 +1,49 @@
+{
+  "id": "OMEGA_FCRYST_T",
+  "name": "Ω-FCRYST-T / Théorie des Cristaux Fractals de Tristan",
+  "status": "B",
+  "domain": [
+    "materials-science",
+    "crystallography",
+    "fractals",
+    "diffraction",
+    "simulation"
+  ],
+  "core_axiom": "A fractal crystal is a system where order persists partially across scales, defects become informative residues, holes become operators, and spectral signatures compress the structure.",
+  "cvcd_invariants": [
+    "symmetry must specify space metric tolerance and scale",
+    "diffraction prediction is separated from experimental proof",
+    "holes are modeled as operators only after geometry and boundary conditions are explicit",
+    "classical crystal and quasicrystal limits remain reference baselines"
+  ],
+  "oak_risks": [
+    "presenting visual motifs as crystallographic proof",
+    "mixing exact point groups with approximate fractal symmetries",
+    "claiming material properties without simulation or fabrication",
+    "ignoring manufacturability and metrology limits"
+  ],
+  "code_targets": [
+    "fractal_lattice_generator",
+    "fractal_point_group_analyzer",
+    "diffraction_simulator_stub",
+    "symmetry_residue_metrics",
+    "materials_oakbench"
+  ],
+  "git_targets": [
+    "docs_fractal_crystals",
+    "schema_fractal_crystal",
+    "python_simulator_package",
+    "simulation_examples",
+    "oak_status_report"
+  ],
+  "venture_targets": [
+    "materials_discovery_tool",
+    "metamaterial_design_studio",
+    "mems_cpu_geometry_library",
+    "photonics_pattern_ip"
+  ],
+  "m_minus": [
+    "Fractal symmetry language remains Status B until generator, metric, tolerance, scale and diffraction tests are explicit."
+  ],
+  "notes": "Unifies HFH-T, FPG-T and fractal crystallography under strict OAK separation between motif, model, simulation and proof."
+}

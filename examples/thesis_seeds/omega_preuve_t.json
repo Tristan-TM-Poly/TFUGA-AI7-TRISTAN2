@@ -1,0 +1,51 @@
+{
+  "id": "OMEGA_PREUVE_T",
+  "name": "Ω-PREUVE-T / Evidence Graphs for Fraud, Corruption and Crime Detection",
+  "status": "B",
+  "domain": [
+    "evidence-analysis",
+    "anti-fraud",
+    "audit",
+    "legaltech",
+    "graph-systems"
+  ],
+  "core_axiom": "A proof system is a chain-of-custody hypergraph where each claim must remain attached to source, timestamp, uncertainty, counter-hypothesis, legal boundary, and OAK status.",
+  "cvcd_invariants": [
+    "source provenance is mandatory",
+    "claim evidence and inference are separated",
+    "chain-of-custody is append-only",
+    "false-positive cost is explicit",
+    "human legal review remains a gate for accusations"
+  ],
+  "oak_risks": [
+    "defamation or wrongful accusation",
+    "privacy violation",
+    "treating correlation as guilt",
+    "evidence contamination",
+    "unsafe autonomous reporting"
+  ],
+  "code_targets": [
+    "evidence_graph_schema",
+    "claim_evidence_linker",
+    "chain_of_custody_ledger",
+    "contradiction_detector",
+    "legal_oak_report"
+  ],
+  "git_targets": [
+    "docs_evidence_graphs",
+    "schemas_evidence",
+    "red_team_examples",
+    "audit_trail_tests",
+    "safety_policy_report"
+  ],
+  "venture_targets": [
+    "audit_intelligence_platform",
+    "investigative_research_os",
+    "compliance_graph_api",
+    "journalistic_evidence_assistant"
+  ],
+  "m_minus": [
+    "The system must never label a person guilty; it can only organize evidence, uncertainty and hypotheses for qualified review."
+  ],
+  "notes": "High-risk branch requiring strict legal, privacy, reputational and human-sovereignty gates."
+}

@@ -1,0 +1,51 @@
+{
+  "id": "OMEGA_ENERGY_T",
+  "name": "Ω-ENERGY-T / Systèmes Énergétiques de Tristan",
+  "status": "B",
+  "domain": [
+    "energy-systems",
+    "simulation",
+    "control",
+    "power-electronics",
+    "safety"
+  ],
+  "core_axiom": "Energy is not created; it is captured, converted, stored, routed, synchronized, filtered, recovered partially, or dissipated with explicit losses and safety boundaries.",
+  "cvcd_invariants": [
+    "energy conservation is mandatory",
+    "losses and efficiency are measured",
+    "thermal and electrical safety are explicit",
+    "baselines include ideal and non-ideal models",
+    "claims above 100 percent efficiency are rejected unless classified as measurement error or boundary mismatch"
+  ],
+  "oak_risks": [
+    "free-energy claims",
+    "unsafe high-voltage or battery experimentation",
+    "missing thermal balance",
+    "confusing resonance with net energy gain",
+    "publishing patent-sensitive details prematurely"
+  ],
+  "code_targets": [
+    "microgrid_simulator",
+    "loss_accounting_module",
+    "mppt_controller_stub",
+    "storage_model",
+    "energy_oakbench"
+  ],
+  "git_targets": [
+    "docs_energy_systems",
+    "schemas_energy_flow",
+    "simulation_examples",
+    "safety_report",
+    "benchmark_results"
+  ],
+  "venture_targets": [
+    "low_voltage_microgrid_lab",
+    "energy_digital_twin",
+    "power_loss_audit_tool",
+    "education_simulator"
+  ],
+  "m_minus": [
+    "No energy-free or over-unity claim can be promoted; every gain claim must include boundary, units, losses and measurement uncertainty."
+  ],
+  "notes": "Priority MVP is a safe low-voltage simulated microgrid before any physical energy hardware work."
+}

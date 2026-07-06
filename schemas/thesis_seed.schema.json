@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/thesis_seed.schema.json",
+  "title": "ThesisSeed",
+  "description": "Canonical seed for expanding a Tristan theory into a thesis, code package, OAKBench, Git artifact, IP brief, and venture map.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "status",
+    "domain",
+    "core_axiom",
+    "cvcd_invariants",
+    "oak_risks",
+    "code_targets",
+    "git_targets",
+    "venture_targets"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 3
+    },
+    "status": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D", "E", "F", "G"]
+    },
+    "domain": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "core_axiom": {
+      "type": "string",
+      "minLength": 10
+    },
+    "cvcd_invariants": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "oak_risks": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "code_targets": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "git_targets": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "venture_targets": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "m_minus": {
+      "type": "array",
+      "items": {"type": "string"},
+      "default": []
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

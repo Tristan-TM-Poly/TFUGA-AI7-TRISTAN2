@@ -1,0 +1,51 @@
+{
+  "id": "OMEGA_TRANSFORM_T",
+  "name": "Ω-TRANSFORM-T / Transformées de Tristan",
+  "status": "C",
+  "domain": [
+    "mathematics",
+    "signal-processing",
+    "compression",
+    "software",
+    "anomaly-detection"
+  ],
+  "core_axiom": "A transform is a LOG/EXP bridge that compresses raw objects into multi-scale invariants and decompresses them into reconstruction, prediction, detection, or generation.",
+  "cvcd_invariants": [
+    "reconstruction error is measured",
+    "energy or information conservation is tracked when applicable",
+    "compression ratio is explicit",
+    "multi-scale stability is benchmarked",
+    "residuals feed M-"
+  ],
+  "oak_risks": [
+    "claiming FFWT superiority without benchmark",
+    "confusing fertile fractal weighting with proof",
+    "hiding reconstruction loss",
+    "overfitting anomaly examples"
+  ],
+  "code_targets": [
+    "omega_transforms_package",
+    "ffwt_module",
+    "ffwtn_module",
+    "compression_benchmark",
+    "anomaly_detection_benchmark",
+    "visualization_demo"
+  ],
+  "git_targets": [
+    "docs_transform_theory",
+    "python_package",
+    "pytest_suite",
+    "oakbench_results",
+    "negative_memory_report"
+  ],
+  "venture_targets": [
+    "signal_compression_toolkit",
+    "scientific_anomaly_detection_api",
+    "industrial_sensor_monitoring",
+    "research_license"
+  ],
+  "m_minus": [
+    "Naive fractal weighting did not yet beat simple FWT on reconstruction in an earlier local OAK test."
+  ],
+  "notes": "Priority seed for FFWT, FFWT-N, HAC-CVCD, compression, denoising, classification, prediction and anomaly detection."
+}
