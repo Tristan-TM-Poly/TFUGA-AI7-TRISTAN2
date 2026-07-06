@@ -1,0 +1,4 @@
+id,name,type,region,updated_at
+1,Demo Service,service,Demo Region,2026-07-06
+2,Demo Dataset,dataset,Demo Region,2026-07-06
+3,Demo Municipality,municipality,Demo Region,
