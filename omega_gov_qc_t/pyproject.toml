@@ -10,6 +10,9 @@ requires-python = ">=3.10"
 authors = [{ name = "Tristan-TM-Poly" }]
 readme = "README.md"
 
+[project.scripts]
+omega-gov-qc = "omega_gov_qc_t.cli:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
