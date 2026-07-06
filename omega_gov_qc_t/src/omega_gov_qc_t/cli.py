@@ -11,6 +11,7 @@ from .municipal_report import MunicipalReportBuilder
 from .oak_issue_bundle_mapper import OAKIssueBundleMapper
 from .oak_issue_generator import OAKIssueGenerator
 from .oak_issue_labels import label_manifest_json
+from .oak_severity_report import OAKSeverityReportBuilder
 
 
 def _write_text(path: Path, content: str) -> None:
@@ -61,6 +62,20 @@ def build_parser() -> argparse.ArgumentParser:
     bundle_issues_md.add_argument("--bundle", required=True, help="Input ExportBundle JSON path.")
     bundle_issues_md.add_argument("--out", default="reports/generated/oak_issue_drafts_from_bundle.md", help="Output Markdown path.")
 
+    severity_json = sub.add_parser(
+        "severity-json",
+        help="Generate local OAK severity report JSON from a local ExportBundle JSON file.",
+    )
+    severity_json.add_argument("--bundle", required=True, help="Input ExportBundle JSON path.")
+    severity_json.add_argument("--out", default="reports/generated/oak_severity_report.json", help="Output JSON path.")
+
+    severity_md = sub.add_parser(
+        "severity-md",
+        help="Generate local OAK severity report Markdown from a local ExportBundle JSON file.",
+    )
+    severity_md.add_argument("--bundle", required=True, help="Input ExportBundle JSON path.")
+    severity_md.add_argument("--out", default="reports/generated/oak_severity_report.md", help="Output Markdown path.")
+
     labels = sub.add_parser("labels-json", help="Generate suggested local label manifest as JSON.")
     labels.add_argument("--out", default="reports/generated/oak_issue_labels.json", help="Output JSON path.")
 
@@ -82,6 +97,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         _write_text(out_dir / "oak_issue_drafts.json", issue_bundle.to_json())
         _write_text(out_dir / "oak_issue_drafts.md", issue_bundle.to_markdown())
         _write_text(out_dir / "oak_issue_labels.json", label_manifest_json())
+        severity = OAKSeverityReportBuilder().from_json_text(artifacts.bundle_json)
+        _write_text(out_dir / "oak_severity_report.json", severity.to_json())
+        _write_text(out_dir / "oak_severity_report.md", severity.to_markdown())
         return 0
 
     if args.command == "bundle":
@@ -113,6 +131,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "issues-from-bundle-md":
         bundle = OAKIssueBundleMapper().from_json_text(_read_text(Path(args.bundle)))
         _write_text(Path(args.out), bundle.to_markdown())
+        return 0
+
+    if args.command == "severity-json":
+        report = OAKSeverityReportBuilder().from_json_text(_read_text(Path(args.bundle)))
+        _write_text(Path(args.out), report.to_json())
+        return 0
+
+    if args.command == "severity-md":
+        report = OAKSeverityReportBuilder().from_json_text(_read_text(Path(args.bundle)))
+        _write_text(Path(args.out), report.to_markdown())
         return 0
 
     if args.command == "labels-json":
