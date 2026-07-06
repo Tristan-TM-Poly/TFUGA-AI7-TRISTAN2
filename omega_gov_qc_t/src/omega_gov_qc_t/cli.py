@@ -8,6 +8,7 @@ from typing import Sequence
 
 from .graph_exports import GraphExporter
 from .municipal_report import MunicipalReportBuilder
+from .oak_issue_generator import OAKIssueGenerator
 
 
 def _write_text(path: Path, content: str) -> None:
@@ -34,6 +35,12 @@ def build_parser() -> argparse.ArgumentParser:
     report = sub.add_parser("report", help="Generate demo Markdown report.")
     report.add_argument("--out", default="reports/generated/municipal_demo_report.md", help="Output Markdown path.")
 
+    issues_json = sub.add_parser("issues-json", help="Generate local OAK issue drafts as JSON.")
+    issues_json.add_argument("--out", default="reports/generated/oak_issue_drafts.json", help="Output JSON path.")
+
+    issues_md = sub.add_parser("issues-md", help="Generate local OAK issue drafts as Markdown.")
+    issues_md.add_argument("--out", default="reports/generated/oak_issue_drafts.md", help="Output Markdown path.")
+
     return parser
 
 
@@ -41,6 +48,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     artifacts = MunicipalReportBuilder().build_demo()
+    issue_bundle = OAKIssueGenerator().from_demo_artifacts(artifacts)
 
     if args.command == "demo":
         out_dir = Path(args.out)
@@ -48,6 +56,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         _write_text(out_dir / "municipal_demo_bundle.json", artifacts.bundle_json)
         graphml = GraphExporter().to_graphml(artifacts.graph).content
         _write_text(out_dir / "municipal_demo.graphml", graphml)
+        _write_text(out_dir / "oak_issue_drafts.json", issue_bundle.to_json())
+        _write_text(out_dir / "oak_issue_drafts.md", issue_bundle.to_markdown())
         return 0
 
     if args.command == "bundle":
@@ -61,6 +71,14 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "report":
         _write_text(Path(args.out), artifacts.report_markdown)
+        return 0
+
+    if args.command == "issues-json":
+        _write_text(Path(args.out), issue_bundle.to_json())
+        return 0
+
+    if args.command == "issues-md":
+        _write_text(Path(args.out), issue_bundle.to_markdown())
         return 0
 
     parser.error(f"unknown command: {args.command}")
