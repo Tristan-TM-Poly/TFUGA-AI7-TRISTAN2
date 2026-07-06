@@ -1,0 +1,13 @@
+{
+  "patent_id": "EXAMPLE-PATENT-T",
+  "title": "Example technical document thesis seed",
+  "status": "unknown",
+  "domains": ["software", "analysis"],
+  "core_problem": "Convert a technical document into a structured review package.",
+  "core_solution": "Extract claim summaries, risks, prototype targets, and value hypotheses.",
+  "independent_claims": ["A system for converting a technical record into a structured review package."],
+  "dependent_claims": ["The package includes prototype, benchmark, and value sections."],
+  "prototype_targets": ["parser", "report", "demo"],
+  "business_targets": ["research assistant", "portfolio scanner"],
+  "oak_risks": ["status unknown", "requires expert review", "prototype not validated"]
+}
