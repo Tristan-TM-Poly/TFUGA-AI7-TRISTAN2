@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/canon_node.schema.json",
+  "title": "CanonNode",
+  "description": "A typed node in the Tristan CanonGraph.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["node_id", "title", "node_type", "reality_level", "proof_level", "canon_rank", "status"],
+  "properties": {
+    "node_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "node_type": {
+      "type": "string",
+      "enum": ["idea", "theory", "file", "tool", "test", "proof", "error", "prototype", "pull_request", "risk", "source", "measurement", "residue", "roadmap"]
+    },
+    "reality_level": {"type": "string", "pattern": "^R([0-9]|10)_"},
+    "proof_level": {"type": "string", "pattern": "^P([0-9]|10)_"},
+    "canon_rank": {"type": "string", "pattern": "^C([0-9]|10)_"},
+    "status": {"type": "string", "enum": ["raw", "draft", "testing", "quarantined", "deprecated", "active", "reinforced"]},
+    "paths": {"type": "array", "items": {"type": "string"}},
+    "oak_notes": {"type": "array", "items": {"type": "string"}}
+  }
+}
