@@ -117,7 +117,6 @@ def build_demo_artifacts() -> InfraDemoArtifacts:
             public_dependency=3,
             climate_exposure=2,
             maintenance_debt=3,
-            evidence_quality=0 if False else 0,
             notes="Demo risk signal only.",
         ),
         InfraRiskTensor(
