@@ -3,6 +3,7 @@
 from .asset_model import AssetNode
 from .demo_builder import InfraDemoArtifacts, build_demo_artifacts
 from .evidence import EvidenceGraph, EvidenceItem
+from .graph_exports import GraphMLExporter
 from .infra_graph import DependencyEdge, InfraGraph
 from .json_exporter import InfraExportBundle, JsonExporter
 from .maintenance import MaintenanceSignal
@@ -17,6 +18,7 @@ __all__ = [
     "DependencyEdge",
     "EvidenceGraph",
     "EvidenceItem",
+    "GraphMLExporter",
     "InfraDemoArtifacts",
     "InfraExportBundle",
     "InfraGraph",
