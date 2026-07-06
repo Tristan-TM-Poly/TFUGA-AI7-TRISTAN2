@@ -7,7 +7,7 @@ OAK-safe InfrastructureGraph Quebec MVP.
 Model public, private and mixed infrastructure as a safe, review-first graph:
 
 ```text
-assets -> dependencies -> evidence -> risks -> maintenance -> resilience -> report -> bundle
+assets -> dependencies -> evidence -> risks -> maintenance -> resilience -> report -> bundle -> graphml
 ```
 
 ## Safety posture
@@ -28,6 +28,7 @@ This package uses demo or authorized data only. It does not fetch live data by d
 - `MarkdownReportFactory`
 - `JsonExporter`
 - `InfraExportBundle`
+- `GraphMLExporter`
 - `build_demo_artifacts`
 
 ## CLI
@@ -36,6 +37,7 @@ This package uses demo or authorized data only. It does not fetch live data by d
 omega-infra-qc demo --out reports/generated/omega_infra_qc
 omega-infra-qc report --out reports/generated/infra_qc_demo_report.md
 omega-infra-qc bundle --out reports/generated/infra_qc_demo_bundle.json
+omega-infra-qc graphml --out reports/generated/infra_qc_demo.graphml
 ```
 
 ## Example use
@@ -55,9 +57,14 @@ The demo builder generates:
 ```text
 infra_qc_demo_report.md
 infra_qc_demo_bundle.json
+infra_qc_demo.graphml
 ```
 
 These are public-safe fictional/generalized artifacts, not real infrastructure assessments.
+
+## Public-safe GraphML
+
+`GraphMLExporter` redacts review/restricted/critical asset labels by default. Use `public_safe=False` only for authorized internal review contexts.
 
 ## OAK rule
 
