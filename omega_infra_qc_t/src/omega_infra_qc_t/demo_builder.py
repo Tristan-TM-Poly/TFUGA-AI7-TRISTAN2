@@ -7,6 +7,7 @@ from typing import Any, Dict
 
 from .asset_model import AssetNode
 from .evidence import EvidenceGraph, EvidenceItem
+from .graph_exports import GraphMLExporter
 from .infra_graph import DependencyEdge, InfraGraph
 from .json_exporter import InfraExportBundle, JsonExporter
 from .maintenance import MaintenanceSignal
@@ -21,6 +22,7 @@ from .source_registry import SourceRecord, SourceRegistry
 class InfraDemoArtifacts:
     report_markdown: str
     bundle_json: str
+    graphml: str
     metadata: Dict[str, Any]
 
 
@@ -190,5 +192,6 @@ def build_demo_artifacts() -> InfraDemoArtifacts:
     return InfraDemoArtifacts(
         report_markdown=report.to_markdown(),
         bundle_json=JsonExporter().export_bundle(bundle, public_safe=True),
+        graphml=GraphMLExporter().export(graph, public_safe=True),
         metadata={"asset_count": graph.quality_report()["asset_count"], "security_status": gate.status},
     )
