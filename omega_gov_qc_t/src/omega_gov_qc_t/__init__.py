@@ -3,8 +3,10 @@
 from .dataset_health import DatasetHealthEngine, DatasetHealthReport, DatasetRecord
 from .evidence import EvidenceGraph, EvidenceItem
 from .gov_graph import GovEdge, GovGraph, GovNode
+from .graph_exports import GraphExportResult, GraphExporter
 from .json_exporter import ExportBundle, JsonExporter
 from .m_minus import MMinusEvent, MMinusRegister
+from .municipal_report import MunicipalDemoArtifacts, MunicipalReportBuilder
 from .oak_gate import GateResult, OAKGate, OAKReport
 from .opendata_ingestor import IngestionResult, OpenDataIngestor
 from .product_factory import ProductCard, ProductFactory
@@ -25,11 +27,15 @@ __all__ = [
     "GovGraph",
     "GovNode",
     "GovReport",
+    "GraphExportResult",
+    "GraphExporter",
     "IngestionResult",
     "JsonExporter",
     "MMinusEvent",
     "MMinusRegister",
     "MarkdownReportFactory",
+    "MunicipalDemoArtifacts",
+    "MunicipalReportBuilder",
     "OAKGate",
     "OAKReport",
     "OpenDataIngestor",
