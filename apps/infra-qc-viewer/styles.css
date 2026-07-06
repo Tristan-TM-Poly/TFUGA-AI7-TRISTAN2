@@ -1,0 +1,261 @@
+:root {
+  --bg: #090b10;
+  --panel: #11151d;
+  --panel-2: #171d27;
+  --text: #f4efe7;
+  --muted: #aeb7c5;
+  --line: #273142;
+  --fire: #ff5b35;
+  --forest: #56b37f;
+  --gold: #d8b46a;
+  --blue: #8fb7ff;
+  --danger: #ff7373;
+  --radius: 18px;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255, 91, 53, 0.18), transparent 34rem),
+    radial-gradient(circle at top right, rgba(86, 179, 127, 0.13), transparent 32rem),
+    var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.hero,
+main,
+footer {
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.hero {
+  padding: 72px 0 32px;
+}
+
+.eyebrow {
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: clamp(3rem, 10vw, 7rem);
+  line-height: 0.92;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  margin-bottom: 12px;
+}
+
+.hero-text {
+  max-width: 820px;
+  color: var(--muted);
+  font-size: 1.18rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 91, 53, 0.6);
+  background: var(--fire);
+  color: #1a0c07;
+  text-decoration: none;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.button.secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--line);
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.card,
+.panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent), var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.card {
+  padding: 18px;
+}
+
+.card.accent {
+  border-color: rgba(255, 91, 53, 0.6);
+}
+
+.card strong {
+  display: block;
+  font-size: 1.75rem;
+  margin: 4px 0 6px;
+}
+
+.label {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.panel {
+  margin: 18px 0;
+  padding: 24px;
+}
+
+.section-title {
+  margin-bottom: 18px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  color: var(--gold);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+td {
+  color: var(--muted);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.cards.compact {
+  grid-template-columns: 1fr;
+}
+
+.metric-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.metric-card h3 {
+  margin: 0 0 10px;
+}
+
+.badge {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: rgba(143, 183, 255, 0.12);
+  color: var(--blue);
+  border: 1px solid rgba(143, 183, 255, 0.28);
+}
+
+.badge.medium,
+.badge.planned {
+  color: var(--gold);
+  border-color: rgba(216, 180, 106, 0.35);
+  background: rgba(216, 180, 106, 0.12);
+}
+
+.badge.pass,
+.badge.low,
+.badge.monitor {
+  color: var(--forest);
+  border-color: rgba(86, 179, 127, 0.35);
+  background: rgba(86, 179, 127, 0.12);
+}
+
+.badge.high,
+.badge.urgent,
+.badge.critical,
+.badge.block {
+  color: var(--danger);
+  border-color: rgba(255, 115, 115, 0.35);
+  background: rgba(255, 115, 115, 0.12);
+}
+
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 6px 0 0;
+}
+
+.oak ul {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+footer {
+  color: var(--muted);
+  padding: 40px 0 60px;
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .status-grid,
+  .two-col,
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 48px;
+  }
+}
