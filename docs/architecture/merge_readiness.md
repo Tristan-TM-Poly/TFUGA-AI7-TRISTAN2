@@ -7,6 +7,8 @@ PR #220 is a draft hyperstructure. It is not treated as merge-ready by this note
 ## Readiness checklist
 
 - Import smoke test plan exists.
+- Import smoke test file exists: `tests/test_pr220_import_smoke.py`.
+- Focused test matrix exists: `configs/pr220_focused_test_matrix.yaml`.
 - Layer index exists.
 - Tool-to-layer map exists.
 - Test-to-tool map exists.
@@ -17,8 +19,8 @@ PR #220 is a draft hyperstructure. It is not treated as merge-ready by this note
 
 ## Current classification
 
-`audit_ready`, not `merge_ready`.
+`import_smoke_planned`, not `merge_ready`.
 
 ## Next safe move
 
-Add import smoke testing and focused CI checks before any ready-for-review transition.
+Run focused pytest groups in a controlled CI or local sandbox before any ready-for-review or merge transition.
