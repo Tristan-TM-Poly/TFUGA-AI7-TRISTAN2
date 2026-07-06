@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Infra QC Viewer — InfrastructureGraph Quebec</title>
+    <meta
+      name="description"
+      content="Static OAK-safe viewer for InfrastructureGraph Quebec demo assets, risks, maintenance, resilience and evidence."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <p class="eyebrow">Ω-INFRA-QC-T / InfrastructureGraph Quebec</p>
+      <h1>Infra QC Viewer</h1>
+      <p class="hero-text">
+        A public-safe interface that turns a generalized infrastructure bundle into visible assets,
+        risks, maintenance signals, resilience scenarios and OAK limits.
+      </p>
+      <div class="hero-actions">
+        <a href="../../reports/examples/infra_qc_public_demo/" class="button">Open demo pack</a>
+        <a href="../../docs/products/INFRA_OAK_AUDIT_EXPRESS.md" class="button secondary">Infra-OAK Audit Express</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="status-grid" aria-label="Status summary">
+        <article class="card accent">
+          <span class="label">Security Gate</span>
+          <strong id="security-status">Loading</strong>
+          <p id="security-note">Loading demo bundle…</p>
+        </article>
+        <article class="card">
+          <span class="label">Assets</span>
+          <strong id="asset-count">—</strong>
+          <p>Generalized infrastructure nodes.</p>
+        </article>
+        <article class="card">
+          <span class="label">Dependencies</span>
+          <strong id="dependency-count">—</strong>
+          <p>Public-safe graph edges.</p>
+        </article>
+        <article class="card">
+          <span class="label">Public safe</span>
+          <strong id="public-safe">—</strong>
+          <p>Default display mode.</p>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <p class="eyebrow">Assets</p>
+          <h2>Infrastructure nodes</h2>
+        </div>
+        <div id="assets" class="table-wrap"></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <p class="eyebrow">Risks</p>
+          <h2>Risk tensors</h2>
+        </div>
+        <div id="risks" class="cards"></div>
+      </section>
+
+      <section class="panel two-col">
+        <div>
+          <div class="section-title">
+            <p class="eyebrow">Maintenance</p>
+            <h2>Priority signals</h2>
+          </div>
+          <div id="maintenance" class="cards compact"></div>
+        </div>
+        <div>
+          <div class="section-title">
+            <p class="eyebrow">Resilience</p>
+            <h2>Scenario summaries</h2>
+          </div>
+          <div id="scenarios" class="cards compact"></div>
+        </div>
+      </section>
+
+      <section class="panel two-col">
+        <div>
+          <div class="section-title">
+            <p class="eyebrow">Sources</p>
+            <h2>Source registry</h2>
+          </div>
+          <div id="sources" class="cards compact"></div>
+        </div>
+        <div>
+          <div class="section-title">
+            <p class="eyebrow">Evidence</p>
+            <h2>Evidence items</h2>
+          </div>
+          <div id="evidence" class="cards compact"></div>
+        </div>
+      </section>
+
+      <section class="panel oak">
+        <p class="eyebrow">OAK limits</p>
+        <h2>What this viewer is not</h2>
+        <ul>
+          <li>Not a final engineering, operational, legal or authority decision.</li>
+          <li>Not a publication channel for sensitive infrastructure details.</li>
+          <li>Not a replacement for qualified review and authorization.</li>
+          <li>Not proof of market validation or guaranteed revenue.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        The code is a hypothesis. The test is the fire. The proof is the passage.
+        The company is a responsibility.
+      </p>
+    </footer>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
