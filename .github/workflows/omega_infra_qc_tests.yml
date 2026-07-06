@@ -1,0 +1,38 @@
+name: omega-infra-qc-tests
+
+on:
+  pull_request:
+    paths:
+      - "omega_infra_qc_t/**"
+      - "docs/canon/OMEGA_INFRA_QC_T.md"
+      - "docs/roadmaps/INFRA_QC_PUBLIC_PRIVATE_MVP.md"
+      - "docs/roadmaps/INFRA_QC_V0_2_CLI_CI_EXPORT.md"
+      - "docs/ops/INFRA_QC_OAK_SECURITY_GATE.md"
+      - "docs/products/INFRA_QC_PRODUCT_FACTORY.md"
+      - "docs/public_site/INFRA_QC_PAGE_COPY.md"
+      - ".github/workflows/omega_infra_qc_tests.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e omega_infra_qc_t pytest
+      - name: Run tests
+        run: pytest omega_infra_qc_t
+      - name: Generate demo artifacts
+        run: omega-infra-qc demo --out reports/generated/omega_infra_qc
+      - name: Generate individual GraphML artifact
+        run: omega-infra-qc graphml --out reports/generated/omega_infra_qc/infra_qc_demo_individual.graphml
+      - name: Upload demo artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-infra-qc-demo-artifacts
+          path: reports/generated/omega_infra_qc

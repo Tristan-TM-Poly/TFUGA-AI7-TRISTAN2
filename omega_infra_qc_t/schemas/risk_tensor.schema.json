@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_infra_qc_t/risk_tensor.schema.json",
+  "title": "Infrastructure RiskTensor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["risk_id", "asset_id"],
+  "properties": {
+    "risk_id": {"type": "string", "minLength": 1},
+    "asset_id": {"type": "string", "minLength": 1},
+    "physical_condition": {"type": "integer", "minimum": 0, "maximum": 5},
+    "service_criticality": {"type": "integer", "minimum": 0, "maximum": 5},
+    "public_dependency": {"type": "integer", "minimum": 0, "maximum": 5},
+    "climate_exposure": {"type": "integer", "minimum": 0, "maximum": 5},
+    "cyber_dependency": {"type": "integer", "minimum": 0, "maximum": 5},
+    "supply_chain_dependency": {"type": "integer", "minimum": 0, "maximum": 5},
+    "maintenance_debt": {"type": "integer", "minimum": 0, "maximum": 5},
+    "financial_pressure": {"type": "integer", "minimum": 0, "maximum": 5},
+    "legal_regulatory_risk": {"type": "integer", "minimum": 0, "maximum": 5},
+    "equity_access_risk": {"type": "integer", "minimum": 0, "maximum": 5},
+    "privacy_security_sensitivity": {"type": "integer", "minimum": 0, "maximum": 5},
+    "reversibility": {"type": "integer", "minimum": 0, "maximum": 5},
+    "notes": {"type": "string"},
+    "metadata": {"type": "object"}
+  }
+}
