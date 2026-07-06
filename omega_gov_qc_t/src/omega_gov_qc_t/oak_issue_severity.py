@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, asdict
 import json
-from typing import Any, Dict, Iterable, Tuple
+from typing import Any, Dict, Tuple
 
 
 @dataclass(frozen=True)
@@ -63,34 +63,58 @@ class OAKIssueSeverityPolicy:
         return SeverityDecision(priority=priority, status=status, reasons=tuple(reasons or ["no_high_severity_dataset_signal"]))
 
     def risk_register(self, risks: Dict[str, Any]) -> SeverityDecision:
-        """Return severity from a RiskRegister-like export section."""
+        """Return severity from a RiskRegister-like export section.
+
+        The policy reads the exported RiskTensor fields when available:
+        `band`, `blocks_deployment`, `risk_pressure`, and individual risk axes.
+        """
 
         risk_items = _extract_items(risks)
+        quality_report = risks.get("quality_report", {}) if isinstance(risks, dict) else {}
         reasons = []
         max_score = 0
+        max_pressure = 0
         high_impact_count = 0
+        critical_count = 0
         blocker_count = 0
+
+        quality_blockers = quality_report.get("blockers", []) if isinstance(quality_report, dict) else []
+        if quality_blockers:
+            blocker_count += len(quality_blockers)
+            reasons.append("quality_report_contains_blockers")
+
         for item in risk_items:
             if not isinstance(item, dict):
                 continue
             score = _risk_total(item)
+            pressure = int(_as_float(item.get("risk_pressure"), default=float(_risk_pressure(item))))
+            band = str(item.get("band", "")).lower()
+            blocks_deployment = bool(item.get("blocks_deployment", False))
             max_score = max(max_score, score)
-            if score >= 20:
-                high_impact_count += 1
-            if str(item.get("band", "")).lower() == "blocked":
+            max_pressure = max(max_pressure, pressure)
+
+            if blocks_deployment:
                 blocker_count += 1
+            if band == "critical":
+                critical_count += 1
+            if band == "high" or pressure >= 16 or score >= 20:
+                high_impact_count += 1
 
         if blocker_count:
             reasons.append("risk_register_contains_blocker")
+        if critical_count:
+            reasons.append("risk_register_contains_critical_band")
         if high_impact_count:
             reasons.append("risk_register_contains_high_impact_items")
+        if max_pressure:
+            reasons.append(f"max_risk_pressure_{max_pressure}")
         if max_score:
             reasons.append(f"max_risk_total_{max_score}")
 
-        if blocker_count:
+        if blocker_count or critical_count:
             priority = "P0"
             status = "blocked_until_risk_review"
-        elif high_impact_count or max_score >= 20:
+        elif high_impact_count or max_pressure >= 16 or max_score >= 20:
             priority = "P1"
             status = "risk_review_required"
         elif risk_items:
@@ -151,6 +175,11 @@ def _extract_items(section: Any) -> Tuple[Dict[str, Any], ...]:
         if all(isinstance(value, dict) for value in section.values()):
             return tuple(section.values())
     return tuple()
+
+
+def _risk_pressure(item: Dict[str, Any]) -> int:
+    fields = ("legal", "privacy", "security", "fairness", "human_impact")
+    return sum(int(_as_float(item.get(field), default=0.0)) for field in fields)
 
 
 def _risk_total(item: Dict[str, Any]) -> int:
