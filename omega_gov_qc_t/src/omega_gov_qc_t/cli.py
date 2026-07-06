@@ -8,11 +8,18 @@ from typing import Sequence
 
 from .graph_exports import GraphExporter
 from .municipal_report import MunicipalReportBuilder
+from .oak_issue_bundle_mapper import OAKIssueBundleMapper
+from .oak_issue_generator import OAKIssueGenerator
+from .oak_issue_labels import label_manifest_json
 
 
 def _write_text(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
+
+
+def _read_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -34,6 +41,29 @@ def build_parser() -> argparse.ArgumentParser:
     report = sub.add_parser("report", help="Generate demo Markdown report.")
     report.add_argument("--out", default="reports/generated/municipal_demo_report.md", help="Output Markdown path.")
 
+    issues_json = sub.add_parser("issues-json", help="Generate local OAK issue drafts as JSON.")
+    issues_json.add_argument("--out", default="reports/generated/oak_issue_drafts.json", help="Output JSON path.")
+
+    issues_md = sub.add_parser("issues-md", help="Generate local OAK issue drafts as Markdown.")
+    issues_md.add_argument("--out", default="reports/generated/oak_issue_drafts.md", help="Output Markdown path.")
+
+    bundle_issues_json = sub.add_parser(
+        "issues-from-bundle-json",
+        help="Generate local OAK issue drafts from a local ExportBundle JSON file.",
+    )
+    bundle_issues_json.add_argument("--bundle", required=True, help="Input ExportBundle JSON path.")
+    bundle_issues_json.add_argument("--out", default="reports/generated/oak_issue_drafts_from_bundle.json", help="Output JSON path.")
+
+    bundle_issues_md = sub.add_parser(
+        "issues-from-bundle-md",
+        help="Generate local OAK issue draft Markdown from a local ExportBundle JSON file.",
+    )
+    bundle_issues_md.add_argument("--bundle", required=True, help="Input ExportBundle JSON path.")
+    bundle_issues_md.add_argument("--out", default="reports/generated/oak_issue_drafts_from_bundle.md", help="Output Markdown path.")
+
+    labels = sub.add_parser("labels-json", help="Generate suggested local label manifest as JSON.")
+    labels.add_argument("--out", default="reports/generated/oak_issue_labels.json", help="Output JSON path.")
+
     return parser
 
 
@@ -41,6 +71,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     artifacts = MunicipalReportBuilder().build_demo()
+    issue_bundle = OAKIssueGenerator().from_demo_artifacts(artifacts)
 
     if args.command == "demo":
         out_dir = Path(args.out)
@@ -48,6 +79,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         _write_text(out_dir / "municipal_demo_bundle.json", artifacts.bundle_json)
         graphml = GraphExporter().to_graphml(artifacts.graph).content
         _write_text(out_dir / "municipal_demo.graphml", graphml)
+        _write_text(out_dir / "oak_issue_drafts.json", issue_bundle.to_json())
+        _write_text(out_dir / "oak_issue_drafts.md", issue_bundle.to_markdown())
+        _write_text(out_dir / "oak_issue_labels.json", label_manifest_json())
         return 0
 
     if args.command == "bundle":
@@ -61,6 +95,28 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.command == "report":
         _write_text(Path(args.out), artifacts.report_markdown)
+        return 0
+
+    if args.command == "issues-json":
+        _write_text(Path(args.out), issue_bundle.to_json())
+        return 0
+
+    if args.command == "issues-md":
+        _write_text(Path(args.out), issue_bundle.to_markdown())
+        return 0
+
+    if args.command == "issues-from-bundle-json":
+        bundle = OAKIssueBundleMapper().from_json_text(_read_text(Path(args.bundle)))
+        _write_text(Path(args.out), bundle.to_json())
+        return 0
+
+    if args.command == "issues-from-bundle-md":
+        bundle = OAKIssueBundleMapper().from_json_text(_read_text(Path(args.bundle)))
+        _write_text(Path(args.out), bundle.to_markdown())
+        return 0
+
+    if args.command == "labels-json":
+        _write_text(Path(args.out), label_manifest_json())
         return 0
 
     parser.error(f"unknown command: {args.command}")
