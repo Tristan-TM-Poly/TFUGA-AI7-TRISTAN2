@@ -1,0 +1,48 @@
+name: infra-qc-viewer-checks
+
+on:
+  pull_request:
+    paths:
+      - "apps/infra-qc-viewer/**"
+      - "docs/roadmaps/INFRA_QC_VIEWER.md"
+      - ".github/workflows/infra_qc_viewer_checks.yml"
+  workflow_dispatch:
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate demo bundle and viewer references
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('apps/infra-qc-viewer')
+          bundle_path = root / 'data' / 'infra_qc_demo_bundle.json'
+          html_path = root / 'index.html'
+          js_path = root / 'app.js'
+          css_path = root / 'styles.css'
+
+          for path in [bundle_path, html_path, js_path, css_path]:
+              assert path.exists(), f'missing {path}'
+
+          payload = json.loads(bundle_path.read_text(encoding='utf-8'))
+          assert payload['schema'] == 'omega_infra_qc_t.export_bundle.v0'
+          assert payload['public_safe'] is True
+          assert payload['security_gate']['status'] == 'pass'
+          assert payload['graph']['quality']['asset_count'] == 3
+          assert payload['graph']['quality']['dependency_count'] == 1
+
+          html = html_path.read_text(encoding='utf-8')
+          js = js_path.read_text(encoding='utf-8')
+          assert './app.js' in html
+          assert './styles.css' in html
+          assert './data/infra_qc_demo_bundle.json' in js
+          assert 'renderAssets' in js
+          assert 'renderRisks' in js
+          PY
