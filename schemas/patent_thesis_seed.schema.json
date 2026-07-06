@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PatentThesisSeed",
+  "type": "object",
+  "required": ["patent_id", "title", "independent_claims"],
+  "properties": {
+    "patent_id": {"type": "string"},
+    "title": {"type": "string"},
+    "status": {"type": "string"},
+    "domains": {"type": "array", "items": {"type": "string"}},
+    "core_problem": {"type": "string"},
+    "core_solution": {"type": "string"},
+    "independent_claims": {"type": "array", "items": {"type": "string"}},
+    "dependent_claims": {"type": "array", "items": {"type": "string"}},
+    "prototype_targets": {"type": "array", "items": {"type": "string"}},
+    "business_targets": {"type": "array", "items": {"type": "string"}},
+    "oak_risks": {"type": "array", "items": {"type": "string"}}
+  }
+}
