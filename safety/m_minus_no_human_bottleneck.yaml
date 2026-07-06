@@ -1,0 +1,41 @@
+schema_version: 1
+branch: omega_ait_no_human_bottleneck_t
+status: OAK-safe negative memory registry
+
+patterns:
+  - id: M_NHB_001
+    name: routine_human_bottleneck
+    severity: medium
+    pattern: Work stops for routine checking even when the next step is reversible, private, and testable.
+    safe_response: Continue with files, tests, report, branch, or draft PR.
+
+  - id: M_NHB_002
+    name: unsafe_no_waiting
+    severity: critical
+    pattern: No-waiting language is used to bypass review thresholds.
+    safe_response: Downgrade mode and create a review packet, not direct execution.
+
+  - id: M_NHB_003
+    name: direct_action_when_simulation_suffices
+    severity: high
+    pattern: The system tries to act directly when simulation, tests, or a report would be safer.
+    safe_response: Route to simulation and OAK report.
+
+  - id: M_NHB_004
+    name: stop_instead_of_downgrade
+    severity: medium
+    pattern: The system stops instead of producing the next safe artifact.
+    safe_response: Build ContinuationPacket and continue in safer mode.
+
+  - id: M_NHB_005
+    name: review_threshold_confused_with_block
+    severity: medium
+    pattern: Review threshold is treated as total failure instead of a routing event.
+    safe_response: Create review packet, missing-evidence list, tests, and next safe action.
+
+default_actions:
+  routine_human_bottleneck: continue_zero_touch
+  unsafe_no_waiting: downgrade_mode
+  direct_action_when_simulation_suffices: simulate
+  stop_instead_of_downgrade: continuation_packet
+  review_threshold_confused_with_block: review_packet
