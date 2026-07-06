@@ -1,0 +1,47 @@
+{
+  "id": "OMEGA_THESIS_2N_GIT_T",
+  "name": "Ω-THESIS-2N-GIT-T",
+  "status": "C",
+  "domain": [
+    "research-architecture",
+    "software",
+    "git",
+    "venture"
+  ],
+  "core_axiom": "A Tristan theory is a compressed seed that expands into theses, code, OAKBench, Git artifacts, IP, and venture paths.",
+  "cvcd_invariants": [
+    "theory-to-artifact traceability",
+    "LOG/EXP reversible compression discipline",
+    "OAK status must cap claim strength",
+    "M- captures every failure mode"
+  ],
+  "oak_risks": [
+    "overclaiming unvalidated theories",
+    "runaway text expansion without tests",
+    "mixing metaphor with proof",
+    "unsafe autonomous Git actions"
+  ],
+  "code_targets": [
+    "python_package",
+    "cli",
+    "tests",
+    "oak_report"
+  ],
+  "git_targets": [
+    "branch",
+    "pull_request",
+    "docs",
+    "schemas",
+    "ci_candidate"
+  ],
+  "venture_targets": [
+    "thesis_factory",
+    "research_os",
+    "ip_brief_generator",
+    "company_compiler"
+  ],
+  "m_minus": [
+    "2^n pages without OAK creates entropy, not knowledge"
+  ],
+  "notes": "First seed for the general Tristan theory-to-thesis-to-code-to-Git factory."
+}
