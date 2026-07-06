@@ -15,15 +15,21 @@
 11. Ω-AIT-NO-HUMAN-BOTTLENECK-T
 12. Ω-AIT-CONTINUATION-ENGINE-T
 13. Ω-AIT-AUTONOMOUS-PROPULSION-MESH-T
+14. Ω-AIT-SELF-STABILIZING-REFACTOR-KERNEL-T
 
 ## Current draft status
 
 This PR is intentionally draft-only. It creates a large OAK-safe architecture and should be split into focused follow-up PRs after review.
 
+## Smoke-test progress
+
+- Import smoke test exists: `tests/test_pr220_import_smoke.py`
+- Focused matrix exists: `configs/pr220_focused_test_matrix.yaml`
+- Progress report exists: `docs/oak_reports/pr220_import_smoke_progress.md`
+
 ## Safe next work
 
-- Add import smoke tests.
-- Run focused pytest groups.
-- Split packages by layer.
+- Run focused pytest groups in a controlled CI or local sandbox.
+- Split packages by layer after review.
 - Normalize fallback filenames created due to connector filtering.
 - Keep no-auto-merge policy.
