@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_gov_qc_t/gov_node.schema.json",
+  "title": "Ω-GOV-QC-T GovNode",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "node_id",
+    "name",
+    "node_type",
+    "source",
+    "oak_status",
+    "jurisdiction"
+  ],
+  "properties": {
+    "node_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable identifier such as ministry:mcn or municipality:montreal."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "node_type": {
+      "type": "string",
+      "enum": [
+        "ministry",
+        "organization",
+        "municipality",
+        "mrc",
+        "region",
+        "program",
+        "contract",
+        "dataset",
+        "indicator",
+        "risk",
+        "service",
+        "law",
+        "report"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Source, registry, URL, document, dataset, or internal provenance marker."
+    },
+    "oak_status": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D", "M-", "blocked"]
+    },
+    "jurisdiction": {
+      "type": "string",
+      "default": "Québec"
+    },
+    "description": {
+      "type": "string"
+    },
+    "retrieved_at": {
+      "type": "string",
+      "description": "ISO-8601 timestamp for provenance."
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
+}
