@@ -27,3 +27,14 @@ jobs:
       - name: Run tests
         run: |
           pytest omega_gov_qc_t
+
+      - name: Generate demo artifacts
+        run: |
+          omega-gov-qc demo --out reports/generated/omega_gov_qc
+          ls -la reports/generated/omega_gov_qc
+
+      - name: Upload demo artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-gov-qc-demo-artifacts
+          path: reports/generated/omega_gov_qc
