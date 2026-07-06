@@ -8,6 +8,7 @@ from .json_exporter import ExportBundle, JsonExporter
 from .m_minus import MMinusEvent, MMinusRegister
 from .municipal_report import MunicipalDemoArtifacts, MunicipalReportBuilder
 from .oak_gate import GateResult, OAKGate, OAKReport
+from .oak_issue_generator import OAKIssueBundle, OAKIssueDraft, OAKIssueGenerator
 from .opendata_ingestor import IngestionResult, OpenDataIngestor
 from .product_factory import ProductCard, ProductFactory
 from .report_factory import GovReport, MarkdownReportFactory
@@ -37,6 +38,9 @@ __all__ = [
     "MunicipalDemoArtifacts",
     "MunicipalReportBuilder",
     "OAKGate",
+    "OAKIssueBundle",
+    "OAKIssueDraft",
+    "OAKIssueGenerator",
     "OAKReport",
     "OpenDataIngestor",
     "ProductCard",
