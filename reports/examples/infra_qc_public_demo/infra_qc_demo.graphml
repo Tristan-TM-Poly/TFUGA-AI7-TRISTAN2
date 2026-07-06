@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="label" for="node" attr.name="label" attr.type="string"/>
+  <key id="sector" for="node" attr.name="sector" attr.type="string"/>
+  <key id="owner_type" for="node" attr.name="owner_type" attr.type="string"/>
+  <key id="visibility" for="node" attr.name="visibility" attr.type="string"/>
+  <key id="criticality" for="node" attr.name="criticality" attr.type="int"/>
+  <key id="kind" for="edge" attr.name="kind" attr.type="string"/>
+  <key id="confidence" for="edge" attr.name="confidence" attr.type="double"/>
+  <graph id="InfrastructureGraphQuebec" edgedefault="directed">
+    <node id="asset:demo_bridge">
+      <data key="label">Demo Local Bridge</data>
+      <data key="sector">transport</data>
+      <data key="owner_type">municipal</data>
+      <data key="visibility">public</data>
+      <data key="criticality">3</data>
+    </node>
+    <node id="asset:demo_water_facility">
+      <data key="label">redacted_asset</data>
+      <data key="sector">water</data>
+      <data key="owner_type">municipal</data>
+      <data key="visibility">review</data>
+      <data key="criticality">4</data>
+    </node>
+    <node id="asset:demo_school">
+      <data key="label">Demo School Building</data>
+      <data key="sector">education</data>
+      <data key="owner_type">public</data>
+      <data key="visibility">public</data>
+      <data key="criticality">2</data>
+    </node>
+    <edge id="edge:0" source="asset:demo_school" target="asset:demo_bridge">
+      <data key="kind">depends_on</data>
+      <data key="confidence">0.6</data>
+    </edge>
+  </graph>
+</graphml>

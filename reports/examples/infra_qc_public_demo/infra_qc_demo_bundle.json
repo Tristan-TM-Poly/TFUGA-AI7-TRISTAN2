@@ -1,0 +1,227 @@
+{
+  "schema": "omega_infra_qc_t.export_bundle.v0",
+  "generated_at": "2026-07-06T20:45:00Z",
+  "public_safe": true,
+  "graph": {
+    "schema": "omega_infra_qc_t.infra_graph.v0",
+    "assets": [
+      {
+        "asset_id": "asset:demo_bridge",
+        "name": "Demo Local Bridge",
+        "sector": "transport",
+        "owner_type": "municipal",
+        "region": "Demo Region",
+        "municipality": "Demo Municipality",
+        "location_level": "generalized",
+        "visibility": "public",
+        "criticality": 3,
+        "public_dependency": 3,
+        "condition_status": "review",
+        "notes": "Generalized demo bridge; no real location."
+      },
+      {
+        "asset_id": "asset:demo_water_facility",
+        "name": "redacted_asset",
+        "sector": "water",
+        "owner_type": "municipal",
+        "region": "Demo Region",
+        "municipality": "redacted",
+        "location_level": "generalized",
+        "visibility": "review",
+        "criticality": 4,
+        "public_dependency": 5,
+        "condition_status": "unknown",
+        "notes": "redacted"
+      },
+      {
+        "asset_id": "asset:demo_school",
+        "name": "Demo School Building",
+        "sector": "education",
+        "owner_type": "public",
+        "region": "Demo Region",
+        "municipality": "Demo Municipality",
+        "location_level": "generalized",
+        "visibility": "public",
+        "criticality": 2,
+        "public_dependency": 3,
+        "condition_status": "planned",
+        "notes": ""
+      }
+    ],
+    "dependencies": [
+      {
+        "source_asset_id": "asset:demo_school",
+        "target_asset_id": "asset:demo_bridge",
+        "kind": "depends_on",
+        "confidence": 0.6,
+        "visibility": "public",
+        "evidence_ids": [],
+        "notes": "Generalized access dependency for demo only.",
+        "metadata": {}
+      }
+    ],
+    "quality": {
+      "asset_count": 3,
+      "dependency_count": 1,
+      "sectors": {
+        "transport": 1,
+        "water": 1,
+        "education": 1
+      },
+      "sensitive_asset_count": 1,
+      "sensitive_dependency_count": 0,
+      "m_minus_count": 0
+    },
+    "oak_note": "InfrastructureGraph output is review support, not final authority."
+  },
+  "sources": {
+    "schema": "omega_infra_qc_t.source_registry.v0",
+    "sources": [
+      {
+        "source_id": "source:demo_manual",
+        "title": "Generalized demo source",
+        "kind": "demo",
+        "locator": "",
+        "permission": "allowed",
+        "retrieved_at": "2026-07-06T20:45:00Z",
+        "fingerprint": "demo_public_bundle_fingerprint",
+        "notes": "Fictional source for OAK-safe demo.",
+        "metadata": {}
+      }
+    ],
+    "quality": {
+      "source_count": 1,
+      "allowed": ["source:demo_manual"],
+      "review_required": [],
+      "blocked": [],
+      "m_minus_count": 0
+    },
+    "m_minus": []
+  },
+  "evidence": {
+    "schema": "omega_infra_qc_t.evidence_graph.v0",
+    "items": [
+      {
+        "evidence_id": "evidence:demo_bridge_review",
+        "claim": "Demo bridge has a review maintenance signal.",
+        "source_id": "source:demo_manual",
+        "asset_id": "asset:demo_bridge",
+        "status": "structured_evidence",
+        "confidence": 0.7,
+        "method": "demo_fixture",
+        "limitations": "Fictional example; no real asset assessment.",
+        "counter_explanations": [],
+        "created_at": "2026-07-06T20:45:00Z",
+        "metadata": {}
+      }
+    ],
+    "quality": {
+      "evidence_count": 1,
+      "status_counts": {
+        "structured_evidence": 1
+      },
+      "m_minus_count": 0
+    },
+    "m_minus": [],
+    "oak_note": "Evidence supports review; it is not a final authority decision."
+  },
+  "risks": [
+    {
+      "risk_id": "risk:demo_bridge",
+      "asset_id": "asset:demo_bridge",
+      "physical_condition": 3,
+      "service_criticality": 3,
+      "public_dependency": 3,
+      "climate_exposure": 2,
+      "cyber_dependency": 0,
+      "supply_chain_dependency": 0,
+      "maintenance_debt": 3,
+      "financial_pressure": 0,
+      "legal_regulatory_risk": 0,
+      "equity_access_risk": 0,
+      "privacy_security_sensitivity": 0,
+      "reversibility": 5,
+      "pressure": 17,
+      "band": "medium",
+      "blocks_publication": false,
+      "maintenance_priority": 2.7,
+      "notes": "Demo risk signal only.",
+      "metadata": {},
+      "oak_note": "Risk tensor is a review signal, not a final engineering or authority decision."
+    },
+    {
+      "risk_id": "risk:demo_water_facility",
+      "asset_id": "asset:demo_water_facility",
+      "physical_condition": 0,
+      "service_criticality": 4,
+      "public_dependency": 5,
+      "climate_exposure": 0,
+      "cyber_dependency": 0,
+      "supply_chain_dependency": 0,
+      "maintenance_debt": 2,
+      "financial_pressure": 0,
+      "legal_regulatory_risk": 0,
+      "equity_access_risk": 0,
+      "privacy_security_sensitivity": 3,
+      "reversibility": 5,
+      "pressure": 14,
+      "band": "medium",
+      "blocks_publication": false,
+      "maintenance_priority": 2.25,
+      "notes": "Review-only generalized signal.",
+      "metadata": {},
+      "oak_note": "Risk tensor is a review signal, not a final engineering or authority decision."
+    }
+  ],
+  "maintenance": [
+    {
+      "signal_id": "maint:demo_bridge",
+      "asset_id": "asset:demo_bridge",
+      "condition_score": 3,
+      "service_criticality": 3,
+      "maintenance_debt": 3,
+      "climate_exposure": 2,
+      "cost_of_delay": 3,
+      "reversibility": 5,
+      "evidence_quality": 3,
+      "priority_score": 2.85,
+      "band": "planned",
+      "needs_more_evidence": false,
+      "notes": "Demo maintenance prioritization signal.",
+      "metadata": {},
+      "oak_note": "Maintenance signal is prioritization support, not an engineering order."
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "scenario:demo_ice_storm",
+      "name": "Generalized ice storm scenario",
+      "kind": "ice_storm",
+      "affected_asset_count": 2,
+      "affected_asset_ids": [],
+      "expected_service_impact": 3,
+      "preparedness_level": 3,
+      "recovery_complexity": 2,
+      "evidence_quality": 3,
+      "resilience_pressure": 7,
+      "band": "medium",
+      "needs_review": false,
+      "notes": "Public-safe generalized scenario.",
+      "metadata": {},
+      "oak_note": "Scenario is generalized decision support, not an emergency plan."
+    }
+  ],
+  "security_gate": {
+    "status": "pass",
+    "publishable": true,
+    "blockers": [],
+    "warnings": [],
+    "recommendations": ["public_safe_summary_only"]
+  },
+  "metadata": {
+    "demo": true,
+    "real_assets": false,
+    "product_path": "Infra-OAK Audit Express"
+  },
+  "oak_note": "Export bundle is review support, not final authority."
+}
