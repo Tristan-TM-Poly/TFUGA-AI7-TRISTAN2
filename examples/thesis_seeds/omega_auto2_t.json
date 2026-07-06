@@ -1,0 +1,51 @@
+{
+  "id": "OMEGA_AUTO2_T",
+  "name": "Ω-AUTO²-T / Automatisation de l'Automatisation de Tristan",
+  "status": "B",
+  "domain": [
+    "automation",
+    "workflow-systems",
+    "software-safety",
+    "governance",
+    "productivity"
+  ],
+  "core_axiom": "Every repeated friction can become a workflow genome only after intent, permissions, dry-run, rollback, telemetry, and human sovereignty gates are explicit.",
+  "cvcd_invariants": [
+    "dry-run before deployment",
+    "least privilege for external actions",
+    "rollback or compensation path is required",
+    "irreversible actions require explicit approval",
+    "telemetry feeds M- and regeneration"
+  ],
+  "oak_risks": [
+    "unsafe autonomous actions",
+    "secret leakage",
+    "accidental deletion or publication",
+    "platform lock-in",
+    "automation without accountability"
+  ],
+  "code_targets": [
+    "workflow_manifest_schema",
+    "dry_run_engine",
+    "risk_permission_tensor",
+    "rollback_ledger",
+    "action_queue"
+  ],
+  "git_targets": [
+    "docs_auto2_architecture",
+    "schemas_workflow_dna",
+    "sandbox_examples",
+    "incident_tests",
+    "oakgate_ci_candidate"
+  ],
+  "venture_targets": [
+    "personal_research_os",
+    "automation_consulting_toolkit",
+    "safe_workflow_marketplace",
+    "company_ops_copilot"
+  ],
+  "m_minus": [
+    "Zero-touch must never mean zero-control; the more sensitive the actuator, the stronger the gate."
+  ],
+  "notes": "The external-action layer must be sovereignty-first, reversible-first and proof-of-execution-first."
+}
