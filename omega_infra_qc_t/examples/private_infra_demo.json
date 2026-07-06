@@ -1,0 +1,30 @@
+{
+  "schema": "omega_infra_qc_t.private_demo.v0",
+  "oak_note": "Demo generalized private infrastructure. No real operator or sensitive detail.",
+  "assets": [
+    {
+      "asset_id": "asset:demo_data_center_generalized",
+      "name": "Generalized Demo Data Center",
+      "sector": "data",
+      "owner_type": "private",
+      "region": "Generalized Region",
+      "municipality": "redacted",
+      "visibility": "restricted",
+      "criticality": 4,
+      "public_dependency": 2,
+      "condition_status": "unknown"
+    },
+    {
+      "asset_id": "asset:demo_food_warehouse",
+      "name": "Demo Food Warehouse",
+      "sector": "food",
+      "owner_type": "private",
+      "region": "Demo Region",
+      "municipality": "Demo Municipality",
+      "visibility": "review",
+      "criticality": 3,
+      "public_dependency": 4,
+      "condition_status": "review"
+    }
+  ]
+}
