@@ -1,3 +1,5 @@
+import json
+
 from omega_software_truth import Contract, ExampleCase, OAKValidator, SoftwareState, probe_mutant
 
 
@@ -72,3 +74,25 @@ def test_mutation_probe_kills_broken_addition():
 
     assert mutation.killed is True
     assert mutation.report.passed is False
+
+
+def test_oak_report_json_export_is_machine_readable():
+    contract = Contract(
+        name="addition_contract",
+        input_predicates={"two_ints": lambda args, kwargs: len(args) == 2 and all(isinstance(x, int) for x in args)},
+        output_predicates={"int_output": lambda output: isinstance(output, int)},
+    )
+    state = SoftwareState(
+        name="add_positive",
+        target=add_positive,
+        contract=contract,
+        examples=(ExampleCase("simple", args=(2, 3), expected=5),),
+    )
+
+    report = OAKValidator().validate(state)
+    payload = json.loads(report.to_json())
+
+    assert payload["state_name"] == "add_positive"
+    assert payload["passed"] is True
+    assert payload["case_results"][0]["name"] == "simple"
+    assert payload["case_results"][0]["output_repr"] == "5"
