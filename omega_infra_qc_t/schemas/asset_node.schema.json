@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_infra_qc_t/asset_node.schema.json",
+  "title": "Infrastructure AssetNode",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["asset_id", "name", "sector", "owner_type", "visibility"],
+  "properties": {
+    "asset_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "sector": {"type": "string"},
+    "owner_type": {"type": "string", "enum": ["public", "private", "municipal", "mixed", "community", "unknown"]},
+    "operator": {"type": "string"},
+    "region": {"type": "string"},
+    "municipality": {"type": "string"},
+    "location_level": {"type": "string"},
+    "visibility": {"type": "string", "enum": ["public", "review", "restricted", "critical"]},
+    "criticality": {"type": "integer", "minimum": 0, "maximum": 5},
+    "public_dependency": {"type": "integer", "minimum": 0, "maximum": 5},
+    "condition_status": {"type": "string"},
+    "source_ids": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"},
+    "metadata": {"type": "object"}
+  }
+}
