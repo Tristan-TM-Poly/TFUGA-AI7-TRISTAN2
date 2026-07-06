@@ -1,0 +1,42 @@
+{
+  "schema": "omega_infra_qc_t.demo_assets.v0",
+  "oak_note": "Demo data only. No real sensitive infrastructure details.",
+  "assets": [
+    {
+      "asset_id": "asset:demo_bridge",
+      "name": "Demo Local Bridge",
+      "sector": "transport",
+      "owner_type": "municipal",
+      "region": "Demo Region",
+      "municipality": "Demo Municipality",
+      "visibility": "public",
+      "criticality": 3,
+      "public_dependency": 3,
+      "condition_status": "review"
+    },
+    {
+      "asset_id": "asset:demo_water_facility",
+      "name": "Demo Water Facility",
+      "sector": "water",
+      "owner_type": "municipal",
+      "region": "Demo Region",
+      "municipality": "Demo Municipality",
+      "visibility": "review",
+      "criticality": 4,
+      "public_dependency": 5,
+      "condition_status": "unknown"
+    },
+    {
+      "asset_id": "asset:demo_school",
+      "name": "Demo School Building",
+      "sector": "education",
+      "owner_type": "public",
+      "region": "Demo Region",
+      "municipality": "Demo Municipality",
+      "visibility": "public",
+      "criticality": 2,
+      "public_dependency": 3,
+      "condition_status": "planned"
+    }
+  ]
+}
