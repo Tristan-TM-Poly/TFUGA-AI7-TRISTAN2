@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -20,6 +21,20 @@ class CaseResult:
     exception: str | None = None
     residue: str | None = None
 
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-safe representation of a case result."""
+
+        return {
+            "name": self.name,
+            "passed": self.passed,
+            "input_checks": [_check_to_dict(check) for check in self.input_checks],
+            "output_checks": [_check_to_dict(check) for check in self.output_checks],
+            "exception_checks": [_check_to_dict(check) for check in self.exception_checks],
+            "output_repr": repr(self.output),
+            "exception": self.exception,
+            "residue": self.residue,
+        }
+
 
 @dataclass(frozen=True)
 class OAKReport:
@@ -31,6 +46,25 @@ class OAKReport:
     failed_cases: int
     residues: list[str]
     case_results: list[CaseResult]
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-safe OAK report dictionary."""
+
+        return {
+            "state_name": self.state_name,
+            "verdict": self.verdict,
+            "passed": self.passed,
+            "total_cases": self.total_cases,
+            "passed_cases": self.passed_cases,
+            "failed_cases": self.failed_cases,
+            "residues": list(self.residues),
+            "case_results": [case.to_dict() for case in self.case_results],
+        }
+
+    def to_json(self, *, indent: int = 2) -> str:
+        """Serialize the report as deterministic UTF-8 JSON text."""
+
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent, sort_keys=True)
 
     def to_markdown(self) -> str:
         lines = [
@@ -116,3 +150,7 @@ class OAKValidator:
             output=output,
             residue=residue,
         )
+
+
+def _check_to_dict(check: ContractCheck) -> dict[str, Any]:
+    return {"name": check.name, "passed": check.passed, "message": check.message}
