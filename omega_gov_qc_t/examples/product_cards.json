@@ -1,0 +1,47 @@
+{
+  "schema": "omega_gov_qc_t.product_cards_example.v0",
+  "products": [
+    {
+      "product_id": "product:tristan_govgraph_qc",
+      "name": "TristanGovGraph Québec",
+      "mission": "Map public-sector entities, sources, evidence and risks into an OAK-safe graph.",
+      "target_users": ["researcher", "municipality", "consultant", "public_data_team"],
+      "input_data": ["open_data", "official_public_pages", "public_reports"],
+      "outputs": ["json_graph", "markdown_report", "risk_register", "source_registry"],
+      "risk_level": "medium",
+      "maturity": "P1",
+      "oak_requirements": ["SourceRegistry", "EvidenceGraph", "RiskTensor", "OAKGate"],
+      "monetization_hypothesis": "pilot report or data-quality audit",
+      "next_milestone": "Add open-data ingestion and JSON export",
+      "notes": "Demo must remain analysis-only until source policy is reviewed."
+    },
+    {
+      "product_id": "product:municipalite_oak",
+      "name": "Municipalité-OAK",
+      "mission": "Generate municipal service and data-quality reports from authorized public information.",
+      "target_users": ["municipality", "MRC", "consultant"],
+      "input_data": ["municipal_open_data", "public_service_pages", "public_reports"],
+      "outputs": ["municipal_report", "service_friction_signals", "data_gap_list"],
+      "risk_level": "medium",
+      "maturity": "P1",
+      "oak_requirements": ["SourceRegistry", "ServiceCatalog", "ReportFactory", "HumanAuthorityGate"],
+      "monetization_hypothesis": "fixed-fee municipal diagnostic report",
+      "next_milestone": "Create municipal input template and generated report",
+      "notes": "Signals cannot be represented as final performance judgments."
+    },
+    {
+      "product_id": "product:privacy_oak_public_bodies",
+      "name": "Privacy-OAK Public Bodies",
+      "mission": "Help public bodies document data flows, minimization and review requirements.",
+      "target_users": ["public_body", "privacy_officer", "consultant"],
+      "input_data": ["data_flow_inventory", "source_registry", "policy_notes"],
+      "outputs": ["privacy_review_package", "risk_register", "m_minus_register"],
+      "risk_level": "high",
+      "maturity": "P0",
+      "oak_requirements": ["PrivacyGate", "HumanAuthorityGate", "EvidenceGate", "SecurityGate"],
+      "monetization_hypothesis": "compliance support package",
+      "next_milestone": "Define privacy-specific schemas and blocked-use cases",
+      "notes": "Requires strict review before any pilot."
+    }
+  ]
+}

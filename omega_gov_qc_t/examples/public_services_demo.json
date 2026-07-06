@@ -1,0 +1,36 @@
+{
+  "schema": "omega_gov_qc_t.public_services_demo.v0",
+  "warning": "Example-only records for service modeling. Not official service descriptions.",
+  "services": [
+    {
+      "service_id": "service:demo_permit",
+      "name": "Demo permit service",
+      "responsible_entity": "municipality:demo",
+      "target_users": ["citizen", "business"],
+      "required_documents": ["identity_document", "address_document"],
+      "forms": ["permit_form_demo"],
+      "channels": ["web", "office"],
+      "data_used": ["public_service_request", "contact_information"],
+      "appeal_or_review_path": "Contact the responsible service owner for review.",
+      "human_contact_required": true,
+      "oak_status": "B",
+      "average_delay_days": 15,
+      "notes": "Placeholder service for demo report generation."
+    },
+    {
+      "service_id": "service:demo_information_request",
+      "name": "Demo information request service",
+      "responsible_entity": "organization:demo",
+      "target_users": ["citizen", "researcher"],
+      "required_documents": [],
+      "forms": ["request_form_demo"],
+      "channels": ["web", "email"],
+      "data_used": ["request_text", "contact_information"],
+      "appeal_or_review_path": "Human follow-up channel required.",
+      "human_contact_required": true,
+      "oak_status": "B",
+      "average_delay_days": null,
+      "notes": "Example only; not an official process."
+    }
+  ]
+}

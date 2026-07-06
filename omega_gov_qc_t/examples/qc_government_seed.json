@@ -1,0 +1,113 @@
+{
+  "schema": "omega_gov_qc_t.gov_graph_seed.v0",
+  "warning": "Seed graph for public open-government mapping only. Not authoritative, not exhaustive, not a legal source.",
+  "nodes": [
+    {
+      "node_id": "jurisdiction:quebec",
+      "name": "Québec",
+      "node_type": "region",
+      "source": "public_government_context",
+      "oak_status": "B",
+      "jurisdiction": "Québec",
+      "description": "Provincial jurisdiction root for TristanGovGraph Québec."
+    },
+    {
+      "node_id": "module:citizenflow",
+      "name": "Ω-CITIZEN-T / CitizenFlow Québec",
+      "node_type": "service",
+      "source": "OMEGA_GOV_QC_T doctrine",
+      "oak_status": "B",
+      "jurisdiction": "Québec",
+      "description": "Assistant de navigation administrative non décisionnel."
+    },
+    {
+      "node_id": "module:opendata_cvcd",
+      "name": "Ω-OPEN-DATA-CVCD-T",
+      "node_type": "dataset",
+      "source": "OMEGA_GOV_QC_T doctrine",
+      "oak_status": "B",
+      "jurisdiction": "Québec",
+      "description": "Ingestion, normalisation et vérification de données ouvertes."
+    },
+    {
+      "node_id": "module:procurement_integrity",
+      "name": "Ω-PROCUREMENT-INTEGRITY-T",
+      "node_type": "risk",
+      "source": "OMEGA_GOV_QC_T doctrine",
+      "oak_status": "B",
+      "jurisdiction": "Québec",
+      "description": "Détection de signaux d'anomalies contractuelles, jamais verdict automatique."
+    },
+    {
+      "node_id": "module:privacy_law25",
+      "name": "Ω-PRIVACY-LAW25-T",
+      "node_type": "law",
+      "source": "OMEGA_GOV_QC_T doctrine",
+      "oak_status": "B",
+      "jurisdiction": "Québec",
+      "description": "Garde-fous de protection des renseignements personnels."
+    },
+    {
+      "node_id": "module:cyber_qc",
+      "name": "Ω-CYBER-QC-T",
+      "node_type": "risk",
+      "source": "OMEGA_GOV_QC_T doctrine",
+      "oak_status": "B",
+      "jurisdiction": "Québec",
+      "description": "Cyberdéfense publique, registre d'actifs et réponse aux incidents."
+    },
+    {
+      "node_id": "module:municipal_oak",
+      "name": "Ω-MUNICIPAL-T / Municipalité-OAK",
+      "node_type": "service",
+      "source": "OMEGA_GOV_QC_T doctrine",
+      "oak_status": "B",
+      "jurisdiction": "Québec",
+      "description": "Tableaux de bord municipaux, MRC, infrastructures et risques territoriaux."
+    }
+  ],
+  "edges": [
+    {
+      "source_id": "jurisdiction:quebec",
+      "target_id": "module:citizenflow",
+      "relation": "contains_candidate_system",
+      "evidence": "OMEGA_GOV_QC_T doctrine",
+      "confidence": 0.8
+    },
+    {
+      "source_id": "jurisdiction:quebec",
+      "target_id": "module:opendata_cvcd",
+      "relation": "contains_candidate_system",
+      "evidence": "OMEGA_GOV_QC_T doctrine",
+      "confidence": 0.8
+    },
+    {
+      "source_id": "module:opendata_cvcd",
+      "target_id": "module:procurement_integrity",
+      "relation": "feeds_signals_to",
+      "evidence": "MVP roadmap",
+      "confidence": 0.7
+    },
+    {
+      "source_id": "module:privacy_law25",
+      "target_id": "module:citizenflow",
+      "relation": "guards",
+      "evidence": "OAKGate doctrine",
+      "confidence": 0.9
+    },
+    {
+      "source_id": "module:cyber_qc",
+      "target_id": "module:opendata_cvcd",
+      "relation": "guards",
+      "evidence": "OAKGate doctrine",
+      "confidence": 0.9
+    },
+    {
+      "source_id": "module:municipal_oak",
+      "target_id": "module:opendata_cvcd",
+      "relation": "uses_public_data_from",
+      "evidence": "MVP roadmap",
+      "confidence": 0.7
+    }
+  ]
+}

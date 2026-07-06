@@ -1,0 +1,25 @@
+{
+  "records": [
+    {
+      "id": "1",
+      "name": "Demo Service",
+      "type": "service",
+      "region": "Demo Region",
+      "updated_at": "2026-07-06"
+    },
+    {
+      "id": "2",
+      "name": "Demo Dataset",
+      "type": "dataset",
+      "region": "Demo Region",
+      "updated_at": "2026-07-06"
+    },
+    {
+      "id": "3",
+      "name": "Demo Municipality",
+      "type": "municipality",
+      "region": "Demo Region",
+      "updated_at": null
+    }
+  ]
+}

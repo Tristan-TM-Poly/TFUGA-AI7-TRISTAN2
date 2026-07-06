@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_gov_qc_t/m_minus_event.schema.json",
+  "title": "Ω-GOV-QC-T MMinusEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "module", "error_type", "description", "severity"],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "module": {"type": "string", "minLength": 1},
+    "error_type": {"type": "string", "minLength": 1},
+    "description": {"type": "string", "minLength": 1},
+    "severity": {"type": "integer", "minimum": 1, "maximum": 5},
+    "countermeasure": {"type": "string"},
+    "test_to_add": {"type": "string"},
+    "oak_note": {"type": "string"},
+    "blocks_release": {"type": "boolean"},
+    "requires_test": {"type": "boolean"},
+    "created_at": {"type": "string"},
+    "metadata": {"type": "object"}
+  }
+}

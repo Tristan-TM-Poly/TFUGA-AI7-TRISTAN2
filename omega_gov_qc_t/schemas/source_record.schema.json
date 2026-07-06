@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_gov_qc_t/source_record.schema.json",
+  "title": "Ω-GOV-QC-T SourceRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["source_id", "title", "kind", "locator", "permission"],
+  "properties": {
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["open_data", "official_page", "report", "api", "manual_note", "example"]
+    },
+    "locator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "permission": {
+      "type": "string",
+      "enum": ["allowed", "review_required", "blocked"]
+    },
+    "retrieved_at": {
+      "type": "string"
+    },
+    "fingerprint": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
+}

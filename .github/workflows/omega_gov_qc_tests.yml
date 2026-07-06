@@ -1,0 +1,40 @@
+name: omega-gov-qc-tests
+
+on:
+  pull_request:
+    paths:
+      - "omega_gov_qc_t/**"
+      - ".github/workflows/omega_gov_qc_tests.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package and test tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e omega_gov_qc_t pytest
+
+      - name: Run tests
+        run: |
+          pytest omega_gov_qc_t
+
+      - name: Generate demo artifacts
+        run: |
+          omega-gov-qc demo --out reports/generated/omega_gov_qc
+          ls -la reports/generated/omega_gov_qc
+
+      - name: Upload demo artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-gov-qc-demo-artifacts
+          path: reports/generated/omega_gov_qc

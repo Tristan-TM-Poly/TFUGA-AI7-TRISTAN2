@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_gov_qc_t/public_service.schema.json",
+  "title": "Ω-GOV-QC-T PublicService",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["service_id", "name", "responsible_entity", "human_contact_required", "oak_status"],
+  "properties": {
+    "service_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "responsible_entity": {"type": "string", "minLength": 1},
+    "target_users": {"type": "array", "items": {"type": "string"}},
+    "required_documents": {"type": "array", "items": {"type": "string"}},
+    "forms": {"type": "array", "items": {"type": "string"}},
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["web", "phone", "office", "mail", "email", "api", "mobile", "other"]
+      }
+    },
+    "data_used": {"type": "array", "items": {"type": "string"}},
+    "appeal_or_review_path": {"type": "string"},
+    "human_contact_required": {"type": "boolean"},
+    "oak_status": {"type": "string", "enum": ["A", "B", "C", "D", "M-", "blocked"]},
+    "average_delay_days": {"type": ["number", "null"], "minimum": 0},
+    "document_burden": {"type": "integer"},
+    "friction_signals": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"},
+    "metadata": {"type": "object"}
+  }
+}

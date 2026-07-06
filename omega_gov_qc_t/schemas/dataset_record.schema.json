@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_gov_qc_t/dataset_record.schema.json",
+  "title": "TristanGovGraph DatasetRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dataset_id", "title", "source_id", "format", "row_count", "field_count"],
+  "properties": {
+    "dataset_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "source_id": {"type": "string", "minLength": 1},
+    "format": {"type": "string", "enum": ["csv", "json", "unknown"]},
+    "row_count": {"type": "integer", "minimum": 0},
+    "field_count": {"type": "integer", "minimum": 0},
+    "fields": {"type": "array", "items": {"type": "string"}},
+    "retrieved_at": {"type": "string"},
+    "fingerprint": {"type": "string"},
+    "notes": {"type": "string"},
+    "metadata": {"type": "object"}
+  }
+}

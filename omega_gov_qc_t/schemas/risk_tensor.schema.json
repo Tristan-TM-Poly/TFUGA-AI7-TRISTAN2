@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_gov_qc_t/risk_tensor.schema.json",
+  "title": "Ω-GOV-QC-T RiskTensor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "risk_id",
+    "name",
+    "legal",
+    "privacy",
+    "security",
+    "fairness",
+    "human_impact",
+    "reversibility",
+    "evidence_quality",
+    "public_utility"
+  ],
+  "properties": {
+    "risk_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "legal": {"type": "integer", "minimum": 0, "maximum": 5},
+    "privacy": {"type": "integer", "minimum": 0, "maximum": 5},
+    "security": {"type": "integer", "minimum": 0, "maximum": 5},
+    "fairness": {"type": "integer", "minimum": 0, "maximum": 5},
+    "human_impact": {"type": "integer", "minimum": 0, "maximum": 5},
+    "reversibility": {"type": "integer", "minimum": 0, "maximum": 5},
+    "evidence_quality": {"type": "integer", "minimum": 0, "maximum": 5},
+    "public_utility": {"type": "integer", "minimum": 0, "maximum": 5},
+    "risk_pressure": {"type": "integer"},
+    "support_strength": {"type": "integer"},
+    "net_score": {"type": "integer"},
+    "band": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+    "blocks_deployment": {"type": "boolean"},
+    "notes": {"type": "string"},
+    "metadata": {"type": "object"}
+  }
+}
