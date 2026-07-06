@@ -1,0 +1,63 @@
+schema_version: 1
+branch: omega_dmt_worldmodel_ait_t
+status: OAK-safe negative memory registry for cognitive overrun
+hard_boundary: >-
+  This registry is about AI/world-model overrun and unsafe reasoning patterns.
+  It is not substance-use guidance, not medical advice, and not a psychedelic
+  protocol.
+
+patterns:
+  - id: M_BADTRIP_001
+    name: intensity_equals_truth
+    severity: high
+    pattern: Mistaking emotional or symbolic intensity for factual truth.
+    safe_response: Downgrade to vision/metaphor unless RealityAnchor, tests, and evidence exist.
+
+  - id: M_BADTRIP_002
+    name: imagery_equals_evidence
+    severity: high
+    pattern: Treating vivid imagery, dreams, or generated scenes as evidence.
+    safe_response: Separate imagery from mechanism; require tests and sources.
+
+  - id: M_BADTRIP_003
+    name: persona_equals_authority
+    severity: high
+    pattern: Treating a persona or sub-agent output as authoritative proof.
+    safe_response: Apply EgoBoundaryGate; route to OAK-Falsifier and RealityAnchor.
+
+  - id: M_BADTRIP_004
+    name: novelty_equals_validity
+    severity: medium
+    pattern: Treating a new idea as true because it is surprising or beautiful.
+    safe_response: Classify as hypothesis; add falsification tests.
+
+  - id: M_BADTRIP_005
+    name: coherence_trap
+    severity: medium
+    pattern: Mistaking a coherent story for a verified theory.
+    safe_response: Add SourceTrust, RealityAnchor, tests, and limitations.
+
+  - id: M_BADTRIP_006
+    name: metaphor_mechanism_confusion
+    severity: high
+    pattern: Confusing metaphorical language with a physical, biological, or computational mechanism.
+    safe_response: Label metaphor explicitly and define mechanism separately.
+
+  - id: M_BADTRIP_007
+    name: exploration_equals_deployment
+    severity: critical
+    pattern: Moving from high-entropy exploration directly to external action.
+    safe_response: Force Return-to-Baseline, QuarantineGraph, and AutonomyGate downgrade.
+
+  - id: M_BADTRIP_008
+    name: possible_equals_permitted
+    severity: critical
+    pattern: Assuming an action is allowed or safe because it can be imagined or automated.
+    safe_response: Apply Reality-Permission Splitter and Human Sovereignty Layer.
+
+default_actions:
+  high_entropy_unanchored: add_reality_anchor
+  unsafe_boundary_terms: quarantine
+  persona_authority_confusion: ego_boundary_gate
+  public_or_irreversible_action: one_touch_or_no_touch
+  medical_or_substance_context: biotox_guardian
