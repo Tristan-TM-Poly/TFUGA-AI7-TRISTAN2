@@ -1,6 +1,6 @@
 """Small Git workflow helpers for atomic OAK-friendly changes."""
 
 from .events import GitEvent, default_events, summarize
-from .plan import GitPlan, prepare
+from .sizing import size_mode
 
-__all__ = ["GitEvent", "GitPlan", "default_events", "prepare", "summarize"]
+__all__ = ["GitEvent", "default_events", "size_mode", "summarize"]
