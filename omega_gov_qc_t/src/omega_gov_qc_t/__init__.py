@@ -11,6 +11,7 @@ from .oak_gate import GateResult, OAKGate, OAKReport
 from .oak_issue_bundle_mapper import OAKIssueBundleMapper
 from .oak_issue_generator import OAKIssueBundle, OAKIssueDraft, OAKIssueGenerator
 from .oak_issue_labels import OAKIssueLabel, label_manifest, label_manifest_json, label_names
+from .oak_issue_severity import OAKIssueSeverityPolicy, SeverityDecision, severity_json
 from .opendata_ingestor import IngestionResult, OpenDataIngestor
 from .product_factory import ProductCard, ProductFactory
 from .report_factory import GovReport, MarkdownReportFactory
@@ -45,6 +46,7 @@ __all__ = [
     "OAKIssueDraft",
     "OAKIssueGenerator",
     "OAKIssueLabel",
+    "OAKIssueSeverityPolicy",
     "OAKReport",
     "OpenDataIngestor",
     "ProductCard",
@@ -53,9 +55,11 @@ __all__ = [
     "RiskRegister",
     "RiskTensor",
     "ServiceCatalog",
+    "SeverityDecision",
     "SourceRecord",
     "SourceRegistry",
     "label_manifest",
     "label_manifest_json",
     "label_names",
+    "severity_json",
 ]
