@@ -1,0 +1,50 @@
+schema_version: 1
+branch: omega_ait_canon_os_t
+status: OAK-safe CanonOS policy
+
+core_rules:
+  - canon_is_living_but_review_gated
+  - no_persona_can_promote_an_idea_to_canon_alone
+  - proof_capital_must_pay_for_claim_strength
+  - deprecation_is_canon_protection
+  - contradictions_are_fertile_audit_objects
+  - residues_are_hypotheses_not_truth
+  - sensitive_domains_require_qualified_review
+  - no_auto_merge_for_sensitive_prs
+
+canon_rank:
+  C0: raw_fragment
+  C1: captured_idea
+  C2: defined_concept
+  C3: testable_hypothesis
+  C4: structured_model
+  C5: prototype
+  C6: tested_tool
+  C7: benchmarked
+  C8: reproduced
+  C9: reinforced_canon
+  C10: fundamental_pillar
+
+canon_temperature:
+  T0: frozen
+  T1: cold
+  T2: fertile
+  T3: hot
+  T4: overheated
+
+mutation_policy:
+  low_risk_doc_change: draft_pr
+  missing_tests: sandbox
+  privacy_or_ip_unclear: review_required
+  public_side_effect: review_required
+  qualified_review_domain: quarantine_or_review
+  irreversible_change: hold
+
+daily_canon_loop:
+  - reduce_one_debt
+  - add_one_test
+  - add_one_m_minus
+  - find_one_contradiction
+  - mine_one_residue
+  - advance_one_artifact
+  - produce_one_safe_next_action
