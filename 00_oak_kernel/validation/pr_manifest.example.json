@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "pr_id": 224,
+  "title": "OAKGate R3 hardening",
+  "class": "K",
+  "product": "oakgate",
+  "claim": {
+    "id": "CLM-OAK-001",
+    "statement": "OAKGate rejette toute Pull Request dont le contrat ou les preuves minimales sont invalides.",
+    "status": "tested_local",
+    "domain": [
+      "ci",
+      "governance",
+      "validation"
+    ],
+    "exclusions": [
+      "Ne constitue pas une preuve formelle d'absence totale de vulnérabilités."
+    ],
+    "falsification_criteria": [
+      "Une PR sans manifeste franchit la gate.",
+      "Une preuve dont le hash diffère est acceptée."
+    ]
+  },
+  "dependencies": {
+    "required_prs": [],
+    "supersedes": []
+  },
+  "risk": {
+    "technical": "medium",
+    "scientific": "low",
+    "security": "high",
+    "operational": "high"
+  },
+  "validation": {
+    "unit_tests": {
+      "required": true,
+      "command": "python -m unittest discover -s 00_oak_kernel/validation/tests -v",
+      "expected": "Tous les tests requis réussissent."
+    },
+    "baseline_comparison": {
+      "required": true,
+      "command": "python -m unittest discover -s 00_oak_kernel/validation/tests -v",
+      "expected": "Le mode ciblé par numéro de PR et le registre global restent testables.",
+      "baseline_id": "manual-cartographer-v0.1",
+      "metrics": [
+        {
+          "name": "targeted_pr_filter_test_failures",
+          "direction": "max",
+          "threshold": 0
+        }
+      ]
+    },
+    "clean_environment_reproduction": {
+      "required": true,
+      "command": "python -m unittest discover -s 00_oak_kernel/validation/tests -v",
+      "expected": "La suite réussit sur le runner GitHub Actions propre."
+    }
+  },
+  "evidence": {
+    "ledger_path": "evidence/pr_224.jsonl",
+    "ledger_sha256": "71dc2b7e8e9254a9bd0515431776a2b958ecf16003a384472c82fc70df37864f",
+    "required_kinds": [
+      "unit_test",
+      "baseline",
+      "reproduction"
+    ]
+  }
+}
