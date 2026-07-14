@@ -1,0 +1,87 @@
+name: OAK PR Cartographer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: read
+  actions: read
+
+concurrency:
+  group: oak-pr-cartographer-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cartography:
+    name: OAK manifest and evidence gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout immutable event revision
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: 00_oak_kernel/validation/requirements.txt
+
+      - name: Install validator dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r 00_oak_kernel/validation/requirements.txt
+
+      - name: Run cartographer unit tests
+        run: python -m unittest discover -s 00_oak_kernel/validation/tests -v
+
+      - name: Validate current Pull Request
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python 00_oak_kernel/validation/cartographer.py \
+            --owner "${{ github.repository_owner }}" \
+            --repo "${{ github.event.repository.name }}" \
+            --pr-number "$PR_NUMBER" \
+            --output-dir build/oak_cartography \
+            --fail-on-blocked
+
+      - name: Build global advisory registry
+        if: github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python 00_oak_kernel/validation/cartographer.py \
+            --owner "${{ github.repository_owner }}" \
+            --repo "${{ github.event.repository.name }}" \
+            --output-dir build/oak_cartography
+
+      - name: Publish OAK job summary
+        if: always()
+        run: |
+          if [ -f build/oak_cartography/pr_registry.md ]; then
+            cat build/oak_cartography/pr_registry.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## OAK Cartographer" >> "$GITHUB_STEP_SUMMARY"
+            echo "Aucun registre n'a été produit. Consulter les logs du job." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload immutable OAK registry
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: oak-pr-cartography-${{ github.run_id }}-${{ github.run_attempt }}
+          path: build/oak_cartography/
+          if-no-files-found: warn
+          retention-days: 30
