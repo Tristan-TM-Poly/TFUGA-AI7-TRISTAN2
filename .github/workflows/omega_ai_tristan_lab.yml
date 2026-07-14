@@ -1,0 +1,41 @@
+name: Ω-AI-Tristan Lab
+
+on:
+  pull_request:
+    paths:
+      - "omega_ai_tristan_lab/**"
+      - ".github/workflows/omega_ai_tristan_lab.yml"
+  push:
+    branches:
+      - omega-ai-tristan-lab
+    paths:
+      - "omega_ai_tristan_lab/**"
+      - ".github/workflows/omega_ai_tristan_lab.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package
+        working-directory: omega_ai_tristan_lab
+        run: python -m pip install -e ".[dev]"
+      - name: Run tests
+        working-directory: omega_ai_tristan_lab
+        run: python -m pytest -q
+      - name: Smoke test CLI JSON
+        working-directory: omega_ai_tristan_lab
+        run: python -m omega_ai_tristan_lab.cli --idea "Agent IA OAK-safe pour transformer une idée en prototype" --pretty
+      - name: Smoke test CLI workspace
+        working-directory: omega_ai_tristan_lab
+        run: |
+          python -m omega_ai_tristan_lab.cli \
+            --idea "Agent OAK-safe qui ingère un manifeste et produit des rapports" \
+            --ingest omega_ai_manifesto.md docs/curriculum.md \
+            --context-query "OAK IP revenue prototype" \
+            --output-dir omega_runs
+          test -n "$(find omega_runs -name report.json -print -quit)"
+          test -n "$(find omega_runs -name report.md -print -quit)"
