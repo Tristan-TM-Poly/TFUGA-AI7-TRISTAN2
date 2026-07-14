@@ -1,0 +1,83 @@
+{
+  "schema": "ark_sp_cube_gaia.snapshot_bundle.v0.12",
+  "status": "C_plus_snapshot_scaffold_not_validation",
+  "created_for": "PR_232",
+  "purpose": "Public-safe snapshot of the ARK-M1 / SP-CUBE / GAIA-SAT integration scaffold after v0.11.",
+  "oak_boundaries": {
+    "technical_validation": false,
+    "certified_climate_credit": false,
+    "revenue_claim": false,
+    "legal_patent_claim": false,
+    "public_sector_finding": false,
+    "human_review_required": true
+  },
+  "modules": [
+    {
+      "id": "ARK-M1",
+      "role": "low-power energy and thermal bench",
+      "current_status": "FORMALIZED_PROTOCOL_NOT_MEASURED",
+      "next_gate": "run low-power bench protocol and record CSV measurements"
+    },
+    {
+      "id": "SP-CUBE",
+      "role": "passive radiative delta-T experiment candidate",
+      "current_status": "FORMALIZED_PROTOCOL_NOT_MEASURED",
+      "next_gate": "run passive plate delta-T comparison against baseline samples"
+    },
+    {
+      "id": "GAIA-SAT",
+      "role": "MRV and climate-value framing layer",
+      "current_status": "SIMULATED_MRV_DEPENDENT_NOT_CERTIFIED",
+      "next_gate": "attach verified citations, uncertainty fields and anti-double-counting IDs"
+    },
+    {
+      "id": "OAKShield",
+      "role": "claim-style and boundary guard",
+      "current_status": "DOCUMENTATION_SCAFFOLD",
+      "next_gate": "convert claim style to executable lint rules"
+    },
+    {
+      "id": "FailureSynth",
+      "role": "negative-memory anti-hype registry",
+      "current_status": "LOCAL_DRAFTS_ONLY",
+      "next_gate": "convert selected local drafts into remote issues only after explicit confirmation"
+    }
+  ],
+  "snapshot_checks": [
+    {
+      "check_id": "SNAP-001",
+      "description": "No module is marked CERTIFIED.",
+      "expected": true
+    },
+    {
+      "check_id": "SNAP-002",
+      "description": "Climate value claims remain separated into gross, MRV-dependent and OAK-adjusted categories.",
+      "expected": true
+    },
+    {
+      "check_id": "SNAP-003",
+      "description": "Experimental protocols require baseline comparison before measured claims.",
+      "expected": true
+    },
+    {
+      "check_id": "SNAP-004",
+      "description": "Methane events require unique event IDs before any value claim.",
+      "expected": true
+    },
+    {
+      "check_id": "SNAP-005",
+      "description": "Public dashboard is informational, not operational or investment material.",
+      "expected": true
+    }
+  ],
+  "next_version": {
+    "version": "v0.13",
+    "targets": [
+      "OAK lint rule draft",
+      "citations with verified URLs and access dates",
+      "HTML dashboard refinement",
+      "snapshot check script or JSON schema",
+      "optional issue conversion after explicit confirmation"
+    ]
+  }
+}
