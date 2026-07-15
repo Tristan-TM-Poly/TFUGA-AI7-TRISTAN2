@@ -1,0 +1,52 @@
+version: 1
+
+classes:
+  D:
+    requires:
+      - review
+    approvals: 1
+  E:
+    requires:
+      - unit_test
+    approvals: 1
+  P:
+    requires:
+      - unit_test
+      - baseline
+      - reproduction
+    approvals: 1
+  K:
+    requires:
+      - unit_test
+      - baseline
+      - reproduction
+    approvals: 2
+
+path_rules:
+  - pattern: ".github/workflows/**"
+    minimum_class: K
+    security_review: true
+    oak_self_review: true
+  - pattern: "00_oak_kernel/**"
+    minimum_class: K
+    oak_self_review: true
+  - pattern: ".oak/**"
+    minimum_class: K
+    oak_self_review: true
+
+capabilities:
+  forbidden:
+    - merge_pull_request
+    - enable_auto_merge
+    - write_repository_contents
+    - write_pull_requests
+
+blocking_codes:
+  - MANIFEST_SCHEMA_INVALID
+  - CLAIM_SCHEMA_INVALID
+  - CLAIM_DEPENDENCY_CYCLE
+  - EVIDENCE_HASH_MISMATCH
+  - EVIDENCE_CHAIN_BROKEN
+  - EVIDENCE_CONTRADICTION
+  - FRESH_EVIDENCE_MISSING
+  - POLICY_FORBIDDEN_CAPABILITY

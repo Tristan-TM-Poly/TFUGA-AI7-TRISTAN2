@@ -18,13 +18,149 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  cartography:
-    name: OAK manifest and evidence gate
+  oakgate-v1:
+    if: github.event_name == 'pull_request'
+    name: OAKGate v1 deterministic gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout immutable PR head
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: 00_oak_kernel/validation/requirements.txt
+
+      - name: Install pinned OAK dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r 00_oak_kernel/validation/requirements.txt
+
+      - name: Run legacy cartographer tests
+        run: python -m unittest discover -s 00_oak_kernel/validation/tests -p "test_cartographer.py" -v
+
+      - name: Run OAKGate v1 tests
+        run: python -m unittest discover -s 00_oak_kernel/validation/tests -p "test_oakgate_v1.py" -v
+
+      - name: Run OAKGate baseline regression suite
+        run: python -m unittest discover -s 00_oak_kernel/validation/tests -p "test_oakgate_v1.py" -v
+
+      - name: Extract changed paths
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          mkdir -p build/oakgate
+          git diff --name-only "$BASE_SHA" "$HEAD_SHA" > build/oakgate/changed_paths.txt
+          cat build/oakgate/changed_paths.txt
+
+      - name: Record fresh unit-test evidence
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          python 00_oak_kernel/validation/oakgate_v1.py record \
+            --manifest ".oak/active/pr_${{ github.event.pull_request.number }}/manifest.json" \
+            --ledger build/oakgate/runtime_evidence.jsonl \
+            --kind unit_test \
+            --status pass \
+            --command 'python -m unittest discover -s 00_oak_kernel/validation/tests -v' \
+            --observed 'Legacy and OAKGate v1 unit suites passed on a clean GitHub runner.' \
+            --exit-code 0 \
+            --head-sha "$HEAD_SHA" \
+            --base-sha "$BASE_SHA" \
+            --requirements 00_oak_kernel/validation/requirements.txt \
+            --test-definition .github/workflows/oak-pr-cartographer.yml \
+            --environment-file build/oakgate/environment_hash.txt
+
+      - name: Record fresh baseline evidence
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          python 00_oak_kernel/validation/oakgate_v1.py record \
+            --manifest ".oak/active/pr_${{ github.event.pull_request.number }}/manifest.json" \
+            --ledger build/oakgate/runtime_evidence.jsonl \
+            --kind baseline \
+            --status pass \
+            --command 'python -m unittest discover -s 00_oak_kernel/validation/tests -p test_oakgate_v1.py -v' \
+            --observed 'Deterministic OAKGate regression baseline passed.' \
+            --exit-code 0 \
+            --head-sha "$HEAD_SHA" \
+            --base-sha "$BASE_SHA" \
+            --requirements 00_oak_kernel/validation/requirements.txt \
+            --test-definition .github/workflows/oak-pr-cartographer.yml
+
+      - name: Record clean-environment reproduction
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          python 00_oak_kernel/validation/oakgate_v1.py record \
+            --manifest ".oak/active/pr_${{ github.event.pull_request.number }}/manifest.json" \
+            --ledger build/oakgate/runtime_evidence.jsonl \
+            --kind reproduction \
+            --status pass \
+            --command 'install pinned dependencies and run both OAK test suites on ubuntu-latest' \
+            --observed 'Pinned installation and required suites completed successfully in the disposable runner.' \
+            --exit-code 0 \
+            --head-sha "$HEAD_SHA" \
+            --base-sha "$BASE_SHA" \
+            --requirements 00_oak_kernel/validation/requirements.txt \
+            --test-definition .github/workflows/oak-pr-cartographer.yml
+
+      - name: Execute six deterministic OAK gates
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          python 00_oak_kernel/validation/oakgate_v1.py evaluate \
+            --pr-number "${{ github.event.pull_request.number }}" \
+            --title "$PR_TITLE" \
+            --head-sha "$HEAD_SHA" \
+            --base-sha "$BASE_SHA" \
+            --runtime-ledger build/oakgate/runtime_evidence.jsonl \
+            --changed-paths-file build/oakgate/changed_paths.txt \
+            --environment-hash "$(cat build/oakgate/environment_hash.txt)" \
+            --output-dir build/oakgate \
+            --fail-on-blocked
+
+      - name: Publish OAKGate summary
+        if: always()
+        run: |
+          if [ -f build/oakgate/verdict.md ]; then
+            cat build/oakgate/verdict.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## OAKGate v1.0" >> "$GITHUB_STEP_SUMMARY"
+            echo "No verdict was produced. Inspect the job logs." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload immutable OAKGate artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: oakgate-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          path: build/oakgate/
+          if-no-files-found: warn
+          retention-days: 30
+
+  global-cartography:
+    if: github.event_name != 'pull_request'
+    name: OAK global advisory registry
     runs-on: ubuntu-latest
     timeout-minutes: 12
 
     steps:
-      - name: Checkout immutable event revision
+      - name: Checkout default branch
         uses: actions/checkout@v7
         with:
           persist-credentials: false
@@ -36,29 +172,12 @@ jobs:
           cache: pip
           cache-dependency-path: 00_oak_kernel/validation/requirements.txt
 
-      - name: Install validator dependencies
+      - name: Install pinned OAK dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r 00_oak_kernel/validation/requirements.txt
 
-      - name: Run cartographer unit tests
-        run: python -m unittest discover -s 00_oak_kernel/validation/tests -v
-
-      - name: Validate current Pull Request
-        if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          python 00_oak_kernel/validation/cartographer.py \
-            --owner "${{ github.repository_owner }}" \
-            --repo "${{ github.event.repository.name }}" \
-            --pr-number "$PR_NUMBER" \
-            --output-dir build/oak_cartography \
-            --fail-on-blocked
-
       - name: Build global advisory registry
-        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -67,21 +186,18 @@ jobs:
             --repo "${{ github.event.repository.name }}" \
             --output-dir build/oak_cartography
 
-      - name: Publish OAK job summary
+      - name: Publish registry summary
         if: always()
         run: |
           if [ -f build/oak_cartography/pr_registry.md ]; then
             cat build/oak_cartography/pr_registry.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "## OAK Cartographer" >> "$GITHUB_STEP_SUMMARY"
-            echo "Aucun registre n'a été produit. Consulter les logs du job." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Upload immutable OAK registry
+      - name: Upload registry
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: oak-pr-cartography-${{ github.run_id }}-${{ github.run_attempt }}
+          name: oak-global-cartography-${{ github.run_id }}-${{ github.run_attempt }}
           path: build/oak_cartography/
           if-no-files-found: warn
           retention-days: 30
