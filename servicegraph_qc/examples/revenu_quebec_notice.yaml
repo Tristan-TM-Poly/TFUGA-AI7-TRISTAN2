@@ -1,0 +1,108 @@
+service_id: "revenu_quebec_notice"
+service_name: "Revenu Québec - avis, paiement et correction"
+owner_organization: "Revenu Québec"
+public_need: "Comprendre un avis fiscal, payer ou corriger une situation sans stress inutile et avec explication claire"
+
+channels:
+  - online
+  - phone
+  - mail
+  - counter_by_appointment
+
+citizen_segments:
+  - salarié
+  - travailleur autonome
+  - étudiant
+  - personne âgée
+  - nouvel arrivant
+  - petite entreprise
+  - personne à faible littératie fiscale
+
+legal_rules:
+  - identification fiscale
+  - année d'imposition
+  - revenus déclarés
+  - crédits et déductions
+  - intérêts et pénalités
+  - délais d'opposition
+
+data_nodes:
+  - identity
+  - tax_year
+  - assessed_amount
+  - payment_status
+  - supporting_documents
+  - objection_deadline
+
+process_steps:
+  - recevoir avis
+  - comprendre motif
+  - voir calcul simplifié
+  - payer ou contester
+  - transmettre documents
+  - suivre statut
+  - obtenir correction ou décision
+
+friction_points:
+  - langage fiscal difficile
+  - statut de demande non visible
+  - documents ou preuves redemandées
+  - délai d'opposition peu compris
+  - stress lié aux pénalités
+  - difficulté à joindre un humain
+
+risks:
+  - erreur non corrigée avant délai
+  - paiement en double
+  - pénalité liée à incompréhension
+  - exclusion numérique
+  - documents sensibles mal transmis
+
+oak_tests:
+  - test français clair pour avis fiscal
+  - test travailleur autonome
+  - test nouvel arrivant
+  - test personne âgée
+  - test opposition avant délai
+  - test paiement partiel
+  - test correction d'erreur système
+  - test protection de données fiscales
+
+success_metrics:
+  - taux de compréhension de l'avis
+  - temps moyen pour résoudre l'avis
+  - nombre de contacts par avis
+  - taux de correction sans pénalité injuste
+  - taux de documents redemandés
+  - satisfaction citoyenne
+
+human_recourses:
+  - agent téléphonique
+  - demande de rappel
+  - opposition formelle
+  - correction administrative
+  - plainte officielle
+
+m_minus_rules:
+  - ne pas envoyer d'avis incompréhensible sans résumé clair
+  - toujours afficher échéances et recours
+  - éviter preuves redondantes
+  - protéger les données fiscales sensibles
+
+metric_inputs:
+  resolution: 0.64
+  accessibility: 0.55
+  transparency: 0.48
+  security: 0.82
+  human_recourse: 0.58
+  interoperability: 0.50
+  cost_control: 0.62
+
+penalties:
+  outage_risk: 0.25
+  no_human_channel: 0.25
+  no_rollback: 0.30
+  no_accessibility_test: 0.45
+  opaque_status: 0.70
+  vendor_lock_in: 0.20
+  repeated_documents: 0.60

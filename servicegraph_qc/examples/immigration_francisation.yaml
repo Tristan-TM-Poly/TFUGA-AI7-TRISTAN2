@@ -1,0 +1,111 @@
+service_id: "immigration_francisation"
+service_name: "Immigration et francisation - statut, documents et parcours"
+owner_organization: "Ministère de l'Immigration, de la Francisation et de l'Intégration"
+public_need: "Permettre à une personne immigrante de comprendre son statut, ses documents, ses délais et son parcours de francisation/intégration"
+
+channels:
+  - online
+  - phone
+  - service_counter
+  - community_partner
+  - school_or_francisation_center
+
+citizen_segments:
+  - demandeur récent
+  - personne réfugiée
+  - travailleur temporaire
+  - étudiant international
+  - famille immigrante
+  - personne avec faible français administratif
+  - personne sans accès numérique stable
+
+legal_rules:
+  - statut migratoire
+  - documents d'identité
+  - preuve de résidence
+  - admissibilité aux cours
+  - délais de programme
+  - consentement au partage de données
+
+data_nodes:
+  - identity
+  - immigration_status
+  - address
+  - documents
+  - language_level
+  - course_registration
+  - appointment_status
+
+process_steps:
+  - comprendre le parcours
+  - créer ou accéder au dossier
+  - transmettre documents
+  - suivre statut
+  - recevoir rendez-vous ou cours
+  - corriger erreur
+  - obtenir recours ou accompagnement
+
+friction_points:
+  - langage administratif difficile
+  - documents manquants peu clairs
+  - statut de demande non visible
+  - rendez-vous indisponibles
+  - délais opaques
+  - multiplicité des organismes
+  - stress lié au statut
+
+risks:
+  - perte de délai critique
+  - exclusion numérique ou linguistique
+  - données sensibles mal protégées
+  - mauvaise orientation vers le mauvais programme
+  - rupture de continuité francisation
+
+oak_tests:
+  - test nouvel arrivant avec français débutant
+  - test famille avec plusieurs dossiers
+  - test faible connexion mobile
+  - test documents manquants
+  - test statut urgent
+  - test accessibilité multilingue d'orientation
+  - test partenaire communautaire
+  - test recours humain
+
+success_metrics:
+  - taux de compréhension du parcours
+  - délai médian avant prochaine étape
+  - taux de dossiers complets au premier dépôt
+  - taux de rendez-vous obtenu
+  - nombre de contacts par demande
+  - continuité du parcours de francisation
+
+human_recourses:
+  - agent ministériel
+  - partenaire communautaire
+  - centre de francisation
+  - correction dossier
+  - plainte officielle
+
+m_minus_rules:
+  - ne pas cacher les délais critiques
+  - expliquer clairement documents et prochaines étapes
+  - ne pas dépendre uniquement du numérique
+  - protéger les données sensibles de statut migratoire
+
+metric_inputs:
+  resolution: 0.58
+  accessibility: 0.50
+  transparency: 0.40
+  security: 0.78
+  human_recourse: 0.64
+  interoperability: 0.42
+  cost_control: 0.56
+
+penalties:
+  outage_risk: 0.30
+  no_human_channel: 0.15
+  no_rollback: 0.45
+  no_accessibility_test: 0.70
+  opaque_status: 0.85
+  vendor_lock_in: 0.30
+  repeated_documents: 0.65
