@@ -1,0 +1,24 @@
+name: omega-action-ext-t-tests
+
+on:
+  pull_request:
+    paths:
+      - 'packages/omega_action_ext_t/**'
+      - '.github/workflows/omega-action-ext-t-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Run omega_action_ext_t tests
+        working-directory: packages/omega_action_ext_t
+        run: pytest -q
