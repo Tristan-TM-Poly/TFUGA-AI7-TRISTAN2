@@ -1,0 +1,5 @@
+[project]
+name = "ait-githubmanager-cloudsserversmanager"
+version = "0.1.0"
+description = "OAK-safe managers for GitHub, cloud and server operations."
+requires-python = ">=3.10"
