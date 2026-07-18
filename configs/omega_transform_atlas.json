@@ -1,0 +1,40 @@
+{
+  "name": "Ω-TRANSFORM-T",
+  "status": "OAK-safe prototype atlas",
+  "families": {
+    "FFT": {
+      "captures": ["global frequency", "periodicity"],
+      "baseline_for": ["spectra", "periodic signals"]
+    },
+    "FWT": {
+      "captures": ["time-scale locality", "details", "multiresolution"],
+      "baseline_for": ["signals", "images", "compression"]
+    },
+    "FFWT": {
+      "captures": ["fractal persistence", "scale fertility", "multi-scale anomalies"],
+      "baseline_for": ["fractal/noisy/multiscale signals"]
+    },
+    "FFWT-N": {
+      "captures": ["recursive transforms", "tensor dimensions", "cross-variable coherence", "hypergraph invariants"],
+      "baseline_for": ["multi-channel scientific data"]
+    },
+    "SVD": {
+      "captures": ["dominant linear modes", "rank compression"],
+      "baseline_for": ["matrices", "images"]
+    },
+    "Koopman_DMD": {
+      "captures": ["linearized nonlinear dynamics", "temporal modes"],
+      "baseline_for": ["dynamical systems"]
+    }
+  },
+  "oak_metrics": [
+    "relative_reconstruction_error",
+    "sparse_retention_fraction",
+    "compression_ratio_estimate",
+    "residual_energy",
+    "fertility_score",
+    "stability_under_noise",
+    "baseline_delta"
+  ],
+  "canon_rule": "No revolution without benchmark."
+}
