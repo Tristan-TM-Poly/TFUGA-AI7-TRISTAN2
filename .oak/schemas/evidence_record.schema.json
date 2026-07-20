@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OAKGate Evidence Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_id",
+    "claim_id",
+    "kind",
+    "status",
+    "producer",
+    "head_sha",
+    "base_sha",
+    "dependency_lock_hash",
+    "test_definition_hash",
+    "environment_hash",
+    "command",
+    "exit_code",
+    "observed",
+    "workflow_run_id",
+    "timestamp",
+    "previous_record_sha256",
+    "record_sha256"
+  ],
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^EVD-[A-Za-z0-9._-]+$"
+    },
+    "claim_id": {
+      "type": "string",
+      "pattern": "^CLM-"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "unit_test",
+        "integration_test",
+        "baseline",
+        "reproduction",
+        "security_scan",
+        "benchmark",
+        "review",
+        "mutation_test"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "inconclusive",
+        "not_run"
+      ]
+    },
+    "producer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "head_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "base_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "dependency_lock_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "test_definition_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "environment_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "command": {
+      "type": "string",
+      "minLength": 1
+    },
+    "exit_code": {
+      "type": "integer"
+    },
+    "observed": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflow_run_id": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "artifact": {
+      "type": "string"
+    },
+    "artifact_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "previous_record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

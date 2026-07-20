@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OAKGate Risk Tensor v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "technical",
+    "scientific",
+    "security",
+    "operational",
+    "privacy",
+    "legal",
+    "financial",
+    "reputational",
+    "reversibility",
+    "blast_radius",
+    "dependency",
+    "uncertainty"
+  ],
+  "properties": {
+    "technical": {"type": "integer", "minimum": 1, "maximum": 5},
+    "scientific": {"type": "integer", "minimum": 1, "maximum": 5},
+    "security": {"type": "integer", "minimum": 1, "maximum": 5},
+    "operational": {"type": "integer", "minimum": 1, "maximum": 5},
+    "privacy": {"type": "integer", "minimum": 1, "maximum": 5},
+    "legal": {"type": "integer", "minimum": 1, "maximum": 5},
+    "financial": {"type": "integer", "minimum": 1, "maximum": 5},
+    "reputational": {"type": "integer", "minimum": 1, "maximum": 5},
+    "reversibility": {"type": "integer", "minimum": 1, "maximum": 5},
+    "blast_radius": {"type": "integer", "minimum": 1, "maximum": 5},
+    "dependency": {"type": "integer", "minimum": 1, "maximum": 5},
+    "uncertainty": {"type": "integer", "minimum": 1, "maximum": 5}
+  }
+}
