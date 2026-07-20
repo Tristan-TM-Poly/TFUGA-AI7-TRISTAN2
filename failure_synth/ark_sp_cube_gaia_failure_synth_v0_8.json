@@ -1,0 +1,71 @@
+{
+  "schema": "ark_sp_cube_gaia.failure_synth.v0.8",
+  "oak_status": "C_integration_scaffold",
+  "network_access": false,
+  "remote_mutation": false,
+  "human_review_required": true,
+  "failures": [
+    {
+      "id": "F-SP-001",
+      "module": "SP-CUBE",
+      "failure": "Claiming the same passive surface is transparent and black at the same wavelength, direction, temperature and state.",
+      "oak_response": "Separate visible/NIR transmission or reflection from thermal IR absorption/emission; cite Kirchhoff boundary.",
+      "severity": "P0",
+      "route": "OAKShield"
+    },
+    {
+      "id": "F-SP-002",
+      "module": "SP-CUBE",
+      "failure": "Presenting passive radiative cooling as energy generation from vacuum.",
+      "oak_response": "State bounded net heat rejection only; no free energy; require net radiation calculation.",
+      "severity": "P0",
+      "route": "OAKShield"
+    },
+    {
+      "id": "F-GAIA-001",
+      "module": "GAIA-SAT",
+      "failure": "Converting simulated gross climate value directly into revenue or certified credits.",
+      "oak_response": "Keep value hypothesis, MRV evidence and certified credit as distinct states.",
+      "severity": "P0",
+      "route": "Gov-QC"
+    },
+    {
+      "id": "F-GAIA-002",
+      "module": "GAIA-SAT",
+      "failure": "Double-counting methane repair impact across plume, source, operator or jurisdiction boundaries.",
+      "oak_response": "Require attribution, uncertainty, deduplication and source registry before priority claims.",
+      "severity": "P1",
+      "route": "Gov-QC"
+    },
+    {
+      "id": "F-ARK-001",
+      "module": "ARK-M1",
+      "failure": "Treating a low-power bench scaffold as a certified energy product.",
+      "oak_response": "Label as experimental low-voltage bench until measured and independently reviewed.",
+      "severity": "P0",
+      "route": "Infra-QC"
+    },
+    {
+      "id": "F-PUBLIC-001",
+      "module": "8e Feu",
+      "failure": "Public copy implies certification, official finding, legal patent status or guaranteed revenue.",
+      "oak_response": "Use proof-ledger language with explicit status and non-claims.",
+      "severity": "P0",
+      "route": "8e Feu"
+    },
+    {
+      "id": "F-INFRA-001",
+      "module": "Infra-QC",
+      "failure": "Viewer or demo graph is mistaken for operational decision authority.",
+      "oak_response": "Add demo-only and human-review-required boundary to every public/demo artifact.",
+      "severity": "P1",
+      "route": "Infra-QC"
+    }
+  ],
+  "next_gates": [
+    "Generate local OAK issue drafts from these failures.",
+    "Map each failure to claim ledger rows.",
+    "Add public proof-ledger seed with conservative language.",
+    "Add optional snapshot tests after output format stabilizes."
+  ]
+}
