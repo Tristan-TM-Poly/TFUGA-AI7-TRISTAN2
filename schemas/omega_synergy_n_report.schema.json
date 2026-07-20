@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_synergy_n_report.schema.json",
+  "title": "Omega Synergy N Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "engine",
+    "authority",
+    "repo_roots",
+    "parameters",
+    "counts",
+    "synergies_by_order",
+    "m_minus"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "engine": {"const": "OMEGA-SYNERGY-N-T"},
+    "authority": {"const": "review_only_heuristic"},
+    "repo_roots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string"}
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_order", "beam_width", "top_k", "max_nodes"],
+      "properties": {
+        "max_order": {"type": "integer", "minimum": 2, "maximum": 8},
+        "beam_width": {"type": "integer", "minimum": 1},
+        "top_k": {"type": "integer", "minimum": 1},
+        "max_nodes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["systems", "retained_pairs", "synergy_candidates", "research_packets"],
+      "properties": {
+        "systems": {"type": "integer", "minimum": 0},
+        "retained_pairs": {"type": "integer", "minimum": 0},
+        "synergy_candidates": {"type": "integer", "minimum": 0},
+        "research_packets": {"type": "integer", "minimum": 0}
+      }
+    },
+    "synergies_by_order": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {"$ref": "#/$defs/candidate"}
+      }
+    },
+    "m_minus": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string"}
+    }
+  },
+  "$defs": {
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "order",
+        "systems",
+        "score",
+        "pair_mean",
+        "bottleneck",
+        "coverage",
+        "evidence",
+        "risk",
+        "packet_id"
+      ],
+      "properties": {
+        "order": {"type": "integer", "minimum": 2, "maximum": 8},
+        "systems": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"type": "string"}
+        },
+        "score": {"type": "number", "minimum": 0, "maximum": 1},
+        "pair_mean": {"type": "number", "minimum": 0, "maximum": 1},
+        "bottleneck": {"type": "number", "minimum": 0, "maximum": 1},
+        "coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "packet_id": {"type": "string", "pattern": "^RPK-[0-9a-f]{16}$"}
+      }
+    }
+  }
+}

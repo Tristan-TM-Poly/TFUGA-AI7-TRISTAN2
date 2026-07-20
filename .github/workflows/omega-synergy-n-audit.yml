@@ -1,0 +1,102 @@
+name: Omega Synergy N Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_order:
+        description: Maximum synergy order, from 2 to 8
+        required: false
+        default: '4'
+  schedule:
+    - cron: '27 6 * * 3'
+  pull_request:
+    paths:
+      - 'tools/github_reactor/synergy_n_engine.py'
+      - 'tests/test_synergy_n_engine.py'
+      - 'docs/canon/OMEGA_SYNERGY_N_T.md'
+      - 'schemas/omega_synergy_n_report.schema.json'
+      - '.github/workflows/omega-synergy-n-audit.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-synergy-n-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout root reactor
+        uses: actions/checkout@v4
+        with:
+          path: workspace/root
+          persist-credentials: false
+
+      - name: Checkout public deep corpus
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
+          path: workspace/deep-corpus
+          persist-credentials: false
+
+      - name: Checkout public AIT generator
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG
+          path: workspace/ait-generator
+          persist-credentials: false
+
+      - name: Checkout public variant
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2
+          path: workspace/variant
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run focused tests
+        working-directory: workspace/root
+        run: |
+          python -m pip install --upgrade pip pytest
+          pytest -q tests/test_synergy_n_engine.py
+
+      - name: Generate bounded n-order analysis
+        env:
+          MAX_ORDER: ${{ inputs.max_order || '4' }}
+        run: |
+          roots=(--repo-root workspace/root)
+          [ -d workspace/deep-corpus/.git ] && roots+=(--repo-root workspace/deep-corpus)
+          [ -d workspace/ait-generator/.git ] && roots+=(--repo-root workspace/ait-generator)
+          [ -d workspace/variant/.git ] && roots+=(--repo-root workspace/variant)
+          python workspace/root/tools/github_reactor/synergy_n_engine.py \
+            "${roots[@]}" \
+            --out reports/github-autonomous-reactor/synergy-n \
+            --max-order "$MAX_ORDER" \
+            --beam-width 96 \
+            --top-k 25 \
+            --max-nodes 800
+
+      - name: Validate generated JSON
+        run: |
+          python -m json.tool workspace/root/reports/github-autonomous-reactor/synergy-n/system_inventory.json >/dev/null
+          python -m json.tool workspace/root/reports/github-autonomous-reactor/synergy-n/synergy_n.json >/dev/null
+          python -m json.tool workspace/root/reports/github-autonomous-reactor/synergy-n/research_queue.json >/dev/null
+
+      - name: Upload review-only reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-synergy-n-${{ github.run_id }}
+          path: workspace/root/reports/github-autonomous-reactor/synergy-n
+          if-no-files-found: error
+          retention-days: 30
