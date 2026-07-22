@@ -1,0 +1,48 @@
+schema_version: 1
+branch: omega_ait_continuation_engine_t
+status: OAK-safe negative memory registry
+
+patterns:
+  - id: M_CONT_001
+    name: blocked_treated_as_final
+    severity: high
+    pattern: A blocked task is treated as a terminal state.
+    safe_response: Convert BLOCKED to SAFE_ALTERNATIVE and create a safe artifact.
+
+  - id: M_CONT_002
+    name: missing_input_causes_stop
+    severity: medium
+    pattern: Missing information causes the system to stop instead of creating assumptions, tests, or notes.
+    safe_response: Use MissingInputSynthesizer.
+
+  - id: M_CONT_003
+    name: direct_action_instead_of_fallback
+    severity: high
+    pattern: Direct action is attempted when fallback ladder should be used.
+    safe_response: Descend fallback ladder to safe artifact.
+
+  - id: M_CONT_004
+    name: effort_not_conserved
+    severity: medium
+    pattern: Failed or partial work is not converted into M−, tests, residue, or next action.
+    safe_response: Record M− and create next-action note.
+
+  - id: M_CONT_005
+    name: spectacular_over_useful
+    severity: medium
+    pattern: The system chooses the most impressive action rather than the safest useful one.
+    safe_response: Use AutonomousPriorityEngine score.
+
+  - id: M_CONT_006
+    name: review_state_without_artifact
+    severity: high
+    pattern: Review threshold is reached but no packet/report/note is produced.
+    safe_response: Create review packet or OAK report.
+
+default_actions:
+  blocked_treated_as_final: task_graph_safe_alternative
+  missing_input_causes_stop: missing_input_synthesizer
+  direct_action_instead_of_fallback: fallback_ladder
+  effort_not_conserved: m_minus_and_next_action
+  spectacular_over_useful: priority_engine
+  review_state_without_artifact: review_packet

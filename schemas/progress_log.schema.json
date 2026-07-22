@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProgressLog",
+  "type": "object",
+  "required": ["change", "reason", "next_step"],
+  "properties": {
+    "change": {"type": "string"},
+    "reason": {"type": "string"},
+    "evidence": {"type": "string"},
+    "check": {"type": "string"},
+    "next_step": {"type": "string"}
+  }
+}

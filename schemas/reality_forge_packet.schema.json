@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/reality_forge_packet.schema.json",
+  "title": "RealityForgePacket",
+  "description": "Structured packet for moving an idea through Reality Forge without overclaiming or unsafe execution.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["idea", "reality_level", "proof_level", "counterworlds", "failure_modes", "artifacts", "safe_next_action"],
+  "properties": {
+    "idea": {"type": "string", "minLength": 1},
+    "reality_level": {"type": "string", "pattern": "^R([0-9]|10)_"},
+    "proof_level": {"type": "string", "pattern": "^P([0-9]|10)_"},
+    "counterworlds": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["kind", "scenario", "test_or_signal", "oak_response"],
+        "properties": {
+          "kind": {"type": "string", "enum": ["success", "failure", "abuse", "cost", "limit", "counterexample"]},
+          "scenario": {"type": "string"},
+          "test_or_signal": {"type": "string"},
+          "oak_response": {"type": "string"}
+        }
+      }
+    },
+    "failure_modes": {"type": "array", "items": {"type": "string"}},
+    "artifacts": {
+      "type": "object",
+      "required": ["theory_doc", "schema", "tool", "tests", "m_minus", "oak_report"],
+      "properties": {
+        "theory_doc": {"type": "string"},
+        "schema": {"type": "string"},
+        "tool": {"type": "string"},
+        "tests": {"type": "string"},
+        "m_minus": {"type": "string"},
+        "oak_report": {"type": "string"}
+      }
+    },
+    "safe_next_action": {"type": "string"},
+    "quarantine_required": {"type": "boolean"}
+  }
+}

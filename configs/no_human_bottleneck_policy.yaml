@@ -1,0 +1,41 @@
+schema_version: 1
+branch: omega_ait_no_human_bottleneck_t
+status: OAK-safe continuation policy
+
+core_rules:
+  - remove_routine_human_bottlenecks
+  - keep_human_sovereignty_at_oak_thresholds
+  - never_stop_downgrade_mode_instead
+  - if_direct_action_is_not_safe_create_next_safe_artifact
+  - zero_touch_for_reversible_private_testable_work
+  - review_required_for_irreversible_public_sensitive_or_qualified_review_domains
+  - no_auto_merge
+  - no_auto_publish
+
+safe_zero_touch_work:
+  - docs
+  - schemas
+  - tools
+  - tests
+  - oak_reports
+  - roadmaps
+  - m_minus
+  - branch
+  - draft_pr
+  - simulation
+  - self_audit
+
+continuation_modes:
+  create: reversible_private_testable
+  simulate: missing_safety_property
+  review: public_or_commitment_effect
+  hold: irreversible_or_qualified_review_threshold
+
+fallback_sequence:
+  - create
+  - simulate
+  - review_packet
+  - oak_report
+  - quarantine_note
+  - m_minus
+  - next_safe_action

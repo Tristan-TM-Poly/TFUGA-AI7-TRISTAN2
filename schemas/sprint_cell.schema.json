@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/sprint_cell.schema.json",
+  "title": "SprintCell",
+  "description": "One safe autonomous sprint cell.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sprint_goal", "scope", "artifacts", "tests", "debts_reduced", "oak_status", "next_sprint"],
+  "properties": {
+    "sprint_goal": {"type": "string"},
+    "scope": {"type": "string"},
+    "safe_actions": {"type": "array", "items": {"type": "string"}},
+    "artifacts": {"type": "array", "items": {"type": "string"}},
+    "tests": {"type": "array", "items": {"type": "string"}},
+    "debts_reduced": {"type": "array", "items": {"type": "string"}},
+    "m_minus_added": {"type": "array", "items": {"type": "string"}},
+    "oak_status": {"type": "string"},
+    "next_sprint": {"type": "string"}
+  }
+}

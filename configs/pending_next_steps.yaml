@@ -1,0 +1,18 @@
+schema_version: 1
+source: PR-220
+mode: planning
+state: draft_pr
+
+rules:
+  no_auto_merge: true
+  no_external_calls: true
+
+next_steps:
+  - split_safety_core
+  - split_reality_forge_layer
+  - split_canon_ops_layer
+  - split_continuation_layer
+  - add_import_smoke_tests
+  - normalize_fallback_filenames
+  - verify_ci_path
+  - add_architecture_index

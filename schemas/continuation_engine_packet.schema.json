@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/continuation_engine_packet.schema.json",
+  "title": "ContinuationEnginePacket",
+  "description": "Traceable packet for converting any state into a safe next move.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["goal", "current_state", "best_safe_action", "artifact", "motion_state", "next_action"],
+  "properties": {
+    "goal": {"type": "string", "minLength": 1},
+    "current_state": {"type": "string", "minLength": 1},
+    "best_safe_action": {"type": "string", "minLength": 1},
+    "artifact": {"type": "string", "enum": ["doc", "schema", "tool", "test", "benchmark", "oak_report", "m_minus", "draft_pr", "simulation", "review_packet", "quarantine_note", "next_action_note"]},
+    "motion_state": {"type": "string", "pattern": "^M([0-9]|10)_"},
+    "risk_notes": {"type": "array", "items": {"type": "string"}},
+    "missing_inputs": {"type": "array", "items": {"type": "string"}},
+    "tests_added": {"type": "array", "items": {"type": "string"}},
+    "m_minus_added": {"type": "array", "items": {"type": "string"}},
+    "next_action": {"type": "string", "minLength": 1}
+  }
+}
