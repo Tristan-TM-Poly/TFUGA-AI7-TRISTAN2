@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ARK-SP-CUBE-GAIA v0.12 Public-Safe Dashboard</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, sans-serif; margin: 2rem; line-height: 1.5; max-width: 1100px; }
+    header { border-bottom: 1px solid #ddd; margin-bottom: 1.5rem; padding-bottom: 1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; }
+    .status { font-weight: 700; }
+    code { background: #f5f5f5; padding: 0.1rem 0.25rem; border-radius: 4px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border: 1px solid #ddd; padding: 0.55rem; vertical-align: top; }
+    th { text-align: left; }
+    footer { margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1rem; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ARK-SP-CUBE-GAIA v0.12</h1>
+    <p><strong>Public-safe dashboard scaffold.</strong> This page summarizes integration status only. It does not certify ARK-M1, SP-CUBE, GAIA-SAT, methane claims, carbon credits, revenue, patents, or public-sector findings.</p>
+  </header>
+
+  <section class="grid">
+    <article class="card">
+      <h2>ARK-M1</h2>
+      <p class="status">FORMALIZED_PROTOCOL_NOT_MEASURED</p>
+      <p>Low-power energy and thermal bench candidate. Next gate: run controlled measurements and attach CSV traces.</p>
+    </article>
+    <article class="card">
+      <h2>SP-CUBE</h2>
+      <p class="status">FORMALIZED_PROTOCOL_NOT_MEASURED</p>
+      <p>Passive radiative delta-T experiment candidate. Next gate: compare against baseline samples under controlled logging.</p>
+    </article>
+    <article class="card">
+      <h2>GAIA-SAT</h2>
+      <p class="status">SIMULATED_MRV_DEPENDENT_NOT_CERTIFIED</p>
+      <p>Climate MRV and value-framing layer. Next gate: verified citations, uncertainty fields and anti-double-counting IDs.</p>
+    </article>
+    <article class="card">
+      <h2>OAKShield</h2>
+      <p class="status">CLAIM_BOUNDARY_SCAFFOLD</p>
+      <p>Claim-style guard. Blocks wording drift from simulated value into revenue, certification or investment claims.</p>
+    </article>
+  </section>
+
+  <section>
+    <h2>OAK boundary</h2>
+    <table>
+      <thead><tr><th>Boundary</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Technical validation</td><td>false</td></tr>
+        <tr><td>Certified climate credit</td><td>false</td></tr>
+        <tr><td>Revenue claim</td><td>false</td></tr>
+        <tr><td>Legal patent claim</td><td>false</td></tr>
+        <tr><td>Public-sector finding</td><td>false</td></tr>
+        <tr><td>Human review required</td><td>true</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Snapshot checks</h2>
+    <ul>
+      <li>No module is marked <code>CERTIFIED</code>.</li>
+      <li>Climate value claims remain gross, MRV-dependent or OAK-adjusted, not revenue.</li>
+      <li>Experimental protocols require baseline comparison before measured claims.</li>
+      <li>Methane events require unique event IDs before any value claim.</li>
+      <li>This dashboard is informational, not operational or investment material.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Status: <strong>C+ integration and experiment protocol scaffold</strong>. Next gates: executable OAK lint rules, verified source citations, JSON schema or snapshot test script, and optional remote issue creation only after explicit confirmation.</p>
+  </footer>
+</body>
+</html>

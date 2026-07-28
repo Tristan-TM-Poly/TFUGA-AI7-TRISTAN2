@@ -1,0 +1,83 @@
+{
+  "schema": "ark_sp_cube_gaia.oak_lint_rules.v0.13",
+  "oak_status": "C_plus_lint_scaffold_not_certification",
+  "purpose": "Detect unsafe or over-strong ARK/SP-CUBE/GAIA wording before public, scientific, investor, or GitHub release.",
+  "global_boundary": {
+    "technical_validation": false,
+    "legal_patent_claim": false,
+    "certified_climate_credit": false,
+    "revenue_claim": false,
+    "public_sector_finding": false,
+    "human_review_required": true
+  },
+  "blocked_patterns": [
+    {
+      "id": "OAK-BLOCK-REVENUE-001",
+      "pattern": "revenu garanti",
+      "severity": "P0",
+      "safe_rewrite": "valeur climatique simulée non certifiée et non assimilable à un revenu"
+    },
+    {
+      "id": "OAK-BLOCK-CERT-001",
+      "pattern": "crédit carbone certifié",
+      "severity": "P0",
+      "safe_rewrite": "hypothèse de valeur MRV dépendante, non certifiée"
+    },
+    {
+      "id": "OAK-BLOCK-ENERGY-001",
+      "pattern": "énergie gratuite",
+      "severity": "P0",
+      "safe_rewrite": "gestion énergétique basse puissance à mesurer"
+    },
+    {
+      "id": "OAK-BLOCK-VOID-001",
+      "pattern": "énergie du vide",
+      "severity": "P0",
+      "safe_rewrite": "aucune extraction d'énergie du vide n'est revendiquée"
+    },
+    {
+      "id": "OAK-BLOCK-PROOF-001",
+      "pattern": "preuve finale",
+      "severity": "P1",
+      "safe_rewrite": "preuve partielle ou statut OAK, selon données disponibles"
+    },
+    {
+      "id": "OAK-BLOCK-PERF-001",
+      "pattern": "performance validée",
+      "severity": "P1",
+      "safe_rewrite": "performance à mesurer ou résultat local non certifié"
+    },
+    {
+      "id": "OAK-BLOCK-PUBLIC-001",
+      "pattern": "décision publique automatique",
+      "severity": "P0",
+      "safe_rewrite": "signal d'aide à la revue humaine, non décision finale"
+    }
+  ],
+  "required_statuses": [
+    "IDEA",
+    "FORMALIZED",
+    "SIMULATED",
+    "CODED",
+    "TESTED_LOCAL",
+    "PROTOTYPED",
+    "MEASURED",
+    "REPRODUCED",
+    "EXTERNALLY_VERIFIED",
+    "CERTIFIED",
+    "REFUTED",
+    "BLOCKED"
+  ],
+  "module_boundaries": {
+    "ARK_M1": "low-power energy and thermal management bench; not a certified energy product",
+    "SP_CUBE": "selective spectral/radiative hypothesis; not measured cooling until experiment data exists",
+    "GAIA_SAT": "simulated climate value and MRV scaffold; not revenue or certified credit",
+    "METHANE_MRV": "event registry and anti-double-counting scaffold; not verified offset issuance",
+    "DASHBOARD": "public-safe visibility layer; not proof or final authority"
+  },
+  "lint_result_semantics": {
+    "PASS": "No blocked pattern found; still requires human review for public use.",
+    "WARN": "Ambiguous claim or missing OAK status; rewrite recommended.",
+    "BLOCK": "Unsafe claim pattern or unsupported certification/revenue language present."
+  }
+}

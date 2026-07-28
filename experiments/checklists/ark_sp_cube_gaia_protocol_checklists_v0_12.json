@@ -1,0 +1,13 @@
+{
+  "schema": "ark_sp_cube_gaia.protocol_checklists.v0.12",
+  "oak_status": "C_plus_checklist_scaffold_not_measurement",
+  "non_claims": [
+    "not technical validation",
+    "not certified climate credit",
+    "not revenue claim",
+    "not patent filing",
+    "not public-sector decision"
+  ],
+  "checklists": [
+    {
+      "id": "SPC

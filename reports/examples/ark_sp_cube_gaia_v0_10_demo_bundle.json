@@ -1,0 +1,51 @@
+{
+  "schema": "ark_sp_cube_gaia.demo_bundle.v0.10",
+  "status_oak": "C_experimental_scaffold_not_validated",
+  "modules": {
+    "ARK-M1": {
+      "role": "low-power thermal bench",
+      "status": "FORMALIZED_PROTOCOL",
+      "next_measurement": "controlled heat load delta-T log"
+    },
+    "SP-CUBE": {
+      "role": "passive spectral/radiative cooling candidate",
+      "status": "FORMALIZED_PROTOCOL",
+      "next_measurement": "passive delta-T plate comparison"
+    },
+    "GAIA-SAT": {
+      "role": "simulated climate value and MRV routing layer",
+      "status": "SIMULATED_MRV_DEPENDENT",
+      "next_measurement": "methane event uniqueness and post-repair verification"
+    },
+    "OAKShield": {
+      "role": "claim style and status boundary",
+      "status": "ACTIVE_DOCUMENTATION",
+      "blocked_claims": [
+        "guaranteed revenue",
+        "certified climate credit without MRV",
+        "energy from vacuum",
+        "measured SP-CUBE performance without experiment"
+      ]
+    }
+  },
+  "new_v0_10_files": [
+    "experiments/ARK_SP_CUBE_GAIA_SP_CUBE_PASSIVE_DELTA_T_PROTOCOL_v0_10.md",
+    "experiments/ARK_SP_CUBE_GAIA_ARK_M1_LOW_POWER_BENCH_PROTOCOL_v0_10.md",
+    "data/mrv/ark_sp_cube_gaia_methane_event_registry_v0_10.csv",
+    "reports/examples/ark_sp_cube_gaia_v0_10_demo_bundle.json"
+  ],
+  "non_claims": {
+    "technical_validation": false,
+    "legal_patent_claim": false,
+    "certified_climate_credit": false,
+    "revenue_claim": false,
+    "public_sector_finding": false,
+    "remote_mutation": false
+  },
+  "next_gates": [
+    "add executable protocol checklist tests",
+    "convert local OAK drafts into issues only after explicit confirmation",
+    "add source citations registry",
+    "add public-safe dashboard mini-bundle"
+  ]
+}
