@@ -1,0 +1,41 @@
+{
+  "policy_id": "omega-solids-oak-r0.1",
+  "promotion_threshold": 0.8,
+  "hard_fail_gates": [
+    "physical_coherence",
+    "stability",
+    "reproducibility",
+    "uncertainty",
+    "hypergraph_integrity"
+  ],
+  "human_approval_required_for": [
+    "public scientific claim",
+    "patent disclosure",
+    "material safety statement",
+    "critical structural use",
+    "medical use",
+    "pressure-containing part",
+    "regulated product",
+    "manufacturing release"
+  ],
+  "forbidden_promotions": [
+    "simulation_to_measurement_without_experiment",
+    "minimum_energy_to_synthesizability_without_kinetics",
+    "generated_geometry_to_manufacturability_without_process_validation",
+    "correlation_to_mechanism_without_discriminating_test",
+    "exploratory_hyperalgebra_to_new_physics_without_prediction_and_validation"
+  ],
+  "unbounded_growth": {
+    "permanent_total_addition_cap": null,
+    "required_runtime_bound": "finite work target or explicit stop predicate",
+    "required_controls": [
+      "adaptive batching",
+      "backpressure",
+      "checkpointing",
+      "disk-backed deduplication",
+      "quality floor",
+      "M-minus saturation ledger",
+      "rollback-compatible outputs"
+    ]
+  }
+}

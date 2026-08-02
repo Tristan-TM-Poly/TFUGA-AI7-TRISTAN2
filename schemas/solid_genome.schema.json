@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/omega-solids-t/solid_genome.schema.json",
+  "title": "Ω-SOLID-T∞ SolidGenome-T",
+  "description": "Traceable multi-scale description of a solid, including composition, bonds, phases, defects, interfaces, properties, process, uncertainty, epistemic status and next experiments.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "identifier",
+    "name",
+    "family",
+    "composition",
+    "bonds",
+    "order",
+    "dimensionality",
+    "status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "identifier": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9._:-]+$"},
+    "name": {"type": "string", "minLength": 1},
+    "family": {"type": "string", "minLength": 1},
+    "composition": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/compositionComponent"}
+    },
+    "bonds": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/bondContribution"}
+    },
+    "order": {"$ref": "#/$defs/orderClass"},
+    "dimensionality": {"$ref": "#/$defs/dimensionality"},
+    "phases": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/phaseRecord"}
+    },
+    "defects": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/defectRecord"}
+    },
+    "interfaces": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/interfaceRecord"}
+    },
+    "properties": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/propertyRecord"}
+    },
+    "geometry": {"type": "object"},
+    "process": {"type": "array", "items": {"type": "object"}},
+    "history": {"type": "array", "items": {"type": "object"}},
+    "fields": {"type": "object"},
+    "environment": {"type": "object"},
+    "applications": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "risks": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "provenance": {"type": "array", "items": {"type": "object"}},
+    "assumptions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "next_experiments": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "status": {"$ref": "#/$defs/epistemicStatus"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "epistemicStatus": {
+      "type": "string",
+      "enum": [
+        "measured",
+        "established_theory",
+        "simulated",
+        "model_extrapolation",
+        "fertile_hypothesis",
+        "proposed_design",
+        "fabricated_prototype",
+        "independently_validated"
+      ]
+    },
+    "dimensionality": {
+      "type": "string",
+      "enum": ["0D", "1D", "2D", "3D", "4D-design", "nD-information"]
+    },
+    "orderClass": {
+      "type": "string",
+      "enum": [
+        "periodic_crystal",
+        "quasicrystal",
+        "amorphous",
+        "semicrystalline",
+        "polycrystalline",
+        "hierarchical",
+        "granular",
+        "unknown"
+      ]
+    },
+    "bondClass": {
+      "type": "string",
+      "enum": [
+        "ionic",
+        "covalent",
+        "metallic",
+        "molecular",
+        "hydrogen_bonded",
+        "polymeric",
+        "mixed",
+        "unknown"
+      ]
+    },
+    "defectKind": {
+      "type": "string",
+      "enum": [
+        "vacancy",
+        "interstitial",
+        "substitution",
+        "dislocation",
+        "stacking_fault",
+        "grain_boundary",
+        "pore",
+        "inclusion",
+        "crack",
+        "residual_stress",
+        "chemical_disorder",
+        "electronic",
+        "topological",
+        "delamination",
+        "other"
+      ]
+    },
+    "propertyDomain": {
+      "type": "string",
+      "enum": [
+        "mechanical",
+        "thermal",
+        "electrical",
+        "magnetic",
+        "optical",
+        "chemical",
+        "ionic",
+        "acoustic",
+        "biological",
+        "economic",
+        "durability",
+        "geometric"
+      ]
+    },
+    "quantity": {
+      "type": "object",
+      "required": ["value", "unit", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {"type": "number"},
+        "unit": {"type": "string", "minLength": 1},
+        "uncertainty": {"type": ["number", "null"], "minimum": 0},
+        "status": {"$ref": "#/$defs/epistemicStatus"},
+        "source": {"type": ["string", "null"]},
+        "method": {"type": ["string", "null"]},
+        "conditions": {"type": "object"}
+      }
+    },
+    "compositionComponent": {
+      "type": "object",
+      "required": ["species", "fraction", "basis"],
+      "additionalProperties": false,
+      "properties": {
+        "species": {"type": "string", "minLength": 1},
+        "fraction": {"type": "number", "minimum": 0},
+        "basis": {"type": "string", "minLength": 1},
+        "role": {"type": ["string", "null"]},
+        "uncertainty": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "bondContribution": {
+      "type": "object",
+      "required": ["kind", "weight"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"$ref": "#/$defs/bondClass"},
+        "weight": {"type": "number", "minimum": 0},
+        "note": {"type": ["string", "null"]}
+      }
+    },
+    "defectRecord": {
+      "type": "object",
+      "required": ["kind", "criticality", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"$ref": "#/$defs/defectKind"},
+        "density": {"oneOf": [{"$ref": "#/$defs/quantity"}, {"type": "null"}]},
+        "geometry": {"type": "object"},
+        "orientation": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "array", "minItems": 2, "maxItems": 4, "items": {"type": "number"}}
+          ]
+        },
+        "mobility": {"type": ["number", "null"], "minimum": 0},
+        "formation_energy": {"oneOf": [{"$ref": "#/$defs/quantity"}, {"type": "null"}]},
+        "criticality": {"type": "number", "minimum": 0, "maximum": 1},
+        "function": {"type": ["string", "null"]},
+        "status": {"$ref": "#/$defs/epistemicStatus"}
+      }
+    },
+    "interfaceRecord": {
+      "type": "object",
+      "required": ["name", "between", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "between": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "thickness": {"oneOf": [{"$ref": "#/$defs/quantity"}, {"type": "null"}]},
+        "energy": {"oneOf": [{"$ref": "#/$defs/quantity"}, {"type": "null"}]},
+        "charge_density": {"oneOf": [{"$ref": "#/$defs/quantity"}, {"type": "null"}]},
+        "coherency": {"type": ["string", "null"]},
+        "orientation_relationship": {"type": ["string", "null"]},
+        "properties": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/quantity"}
+        },
+        "defects": {"type": "array", "items": {"$ref": "#/$defs/defectRecord"}},
+        "status": {"$ref": "#/$defs/epistemicStatus"}
+      }
+    },
+    "phaseRecord": {
+      "type": "object",
+      "required": ["name", "fraction", "order", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "order": {"$ref": "#/$defs/orderClass"},
+        "space_group": {"type": ["string", "null"]},
+        "lattice_parameters": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/quantity"}
+        },
+        "stability_window": {"type": "object"},
+        "status": {"$ref": "#/$defs/epistemicStatus"}
+      }
+    },
+    "propertyRecord": {
+      "type": "object",
+      "required": ["name", "domain", "quantity"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "domain": {"$ref": "#/$defs/propertyDomain"},
+        "quantity": {"$ref": "#/$defs/quantity"},
+        "direction": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "array", "minItems": 2, "maxItems": 3, "items": {"type": "number"}}
+          ]
+        },
+        "tensor": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "array", "minItems": 1, "items": {"type": "number"}}
+            }
+          ]
+        },
+        "note": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
