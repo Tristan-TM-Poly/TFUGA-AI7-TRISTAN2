@@ -6,7 +6,6 @@ from dataclasses import replace
 import pytest
 
 from omega_anime_t import (
-    CharacterState,
     NarrativeLinter,
     OakStatus,
     ProjectValidationError,
@@ -102,6 +101,24 @@ def test_character_validation_rejects_empty_limitation() -> None:
     invalid = replace(project.characters[0], limitation="")
     errors = invalid.validate()
     assert any("limitation" in error for error in errors)
+
+
+def test_information_reveals_are_sequences_and_serialize_as_arrays() -> None:
+    project = build_eighth_fire_project()
+    assert all(isinstance(beat.information_revealed, tuple) for beat in project.episode_beats)
+    payload = project.to_dict()
+    assert all(
+        isinstance(beat["information_revealed"], list)
+        for beat in payload["episode_beats"]
+    )
+
+
+def test_scalar_information_reveal_is_rejected() -> None:
+    project = build_eighth_fire_project()
+    beats = list(project.episode_beats)
+    beats[0] = replace(beats[0], information_revealed="scalar reveal")
+    errors = replace(project, episode_beats=tuple(beats)).validate()
+    assert any("must be a sequence of strings" in error for error in errors)
 
 
 def test_bundle_contains_manifest_project_lint_and_report(tmp_path) -> None:
