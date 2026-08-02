@@ -1,0 +1,206 @@
+.oakgate-form {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.oak-object-selector {
+  display: grid;
+  gap: .35rem;
+}
+
+.oak-object-selector > span,
+.oakgate-form legend {
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.oak-object-selector select {
+  width: 100%;
+  min-height: 3rem;
+  padding: .65rem .8rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: .75rem;
+}
+
+.oakgate-form fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: .85rem;
+}
+
+.oakgate-form legend {
+  padding: 0 .45rem;
+}
+
+.oak-check-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .55rem;
+}
+
+.gate-check-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.oak-check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .65rem;
+  align-items: start;
+  min-height: 4rem;
+  padding: .75rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: .7rem;
+  cursor: pointer;
+}
+
+.oak-check:hover,
+.oak-check:has(input:focus-visible) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus);
+}
+
+.oak-check:has(input:checked) {
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+  border-color: color-mix(in srgb, var(--accent) 48%, var(--line));
+}
+
+.oak-check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: .1rem 0 0;
+  accent-color: var(--accent);
+}
+
+.oak-check strong,
+.oak-check small {
+  display: block;
+}
+
+.oak-check strong {
+  font-size: .82rem;
+  line-height: 1.25;
+}
+
+.oak-check small {
+  margin-top: .2rem;
+  color: var(--muted);
+  font-size: .67rem;
+}
+
+.automatic-promotion-field .oak-check:has(input:checked) {
+  background: color-mix(in srgb, var(--danger) 10%, var(--bg));
+  border-color: var(--danger);
+}
+
+.oak-report-host {
+  min-height: 1rem;
+}
+
+.oak-report {
+  display: grid;
+  gap: 1rem;
+  border-top: .3rem solid var(--accent-2);
+}
+
+.oak-report-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .55rem;
+}
+
+.oak-report-metrics article {
+  padding: .85rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: .7rem;
+}
+
+.oak-report-metrics strong,
+.oak-report-metrics span {
+  display: block;
+}
+
+.oak-report-metrics strong {
+  color: var(--accent-2);
+  font-size: 1.65rem;
+}
+
+.oak-report-metrics span {
+  margin-top: .25rem;
+  color: var(--muted);
+  font-size: .7rem;
+}
+
+.blocker-list {
+  display: grid;
+  gap: .45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.blocker-list li {
+  padding: .7rem;
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 28%, var(--line));
+  border-radius: .6rem;
+}
+
+.blocker-list code {
+  color: inherit;
+}
+
+.success-callout {
+  padding: .8rem;
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--success) 30%, var(--line));
+  border-radius: .65rem;
+}
+
+.provenance-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem .5rem;
+}
+
+.provenance-links a {
+  font-family: monospace;
+  font-size: .7rem;
+}
+
+.provenance-view td code {
+  display: block;
+  max-width: 32rem;
+  overflow-wrap: anywhere;
+}
+
+.compact-loading {
+  min-height: 16rem;
+}
+
+@media (max-width: 900px) {
+  .oak-check-grid,
+  .gate-check-grid,
+  .oak-report-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .oak-check-grid,
+  .gate-check-grid,
+  .oak-report-metrics {
+    grid-template-columns: 1fr;
+  }
+}
