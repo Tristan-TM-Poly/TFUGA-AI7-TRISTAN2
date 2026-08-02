@@ -1,0 +1,105 @@
+name: Omega Legal Real Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: Exact bounded provider
+        required: true
+        type: choice
+        options:
+          - gmail-send
+          - github-release-draft
+          - stripe-test-payment-intent
+      action_path:
+        description: Approved JSON under external_actions/approved/
+        required: true
+        type: string
+      action_id:
+        description: Exact approved action id
+        required: true
+        type: string
+      action_hash:
+        description: Exact canonical sha256 action hash
+        required: true
+        type: string
+      confirmation:
+        description: Type I_ACKNOWLEDGE_ONE_ACTION
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-external-${{ inputs.provider }}-${{ inputs.action_id }}
+  cancel-in-progress: false
+
+jobs:
+  execute-one-action:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: external-actions-sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate manual invocation
+        env:
+          ACTION_PATH: ${{ inputs.action_path }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+          ACTION_HASH: ${{ inputs.action_hash }}
+        run: |
+          test "$CONFIRMATION" = "I_ACKNOWLEDGE_ONE_ACTION"
+          case "$ACTION_PATH" in
+            external_actions/approved/*.json) ;;
+            *) echo "Action must be committed under external_actions/approved/" >&2; exit 2 ;;
+          esac
+          test -f "$ACTION_PATH"
+          case "$ACTION_HASH" in
+            sha256:????????????????????????????????????????????????????????????????) ;;
+            *) echo "Invalid canonical action hash" >&2; exit 2 ;;
+          esac
+      - name: Provider doctor
+        env:
+          OMEGA_EXTERNAL_EXECUTION_ACK: ${{ inputs.confirmation }}
+          OMEGA_ALLOWED_ACTION_ID: ${{ inputs.action_id }}
+          OMEGA_ALLOWED_ACTION_HASH: ${{ inputs.action_hash }}
+          OMEGA_ALLOWED_PROVIDER: ${{ inputs.provider }}
+          GMAIL_ACCESS_TOKEN: ${{ secrets.OMEGA_GMAIL_ACCESS_TOKEN }}
+          OMEGA_RECIPIENT_EMAIL: ${{ secrets.OMEGA_RECIPIENT_EMAIL }}
+          OMEGA_SENDER_EMAIL: ${{ secrets.OMEGA_SENDER_EMAIL }}
+          GITHUB_RELEASE_TOKEN: ${{ secrets.OMEGA_GITHUB_RELEASE_TOKEN }}
+          STRIPE_SECRET_KEY: ${{ secrets.OMEGA_STRIPE_TEST_SECRET_KEY }}
+        run: python -m omega_legal_production_os_t.real_cli doctor --provider "${{ inputs.provider }}"
+      - name: Execute exactly one action
+        env:
+          OMEGA_EXTERNAL_EXECUTION_ACK: ${{ inputs.confirmation }}
+          OMEGA_ALLOWED_ACTION_ID: ${{ inputs.action_id }}
+          OMEGA_ALLOWED_ACTION_HASH: ${{ inputs.action_hash }}
+          OMEGA_ALLOWED_PROVIDER: ${{ inputs.provider }}
+          GMAIL_ACCESS_TOKEN: ${{ secrets.OMEGA_GMAIL_ACCESS_TOKEN }}
+          OMEGA_RECIPIENT_EMAIL: ${{ secrets.OMEGA_RECIPIENT_EMAIL }}
+          OMEGA_SENDER_EMAIL: ${{ secrets.OMEGA_SENDER_EMAIL }}
+          OMEGA_MESSAGE_ID_DOMAIN: ${{ secrets.OMEGA_MESSAGE_ID_DOMAIN }}
+          GITHUB_RELEASE_TOKEN: ${{ secrets.OMEGA_GITHUB_RELEASE_TOKEN }}
+          STRIPE_SECRET_KEY: ${{ secrets.OMEGA_STRIPE_TEST_SECRET_KEY }}
+        run: >-
+          python -m omega_legal_production_os_t.real_cli execute
+          "${{ inputs.action_path }}"
+          --provider "${{ inputs.provider }}"
+          --ledger /tmp/omega-external-ledger.jsonl
+          --receipt /tmp/omega-external-receipt.json
+      - name: Audit local execution ledger
+        run: python -m omega_legal_production_os_t.cli audit-ledger /tmp/omega-external-ledger.jsonl
+      - name: Upload expiring receipt and ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-external-${{ inputs.action_id }}
+          path: |
+            /tmp/omega-external-receipt.json
+            /tmp/omega-external-ledger.jsonl
+          if-no-files-found: warn
+          retention-days: 30

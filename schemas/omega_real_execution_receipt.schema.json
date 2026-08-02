@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omega-tristan.example/schemas/omega_real_execution_receipt.schema.json",
+  "title": "Omega Real Execution Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "action_id",
+    "action_hash",
+    "company_id",
+    "provider_receipt",
+    "ledger_path"
+  ],
+  "properties": {
+    "schema": {"const": "omega-real-execution-receipt-v1"},
+    "action_id": {"type": "string", "minLength": 3, "maxLength": 80},
+    "action_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "company_id": {"type": "string", "minLength": 1},
+    "ledger_path": {"type": "string", "minLength": 1},
+    "provider_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "operation",
+        "external_id",
+        "status",
+        "effect_confirmed",
+        "details"
+      ],
+      "properties": {
+        "provider": {
+          "enum": [
+            "gmail-send",
+            "github-release-draft",
+            "stripe-test-payment-intent",
+            "dropbox-sign-test"
+          ]
+        },
+        "operation": {"type": "string", "minLength": 1},
+        "external_id": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "minLength": 1},
+        "effect_confirmed": {"type": "boolean"},
+        "details": {"type": "object"}
+      }
+    }
+  }
+}

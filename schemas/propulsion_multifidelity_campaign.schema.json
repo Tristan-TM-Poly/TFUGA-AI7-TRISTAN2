@@ -1,0 +1,294 @@
+{
+  "$defs": {
+    "checkpoint": {
+      "properties": {
+        "chain_digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "consumed_cost_units": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "evidence_event_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "next_index": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "next_index",
+        "evidence_event_count",
+        "consumed_cost_units",
+        "chain_digest"
+      ],
+      "type": "object"
+    },
+    "event": {
+      "properties": {
+        "candidate_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "evidence_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "frontier_index": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "stage": {
+          "enum": [
+            "F0_ANALYTIC",
+            "F1_SYSTEM",
+            "F2_STRESS"
+          ]
+        }
+      },
+      "required": [
+        "frontier_index",
+        "candidate_id",
+        "stage",
+        "evidence_hash"
+      ],
+      "type": "object"
+    },
+    "mminus": {
+      "properties": {
+        "action": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "reason": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "signature": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "F0_ANALYTIC",
+            "F1_SYSTEM",
+            "F2_STRESS"
+          ]
+        }
+      },
+      "required": [
+        "signature",
+        "stage",
+        "reason",
+        "count",
+        "action"
+      ],
+      "type": "object"
+    },
+    "stage": {
+      "properties": {
+        "cost_units": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "description": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "enum": [
+            "F0_ANALYTIC",
+            "F1_SYSTEM",
+            "F2_STRESS"
+          ]
+        },
+        "physical_fidelity_claim": {
+          "const": false
+        }
+      },
+      "required": [
+        "name",
+        "cost_units",
+        "description",
+        "physical_fidelity_claim"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://tristan-tm-poly.example/schemas/propulsion_multifidelity_campaign.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "backpressure": {
+      "properties": {
+        "admitted_f0_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "consumed_cost_units": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "pressure_ratio": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "requested_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "stop_reason": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "requested_count",
+        "admitted_f0_count",
+        "consumed_cost_units",
+        "pressure_ratio",
+        "stop_reason"
+      ],
+      "type": "object"
+    },
+    "campaign_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "checkpoints": {
+      "items": {
+        "$ref": "#/$defs/checkpoint"
+      },
+      "type": "array"
+    },
+    "consumed_cost_units": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "evidence_events": {
+      "items": {
+        "$ref": "#/$defs/event"
+      },
+      "type": "array"
+    },
+    "f0_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "f1_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "f2_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "feasible_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "final_chain_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "m_minus": {
+      "items": {
+        "$ref": "#/$defs/mminus"
+      },
+      "type": "array"
+    },
+    "next_index": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "permanent_total_cap": {
+      "type": "null"
+    },
+    "physics_certified": {
+      "const": false
+    },
+    "policy": {
+      "properties": {
+        "f0": {
+          "$ref": "#/$defs/stage"
+        },
+        "f1": {
+          "$ref": "#/$defs/stage"
+        },
+        "f2": {
+          "$ref": "#/$defs/stage"
+        },
+        "permanent_total_cap": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "f0",
+        "f1",
+        "f2",
+        "permanent_total_cap"
+      ],
+      "type": "object"
+    },
+    "requested_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "resources": {
+      "properties": {
+        "checkpoint_interval": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "max_cost_units": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "scope": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "shard_count": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "max_cost_units",
+        "checkpoint_interval",
+        "shard_count",
+        "scope"
+      ],
+      "type": "object"
+    },
+    "start_index": {
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "campaign_id",
+    "start_index",
+    "requested_count",
+    "next_index",
+    "f0_count",
+    "f1_count",
+    "f2_count",
+    "consumed_cost_units",
+    "final_chain_digest",
+    "backpressure",
+    "policy",
+    "resources",
+    "permanent_total_cap",
+    "physics_certified"
+  ],
+  "title": "Omega Propulsion R0.4 Multifidelity Campaign Report",
+  "type": "object"
+}
