@@ -10,7 +10,20 @@ from typing import Any, Iterable, Mapping, Sequence
 from omega_generator_discovery_t.core import MorphIR
 from omega_wiki_t.knowledge_cell import ClaimAtom, EvidenceRecord, KnowledgeCell
 
-from .events import DiscoveryEvent, EVENT_TYPES, canonical_json, parse_timestamp, stable_id
+from .catalog import EVENT_TYPES, catalog_manifest, event_spec
+from .events import DiscoveryEvent, canonical_json, parse_timestamp, stable_id
+
+
+CORE_LOOP_EVENT_TYPES = (
+    "ObservationEvent",
+    "ClaimEvent",
+    "GeneratorCandidate",
+    "ExperimentSpec",
+    "ResultPacket",
+    "OAKTransition",
+    "MMinusRule",
+    "ActionProposal",
+)
 
 PROMOTED_STATUSES = {
     "DEMONSTRATED",
@@ -47,7 +60,7 @@ class KernelAudit:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "schema": "omega_discovery_kernel.audit.v0.1",
+            "schema": "omega_discovery_kernel.audit.v0.2",
             "findings": [item.to_dict() for item in self.findings],
             "metrics": self.metrics,
             "subject_status": self.subject_status,
@@ -126,14 +139,12 @@ class DiscoveryLedger:
         parents = [existing[parent] for parent in event.parent_ids]
         ancestors = parents + self._ancestors(event, existing)
         ancestor_types = {item.event_type for item in ancestors}
-        if event.event_type == "ClaimEvent" and "ObservationEvent" not in ancestor_types:
-            raise ValueError("ClaimEvent requires an ObservationEvent ancestor")
-        if event.event_type == "GeneratorCandidate" and "ClaimEvent" not in ancestor_types:
-            raise ValueError("GeneratorCandidate requires a ClaimEvent ancestor")
-        if event.event_type == "ExperimentSpec" and "GeneratorCandidate" not in ancestor_types:
-            raise ValueError("ExperimentSpec requires a GeneratorCandidate ancestor")
-        if event.event_type == "ResultPacket" and "ExperimentSpec" not in ancestor_types:
-            raise ValueError("ResultPacket requires an ExperimentSpec ancestor")
+        spec = event_spec(event.event_type)
+        if spec.required_parent_any and not (set(spec.required_parent_any) & ancestor_types):
+            raise ValueError(
+                f"{event.event_type} requires ancestry containing one of "
+                f"{spec.required_parent_any}; observed {sorted(ancestor_types)}"
+            )
         if event.event_type == "OAKTransition":
             target = str(event.payload.get("to_status", ""))
             if target in PROMOTED_STATUSES and "ResultPacket" not in ancestor_types:
@@ -144,13 +155,16 @@ class DiscoveryLedger:
                 for item in ancestors
             )
             refutation = any(
-                item.event_type == "OAKTransition" and item.payload.get("to_status") == "REFUTED"
+                item.event_type in {"RefutationEvent", "ModelRejectedEvent"}
+                or (item.event_type == "OAKTransition" and item.payload.get("to_status") == "REFUTED")
                 for item in ancestors
             )
             if not (failed_result or refutation):
-                raise ValueError("MMinusRule requires a failed ResultPacket or REFUTED transition ancestor")
-        if event.event_type == "ActionProposal" and not ({"OAKTransition", "MMinusRule"} & ancestor_types):
-            raise ValueError("ActionProposal requires an OAKTransition or MMinusRule ancestor")
+                raise ValueError("MMinusRule requires a failed ResultPacket or refutation ancestor")
+        if event.event_type == "PromotionEvent" and not ({"ReplicationEvent", "ProofEvent"} & ancestor_types):
+            raise ValueError("PromotionEvent requires a ReplicationEvent or ProofEvent ancestor")
+        if event.event_type in {"PublicationEvent", "DeploymentEvent", "RetirementEvent"} and not event.human_approval:
+            raise ValueError(f"{event.event_type} requires explicit human approval")
 
     def ledger_hash(self) -> str:
         return sha256(canonical_json([event.event_hash for event in self.events]).encode("utf-8")).hexdigest()
@@ -170,7 +184,11 @@ class DiscoveryLedger:
 
     def missing_event_types(self, subject_id: str) -> tuple[str, ...]:
         observed = self.subject_event_types(subject_id)
-        return tuple(event_type for event_type in EVENT_TYPES if event_type not in observed)
+        return tuple(event_type for event_type in CORE_LOOP_EVENT_TYPES if event_type not in observed)
+
+    def optional_event_types(self, subject_id: str) -> tuple[str, ...]:
+        observed = self.subject_event_types(subject_id)
+        return tuple(event_type for event_type in EVENT_TYPES if event_type in observed and event_type not in CORE_LOOP_EVENT_TYPES)
 
     def closed_loop_status(self, subject_id: str) -> str:
         missing = self.missing_event_types(subject_id)
@@ -186,7 +204,7 @@ class DiscoveryLedger:
                     severity="P0",
                     category="ledger_integrity",
                     message=issue,
-                    suggested_action="Repair event ordering, parentage, hashes, or OAK gates.",
+                    suggested_action="Repair event ordering, parentage, hashes, catalog contracts, or OAK gates.",
                 )
             )
 
@@ -201,20 +219,23 @@ class DiscoveryLedger:
                         finding_id=stable_id("finding", subject_id, "missing", missing),
                         severity="P2",
                         category="open_discovery_loop",
-                        message=f"Subject is missing events: {', '.join(missing)}",
+                        message=f"Subject is missing core events: {', '.join(missing)}",
                         subject_id=subject_id,
-                        suggested_action=f"Create the next missing event: {missing[0]}",
+                        suggested_action=f"Create the next missing core event: {missing[0]}",
                     )
                 )
 
         results = [event for event in self.events if event.event_type == "ResultPacket"]
         failed_results = [event for event in results if not bool(event.payload.get("success", False))]
         mminus = [event for event in self.events if event.event_type == "MMinusRule"]
+        event_map = self.event_map()
         failed_with_mminus = 0
         for result in failed_results:
-            if any(result.event_id in event.parent_ids or result.event_id in {
-                ancestor.event_id for ancestor in self._ancestors(event, self.event_map())
-            } for event in mminus):
+            if any(
+                result.event_id in event.parent_ids
+                or result.event_id in {ancestor.event_id for ancestor in self._ancestors(event, event_map)}
+                for event in mminus
+            ):
                 failed_with_mminus += 1
             else:
                 findings.append(
@@ -232,9 +253,11 @@ class DiscoveryLedger:
         unsafe_actions = [
             event
             for event in self.events
-            if event.event_type == "ActionProposal"
-            and event.status == "autonomous_execution"
-            and (not event.reversible or not event.human_approval)
+            if event.event_type in {"ActionProposal", "DeploymentEvent", "PublicationEvent"}
+            and (
+                (event.status == "autonomous_execution" and (not event.reversible or not event.human_approval))
+                or (event.event_type in {"DeploymentEvent", "PublicationEvent"} and not event.human_approval)
+            )
         ]
         for event in unsafe_actions:
             findings.append(
@@ -242,7 +265,7 @@ class DiscoveryLedger:
                     finding_id=stable_id("finding", event.event_id, "unsafe_action"),
                     severity="P0",
                     category="unsafe_action",
-                    message="Autonomous action is irreversible or lacks explicit human approval.",
+                    message="External or autonomous action is irreversible or lacks explicit human approval.",
                     event_id=event.event_id,
                     subject_id=event.subject_id,
                     suggested_action="Downgrade to draft/simulation or obtain explicit approval with rollback.",
@@ -251,11 +274,15 @@ class DiscoveryLedger:
 
         total = len(self.events)
         complete_subjects = sum(not self.missing_event_types(subject) for subject in subjects)
+        observed_types = {event.event_type for event in self.events}
         metrics: dict[str, float | int] = {
             "events": total,
             "subjects": len(subjects),
             "complete_subjects": complete_subjects,
             "closed_loop_coverage": round(complete_subjects / len(subjects), 4) if subjects else 1.0,
+            "catalog_event_types": len(EVENT_TYPES),
+            "observed_event_types": len(observed_types),
+            "event_catalog_coverage": round(len(observed_types) / len(EVENT_TYPES), 4),
             "failed_results": len(failed_results),
             "negative_memory_coverage": round(failed_with_mminus / len(failed_results), 4) if failed_results else 1.0,
             "provenance_coverage": round(
@@ -271,8 +298,9 @@ class DiscoveryLedger:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "schema": "omega_discovery_kernel.ledger.v0.1",
+            "schema": "omega_discovery_kernel.ledger.v0.2",
             "ledger_hash": self.ledger_hash(),
+            "core_loop_event_types": list(CORE_LOOP_EVENT_TYPES),
             "events": [event.to_dict() for event in self.events],
         }
 
@@ -281,15 +309,20 @@ class DiscoveryLedger:
         output.mkdir(parents=True, exist_ok=True)
         audit = self.audit()
         manifest = {
-            "schema": "omega_discovery_kernel.manifest.v0.1",
+            "schema": "omega_discovery_kernel.manifest.v0.2",
             "event_count": len(self.events),
             "subject_count": len(audit.subject_status),
             "ledger_hash": self.ledger_hash(),
+            "event_type_count": len(EVENT_TYPES),
             "event_types": list(EVENT_TYPES),
+            "core_loop_event_types": list(CORE_LOOP_EVENT_TYPES),
             "metrics": audit.metrics,
-            "oak_status": "R0.1_CLOSED_LOOP_LEDGER_NOT_SCIENTIFIC_CERTIFICATION",
+            "oak_status": "R0.2_CLOSED_LOOP_LEDGER_NOT_SCIENTIFIC_CERTIFICATION",
         }
         (output / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        (output / "event-catalog.json").write_text(
+            json.dumps(catalog_manifest(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
         (output / "ledger.json").write_text(json.dumps(self.to_dict(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         with (output / "events.jsonl").open("w", encoding="utf-8") as stream:
             for event in self.events:
@@ -305,6 +338,7 @@ class DiscoveryLedger:
                 {
                     "id": event.event_id,
                     "type": event.event_type,
+                    "family": event_spec(event.event_type).family,
                     "subject_id": event.subject_id,
                     "status": event.status,
                     "timestamp": event.timestamp,
@@ -321,10 +355,11 @@ class DiscoveryLedger:
     def render_report(self, audit: KernelAudit | None = None) -> str:
         audit = audit or self.audit()
         lines = [
-            "# Ω-DISCOVERY-KERNEL-T∞ R0.1 report",
+            "# Ω-DISCOVERY-KERNEL-T∞ R0.2 report",
             "",
             f"- Events: **{len(self.events)}**",
             f"- Subjects: **{len(audit.subject_status)}**",
+            f"- Catalog: **{len(EVENT_TYPES)} event contracts**",
             f"- Ledger hash: `{self.ledger_hash()}`",
             "",
             "## Closed-loop status",
@@ -400,6 +435,7 @@ def generator_event_from_morph_ir(
         subject_id or claim_event.subject_id,
         timestamp,
         parent_ids=(claim_event.event_id,),
+        provenance=claim_event.provenance,
         domain=morph.domain,
         status=morph.status,
         payload={
@@ -413,6 +449,7 @@ def generator_event_from_morph_ir(
             "residual": morph.residual,
             "uncertainty": morph.uncertainty,
         },
+        units={"residual": "1"},
         uncertainty={"model": morph.uncertainty},
     )
 
@@ -431,7 +468,7 @@ def result_event_to_evidence_record(
         source_path=(result.provenance[0] if result.provenance else None),
         locator=result.event_id,
         content_hash=result.event_hash,
-        status="reproduced" if result.status == "reproduced" else "candidate",
+        status="reproduced" if result.status.startswith("reproduced") else "candidate",
         supports_claim_ids=(claim.claim_id,) if success else (),
         contradicts_claim_ids=() if success else (claim.claim_id,),
         metadata={
