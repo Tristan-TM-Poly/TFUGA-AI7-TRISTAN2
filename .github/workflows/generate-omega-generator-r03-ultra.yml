@@ -31,6 +31,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
       - name: Generate 393216 linked records and SQLite index
         run: python tools/generate_omega_generator_r03_ultra.py --root .
       - name: Capture first deterministic fingerprint
@@ -83,6 +85,8 @@ jobs:
           assert db.execute("SELECT COUNT(*) FROM validations WHERE risk_tier='high' AND validation_mode!='exhaustive_required'").fetchone()[0] == 0
           db.close()
           PY
+      - name: Run R0.3 Ultra OAKBench
+        run: python -m pytest tests/test_generator_discovery_r03_ultra.py
       - name: Record inventory
         run: |
           du -sh generated/omega_generator_discovery_r03_ultra
