@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1.0",
+  "policy_id": "OMEGA-SANS-PLAFOND-T-INFINITE-R0.1",
+  "permanent_addition_cap": null,
+  "control_model": "capacity_seeking",
+  "growth": {
+    "stable_growth": 2.0,
+    "cautious_growth": 1.25,
+    "pressure_soft": 0.75,
+    "pressure_hard": 1.0
+  },
+  "quality": {
+    "quality_floor": 0.95,
+    "provenance_required_for_external_claims": true,
+    "rollback_required": true
+  },
+  "on_saturation": [
+    "checkpoint",
+    "requeue_atomic_batch",
+    "append_m_minus_event",
+    "identify_limiting_dimensions",
+    "request_or_apply_reversible_redesign",
+    "replay"
+  ],
+  "legitimate_run_boundaries": [
+    "finite_workload_exhausted",
+    "unrecoverable_state",
+    "redesign_unavailable",
+    "human_approval_required",
+    "external_service_policy_or_quota",
+    "quality_or_provenance_gate"
+  ],
+  "forbidden_interpretations": [
+    "infinite_physical_work_in_finite_time",
+    "bypassing_provider_limits",
+    "sacrificing_validation_for_volume",
+    "treating_generated_items_as_verified_truth"
+  ]
+}

@@ -13,6 +13,7 @@ omega-mminus-absorb = "omega_prof_poly_t.mminus_absorber:main"
 omega-wiki = "omega_wiki_t.cli:main"
 omega-quaternion-crystal = "omega_quaternion_crystal_t.cli:main"
 omega-logexp-morph = "omega_logexp_morph_t.cli:main"
+omega-unbounded = "omega_unbounded_t.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
