@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/schemas/oak_claim.schema.json",
-  "title": "OAKGate claim",
+  "title": "OAKGate claim R0.2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -13,14 +13,8 @@
     "ip_classification"
   ],
   "properties": {
-    "claim_id": {
-      "type": "string",
-      "minLength": 1
-    },
-    "text": {
-      "type": "string",
-      "minLength": 1
-    },
+    "claim_id": {"type": "string", "minLength": 1},
+    "text": {"type": "string", "minLength": 1},
     "status": {
       "enum": ["M0", "C1", "F2", "S3", "P4", "E5", "R6", "T7", "D8"]
     },
@@ -37,11 +31,7 @@
       "items": {"type": "string", "minLength": 1},
       "default": []
     },
-    "uncertainty": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1
-    },
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
     "risks": {
       "type": "array",
       "items": {"type": "string"},
@@ -58,14 +48,16 @@
         "NOT_APPLICABLE"
       ]
     },
-    "public_intent": {
-      "type": "boolean",
-      "default": false
-    },
+    "public_intent": {"type": "boolean", "default": false},
     "source_attributions": {
       "type": "array",
       "items": {"type": "string", "minLength": 1},
       "default": []
+    },
+    "provenance_hash": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Canonical SHA-256 over the claim payload excluding this field."
     }
   }
 }
