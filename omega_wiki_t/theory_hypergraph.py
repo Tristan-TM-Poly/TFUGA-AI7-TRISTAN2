@@ -18,6 +18,7 @@ _ALIAS_LABELS = {
     "ω-deeptech intelligence forge": "Ω-DeepTech Intelligence Forge",
     "omega-deeptech intelligence forge": "Ω-DeepTech Intelligence Forge",
     "company revenue ip publication os": "Company Revenue IP Publication OS",
+    "failuresynth and memory-negative engine": "FailureSynth",
 }
 
 _LAYER_DOMAIN = {
@@ -29,104 +30,20 @@ _LAYER_DOMAIN = {
 }
 
 _CORE_RELATIONS: tuple[tuple[str, str, tuple[str, ...], float, str], ...] = (
-    (
-        "rel-core-001",
-        "root_generates_representation",
-        ("TFUGA", "HGFM"),
-        0.95,
-        "TFUGA is the generative root and HGFM its hypergraph representation layer.",
-    ),
-    (
-        "rel-core-002",
-        "representation_supports_compression",
-        ("HGFM", "CVCD"),
-        0.90,
-        "HGFM organizes objects and relations that CVCD compresses and selectively expands.",
-    ),
-    (
-        "rel-core-003",
-        "verification_governs",
-        ("OAK", "TFUGA", "HGFM", "CVCD"),
-        0.96,
-        "OAK gates definitions, tests, residues, and promotion across the core theory stack.",
-    ),
-    (
-        "rel-core-004",
-        "evidence_contract_operationalizes",
-        ("DCT-Ω / DCT++", "OAK"),
-        0.92,
-        "DCT-Ω/DCT++ packages document, code, tests, data, risk, ethics, status, next action, and links.",
-    ),
-    (
-        "rel-core-005",
-        "posterior_calibration",
-        ("Bayes-Tristan", "OAK"),
-        0.86,
-        "Bayes-Tristan supplies posterior decision structure while OAK prevents fertility from being confused with proof.",
-    ),
-    (
-        "rel-core-006",
-        "signal_branch_specializes",
-        ("FFWT-HAC-CVCD", "CVCD", "HGFM"),
-        0.88,
-        "The FFWT branch applies multiscale compression and hypergraph coherence to signals and spectroscopy.",
-    ),
-    (
-        "rel-core-007",
-        "negative_memory_feedback",
-        ("FailureSynth", "OAK"),
-        0.84,
-        "FailureSynth converts errors and refutations into reusable negative memory for later gates.",
-    ),
-    (
-        "rel-core-008",
-        "workflow_compiler_governed_by",
-        ("AUTO² Kernel", "OAK"),
-        0.90,
-        "AUTO² compiles workflows with forbidden actions, rollback, and telemetry under OAK constraints.",
-    ),
-    (
-        "rel-core-009",
-        "benchmark_governed_by",
-        ("Ω-LIN-T", "OAK"),
-        0.91,
-        "Ω-LIN-T is a locally demonstrated OAKBench with residuals and validity domains.",
-    ),
-    (
-        "rel-core-010",
-        "deeptech_routes_value",
-        ("Ω-DeepTech Intelligence Forge", "Company Revenue IP Publication OS", "OAK"),
-        0.90,
-        "DeepTech Forge routes evidence-ranked signals toward IP, revenue, publication, and prototypes behind OAK review.",
-    ),
-    (
-        "rel-core-011",
-        "publication_requires_review",
-        ("Publication Atlas", "OAK"),
-        0.83,
-        "Publication matching remains metadata until human review and evidence checks.",
-    ),
-    (
-        "rel-core-012",
-        "data_ingestion_requires_license_gate",
-        ("Open Data Harvester", "OAK"),
-        0.84,
-        "Open-data retrieval must preserve licensing, provenance, and bounded access.",
-    ),
-    (
-        "rel-core-013",
-        "recursive_generation_uses_representation",
-        ("AIT-Universe", "HGFM", "OAK"),
-        0.82,
-        "Recursive node expansion uses HGFM while OAK limits unbounded recursion and false promotion.",
-    ),
-    (
-        "rel-core-014",
-        "production_verification_metabolism",
-        ("AI-7", "OAK", "DCT-Ω / DCT++"),
-        0.91,
-        "AI-7 couples production, verification, testing, integration, and canonization through explicit evidence packets.",
-    ),
+    ("rel-core-001", "root_generates_representation", ("TFUGA", "HGFM"), 0.95, "TFUGA is the generative root and HGFM its hypergraph representation layer."),
+    ("rel-core-002", "representation_supports_compression", ("HGFM", "CVCD"), 0.90, "HGFM organizes objects and relations that CVCD compresses and selectively expands."),
+    ("rel-core-003", "verification_governs", ("OAK", "TFUGA", "HGFM", "CVCD"), 0.96, "OAK gates definitions, tests, residues, and promotion across the core theory stack."),
+    ("rel-core-004", "evidence_contract_operationalizes", ("DCT-Ω / DCT++", "OAK"), 0.92, "DCT-Ω/DCT++ packages document, code, tests, data, risk, ethics, status, next action, and links."),
+    ("rel-core-005", "posterior_calibration", ("Bayes-Tristan", "OAK"), 0.86, "Bayes-Tristan supplies posterior decision structure while OAK prevents fertility from being confused with proof."),
+    ("rel-core-006", "signal_branch_specializes", ("FFWT-HAC-CVCD", "CVCD", "HGFM"), 0.88, "The FFWT branch applies multiscale compression and hypergraph coherence to signals and spectroscopy."),
+    ("rel-core-007", "negative_memory_feedback", ("FailureSynth", "OAK"), 0.84, "FailureSynth converts errors and refutations into reusable negative memory for later gates."),
+    ("rel-core-008", "workflow_compiler_governed_by", ("AUTO² Kernel", "OAK"), 0.90, "AUTO² compiles workflows with forbidden actions, rollback, and telemetry under OAK constraints."),
+    ("rel-core-009", "benchmark_governed_by", ("Ω-LIN-T", "OAK"), 0.91, "Ω-LIN-T is a locally demonstrated OAKBench with residuals and validity domains."),
+    ("rel-core-010", "deeptech_routes_value", ("Ω-DeepTech Intelligence Forge", "Company Revenue IP Publication OS", "OAK"), 0.90, "DeepTech Forge routes evidence-ranked signals toward IP, revenue, publication, and prototypes behind OAK review."),
+    ("rel-core-011", "publication_requires_review", ("Publication Atlas", "OAK"), 0.83, "Publication matching remains metadata until human review and evidence checks."),
+    ("rel-core-012", "data_ingestion_requires_license_gate", ("Open Data Harvester", "OAK"), 0.84, "Open-data retrieval must preserve licensing, provenance, and bounded access."),
+    ("rel-core-013", "recursive_generation_uses_representation", ("AIT-Universe", "HGFM", "OAK"), 0.82, "Recursive node expansion uses HGFM while OAK limits unbounded recursion and false promotion."),
+    ("rel-core-014", "production_verification_metabolism", ("AI-7", "OAK", "DCT-Ω / DCT++"), 0.91, "AI-7 couples production, verification, testing, integration, and canonization through explicit evidence packets."),
 )
 
 
@@ -407,8 +324,11 @@ class TheoryHypergraphBuilder:
                 continue
             item = line[2:].strip()
             token_match = re.match(r"`([^`]+)`\s*:\s*(.+)", item)
+            plain_match = re.match(r"([^:]+):\s*(.+)", item)
             if token_match:
                 label, role = token_match.group(1), token_match.group(2)
+            elif plain_match:
+                label, role = plain_match.group(1), plain_match.group(2)
             else:
                 label = item.rstrip(".")
                 role = "Candidate or primitive listed in the Master Canon."
@@ -656,7 +576,7 @@ def render_useful_knowledge(graph: TheoryHypergraph) -> str:
         "",
         "## Noyaux classés par utilité opérationnelle",
         "",
-        "Le score sert uniquement à naviguer et prioriser. Il combine statut OAK déclaré, rang du Master System Index, présence d’une prochaine action et caractère testable/exécutable.",
+        "Le score ci-dessous sert uniquement à naviguer et prioriser. Il combine statut OAK déclaré, rang du Master System Index, présence d’une prochaine action et caractère testable/exécutable.",
         "",
         "| Priorité | Système | Score | Statut | Domaine | Prochaine action |",
         "|---:|---|---:|---|---|---|",
@@ -678,7 +598,7 @@ def render_useful_knowledge(graph: TheoryHypergraph) -> str:
             "2. **Prototype scientifique** — prioriser `Ω-LIN-T` et `FFWT-HAC-CVCD`, car ils possèdent déjà des chemins de benchmark explicites.",
             "3. **Compagnie et valeur** — utiliser `Ω-DeepTech Intelligence Forge → Company Revenue IP Publication OS`, sans confondre signal, brevet, vente ou certification.",
             "4. **Mémoire anti-erreur** — relier chaque échec à `FailureSynth → OAK` afin qu’un résidu devienne une règle réutilisable.",
-            "5. **Recherche externe** — connecter ensuite chaque nœud à WikiForge-T multilingue pour ajouter Wikipédia, Wikidata, DOI/ISBN/PMID et contradictions documentaires.",
+            "5. **Recherche externe** — connecter ensuite chaque nœud à WikiForge-T multilingue pour ajouter sources Wikipédia, Wikidata, DOI/ISBN/PMID et contradictions documentaires.",
             "",
             "## Limites OAK",
             "",
