@@ -23,11 +23,11 @@ MASTER_SYSTEM_INDEX.md
 ## Current result
 
 ```text
-96 nodes
+92 nodes
 94 hyperedges
 ```
 
-Node classes include theory systems, layers, workflow stages, risks, next actions, and repository paths. Hyperedges include explicit document structure, priority order, pipeline transitions, and a small set of curated cross-document core relations.
+Node classes include theory systems, layers, workflow stages, risks, next actions, and repository paths. Hyperedges include explicit document structure, priority order, pipeline transitions, and a small set of curated cross-document core relations. Plain `Name: role` bullets are atomized so systems such as CVCD, DCT-Ω/DCT++, and FailureSynth retain their own provenance and definitions.
 
 ## Core spine
 
