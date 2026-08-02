@@ -91,9 +91,11 @@ jobs:
           python -m omega_unbounded_t.cli self-improve \
             --work-items 60000 \
             --minimum-improvement-ratio 0.02 \
+            --overshoot-penalty-weight 10 \
+            --maximum-overshoot-multiplier 2 \
             --output-dir generated/omega-unbounded-self-ci
 
-      - name: Verify self-improvement authority and evidence
+      - name: Verify self-improvement authority and anti-reward-hacking evidence
         run: |
           python - <<'PY'
           import json
@@ -102,13 +104,27 @@ jobs:
           root = Path('generated/omega-unbounded-self-ci')
           report = json.loads((root / 'self-improvement-report.json').read_text(encoding='utf-8'))
           plan = json.loads((root / 'promotion-plan.json').read_text(encoding='utf-8'))
+          negative_memory = (root / 'self_improvement_m_minus.jsonl').read_text(encoding='utf-8')
+          judge = plan['evidence']['judge']
+
           assert report['baseline']['completed'] is True
           assert report['decision']['status'] == 'promotion_proposed'
+          assert report['decision']['selected'] == 'mminus-capacity-redesign'
           assert report['decision']['improvement_ratio'] >= 0.02
           assert report['decision']['remote_mutations'] == 0
           assert report['no_permanent_candidate_cap'] is True
           assert report['no_source_mutation'] is True
           assert report['no_auto_merge'] is True
+
+          assert judge['type'] == 'resource_aware_oak_judge'
+          assert judge['overshoot_penalty_weight'] == 10
+          assert judge['maximum_overshoot_multiplier'] == 2
+          assert judge['selected_capacity_overshoot_ratio'] <= (
+              judge['baseline_capacity_overshoot_ratio']
+              * judge['maximum_overshoot_multiplier']
+          )
+          assert 'capacity overshoot exceeded the permitted multiplier' in negative_memory
+
           assert plan['apply']['automatic'] is False
           assert plan['apply']['requires_human_approval'] is True
           assert plan['apply']['source_mutations'] == 0
