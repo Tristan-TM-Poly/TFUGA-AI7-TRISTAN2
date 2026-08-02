@@ -46,6 +46,7 @@ jobs:
           tests/test_omega_aero_hydro_propulsion_r03_max.py
           tests/test_omega_aero_hydro_propulsion_r04.py
           tests/test_omega_aero_hydro_propulsion_r05.py
+          tests/test_omega_aero_hydro_propulsion_r05_discrepancy.py
       - name: Run R0.5 OAK benchmark
         run: python -m omega_aero_hydro_propulsion_t.r05_cli benchmark > /tmp/propulsion-r05-oak.json
       - name: Materialize wake summary
@@ -57,6 +58,8 @@ jobs:
         run: |
           python -m omega_aero_hydro_propulsion_t.r05_cli architecture-demo --domain air > /tmp/propulsion-r05-air.json
           python -m omega_aero_hydro_propulsion_t.r05_cli architecture-demo --domain water > /tmp/propulsion-r05-water.json
+      - name: Materialize discrepancy tensor
+        run: python -m omega_aero_hydro_propulsion_t.r05_cli discrepancy-demo > /tmp/propulsion-r05-discrepancy.json
       - name: Materialize and validate evidence ladder
         run: |
           python -m omega_aero_hydro_propulsion_t.r05_cli evidence-demo > /tmp/propulsion-r05-evidence.json
@@ -84,6 +87,7 @@ jobs:
           wake = json.loads(Path('/tmp/propulsion-r05-wake.json').read_text())
           air = json.loads(Path('/tmp/propulsion-r05-air.json').read_text())
           water = json.loads(Path('/tmp/propulsion-r05-water.json').read_text())
+          discrepancy = json.loads(Path('/tmp/propulsion-r05-discrepancy.json').read_text())
 
           assert oak['passed'] is True
           assert oak['status'] == 'CERTIFIED_COMPUTATIONAL_WAKE_ARCHITECTURE_EVIDENCE_R0_5'
@@ -112,12 +116,18 @@ jobs:
               for candidate in water['candidates']
               if candidate['eligible']
           )
+          assert discrepancy['metric_count'] == 2
+          assert discrepancy['comparison_count'] == 2
+          assert discrepancy['automatic_model_promotion'] is False
+          assert discrepancy['physics_certified'] is False
+          assert len(discrepancy['evidence_hash']) == 64
           print(json.dumps({
               'status': 'passed',
               'wake_hash': wake['evidence_hash'],
               'wake_segments': wake['segment_count'],
               'air_best': air['best']['architecture']['architecture_id'],
               'water_best': water['best']['architecture']['architecture_id'],
+              'discrepancy_hash': discrepancy['evidence_hash'],
           }, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
@@ -129,4 +139,5 @@ jobs:
             /tmp/propulsion-r05-air.json
             /tmp/propulsion-r05-water.json
             /tmp/propulsion-r05-evidence.json
+            /tmp/propulsion-r05-discrepancy.json
           retention-days: 14
