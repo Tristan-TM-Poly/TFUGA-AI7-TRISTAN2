@@ -1,0 +1,105 @@
+name: Repair Omega Anime Studio R1 Inventory
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/omega-anime-studio-inventory-fix.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 1
+
+      - name: Scope generator inventory to Anime R1 artifacts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('tools/generate_omega_anime_studio_r1.py')
+          text = path.read_text(encoding='utf-8')
+          marker = '# Source inventory (generated files only; caches and helper script excluded).'
+          start = text.index(marker)
+          replacement = '''# Source inventory: only artifacts produced by this generator.
+          inventory = []
+          inventory_candidates = [ROOT / rel for rel in sorted(files)] + [
+              matrix_path,
+              frontier_path,
+              ROOT / 'generated/omega_anime_studio_t/generated-manifest.json',
+          ]
+          seen = set()
+          for path in inventory_candidates:
+              resolved = path.resolve()
+              if resolved in seen or not path.is_file():
+                  continue
+              seen.add(resolved)
+              rel = path.relative_to(ROOT)
+              data = path.read_bytes()
+              try:
+                  text = data.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              inventory.append({
+                  'path': str(rel),
+                  'lines': len(text.splitlines()),
+                  'bytes': len(data),
+                  'sha256': hashlib.sha256(data).hexdigest(),
+              })
+          inv_path = ROOT / 'generated/omega_anime_studio_t/source-inventory.json'
+          inv_path.write_text(json.dumps(inventory, indent=2) + '\\n', encoding='utf-8')
+          print(json.dumps({
+              'files': len(inventory),
+              'lines': sum(item['lines'] for item in inventory),
+              'bytes': sum(item['bytes'] for item in inventory),
+          }, indent=2))
+          '''
+          replacement = '\n'.join(line[10:] if line.startswith('          ') else line for line in replacement.splitlines()) + '\n'
+          path.write_text(text[:start] + replacement, encoding='utf-8')
+          PY
+          python tools/generate_omega_anime_studio_r1.py
+
+      - name: Validate scoped inventory and R1 tests
+        run: |
+          python -m pip install --upgrade pip pytest
+          pytest -q tests/test_omega_anime_studio_t_r1.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          inventory = json.loads(Path('generated/omega_anime_studio_t/source-inventory.json').read_text())
+          paths = [item['path'] for item in inventory]
+          assert 15 <= len(paths) <= 30
+          assert len(paths) == len(set(paths))
+          assert not any(path.startswith('.git/') for path in paths)
+          allowed = (
+              'omega_anime_studio_t/',
+              'tests/test_omega_anime_studio_t_r1.py',
+              'schemas/anime-ir-r1.schema.json',
+              'policies/omega_anime_studio_r1.json',
+              'docs/omega_anime_studio_t_r1.md',
+              'examples/omega_anime_studio_r1_demo.py',
+              '.github/workflows/omega-anime-studio-r1.yml',
+              'generated/omega_anime_studio_t/',
+          )
+          assert all(path.startswith(allowed) for path in paths)
+          print({'inventory_files': len(paths), 'first': paths[:3], 'last': paths[-3:]})
+          PY
+
+      - name: Commit scoped inventory repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- tools/generate_omega_anime_studio_r1.py generated/omega_anime_studio_t/source-inventory.json
+          git diff --cached --stat
+          git diff --cached --quiet && exit 0
+          git commit -m "fix(anime): scope R1 source inventory to generated artifacts"
+          git push origin "HEAD:${{ github.head_ref || github.ref_name }}"
