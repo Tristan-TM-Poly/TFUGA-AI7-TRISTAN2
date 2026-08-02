@@ -16,7 +16,7 @@ omega-logexp-morph = "omega_logexp_morph_t.cli:main"
 omega-unbounded = "omega_unbounded_t.cli:main"
 omega-generator-discovery = "omega_generator_discovery_t.cli:main"
 omega-generator-catalog = "omega_generator_discovery_t.catalog_cli:main"
-omega-generator-ultra = "omega_generator_discovery_t.ultra_cli:main"
+omega-organic-family = "omega_org_fam_t.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
