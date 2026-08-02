@@ -1,0 +1,7 @@
+{
+  "purpose": "Record the main-sync preparation for PR #238.",
+  "base_main_sha": "111eeac1059555701a6682a771fda9ddd407c921",
+  "pre_sync_head_sha": "e04940f522e7cc6c3c02abf399c2cfd805db618e",
+  "status": "content_reconciled_pending_merge_parent",
+  "non_claim": "This receipt is repository provenance, not scientific validation."
+}
