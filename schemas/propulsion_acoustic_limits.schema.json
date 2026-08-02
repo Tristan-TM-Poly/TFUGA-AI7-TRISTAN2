@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Omega Propulsion R0.3 Acoustic Limits","type":"object","additionalProperties":false,"properties":{"maximum_overall_spl_db":{"type":["number","null"]},"maximum_tip_mach":{"type":["number","null"],"exclusiveMinimum":0},"maximum_blade_passing_frequency_hz":{"type":["number","null"],"exclusiveMinimum":0}}}
