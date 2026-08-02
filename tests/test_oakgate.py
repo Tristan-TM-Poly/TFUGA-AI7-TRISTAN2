@@ -24,7 +24,7 @@ def test_blocks_status_inflation_and_unsupported_external_execution() -> None:
     assert "OAK-EVIDENCE-001" in codes
     assert "OAK-ARTIFACT-001" in codes
     assert "OAK-IP-001" in codes
-    assert "OAK-OVERCLAIM-001" in codes
+    assert "OAK-OVERCLAIM-CONTROL" in codes
     assert "OAK-EXECUTION-001" in codes
 
 
@@ -37,9 +37,9 @@ def test_passes_bounded_formal_claim_with_evidence_and_ip_classification() -> No
         ),
         status=EpistemicStatus.FORMALIZATION,
         layer=EpistemicLayer.THEORY,
-        evidence=["docs/OAKGATE_R0_1.md"],
+        evidence=["docs/OAKGATE_R0_2.md"],
         artifacts=[],
-        uncertainty=0.2,
+        uncertainty=0.35,
         ip_classification="OPEN_SOURCE",
     )
 
