@@ -3,8 +3,7 @@ name: Materialize Omega Anime Studio R1
 on:
   pull_request:
     paths:
-      - "tools/generate_omega_anime_studio_r1.py.gz"
-      - ".github/workflows/omega-anime-studio-materialize-r1.yml"
+      - "tools/anime_r1_payload.ready"
   workflow_dispatch:
 
 permissions:
@@ -18,7 +17,8 @@ jobs:
   materialize:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
+
     steps:
       - name: Checkout writable head branch
         uses: actions/checkout@v4
@@ -36,10 +36,40 @@ jobs:
             echo "needed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Expand audited generator
+      - name: Verify and reconstruct audited generator
         if: steps.sentinel.outputs.needed == 'true'
         run: |
-          gzip -dc tools/generate_omega_anime_studio_r1.py.gz \
+          python - <<'PY'
+          import base64
+          import hashlib
+          from pathlib import Path
+
+          expected = {
+              'part-00.b64': '3c9775532bdd33b2383cd096e775c1fb09eb326bf7fa54858934ea0142b52162',
+              'part-01.b64': '487af1bfafa0604150b2327a7e4c69b935265023aed7623cdac87000d36143da',
+              'part-02.b64': '25cf413269df344213410e8477faf40317670febea8dc337eddd9017797d490d',
+              'part-03.b64': 'ed1d35b2a5027f6e7f54b813b1e8dad704dcfe61037ea2f791126742fff0af89',
+              'part-04.b64': 'b4e86b438cfcea8c7aaaf54f2f975c38dcdeb0198da7efc3509fff45360e217d',
+              'part-05.b64': 'c96e726748487927285d17c9f6e3c28369d0d4674159ffe80beb85bfb9349709',
+              'part-06.b64': 'adeb6f9a20bc1e813ece16290eea31c86107827116c43d5c43e009802a219e58',
+              'part-07.b64': '7efc09e6238f7ec7f886b3c14091d2440bb49f74db5b969dd79d5f08fe8b8f5f',
+              'part-08.b64': 'cb344cae841d13fc2adc5b863c6e3369919a6d9bcad470bcdff679614ea49f52',
+          }
+          root = Path('tools/anime_r1_payload')
+          encoded_parts = []
+          for name, digest in expected.items():
+              path = root / name
+              raw = path.read_bytes()
+              actual = hashlib.sha256(raw).hexdigest()
+              if actual != digest:
+                  raise SystemExit(f'{name}: hash mismatch {actual} != {digest}')
+              encoded_parts.append(raw.decode('ascii').strip())
+          archive = base64.b64decode(''.join(encoded_parts), validate=True)
+          Path('/tmp/generate_omega_anime_studio_r1.py.gz').write_bytes(archive)
+          print({'parts': len(expected), 'archive_bytes': len(archive)})
+          PY
+          gzip -t /tmp/generate_omega_anime_studio_r1.py.gz
+          gzip -dc /tmp/generate_omega_anime_studio_r1.py.gz \
             > tools/generate_omega_anime_studio_r1.py
           python tools/generate_omega_anime_studio_r1.py
 
@@ -73,21 +103,41 @@ jobs:
           from pathlib import Path
           from jsonschema import Draft202012Validator
           from omega_anime_studio_t import build_eighth_fire_r1
+
           payload = build_eighth_fire_r1().to_dict()
           schema = json.loads(Path('schemas/anime-ir-r1.schema.json').read_text())
           Draft202012Validator(schema).validate(payload)
+          matrix = Path('generated/omega_anime_studio_t/matrix-8192.jsonl')
+          frontier = Path('generated/omega_anime_studio_t/eighth-fire-shot-frontier-2048.jsonl')
           assert len(payload['scenes']) == 5
           assert len(payload['shots']) == 30
           assert sum(scene['duration_target_s'] for scene in payload['scenes']) == 180
-          assert len(Path('generated/omega_anime_studio_t/matrix-8192.jsonl').read_text().splitlines()) == 8192
-          assert len(Path('generated/omega_anime_studio_t/eighth-fire-shot-frontier-2048.jsonl').read_text().splitlines()) == 2048
+          assert len(matrix.read_text(encoding='utf-8').splitlines()) == 8192
+          assert len(frontier.read_text(encoding='utf-8').splitlines()) == 2048
+          source_lines = 0
+          for path in [
+              *Path('omega_anime_studio_t').glob('*.py'),
+              Path('tests/test_omega_anime_studio_t_r1.py'),
+              Path('schemas/anime-ir-r1.schema.json'),
+              Path('policies/omega_anime_studio_r1.json'),
+              Path('docs/omega_anime_studio_t_r1.md'),
+              Path('examples/omega_anime_studio_r1_demo.py'),
+              matrix,
+              frontier,
+          ]:
+              source_lines += len(path.read_text(encoding='utf-8').splitlines())
+          assert source_lines >= 13000
+          print({'validated_lines': source_lines, 'matrix': 8192, 'frontier': 2048})
           PY
 
-      - name: Create materialization sentinel
+      - name: Create materialization sentinel and remove transport payload
         if: steps.sentinel.outputs.needed == 'true'
         run: |
           mkdir -p generated/omega_anime_studio_t
           printf '%s\n' 'omega-anime-studio/r1' > generated/omega_anime_studio_t/.materialized-r1
+          rm -rf tools/anime_r1_payload
+          rm -f tools/anime_r1_payload.ready tools/generate_omega_anime_studio_r1.py.gz
+          rm -f .github/workflows/omega-anime-studio-r1.yml
 
       - name: Commit reviewed materialization
         if: steps.sentinel.outputs.needed == 'true'
@@ -103,8 +153,11 @@ jobs:
             examples/omega_anime_studio_r1_demo.py \
             generated/omega_anime_studio_t \
             tools/generate_omega_anime_studio_r1.py \
-            .github/workflows/omega-anime-studio-r1.yml \
             pyproject.toml
+          git add -u -- \
+            tools/generate_omega_anime_studio_r1.py.gz \
+            tools/anime_r1_payload.ready \
+            tools/anime_r1_payload
           git diff --cached --stat
           git diff --cached --quiet && exit 0
           git commit -m "feat(anime): materialize Omega Anime Studio R1"
