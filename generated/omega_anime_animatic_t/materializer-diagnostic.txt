@@ -1,0 +1,67 @@
+status=FAILURE
+stage=TESTED
+head=4ff5823b7d14ab7370765c9cbec5d9a766478c10
+--- log tail ---
+Traceback (most recent call last):
+  File "<stdin>", line 9, in <module>
+  File "/usr/lib/python3.12/base64.py", line 494, in b85decode
+    raise ValueError('base85 overflow in hunk starting at byte %d'
+ValueError: base85 overflow in hunk starting at byte 55
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: pip in /usr/lib/python3/dist-packages (24.0)
+Collecting pip
+  Downloading pip-26.2-py3-none-any.whl.metadata (4.6 kB)
+Collecting pytest
+  Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+Requirement already satisfied: jsonschema in /usr/lib/python3/dist-packages (4.10.3)
+Collecting jsonschema
+  Downloading jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)
+Collecting iniconfig>=1.0.1 (from pytest)
+  Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: packaging>=22 in /usr/lib/python3/dist-packages (from pytest) (24.0)
+Collecting pluggy<2,>=1.5 (from pytest)
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Requirement already satisfied: pygments>=2.7.2 in /usr/lib/python3/dist-packages (from pytest) (2.17.2)
+Requirement already satisfied: attrs>=22.2.0 in /usr/lib/python3/dist-packages (from jsonschema) (23.2.0)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema)
+  Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting referencing>=0.28.4 (from jsonschema)
+  Downloading referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.25.0 (from jsonschema)
+  Downloading rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+Requirement already satisfied: typing-extensions>=4.4.0 in /usr/lib/python3/dist-packages (from referencing>=0.28.4->jsonschema) (4.10.0)
+Downloading pip-26.2-py3-none-any.whl (1.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 77.8 MB/s eta 0:00:00
+Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 386.5/386.5 kB 59.3 MB/s eta 0:00:00
+Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 13.2 MB/s eta 0:00:00
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+Downloading rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (366 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 366.2/366.2 kB 89.8 MB/s eta 0:00:00
+Installing collected packages: rpds-py, pluggy, pip, iniconfig, referencing, pytest, jsonschema-specifications, jsonschema
+Successfully installed iniconfig-2.3.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 pip-26.2 pluggy-1.6.0 pytest-9.1.1 referencing-0.37.0 rpds-py-2026.6.3
+Listing 'omega_anime_animatic_t'...
+Can't list 'omega_anime_animatic_t'
+Listing 'tests/test_omega_anime_animatic_t_r2.py'...
+Can't list 'tests/test_omega_anime_animatic_t_r2.py'
+Listing 'examples/omega_anime_animatic_r2_demo.py'...
+Can't list 'examples/omega_anime_animatic_r2_demo.py'
+ERROR: file or directory not found: tests/test_omega_anime_animatic_t_r2.py
+
+
+no tests ran in 0.00s
+/usr/bin/python: No module named omega_anime_animatic_t
+/usr/bin/python: No module named omega_anime_animatic_t
+Traceback (most recent call last):
+  File "<stdin>", line 8, in <module>
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/eighth-fire-r2/timeline.json'
