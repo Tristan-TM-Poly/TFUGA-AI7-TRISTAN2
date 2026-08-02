@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega Solid Evidence Template R0.2",
+  "type": "object",
+  "required": ["evidence_id","candidate_id","required_claim_types","required_methods","oak_status","oak_score","status"],
+  "properties": {
+    "evidence_id": {"type": "string"},
+    "candidate_id": {"type": "string"},
+    "required_claim_types": {"type": "array", "items": {"type": "string"}},
+    "required_methods": {"type": "array", "items": {"type": "string"}},
+    "oak_status": {"type": "string"},
+    "oak_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "blockers": {"type": "array", "items": {"type": "string"}},
+    "status": {"const": "template_not_evidence"}
+  },
+  "additionalProperties": false
+}

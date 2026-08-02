@@ -1,0 +1,36 @@
+{
+  "system": "Ω-SOLID-T∞ R0.2",
+  "planned_base_candidates": 524288,
+  "planned_contextual_states": 2097152,
+  "materialized_objects": 20480,
+  "materialized_breakdown": {
+    "hot_candidates": 8192,
+    "evidence_templates": 8192,
+    "world_mechanism_mappings": 4096
+  },
+  "tests": {
+    "passed": 52,
+    "unit": 49,
+    "scale": 3
+  },
+  "compileall": "passed",
+  "cli_commands": [
+    "manifest",
+    "materialized-stats",
+    "decode",
+    "oak",
+    "graph"
+  ],
+  "files_before_report": 46,
+  "lines_before_report": 23032,
+  "scale_test": {
+    "streamed_candidates": 100000,
+    "elapsed_seconds_approx": 21.3,
+    "fingerprint_sampling_period": 1000
+  },
+  "boundaries": [
+    "generated records are not discoveries",
+    "no automatic safety or fabrication claims",
+    "finite runs required despite no permanent total cap"
+  ]
+}

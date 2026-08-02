@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega Solid Campaign Plan R0.2",
+  "type": "object",
+  "required": [
+    "campaign_id",
+    "campaign_fingerprint",
+    "base_cardinality",
+    "contextual_cardinality",
+    "partition_count",
+    "partitions",
+    "no_permanent_total_candidate_cap"
+  ],
+  "properties": {
+    "campaign_id": {"type": "string"},
+    "campaign_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "base_cardinality": {"type": "integer", "minimum": 1},
+    "contextual_cardinality": {"type": "integer", "minimum": 1},
+    "partition_count": {"type": "integer", "minimum": 1},
+    "partitions": {"type": "array", "items": {"type": "object"}},
+    "no_permanent_total_candidate_cap": {"const": true},
+    "boundary": {"type": "string"}
+  },
+  "additionalProperties": true
+}

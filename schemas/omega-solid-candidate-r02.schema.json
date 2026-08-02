@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega-solid-candidate-r02.json",
+  "title": "Omega Solid Candidate R0.2",
+  "type": "object",
+  "required": ["candidate_id","campaign_id","logical_index","world_id","architecture_id","defect_profile_id","process_profile_id","environment_profile_id","mechanism_ids","descriptor","required_checks","epistemic_status"],
+  "properties": {
+    "candidate_id": {"type": "string", "minLength": 1},
+    "campaign_id": {"type": "string", "minLength": 1},
+    "logical_index": {"type": "integer", "minimum": 0},
+    "world_id": {"type": "string"},
+    "world_name": {"type": "string"},
+    "architecture_id": {"type": "string"},
+    "architecture_name": {"type": "string"},
+    "defect_profile_id": {"type": "string"},
+    "process_profile_id": {"type": "string"},
+    "environment_profile_id": {"type": "string"},
+    "mechanism_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "descriptor": {"type": "object"},
+    "required_checks": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "epistemic_status": {"const": "generated_candidate"},
+    "provenance_ids": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

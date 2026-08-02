@@ -1,0 +1,51 @@
+{
+  "policy_id": "omega-solids-r02-oak-policy",
+  "version": "0.2.0",
+  "default_status": "generated_candidate",
+  "promotion_ladder": [
+    "GENERATED",
+    "STRUCTURALLY_VALID",
+    "BASELINED",
+    "SIMULATED",
+    "BENCHMARKED",
+    "MEASURED",
+    "REPRODUCED",
+    "CANONICAL"
+  ],
+  "mandatory_gates": [
+    "OAK-01",
+    "OAK-02",
+    "OAK-03",
+    "OAK-04",
+    "OAK-05",
+    "OAK-06",
+    "OAK-07",
+    "OAK-08",
+    "OAK-09",
+    "OAK-10",
+    "OAK-11",
+    "OAK-12"
+  ],
+  "prohibited_automatic_claims": [
+    "discovery",
+    "stable material",
+    "safe material",
+    "fabricable material",
+    "patentable invention",
+    "commercial performance"
+  ],
+  "storage": {
+    "git": "schemas, code, manifests, hot atlas and selected evidence templates",
+    "cold": "large campaigns, raw simulations and private datasets"
+  },
+  "capacity": {
+    "permanent_total_candidate_cap": null,
+    "finite_runs_required": true,
+    "checkpoint_required_above_records": 100000,
+    "quality_sampling_required": true
+  },
+  "safety": {
+    "critical_materials_require_specialist_review": true,
+    "medical_or_structural_release_forbidden_without_qualification": true
+  }
+}
