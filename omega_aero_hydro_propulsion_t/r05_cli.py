@@ -5,6 +5,7 @@ import json
 from typing import Any, Sequence
 
 from .architecture_compiler import compile_propulsion_architectures
+from .evidence_discrepancy import demo_discrepancy_tensor
 from .evidence_ladder import assess_evidence_ladder, computational_receipts
 from .models import OperatingPoint, default_air, default_water, demo_rotor
 from .r05_oak import demo_air_intent, demo_water_intent, run_r05_benchmarks
@@ -30,6 +31,7 @@ def _parser() -> argparse.ArgumentParser:
     architecture.add_argument("--domain", choices=("air", "water"), default="air")
 
     sub.add_parser("evidence-demo")
+    sub.add_parser("discrepancy-demo")
     return parser
 
 
@@ -83,6 +85,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             report = compile_propulsion_architectures(demo_water_intent(), default_water())
         print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "discrepancy-demo":
+        print(json.dumps(demo_discrepancy_tensor().to_dict(), indent=2, sort_keys=True))
         return 0
 
     wake = analyze_wake_graph(
