@@ -1,0 +1,120 @@
+{
+  "policy_id": "omega-production-quality-observatory-r0.1",
+  "version": "0.1.0",
+  "purpose": "Prevent quantity inflation from being mistaken for scientific, product or economic validation and route the repository toward consolidation and external evidence.",
+  "volume_truth_classes": [
+    {
+      "id": "V0_VIRTUAL",
+      "definition": "Addressable or analytically planned cardinality with no materialized payloads.",
+      "may_support": ["capacity_planning", "indexing_design"],
+      "may_not_support": ["execution_claim", "scientific_claim", "product_claim"]
+    },
+    {
+      "id": "V1_PLANNED",
+      "definition": "Finite workload plan, partition map or dry-run with no completed execution.",
+      "may_support": ["resource_estimation", "rollback_design"],
+      "may_not_support": ["execution_claim", "empirical_validation"]
+    },
+    {
+      "id": "V2_MATERIALIZED",
+      "definition": "Records or artifacts were emitted and integrity-checked.",
+      "may_support": ["generation_capacity", "storage_integrity"],
+      "may_not_support": ["semantic_novelty", "scientific_truth", "market_value"]
+    },
+    {
+      "id": "V3_EXECUTED_SYNTHETIC",
+      "definition": "A deterministic or synthetic workload executed under a recorded protocol.",
+      "may_support": ["software_behavior", "performance", "recovery"],
+      "may_not_support": ["external_validity", "scientific_discovery"]
+    },
+    {
+      "id": "V4_EXTERNALLY_EVALUATED",
+      "definition": "A system was tested on an external dataset, user workflow or independent implementation with provenance.",
+      "may_support": ["transfer_evidence", "pilot_evidence"],
+      "may_not_support": ["universal_superiority", "canon_without_replication"]
+    },
+    {
+      "id": "V5_EXTERNALLY_REPLICATED",
+      "definition": "A scoped result was independently reproduced with method, uncertainty and negative results disclosed.",
+      "may_support": ["strong_scoped_promotion"],
+      "may_not_support": ["unbounded_generalization"]
+    }
+  ],
+  "gates": {
+    "volume_gate": {
+      "green_when": {
+        "actual_materialized_or_executed_minimum_gte": 1000000,
+        "virtual_is_not_counted_as_actual": true
+      }
+    },
+    "integration_gate": {
+      "green_when": {
+        "global_python_compile_observed_success": true,
+        "global_pytest_observed_success": true
+      }
+    },
+    "wip_gate": {
+      "green_when": {
+        "open_pull_requests_lte": 5,
+        "open_pr_commit_associations_lte": 60
+      },
+      "red_action": "freeze_new_massive_frontiers_and_close_merge_split_or_archive_open_prs"
+    },
+    "external_science_gate": {
+      "green_when_any": [
+        {"real_instrument_datasets_with_provenance_gte": 1},
+        {"independent_replications_gte": 1},
+        {"external_domain_expert_reviews_gte": 1}
+      ]
+    },
+    "external_product_gate": {
+      "green_when_any": [
+        {"external_active_users_gte": 1},
+        {"external_pilots_gte": 1},
+        {"confirmed_revenue_events_gte": 1}
+      ]
+    }
+  },
+  "decision_rules": [
+    {
+      "when": "volume_gate_green AND integration_gate_green AND (external_science_gate_red OR external_product_gate_red)",
+      "decision": "CONSOLIDATE_AND_EXTERNALIZE"
+    },
+    {
+      "when": "wip_gate_red",
+      "decision": "REDUCE_WIP_BEFORE_NEW_FRONT"
+    },
+    {
+      "when": "external_science_gate_green AND external_product_gate_green AND wip_gate_green",
+      "decision": "SELECTIVE_EXPANSION_ALLOWED"
+    }
+  ],
+  "promotion_requirements": {
+    "scientific": [
+      "provenance",
+      "units",
+      "baseline",
+      "uncertainty",
+      "negative_control",
+      "out_of_sample_evidence",
+      "falsification_condition",
+      "independent_review_or_replication"
+    ],
+    "product": [
+      "named_user_problem",
+      "external_user_or_pilot",
+      "measured_before_after_outcome",
+      "operational_cost",
+      "failure_and_rollback_record",
+      "privacy_security_ip_review"
+    ]
+  },
+  "authority": {
+    "automatic_merge": false,
+    "automatic_publication": false,
+    "automatic_scientific_promotion": false,
+    "automatic_product_claim": false,
+    "human_approval_required": true,
+    "scalar_score_has_final_authority": false
+  }
+}
