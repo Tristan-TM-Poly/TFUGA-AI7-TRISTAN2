@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_naruto_scale_index_v2.schema.json",
+  "title": "Omega Naruto Frontier Scale Index v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "indexed_records", "indexed_shards", "start_ordinal",
+    "next_ordinal", "axis_cardinality", "covered_local_combinations",
+    "local_coverage_fraction", "completed_epochs", "partial_epoch_records",
+    "repeated_axis_realizations", "counts_by_epoch", "counts_by_operator",
+    "counts_by_domain", "counts_by_epistemic_state", "counts_by_evidence_mode",
+    "counts_by_perturbation", "counts_by_gate_profile", "counts_by_oak_action",
+    "mminus_records", "blocked_records", "human_review_records",
+    "locally_ranked_records", "mminus_fraction", "blocked_fraction",
+    "samples", "non_claim"
+  ],
+  "properties": {
+    "schema": {"const": "omega_naruto_frontier.scale_index.v2"},
+    "indexed_records": {"type": "integer", "minimum": 0},
+    "indexed_shards": {"type": "integer", "minimum": 0},
+    "start_ordinal": {"type": "integer", "minimum": 0},
+    "next_ordinal": {"type": "integer", "minimum": 0},
+    "axis_cardinality": {"type": "integer", "minimum": 1},
+    "covered_local_combinations": {"type": "integer", "minimum": 0},
+    "local_coverage_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+    "completed_epochs": {"type": "integer", "minimum": 0},
+    "partial_epoch_records": {"type": "integer", "minimum": 0},
+    "repeated_axis_realizations": {"type": "integer", "minimum": 0},
+    "counts_by_epoch": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "counts_by_operator": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "counts_by_domain": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "counts_by_epistemic_state": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "counts_by_evidence_mode": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "counts_by_perturbation": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "counts_by_gate_profile": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "counts_by_oak_action": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "mminus_records": {"type": "integer", "minimum": 0},
+    "blocked_records": {"type": "integer", "minimum": 0},
+    "human_review_records": {"type": "integer", "minimum": 0},
+    "locally_ranked_records": {"type": "integer", "minimum": 0},
+    "mminus_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+    "blocked_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+    "samples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ordinal", "record_id", "epoch", "operator", "domain", "expected_oak_action"]
+      }
+    },
+    "non_claim": {"type": "string", "minLength": 1}
+  }
+}

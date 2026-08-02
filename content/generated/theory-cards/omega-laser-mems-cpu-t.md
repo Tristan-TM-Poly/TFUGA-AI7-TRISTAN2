@@ -1,0 +1,107 @@
+# Ω-LASER-MEMS-CPU-T — Laser pour microfabrication et photonique
+
+**Identifiant :** `omega-laser-mems-cpu-t`  
+**Version :** `R0.2-public`  
+**Maturité :** `architecture`  
+**Preuve :** `simulation et sécurité`
+
+## Résumé
+
+Utilise le laser comme outil de mesure, écriture, activation, recuit et correction dans des systèmes microfabriqués.
+
+## Statut épistémique
+
+Aucune promesse sub-nanométrique arbitraire; diffraction, absorption, dégâts et sécurité oculaire s’appliquent.
+
+Une architecture n’est pas une preuve; un prototype n’est pas un produit validé.
+
+## Domaines
+
+- laser
+- photonique
+- microfabrication
+
+## Profil OAK provisoire
+
+| Dimension | Signal |
+|---|---:|
+| verite | 0.46 |
+| utilite | 0.77 |
+| testabilite | 0.81 |
+| simplicite | 0.43 |
+| valeur | 0.73 |
+| protection | 0.69 |
+
+Les scores servent à naviguer; ils ne sont ni probabilités de vérité ni certifications.
+
+## Claims publics
+
+### claim-omega-laser-mems-cpu-t-01 — Portée publique et objet testable
+
+- Type: `scope`
+- Statut: `candidate`
+- Énoncé: Ω-LASER-MEMS-CPU-T propose un cadre structuré pour utilise le laser comme outil de mesure, écriture, activation, recuit et correction dans des systèmes microfabriqués.
+- Limite: La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.
+- Prochain test: Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.
+
+### claim-omega-laser-mems-cpu-t-02 — Limite OAK obligatoire
+
+- Type: `limit`
+- Statut: `guardrail`
+- Énoncé: La promotion de Ω-LASER-MEMS-CPU-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.
+- Limite: Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.
+- Prochain test: Auditer page, dépôt, tests et sources pour détecter une divergence réelle.
+
+### claim-omega-laser-mems-cpu-t-03 — Prochaine falsification ou réduction
+
+- Type: `test-plan`
+- Statut: `planned`
+- Énoncé: La prochaine progression de Ω-LASER-MEMS-CPU-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.
+- Limite: Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.
+- Prochain test: Simuler le budget thermique et la résolution d’un motif direct-writing basse énergie.
+
+## Relations sortantes
+
+- `crystallized_by` → `omega-tristan-self-os` — Traverse capture, canon, OAK, prototype, IP et valeur.
+- `documented_by` → `omega-doc-t` — Claims, versions, limites et résidus restent documentés.
+- `mapped_by` → `omega-atlas-t` — Coordonnées, provenance, statut, risques et routes restent navigables.
+- `uncertainty_guard` → `omega-unc2-t` — Incertitudes, désaccords et domaines de validité restent explicites.
+- `published_through` → `omega-web-tristan-t` — La couche publique expose seulement le résumé validé par les quatre gates.
+- `shares_domain` → `omega-mems-cpu-t` — Domaine partagé: microfabrication
+
+## Relations entrantes
+
+- `same_family` ← `omega-cpufmt` — Famille partagée: hardware
+
+## Risques
+
+- surpromesse
+- preuve insuffisante
+- sécurité physique
+- fabricabilité
+
+## Artefacts attendus
+
+- fiche publique
+- rapport OAK
+- prochaine expérience
+- spécification
+- schéma
+- protocole de test
+
+## Prochaine action
+
+Simuler le budget thermique et la résolution d’un motif direct-writing basse énergie.
+
+## Provenance
+
+- Source: `docs/theory_cards/OMEGA_LASER_MEMS_CPU_T.md`
+- Mise à jour: `2026-08-02`
+
+## Gates
+
+```text
+PUBLIC = OAKGate AND IPGate AND PrivacyGate AND SecurityGate
+```
+
+Aucune action externe automatique ou divulgation d’IP n’est autorisée par cette fiche.

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-web-os.local/schema/provenance.schema.json",
+  "title": "Tristan Web OS provenance manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version", "generated_from", "repository_scope", "hash_algorithm",
+    "disclaimer", "metrics", "sources", "theory_provenance", "claim_provenance"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.3.0" },
+    "repository_scope": { "type": "string", "minLength": 3 },
+    "hash_algorithm": { "const": "sha256" },
+    "disclaimer": { "type": "string", "minLength": 30 },
+    "metrics": {
+      "type": "object",
+      "required": ["sources", "resolved_files", "resolved_directories", "unresolved", "blocked_outside_repository", "theories", "claims"],
+      "properties": {
+        "sources": { "type": "integer", "minimum": 0 },
+        "resolved_files": { "type": "integer", "minimum": 0 },
+        "resolved_directories": { "type": "integer", "minimum": 0 },
+        "unresolved": { "type": "integer", "minimum": 0 },
+        "blocked_outside_repository": { "type": "integer", "minimum": 0 },
+        "theories": { "const": 44 },
+        "claims": { "const": 133 }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "kind", "status", "sha256", "size_bytes", "theory_ids", "claim_ids", "references", "epistemic_boundary"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^source-[0-9]{4}$" },
+          "path": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["document", "code", "structured-data", "dataset", "publication", "other"] },
+          "status": { "enum": ["resolved-file", "resolved-directory", "unresolved", "blocked-outside-repository"] },
+          "sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+          "size_bytes": { "type": ["integer", "null"], "minimum": 0 },
+          "theory_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+          "claim_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+          "references": { "type": "array" },
+          "epistemic_boundary": { "type": "string", "minLength": 20 }
+        }
+      }
+    },
+    "theory_provenance": { "type": "array", "minItems": 44, "maxItems": 44 },
+    "claim_provenance": { "type": "array", "minItems": 133, "maxItems": 133 }
+  }
+}

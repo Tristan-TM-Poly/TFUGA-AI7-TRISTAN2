@@ -1,0 +1,271 @@
+{
+  "schema_version": "0.3.0",
+  "generated_from": "2026-08-02T18:12:00-04:00",
+  "algorithm": "sha256(path\\0sha256\\0size\\n)",
+  "root_sha256": "98046738c6bd60080f78bf76a2b18b6ce22ad9f7bc09f90c203dd911d7c2672f",
+  "metrics": {
+    "files": 34,
+    "bytes": 638575,
+    "roles": {
+      "document-shell": 1,
+      "documentation": 1,
+      "javascript-module": 22,
+      "public-data": 5,
+      "stylesheet": 4,
+      "web-manifest": 1
+    },
+    "extensions": {
+      ".css": 4,
+      ".html": 1,
+      ".js": 22,
+      ".json": 5,
+      ".md": 1,
+      ".webmanifest": 1
+    }
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "role": "documentation",
+      "size_bytes": 4763,
+      "sha256": "1f73e90d68c39ec1735937e3ee9831f17000736dabc254c1a25457e973000e55",
+      "cache_candidate": false
+    },
+    {
+      "path": "accessibility.css",
+      "role": "stylesheet",
+      "size_bytes": 980,
+      "sha256": "de3728d6932201ef185a51e72562945265eaf79ab617a2dac8b704831b191d80",
+      "cache_candidate": true
+    },
+    {
+      "path": "app.js",
+      "role": "javascript-module",
+      "size_bytes": 93,
+      "sha256": "649235b6043dbcc30cb8aad5393c2fcb8c94dd04a6a50ef66621819f55e806fa",
+      "cache_candidate": true
+    },
+    {
+      "path": "app.webmanifest",
+      "role": "web-manifest",
+      "size_bytes": 610,
+      "sha256": "93ae514b01ab57203440c1ce5d2993832e8938dade40eb14638a30bada740c4f",
+      "cache_candidate": true
+    },
+    {
+      "path": "data/claims.json",
+      "role": "public-data",
+      "size_bytes": 179215,
+      "sha256": "132612aed207b3199f77324c3af9c29d2864b8af5b96aeaf1f313316067cd4a3",
+      "cache_candidate": true
+    },
+    {
+      "path": "data/provenance.json",
+      "role": "public-data",
+      "size_bytes": 105476,
+      "sha256": "256fd65e6e072fa0674e299044366baf19cc2675e111daa37645b3494780c559",
+      "cache_candidate": true
+    },
+    {
+      "path": "data/relations.json",
+      "role": "public-data",
+      "size_bytes": 102597,
+      "sha256": "4a719a83271de89ec1231555e7ee87767633a11fc07230d09228bdd0083b46cc",
+      "cache_candidate": true
+    },
+    {
+      "path": "data/theories.json",
+      "role": "public-data",
+      "size_bytes": 97993,
+      "sha256": "250c5e79629e86737a22553452300c839bb8d92f4b7caebb39e5fc88157bd516",
+      "cache_candidate": true
+    },
+    {
+      "path": "index.html",
+      "role": "document-shell",
+      "size_bytes": 4666,
+      "sha256": "45e3c3c04798065c8441cb0bd05a756841c5bb37fd9f465c33c0260b07bb3b20",
+      "cache_candidate": true
+    },
+    {
+      "path": "oakgate.css",
+      "role": "stylesheet",
+      "size_bytes": 3645,
+      "sha256": "e514771f2fb236ed97bdbe6858c85d5fd7fc228868d1cc5461534ec7497c32d7",
+      "cache_candidate": true
+    },
+    {
+      "path": "package.json",
+      "role": "public-data",
+      "size_bytes": 361,
+      "sha256": "5dfb51304fbdc300bbfdc2f958a0c6973096700bd557c4bf292104a80275b35f",
+      "cache_candidate": false
+    },
+    {
+      "path": "r03.css",
+      "role": "stylesheet",
+      "size_bytes": 17600,
+      "sha256": "cda51490da2efc90525bfdf6d760148719feeac5db8e77568937c8121d659421",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/application.js",
+      "role": "javascript-module",
+      "size_bytes": 6516,
+      "sha256": "917514fa77aa46085ca6cb875a3b54b35e46a91072f137e35d008c6956355bc5",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/core.js",
+      "role": "javascript-module",
+      "size_bytes": 14111,
+      "sha256": "07f2d31a352485e333fa32f3ae2fa60ee6632b4159b8482da5852d3b13aad736",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/data-store.js",
+      "role": "javascript-module",
+      "size_bytes": 7860,
+      "sha256": "82810030a5f9e17e314b28652959b3e5e2ffdc87f645a3638d4b3f999a15b821",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/exporters.js",
+      "role": "javascript-module",
+      "size_bytes": 4418,
+      "sha256": "7ec7324980bddb3121b0dd4a99229b31f28457799b010a1662f3d550a8851a69",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/oak-engine.js",
+      "role": "javascript-module",
+      "size_bytes": 8283,
+      "sha256": "0d142bc8a0adaa21f3e043cbb2c49adf449cd4de6008f0ed89127fa7064bedf5",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/preferences.js",
+      "role": "javascript-module",
+      "size_bytes": 1366,
+      "sha256": "13e83fa8768fd0f31d64c9785447a9335ac326cd3bbae44f2a4e2b474b19d937",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/router.js",
+      "role": "javascript-module",
+      "size_bytes": 1910,
+      "sha256": "218df7262b76d0e3ae0887e5c277c1b19e8e875e4c28950c5720bc00a0360066",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/search-engine.js",
+      "role": "javascript-module",
+      "size_bytes": 2263,
+      "sha256": "a646fc65b96a02d5e07a4093f752b5beee679d4bcaa9f32574c920ac8c632873",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/ui.js",
+      "role": "javascript-module",
+      "size_bytes": 4785,
+      "sha256": "461c23f73be540ff4c0643e9d6242bfb2b96d48df4c09be9120a74c4d3b8b387",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/about.js",
+      "role": "javascript-module",
+      "size_bytes": 3217,
+      "sha256": "3f0244e4e851d5e338b237739a95c0d64b216f0c6900b86e67ddd2a0d6cb6274",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/atlas.js",
+      "role": "javascript-module",
+      "size_bytes": 5037,
+      "sha256": "e257269c4edcbf9b7598c2875e5ba281aa01561201b851a5961e107a96cc905d",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/claims.js",
+      "role": "javascript-module",
+      "size_bytes": 6625,
+      "sha256": "52196eefcd021a4347ef779cee897e8687791a397037fe25216589177ae5e75a",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/dashboard.js",
+      "role": "javascript-module",
+      "size_bytes": 4475,
+      "sha256": "692c9200981ac8e9303334ba73f9d16792f54f7fb321d53255fd70f2dc20802c",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/evidence.js",
+      "role": "javascript-module",
+      "size_bytes": 3591,
+      "sha256": "19798309ce7182a10dc1c097560b3279ed4c7b1a6434d16d7ea722788c1998be",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/graph.js",
+      "role": "javascript-module",
+      "size_bytes": 7470,
+      "sha256": "61aac4b5fcbfb7e1670275b695c1693d1de8a118ee24e4c8834109255cfa3f23",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/mminus.js",
+      "role": "javascript-module",
+      "size_bytes": 3442,
+      "sha256": "f46486ee5857c4d0b62489c43a50a9adadc1172baaa6644a3ba017752ba98f93",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/oakgate.js",
+      "role": "javascript-module",
+      "size_bytes": 7092,
+      "sha256": "4665ad00abba9555a04dcece5b7b4392075f1ccd52dccdb830c4e725a9737bfa",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/provenance.js",
+      "role": "javascript-module",
+      "size_bytes": 6922,
+      "sha256": "4b0bed21d75660c056844ccb9bfd71d5b894abcbf038792132ab9e3eb7fe0114",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/roadmap.js",
+      "role": "javascript-module",
+      "size_bytes": 3021,
+      "sha256": "b265682be42fc1b910cc50d36e1f7d2ff3641b61ed98aadbf87b27cb6660f040",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/theory.js",
+      "role": "javascript-module",
+      "size_bytes": 4745,
+      "sha256": "a604dd86eca22f435e3c89ef7082f29ed74350c4d30249f44c1c27a0dda2a178",
+      "cache_candidate": true
+    },
+    {
+      "path": "styles.css",
+      "role": "stylesheet",
+      "size_bytes": 11348,
+      "sha256": "b151d56951abcf92f267bc23a526e790b2cedcde3d9f9ea32d8c7b933d21433f",
+      "cache_candidate": true
+    },
+    {
+      "path": "sw.js",
+      "role": "javascript-module",
+      "size_bytes": 2079,
+      "sha256": "410a5afd1f6f0fb5b829cd1f3de8fc5826266b26478197d957fee91835ef1a10",
+      "cache_candidate": true
+    }
+  ],
+  "excluded": [
+    ".DS_Store",
+    "data/build-manifest.json"
+  ],
+  "epistemic_boundary": "The root hash identifies this generated application snapshot. It does not certify security, accessibility, scientific validity, deployment identity, authorship, legal status, or absence of runtime compromise."
+}

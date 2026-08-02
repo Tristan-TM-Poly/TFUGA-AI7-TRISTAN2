@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_naruto_run_ledger_v3.schema.json",
+  "title": "Omega Naruto Frontier Run Ledger v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "valid",
+    "contiguous",
+    "run_count",
+    "total_records",
+    "first_ordinal",
+    "next_ordinal",
+    "total_compressed_bytes",
+    "total_uncompressed_bytes",
+    "federation_root_sha256",
+    "runs",
+    "findings",
+    "non_claim"
+  ],
+  "properties": {
+    "schema": {"const": "omega_naruto_frontier.run_ledger.v3"},
+    "valid": {"type": "boolean"},
+    "contiguous": {"type": "boolean"},
+    "run_count": {"type": "integer", "minimum": 1},
+    "total_records": {"type": "integer", "minimum": 0},
+    "first_ordinal": {"type": "integer", "minimum": 0},
+    "next_ordinal": {"type": "integer", "minimum": 0},
+    "total_compressed_bytes": {"type": "integer", "minimum": 0},
+    "total_uncompressed_bytes": {"type": "integer", "minimum": 0},
+    "federation_root_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "runs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "run_id",
+          "manifest_path",
+          "start_ordinal",
+          "next_ordinal",
+          "written_records",
+          "shard_count",
+          "compressed_bytes",
+          "uncompressed_bytes",
+          "logical_corpus_sha256",
+          "merkle_root_sha256",
+          "complete",
+          "range_records"
+        ]
+      }
+    },
+    "findings": {"type": "array", "items": {"type": "object"}},
+    "non_claim": {"type": "string", "minLength": 1}
+  }
+}

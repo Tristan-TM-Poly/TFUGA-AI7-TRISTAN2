@@ -1,0 +1,68 @@
+name: Tristan Web OS Build Manifest
+
+on:
+  push:
+    branches:
+      - feat/tristan-web-os-r0-1
+    paths:
+      - apps/tristan-8fire-site/**
+      - scripts/generate_tristan_web_build_manifest.py
+      - .github/workflows/tristan-web-os-build-manifest.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tristan-web-os-build-manifest-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout writable branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/tristan-web-os-r0-1
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate build manifest
+        run: python scripts/generate_tristan_web_build_manifest.py
+
+      - name: Verify manifest invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('apps/tristan-8fire-site/data/build-manifest.json').read_text(encoding='utf-8'))
+          assert manifest['schema_version'] == '0.3.0'
+          assert len(manifest['root_sha256']) == 64
+          assert manifest['metrics']['files'] == len(manifest['files'])
+          assert manifest['metrics']['files'] >= 25
+          assert all(len(item['sha256']) == 64 for item in manifest['files'])
+          assert 'data/build-manifest.json' in manifest['excluded']
+          print(manifest['metrics'])
+          PY
+
+      - name: Commit generated build manifest
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            apps/tristan-8fire-site/data/build-manifest.json \
+            content/generated/BUILD_MANIFEST.md
+          if git diff --cached --quiet; then
+            echo 'Build manifest is already current.'
+            exit 0
+          fi
+          git commit -m 'generated(web): materialize application build manifest'
+          git push origin HEAD:feat/tristan-web-os-r0-1

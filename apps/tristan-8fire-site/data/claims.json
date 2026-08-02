@@ -1,0 +1,4267 @@
+{
+  "schema_version": "0.2.0",
+  "generated_at": "2026-08-02T18:12:00-04:00",
+  "disclaimer": "Chaque claim conserve son statut, sa limite et son prochain test.",
+  "claims": [
+    {
+      "id": "claim-omega-tristan-self-os-01",
+      "theory_id": "omega-tristan-self-os",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-TRISTAN-SELF-OS propose un cadre structuré pour transforme l’expansion conceptuelle en définitions, preuves, code, tests, actifs, offres et décisions traçables.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-tristan-self-os-02",
+      "theory_id": "omega-tristan-self-os",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-TRISTAN-SELF-OS reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-tristan-self-os-03",
+      "theory_id": "omega-tristan-self-os",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-TRISTAN-SELF-OS doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Mesurer chaque semaine le ratio idées capturées / artefacts vérifiables livrés.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-transform-t-01",
+      "theory_id": "omega-transform-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-TRANSFORM-T propose un cadre structuré pour relie FWT, extensions fractales, tensorisation et analyse multi-échelle pour compression, reconstruction et détection.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_TRANSFORM_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-transform-t-02",
+      "theory_id": "omega-transform-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-TRANSFORM-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_TRANSFORM_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-transform-t-03",
+      "theory_id": "omega-transform-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-TRANSFORM-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_TRANSFORM_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Comparer sur anomalies, débruitage, classification et coût de calcul.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-unc2-t-01",
+      "theory_id": "omega-unc2-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-UNC²-T propose un cadre structuré pour structure provenance, calibration, résidus, désaccords de modèles et décisions robustes contre la surconfiance.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_UNC2_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-unc2-t-02",
+      "theory_id": "omega-unc2-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-UNC²-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_UNC2_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-unc2-t-03",
+      "theory_id": "omega-unc2-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-UNC²-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_UNC2_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Implémenter un registre U² et tester sa calibration sur des claims de dépôts.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-cvcd-t-01",
+      "theory_id": "omega-cvcd-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-CVCD-T propose un cadre structuré pour explore un espace de possibilités sous forme comprimée puis décompresse seulement les régions prometteuses et vérifiables.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CVCD_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-cvcd-t-02",
+      "theory_id": "omega-cvcd-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-CVCD-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CVCD_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-cvcd-t-03",
+      "theory_id": "omega-cvcd-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-CVCD-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CVCD_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Comparer à la recherche exhaustive, au beam search et à l’échantillonnage bayésien.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-cpufmt-01",
+      "theory_id": "omega-cpufmt",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-CPUFMT propose un cadre structuré pour architecture de calcul modulaire explorant topologies NoC, caches multi-échelles, redondance et contrôle thermo-énergétique.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CPUFMT.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-cpufmt-02",
+      "theory_id": "omega-cpufmt",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-CPUFMT reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CPUFMT.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-cpufmt-03",
+      "theory_id": "omega-cpufmt",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-CPUFMT doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CPUFMT.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Construire un simulateur de topologies et comparer latence, énergie, surface et tolérance aux défauts.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-bat-t-01",
+      "theory_id": "omega-bat-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-BAT-T propose un cadre structuré pour modélise les batteries comme systèmes électro-chemo-thermo-mécaniques avec diagnostic, BMS, vieillissement et sécurité.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_BAT_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-bat-t-02",
+      "theory_id": "omega-bat-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-BAT-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_BAT_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-bat-t-03",
+      "theory_id": "omega-bat-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-BAT-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_BAT_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Créer un analyseur EIS public avec baselines, incertitudes et détection de dérive.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-3dp-t-01",
+      "theory_id": "omega-3dp-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-3DP-T propose un cadre structuré pour relie géométrie, matériau, procédé, trajectoire, capteurs, défauts et métrologie dans un jumeau numérique auditable.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_3DP_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-3dp-t-02",
+      "theory_id": "omega-3dp-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-3DP-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_3DP_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-3dp-t-03",
+      "theory_id": "omega-3dp-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-3DP-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_3DP_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Générer des coupons de calibration et mesurer anisotropie, porosité et gauchissement.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-company-qc-ca-t-01",
+      "theory_id": "omega-company-qc-ca-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-COMPANY-QC-CA-T propose un cadre structuré pour convertit les actifs scientifiques en offres, pilotes et produits avec gouvernance, propriété intellectuelle et conformité.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "confidentialité",
+        "droits et permissions"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-company-qc-ca-t-02",
+      "theory_id": "omega-company-qc-ca-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-COMPANY-QC-CA-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "confidentialité",
+        "droits et permissions"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-company-qc-ca-t-03",
+      "theory_id": "omega-company-qc-ca-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-COMPANY-QC-CA-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Cristalliser une offre d’audit OAK, la tester avec un pilote et mesurer le temps économisé.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "confidentialité",
+        "droits et permissions"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-neuro-t-01",
+      "theory_id": "omega-neuro-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-NEURO-T propose un cadre structuré pour formalise cognition, mémoire, attention, action et apprentissage comme hypergraphe dynamique multi-échelle.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_NEURO_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "mauvaise interprétation",
+        "usage hors cadre"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-neuro-t-02",
+      "theory_id": "omega-neuro-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-NEURO-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_NEURO_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "mauvaise interprétation",
+        "usage hors cadre"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-neuro-t-03",
+      "theory_id": "omega-neuro-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-NEURO-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_NEURO_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Construire un notebook sur données publiques et séparer faits établis, modèle et hypothèses.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "mauvaise interprétation",
+        "usage hors cadre"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-oem-mtd-t-01",
+      "theory_id": "omega-oem-mtd-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-OEMMTD-T propose un cadre structuré pour couple lumière, champs, charges, déformation, chaleur et transitions de phase dans des modèles multi-physiques.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_OEMMTD_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-oem-mtd-t-02",
+      "theory_id": "omega-oem-mtd-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-OEMMTD-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_OEMMTD_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-oem-mtd-t-03",
+      "theory_id": "omega-oem-mtd-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-OEMMTD-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_OEMMTD_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Implémenter un cas piézoélectrique ou thermoélectrique réduit et comparer à un solveur de référence.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-opt-solar-t-01",
+      "theory_id": "omega-opt-solar-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-OPT-SOLAR-T propose un cadre structuré pour explore des surfaces optiques multi-échelles où trous, canaux et étages redistribuent un flux solaire mesurable.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_OPT_SOLAR_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-opt-solar-t-02",
+      "theory_id": "omega-opt-solar-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-OPT-SOLAR-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_OPT_SOLAR_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-opt-solar-t-03",
+      "theory_id": "omega-opt-solar-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-OPT-SOLAR-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_OPT_SOLAR_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Construire un ray tracer et comparer PSF, flux utile, tolérance d’alignement et température.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-mems-cpu-t-01",
+      "theory_id": "omega-mems-cpu-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-MEMS-CPU-T propose un cadre structuré pour applique motifs troués, canaux et réseaux multi-échelles aux MEMS, interconnexions, capteurs et refroidissement.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_MEMS_CPU_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-mems-cpu-t-02",
+      "theory_id": "omega-mems-cpu-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-MEMS-CPU-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_MEMS_CPU_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-mems-cpu-t-03",
+      "theory_id": "omega-mems-cpu-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-MEMS-CPU-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_MEMS_CPU_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Créer une bibliothèque de motifs et un OAKBench lithographie, thermique, RC et variabilité.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-laser-mems-cpu-t-01",
+      "theory_id": "omega-laser-mems-cpu-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-LASER-MEMS-CPU-T propose un cadre structuré pour utilise le laser comme outil de mesure, écriture, activation, recuit et correction dans des systèmes microfabriqués.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LASER_MEMS_CPU_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-laser-mems-cpu-t-02",
+      "theory_id": "omega-laser-mems-cpu-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-LASER-MEMS-CPU-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LASER_MEMS_CPU_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-laser-mems-cpu-t-03",
+      "theory_id": "omega-laser-mems-cpu-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-LASER-MEMS-CPU-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LASER_MEMS_CPU_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Simuler le budget thermique et la résolution d’un motif direct-writing basse énergie.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-corp-jarvis-t-01",
+      "theory_id": "omega-corp-jarvis-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-CORP-JARVIS-T propose un cadre structuré pour orchestre projets, contrats, IP, tâches, CRM et décisions avec approbation humaine pour les actions sensibles.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CORP_JARVIS_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "confidentialité",
+        "droits et permissions"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-corp-jarvis-t-02",
+      "theory_id": "omega-corp-jarvis-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-CORP-JARVIS-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CORP_JARVIS_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "confidentialité",
+        "droits et permissions"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-corp-jarvis-t-03",
+      "theory_id": "omega-corp-jarvis-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-CORP-JARVIS-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CORP_JARVIS_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Implémenter un registre d’actions proposé/approuvé/exécuté avec rollback et journal append-only.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "confidentialité",
+        "droits et permissions"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-lin-t-01",
+      "theory_id": "omega-lin-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-LIN-T propose un cadre structuré pour traite la linéarisation comme atlas de modèles locaux avec domaines de validité et résidus non linéaires conservés.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LIN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-lin-t-02",
+      "theory_id": "omega-lin-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-LIN-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LIN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-lin-t-03",
+      "theory_id": "omega-lin-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-LIN-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LIN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Créer un atlas Jacobien/Koopman et mesurer l’erreur hors domaine sur systèmes non linéaires.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-chem-log-lin-t-01",
+      "theory_id": "omega-chem-log-lin-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-CHEM-LOG-LIN-T propose un cadre structuré pour transforme les lois multiplicatives et vitesses relatives en représentations log pour analyse et approximation.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CHEM_LOG_LIN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-chem-log-lin-t-02",
+      "theory_id": "omega-chem-log-lin-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-CHEM-LOG-LIN-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CHEM_LOG_LIN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-chem-log-lin-t-03",
+      "theory_id": "omega-chem-log-lin-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-CHEM-LOG-LIN-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CHEM_LOG_LIN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Comparer réactions d’ordre 1/2, Michaelis–Menten et autocatalyse aux solveurs standards.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-energy-t-01",
+      "theory_id": "omega-energy-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-ENERGY-T propose un cadre structuré pour relie sources, stockage, conversion, réseau, contrôle, pertes, mesure, sécurité et économie dans un microgrid auditable.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ENERGY_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-energy-t-02",
+      "theory_id": "omega-energy-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-ENERGY-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ENERGY_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-energy-t-03",
+      "theory_id": "omega-energy-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-ENERGY-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ENERGY_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Livrer un microgrid PV–batterie–charge avec bilan énergétique et baselines de contrôle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-game-t-01",
+      "theory_id": "omega-game-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-GAME-T propose un cadre structuré pour traite règles, mondes, quêtes, narration, économie et agents comme hypergraphe interactif vérifiable.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_GAME_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-game-t-02",
+      "theory_id": "omega-game-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-GAME-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_GAME_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-game-t-03",
+      "theory_id": "omega-game-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-GAME-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_GAME_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Créer un monde minimal déterministe avec journal d’événements, tests de règles et maître de jeu réversible.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-neg-t-01",
+      "theory_id": "omega-neg-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-NEG-T propose un cadre structuré pour mesure l’ordre utile local par compression, prédiction, stabilité et réparation tout en comptant les coûts et dissipations.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_NEG_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-neg-t-02",
+      "theory_id": "omega-neg-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-NEG-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_NEG_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-neg-t-03",
+      "theory_id": "omega-neg-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-NEG-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_NEG_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Comparer plusieurs indices sur compression, prédiction et auto-réparation de systèmes simulés.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-learn-t-01",
+      "theory_id": "omega-learn-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-LEARN-T propose un cadre structuré pour convertit expérience, erreur, attention et pratique en modèles internes testés par rétention, transfert et action.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LEARN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-learn-t-02",
+      "theory_id": "omega-learn-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-LEARN-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LEARN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-learn-t-03",
+      "theory_id": "omega-learn-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-LEARN-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LEARN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Construire un tracker de maîtrise et mesurer rétention, transfert, coût et fatigue.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-jkd-t-01",
+      "theory_id": "omega-jkd-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-JKD-T propose un cadre structuré pour formalise perception précoce, désescalade, sortie, action minimale et apprentissage par résidus.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_JKD_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "escalade",
+        "mauvaise application"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-jkd-t-02",
+      "theory_id": "omega-jkd-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-JKD-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_JKD_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "escalade",
+        "mauvaise application"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-jkd-t-03",
+      "theory_id": "omega-jkd-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-JKD-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_JKD_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Créer un simulateur de décisions non violentes avec scénarios, sorties et journal M⁻.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "escalade",
+        "mauvaise application"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-calib-t-01",
+      "theory_id": "omega-calib-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-CALIB-T propose un cadre structuré pour relie instrument, référence, procédure, environnement, incertitude, dérive et certificat dans un graphe traçable.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CALIB_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-calib-t-02",
+      "theory_id": "omega-calib-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-CALIB-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CALIB_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-calib-t-03",
+      "theory_id": "omega-calib-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-CALIB-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_CALIB_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Créer un passeport d’instrument et un détecteur de dérive sur données publiques ou synthétiques.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-zeta-mandel-t-01",
+      "theory_id": "omega-zeta-mandel-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-ZETA-MANDEL-T propose un cadre structuré pour laboratoire numérique reliant fonctions zêta, dynamiques complexes et algèbres de Cayley–Dickson.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ZETA_MANDEL_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-zeta-mandel-t-02",
+      "theory_id": "omega-zeta-mandel-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-ZETA-MANDEL-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ZETA_MANDEL_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-zeta-mandel-t-03",
+      "theory_id": "omega-zeta-mandel-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-ZETA-MANDEL-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ZETA_MANDEL_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Tester stabilité sous précision, projection, norme, parenthésage et pas numérique.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-natsci-t-01",
+      "theory_id": "omega-natsci-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-NATSCI-T propose un cadre structuré pour unifie flux de matière, énergie, information et formes dans des modèles réduits avec provenance et résidus.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_NATSCI_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-natsci-t-02",
+      "theory_id": "omega-natsci-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-NATSCI-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_NATSCI_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-natsci-t-03",
+      "theory_id": "omega-natsci-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-NATSCI-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_NATSCI_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Livrer six exemples réduits avec unités, conservation, baseline et prédictions falsifiables.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-atlas-t-01",
+      "theory_id": "omega-atlas-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-ATLAS-T propose un cadre structuré pour cartographie connaissances, fichiers, code, agents, droits, preuves, routes d’action et potentiel de valeur.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ATLAS_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-atlas-t-02",
+      "theory_id": "omega-atlas-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-ATLAS-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ATLAS_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-atlas-t-03",
+      "theory_id": "omega-atlas-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-ATLAS-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ATLAS_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Implémenter ingestion Markdown/YAML et produire atlas JSON, GraphML et rapport OAK.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-vtp-t-01",
+      "theory_id": "omega-vtp-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-VTP-T propose un cadre structuré pour transforme calculs et graphes en représentations exécutables en parallèle sans perdre précision ni causalité.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_VTP_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-vtp-t-02",
+      "theory_id": "omega-vtp-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-VTP-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_VTP_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-vtp-t-03",
+      "theory_id": "omega-vtp-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-VTP-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_VTP_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Comparer CPU scalaire, NumPy et GPU avec exactitude, mémoire, énergie et taille de problème.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-oss-digest-t-01",
+      "theory_id": "omega-oss-digest-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-OSS-DIGEST-T propose un cadre structuré pour absorbe dépôts, licences, issues, tests et connaissances externes avec provenance, sécurité et attribution.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_OSS_DIGEST_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-oss-digest-t-02",
+      "theory_id": "omega-oss-digest-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-OSS-DIGEST-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_OSS_DIGEST_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-oss-digest-t-03",
+      "theory_id": "omega-oss-digest-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-OSS-DIGEST-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_OSS_DIGEST_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Créer un pipeline SBOM, licence, provenance, tests sandbox et registre M⁻.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-pdf-hypergraph-github-t-01",
+      "theory_id": "omega-pdf-hypergraph-github-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-PDF-HYPERGRAPH-GITHUB-T propose un cadre structuré pour ingest ZIP/PDF, extrait claims, équations et figures, puis produit graphes, rapports et artefacts traçables.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_PDF_HYPERGRAPH_GITHUB_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-pdf-hypergraph-github-t-02",
+      "theory_id": "omega-pdf-hypergraph-github-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-PDF-HYPERGRAPH-GITHUB-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_PDF_HYPERGRAPH_GITHUB_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-pdf-hypergraph-github-t-03",
+      "theory_id": "omega-pdf-hypergraph-github-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-PDF-HYPERGRAPH-GITHUB-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_PDF_HYPERGRAPH_GITHUB_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Tester un corpus contrôlé et mesurer rappel, précision, erreurs d’équations et provenance.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-fpg-t-01",
+      "theory_id": "omega-fpg-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-FPG-T propose un cadre structuré pour généralise les symétries locales exactes ou approximatives à plusieurs échelles avec métriques et résidus.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_FPG_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-fpg-t-02",
+      "theory_id": "omega-fpg-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-FPG-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_FPG_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-fpg-t-03",
+      "theory_id": "omega-fpg-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-FPG-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_FPG_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Définir espace, action, générateurs, métrique, tolérance et contre-exemples pour un premier cas.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-fcryst-t-01",
+      "theory_id": "omega-fcryst-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-FCRYST-T propose un cadre structuré pour étudie ordre multi-échelle, défauts, pores, interfaces, diffraction et propriétés de matériaux architecturés.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_FCRYST_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-fcryst-t-02",
+      "theory_id": "omega-fcryst-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-FCRYST-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_FCRYST_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-fcryst-t-03",
+      "theory_id": "omega-fcryst-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-FCRYST-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_FCRYST_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Simuler une structure architecturée et prédire une signature de diffraction mesurable.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-doc-t-01",
+      "theory_id": "omega-doc-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-DOC-T propose un cadre structuré pour traite la documentation comme mémoire versionnée reliant claims, preuves, code, tests, versions et permissions.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_DOC_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-doc-t-02",
+      "theory_id": "omega-doc-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-DOC-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_DOC_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-doc-t-03",
+      "theory_id": "omega-doc-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-DOC-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_DOC_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Construire un audit détectant une divergence réelle entre affirmation, exemple et code.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-sans-plafond-t-01",
+      "theory_id": "omega-sans-plafond-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-SANS-PLAFOND-T propose un cadre structuré pour remplace les limites fixes par budgets adaptatifs, sharding, streaming, backpressure, checkpoints et rollback.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_SANS_PLAFOND_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-sans-plafond-t-02",
+      "theory_id": "omega-sans-plafond-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-SANS-PLAFOND-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_SANS_PLAFOND_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-sans-plafond-t-03",
+      "theory_id": "omega-sans-plafond-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-SANS-PLAFOND-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_SANS_PLAFOND_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Mesurer la prochaine saturation réelle puis modifier l’architecture plutôt que relever une constante.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-mail-t-01",
+      "theory_id": "omega-mail-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-MAIL-T propose un cadre structuré pour génère et teste des fils de courriels synthétiques entre compagnies et agents dans un transport fermé.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_MAIL_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-mail-t-02",
+      "theory_id": "omega-mail-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-MAIL-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_MAIL_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-mail-t-03",
+      "theory_id": "omega-mail-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-MAIL-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_MAIL_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Implémenter boîtes en mémoire, scénarios YAML, assertions, erreurs simulées et rapports de couverture.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-web-tristan-t-01",
+      "theory_id": "omega-web-tristan-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-WEB-TRISTAN-T propose un cadre structuré pour interface publique et privée reliant théories, claims, preuves, code, risques, IP, produits et prochaines actions.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_WEB_TRISTAN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-web-tristan-t-02",
+      "theory_id": "omega-web-tristan-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-WEB-TRISTAN-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_WEB_TRISTAN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-web-tristan-t-03",
+      "theory_id": "omega-web-tristan-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-WEB-TRISTAN-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_WEB_TRISTAN_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Relier chaque carte publique à un claim, une preuve, un test, un commit et une politique de visibilité.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-wiki-t-01",
+      "theory_id": "omega-wiki-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-WIKI-T∞ propose un cadre structuré pour lit des articles révisionnés, extrait claims et sources, traduit sous garde-fous et construit des graphes de connaissance.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_WIKI_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-wiki-t-02",
+      "theory_id": "omega-wiki-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-WIKI-T∞ reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_WIKI_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-wiki-t-03",
+      "theory_id": "omega-wiki-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-WIKI-T∞ doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_WIKI_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Ajouter validation de support claim–source, comparaison de révisions et divergences entre langues.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-logexp-morph-t-01",
+      "theory_id": "omega-logexp-morph-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-LOGEXP-MORPH-T∞² propose un cadre structuré pour modélise translations, dilatations, rotations et morphismes par générateurs, exponentielles et résidus.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LOGEXP_MORPH_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-logexp-morph-t-02",
+      "theory_id": "omega-logexp-morph-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-LOGEXP-MORPH-T∞² reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LOGEXP_MORPH_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-logexp-morph-t-03",
+      "theory_id": "omega-logexp-morph-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-LOGEXP-MORPH-T∞² doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_LOGEXP_MORPH_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Ajouter identification parcimonieuse, BCH/Magnus adaptatif et validation hors échantillon.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-quaternion-crystal-t-01",
+      "theory_id": "omega-quaternion-crystal-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-QUATERNION-CRYSTAL-T propose un cadre structuré pour sépare orientation quaternionique, transformation affine, tenseurs de contrainte/déformation et élasticité.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_QUATERNION_CRYSTAL_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-quaternion-crystal-t-02",
+      "theory_id": "omega-quaternion-crystal-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-QUATERNION-CRYSTAL-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_QUATERNION_CRYSTAL_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-quaternion-crystal-t-03",
+      "theory_id": "omega-quaternion-crystal-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-QUATERNION-CRYSTAL-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_QUATERNION_CRYSTAL_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Étendre aux groupes ponctuels, désorientations minimales et champs EBSD avec incertitudes.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-ecc-t-01",
+      "theory_id": "omega-ecc-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-ECC-T propose un cadre structuré pour relie codes classiques, syndromes, hypergraphes de parité et mémoire négative dans un laboratoire reproductible.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ECC_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-ecc-t-02",
+      "theory_id": "omega-ecc-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-ECC-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ECC_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-ecc-t-03",
+      "theory_id": "omega-ecc-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-ECC-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ECC_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Comparer Hamming, BCH/LDPC simples et canaux burst avec coût, latence et taux résiduel.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-prime-object-t-01",
+      "theory_id": "omega-prime-object-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-PRIME-OBJECT-T propose un cadre structuré pour définit l’irréductibilité relativement à un domaine, une composition, des invariants et des tentatives de factorisation.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_PRIME_OBJECT_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-prime-object-t-02",
+      "theory_id": "omega-prime-object-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-PRIME-OBJECT-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_PRIME_OBJECT_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-prime-object-t-03",
+      "theory_id": "omega-prime-object-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-PRIME-OBJECT-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_PRIME_OBJECT_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Tester plusieurs domaines algébriques et vérifier recomposition, résidus et faux positifs.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-fact-infinity-t-01",
+      "theory_id": "omega-fact-infinity-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-FACT∞-T propose un cadre structuré pour décompose objets, opérateurs, invariants et cofactors puis mesure la qualité de recomposition.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_FACT_INFINITY_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-fact-infinity-t-02",
+      "theory_id": "omega-fact-infinity-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-FACT∞-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_FACT_INFINITY_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-fact-infinity-t-03",
+      "theory_id": "omega-fact-infinity-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-FACT∞-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_FACT_INFINITY_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Ajouter ambiguïté de factorisation, coût descriptif et comparaison à des décompositions standards.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-generator-discovery-stack-01",
+      "theory_id": "omega-generator-discovery-stack",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-GENERATOR-DISCOVERY-STACK propose un cadre structuré pour couple identification de transformations, spectres, commutateurs, holonomie, protocoles et classement d’expériences.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_GENERATOR_DISCOVERY_STACK.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-generator-discovery-stack-02",
+      "theory_id": "omega-generator-discovery-stack",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-GENERATOR-DISCOVERY-STACK reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_GENERATOR_DISCOVERY_STACK.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-generator-discovery-stack-03",
+      "theory_id": "omega-generator-discovery-stack",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-GENERATOR-DISCOVERY-STACK doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_GENERATOR_DISCOVERY_STACK.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Ajouter Jacobiennes analytiques, incertitudes, cross-validation et baselines physiques.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-life-t-01",
+      "theory_id": "omega-life-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-VIE-T∞ propose un cadre structuré pour organise chimie prébiotique, évolution, transitions biologiques, cognition et technosphère dans un graphe de recherche.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_VIE_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-life-t-02",
+      "theory_id": "omega-life-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-VIE-T∞ reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_VIE_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-life-t-03",
+      "theory_id": "omega-life-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-VIE-T∞ doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_VIE_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Créer une chronologie sourcée et un simulateur réduit de réseaux autocatalytiques sans prétention d’abiogenèse complète.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-edu-can-qc-t-01",
+      "theory_id": "omega-edu-can-qc-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-EDU-CAN-QC-T propose un cadre structuré pour cartographie programmes, diplômes, cours, compétences, prérequis, équivalences et preuves d’apprentissage.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_EDU_CAN_QC_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-edu-can-qc-t-02",
+      "theory_id": "omega-edu-can-qc-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-EDU-CAN-QC-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_EDU_CAN_QC_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-edu-can-qc-t-03",
+      "theory_id": "omega-edu-can-qc-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-EDU-CAN-QC-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_EDU_CAN_QC_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Ingest un petit ensemble de programmes officiels avec dates, juridictions et provenance.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-algorithmic-energy-t-01",
+      "theory_id": "omega-algorithmic-energy-t",
+      "kind": "scope",
+      "title": "Portée publique et objet testable",
+      "statement": "Ω-ALGO-ENERGY-T propose un cadre structuré pour explore des métriques de coût computationnel, information utile, dissipation et néguentropie de calcul.",
+      "status": "candidate",
+      "epistemic_level": "modèle ou architecture",
+      "confidence_label": "provisoire",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ALGO_ENERGY_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "La portée publique ne démontre ni supériorité générale, ni causalité, ni validité hors du domaine déclaré.",
+      "next_test": "Transformer l’objet en entrée, sortie, baseline, métrique et seuil reproductibles.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-algorithmic-energy-t-02",
+      "theory_id": "omega-algorithmic-energy-t",
+      "kind": "limit",
+      "title": "Limite OAK obligatoire",
+      "statement": "La promotion de Ω-ALGO-ENERGY-T reste bloquée tant que hypothèses, unités, résidus, risques et contre-exemples ne sont pas exposés.",
+      "status": "guardrail",
+      "epistemic_level": "règle de gouvernance",
+      "confidence_label": "processus fort, fond non prouvé",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ALGO_ENERGY_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Un garde-fou éditorial réduit la surpromesse mais ne valide pas le modèle sous-jacent.",
+      "next_test": "Auditer page, dépôt, tests et sources pour détecter une divergence réelle.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-algorithmic-energy-t-03",
+      "theory_id": "omega-algorithmic-energy-t",
+      "kind": "test-plan",
+      "title": "Prochaine falsification ou réduction",
+      "statement": "La prochaine progression de Ω-ALGO-ENERGY-T doit produire une comparaison mesurée plutôt qu’une nouvelle extension nominale.",
+      "status": "planned",
+      "epistemic_level": "plan expérimental",
+      "confidence_label": "non exécuté",
+      "support": [
+        {
+          "type": "canonical-reference",
+          "path": "docs/theory_cards/OMEGA_ALGO_ENERGY_T.md",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        }
+      ],
+      "counter_hypotheses": [
+        "Une baseline plus simple peut suffire.",
+        "Le gain peut provenir des données, du protocole ou du réglage."
+      ],
+      "falsification_or_limit": "Le plan peut échouer, être sous-dimensionné ou mesurer un proxy inadéquat.",
+      "next_test": "Séparer énergie matérielle mesurée, complexité, entropie informationnelle et heuristiques de fertilité.",
+      "risk_tags": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "publication_scope": "public-summary",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    },
+    {
+      "id": "claim-omega-transform-t-negative-01",
+      "theory_id": "omega-transform-t",
+      "kind": "negative-memory",
+      "title": "M⁻ — la pondération fractale naïve ne gagne pas au premier benchmark",
+      "statement": "Sur le premier signal synthétique documenté, une FWT standard a obtenu une meilleure erreur de reconstruction que la FFWT heuristique à fraction conservée comparable.",
+      "status": "negative_result",
+      "epistemic_level": "résultat expérimental local",
+      "confidence_label": "observé dans un cas documenté",
+      "support": [
+        {
+          "type": "local-benchmark",
+          "path": "omega_transform_t_package.zip",
+          "locator": "keep_fraction=0.2",
+          "note": "Conserver comme mémoire M⁻."
+        }
+      ],
+      "counter_hypotheses": [
+        "La FFWT peut aider une autre tâche.",
+        "La pondération naïve peut expliquer l’échec.",
+        "La classe de signal peut favoriser la FWT."
+      ],
+      "falsification_or_limit": "Résultat local; aucune conclusion générale sur toutes les FFWT ou toutes les tâches.",
+      "next_test": "Répéter sur plusieurs classes de signaux avec intervalles, coût et baselines.",
+      "risk_tags": [
+        "surinterprétation",
+        "cherry-picking",
+        "benchmark insuffisant"
+      ],
+      "publication_scope": "public-result-with-limit",
+      "automatic_promotion": false,
+      "updated_at": "2026-08-02"
+    }
+  ]
+}
