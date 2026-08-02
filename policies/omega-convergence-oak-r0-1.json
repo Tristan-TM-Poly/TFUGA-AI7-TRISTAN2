@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1.0",
+  "policy_id": "omega-convergence-oak-r0-1",
+  "default_mode": "dry_run",
+  "automatic_merge": false,
+  "automatic_scientific_promotion": false,
+  "forbidden_capabilities": [
+    "force_push_main",
+    "rewrite_public_history",
+    "bypass_required_checks",
+    "silence_failed_tests",
+    "promote_synthetic_to_empirical",
+    "discard_m_minus",
+    "increase_workflow_write_permissions_without_review"
+  ],
+  "mandatory_gates": [
+    "branch_dna_digest",
+    "conflict_tensor",
+    "public_api_contract",
+    "workflow_permission_audit",
+    "rollback_plan",
+    "merge_receipt"
+  ],
+  "critical_review_domains": [
+    "legal",
+    "medical",
+    "finance",
+    "privacy",
+    "public_ip",
+    "external_network_mutation",
+    "physical_experiment",
+    "workflow_write_permissions"
+  ],
+  "epistemic_rule": "addressable != generated != executed != software_verified != synthetic_validated != empirical != replicated != canon",
+  "merge_rule": "mergeable != safe_to_merge",
+  "residue_rule": "every unresolved conflict, missing test, failed gate or uncertain inference must remain visible in M-minus",
+  "status": "prototype_policy_not_external_certification"
+}

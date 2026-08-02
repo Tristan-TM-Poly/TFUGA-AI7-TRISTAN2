@@ -1,7 +1,7 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "3.2.0"
-description = "Omega absorb and OAK-safe public research tooling"
+version = "3.3.0"
+description = "Omega absorb, convergence and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
 [project.scripts]
@@ -15,6 +15,8 @@ omega-quaternion-crystal = "omega_quaternion_crystal_t.cli:main"
 omega-logexp-morph = "omega_logexp_morph_t.cli:main"
 omega-unbounded = "omega_unbounded_t.cli:main"
 omega-fluid = "omega_fluid_t.cli:main"
+omega-propulsion = "omega_aero_hydro_propulsion_t.cli:main"
+omega-propulsion-r02 = "omega_aero_hydro_propulsion_t.r02_cli:main"
 omega-generator-discovery = "omega_generator_discovery_t.cli:main"
 omega-generator-catalog = "omega_generator_discovery_t.catalog_cli:main"
 omega-generator-ultra = "omega_generator_discovery_t.ultra_cli:main"
@@ -24,8 +26,22 @@ omega-generator-frontier = "omega_generator_discovery_t.frontier_cli:main"
 omega-organic-family = "omega_org_fam_t.cli:main"
 omega-organic-family-ultra = "omega_org_fam_t.ultra_cli:main"
 omega-organic-evidence = "omega_org_fam_t.r03_cli:main"
-
 omega-plasma = "omega_plasma_t.cli:main"
+omega-convergence = "omega_convergence_os.cli:main"
+omega-re = "omega_re_t.cli:main"
+omega-re-r02 = "omega_re_t.r02_cli:main"
+omega-re-frontier = "omega_re_t.frontier:main"
+omega-mail = "omega_mail_t.cli:main"
+omega-mail-catalog = "omega_mail_t.catalog_cli:main"
+omega-mail-cvcd = "omega_mail_t.cvcd_atlas:main"
+omega-mail-official = "omega_mail_t.official_cli:main"
+omega-company-autopilot = "omega_company_autopilot_t.cli:main"
+omega-company-policy-atlas = "omega_company_autopilot_t.policy_atlas:main"
+omega-inbox-outcome = "omega_inbox_outcome_t.cli:main"
+omega-inbox-atlas = "omega_inbox_outcome_t.atlas:main"
+omega-intercompany-mesh = "omega_intercompany_mesh_t.cli:main"
+omega-mail-github = "omega_mail_github_loop_t.cli:main"
+omega-mail-github-atlas = "omega_mail_github_loop_t.atlas:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

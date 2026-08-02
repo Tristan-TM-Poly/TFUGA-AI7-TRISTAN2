@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega-convergence-branch-dna.schema.json",
+  "title": "Omega Convergence Branch DNA R0.1",
+  "type": "object",
+  "required": ["branch", "base_sha", "head_sha", "files", "scripts", "workflow_permissions"],
+  "properties": {
+    "branch": {"type": "string", "minLength": 1},
+    "base_sha": {"type": "string", "minLength": 7},
+    "head_sha": {"type": "string", "minLength": 7},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "status", "binary"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "status": {"enum": ["added", "modified", "deleted", "renamed", "unchanged"]},
+          "sha256": {"type": ["string", "null"]},
+          "size_bytes": {"type": ["integer", "null"], "minimum": 0},
+          "binary": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "public_symbols": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
+    "scripts": {"type": "object", "additionalProperties": {"type": "string"}},
+    "workflow_permissions": {"type": "object", "additionalProperties": {"enum": ["none", "read", "write"]}},
+    "epistemic_statuses": {"type": "object", "additionalProperties": {"type": "string"}},
+    "claims": {"type": "array", "items": {"type": "string"}},
+    "tests": {"type": "array", "items": {"type": "string"}},
+    "risks": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
