@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-re-r02.schema.json",
+  "title": "Omega RE T R0.2 Foundation Envelope",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "id",
+    "payload",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2.0"
+    },
+    "kind": {
+      "enum": [
+        "authorization_contract",
+        "re_ir_graph",
+        "probabilistic_machine",
+        "timed_machine",
+        "constraint_set",
+        "residual_record",
+        "checkpoint",
+        "benchmark_case"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object"
+    },
+    "provenance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "epistemic_status": {
+      "enum": [
+        "observed",
+        "measured",
+        "derived",
+        "inferred",
+        "plausible",
+        "reconstructed",
+        "causally_supported",
+        "independently_replicated",
+        "verified_within_domain",
+        "falsified",
+        "unknown"
+      ]
+    },
+    "authorization_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "content_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "distribution": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "latency_model": {
+      "type": "object",
+      "required": [
+        "mean",
+        "std",
+        "minimum"
+      ],
+      "properties": {
+        "mean": {
+          "type": "number",
+          "minimum": 0
+        },
+        "std": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "minimum": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "constraint": {
+      "type": "object",
+      "required": [
+        "constraint_id",
+        "field",
+        "comparator"
+      ],
+      "properties": {
+        "constraint_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comparator": {
+          "enum": [
+            "eq",
+            "ne",
+            "lt",
+            "le",
+            "gt",
+            "ge",
+            "in",
+            "not_in",
+            "exists",
+            "absent"
+          ]
+        },
+        "expected": {},
+        "tolerance": {
+          "type": "number",
+          "minimum": 0
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
