@@ -19,6 +19,11 @@ from .github_planner import (
     iter_jsonl,
     synthetic_additions,
 )
+from .self_improvement import (
+    SelfImprovementLab,
+    default_scenarios,
+    iter_variants_jsonl,
+)
 from .streaming import MPlusLedger, RangeWorkSource, ResourceSampler
 
 
@@ -69,6 +74,24 @@ def _build_parser() -> argparse.ArgumentParser:
     synthetic_plan.add_argument("--namespaces", type=int, default=8)
     synthetic_plan.add_argument("--output-dir", default="generated/omega_unbounded_synthetic_plan")
     _add_plan_policy_arguments(synthetic_plan)
+
+    self_improve = sub.add_parser(
+        "self-improve",
+        help=(
+            "Benchmark the current controller against an open candidate stream and emit "
+            "an OAK-gated promotion plan without modifying source or GitHub."
+        ),
+    )
+    self_improve.add_argument("--work-items", type=int, default=60_000)
+    self_improve.add_argument(
+        "--candidates",
+        help="Optional JSONL stream of controller variants; consumed until file exhaustion.",
+    )
+    self_improve.add_argument("--minimum-improvement-ratio", type=float, default=0.02)
+    self_improve.add_argument(
+        "--output-dir",
+        default="generated/omega_unbounded_self_improvement",
+    )
     return parser
 
 
@@ -150,6 +173,19 @@ def _run_plan(args: argparse.Namespace, records: Any) -> int:
     return 0
 
 
+def _self_improve(args: argparse.Namespace) -> int:
+    scenarios = default_scenarios(args.work_items)
+    candidates = iter_variants_jsonl(args.candidates) if args.candidates else None
+    report = SelfImprovementLab(
+        args.output_dir,
+        scenarios=scenarios,
+        minimum_improvement_ratio=args.minimum_improvement_ratio,
+    ).run(candidates)
+    payload = report.to_dict()
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0 if report.baseline.completed else 2
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     try:
@@ -162,6 +198,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args,
                 synthetic_additions(args.work_items, namespaces=args.namespaces),
             )
+        if args.command == "self-improve":
+            return _self_improve(args)
     except (OSError, ValueError, TypeError, sqlite3.Error) as exc:
         print(f"omega-unbounded: {exc}", file=sys.stderr)
         return 2
