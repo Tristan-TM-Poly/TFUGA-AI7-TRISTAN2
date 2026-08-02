@@ -3,8 +3,9 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sqlite3
 import sys
-from typing import Sequence
+from typing import Any, Sequence
 
 from .core import (
     AdaptiveController,
@@ -118,13 +119,13 @@ def _plan_policy(args: argparse.Namespace) -> GitHubPlanPolicy:
     )
 
 
-def _run_plan(args: argparse.Namespace, records: object) -> int:
+def _run_plan(args: argparse.Namespace, records: Any) -> int:
     planner = GitHubDryRunPlanner(
         args.output_dir,
         policy=_plan_policy(args),
         proposed_branch=args.branch,
     )
-    report = planner.plan(records)  # type: ignore[arg-type]
+    report = planner.plan(records)
     print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
