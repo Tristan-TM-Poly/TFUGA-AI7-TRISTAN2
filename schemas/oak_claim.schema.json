@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/oak_claim.schema.json",
+  "title": "OAKGate claim R0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim_id",
+    "text",
+    "status",
+    "layer",
+    "uncertainty",
+    "ip_classification"
+  ],
+  "properties": {
+    "claim_id": {"type": "string", "minLength": 1},
+    "text": {"type": "string", "minLength": 1},
+    "status": {
+      "enum": ["M0", "C1", "F2", "S3", "P4", "E5", "R6", "T7", "D8"]
+    },
+    "layer": {
+      "enum": ["MythOS", "TheoryOS", "PrototypeOS", "RealityOS"]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "default": []
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "default": []
+    },
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+    "risks": {
+      "type": "array",
+      "items": {"type": "string"},
+      "default": []
+    },
+    "ip_classification": {
+      "enum": [
+        "OPEN_SOURCE",
+        "PUBLICATION",
+        "PATENT_CANDIDATE",
+        "TRADE_SECRET",
+        "TRADEMARK",
+        "CONFIDENTIAL",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "public_intent": {"type": "boolean", "default": false},
+    "source_attributions": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "default": []
+    },
+    "provenance_hash": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Canonical SHA-256 over the claim payload excluding this field."
+    }
+  }
+}
