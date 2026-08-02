@@ -1,0 +1,17 @@
+{
+  "actual_minimum_heterogeneous_units": 81602080,
+  "automatic_merge_runtime": false,
+  "decision": "REDUCE_WIP_AND_EXTERNALIZE",
+  "external_product_gate": "RED",
+  "external_science_gate": "RED",
+  "human_merge_authorization": true,
+  "integration_gate": "GREEN",
+  "largest_virtual_plan": 1000000000000000,
+  "scalar_score_has_final_authority": false,
+  "status": "passed",
+  "synchronized_main": "cbc65fd079868ef126d0fcd8ea77ea8a075882fe",
+  "targeted_tests": "passed",
+  "validated_tree": "c2afcbd0b9cde95265a0edf00d867ce75acb5a59",
+  "virtual_plan_counted_as_execution": false,
+  "wip_gate": "RED"
+}
