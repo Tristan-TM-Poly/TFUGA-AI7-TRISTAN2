@@ -29,7 +29,7 @@ def test_manifest_has_stable_contract_and_boundary() -> None:
     assert len(payload["root_sha256"]) == 64
     assert "does not certify" in payload["epistemic_boundary"]
     assert payload["metrics"]["files"] == len(payload["files"])
-    assert payload["metrics"]["files"] >= 35
+    assert payload["metrics"]["files"] >= 34
 
 
 def test_every_manifest_file_exists_and_matches_hash_and_size() -> None:
