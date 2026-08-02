@@ -1,0 +1,51 @@
+name: OAKGate CI
+
+on:
+  pull_request:
+    paths:
+      - "oakgate/**"
+      - "schemas/oak_claim.schema.json"
+      - "tests/test_oakgate.py"
+      - "examples/oakgate_claim.json"
+      - "pyproject.toml"
+      - ".github/workflows/oakgate-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "oakgate/**"
+      - "schemas/oak_claim.schema.json"
+      - "tests/test_oakgate.py"
+      - "examples/oakgate_claim.json"
+      - "pyproject.toml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install test runner and package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pip install -e .
+
+      - name: Run OAKGate tests
+        run: python -m pytest tests/test_oakgate.py -q
+
+      - name: Scan passing example
+        run: oakgate scan examples/oakgate_claim.json --format json
