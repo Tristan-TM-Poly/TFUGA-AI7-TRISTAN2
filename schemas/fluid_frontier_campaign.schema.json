@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-fluid-t/fluid_frontier_campaign.schema.json",
+  "title": "Ω-FLUID-T Frontier Campaign",
+  "type": "object",
+  "required": ["start", "count", "output_dir"],
+  "properties": {
+    "start": {"type": "integer", "minimum": 0},
+    "count": {"type": "integer", "minimum": 0},
+    "output_dir": {"type": "string", "minLength": 1},
+    "target_shard_bytes": {"type": "integer", "minimum": 1},
+    "checkpoint_interval": {"type": "integer", "minimum": 1},
+    "permanent_total_cap": {"type": "null"},
+    "require_oak_status": {"type": "boolean"},
+    "require_provenance": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}
