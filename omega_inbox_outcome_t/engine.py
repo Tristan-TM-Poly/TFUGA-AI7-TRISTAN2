@@ -5,10 +5,12 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .deliverables import build_deliverable
+from .followup import schedule_followups
 from .intent import analyze_request
 from .models import AutonomousDeliveryContract, CaseRecord, IntakeEvent, IntakeStatus, ResolvedIdentity
 from .planner import build_plan
 from .policy import gate_case
+from .reply import compose_reply
 from .routing import DryRunDispatcher, choose_route
 from .validation import validate_deliverable
 
@@ -22,6 +24,8 @@ class OutcomeResult:
     validation: object
     route: object
     receipt: object
+    reply: object
+    followups: list[object]
 
     def to_dict(self) -> dict:
         return {
@@ -50,6 +54,8 @@ class OutcomeResult:
                 "reasons": list(self.route.reasons),
             },
             "receipt": self.receipt.to_dict(),
+            "reply": self.reply.to_dict(),
+            "followups": [item.to_dict() for item in self.followups],
         }
 
 
@@ -86,5 +92,7 @@ class InboxOutcomeEngine:
         validation = validate_deliverable(case, manifest)
         route = choose_route(manifest, identity, event.sender_address)
         receipt = self.dispatcher.dispatch(case.case_id, manifest, route)
+        reply = compose_reply(case, manifest, validation, gate, route, event.sender_address)
+        followups = schedule_followups(case, receipt)
         case.status = IntakeStatus.READY_TO_DISPATCH
-        return OutcomeResult(case, gate, plan, manifest, validation, route, receipt)
+        return OutcomeResult(case, gate, plan, manifest, validation, route, receipt, reply, followups)
