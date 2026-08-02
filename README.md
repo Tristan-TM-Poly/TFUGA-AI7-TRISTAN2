@@ -24,6 +24,7 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `Ω-DeepTech Intelligence Forge`: OAK-safe layer for deeptech signals -> IP triage -> prototype tasks -> revenue routing -> GitHub artifacts.
 - `Ω-ECC-T`: OAK-safe error-correction lab: Hamming(7,4), channel models, Syndrome-CVCD, HyperParityGraph-T, M⁻ hooks, and deterministic OAKBench.
 - `Ω-PDF-HYPERGRAPH-GITHUB-T`: OAK-safe universal absorber for PDF/ZIP/text/code corpora -> chunks -> claim candidates -> HGFM/CVCD hypergraph -> GitHub-ready artifacts.
+- `Ω-QUATERNION-CRYSTAL-T`: tested 3D kernel separating quaternion orientation, affine deformation, stress/strain tensors, cubic elasticity, and Schmid projection.
 
 ## Repository structure
 
@@ -34,6 +35,7 @@ sage_tristan/ Minimal Python engine for scoring, cards, status, HGFM, claims, AI
 omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
 ecc_tristan/ Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
 omega_prof_poly_t/ Omega absorb systems, including the universal corpus absorber.
+omega_quaternion_crystal_t/ Quaternion, affine, crystal, stress, and elasticity operators.
 tests/      Unit tests for the executable core.
 examples/   Example branches and DCT++ packets.
 reports/    Generated audit and publication reports.
@@ -55,6 +57,8 @@ python -m sage_tristan.demo
 python examples/omega_deeptech_forge_demo.py
 python examples/omega_ecc_t_demo.py
 python examples/omega_universal_absorber_demo.py
+python examples/omega_quaternion_crystal_demo.py
+omega-quaternion-crystal --axis 0 0 1 --angle-deg 90 --vector 1 0 0
 ```
 
 Universal corpus absorption dry-run:
@@ -92,6 +96,7 @@ Immediate canonizable modules:
 
 Crystallizable modules:
 
+- Ω-QUATERNION-CRYSTAL-T
 - FractalLC
 - NavierTardif
 - FFWT-HGFM
