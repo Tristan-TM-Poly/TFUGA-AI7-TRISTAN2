@@ -1,0 +1,53 @@
+name: Omega Company Outreach OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_company_outreach_t/**"
+      - "company_outreach/**"
+      - "tests/test_omega_company_outreach.py"
+      - "docs/OMEGA_COMPANY_OUTREACH_T.md"
+      - ".github/workflows/omega-company-outreach.yml"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - "omega_company_outreach_t/**"
+      - "company_outreach/**"
+      - "tests/test_omega_company_outreach.py"
+      - "docs/OMEGA_COMPANY_OUTREACH_T.md"
+      - ".github/workflows/omega-company-outreach.yml"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  outreach-oakbench:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+      - name: Compile
+        run: python -m compileall -q omega_company_outreach_t tests/test_omega_company_outreach.py
+      - name: Run OAKBench
+        run: python -m pytest -q tests/test_omega_company_outreach.py
+      - name: Validate public-safe cases
+        run: |
+          python -m omega_company_outreach_t.cli validate-case company_outreach/cases/OUT-2026-0001.json
+          python -m omega_company_outreach_t.cli validate-case company_outreach/cases/OUT-2026-0002.json
+      - name: Build and audit deterministic ledger
+        run: |
+          rm -f /tmp/outreach.jsonl
+          python -m omega_company_outreach_t.cli append-case company_outreach/cases/OUT-2026-0001.json --ledger /tmp/outreach.jsonl
+          python -m omega_company_outreach_t.cli append-case company_outreach/cases/OUT-2026-0002.json --ledger /tmp/outreach.jsonl
+          python -m omega_company_outreach_t.cli audit-ledger /tmp/outreach.jsonl
