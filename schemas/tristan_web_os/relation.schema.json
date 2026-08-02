@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-web-os.local/schema/relation.schema.json",
+  "title": "Tristan Web OS navigation relation",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "id", "source", "target", "kind", "rationale", "strength",
+    "status", "directional", "evidence_required", "public_scope"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^relation-[0-9]{4}$" },
+    "source": { "type": "string", "pattern": "^omega-[a-z0-9-]+$" },
+    "target": { "type": "string", "pattern": "^omega-[a-z0-9-]+$" },
+    "kind": { "type": "string", "pattern": "^[a-z][a-z0-9_]+$" },
+    "rationale": { "type": "string", "minLength": 15 },
+    "strength": { "type": "number", "minimum": 0, "maximum": 1 },
+    "status": { "enum": ["curated-candidate", "tested-association", "deprecated"] },
+    "directional": { "type": "boolean" },
+    "evidence_required": { "const": true },
+    "public_scope": { "const": "navigation" }
+  },
+  "allOf": [
+    {
+      "not": {
+        "properties": {
+          "source": { "const": { "$data": "1/target" } }
+        }
+      }
+    }
+  ]
+}
