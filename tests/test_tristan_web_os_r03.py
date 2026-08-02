@@ -74,21 +74,23 @@ def test_all_public_theories_have_four_gates_and_negative_memory() -> None:
 def test_application_registers_all_public_views() -> None:
     app = (SITE / "src" / "application.js").read_text(encoding="utf-8")
     html = (SITE / "index.html").read_text(encoding="utf-8")
-    routes = ["dashboard", "atlas", "theory", "claims", "claim", "graph", "evidence", "provenance", "mminus", "roadmap", "about"]
+    routes = ["dashboard", "atlas", "theory", "claims", "claim", "graph", "evidence", "provenance", "oakgate", "mminus", "roadmap", "about"]
     for route in routes:
         assert f"{route}:" in app
-    for route in ["dashboard", "atlas", "claims", "graph", "evidence", "provenance", "mminus", "roadmap", "about"]:
+    for route in ["dashboard", "atlas", "claims", "graph", "evidence", "provenance", "oakgate", "mminus", "roadmap", "about"]:
         assert f'data-route="{route}"' in html
     assert 'type="module"' in html
     assert 'id="global-search"' in html
     assert 'id="live-region"' in html
+    assert 'href="oakgate.css"' in html
 
 
-def test_offline_shell_covers_data_and_modules() -> None:
+def test_offline_shell_covers_data_modules_and_labs() -> None:
     worker = (SITE / "sw.js").read_text(encoding="utf-8")
     for item in [
         "data/theories.json", "data/claims.json", "data/relations.json", "data/provenance.json",
-        "src/application.js", "src/data-store.js", "src/views/graph.js", "src/views/provenance.js",
+        "src/application.js", "src/data-store.js", "src/oak-engine.js", "src/views/graph.js",
+        "src/views/provenance.js", "src/views/oakgate.js", "oakgate.css",
     ]:
         assert item in worker
     assert "fetch(" in worker
@@ -119,3 +121,13 @@ def test_global_search_uses_text_content_safe_primitives() -> None:
     assert "textContent" in ui
     assert "Unsafe html option is forbidden" in ui
     assert ".innerHTML" not in application
+
+
+def test_oakgate_never_claims_certification_or_auto_promotion() -> None:
+    engine = (SITE / "src" / "oak-engine.js").read_text(encoding="utf-8")
+    view = (SITE / "src" / "views" / "oakgate.js").read_text(encoding="utf-8")
+    assert 'automatic_promotion: false' in engine
+    assert '"human-review-candidate"' in engine
+    assert "ne certifie" in engine.lower()
+    assert "Auditer sans certifier" in view
+    assert "Exporter le paquet OAK JSON" in view
