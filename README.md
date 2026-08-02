@@ -1,6 +1,6 @@
 # TFUGA / SAGE-TRISTAN
 
-**Status:** v0.5 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
+**Status:** v0.6 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
 
 This repository crystallizes a rigorous, testable, reusable layer of the TFUGA / SAGE-TRISTAN mathematical biosphere.
 
@@ -27,6 +27,7 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `Ω-WIKI-T∞ / WikiForge-T`: multilingual Wikipedia reader and repository-theory absorber -> revision-pinned articles or canon files -> traceable claims/nodes -> citations, risks, next actions, and knowledge hypergraphs.
 - `Ω-QUATERNION-CRYSTAL-T`: tested 3D kernel separating quaternion orientation, affine deformation, stress/strain tensors, cubic elasticity, and Schmid projection.
 - `Ω-LOGEXP-MORPH-T∞²`: guarded generator calculus with matrix exp/log, nilpotent lifting, BCH, active singular sectors, polar-log, Magnus, commutator graphs, MorphCodex, and basis compression.
+- `Ω-GENERATOR-DISCOVERY-STACK`: ten coupled fronts for spectral morphs, generator operators, semigroup residuals, crystal holonomy, order experiments, MorphIR, epistemic dynamics, AutoLab, lab protocols, and generator syndromes.
 
 ## Repository structure
 
@@ -40,6 +41,7 @@ omega_prof_poly_t/ Omega absorb systems, including the universal corpus absorber
 omega_wiki_t/  Ω-WIKI-T∞ multilingual evidence compiler, translation guard, and theory hypergraph builder.
 omega_quaternion_crystal_t/ Quaternion, affine, crystal, stress, and elasticity operators.
 omega_logexp_morph_t/ Logarithmic/exponential morphism, active-factorization, and generator-compression kernel.
+omega_generator_discovery_t/ Unified ten-front generator discovery, diagnostics, experiment design, and OAK governance stack.
 generated/omega_wiki_t/ Reproducible WikiForge evidence and theory-knowledge artifacts.
 tests/         Unit tests for the executable core.
 examples/      Example branches and DCT++ packets.
@@ -66,8 +68,10 @@ python examples/omega_wiki_t_demo.py
 python examples/omega_quaternion_crystal_demo.py
 python examples/omega_logexp_morph_demo.py
 python examples/omega_logexp_morph_r0_3_demo.py
+python examples/omega_generator_discovery_stack_demo.py
 omega-quaternion-crystal --axis 0 0 1 --angle-deg 90 --vector 1 0 0
 omega-logexp-morph --generator '[[0,0.1],[-0.1,0]]'
+omega-generator-discovery affine --source '[0,1,2]' --target '[2,5,8]'
 ```
 
 Universal corpus absorption dry-run:
@@ -160,6 +164,7 @@ Crystallizable modules:
 
 - Ω-QUATERNION-CRYSTAL-T
 - Ω-LOGEXP-MORPH-T∞² R0.3
+- Ω-GENERATOR-DISCOVERY-STACK R0.1
 - FractalLC
 - NavierTardif
 - FFWT-HGFM
