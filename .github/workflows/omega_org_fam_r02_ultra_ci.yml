@@ -32,3 +32,5 @@ jobs:
         run: |
           python tools/generate_omega_org_fam_r02_ultra.py --root "$RUNNER_TEMP/omega-r02" --family-records 262144 --shard-families 65536 --clean
           python -m omega_org_fam_t.ultra_cli audit "$RUNNER_TEMP/omega-r02/generated/omega_org_fam_t_r02_ultra"
+
+# Merge-max exact-head validation trigger; generated corpus bytes remain unchanged.
