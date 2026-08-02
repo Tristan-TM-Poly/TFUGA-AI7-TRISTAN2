@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr-CA" data-theme="dark" data-density="comfortable" data-motion="system">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tristan Web OS — atlas vivant de théories, claims, preuves, prototypes, limites et prochaines expériences.">
+  <meta name="theme-color" content="#0b0e11">
+  <meta name="color-scheme" content="dark light">
+  <title>Tableau de preuve — Tristan Web OS</title>
+  <link rel="manifest" href="app.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="r03.css">
+  <link rel="stylesheet" href="oakgate.css">
+  <link rel="stylesheet" href="accessibility.css">
+</head>
+<body>
+  <a class="skip-link" href="#app">Aller au contenu</a>
+  <div id="live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <header class="app-header">
+    <a class="brand" href="#/dashboard" aria-label="Tristan Web OS, tableau de preuve">
+      <span class="brand-mark" aria-hidden="true">Ω</span>
+      <span>
+        <strong>Tristan Web OS</strong>
+        <small>R0.3 · proof-first knowledge system</small>
+      </span>
+    </a>
+
+    <form id="global-search" class="global-search" role="search" autocomplete="off">
+      <label class="sr-only" for="global-search-input">Rechercher dans les théories et claims</label>
+      <span aria-hidden="true">⌕</span>
+      <input id="global-search-input" type="search" placeholder="Rechercher théorie, claim, domaine…" aria-controls="global-search-results">
+      <kbd>Ctrl K</kbd>
+      <div id="global-search-results" class="global-search-results" hidden></div>
+    </form>
+
+    <div class="header-actions">
+      <button id="install-app" class="icon-button" type="button" hidden aria-label="Installer Tristan Web OS">↓</button>
+      <button id="toggle-density" class="icon-button" type="button" aria-label="Changer la densité">↕</button>
+      <button id="toggle-theme" class="icon-button" type="button" aria-label="Changer le thème">◐</button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <aside class="app-sidebar" aria-label="Navigation principale">
+      <nav class="side-nav">
+        <a href="#/dashboard" data-route="dashboard"><span aria-hidden="true">◫</span><span>Tableau de preuve</span></a>
+        <a href="#/atlas" data-route="atlas"><span aria-hidden="true">⌘</span><span>Atlas</span></a>
+        <a href="#/claims" data-route="claims"><span aria-hidden="true">≣</span><span>Claims</span></a>
+        <a href="#/graph" data-route="graph"><span aria-hidden="true">⌬</span><span>Hypergraphe</span></a>
+        <a href="#/evidence" data-route="evidence"><span aria-hidden="true">⊢</span><span>Evidence Fabric</span></a>
+        <a href="#/provenance" data-route="provenance"><span aria-hidden="true">⟐</span><span>Provenance</span></a>
+        <a href="#/oakgate" data-route="oakgate"><span aria-hidden="true">OAK</span><span>OAKGate Lab</span></a>
+        <a href="#/mminus" data-route="mminus"><span aria-hidden="true">M⁻</span><span>Mémoire négative</span></a>
+        <a href="#/roadmap" data-route="roadmap"><span aria-hidden="true">↗</span><span>GO Cristallise</span></a>
+        <a href="#/about" data-route="about"><span aria-hidden="true">i</span><span>Gouvernance</span></a>
+      </nav>
+
+      <section class="sidebar-gate" aria-label="Invariant de publication">
+        <p>Publication</p>
+        <code>OAK ∧ IP ∧ Privacy ∧ Security</code>
+        <small>Aucune promotion automatique.</small>
+      </section>
+    </aside>
+
+    <main id="app" class="app-main" tabindex="-1">
+      <section id="app-loading" class="loading-state" aria-busy="true">
+        <span class="loading-orbit" aria-hidden="true"></span>
+        <h1>Chargement du corpus</h1>
+        <p>Vérification des théories, claims et relations…</p>
+      </section>
+      <p id="app-error" class="error-banner" hidden></p>
+    </main>
+  </div>
+
+  <footer class="app-footer">
+    <p><strong>Tristan Web OS R0.3</strong> — Moins de brouillard, plus de preuves.</p>
+    <p>Les scores OAK sont des signaux provisoires de navigation; ils ne sont ni probabilités de vérité, ni certifications.</p>
+  </footer>
+
+  <noscript>
+    <section class="noscript-warning">
+      <h1>JavaScript est requis pour l’interface interactive.</h1>
+      <p>Les registres restent accessibles dans <code>data/theories.json</code>, <code>data/claims.json</code>, <code>data/relations.json</code> et <code>data/provenance.json</code>.</p>
+    </section>
+  </noscript>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
