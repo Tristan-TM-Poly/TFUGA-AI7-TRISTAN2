@@ -153,6 +153,9 @@ def test_end_to_end_dry_run_generates_manifest(tmp_path: Path):
     assert result.receipt.status == "DRY_RUN_PREPARED"
     assert result.validation.status is ValidationStatus.PASS
     assert all(Path(item["path"]).exists() for item in result.manifest.outputs)
+    assert result.reply.deliverable_id == result.manifest.deliverable_id
+    assert result.reply.reply_hash
+    assert result.followups[0].action == "request_dispatch_decision"
 
 
 def test_bug_report_routes_without_source_permission(tmp_path: Path):
@@ -207,3 +210,17 @@ def test_atlas_detects_missing_shard(tmp_path: Path):
     result = audit(tmp_path)
     assert result["passed"] is False
     assert result["missing"] == 1
+
+
+def test_status_reply_can_be_content_bound(tmp_path: Path):
+    event = IntakeRegistry().ingest_email(event_payload("Statut", "Quel est le statut?"))
+    result = InboxOutcomeEngine(tmp_path).process(event, identity=identity(), contract=contract(), company_id="c", division_id="d")
+    assert result.reply.output_hashes
+    assert result.reply.send_authorized is True
+
+
+def test_report_remains_draft_dispatch(tmp_path: Path):
+    event = IntakeRegistry().ingest_email(event_payload())
+    result = InboxOutcomeEngine(tmp_path).process(event, identity=identity(), contract=contract(), company_id="c", division_id="d")
+    assert result.gate.decision is ReplyDecision.AUTO_PRODUCE_DRAFT_DISPATCH
+    assert result.reply.send_authorized is False
