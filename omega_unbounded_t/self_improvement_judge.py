@@ -25,7 +25,7 @@ class ResourceAwareSelfImprovementLab(RawSelfImprovementLab):
         output_dir: str | Path,
         *,
         overshoot_penalty_weight: float = 10.0,
-        maximum_overshoot_multiplier: float = 2.0,
+        maximum_overshoot_multiplier: float = 3.0,
         **kwargs: Any,
     ):
         if overshoot_penalty_weight < 0.0:
