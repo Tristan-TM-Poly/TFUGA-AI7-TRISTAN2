@@ -5,6 +5,7 @@ Examples:
     python -m omega_discovery_kernel_t audit path/to/events.jsonl
     python -m omega_discovery_kernel_t catalog --output event-catalog.json
     python -m omega_discovery_kernel_t frontier --events 50000 --output-dir generated/frontier-50k
+    python -m omega_discovery_kernel_t plan-additions --output-dir generated/additions-50100
 """
 from __future__ import annotations
 
@@ -15,18 +16,15 @@ from typing import Sequence
 
 from .catalog import catalog_manifest
 from .demo import build_raman_closed_loop
+from .factory import KnowledgeFrontierTargets, plan_knowledge_frontier
 from .kernel import DiscoveryLedger
-from .streaming import (
-    AdaptiveFrontierConfig,
-    FrontierExperimentConfig,
-    run_frontier_experiment,
-)
+from .streaming import AdaptiveFrontierConfig, FrontierExperimentConfig, run_frontier_experiment
 
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m omega_discovery_kernel_t",
-        description="Compile, audit, and scale OAK-safe closed-loop discovery event ledgers.",
+        description="Compile, audit, scale, and plan OAK-safe discovery frontiers.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -42,7 +40,7 @@ def _parser() -> argparse.ArgumentParser:
 
     frontier = sub.add_parser(
         "frontier",
-        help="Run a finite adaptive frontier experiment without imposing a permanent total-event ceiling.",
+        help="Run a finite adaptive event experiment without imposing a permanent total-event ceiling.",
     )
     frontier.add_argument("--events", type=int, default=50_000)
     frontier.add_argument("--namespaces", type=int, default=16)
@@ -55,6 +53,24 @@ def _parser() -> argparse.ArgumentParser:
     frontier.add_argument("--commit-interval", type=int, default=1_000)
     frontier.add_argument("--minimum-free-bytes", type=int, default=64 * 1024 * 1024)
     frontier.add_argument("--resume", action="store_true")
+
+    plan = sub.add_parser(
+        "plan-additions",
+        help="Compile a reversible Ω-SANS-PLAFOND GitHub dry-run plan from diversified logical additions.",
+    )
+    plan.add_argument("--output-dir", default="generated/omega_discovery_kernel_t/additions-50100-r0-2")
+    plan.add_argument("--cells", type=int, default=100)
+    plan.add_argument("--claims-per-cell", type=int, default=10)
+    plan.add_argument("--evidence-per-claim", type=int, default=5)
+    plan.add_argument("--experiments-per-claim", type=int, default=1)
+    plan.add_argument("--results-per-experiment", type=int, default=10)
+    plan.add_argument("--actions-per-result", type=int, default=1)
+    plan.add_argument("--memory-rules-per-result", type=int, default=1)
+    plan.add_argument("--identities-per-claim", type=int, default=1)
+    plan.add_argument("--benchmark-cases", type=int, default=12_000)
+    plan.add_argument("--initial-shard-bytes", type=int, default=262_144)
+    plan.add_argument("--shard-growth-factor", type=float, default=2.0)
+    plan.add_argument("--proposed-branch", default="feat/omega-discovery-frontier-generated")
     return parser
 
 
@@ -104,8 +120,28 @@ def main(argv: Sequence[str] | None = None) -> int:
             resume=args.resume,
         )
         print(json.dumps(summary, ensure_ascii=False, indent=2))
-        findings = summary["manifest"].get("integrity_findings", [])
-        return 0 if not findings else 1
+        return 0 if not summary["manifest"].get("integrity_findings") else 1
+    if args.command == "plan-additions":
+        targets = KnowledgeFrontierTargets(
+            cells=args.cells,
+            claims_per_cell=args.claims_per_cell,
+            evidence_per_claim=args.evidence_per_claim,
+            experiments_per_claim=args.experiments_per_claim,
+            results_per_experiment=args.results_per_experiment,
+            actions_per_result=args.actions_per_result,
+            memory_rules_per_result=args.memory_rules_per_result,
+            identities_per_claim=args.identities_per_claim,
+            benchmark_cases=args.benchmark_cases,
+        )
+        summary = plan_knowledge_frontier(
+            args.output_dir,
+            targets=targets,
+            initial_shard_bytes=args.initial_shard_bytes,
+            shard_growth_factor=args.shard_growth_factor,
+            proposed_branch=args.proposed_branch,
+        )
+        print(json.dumps(summary, ensure_ascii=False, indent=2))
+        return 0 if summary["count_matches_target"] and summary["report"]["invalid_records"] == 0 else 1
     raise AssertionError(f"Unhandled command: {args.command}")
 
 
