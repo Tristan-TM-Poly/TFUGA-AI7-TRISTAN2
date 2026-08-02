@@ -1,9 +1,9 @@
 """Canonical event envelope for Ω-DISCOVERY-KERNEL-T∞.
 
-R0.2 delegates event semantics to the explicit Ω64 catalog.  The envelope is
-append-only, deterministic, hash-verified, unit-aware, and conservative: an
-event proves that a workflow record exists, not that its interpretation is
-scientifically correct.
+R0.3 delegates event semantics to the corrected explicit Ω64 catalog. The
+envelope is append-only, deterministic, hash-verified, unit-aware, and
+conservative: an event proves that a workflow record exists, not that its
+interpretation is scientifically correct.
 """
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from hashlib import sha256
 import json
 from typing import Any, Mapping, Sequence
 
-from .catalog import EVENT_TYPES, event_spec
+from .catalog_r03 import EVENT_TYPES, event_spec
 
 
 OAK_STATUSES = {
