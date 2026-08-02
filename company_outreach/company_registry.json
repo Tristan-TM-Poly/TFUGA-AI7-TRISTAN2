@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "transport": {
+    "provider": "gmail",
+    "authenticated_sender_type": "personal_account",
+    "corporate_domain_verified": false,
+    "rule": "Until a corporate domain or alias is independently verified, messages must not claim to originate from an incorporated company address."
+  },
+  "companies": [
+    {
+      "company_unit": "tristan_parent_opco",
+      "display_name": "Tristan Parent OpCo",
+      "legal_state": "candidate_parent_operating_role",
+      "purpose": ["entrepreneurship", "financing programs", "strategic partnerships"]
+    },
+    {
+      "company_unit": "tristan_oak_systems",
+      "display_name": "Tristan OAK Systems",
+      "legal_state": "internal_division",
+      "purpose": ["audit", "governance", "evidence", "risk"]
+    },
+    {
+      "company_unit": "tristan_software_labs",
+      "display_name": "Tristan Software Labs",
+      "legal_state": "internal_division",
+      "purpose": ["software pilots", "integrations", "customer discovery"]
+    },
+    {
+      "company_unit": "tristan_research_foundry",
+      "display_name": "Tristan Research Foundry",
+      "legal_state": "internal_division",
+      "purpose": ["research pilots", "universities", "scientific partnerships"]
+    }
+  ]
+}
