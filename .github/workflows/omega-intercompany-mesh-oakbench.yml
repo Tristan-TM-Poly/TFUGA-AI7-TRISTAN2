@@ -1,0 +1,52 @@
+name: Ω Intercompany Mesh OAKBench
+
+on:
+  pull_request:
+    paths:
+      - 'omega_intercompany_mesh_t/**'
+      - 'tests/test_omega_intercompany_mesh.py'
+      - 'docs/OMEGA_INTERCOMPANY_MESH_T.md'
+      - 'pyproject.toml'
+      - '.github/workflows/omega-intercompany-mesh-oakbench.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --upgrade pip pytest
+      - name: Compile
+        run: python -m compileall -q omega_intercompany_mesh_t
+      - name: Targeted tests
+        run: python -m pytest -q tests/test_omega_intercompany_mesh.py
+      - name: Generate bounded mesh
+        run: python -m omega_intercompany_mesh_t.cli generated/intercompany_mesh
+      - name: Audit manifest
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('generated/intercompany_mesh/manifest.json').read_text())
+          expected = {
+              'nodes': 4,
+              'directed_relationships': 12,
+              'agreement_families': 7,
+              'agreement_packets': 84,
+              'mail_packets': 24,
+              'real_external_sends': 0,
+          }
+          assert manifest == expected, (manifest, expected)
+          assert sum(1 for _ in Path('generated/intercompany_mesh/agreements.jsonl').open()) == 84
+          assert sum(1 for _ in Path('generated/intercompany_mesh/mail_packets.jsonl').open()) == 24
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-intercompany-mesh
+          path: generated/intercompany_mesh

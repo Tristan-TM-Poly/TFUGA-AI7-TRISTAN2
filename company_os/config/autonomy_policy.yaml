@@ -1,0 +1,41 @@
+version: R0.1
+policy_name: omega_company_autopilot_default
+core_rule: maximum_zero_touch_never_zero_control
+levels:
+  L0: {name: manual, description: no automated preparation or execution}
+  L1: {name: assist, description: checklists summaries reminders and drafts}
+  L2: {name: prepare, description: deterministic preparation and dry runs only}
+  L3: {name: approval, description: one-action execution after content-bound approval}
+  L4: {name: bounded, description: reversible low-risk internal actions may execute automatically}
+  L5: {name: supervised, description: ordinary operations orchestrated under policies telemetry and rollback}
+always_human:
+  - payment_execute
+  - contract_accept
+  - government_filing_submit
+  - tax_return_file
+  - bank_account_open
+  - share_issuance
+  - ip_publish
+  - ip_assign
+  - hire_commit
+  - dns_change
+  - data_delete
+  - public_claim
+always_professional_review:
+  - contract_accept
+  - government_filing_submit
+  - tax_return_file
+  - bank_account_open
+  - share_issuance
+  - ip_assign
+  - hire_commit
+secrets_forbidden_in_git:
+  - government_portal_credentials
+  - tax_credentials
+  - bank_credentials
+  - smtp_passwords
+  - oauth_refresh_tokens
+  - private_dkim_keys
+  - identity_documents
+  - unredacted_tax_records
+  - unredacted_bank_records

@@ -1,0 +1,67 @@
+{
+  "scenario": {
+    "id": "intercompany_support_001",
+    "title": "Demande de support entre Tristan Research Foundry et Tristan OAK Systems",
+    "seed": 42017,
+    "companies": [
+      {
+        "id": "tristan_research_foundry",
+        "name": "Tristan Research Foundry",
+        "mailboxes": [
+          {
+            "address": "research@research-foundry.test",
+            "role": "research",
+            "languages": ["fr-CA", "en-CA"]
+          }
+        ]
+      },
+      {
+        "id": "tristan_oak_systems",
+        "name": "Tristan OAK Systems",
+        "mailboxes": [
+          {
+            "address": "support@oak-systems.test",
+            "role": "support",
+            "languages": ["fr-CA", "en-CA"]
+          }
+        ]
+      }
+    ],
+    "participants": {
+      "researcher": "research@research-foundry.test",
+      "support": "support@oak-systems.test"
+    },
+    "steps": [
+      {
+        "action": "send",
+        "from": "researcher",
+        "to": "support",
+        "intent": "support_request",
+        "language": "fr-CA",
+        "subject": "Validation du nouveau module de classification",
+        "body": "Pouvez-vous vérifier que ce message synthétique est classé comme une demande de support?",
+        "attachments": [
+          {
+            "filename": "trace-synthetique.json",
+            "media_type": "application/json",
+            "content_sha256": "synthetic",
+            "size_bytes": 128,
+            "synthetic": true
+          }
+        ]
+      },
+      {
+        "action": "expect",
+        "mailbox": "support",
+        "assertions": [
+          {"type": "message_count", "equals": 1},
+          {"type": "latest_intent", "equals": "support_request"},
+          {"type": "latest_classification", "equals": "support"},
+          {"type": "latest_language", "equals": "fr-CA"},
+          {"type": "latest_attachment_count", "equals": 1},
+          {"type": "thread_message_count", "equals": 1}
+        ]
+      }
+    ]
+  }
+}
