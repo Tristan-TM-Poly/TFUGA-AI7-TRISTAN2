@@ -52,11 +52,13 @@ jobs:
             tests/test_omega_discovery_knowledge_frontier_r0_2.py \
             tests/test_omega_discovery_kernel_million_r0_3.py
 
-      - name: Validate machine-readable contracts
+      - name: Validate machine-readable contracts and catalog equality
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+
+          from omega_discovery_kernel_t import EVENT_TYPES, catalog_manifest
 
           paths = [
               "schemas/discovery-event.schema.json",
@@ -67,12 +69,42 @@ jobs:
               "policies/omega_discovery_frontier_r0_2.json",
               "policies/omega_discovery_million_frontier_r0_3.json",
           ]
+          documents = {}
           for raw in paths:
               path = Path(raw)
               value = json.loads(path.read_text(encoding="utf-8"))
               if not isinstance(value, dict):
                   raise SystemExit(f"{path} must contain a JSON object")
+              documents[raw] = value
               print(f"validated {path}")
+
+          schema_types = tuple(
+              documents["schemas/discovery-event.schema.json"]
+              ["properties"]["event_type"]["enum"]
+          )
+          if schema_types != EVENT_TYPES:
+              missing_in_schema = sorted(set(EVENT_TYPES) - set(schema_types))
+              extra_in_schema = sorted(set(schema_types) - set(EVENT_TYPES))
+              raise SystemExit(
+                  "catalog/schema drift: "
+                  f"missing_in_schema={missing_in_schema}, extra_in_schema={extra_in_schema}"
+              )
+          manifest = catalog_manifest()
+          if manifest["event_type_count"] != 64 or len(EVENT_TYPES) != 64:
+              raise SystemExit("Omega64 catalog must contain exactly 64 event contracts")
+          core = {
+              "ObservationEvent",
+              "ClaimEvent",
+              "GeneratorCandidate",
+              "ExperimentSpec",
+              "ResultPacket",
+              "OAKTransition",
+              "MMinusRule",
+              "ActionProposal",
+          }
+          if not core <= set(EVENT_TYPES):
+              raise SystemExit(f"core-loop events missing from catalog: {sorted(core - set(EVENT_TYPES))}")
+          print("catalog/schema equality PASS: 64 contracts and complete core loop")
           PY
 
       - name: Run targeted Discovery Kernel suite
