@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +16,7 @@ def load_audit_module():
     spec = importlib.util.spec_from_file_location("audit_tristan_web_os_r03", AUDIT_PATH)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -89,7 +91,8 @@ def test_offline_shell_covers_data_and_modules() -> None:
         "src/application.js", "src/data-store.js", "src/views/graph.js",
     ]:
         assert item in worker
-    assert "network" not in worker.lower() or "fetch" in worker
+    assert "fetch(" in worker
+    assert "caches.open" in worker
 
 
 def test_machine_contracts_are_valid_json() -> None:
@@ -99,6 +102,7 @@ def test_machine_contracts_are_valid_json() -> None:
         assert schema["$schema"].endswith("2020-12/schema")
         assert schema["type"] == "object"
         assert schema["required"]
+        assert "$data" not in json.dumps(schema)
 
 
 def test_exporters_do_not_send_network_requests() -> None:
