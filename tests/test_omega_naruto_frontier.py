@@ -31,19 +31,36 @@ def test_mixed_radix_decode_covers_first_and_last_records() -> None:
     assert last["gate_profile"] == axes.gate_profiles[-1]
 
 
+def test_epoch_boundary_removes_axis_cardinality_ceiling() -> None:
+    axes = default_axes()
+    final_epoch_zero = record_from_ordinal(axes.cardinality - 1, axes)
+    first_epoch_one = record_from_ordinal(axes.cardinality, axes)
+    millionth = record_from_ordinal(1_000_000, axes)
+
+    assert final_epoch_zero.epoch == 0
+    assert first_epoch_one.epoch == 1
+    assert first_epoch_one.local_ordinal == 0
+    assert decode_ordinal(axes.cardinality, axes) == decode_ordinal(0, axes)
+    assert first_epoch_one.record_id != record_from_ordinal(0, axes).record_id
+    assert millionth.epoch == 1_000_000 // axes.cardinality
+    assert millionth.ordinal == 1_000_000
+
+
 def test_record_ids_are_deterministic_and_unique_for_large_slice() -> None:
     axes = default_axes()
-    records = tuple(iter_records(axes, start_ordinal=10_000, record_count=10_000))
+    records = tuple(iter_records(axes, start_ordinal=60_000, record_count=10_000))
     identifiers = [record.record_id for record in records]
     assert len(identifiers) == 10_000
     assert len(set(identifiers)) == 10_000
-    assert record_from_ordinal(10_000, axes) == records[0]
+    assert record_from_ordinal(60_000, axes) == records[0]
+    assert records[-1].epoch == 1
 
 
 def test_frontier_budget_has_no_permanent_total_cap() -> None:
     assert FrontierBudget(requested_records=10).resolve_target() == 10
     assert FrontierBudget(requested_records=100_000).resolve_target() == 100_000
     assert FrontierBudget(requested_records=1_000_000).resolve_target() == 1_000_000
+    assert FrontierBudget(requested_records=10_000_000).resolve_target() == 10_000_000
 
 
 def test_adaptive_target_doubles_previous_success_without_byte_pressure() -> None:
@@ -88,6 +105,28 @@ def test_sharded_generation_and_streaming_validation(tmp_path: Path) -> None:
     assert report.findings == ()
 
 
+def test_resume_appends_new_shards_and_preserves_global_hash(tmp_path: Path) -> None:
+    first = write_corpus(
+        tmp_path,
+        budget=FrontierBudget(requested_records=10_000),
+        shard_records=5_000,
+    )
+    second = write_corpus(
+        tmp_path,
+        budget=FrontierBudget(requested_records=20_000),
+        shard_records=5_000,
+        resume=True,
+    )
+
+    assert first.written_records == 10_000
+    assert second.written_records == 30_000
+    assert second.next_ordinal == 30_000
+    assert len(second.shards) == 6
+    report = validate_frontier(tmp_path)
+    assert report.valid
+    assert report.observed_records == 30_000
+
+
 def test_validator_detects_tampered_shard(tmp_path: Path) -> None:
     manifest = write_corpus(
         tmp_path,
@@ -108,14 +147,19 @@ def test_validator_detects_tampered_shard(tmp_path: Path) -> None:
     assert "CORPUS_HASH_MISMATCH" in codes
 
 
-def test_generation_target_is_bounded_by_current_axis_projection(tmp_path: Path) -> None:
+def test_generation_crosses_epoch_boundary_without_truncation(tmp_path: Path) -> None:
     axes = default_axes()
     manifest = write_corpus(
         tmp_path,
         axes=axes,
-        budget=FrontierBudget(requested_records=1_000_000),
-        shard_records=20_000,
+        budget=FrontierBudget(requested_records=70_000),
+        shard_records=10_000,
     )
-    assert manifest.target_records == axes.cardinality
-    assert manifest.written_records == 64_512
+    assert manifest.target_records == 70_000
+    assert manifest.written_records == 70_000
+    assert manifest.completed_epochs == 1
+    assert len(manifest.shards) == 7
     assert manifest.complete
+    report = validate_frontier(tmp_path)
+    assert report.valid
+    assert report.observed_records == 70_000
