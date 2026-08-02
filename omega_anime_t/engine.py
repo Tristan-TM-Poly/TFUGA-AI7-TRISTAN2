@@ -172,7 +172,7 @@ def build_eighth_fire_project() -> AnimeProject:
                 objective="Établir une anomalie mesurable et la routine du laboratoire.",
                 conflict="Tous les instruments rejettent le signal comme artefact.",
                 irreversible_change="Tristan décide de conserver la trace rejetée.",
-                information_revealed=("l'anomalie est corrélée à plusieurs sous-systèmes"),
+                information_revealed=("l'anomalie est corrélée à plusieurs sous-systèmes",),
                 estimated_seconds=32,
             ),
             EpisodeBeat(
@@ -182,7 +182,7 @@ def build_eighth_fire_project() -> AnimeProject:
                 objective="Montrer la première perception sans l'expliquer entièrement.",
                 conflict="Tristan ne sait pas si le réseau est physique ou projeté.",
                 irreversible_change="Il choisit un nœud minimal à perturber.",
-                information_revealed=("les événements apparemment séparés partagent une contrainte"),
+                information_revealed=("les événements apparemment séparés partagent une contrainte",),
                 estimated_seconds=34,
             ),
             EpisodeBeat(
@@ -192,7 +192,7 @@ def build_eighth_fire_project() -> AnimeProject:
                 objective="Faire réussir une intervention locale crédible.",
                 conflict="Le temps manque et aucune validation complète n'est possible.",
                 irreversible_change="Le laboratoire évite une panne grâce à la correction.",
-                information_revealed=("Tristan peut agir sur le réseau, pas seulement le voir"),
+                information_revealed=("Tristan peut agir sur le réseau, pas seulement le voir",),
                 estimated_seconds=34,
             ),
             EpisodeBeat(
@@ -202,7 +202,7 @@ def build_eighth_fire_project() -> AnimeProject:
                 objective="Prouver que le pouvoir ne donne pas une solution gratuite.",
                 conflict="Un système éloigné se désynchronise après le sauvetage local.",
                 irreversible_change="Une dette causale est créée hors du laboratoire.",
-                information_revealed=("la contrainte a été déplacée plutôt qu'annulée"),
+                information_revealed=("la contrainte a été déplacée plutôt qu'annulée",),
                 estimated_seconds=38,
             ),
             EpisodeBeat(
