@@ -27,7 +27,16 @@ from .genjutsu import (
     audit_proposal,
     has_blocking_finding,
 )
+from .graph import GraphEdge, GraphNode, HGFMGraph, build_hgfmn_graph
 from .integration import to_claim_packet, to_mminus_registry
+from .robustness import (
+    DecisionRobustness,
+    ProposalPerturbation,
+    RobustnessScenario,
+    ScenarioDecision,
+    analyze_decision_robustness,
+    default_robustness_scenarios,
+)
 
 __all__ = [
     "AgentProposal",
@@ -41,8 +50,18 @@ __all__ = [
     "GenjutsuCode",
     "GenjutsuFinding",
     "StrategyBenchmark",
+    "GraphEdge",
+    "GraphNode",
+    "HGFMGraph",
+    "DecisionRobustness",
+    "ProposalPerturbation",
+    "RobustnessScenario",
+    "ScenarioDecision",
+    "analyze_decision_robustness",
     "audit_proposal",
     "benchmark_strategies",
+    "build_hgfmn_graph",
+    "default_robustness_scenarios",
     "evaluate_publication",
     "has_blocking_finding",
     "highest_confidence",
