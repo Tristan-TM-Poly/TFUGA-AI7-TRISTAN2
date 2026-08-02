@@ -14,6 +14,7 @@ on:
       - scripts/tristan_web_catalog_seed_*.py
       - tests/test_tristan_web_os*.py
       - tests/test_tristan_web_provenance.py
+      - tests/js/**
       - .github/workflows/tristan-web-os-r03.yml
   pull_request:
     branches:
@@ -28,6 +29,7 @@ on:
       - scripts/tristan_web_catalog_seed_*.py
       - tests/test_tristan_web_os*.py
       - tests/test_tristan_web_provenance.py
+      - tests/js/**
       - .github/workflows/tristan-web-os-r03.yml
   workflow_dispatch:
 
@@ -81,6 +83,9 @@ jobs:
           while IFS= read -r -d '' file; do
             node --check "$file"
           done < <(find apps/tristan-8fire-site -type f -name '*.js' -print0)
+
+      - name: Run OAKGate JavaScript unit tests
+        run: node --test tests/js/*.test.mjs
 
       - name: Run deterministic OAK audits
         run: |
