@@ -76,18 +76,19 @@ Le pouvoir central révèle ou reconfigure temporairement des relations. Il ne c
 ## 4. Exécution
 
 ```bash
-python -m omega_anime_t show-demo
-python -m omega_anime_t lint-demo
-python -m omega_anime_t compile-demo \
+omega-anime show-demo
+omega-anime lint-demo
+omega-anime compile-demo \
   --output-dir generated/omega_anime_t/eighth_fire_r0_1
 ```
+
+L'exécution directe sans installation reste disponible avec `python -m omega_anime_t`.
 
 Le bundle contient :
 
 ```text
 project.json
-portfolio absent by design
- oak-lint.json
+oak-lint.json
 manifest.json
 report.md
 ```
