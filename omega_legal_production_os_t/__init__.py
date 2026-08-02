@@ -1,4 +1,4 @@
-"""Ω-LEGAL-PRODUCTION-OS-T∞ R0.1/R0.2 public API."""
+"""Ω-LEGAL-PRODUCTION-OS-T∞ public API through R0.5."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -18,6 +18,15 @@ from .models import (
     iso_utc,
 )
 from .policy import LegalProductionPolicyGate, PolicyReport
+from .real_execution import ExecutionReceipt, doctor, execute_action, reconcile_action
+from .real_providers import (
+    DropboxSignTestProvider,
+    GmailSendProvider,
+    GitHubDraftReleaseProvider,
+    ProviderError,
+    ProviderReceipt,
+    StripeTestPaymentProvider,
+)
 from .release import (
     DryRunReleaseProvider,
     ReleaseArtifact,
@@ -45,22 +54,32 @@ __all__ = [
     "ActionType",
     "ApprovalRecord",
     "AuthorityGrant",
+    "DropboxSignTestProvider",
     "DryRunReleaseProvider",
+    "ExecutionReceipt",
     "ExternalActionEnvelope",
     "GateDecision",
+    "GmailSendProvider",
+    "GitHubDraftReleaseProvider",
     "LedgerEntry",
     "LegalProductionPolicyGate",
     "PolicyReport",
+    "ProviderError",
+    "ProviderReceipt",
     "ReleaseArtifact",
     "ReleaseCandidate",
     "ReleaseDryRunReceipt",
     "RiskLevel",
+    "StripeTestPaymentProvider",
     "audit_policy_atlas",
     "detect_forbidden_payload_keys",
+    "doctor",
+    "execute_action",
     "generate_policy_atlas",
     "hash_payload",
     "iso_utc",
+    "reconcile_action",
     "summarize_artifacts",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.5.0"
