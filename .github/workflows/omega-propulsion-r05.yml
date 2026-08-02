@@ -60,7 +60,7 @@ jobs:
           python -m omega_aero_hydro_propulsion_t.r05_cli architecture-demo --domain water > /tmp/propulsion-r05-water.json
       - name: Materialize discrepancy tensor
         run: python -m omega_aero_hydro_propulsion_t.r05_cli discrepancy-demo > /tmp/propulsion-r05-discrepancy.json
-      - name: Materialize and validate evidence ladder
+      - name: Materialize and validate evidence artifacts
         run: |
           python -m omega_aero_hydro_propulsion_t.r05_cli evidence-demo > /tmp/propulsion-r05-evidence.json
           python - <<'PY'
@@ -68,14 +68,20 @@ jobs:
           from pathlib import Path
           import jsonschema
 
-          schema = json.loads(Path('schemas/propulsion_evidence_ladder_r05.schema.json').read_text())
+          evidence_schema = json.loads(Path('schemas/propulsion_evidence_ladder_r05.schema.json').read_text())
+          discrepancy_schema = json.loads(Path('schemas/propulsion_discrepancy_tensor_r05.schema.json').read_text())
           evidence = json.loads(Path('/tmp/propulsion-r05-evidence.json').read_text())
-          jsonschema.validate(evidence, schema)
+          discrepancy = json.loads(Path('/tmp/propulsion-r05-discrepancy.json').read_text())
+          jsonschema.validate(evidence, evidence_schema)
+          jsonschema.validate(discrepancy, discrepancy_schema)
           assert evidence['highest_supported_tier'] == 'F3_VORTEX_PROXY'
           assert evidence['contiguous_tier'] == 'F3_VORTEX_PROXY'
           assert evidence['certification_claim'] is False
           assert evidence['physics_certified'] is False
           assert len(evidence['evidence_hash']) == 64
+          assert discrepancy['automatic_model_promotion'] is False
+          assert discrepancy['physics_certified'] is False
+          assert len(discrepancy['evidence_hash']) == 64
           PY
       - name: Audit R0.5 epistemic and cardinality boundaries
         run: |
