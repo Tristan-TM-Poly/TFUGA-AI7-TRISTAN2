@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE = "tristan-web-os-r03-v3";
+const CACHE = "tristan-web-os-r03-v4";
 const SHELL = [
   "./",
   "./index.html",
@@ -12,6 +12,7 @@ const SHELL = [
   "./src/application.js",
   "./src/data-store.js",
   "./src/exporters.js",
+  "./src/oak-engine.js",
   "./src/preferences.js",
   "./src/router.js",
   "./src/search-engine.js",
@@ -23,6 +24,7 @@ const SHELL = [
   "./src/views/evidence.js",
   "./src/views/graph.js",
   "./src/views/mminus.js",
+  "./src/views/oakgate.js",
   "./src/views/provenance.js",
   "./src/views/roadmap.js",
   "./src/views/theory.js",
