@@ -1,11 +1,12 @@
 "use strict";
 
-const CACHE = "tristan-web-os-r03-v4";
+const CACHE = "tristan-web-os-r03-v5";
 const SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./r03.css",
+  "./oakgate.css",
   "./accessibility.css",
   "./app.js",
   "./app.webmanifest",
