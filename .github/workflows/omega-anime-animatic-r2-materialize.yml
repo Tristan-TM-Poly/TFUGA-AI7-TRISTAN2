@@ -7,6 +7,7 @@ on:
     paths:
       - ".github/workflows/omega-anime-animatic-r2-materialize.yml"
       - "tools/anime_animatic_r2_payload/**"
+      - "tools/anime_animatic_r2_force.ready"
   pull_request:
     paths:
       - ".github/workflows/omega-anime-animatic-r2-materialize.yml"
@@ -49,25 +50,39 @@ jobs:
           import base64
           import hashlib
           import io
-          import lzma
           import tarfile
           from pathlib import Path
 
-          encoded = Path('tools/anime_animatic_r2_payload/archive.tar.xz.b85').read_text(encoding='ascii').strip()
-          archive_xz = base64.b85decode(encoded)
-          digest = hashlib.sha256(archive_xz).hexdigest()
-          expected = '21c5b3c754133a553ed70a168455c07e734df9748a43dbe0b3bf93212e1a3fd4'
-          if digest != expected:
-              raise SystemExit(f'R2 payload hash mismatch: {digest} != {expected}')
-          archive_tar = lzma.decompress(archive_xz)
           root = Path.cwd().resolve()
-          with tarfile.open(fileobj=io.BytesIO(archive_tar), mode='r:') as bundle:
+          payload_root = Path('tools/anime_animatic_r2_payload')
+          expected_parts = {
+              'part-00.b64': '393dd99024fe29cb5767eb9d5e8cad283307b8b076aadf39c9b4a99334f86916',
+              'part-01.b64': '356ecf02fb38df3d7b2edb5520815269c4504f139a2a7ec0e218ce3eeaf50d05',
+              'part-02.b64': 'b4a80ecab8d675a8fed472a29c2ab7a9729a554aa77cefd1a23c48a575f72c51',
+              'part-03.b64': '2d47c3d3fd8fb07026b93c384a0cb46274bf51901ba19cdbf924acb993944562',
+          }
+          encoded_parts = []
+          for name, expected in expected_parts.items():
+              encoded = (payload_root / name).read_text(encoding='ascii').strip()
+              actual = hashlib.sha256(encoded.encode('ascii')).hexdigest()
+              if actual != expected:
+                  raise SystemExit(f'{name}: hash mismatch {actual} != {expected}')
+              encoded_parts.append(encoded)
+
+          archive = base64.b64decode(''.join(encoded_parts), validate=True)
+          digest = hashlib.sha256(archive).hexdigest()
+          expected_archive = '60ca43c5fee5f323bb8bc8073e606900add8444ac646c5cd59f28afc149061c3'
+          if digest != expected_archive:
+              raise SystemExit(f'archive hash mismatch {digest} != {expected_archive}')
+
+          with tarfile.open(fileobj=io.BytesIO(archive), mode='r:gz') as bundle:
               for member in bundle.getmembers():
                   destination = (root / member.name).resolve()
                   if root not in destination.parents and destination != root:
                       raise SystemExit(f'unsafe archive path: {member.name}')
               bundle.extractall(root)
-          print({'payload_sha256': digest, 'tar_bytes': len(archive_tar)})
+
+          print({'parts': len(expected_parts), 'archive_bytes': len(archive), 'sha256': digest})
           PY
 
       - name: Register R2 CLI without disturbing existing scripts
@@ -90,7 +105,10 @@ jobs:
         if: steps.sentinel.outputs.needed == 'true'
         run: |
           python -m pip install --upgrade pip pytest jsonschema
-          python -m compileall omega_anime_animatic_t tests/test_omega_anime_animatic_t_r2.py examples/omega_anime_animatic_r2_demo.py
+          python -m compileall \
+            omega_anime_animatic_t \
+            tests/test_omega_anime_animatic_t_r2.py \
+            examples/omega_anime_animatic_r2_demo.py
           pytest -q tests/test_omega_anime_animatic_t_r2.py --durations=20
           python -m omega_anime_animatic_t validate-demo
           rm -rf /tmp/eighth-fire-r2
@@ -119,9 +137,14 @@ jobs:
           assert '<canvas' in html and 'AudioContext' in html
           assert 'fetch(' not in html and 'https://' not in html and 'http://' not in html
           expected_names = {
-              'audio-cues.jsonl', 'edit-decision-list.csv', 'eighth-fire-animatic.html',
-              'manifest.json', 'report.md', 'storyboard-contact-sheet.svg',
-              'subtitles.fr.vtt', 'timeline.json',
+              'audio-cues.jsonl',
+              'edit-decision-list.csv',
+              'eighth-fire-animatic.html',
+              'manifest.json',
+              'report.md',
+              'storyboard-contact-sheet.svg',
+              'subtitles.fr.vtt',
+              'timeline.json',
           }
           assert {path.name for path in actual.iterdir()} == expected_names
           assert {path.name for path in tracked.iterdir()} == expected_names
@@ -143,7 +166,10 @@ jobs:
         run: |
           mkdir -p generated/omega_anime_animatic_t
           printf '%s\n' 'omega-anime-animatic/r2' > generated/omega_anime_animatic_t/.materialized-r2
+          rm -f generated/omega_anime_animatic_t/materializer-diagnostic.txt
           rm -rf tools/anime_animatic_r2_payload
+          rm -f tools/anime_animatic_r2_force.ready
+          rm -f .github/workflows/omega-anime-animatic-r2-force-materialize.yml
           rm -f .github/workflows/omega-anime-animatic-r2-materialize.yml
 
       - name: Commit validated R2 materialization
@@ -163,6 +189,8 @@ jobs:
             pyproject.toml
           git add -u -- \
             tools/anime_animatic_r2_payload \
+            tools/anime_animatic_r2_force.ready \
+            .github/workflows/omega-anime-animatic-r2-force-materialize.yml \
             .github/workflows/omega-anime-animatic-r2-materialize.yml
           git diff --cached --stat
           git diff --cached --quiet && exit 0
