@@ -111,6 +111,19 @@ class EpisodeBeat:
             errors.append(f"beat.{self.beat_id}.conflict: required")
         if not self.irreversible_change.strip():
             errors.append(f"beat.{self.beat_id}.irreversible_change: required")
+        if isinstance(self.information_revealed, str) or not isinstance(
+            self.information_revealed, (tuple, list)
+        ):
+            errors.append(
+                f"beat.{self.beat_id}.information_revealed: must be a sequence of strings"
+            )
+        elif any(
+            not isinstance(item, str) or not item.strip()
+            for item in self.information_revealed
+        ):
+            errors.append(
+                f"beat.{self.beat_id}.information_revealed: entries must be non-empty strings"
+            )
         return errors
 
 
