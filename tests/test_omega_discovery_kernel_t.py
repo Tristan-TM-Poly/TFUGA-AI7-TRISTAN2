@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from omega_discovery_kernel_t import (
+    CORE_LOOP_EVENT_TYPES,
     DiscoveryEvent,
     DiscoveryLedger,
     EVENT_TYPES,
@@ -28,8 +29,8 @@ def _observation(subject: str = "SUBJECT-001") -> DiscoveryEvent:
         "2026-08-02T12:00:00Z",
         source_hash="sha256:test",
         provenance=("tests/test_omega_discovery_kernel_t.py",),
-        payload={"value": 1.0},
-        units={"value": "dimensionless"},
+        payload={"observation_kind": "unit_test_scalar", "value": 1.0},
+        units={"value": "1"},
         uncertainty={"value": 0.01},
     )
 
@@ -41,14 +42,16 @@ def test_event_ids_and_hashes_are_deterministic_and_tamper_evident() -> None:
     assert first.event_hash == second.event_hash
     assert first.validate() == []
 
-    tampered = replace(first, payload={"value": 2.0})
+    tampered = replace(first, payload={"observation_kind": "unit_test_scalar", "value": 2.0})
     assert any("hash mismatch" in issue for issue in tampered.validate())
 
 
-def test_raman_demo_closes_all_eight_events_and_preserves_negative_memory() -> None:
+def test_raman_demo_closes_core_loop_and_catalog_remains_extensible() -> None:
     ledger = build_raman_closed_loop()
     assert len(ledger.events) == 8
-    assert {event.event_type for event in ledger.events} == set(EVENT_TYPES)
+    assert {event.event_type for event in ledger.events} == set(CORE_LOOP_EVENT_TYPES)
+    assert len(EVENT_TYPES) == 64
+    assert set(CORE_LOOP_EVENT_TYPES).issubset(EVENT_TYPES)
     assert ledger.validate() == []
 
     audit = ledger.audit()
@@ -57,22 +60,27 @@ def test_raman_demo_closes_all_eight_events_and_preserves_negative_memory() -> N
     assert audit.metrics["negative_memory_coverage"] == 1.0
     assert audit.metrics["unit_coverage"] == 1.0
     assert audit.metrics["uncertainty_coverage"] == 1.0
+    assert audit.metrics["event_catalog_coverage"] == 0.125
     assert ledger.closed_loop_status("RAMAN-TEMPERATURE-MORPH-001") == "closed_loop_recorded_not_certified"
 
 
-def test_claim_requires_observation_ancestor() -> None:
+def test_claim_requires_observation_or_definition_ancestor() -> None:
     ledger = DiscoveryLedger()
     claim = DiscoveryEvent.create(
         "ClaimEvent",
         "SUBJECT-001",
         "2026-08-02T12:00:01Z",
-        payload={"text": "X"},
+        payload={
+            "claim_id": "CLM-X",
+            "text": "X",
+            "failure_conditions": ["not X"],
+        },
     )
-    with pytest.raises(ValueError, match="ObservationEvent"):
+    with pytest.raises(ValueError, match="requires ancestry"):
         ledger.append(claim)
 
 
-def test_promotion_requires_result_ancestor() -> None:
+def test_promotion_requires_result_ancestry() -> None:
     ledger = DiscoveryLedger()
     observation = ledger.append(_observation())
     transition = DiscoveryEvent.create(
@@ -83,7 +91,7 @@ def test_promotion_requires_result_ancestor() -> None:
         payload={"from_status": "IDEA", "to_status": "DEMONSTRATED", "cause": "invalid shortcut"},
         human_approval=True,
     )
-    with pytest.raises(ValueError, match="ResultPacket"):
+    with pytest.raises(ValueError, match="requires ancestry"):
         ledger.append(transition)
 
 
@@ -95,9 +103,13 @@ def test_mminus_requires_failed_result_or_refutation() -> None:
         observation.subject_id,
         "2026-08-02T12:00:01Z",
         parent_ids=(observation.event_id,),
-        payload={"reusable_rules": ["do not repeat"]},
+        payload={
+            "context": "unit-test shortcut",
+            "prohibited_inference": "shortcut is valid",
+            "reusable_rule": "require failed-result ancestry",
+        },
     )
-    with pytest.raises(ValueError, match="failed ResultPacket"):
+    with pytest.raises(ValueError, match="requires ancestry"):
         ledger.append(mminus)
 
 
@@ -106,11 +118,26 @@ def test_irreversible_experiment_requires_human_approval() -> None:
         "ExperimentSpec",
         "SUBJECT-001",
         "2026-08-02T12:00:00Z",
-        payload={"name": "destructive test"},
+        payload={
+            "protocol": "destructive test",
+            "success_criteria": "unspecified",
+            "rollback": "none",
+        },
         reversible=False,
         human_approval=False,
     )
-    assert any("irreversible experiment" in issue for issue in event.validate())
+    assert any("irreversible ExperimentSpec" in issue for issue in event.validate())
+
+
+def test_catalog_required_payload_is_fail_closed() -> None:
+    incomplete = DiscoveryEvent.create(
+        "ClaimEvent",
+        "SUBJECT-001",
+        "2026-08-02T12:00:00Z",
+        payload={"text": "missing claim id and failure condition"},
+    )
+    issues = incomplete.validate()
+    assert any("missing payload fields" in issue for issue in issues)
 
 
 def test_hyperknowledge_and_morphir_bridges_preserve_scope_and_provenance() -> None:
@@ -135,6 +162,7 @@ def test_hyperknowledge_and_morphir_bridges_preserve_scope_and_provenance() -> N
     assert generator.event_type == "GeneratorCandidate"
     assert generator.payload["continuous_generators"] == ["multiscale_weighting"]
     assert generator.uncertainty["model"] == 0.05
+    assert generator.provenance == claims[0].provenance
 
 
 def test_result_packet_converts_to_hyperknowledge_counterexample() -> None:
@@ -149,16 +177,27 @@ def test_result_packet_converts_to_hyperknowledge_counterexample() -> None:
     assert record.metadata["baseline"]["name"] == "Lorentzian NLLS"
 
 
-def test_writer_emits_manifest_ledger_graph_audit_and_report(tmp_path: Path) -> None:
+def test_writer_emits_catalog_manifest_ledger_graph_audit_and_report(tmp_path: Path) -> None:
     ledger = build_raman_closed_loop()
     output = ledger.write(tmp_path / "kernel")
-    expected = {"manifest.json", "ledger.json", "events.jsonl", "audit.json", "graph.json", "report.md"}
+    expected = {
+        "manifest.json",
+        "event-catalog.json",
+        "ledger.json",
+        "events.jsonl",
+        "audit.json",
+        "graph.json",
+        "report.md",
+    }
     assert expected == {path.name for path in output.iterdir()}
 
     manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["event_count"] == 8
+    assert manifest["event_type_count"] == 64
     assert manifest["ledger_hash"] == ledger.ledger_hash()
-    assert manifest["oak_status"].startswith("R0.1_")
+    assert manifest["oak_status"].startswith("R0.2_")
+    catalog = json.loads((output / "event-catalog.json").read_text(encoding="utf-8"))
+    assert catalog["event_type_count"] == 64
     assert "closed_loop_recorded_not_certified" in (output / "report.md").read_text(encoding="utf-8")
 
 
