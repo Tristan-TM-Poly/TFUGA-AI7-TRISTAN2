@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://tristan-web-os.local/schema/relation.schema.json",
   "title": "Tristan Web OS navigation relation",
+  "description": "A directed navigation link. Referential integrity and the no-self-loop rule are enforced by the R0.3 audit because they depend on the complete catalog.",
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -19,14 +20,5 @@
     "directional": { "type": "boolean" },
     "evidence_required": { "const": true },
     "public_scope": { "const": "navigation" }
-  },
-  "allOf": [
-    {
-      "not": {
-        "properties": {
-          "source": { "const": { "$data": "1/target" } }
-        }
-      }
-    }
-  ]
+  }
 }
