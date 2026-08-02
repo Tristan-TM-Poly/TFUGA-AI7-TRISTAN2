@@ -1,0 +1,120 @@
+name: Omega Anime T R0.1
+
+on:
+  pull_request:
+    paths:
+      - "omega_anime_t/**"
+      - "tests/test_omega_anime_t_r0_1.py"
+      - "schemas/anime-project-r0-1.schema.json"
+      - "policies/omega_anime_t_r0_1.json"
+      - "docs/omega_anime_t_r0_1.md"
+      - "examples/omega_anime_t_demo.py"
+      - ".github/workflows/omega-anime-t-r0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-anime-t-r0-1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  anime-oakbench:
+    name: Narrative model, schema and deterministic bundle
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pip pytest jsonschema
+
+      - name: Compile package, tests and example
+        run: |
+          python -m compileall \
+            omega_anime_t \
+            tests/test_omega_anime_t_r0_1.py \
+            examples/omega_anime_t_demo.py
+
+      - name: Run targeted tests
+        run: |
+          pytest -q tests/test_omega_anime_t_r0_1.py --durations=15 \
+            2>&1 | tee /tmp/omega-anime-t-r0-1-tests.log
+
+      - name: Validate canonical project against JSON Schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_anime_t import build_eighth_fire_project
+
+          schema = json.loads(Path('schemas/anime-project-r0-1.schema.json').read_text())
+          payload = build_eighth_fire_project().to_dict()
+          Draft202012Validator(schema).validate(payload)
+          print(json.dumps({
+              'project_id': payload['project_id'],
+              'characters': len(payload['characters']),
+              'beats': len(payload['episode_beats']),
+              'duration_seconds': payload['target_duration_seconds'],
+          }, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Compile deterministic evidence bundle
+        run: |
+          python -m omega_anime_t lint-demo | tee /tmp/omega-anime-lint.json
+          python -m omega_anime_t compile-demo \
+            --output-dir /tmp/omega-anime-bundle \
+            | tee /tmp/omega-anime-manifest.stdout.json
+          python examples/omega_anime_t_demo.py
+
+      - name: Enforce R0.1 proof gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          project = json.loads(Path('/tmp/omega-anime-bundle/project.json').read_text())
+          lint = json.loads(Path('/tmp/omega-anime-bundle/oak-lint.json').read_text())
+          manifest = json.loads(Path('/tmp/omega-anime-bundle/manifest.json').read_text())
+
+          assert project['title'] == 'Le Huitième Feu'
+          assert project['target_duration_seconds'] == 180
+          assert sum(beat['estimated_seconds'] for beat in project['episode_beats']) == 180
+          assert len(project['characters']) == 2
+          assert len(project['episode_beats']) == 5
+          assert all(character['limitation'] for character in project['characters'])
+          assert lint['decision'] == 'PROCEED'
+          assert not [item for item in lint['findings'] if item['severity'] == 'BLOCKING']
+          assert manifest['oak_status'] == 'FORMALIZED'
+          assert len(manifest['manifest_sha256']) == 64
+          print(json.dumps({
+              'decision': lint['decision'],
+              'manifest_sha256': manifest['manifest_sha256'],
+              'promise_count': len(project['promises']),
+          }, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-anime-t-r0-1
+          path: |
+            /tmp/omega-anime-t-r0-1-tests.log
+            /tmp/omega-anime-lint.json
+            /tmp/omega-anime-manifest.stdout.json
+            /tmp/omega-anime-bundle/project.json
+            /tmp/omega-anime-bundle/oak-lint.json
+            /tmp/omega-anime-bundle/manifest.json
+            /tmp/omega-anime-bundle/report.md
+          if-no-files-found: warn
+          retention-days: 14
