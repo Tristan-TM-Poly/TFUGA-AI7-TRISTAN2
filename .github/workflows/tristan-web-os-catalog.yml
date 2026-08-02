@@ -8,13 +8,24 @@ on:
       - scripts/generate_tristan_web_os_catalog.py
       - scripts/tristan_web_catalog_seed_*.py
       - .github/workflows/tristan-web-os-catalog.yml
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - scripts/generate_tristan_web_os_catalog.py
+      - scripts/tristan_web_catalog_seed_*.py
+      - .github/workflows/tristan-web-os-catalog.yml
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: tristan-web-os-catalog-${{ github.ref }}
+  group: tristan-web-os-catalog-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -23,10 +34,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Resolve writable feature branch
+        id: branch
+        shell: bash
+        run: |
+          if [ -n "${{ github.head_ref }}" ]; then
+            echo "name=${{ github.head_ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout feature branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ steps.branch.outputs.name }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -74,4 +95,4 @@ jobs:
             exit 0
           fi
           git commit -m 'generated(web): materialize 44 theories, 133 claims and 268 relations [skip ci]'
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "HEAD:${{ steps.branch.outputs.name }}"
