@@ -126,3 +126,5 @@ jobs:
             out/tristan-web-os-provenance-audit.json
           if-no-files-found: warn
           retention-days: 14
+
+# Merge-max exact-head validation trigger; no application bytes changed.
