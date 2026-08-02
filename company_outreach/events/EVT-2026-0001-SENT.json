@@ -1,0 +1,13 @@
+{
+  "case_id": "OUT-2026-0001",
+  "counterparty_hash": "sha256:7418c09cc1ea0c4633f221ab70a1f55f747505cc8557d4f1028a4e056ca2781e",
+  "event_id": "EVT-2026-0001-SENT",
+  "event_type": "sent",
+  "message_hash": "sha256:11cfd457570abc81af8dfec1f62415917dbcbdcc9f11a28da4d5aa0fbec281f5",
+  "occurred_at": "2026-08-02",
+  "provider": "gmail",
+  "raw_content_retained": false,
+  "reply_class": null,
+  "source_issue": 278,
+  "thread_hash": "sha256:11cfd457570abc81af8dfec1f62415917dbcbdcc9f11a28da4d5aa0fbec281f5"
+}
