@@ -1,15 +1,29 @@
-"""Adapters from Ω-NARUTO-HMAGFM-HGFMnD² into repository-wide organs."""
+"""Adapters from Ω-NARUTO-HMAGFM-HGFMnD² into repository-wide organs.
+
+The M-minus packets intentionally mirror ``omega_prof_poly_t.mminus_registry``
+without importing the large umbrella package at module import time.
+"""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
-from omega_prof_poly_t.mminus_registry import (
-    MMinusEntry,
-    MMinusRegistry,
-)
-
 from .core import OAKMergeResult, proposal_score
+
+
+@dataclass(frozen=True)
+class MMinusExportEntry:
+    error: str
+    rule: str
+    fix: str
+    status: str
+
+
+@dataclass(frozen=True)
+class MMinusExportRegistry:
+    entries: tuple[MMinusExportEntry, ...]
+    next_action: str
 
 
 def to_claim_packet(result: OAKMergeResult) -> dict[str, Any] | None:
@@ -37,11 +51,11 @@ def to_claim_packet(result: OAKMergeResult) -> dict[str, Any] | None:
     }
 
 
-def to_mminus_registry(result: OAKMergeResult) -> MMinusRegistry:
-    """Preserve every rejected clone result in the shared M-minus shape."""
+def to_mminus_registry(result: OAKMergeResult) -> MMinusExportRegistry:
+    """Preserve rejected clones in the repository M-minus field shape."""
 
     entries = tuple(
-        MMinusEntry(
+        MMinusExportEntry(
             error=f"proposal {item.proposal_id} was not selected: {item.reason}",
             rule="retain rejected conclusions as falsification memory",
             fix=(
@@ -52,7 +66,7 @@ def to_mminus_registry(result: OAKMergeResult) -> MMinusRegistry:
         )
         for item in result.rejected
     )
-    return MMinusRegistry(
+    return MMinusExportRegistry(
         entries=entries,
         next_action=result.next_experiment or "review_retained_residues",
     )
