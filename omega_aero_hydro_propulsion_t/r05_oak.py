@@ -5,6 +5,7 @@ from math import isfinite
 from typing import Any
 
 from .architecture_compiler import PropulsionMissionIntent, compile_propulsion_architectures
+from .evidence_discrepancy import demo_discrepancy_tensor
 from .evidence_ladder import EvidenceReceipt, assess_evidence_ladder, assess_receipt, computational_receipts
 from .models import OperatingPoint, default_air, default_water, demo_rotor
 from .r04_oak import run_r04_benchmarks
@@ -30,7 +31,7 @@ class R05OAKReport:
     physics_certified: bool = False
     certification_notice: str = (
         "R0.5 certifies deterministic software invariants only; prescribed wake, architecture "
-        "ranking and evidence classification are not CFD, experiment or regulatory certification"
+        "ranking, discrepancy analysis and evidence classification are not CFD, experiment or regulatory certification"
     )
 
     def to_dict(self) -> dict[str, Any]:
@@ -95,6 +96,7 @@ def run_r05_benchmarks() -> R05OAKReport:
     air_report = compile_propulsion_architectures(demo_air_intent(), air)
     water_report = compile_propulsion_architectures(demo_water_intent(), default_water())
     ladder = assess_evidence_ladder(computational_receipts(wake_hash=wake.evidence_hash))
+    discrepancy = demo_discrepancy_tensor()
     phantom_cfd = EvidenceReceipt(
         receipt_id="phantom-cfd",
         tier="F4_HIGH_FIDELITY_NUMERICAL",
@@ -157,6 +159,14 @@ def run_r05_benchmarks() -> R05OAKReport:
             f"contiguous={ladder.contiguous_tier}, highest={ladder.highest_supported_tier}",
         ),
         R05OAKGate(
+            "discrepancy-tensor-non-promotional",
+            discrepancy.comparison_count == 2
+            and discrepancy.physics_certified is False
+            and discrepancy.automatic_model_promotion is False
+            and len(discrepancy.evidence_hash) == 64,
+            f"comparisons={discrepancy.comparison_count}, max_z={discrepancy.maximum_absolute_normalized_residual}",
+        ),
+        R05OAKGate(
             "phantom-cfd-blocked",
             not phantom_assessment.accepted
             and "mesh_independence_requires_at_least_three_levels" in phantom_assessment.blockers,
@@ -168,6 +178,7 @@ def run_r05_benchmarks() -> R05OAKReport:
             and air_report.physics_certified is False
             and water_report.physics_certified is False
             and ladder.physics_certified is False
+            and discrepancy.physics_certified is False
             and ladder.certification_claim is False,
             "all R0.5 artifacts remain computational research evidence",
         ),
@@ -180,6 +191,6 @@ def run_r05_benchmarks() -> R05OAKReport:
             if passed
             else "FAILED_COMPUTATIONAL_WAKE_ARCHITECTURE_EVIDENCE_R0_5"
         ),
-        model_class="prescribed-wake-architecture-compiler-evidence-ladder",
+        model_class="prescribed-wake-architecture-compiler-discrepancy-evidence-ladder",
         gates=gates,
     )
