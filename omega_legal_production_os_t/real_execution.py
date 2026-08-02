@@ -10,7 +10,12 @@ from typing import Any, Mapping
 from .http_client import HttpTransport
 from .ledger import ActionLedger
 from .models import ExternalActionEnvelope
-from .real_providers import PROVIDERS, ProviderError, ProviderReceipt
+from .real_providers import (
+    PROVIDERS,
+    ProviderError,
+    ProviderReceipt,
+    assert_execution_interlock,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -83,6 +88,11 @@ def execute_action(
     values = env or os.environ
     action = load_action(action_path)
     provider = _provider(provider_name, transport)
+
+    # Validate authority and exact action/provider allowlists before consuming
+    # the one-shot reservation. Missing credentials or acknowledgement must not
+    # permanently burn an otherwise valid action.
+    assert_execution_interlock(action, provider_name, env=values)
     ledger = ActionLedger(ledger_path)
 
     # Reservation is written before any provider call. A reserved hash cannot be
