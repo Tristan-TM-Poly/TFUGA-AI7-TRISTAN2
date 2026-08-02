@@ -104,7 +104,24 @@ cas validés scientifiquement
 
 La matérialisation de 256 cas ne constitue ni 256 expériences exécutées ni 256 validations scientifiques.
 
-## 10. Exécution
+## 10. État cristallisé de la branche
+
+La branche GitHub contient maintenant le snapshot déterministe `benchmarks/omega-re/re256.json` :
+
+```text
+256 cas matérialisés
+20 281 lignes JSON ajoutées
+0 cas déclaré exécuté par la matérialisation
+0 cas déclaré scientifiquement vérifié
+26 814 ajouts totaux dans la PR au moment de la cristallisation
+0 suppression
+```
+
+Le fichier conserve pour chaque cas : autorisation synthétique, budget, vérité de banc d’essai, observations, candidats, perturbation, attentes OAK, contrôles négatifs, modes d’échec, provenance et digest.
+
+Ces nombres décrivent un artefact logiciel présent dans GitHub. Ils ne constituent ni une validation expérimentale de systèmes réels ni une preuve d’universalité du moteur.
+
+## 11. Exécution
 
 ```bash
 python -m pytest -q tests/test_omega_re_*.py
@@ -125,7 +142,7 @@ omega-re-r02 demo-timed
 omega-re-r02 db-demo
 ```
 
-## 11. Frontière suivante
+## 12. Frontière suivante
 
 R0.3 doit ajouter :
 
@@ -140,6 +157,6 @@ R0.3 doit ajouter :
 - RE-32 puis RE-64;
 - campagnes shardées avec reprise et Merkle receipts.
 
-## 12. Doctrine OAK
+## 13. Doctrine OAK
 
 Une haute fidélité comportementale n’implique pas l’identité interne. Une absence observée n’est pas une impossibilité universelle. Un meilleur modèle parmi de mauvais modèles n’est pas une explication suffisante. Une reconstruction reste bornée par son contrat, ses données, son domaine et sa dette d’identifiabilité.
