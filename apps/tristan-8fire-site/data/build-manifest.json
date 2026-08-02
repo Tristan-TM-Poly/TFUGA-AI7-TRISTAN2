@@ -2,10 +2,10 @@
   "schema_version": "0.3.0",
   "generated_from": "2026-08-02T18:12:00-04:00",
   "algorithm": "sha256(path\\0sha256\\0size\\n)",
-  "root_sha256": "a733c3911c84af1824cbdb131c8701223ffce9dc1c18f0bc38cf858a3af6cdd3",
+  "root_sha256": "13efcab57217d3b7440ff2372bdb98661a24779c3deafe41a51449f1993d51dc",
   "metrics": {
     "files": 35,
-    "bytes": 637387,
+    "bytes": 638613,
     "roles": {
       "asset": 1,
       "document-shell": 1,
@@ -239,8 +239,8 @@
     {
       "path": "src/views/provenance.js",
       "role": "javascript-module",
-      "size_bytes": 5728,
-      "sha256": "f1a0d98dc75486b596ae39a2b80e60ca428af49ae95c1ed80116f0ba85715418",
+      "size_bytes": 6922,
+      "sha256": "4b0bed21d75660c056844ccb9bfd71d5b894abcbf038792132ab9e3eb7fe0114",
       "cache_candidate": true
     },
     {
@@ -267,8 +267,8 @@
     {
       "path": "sw.js",
       "role": "javascript-module",
-      "size_bytes": 2047,
-      "sha256": "1bf9aa05ed7d1ce39588c17cfaeea1d02b31a51b17692c1959a23823179e1749",
+      "size_bytes": 2079,
+      "sha256": "410a5afd1f6f0fb5b829cd1f3de8fc5826266b26478197d957fee91835ef1a10",
       "cache_candidate": true
     }
   ],
