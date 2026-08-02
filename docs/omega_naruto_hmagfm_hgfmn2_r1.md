@@ -1,4 +1,4 @@
-# Ω-NARUTO-HMAGFM-HGFMnD² — R1.0
+# Ω-NARUTO-HMAGFM-HGFMnD² — R1.1
 
 **Status:** exploratory architecture + executable OAK scaffold.  
 **Scientific boundary:** Naruto and Naruto Shippuden are used as design metaphors. No fictional mechanism is claimed to exist physically.
@@ -91,6 +91,9 @@ Each clone-agent receives:
 Publish = ConsentGate -> PrivacyGate -> IPGate -> EvidenceGate -> SafetyGate
 ```
 
+R1.1 makes these gates explicit through `GatePolicy` and `GateReport`.
+A technically strong proposal may still be blocked or remain in `WARN` until human review is completed.
+
 Blocked examples:
 
 - private identity data not required by the artifact;
@@ -99,18 +102,60 @@ Blocked examples:
 - irreversible actions without explicit authorization;
 - claims stronger than the attached evidence.
 
-## First executable artifact
+## Genjutsu red team
 
-The first implementation contains:
+The deterministic Genjutsu audit searches for:
 
-- `ClaimStatus` and `AgentProposal` types;
-- `ChakraBudget` validation;
-- deterministic `oak_merge` ranking;
-- contradiction and negative-memory preservation;
-- a next-experiment recommendation;
-- unit tests with three contradictory clone proposals.
+- fabricated or placeholder source markers;
+- circular evidence where the conclusion is its own proof;
+- private or restricted source markers;
+- benchmark-or-higher status without enough evidence;
+- missing provenance;
+- confidence that conflicts with stated uncertainty.
 
-## Initial OAK claim ledger
+These checks are adversarial lint, not a scientific validator.
+
+## Baseline benchmark
+
+R1.1 compares three selection strategies:
+
+1. `OAKMerge`: evidence-aware and provenance-aware;
+2. majority vote: counts conclusions but ignores proof quality;
+3. highest confidence: trusts self-reported confidence.
+
+The included hype fixture contains two unsupported clones agreeing with each other and one documented minority clone. Majority vote and highest-confidence selection fail the fixture; OAKMerge selects the documented result.
+
+This is a deterministic software test, not evidence that OAKMerge dominates every possible aggregation method.
+
+## Repository integration
+
+R1.1 adds:
+
+- JSON Schema for agent proposals;
+- JSON Schema for merge results;
+- conservative claim-packet export;
+- M-minus-compatible rejection packets;
+- a dependency-light integration boundary;
+- the `omega-naruto-oak` command-line report.
+
+Run:
+
+```bash
+omega-naruto-oak
+omega-naruto-oak --output generated/omega_naruto/report.json
+```
+
+The report includes:
+
+- accepted local proposal;
+- ranking and contradictions;
+- publication-gate status;
+- Genjutsu findings;
+- baseline comparison;
+- retained M-minus residues;
+- an explicit non-claim boundary.
+
+## OAK claim ledger
 
 | Claim | Status | Required test | Failure mode |
 |---|---|---|---|
@@ -118,6 +163,9 @@ The first implementation contains:
 | OAKMerge can rank evidence-bearing proposals | P5 | adversarial proposal set | score hides missing provenance |
 | Contradictions can be preserved instead of erased | P5 | conflicting-clone test | majority vote suppresses minority evidence |
 | A resource budget can block over-allocation | P5 | exhaustion test | negative or non-finite resource values |
+| Publication gates can separate ranking from release | P5 | privacy/IP/safety fixtures | automatic pass mistaken for authorization |
+| Genjutsu audit can flag known deception patterns | P5 | deterministic adversarial fixtures | heuristic lint mistaken for universal detection |
+| OAKMerge can outperform naive baselines on the hype fixture | B6-local | fixed reproducible fixture | fixture-specific success generalized universally |
 | Naruto metaphors improve engineering communication | H2 | user study / task benchmark | memorable language mistaken for science |
 
 ## Non-claims
@@ -128,14 +176,15 @@ This module does not claim:
 - fictional techniques as real mechanisms;
 - zero dissipation, free energy or negative infinite entropy;
 - autonomous scientific certification;
+- universal superiority of OAKMerge;
 - institutional approval;
 - replacement of expert or human judgment.
 
 ## Next gates
 
-1. Add JSON schema for proposals and evidence.
-2. Add graph export for HGFMnD² state.
-3. Add Genjutsu adversarial fixtures.
-4. Add Privacy/IP/Safety gate tests.
-5. Benchmark OAKMerge against majority vote and naive score averaging.
-6. Connect accepted proposals to the repository ClaimTransmuter and M-minus registry.
+1. Add HGFMnD² graph export for proposals, evidence and contradictions.
+2. Add semantic contradiction detection behind an optional, audited interface.
+3. Add calibration and sensitivity analysis for proposal-score weights.
+4. Add property-based tests for ordering, duplicate IDs and risk thresholds.
+5. Connect claim packets to a reviewed ClaimTransmuter contract.
+6. Add a reproducible benchmark corpus larger than the single hype fixture.
