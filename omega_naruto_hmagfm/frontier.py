@@ -1,8 +1,8 @@
 """Unbounded-by-design streaming corpus frontier for Ω-NARUTO-HMAGFM.
 
-The module has no permanent total-record ceiling. Every execution remains
-finite and bounded by an explicit target or an adaptive resource budget.
-Records are produced lazily, sharded, hashed, checkpointed, and resumable.
+No permanent total-record ceiling is encoded. Each execution is finite and
+resource-bounded, while global ordinals continue across deterministic epochs.
+Records are lazy, sharded, hashed, checkpointed, and resumable.
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 from time import monotonic
-from typing import Iterable, Iterator, Mapping, Sequence
+from typing import Iterator, Mapping, Sequence
 
 
 @dataclass(frozen=True)
@@ -25,8 +25,7 @@ class CorpusAxes:
     gate_profiles: tuple[str, ...]
 
     def __post_init__(self) -> None:
-        fields = asdict(self)
-        for name, values in fields.items():
+        for name, values in asdict(self).items():
             if not values:
                 raise ValueError(f"axis {name} cannot be empty")
             if len(values) != len(set(values)):
@@ -72,7 +71,7 @@ class FrontierBudget:
             raise ValueError("growth_factor must exceed 1")
 
     def resolve_target(self, *, previous_success: int | None = None) -> int:
-        """Resolve a finite execution target without imposing a permanent cap."""
+        """Resolve one finite run target without creating an architecture cap."""
 
         if self.requested_records is not None:
             return self.requested_records
@@ -87,6 +86,8 @@ class FrontierBudget:
 @dataclass(frozen=True)
 class CorpusRecord:
     ordinal: int
+    epoch: int
+    local_ordinal: int
     record_id: str
     operator: str
     domain: str
@@ -120,6 +121,7 @@ class CorpusManifest:
     start_ordinal: int
     next_ordinal: int
     axis_cardinality: int
+    completed_epochs: int
     elapsed_seconds: float
     shards: tuple[ShardReceipt, ...]
     corpus_sha256: str
@@ -144,8 +146,7 @@ class FrontierCheckpoint:
     def load(cls, path: Path) -> "FrontierCheckpoint | None":
         if not path.exists():
             return None
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        return cls(**payload)
+        return cls(**json.loads(path.read_text(encoding="utf-8")))
 
     def write_atomic(self, path: Path) -> None:
         temporary = path.with_suffix(path.suffix + ".tmp")
@@ -157,8 +158,6 @@ class FrontierCheckpoint:
 
 
 def default_axes() -> CorpusAxes:
-    """Return a compact seed whose Cartesian product exceeds 25k records."""
-
     return CorpusAxes(
         operators=(
             "kage_bunshin",
@@ -217,11 +216,11 @@ def default_axes() -> CorpusAxes:
 
 
 def decode_ordinal(ordinal: int, axes: CorpusAxes) -> Mapping[str, str]:
+    """Decode any global ordinal by wrapping through deterministic epochs."""
+
     if ordinal < 0:
         raise ValueError("ordinal must be non-negative")
-    if ordinal >= axes.cardinality:
-        raise IndexError("ordinal exceeds finite axis projection")
-    remainder = ordinal
+    _, remainder = divmod(ordinal, axes.cardinality)
     decoded: dict[str, str] = {}
     ordered = axes.ordered_axes
     for name, values in reversed(ordered):
@@ -245,16 +244,24 @@ def _expected_action(fields: Mapping[str, str]) -> str:
 
 
 def record_from_ordinal(ordinal: int, axes: CorpusAxes) -> CorpusRecord:
+    if ordinal < 0:
+        raise ValueError("ordinal must be non-negative")
+    epoch, local_ordinal = divmod(ordinal, axes.cardinality)
     fields = decode_ordinal(ordinal, axes)
-    canonical = "|".join(f"{key}={value}" for key, value in fields.items())
+    canonical = "|".join(
+        [f"epoch={epoch}", f"local_ordinal={local_ordinal}"]
+        + [f"{key}={value}" for key, value in fields.items()]
+    )
     record_id = "naruto-" + sha256(canonical.encode("utf-8")).hexdigest()[:24]
     hypothesis = (
-        f"Evaluate {fields['operator']} in {fields['domain']} at "
+        f"Epoch {epoch}: evaluate {fields['operator']} in {fields['domain']} at "
         f"{fields['epistemic_state']} with {fields['evidence_mode']}, "
         f"{fields['perturbation']}, and {fields['gate_profile']}."
     )
     return CorpusRecord(
         ordinal=ordinal,
+        epoch=epoch,
+        local_ordinal=local_ordinal,
         record_id=record_id,
         operator=fields["operator"],
         domain=fields["domain"],
@@ -276,8 +283,7 @@ def iter_records(
 ) -> Iterator[CorpusRecord]:
     if start_ordinal < 0:
         raise ValueError("start_ordinal must be non-negative")
-    available = max(0, axes.cardinality - start_ordinal)
-    count = available if record_count is None else min(max(0, record_count), available)
+    count = axes.cardinality if record_count is None else max(0, record_count)
     for ordinal in range(start_ordinal, start_ordinal + count):
         yield record_from_ordinal(ordinal, axes)
 
@@ -286,15 +292,31 @@ def _write_shard(path: Path, lines: Sequence[str]) -> ShardReceipt:
     rendered = "\n".join(lines) + "\n"
     encoded = rendered.encode("utf-8")
     path.write_bytes(encoded)
-    ordinals = [json.loads(line)["ordinal"] for line in lines]
+    first = json.loads(lines[0])["ordinal"]
+    last = json.loads(lines[-1])["ordinal"]
     return ShardReceipt(
         path=path.name,
-        first_ordinal=min(ordinals),
-        last_ordinal=max(ordinals),
+        first_ordinal=first,
+        last_ordinal=last,
         record_count=len(lines),
         byte_count=len(encoded),
         sha256=sha256(encoded).hexdigest(),
     )
+
+
+def _load_existing_receipts(output_dir: Path) -> tuple[ShardReceipt, ...]:
+    manifest_path = output_dir / "manifest.json"
+    if not manifest_path.exists():
+        return ()
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    return tuple(ShardReceipt(**item) for item in payload.get("shards", []))
+
+
+def _digest_existing(output_dir: Path, receipts: Sequence[ShardReceipt]) -> "sha256":
+    digest = sha256()
+    for receipt in receipts:
+        digest.update((output_dir / receipt.path).read_bytes())
+    return digest
 
 
 def write_corpus(
@@ -312,53 +334,56 @@ def write_corpus(
     output_dir.mkdir(parents=True, exist_ok=True)
     checkpoint_path = output_dir / "checkpoint.json"
     checkpoint = FrontierCheckpoint.load(checkpoint_path) if resume else None
+    existing_receipts = _load_existing_receipts(output_dir) if checkpoint else ()
     start = checkpoint.next_ordinal if checkpoint else 0
     previous = checkpoint.written_records if checkpoint else None
-    target = min(budget.resolve_target(previous_success=previous), axes.cardinality - start)
+    run_target = budget.resolve_target(previous_success=previous)
+    total_target = start + run_target
     start_time = monotonic()
-    receipts: list[ShardReceipt] = []
-    corpus_digest = sha256()
-    if checkpoint and checkpoint.corpus_sha256:
-        corpus_digest.update(checkpoint.corpus_sha256.encode("ascii"))
+    receipts = list(existing_receipts)
+    corpus_digest = _digest_existing(output_dir, existing_receipts)
     buffer: list[str] = []
-    written = 0
+    written_this_run = 0
     shard_index = checkpoint.shard_index if checkpoint else 0
 
-    for record in iter_records(axes, start_ordinal=start, record_count=target):
+    for record in iter_records(axes, start_ordinal=start, record_count=run_target):
         line = record.to_json_line()
         buffer.append(line)
         corpus_digest.update((line + "\n").encode("utf-8"))
-        written += 1
+        written_this_run += 1
         if len(buffer) >= shard_records:
-            receipt = _write_shard(output_dir / f"corpus-{shard_index:06d}.jsonl", buffer)
-            receipts.append(receipt)
+            receipts.append(
+                _write_shard(output_dir / f"corpus-{shard_index:06d}.jsonl", buffer)
+            )
             shard_index += 1
             buffer = []
             FrontierCheckpoint(
                 schema="omega_naruto_frontier.checkpoint.v1",
-                next_ordinal=start + written,
-                written_records=(checkpoint.written_records if checkpoint else 0) + written,
+                next_ordinal=start + written_this_run,
+                written_records=start + written_this_run,
                 shard_index=shard_index,
                 corpus_sha256=corpus_digest.hexdigest(),
             ).write_atomic(checkpoint_path)
 
     if buffer:
-        receipt = _write_shard(output_dir / f"corpus-{shard_index:06d}.jsonl", buffer)
-        receipts.append(receipt)
+        receipts.append(
+            _write_shard(output_dir / f"corpus-{shard_index:06d}.jsonl", buffer)
+        )
         shard_index += 1
 
-    complete = written == target
+    total_written = start + written_this_run
     manifest = CorpusManifest(
         schema="omega_naruto_frontier.manifest.v1",
-        target_records=target,
-        written_records=written,
-        start_ordinal=start,
-        next_ordinal=start + written,
+        target_records=total_target,
+        written_records=total_written,
+        start_ordinal=0,
+        next_ordinal=total_written,
         axis_cardinality=axes.cardinality,
+        completed_epochs=total_written // axes.cardinality,
         elapsed_seconds=round(monotonic() - start_time, 6),
         shards=tuple(receipts),
         corpus_sha256=corpus_digest.hexdigest(),
-        complete=complete,
+        complete=total_written == total_target,
         non_claim=(
             "Corpus scale measures generated test coverage, not scientific truth, "
             "product quality, or universal validity."
@@ -370,8 +395,8 @@ def write_corpus(
     )
     FrontierCheckpoint(
         schema="omega_naruto_frontier.checkpoint.v1",
-        next_ordinal=manifest.next_ordinal,
-        written_records=(checkpoint.written_records if checkpoint else 0) + written,
+        next_ordinal=total_written,
+        written_records=total_written,
         shard_index=shard_index,
         corpus_sha256=manifest.corpus_sha256,
     ).write_atomic(checkpoint_path)
