@@ -1,0 +1,74 @@
+name: Ω Legal Production OS OAKBench
+
+on:
+  pull_request:
+    paths:
+      - 'omega_legal_production_os_t/**'
+      - 'tests/test_omega_legal_production_os.py'
+      - 'schemas/omega_external_action.schema.json'
+      - 'schemas/omega_release_candidate.schema.json'
+      - 'examples/omega_legal_production_os_t/**'
+      - 'docs/omega_legal_production_os_t/**'
+      - 'pyproject.toml'
+      - '.github/workflows/omega-legal-production.yml'
+  push:
+    branches:
+      - main
+      - feat/omega-legal-production-r01-r02
+    paths:
+      - 'omega_legal_production_os_t/**'
+      - 'tests/test_omega_legal_production_os.py'
+      - 'schemas/omega_external_action.schema.json'
+      - 'schemas/omega_release_candidate.schema.json'
+      - 'examples/omega_legal_production_os_t/**'
+      - 'docs/omega_legal_production_os_t/**'
+      - 'pyproject.toml'
+      - '.github/workflows/omega-legal-production.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  legal-production-oakbench:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --upgrade pip pytest
+      - name: Compile R0.1 and R0.2
+        run: python -m compileall -q omega_legal_production_os_t tests/test_omega_legal_production_os.py
+      - name: Run targeted OAKBench
+        run: python -m pytest -q tests/test_omega_legal_production_os.py
+      - name: Verify no-network CLI surfaces
+        run: |
+          python -m omega_legal_production_os_t.cli --help
+          python -m omega_legal_production_os_t.atlas --help
+          python -m omega_legal_production_os_t.cli release-dry-run \
+            examples/omega_legal_production_os_t/release_candidate.json \
+            --workflow-ref .github/workflows/omega-legal-production.yml@${{ github.ref }} \
+            --receipt /tmp/release-dry-run.json
+          test -s /tmp/release-dry-run.json
+      - name: Generate and audit 1,176 policy cells
+        run: |
+          python -m omega_legal_production_os_t.atlas generate /tmp/legal-production-atlas
+          first=$(sha256sum /tmp/legal-production-atlas/manifest.json | cut -d' ' -f1)
+          rm -rf /tmp/legal-production-atlas
+          python -m omega_legal_production_os_t.atlas generate /tmp/legal-production-atlas
+          second=$(sha256sum /tmp/legal-production-atlas/manifest.json | cut -d' ' -f1)
+          test "$first" = "$second"
+          python -m omega_legal_production_os_t.atlas audit /tmp/legal-production-atlas
+      - name: Upload deterministic policy atlas
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-legal-production-atlas-${{ github.sha }}
+          path: /tmp/legal-production-atlas/**
+          retention-days: 14

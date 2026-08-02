@@ -1,9 +1,7 @@
 name: Materialize Omega Anime Studio R1
 
 on:
-  push:
-    branches:
-      - "feat/omega-anime-t-r0-1"
+  pull_request:
     paths:
       - "tools/anime_r1_payload.ready"
   workflow_dispatch:
@@ -12,12 +10,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: omega-anime-studio-materialize-r1-${{ github.ref }}
+  group: omega-anime-studio-materialize-r1-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   materialize:
-    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'feat/omega-anime-t-r0-1'
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 20
 
@@ -25,7 +23,7 @@ jobs:
       - name: Checkout writable head branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 1
 
       - name: Check one-shot sentinel
@@ -138,7 +136,7 @@ jobs:
           mkdir -p generated/omega_anime_studio_t
           printf '%s\n' 'omega-anime-studio/r1' > generated/omega_anime_studio_t/.materialized-r1
           rm -rf tools/anime_r1_payload
-          rm -f tools/anime_r1_payload.ready tools/generate_omega_anime_studio_r1.py.gz
+          rm -f tools/anime_r1_payload.ready
           rm -f .github/workflows/omega-anime-studio-r1.yml
 
       - name: Commit reviewed materialization
@@ -157,10 +155,9 @@ jobs:
             tools/generate_omega_anime_studio_r1.py \
             pyproject.toml
           git add -u -- \
-            tools/generate_omega_anime_studio_r1.py.gz \
             tools/anime_r1_payload.ready \
             tools/anime_r1_payload
           git diff --cached --stat
           git diff --cached --quiet && exit 0
           git commit -m "feat(anime): materialize Omega Anime Studio R1"
-          git push origin "HEAD:${{ github.ref_name }}"
+          git push origin "HEAD:${{ github.head_ref || github.ref_name }}"
