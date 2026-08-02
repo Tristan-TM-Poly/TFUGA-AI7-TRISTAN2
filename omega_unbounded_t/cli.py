@@ -26,6 +26,7 @@ from .governance import (
     StopGate,
     pareto_front,
 )
+from .recursive_evolution import RecursiveEvolutionLab
 from .self_improvement import default_scenarios, iter_variants_jsonl
 from .self_improvement_judge import ResourceAwareSelfImprovementLab
 from .streaming import MPlusLedger, RangeWorkSource, ResourceSampler
@@ -108,6 +109,18 @@ def _build_parser() -> argparse.ArgumentParser:
     governance.add_argument(
         "--output-dir",
         default="generated/omega_unbounded_governance",
+    )
+
+    evolution = sub.add_parser(
+        "evolution-check",
+        help=(
+            "Run adversarial multi-objective evaluation, proof-bundle generation and an offline "
+            "canary/rollback demonstration without deployment or remote mutation."
+        ),
+    )
+    evolution.add_argument(
+        "--output-dir",
+        default="generated/omega_unbounded_evolution",
     )
     return parser
 
@@ -283,6 +296,21 @@ def _governance_check(args: argparse.Namespace) -> int:
     return 0 if valid else 2
 
 
+def _evolution_check(args: argparse.Namespace) -> int:
+    report = RecursiveEvolutionLab(args.output_dir).run()
+    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    valid = (
+        report["status"] == "passed"
+        and set(report["pareto_front"]) == {"fast", "lean"}
+        and report["safe_canary"]["status"] == "promotion_candidate"
+        and report["rollback_demonstration"]["status"] == "rolled_back"
+        and report["authority"]["source_mutations"] == 0
+        and report["authority"]["remote_mutations"] == 0
+        and report["authority"]["automatic_merge"] is False
+    )
+    return 0 if valid else 2
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     try:
@@ -299,6 +327,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _self_improve(args)
         if args.command == "governance-check":
             return _governance_check(args)
+        if args.command == "evolution-check":
+            return _evolution_check(args)
     except (OSError, ValueError, TypeError, sqlite3.Error) as exc:
         print(f"omega-unbounded: {exc}", file=sys.stderr)
         return 2
