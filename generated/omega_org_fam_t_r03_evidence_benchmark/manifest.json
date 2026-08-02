@@ -1,0 +1,533 @@
+{
+  "version": "R0.3-evidence-benchmark",
+  "status": "synthetic_engineering_benchmark_not_chemical_evidence",
+  "cases": 8388608,
+  "record_bytes": 4,
+  "correct": 4336991,
+  "wrong": 2406293,
+  "abstained": 1645324,
+  "accuracy_non_abstained": 0.643157,
+  "coverage": 0.803862,
+  "shards": [
+    {
+      "path": "shards/cases_00000.bin.gz",
+      "start": 0,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 652064,
+      "sha256": "e26651b5156aafa626f73b26c6cf01b9a4addd945e8b447a33e723aaffee3f82"
+    },
+    {
+      "path": "shards/cases_00001.bin.gz",
+      "start": 524288,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 660136,
+      "sha256": "c2175b9ec06975d45797d9dbd649d40d860a8db2ac399b67ccc2f865b5cebfb5"
+    },
+    {
+      "path": "shards/cases_00002.bin.gz",
+      "start": 1048576,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 654233,
+      "sha256": "ea224cfc679fce6cb1fff45bf5d734a7ca14704f45016addd3c6c3f671821405"
+    },
+    {
+      "path": "shards/cases_00003.bin.gz",
+      "start": 1572864,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 658282,
+      "sha256": "a83b3361bad2d1e0780c0dc84734e29e6143bc6b99b5083a4d043471e41ecca0"
+    },
+    {
+      "path": "shards/cases_00004.bin.gz",
+      "start": 2097152,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 659541,
+      "sha256": "ed371d8fc8d86cc65ec7839418602d455e876ffc2eca0bba6926d450b74781d3"
+    },
+    {
+      "path": "shards/cases_00005.bin.gz",
+      "start": 2621440,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 651411,
+      "sha256": "0523b57a70dccb800ca6073e32dd4c0310d6148ca7d08d46a51c1cc989e3ddd5"
+    },
+    {
+      "path": "shards/cases_00006.bin.gz",
+      "start": 3145728,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 659872,
+      "sha256": "345004fa1b08c414607e3bcd02b992ec1f975045bd705525b98bd22d1b9fe349"
+    },
+    {
+      "path": "shards/cases_00007.bin.gz",
+      "start": 3670016,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 654595,
+      "sha256": "4a199b42e3cac006d9852fac6db8b5cfcb6bcf12fe57d801b51e590082e866a0"
+    },
+    {
+      "path": "shards/cases_00008.bin.gz",
+      "start": 4194304,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 657888,
+      "sha256": "0c5076e71e9c8c315103211a17865f25cec50e5892705bd6dbcd62604a5258a2"
+    },
+    {
+      "path": "shards/cases_00009.bin.gz",
+      "start": 4718592,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 659991,
+      "sha256": "700a107a97ab2a9c775073e9f88fbbbe29cfd4cfc2e7444c3f7fd63e08bcc15a"
+    },
+    {
+      "path": "shards/cases_00010.bin.gz",
+      "start": 5242880,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 651363,
+      "sha256": "e67ef9c61dee359f2a110776e8c2ee33abc7027e4c1cd011997b1f55fe597e56"
+    },
+    {
+      "path": "shards/cases_00011.bin.gz",
+      "start": 5767168,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 660544,
+      "sha256": "9308fb0d5e030bbf6f8e630fe5ea0bb26aad126a760b1a8f96b60ab4077db8e9"
+    },
+    {
+      "path": "shards/cases_00012.bin.gz",
+      "start": 6291456,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 654326,
+      "sha256": "79cf8128fc54808df30141446c5ed4162f35500a507a6f3993178d6bffb7afcb"
+    },
+    {
+      "path": "shards/cases_00013.bin.gz",
+      "start": 6815744,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 657979,
+      "sha256": "d7ee4f377e4c350911cbfae541664ad85823fc18d5834a191f8bb861051ad94a"
+    },
+    {
+      "path": "shards/cases_00014.bin.gz",
+      "start": 7340032,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 659837,
+      "sha256": "6d306c23cc8ef1406781f5953376a308b6940beb1d02886bef304968609daa8c"
+    },
+    {
+      "path": "shards/cases_00015.bin.gz",
+      "start": 7864320,
+      "count": 524288,
+      "raw_bytes": 2097152,
+      "compressed_bytes": 650758,
+      "sha256": "0eeba2b108d3472b738ff8e6d18efbcc711c1f0517e2a2983f1c654015de6759"
+    }
+  ],
+  "merkle_root": "f504713bff192b1afcda3f8ba0a94796348ae4ff0d05aae7666f77edf282aec3",
+  "confidence_bins": [
+    {
+      "count": 413935,
+      "correct": 0,
+      "empirical_accuracy": 0.0
+    },
+    {
+      "count": 561590,
+      "correct": 0,
+      "empirical_accuracy": 0.0
+    },
+    {
+      "count": 669799,
+      "correct": 0,
+      "empirical_accuracy": 0.0
+    },
+    {
+      "count": 689903,
+      "correct": 689903,
+      "empirical_accuracy": 1.0
+    },
+    {
+      "count": 1255943,
+      "correct": 1255943,
+      "empirical_accuracy": 1.0
+    },
+    {
+      "count": 1902661,
+      "correct": 1063101,
+      "empirical_accuracy": 0.558744
+    },
+    {
+      "count": 2275929,
+      "correct": 709196,
+      "empirical_accuracy": 0.311607
+    },
+    {
+      "count": 386094,
+      "correct": 386094,
+      "empirical_accuracy": 1.0
+    },
+    {
+      "count": 181369,
+      "correct": 181369,
+      "empirical_accuracy": 1.0
+    },
+    {
+      "count": 51385,
+      "correct": 51385,
+      "empirical_accuracy": 1.0
+    }
+  ],
+  "strata": {
+    "clean": {
+      "count": 1645568,
+      "correct": 1627659,
+      "accuracy": 0.989117
+    },
+    "missing": {
+      "count": 986400,
+      "correct": 727685,
+      "accuracy": 0.737718
+    },
+    "counter": {
+      "count": 2611200,
+      "correct": 1116182,
+      "accuracy": 0.427459
+    },
+    "high_noise": {
+      "count": 3145440,
+      "correct": 865465,
+      "accuracy": 0.275149
+    }
+  },
+  "confusion_matrix": [
+    [
+      271071,
+      10003,
+      10075,
+      10128,
+      10154,
+      10153,
+      10092,
+      10068,
+      10029,
+      10002,
+      9989,
+      9951,
+      9943,
+      9929,
+      9917,
+      9956,
+      102828
+    ],
+    [
+      9957,
+      271066,
+      9999,
+      10075,
+      10119,
+      10149,
+      10136,
+      10095,
+      10060,
+      10037,
+      9991,
+      9994,
+      9964,
+      9955,
+      9927,
+      9934,
+      102830
+    ],
+    [
+      9938,
+      9962,
+      271057,
+      10002,
+      10088,
+      10140,
+      10150,
+      10139,
+      10114,
+      10050,
+      10020,
+      10000,
+      9966,
+      9960,
+      9943,
+      9932,
+      102827
+    ],
+    [
+      9940,
+      9924,
+      9954,
+      271049,
+      9999,
+      10068,
+      10126,
+      10160,
+      10135,
+      10109,
+      10058,
+      10027,
+      10006,
+      9979,
+      9956,
+      9955,
+      102843
+    ],
+    [
+      9955,
+      9944,
+      9940,
+      9959,
+      271062,
+      10015,
+      10069,
+      10130,
+      10166,
+      10130,
+      10088,
+      10064,
+      10009,
+      9995,
+      9965,
+      9957,
+      102840
+    ],
+    [
+      9958,
+      9938,
+      9935,
+      9938,
+      9949,
+      271061,
+      10004,
+      10070,
+      10132,
+      10147,
+      10144,
+      10096,
+      10066,
+      10032,
+      10000,
+      9981,
+      102837
+    ],
+    [
+      9987,
+      9960,
+      9958,
+      9952,
+      9933,
+      9974,
+      271066,
+      10004,
+      10073,
+      10120,
+      10140,
+      10132,
+      10105,
+      10037,
+      10028,
+      9998,
+      102821
+    ],
+    [
+      9999,
+      9976,
+      9959,
+      9941,
+      9930,
+      9930,
+      9962,
+      271063,
+      10000,
+      10080,
+      10123,
+      10158,
+      10141,
+      10102,
+      10064,
+      10034,
+      102826
+    ],
+    [
+      10023,
+      10013,
+      9989,
+      9971,
+      9952,
+      9938,
+      9929,
+      9963,
+      271062,
+      9988,
+      10068,
+      10118,
+      10145,
+      10128,
+      10105,
+      10056,
+      102840
+    ],
+    [
+      10070,
+      10010,
+      10005,
+      9966,
+      9940,
+      9953,
+      9930,
+      9932,
+      9952,
+      271068,
+      10014,
+      10076,
+      10132,
+      10166,
+      10137,
+      10097,
+      102840
+    ],
+    [
+      10091,
+      10077,
+      10033,
+      10007,
+      9975,
+      9958,
+      9940,
+      9932,
+      9934,
+      9945,
+      271060,
+      10005,
+      10064,
+      10119,
+      10164,
+      10146,
+      102838
+    ],
+    [
+      10131,
+      10104,
+      10049,
+      10026,
+      9994,
+      9971,
+      9966,
+      9943,
+      9937,
+      9950,
+      9967,
+      271052,
+      10010,
+      10080,
+      10132,
+      10148,
+      102828
+    ],
+    [
+      10152,
+      10134,
+      10111,
+      10052,
+      10026,
+      10009,
+      9979,
+      9951,
+      9938,
+      9934,
+      9933,
+      9955,
+      271061,
+      10007,
+      10082,
+      10135,
+      102829
+    ],
+    [
+      10120,
+      10151,
+      10124,
+      10098,
+      10042,
+      10029,
+      10011,
+      9977,
+      9967,
+      9948,
+      9945,
+      9932,
+      9963,
+      271067,
+      10018,
+      10067,
+      102829
+    ],
+    [
+      10073,
+      10132,
+      10157,
+      10138,
+      10094,
+      10064,
+      10024,
+      9996,
+      9981,
+      9958,
+      9944,
+      9930,
+      9934,
+      9958,
+      271065,
+      10008,
+      102832
+    ],
+    [
+      10002,
+      10057,
+      10125,
+      10140,
+      10138,
+      10095,
+      10067,
+      10025,
+      10009,
+      9995,
+      9957,
+      9962,
+      9940,
+      9932,
+      9947,
+      271061,
+      102836
+    ]
+  ],
+  "generator": {
+    "permanent_total_ceiling": null,
+    "finite_run_cases": 8388608,
+    "axes": {
+      "families": 16,
+      "modalities": 5,
+      "noise": 16,
+      "missing": 8,
+      "counter": 8
+    }
+  }
+}

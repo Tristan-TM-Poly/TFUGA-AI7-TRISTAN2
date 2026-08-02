@@ -19,6 +19,16 @@ from .github_planner import (
     iter_jsonl,
     synthetic_additions,
 )
+from .governance import (
+    IterationObservation,
+    ObjectiveVector,
+    ReflexMemoryLedger,
+    StopGate,
+    pareto_front,
+)
+from .recursive_evolution import RecursiveEvolutionLab
+from .self_improvement import default_scenarios, iter_variants_jsonl
+from .self_improvement_judge import ResourceAwareSelfImprovementLab
 from .streaming import MPlusLedger, RangeWorkSource, ResourceSampler
 
 
@@ -69,6 +79,49 @@ def _build_parser() -> argparse.ArgumentParser:
     synthetic_plan.add_argument("--namespaces", type=int, default=8)
     synthetic_plan.add_argument("--output-dir", default="generated/omega_unbounded_synthetic_plan")
     _add_plan_policy_arguments(synthetic_plan)
+
+    self_improve = sub.add_parser(
+        "self-improve",
+        help=(
+            "Benchmark the current controller against an open candidate stream and emit "
+            "an OAK-gated promotion plan without modifying source or GitHub."
+        ),
+    )
+    self_improve.add_argument("--work-items", type=int, default=60_000)
+    self_improve.add_argument(
+        "--candidates",
+        help="Optional JSONL stream of controller variants; consumed until file exhaustion.",
+    )
+    self_improve.add_argument("--minimum-improvement-ratio", type=float, default=0.02)
+    self_improve.add_argument("--overshoot-penalty-weight", type=float, default=10.0)
+    self_improve.add_argument("--maximum-overshoot-multiplier", type=float, default=2.0)
+    self_improve.add_argument(
+        "--output-dir",
+        default="generated/omega_unbounded_self_improvement",
+    )
+
+    governance = sub.add_parser(
+        "governance-check",
+        help=(
+            "Verify StopGate, reflex M-minus and Pareto invariants without source or remote mutations."
+        ),
+    )
+    governance.add_argument(
+        "--output-dir",
+        default="generated/omega_unbounded_governance",
+    )
+
+    evolution = sub.add_parser(
+        "evolution-check",
+        help=(
+            "Run adversarial multi-objective evaluation, proof-bundle generation and an offline "
+            "canary/rollback demonstration without deployment or remote mutation."
+        ),
+    )
+    evolution.add_argument(
+        "--output-dir",
+        default="generated/omega_unbounded_evolution",
+    )
     return parser
 
 
@@ -150,6 +203,114 @@ def _run_plan(args: argparse.Namespace, records: Any) -> int:
     return 0
 
 
+def _self_improve(args: argparse.Namespace) -> int:
+    scenarios = default_scenarios(args.work_items)
+    candidates = iter_variants_jsonl(args.candidates) if args.candidates else None
+    report = ResourceAwareSelfImprovementLab(
+        args.output_dir,
+        scenarios=scenarios,
+        minimum_improvement_ratio=args.minimum_improvement_ratio,
+        overshoot_penalty_weight=args.overshoot_penalty_weight,
+        maximum_overshoot_multiplier=args.maximum_overshoot_multiplier,
+    ).run(candidates)
+    payload = report.to_dict()
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0 if report.baseline.completed else 2
+
+
+def _governance_check(args: argparse.Namespace) -> int:
+    output = Path(args.output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    ledger_path = output / "m_minus_reflex.jsonl"
+    if ledger_path.exists():
+        ledger_path.unlink()
+
+    ledger = ReflexMemoryLedger(ledger_path)
+    rule = ledger.record_overiteration()
+
+    gate = StopGate()
+    initial = gate.observe(
+        IterationObservation(
+            objective_reached=False,
+            authoritative_validation=False,
+            marginal_information_gain=0.50,
+            repetition_score=0.10,
+            details=("work still has unresolved evidence",),
+        )
+    )
+    final = gate.observe(
+        IterationObservation(
+            objective_reached=True,
+            authoritative_validation=True,
+            marginal_information_gain=0.01,
+            repetition_score=0.95,
+            validation_fingerprint="governance-ci-proof",
+            details=("authoritative evidence obtained",),
+        )
+    )
+
+    points = (
+        ObjectiveVector(
+            name="fast",
+            maximize={"quality": 1.0, "throughput": 10.0},
+            minimize={"memory": 8.0},
+        ),
+        ObjectiveVector(
+            name="lean",
+            maximize={"quality": 1.0, "throughput": 8.0},
+            minimize={"memory": 4.0},
+        ),
+        ObjectiveVector(
+            name="dominated",
+            maximize={"quality": 1.0, "throughput": 7.0},
+            minimize={"memory": 9.0},
+        ),
+    )
+    front = pareto_front(points)
+    payload = {
+        "status": "passed" if final.should_stop else "failed",
+        "initial_decision": initial.to_dict(),
+        "final_decision": final.to_dict(),
+        "negative_memory_rule": rule.to_dict(),
+        "known_overiteration_blocked": ledger.is_blocked(
+            "repeat_equivalent_validation",
+            trigger="objective_reached_and_authoritative_validation_obtained",
+        ),
+        "pareto_front": [point.to_dict() for point in front],
+        "scalar_score_has_final_authority": False,
+        "source_mutations": 0,
+        "remote_mutations": 0,
+    }
+    (output / "governance-report.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    valid = (
+        not initial.should_stop
+        and final.should_stop
+        and payload["known_overiteration_blocked"] is True
+        and {point.name for point in front} == {"fast", "lean"}
+        and payload["remote_mutations"] == 0
+    )
+    return 0 if valid else 2
+
+
+def _evolution_check(args: argparse.Namespace) -> int:
+    report = RecursiveEvolutionLab(args.output_dir).run()
+    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    valid = (
+        report["status"] == "passed"
+        and set(report["pareto_front"]) == {"fast", "lean"}
+        and report["safe_canary"]["status"] == "promotion_candidate"
+        and report["rollback_demonstration"]["status"] == "rolled_back"
+        and report["authority"]["source_mutations"] == 0
+        and report["authority"]["remote_mutations"] == 0
+        and report["authority"]["automatic_merge"] is False
+    )
+    return 0 if valid else 2
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     try:
@@ -162,6 +323,12 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args,
                 synthetic_additions(args.work_items, namespaces=args.namespaces),
             )
+        if args.command == "self-improve":
+            return _self_improve(args)
+        if args.command == "governance-check":
+            return _governance_check(args)
+        if args.command == "evolution-check":
+            return _evolution_check(args)
     except (OSError, ValueError, TypeError, sqlite3.Error) as exc:
         print(f"omega-unbounded: {exc}", file=sys.stderr)
         return 2

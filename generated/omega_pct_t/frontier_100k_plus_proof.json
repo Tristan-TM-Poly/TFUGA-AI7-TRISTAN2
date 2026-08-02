@@ -1,0 +1,30 @@
+{
+  "budget": {
+    "initial_batch": 4096,
+    "max_batch_by_resource": 65536,
+    "max_bytes": 40000000,
+    "max_seconds": 30,
+    "namespaces": 256
+  },
+  "controller": "resource-bounded, no permanent total-item ceiling",
+  "date": "2026-08-02",
+  "output_committed": false,
+  "reason_not_committed": "Large synthetic JSONL is reproducible and would bloat Git history; only its proof manifest is committed.",
+  "reproduce": "python -m omega_pct_t frontier --max-seconds 30 --max-bytes 40000000 --initial-batch 4096 --max-batch-by-resource 65536 --namespaces 256 --output generated/omega_pct_t/frontier/candidates.jsonl",
+  "result": {
+    "accepted": 118123,
+    "batch_size": 32768,
+    "bytes_written": 39999890,
+    "duplicates": 0,
+    "elapsed_seconds": 0.9118096929999524,
+    "failures": 0,
+    "frontier_digest": "edb9fd123d497c3c89ac1d73b76190a14caea5348058330e72779ac0e7b37cbf",
+    "m_minus": [],
+    "processed": 118124,
+    "rejected": 0,
+    "source_exhausted": false,
+    "stop_reason": "byte_budget"
+  },
+  "status": "synthetic capacity evidence, not physical discovery",
+  "system": "Ω-PCT∞ adaptive frontier proof"
+}

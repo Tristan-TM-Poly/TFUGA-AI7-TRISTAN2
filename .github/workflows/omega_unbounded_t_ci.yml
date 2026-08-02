@@ -7,8 +7,16 @@ on:
       - 'tests/test_omega_unbounded_t.py'
       - 'tests/test_omega_unbounded_github_planner.py'
       - 'tests/test_omega_unbounded_streaming.py'
+      - 'tests/test_omega_unbounded_self_improvement.py'
+      - 'tests/test_omega_unbounded_governance.py'
+      - 'tests/test_omega_unbounded_recursive_evolution.py'
       - 'schemas/omega_unbounded_addition.schema.json'
+      - 'schemas/omega_unbounded_self_improvement_report.schema.json'
+      - 'schemas/omega_unbounded_evolution_report.schema.json'
       - 'policies/omega_unbounded_growth.json'
+      - 'policies/omega_unbounded_self_improvement.json'
+      - 'policies/omega_unbounded_governance.json'
+      - 'policies/omega_unbounded_recursive_evolution.json'
       - '.github/workflows/omega_unbounded_t_ci.yml'
   push:
     branches:
@@ -18,8 +26,16 @@ on:
       - 'tests/test_omega_unbounded_t.py'
       - 'tests/test_omega_unbounded_github_planner.py'
       - 'tests/test_omega_unbounded_streaming.py'
+      - 'tests/test_omega_unbounded_self_improvement.py'
+      - 'tests/test_omega_unbounded_governance.py'
+      - 'tests/test_omega_unbounded_recursive_evolution.py'
       - 'schemas/omega_unbounded_addition.schema.json'
+      - 'schemas/omega_unbounded_self_improvement_report.schema.json'
+      - 'schemas/omega_unbounded_evolution_report.schema.json'
       - 'policies/omega_unbounded_growth.json'
+      - 'policies/omega_unbounded_self_improvement.json'
+      - 'policies/omega_unbounded_governance.json'
+      - 'policies/omega_unbounded_recursive_evolution.json'
       - '.github/workflows/omega_unbounded_t_ci.yml'
   workflow_dispatch:
 
@@ -38,8 +54,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install pytest
-        run: python -m pip install --upgrade pip pytest
+      - name: Install test tools
+        run: python -m pip install --upgrade pip pytest jsonschema
 
       - name: Compile package
         run: python -m compileall -q omega_unbounded_t
@@ -50,6 +66,9 @@ jobs:
           tests/test_omega_unbounded_t.py
           tests/test_omega_unbounded_github_planner.py
           tests/test_omega_unbounded_streaming.py
+          tests/test_omega_unbounded_self_improvement.py
+          tests/test_omega_unbounded_governance.py
+          tests/test_omega_unbounded_recursive_evolution.py
           -q
 
       - name: Build a 100k-addition dry-run plan
@@ -79,10 +98,143 @@ jobs:
           assert (root / 'rollback.jsonl').stat().st_size > 0
           PY
 
-      - name: Upload frontier report
+      - name: Run recursive self-improvement benchmark
+        run: |
+          python -m omega_unbounded_t.cli self-improve \
+            --work-items 60000 \
+            --minimum-improvement-ratio 0.02 \
+            --overshoot-penalty-weight 10 \
+            --maximum-overshoot-multiplier 2 \
+            --output-dir generated/omega-unbounded-self-ci
+
+      - name: Verify self-improvement authority and anti-reward-hacking evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('generated/omega-unbounded-self-ci')
+          report = json.loads((root / 'self-improvement-report.json').read_text(encoding='utf-8'))
+          plan = json.loads((root / 'promotion-plan.json').read_text(encoding='utf-8'))
+          negative_memory = (root / 'self_improvement_m_minus.jsonl').read_text(encoding='utf-8')
+          judge = plan['evidence']['judge']
+
+          assert report['baseline']['completed'] is True
+          assert report['decision']['status'] == 'promotion_proposed'
+          assert report['decision']['selected'] == 'mminus-capacity-redesign'
+          assert report['decision']['improvement_ratio'] >= 0.02
+          assert report['decision']['remote_mutations'] == 0
+          assert report['no_permanent_candidate_cap'] is True
+          assert report['no_source_mutation'] is True
+          assert report['no_auto_merge'] is True
+
+          assert judge['type'] == 'resource_aware_oak_judge'
+          assert judge['overshoot_penalty_weight'] == 10
+          assert judge['maximum_overshoot_multiplier'] == 2
+          assert judge['selected_capacity_overshoot_ratio'] <= (
+              judge['baseline_capacity_overshoot_ratio']
+              * judge['maximum_overshoot_multiplier']
+          )
+          assert 'capacity overshoot exceeded the permitted multiplier' in negative_memory
+
+          assert plan['apply']['automatic'] is False
+          assert plan['apply']['requires_human_approval'] is True
+          assert plan['apply']['source_mutations'] == 0
+          assert plan['apply']['remote_mutations'] == 0
+          assert plan['apply']['merge'] is False
+          assert (root / 'm_plus.jsonl').stat().st_size > 0
+          assert (root / 'self_improvement_m_minus.jsonl').stat().st_size > 0
+          PY
+
+      - name: Run governance self-check
+        run: |
+          python -m omega_unbounded_t.cli governance-check \
+            --output-dir generated/omega-unbounded-governance-ci
+
+      - name: Verify StopGate reflex and Pareto invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('generated/omega-unbounded-governance-ci')
+          report = json.loads((root / 'governance-report.json').read_text(encoding='utf-8'))
+          front = {item['name'] for item in report['pareto_front']}
+
+          assert report['status'] == 'passed'
+          assert report['initial_decision']['action'] == 'CONTINUE'
+          assert report['final_decision']['action'] == 'STOP'
+          assert report['known_overiteration_blocked'] is True
+          assert front == {'fast', 'lean'}
+          assert report['scalar_score_has_final_authority'] is False
+          assert report['source_mutations'] == 0
+          assert report['remote_mutations'] == 0
+          assert (root / 'm_minus_reflex.jsonl').stat().st_size > 0
+          PY
+
+      - name: Run proof-carrying recursive evolution benchmark
+        run: |
+          python -m omega_unbounded_t.cli evolution-check \
+            --output-dir generated/omega-unbounded-evolution-ci
+
+      - name: Verify R0.6 schema proof bundles canary and rollback
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          from jsonschema import Draft202012Validator
+
+          root = Path('generated/omega-unbounded-evolution-ci')
+          report = json.loads((root / 'evolution-report.json').read_text(encoding='utf-8'))
+          schema = json.loads(
+              Path('schemas/omega_unbounded_evolution_report.schema.json').read_text(
+                  encoding='utf-8'
+              )
+          )
+          Draft202012Validator(schema).validate(report)
+
+          assert report['status'] == 'passed'
+          assert set(report['pareto_front']) == {'fast', 'lean'}
+          assert report['dominated'] == ['dominated']
+          assert report['rejected'] == ['fragile']
+          assert report['safe_canary']['status'] == 'promotion_candidate'
+          assert report['rollback_demonstration']['status'] == 'rolled_back'
+          rollback = report['rollback_demonstration']['decisions'][-1]
+          assert rollback['stage'] == 0.2
+          assert rollback['action'] == 'ROLLBACK'
+          assert rollback['rollback_required'] is True
+
+          authority = report['authority']
+          assert authority['source_mutations'] == 0
+          assert authority['remote_mutations'] == 0
+          assert authority['automatic_pull_request'] is False
+          assert authority['automatic_merge'] is False
+          assert authority['automatic_promotion'] is False
+          assert authority['human_approval_required'] is True
+          assert authority['scalar_score_has_final_authority'] is False
+
+          for bundle in report['proof_bundles'].values():
+              bundle_root = Path(bundle['path'])
+              manifest = json.loads(
+                  (bundle_root / 'manifest.json').read_text(encoding='utf-8')
+              )
+              assert manifest['bundle_id'] == bundle['bundle_id']
+              assert manifest['source_mutations'] == 0
+              assert manifest['remote_mutations'] == 0
+              for name, expected in manifest['files'].items():
+                  actual = hashlib.sha256((bundle_root / name).read_bytes()).hexdigest()
+                  assert actual == expected
+
+          assert (root / 'm_minus.jsonl').stat().st_size > 0
+          assert (root / 'm_plus.jsonl').stat().st_size > 0
+          PY
+
+      - name: Upload frontier self-improvement governance and evolution evidence
         uses: actions/upload-artifact@v7
         with:
-          name: omega-unbounded-ci-100k
+          name: omega-unbounded-ci-evidence
           path: |
             generated/omega-unbounded-ci-100k/manifest.json
             generated/omega-unbounded-ci-100k/semantic-diff.json
@@ -90,3 +242,14 @@ jobs:
             generated/omega-unbounded-ci-100k/tree.jsonl
             generated/omega-unbounded-ci-100k/commit-plan.jsonl
             generated/omega-unbounded-ci-100k/rollback.jsonl
+            generated/omega-unbounded-self-ci/self-improvement-report.json
+            generated/omega-unbounded-self-ci/promotion-plan.json
+            generated/omega-unbounded-self-ci/candidate-results.jsonl
+            generated/omega-unbounded-self-ci/self_improvement_m_minus.jsonl
+            generated/omega-unbounded-self-ci/m_plus.jsonl
+            generated/omega-unbounded-governance-ci/governance-report.json
+            generated/omega-unbounded-governance-ci/m_minus_reflex.jsonl
+            generated/omega-unbounded-evolution-ci/evolution-report.json
+            generated/omega-unbounded-evolution-ci/m_minus.jsonl
+            generated/omega-unbounded-evolution-ci/m_plus.jsonl
+            generated/omega-unbounded-evolution-ci/proof-bundles/**

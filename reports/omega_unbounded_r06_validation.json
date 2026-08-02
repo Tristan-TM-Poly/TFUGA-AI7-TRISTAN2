@@ -1,0 +1,29 @@
+{
+  "adversarial_rejected": [
+    "fragile"
+  ],
+  "automatic_merge": false,
+  "canary_status": "promotion_candidate",
+  "frontier_records": 100000,
+  "human_approval_required": true,
+  "pareto_front": [
+    "fast",
+    "lean"
+  ],
+  "proof_bundle_ids": {
+    "dominated": "9c439bdb8a9a4b4bb91f7a1aa0594c95b487a1b7765e690cacdb94aa179df2df",
+    "fast": "cf9cb432452602b2f275fd736053cfa64d25ab93c8da791ac33eb50c56d6170c",
+    "lean": "c1c21f7d3cef0a4f8846938b13eec5098abc3200c92be428b51d06ef7aecf610"
+  },
+  "reflex_m_minus_blocked": true,
+  "remote_mutations": 0,
+  "rollback_stage": 0.2,
+  "rollback_status": "rolled_back",
+  "self_improvement_ratio": 0.33674063684879907,
+  "self_improvement_selected": "mminus-capacity-redesign",
+  "source_mutations": 0,
+  "status": "passed",
+  "stopgate": "STOP",
+  "targeted_tests": "passed",
+  "validated_commit": "8e537a40b336c519cbdc3dd480bace92986285e2"
+}

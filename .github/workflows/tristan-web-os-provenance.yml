@@ -1,0 +1,69 @@
+name: Tristan Web OS Provenance
+
+on:
+  push:
+    branches:
+      - feat/tristan-web-os-r0-1
+    paths:
+      - scripts/generate_tristan_web_provenance.py
+      - apps/tristan-8fire-site/data/theories.json
+      - apps/tristan-8fire-site/data/claims.json
+      - .github/workflows/tristan-web-os-provenance.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tristan-web-os-provenance-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout writable branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/tristan-web-os-r0-1
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate provenance
+        run: python scripts/generate_tristan_web_provenance.py
+
+      - name: Verify manifest invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('apps/tristan-8fire-site/data/provenance.json')
+          manifest = json.loads(path.read_text(encoding='utf-8'))
+          assert manifest['schema_version'] == '0.3.0'
+          assert len(manifest['theory_provenance']) == 44
+          assert len(manifest['claim_provenance']) == 133
+          assert manifest['metrics']['sources'] > 0
+          assert all(row['automatic_promotion'] is False for row in manifest['claim_provenance'])
+          print(manifest['metrics'])
+          PY
+
+      - name: Commit generated provenance
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            apps/tristan-8fire-site/data/provenance.json \
+            content/generated/PROVENANCE_INDEX.md
+          if git diff --cached --quiet; then
+            echo 'Provenance is already current.'
+            exit 0
+          fi
+          git commit -m 'generated(web): materialize claim-source provenance'
+          git push origin HEAD:feat/tristan-web-os-r0-1

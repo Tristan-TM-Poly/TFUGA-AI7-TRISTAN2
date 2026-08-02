@@ -1,0 +1,79 @@
+{
+  "$id": "omega-pct-r03-campaign-task.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "a": {
+      "enum": [
+        "definition",
+        "schema",
+        "invariant",
+        "baseline",
+        "positive_test",
+        "negative_test",
+        "falsifier",
+        "dataset_adapter",
+        "simulation",
+        "benchmark",
+        "uncertainty",
+        "provenance",
+        "m_minus",
+        "report",
+        "cli",
+        "integration"
+      ]
+    },
+    "ap": {
+      "const": false
+    },
+    "e": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "fr": {
+      "const": true
+    },
+    "g": {
+      "enum": [
+        "OAK-0",
+        "OAK-1",
+        "OAK-2",
+        "OAK-3",
+        "OAK-4",
+        "OAK-5",
+        "OAK-6",
+        "OAK-7"
+      ]
+    },
+    "h": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ]
+    },
+    "i": {
+      "pattern": "^pct-r03-[0-9]{5}$",
+      "type": "string"
+    },
+    "st": {
+      "const": "task"
+    }
+  },
+  "required": [
+    "i",
+    "h",
+    "e",
+    "a",
+    "g",
+    "st",
+    "ap",
+    "fr"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/compact-discovery-record.schema.json",
+  "title": "Omega Discovery Kernel Compact Event Record R0.3",
+  "description": "One individually identifiable event in a million-scale JSONL shard. Semantic templates are stored in event-templates.json; this compact representation preserves sequence, identity, type, subject, namespace, parent, timestamp offset and event hash.",
+  "type": "array",
+  "minItems": 8,
+  "maxItems": 8,
+  "prefixItems": [
+    {
+      "title": "sequence",
+      "type": "integer",
+      "minimum": 0
+    },
+    {
+      "title": "event_id",
+      "type": "string",
+      "pattern": "^evt_[0-9a-f]{24}$"
+    },
+    {
+      "title": "event_code",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 7
+    },
+    {
+      "title": "subject_index",
+      "type": "integer",
+      "minimum": 0
+    },
+    {
+      "title": "namespace_index",
+      "type": "integer",
+      "minimum": 0
+    },
+    {
+      "title": "parent_sequence",
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    {
+      "title": "timestamp_offset_us",
+      "type": "integer",
+      "minimum": 0
+    },
+    {
+      "title": "event_hash",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  ],
+  "items": false,
+  "allOf": [
+    {
+      "if": {
+        "prefixItems": [
+          {},
+          {},
+          {"const": 0}
+        ]
+      },
+      "then": {
+        "prefixItems": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {"type": "null"}
+        ]
+      }
+    },
+    {
+      "if": {
+        "prefixItems": [
+          {},
+          {},
+          {"minimum": 1}
+        ]
+      },
+      "then": {
+        "prefixItems": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {"type": "integer", "minimum": 0}
+        ]
+      }
+    }
+  ],
+  "x-oak-boundary": "A valid compact event proves workflow-record integrity only. It does not establish scientific truth, causality, safety, legal compliance or product value.",
+  "x-unbounded-boundary": "A configured event count is a finite experiment target, never a permanent total-event ceiling."
+}

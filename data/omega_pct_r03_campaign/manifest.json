@@ -1,0 +1,37 @@
+{
+  "artifact_types": 16,
+  "automatic_scientific_promotion": false,
+  "engines": 64,
+  "oak_gates": 8,
+  "permanent_total_ceiling": null,
+  "records": 8192,
+  "shards": [
+    {
+      "bytes": 242304,
+      "path": "data/omega_pct_r03_campaign/tasks-00.jsonl",
+      "records": 2048,
+      "sha256": "cba10fa27eac9815f7ecf8b27e1e6e65d1fc5085108ad0991b3b17f910246e9c"
+    },
+    {
+      "bytes": 232704,
+      "path": "data/omega_pct_r03_campaign/tasks-01.jsonl",
+      "records": 2048,
+      "sha256": "86b3cd6cafaa6a49f255eeeee6e78326d4d40a4bd964bccdd93039f8fe040e6c"
+    },
+    {
+      "bytes": 238976,
+      "path": "data/omega_pct_r03_campaign/tasks-02.jsonl",
+      "records": 2048,
+      "sha256": "3d25e8be483c753110754611354719d6efd9e7fd6859808f3e4ab49c78950951"
+    },
+    {
+      "bytes": 241664,
+      "path": "data/omega_pct_r03_campaign/tasks-03.jsonl",
+      "records": 2048,
+      "sha256": "cd8d0eef47ecc4602518210aae565f874faa3f278bb030cbd9859e5b38ca39f4"
+    }
+  ],
+  "status": "research-task atlas; not physical claims or discoveries",
+  "system": "Ω-PCT∞ R0.3 MAX campaign atlas",
+  "version": "0.3.0"
+}

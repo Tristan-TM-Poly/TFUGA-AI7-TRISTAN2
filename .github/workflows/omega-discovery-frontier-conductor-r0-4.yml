@@ -1,0 +1,118 @@
+name: Omega Discovery Frontier Conductor R0.4
+
+on:
+  pull_request:
+    paths:
+      - "omega_discovery_kernel_t/frontier_conductor.py"
+      - "tests/test_omega_discovery_frontier_conductor_r0_4.py"
+      - "schemas/discovery-frontier-conductor.schema.json"
+      - "policies/omega_discovery_frontier_conductor_r0_4.json"
+      - "docs/omega_discovery_kernel_r0_4.md"
+      - ".github/workflows/omega-discovery-frontier-conductor-r0-4.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-discovery-frontier-conductor-r0-4-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  conductor-tests:
+    name: Adaptive frontier conductor OAKBench
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pip pytest jsonschema
+
+      - name: Compile R0.4
+        run: |
+          python -m compileall \
+            omega_discovery_kernel_t/frontier_conductor.py \
+            tests/test_omega_discovery_frontier_conductor_r0_4.py
+
+      - name: Run targeted tests
+        run: |
+          pytest -q tests/test_omega_discovery_frontier_conductor_r0_4.py --durations=20
+
+      - name: Validate policy and generated plan schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_discovery_kernel_t.frontier_conductor import (
+              ConductorPolicy,
+              ResourceEnvelope,
+              build_plan,
+              write_plan,
+          )
+
+          schema = json.loads(Path("schemas/discovery-frontier-conductor.schema.json").read_text())
+          policy_doc = json.loads(Path("policies/omega_discovery_frontier_conductor_r0_4.json").read_text())
+          assert policy_doc["core_loop_width"] == 8
+          assert "max_total_events" not in json.dumps(policy_doc)
+
+          plan = build_plan(
+              ResourceEnvelope(
+                  wall_time_seconds=3_600,
+                  writable_bytes=20_000_000_000,
+                  rss_soft_bytes=2_000_000_000,
+                  rollback_reserve_bytes=1_000_000_000,
+                  minimum_throughput_events_per_second=5_000,
+              ),
+              ConductorPolicy(
+                  initial_events=1_000_000,
+                  growth_factor=2.0,
+                  bytes_per_event_estimate=160.0,
+                  throughput_estimate_events_per_second=20_000.0,
+              ),
+          )
+          write_plan(plan, "/tmp/frontier-plan.json")
+          payload = json.loads(Path("/tmp/frontier-plan.json").read_text())
+          Draft202012Validator(schema).validate(payload)
+          assert payload["planned_events"] >= 31_000_000
+          assert payload["no_permanent_total_event_cap"] is True
+          print(json.dumps({
+              "stage_count": payload["stage_count"],
+              "planned_events": payload["planned_events"],
+              "exhausted_resource": payload["exhausted_resource"],
+          }, indent=2))
+          PY
+
+      - name: Verify billion-scale projection without materialization
+        run: |
+          cat > /tmp/generator-billion.json <<'JSON'
+          {
+            "planned_logical_records": 1179648000,
+            "epoch_count": 1000,
+            "partition_count": 8000,
+            "no_permanent_total_addition_cap": true
+          }
+          JSON
+          python -m omega_discovery_kernel_t.frontier_conductor project-generator \
+            --campaign-summary /tmp/generator-billion.json \
+            --output /tmp/generator-projection.json
+          python - <<'PY'
+          import json
+          projection = json.load(open('/tmp/generator-projection.json', encoding='utf-8'))
+          assert projection['projected_discovery_events'] == 9_437_184_000
+          assert projection['projected_discovery_subjects'] == 1_179_648_000
+          PY
+
+      - name: Verify CLI surface
+        run: |
+          python -m omega_discovery_kernel_t.frontier_conductor --help
+          python -m omega_discovery_kernel_t.frontier_conductor plan --help
+          python -m omega_discovery_kernel_t.frontier_conductor observe --help
+          python -m omega_discovery_kernel_t.frontier_conductor audit --help

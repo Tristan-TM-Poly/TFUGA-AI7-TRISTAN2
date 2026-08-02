@@ -1,0 +1,32 @@
+{
+  "automatic_scientific_promotion": false,
+  "generated_files": 24,
+  "paths": [
+    ".github/workflows/omega-pct-ci.yml",
+    "docs/OMEGA_PCT_R03_MAX_ARCHITECTURE.md",
+    "examples/omega_pct_r03max_demo.py",
+    "omega_pct_t/r03max/__init__.py",
+    "omega_pct_t/r03max/__main__.py",
+    "omega_pct_t/r03max/campaign.py",
+    "omega_pct_t/r03max/lagrangian_ir.py",
+    "omega_pct_t/r03max/model_generator.py",
+    "omega_pct_t/r03max/oakbench.py",
+    "omega_pct_t/r03max/operators.py",
+    "omega_pct_t/r03max/pdg_absorber.py",
+    "omega_pct_t/r03max/symmetry.py",
+    "omega_pct_t/r03max/types.py",
+    "policies/omega-pct-r03-oak.json",
+    "reports/omega_pct_r03_validation.json",
+    "schemas/omega-pct-pdg-snapshot-r03.schema.json",
+    "schemas/omega-pct-theory-r03.schema.json",
+    "tests/test_omega_pct_r03_campaign.py",
+    "tests/test_omega_pct_r03_lagrangian.py",
+    "tests/test_omega_pct_r03_oak.py",
+    "tests/test_omega_pct_r03_operators.py",
+    "tests/test_omega_pct_r03_pdg.py",
+    "tests/test_omega_pct_r03_symmetry.py",
+    "tests/test_omega_pct_r03_types.py"
+  ],
+  "permanent_total_ceiling": null,
+  "system": "Ω-PCT∞ R0.3 MAX"
+}

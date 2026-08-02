@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega-convergence-merge-receipt.schema.json",
+  "title": "Omega Convergence Merge Receipt R0.1",
+  "type": "object",
+  "required": [
+    "receipt_id", "base_sha", "head_sha", "branch_dna_sha256",
+    "conflict_count", "high_or_critical_conflicts", "tests", "artifacts",
+    "known_residues", "oak_verdict", "automatic_scientific_promotion", "automatic_merge"
+  ],
+  "properties": {
+    "receipt_id": {"type": "string", "pattern": "^convergence-[0-9a-f]{20}$"},
+    "base_sha": {"type": "string", "minLength": 7},
+    "head_sha": {"type": "string", "minLength": 7},
+    "result_sha": {"type": ["string", "null"]},
+    "branch_dna_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "conflict_count": {"type": "integer", "minimum": 0},
+    "high_or_critical_conflicts": {"type": "integer", "minimum": 0},
+    "tests": {"type": "array", "items": {"type": "string"}},
+    "artifacts": {"type": "array", "items": {"type": "string"}},
+    "known_residues": {"type": "array", "items": {"type": "string"}},
+    "oak_verdict": {
+      "enum": [
+        "DRY_RUN_ONLY",
+        "MERGED_WITH_EXPLICIT_RESIDUES",
+        "MERGED_SOFTWARE_GATES_PASSED",
+        "MERGED_TEST_EVIDENCE_INCOMPLETE"
+      ]
+    },
+    "automatic_scientific_promotion": {"const": false},
+    "automatic_merge": {"const": false},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

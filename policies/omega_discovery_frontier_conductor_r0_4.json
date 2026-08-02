@@ -1,0 +1,46 @@
+{
+  "schema": "omega_discovery_kernel.frontier_conductor_policy.v0.4",
+  "principle": "No permanent total-event ceiling; every concrete run remains bounded by measured resources, quality, safety, traceability, rollback, and human authority.",
+  "core_loop_width": 8,
+  "decisions": {
+    "EXPAND": "All integrity, quality, resource, latency, throughput, and forced-resume gates pass; propose the next geometric stage.",
+    "RESHARD": "Integrity passes but memory or tail latency saturates; reduce partition granularity before expansion.",
+    "HOLD": "Recoverability or throughput evidence is insufficient; repeat the current scale after calibration.",
+    "REDESIGN": "Duplicates, orphan parents, incomplete subjects, or excessive error rate invalidate promotion.",
+    "STOP": "The next stage does not fit the current finite resource envelope; checkpoint and request a new envelope rather than inventing a cap."
+  },
+  "mandatory_gates": [
+    "event count matches the declared stage",
+    "event count is divisible by eight",
+    "complete subject count matches accepted events",
+    "duplicate IDs equal zero",
+    "orphan parents equal zero",
+    "error rate is inside the envelope",
+    "forced interruption and exact resume are demonstrated",
+    "batch latency and resident memory are measured independently",
+    "remaining disk includes rollback reserve",
+    "ledger and stage fingerprints validate"
+  ],
+  "negative_memory_rules": [
+    "Never infer resumability from an uninterrupted run.",
+    "Never infer complete discovery loops from raw event count.",
+    "Never infer exactly-once integration from successful completion alone.",
+    "Never hide tail-latency or memory saturation behind average throughput.",
+    "Never expand while duplicates, orphan parents, or integrity errors are non-zero.",
+    "Never convert a finite resource envelope into a permanent architecture ceiling.",
+    "Never interpret generated candidates or workflow fixtures as external evidence."
+  ],
+  "generator_campaign_bridge": {
+    "mapping": "one generated logical record projects to one eight-event discovery workflow subject",
+    "materialization": false,
+    "boundary": "Projection is capacity planning only and does not establish evidence, truth, safety, patentability, or value."
+  },
+  "irreversible_actions": {
+    "publication": "human approval required",
+    "deployment": "human approval required",
+    "financial_action": "human approval required",
+    "ip_disclosure": "IPGate and human approval required",
+    "physical_experiment": "safety review and human approval required",
+    "personal_data_processing": "privacy review and human approval required"
+  }
+}

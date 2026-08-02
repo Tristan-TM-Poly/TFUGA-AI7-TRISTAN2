@@ -1,0 +1,58 @@
+name: Generate Omega Organic Family R0.2 Ultra 67M
+on:
+  push:
+    branches: [feat/omega-org-fam-t-r0-2-ultra-67m]
+    paths:
+      - 'omega_org_fam_t/registry.py'
+      - 'omega_org_fam_t/codec.py'
+      - 'omega_org_fam_t/ultra_oak.py'
+      - 'omega_org_fam_t/packed_atlas.py'
+      - 'tools/generate_omega_org_fam_r02_ultra.py'
+      - '.github/workflows/generate-omega-org-fam-r02-ultra-67m.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/omega-org-fam-t-r0-2-ultra-67m
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test Ultra kernel
+        run: |
+          python -m pip install pytest
+          python -m pytest tests/test_omega_org_fam_ultra.py
+      - name: Materialize 67,108,864 linked objects
+        run: python tools/generate_omega_org_fam_r02_ultra.py --root . --family-records 16777216 --shard-families 1048576 --clean
+      - name: Verify declared scale
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('generated/omega_org_fam_t_r02_ultra/manifest.json')
+          m=json.loads(p.read_text())
+          assert m['family_records']==16_777_216
+          assert m['evidence_records']==50_331_648
+          assert m['total_objects']==67_108_864
+          assert len(m['family_shards'])==16
+          assert len(m['evidence_shards'])==16
+          print(m['merkle_root'])
+          PY
+      - name: Commit deterministic packed atlas
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- generated/omega_org_fam_t_r02_ultra
+          if git diff --cached --quiet; then
+            echo 'Ultra atlas already current.'
+          else
+            git commit -m 'feat(org-fam-r02): materialize 67,108,864 linked packed objects'
+            git push origin HEAD:feat/omega-org-fam-t-r0-2-ultra-67m
+          fi

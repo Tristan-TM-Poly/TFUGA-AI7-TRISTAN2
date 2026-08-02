@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/propulsion_mission_genome.schema.json",
+  "title": "Omega Propulsion Mission Genome",
+  "type": "object",
+  "required": ["name", "domain", "vehicle", "objectives", "provenance", "phases"],
+  "properties": {
+    "name": {"type": "string", "minLength": 1},
+    "domain": {"type": "string", "enum": ["aerial", "marine", "hybrid", "research"]},
+    "vehicle": {"type": "string", "minLength": 1},
+    "objectives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "provenance": {"type": "string", "minLength": 1},
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "duration_s", "operating_point"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "duration_s": {"type": "number", "exclusiveMinimum": 0},
+          "minimum_thrust": {"type": "number", "minimum": 0},
+          "maximum_shaft_power": {"type": ["number", "null"], "exclusiveMinimum": 0},
+          "maximum_tip_mach": {"type": ["number", "null"], "exclusiveMinimum": 0},
+          "importance_weight": {"type": "number", "exclusiveMinimum": 0},
+          "operating_point": {
+            "type": "object",
+            "required": ["freestream_velocity", "rpm", "collective_pitch_deg"],
+            "properties": {
+              "freestream_velocity": {"type": "number"},
+              "rpm": {"type": "number", "minimum": 0},
+              "collective_pitch_deg": {"type": "number"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

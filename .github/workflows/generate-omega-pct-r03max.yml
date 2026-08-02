@@ -1,0 +1,81 @@
+name: Generate Omega PCT R0.3 MAX
+
+on:
+  push:
+    branches:
+      - feat/omega-pct-r0.2-unbounded
+    paths:
+      - 'tools/generate_omega_pct_r03max.py'
+      - 'tools/omega_pct_r03max_payload/**'
+      - '.github/workflows/generate-omega-pct-r03max.yml'
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'tools/generate_omega_pct_r03max.py'
+      - 'tools/omega_pct_r03max_payload/**'
+      - '.github/workflows/generate-omega-pct-r03max.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omega-pct-r03max-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/omega-pct-r0.2-unbounded
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Materialize proof-carrying R0.3 MAX tranche
+        run: python tools/generate_omega_pct_r03max.py --root .
+      - name: Install test runner
+        run: python -m pip install --upgrade pip pytest
+      - name: Compile packages
+        run: python -m compileall -q omega_pct_t
+      - name: Validate R0.3 MAX
+        run: python -m pytest tests/test_omega_pct_r03_*.py -q
+      - name: Run demonstration
+        run: python examples/omega_pct_r03max_demo.py
+      - name: Remove runtime-only artifacts
+        shell: bash
+        run: |
+          find omega_pct_t tests examples -type d -name __pycache__ -prune -exec rm -rf {} +
+          find omega_pct_t tests examples -type f -name '*.pyc' -delete
+          git restore -- .github/workflows/omega-pct-ci.yml
+      - name: Commit and synchronize generated tranche
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch='feat/omega-pct-r0.2-unbounded'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            docs/OMEGA_PCT_R03_MAX_ARCHITECTURE.md \
+            examples/omega_pct_r03max_demo.py \
+            omega_pct_t/r03max \
+            policies/omega-pct-r03-oak.json \
+            reports/omega_pct_r03_validation.json \
+            schemas/omega-pct-pdg-snapshot-r03.schema.json \
+            schemas/omega-pct-theory-r03.schema.json \
+            tests/test_omega_pct_r03_*.py \
+            generated/omega_pct_t/r03max-generation.json
+          if git diff --cached --quiet; then
+            echo 'R0.3 MAX tranche already materialized.'
+            exit 0
+          fi
+          git commit -m 'feat(omega-pct): materialize R0.3 MAX theory compiler'
+          git fetch origin "$branch"
+          git rebase "origin/$branch"
+          git push origin "HEAD:$branch"

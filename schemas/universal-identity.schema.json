@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/universal-identity.schema.json",
+  "title": "Omega Universal Identity R0.2",
+  "description": "Content-addressed cross-module identity. Identity equality is not semantic equivalence or scientific validation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "universal_id",
+    "kind",
+    "namespace",
+    "local_id",
+    "version",
+    "content_hash",
+    "parent_ids",
+    "source_ids",
+    "supersedes",
+    "aliases",
+    "repository_commit",
+    "valid_from",
+    "valid_until",
+    "oak_status",
+    "metadata"
+  ],
+  "properties": {
+    "universal_id": {
+      "type": "string",
+      "pattern": "^urn:omega:[a-z0-9._-]+:[a-z][a-z0-9_-]{1,63}:[^:]+:[0-9]+(?:\\.[0-9]+){0,3}(?:[-+][A-Za-z0-9._-]+)?:[0-9a-f]{28}$"
+    },
+    "kind": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{1,63}$"
+    },
+    "namespace": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9._-]+$"
+    },
+    "local_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+(?:\\.[0-9]+){0,3}(?:[-+][A-Za-z0-9._-]+)?$"
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "parent_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^urn:omega:"},
+      "uniqueItems": true
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^urn:omega:"},
+      "uniqueItems": true
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^urn:omega:"},
+      "uniqueItems": true
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["value", "relation", "source", "confidence"],
+        "properties": {
+          "value": {"type": "string", "minLength": 1},
+          "relation": {
+            "enum": [
+              "exact_alias",
+              "probable_alias",
+              "historical_name",
+              "abbreviation",
+              "translation",
+              "overlap",
+              "specialization",
+              "generalization",
+              "not_equivalent"
+            ]
+          },
+          "source": {"type": ["string", "null"]},
+          "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "repository_commit": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-fA-F]{7,64}$"
+    },
+    "valid_from": {"type": ["string", "null"], "format": "date-time"},
+    "valid_until": {"type": ["string", "null"], "format": "date-time"},
+    "oak_status": {
+      "enum": [
+        "IDEA",
+        "ACTIVE",
+        "FORMALIZED",
+        "IMPLEMENTED",
+        "SIMULATED",
+        "DEMONSTRATED",
+        "MEASURED",
+        "CANONICAL",
+        "CERTIFIED_MATH",
+        "CERTIFIED_COMPUTATIONAL",
+        "CERTIFIED_PHYSICS",
+        "REFUTED",
+        "REFORMULATED",
+        "ARCHIVED"
+      ]
+    },
+    "metadata": {"type": "object"}
+  }
+}

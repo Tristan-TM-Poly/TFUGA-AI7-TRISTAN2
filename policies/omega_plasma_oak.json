@@ -1,0 +1,21 @@
+{
+  "theory": "Ω-PLASMA-T∞",
+  "version": "R0.1",
+  "status": "OAK-safe research prototype",
+  "authority": {
+    "automatic_experiment": false,
+    "automatic_hardware_control": false,
+    "automatic_publication": false,
+    "automatic_merge": false,
+    "human_approval_required_for_irreversible_actions": true
+  },
+  "epistemic_levels": {
+    "P0": "established physics",
+    "P1": "established numerical model",
+    "P2": "Tristan computational extension",
+    "P3": "fertile hypothesis",
+    "P4": "speculative hypothesis"
+  },
+  "required_gates": ["units","input validity","conservation","positivity","convergence","baseline comparison","uncertainty","domain of validity","negative controls"],
+  "forbidden_claims": ["simulation equals experiment","named theory equals proof","single diagnostic equals identification","numerical pattern proves new physics","unsafe device is validated"]
+}

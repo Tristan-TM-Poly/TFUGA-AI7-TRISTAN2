@@ -1,0 +1,86 @@
+{
+  "schema": "omega_discovery_kernel.million_frontier_policy.v0.3",
+  "name": "Ω-DISCOVERY-KERNEL-T∞ million-scale forced-resume frontier",
+  "status": "OAKBench finite experiment, not a permanent architecture ceiling",
+  "core_loop": [
+    "ObservationEvent",
+    "ClaimEvent",
+    "GeneratorCandidate",
+    "ExperimentSpec",
+    "ResultPacket",
+    "OAKTransition",
+    "MMinusRule",
+    "ActionProposal"
+  ],
+  "canonical_experiment": {
+    "target_events": 1000000,
+    "subjects": 125000,
+    "events_per_subject": 8,
+    "forced_interrupt_after": 524288,
+    "subjects_before_interrupt": 65536,
+    "namespace_count": 256,
+    "expected_m_minus_events": 125000
+  },
+  "storage": {
+    "event_representation": "one compact JSON array per event",
+    "semantic_templates": "event-templates.json",
+    "index": "SQLite WAL",
+    "identity": "deterministic SHA-256-derived event ID",
+    "integrity": "per-event SHA-256 plus chained ledger digest",
+    "sharding": "adaptive immutable JSONL shards",
+    "checkpoint": "atomic JSON replacement",
+    "rollback": "delete generated frontier directory after hash and provenance review"
+  },
+  "adaptive_calibration": {
+    "initial_shard_bytes": 4194304,
+    "shard_growth_factor": 1.6,
+    "checkpoint_interval": 50000,
+    "sqlite_batch_size": 10000,
+    "minimum_free_bytes": 536870912,
+    "latency_saturation_seconds_per_10000": 8.0,
+    "rss_saturation_bytes": 2147483648
+  },
+  "mandatory_gates": {
+    "contiguous_sequences": true,
+    "unique_event_ids": true,
+    "zero_orphan_parents": true,
+    "complete_eight_event_subjects": true,
+    "exact_resume_after_forced_interruption": true,
+    "checkpoint_digest_continuity": true,
+    "saturation_to_m_minus": true,
+    "remote_mutations": 0
+  },
+  "saturation_memory": {
+    "forced_interruption": {
+      "negative_memory_rule": "Never infer resumability from a clean uninterrupted run.",
+      "redesign": "Force termination, checkpoint, resume, reject duplicates and verify digest continuity."
+    },
+    "sqlite_batch_latency": {
+      "negative_memory_rule": "Never increase index complexity without measuring commit latency.",
+      "redesign": "Repartition indexes, reduce batch size or separate cold lineage storage."
+    },
+    "resident_memory": {
+      "negative_memory_rule": "Never exchange unbounded RAM growth for throughput.",
+      "redesign": "Reduce cache and in-process state while preserving disk-backed indexes."
+    },
+    "disk_backpressure": {
+      "negative_memory_rule": "Never continue when rollback storage cannot be guaranteed.",
+      "redesign": "Pause, checkpoint, expand or compact storage, then resume."
+    }
+  },
+  "prohibited_inferences": [
+    "One million valid records prove a scientific claim.",
+    "High throughput proves semantic quality.",
+    "A completed synthetic frontier proves external reproducibility.",
+    "Hash integrity proves causal truth.",
+    "Passing CI authorizes physical, financial, legal, publication or deployment actions."
+  ],
+  "next_frontiers": [
+    "Measure the actual saturation curve across 1M, 2M, 5M and 10M finite workloads.",
+    "Partition lineage and subject indexes when SQLite latency becomes dominant.",
+    "Add content-addressed external dataset locators and real held-out scientific results.",
+    "Run independent replication on a second compute environment.",
+    "Generate M-minus rules from every observed resource or quality saturation."
+  ],
+  "no_permanent_total_event_cap": true
+}

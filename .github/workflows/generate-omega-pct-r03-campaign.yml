@@ -1,0 +1,74 @@
+name: Generate Omega PCT R0.3 Campaign Atlas
+
+on:
+  push:
+    branches:
+      - feat/omega-pct-r0.2-unbounded
+    paths:
+      - 'tools/generate_omega_pct_r03_campaign.py'
+      - 'tools/omega_pct_r03_campaign_payload/**'
+      - '.github/workflows/generate-omega-pct-r03-campaign.yml'
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'tools/generate_omega_pct_r03_campaign.py'
+      - 'tools/omega_pct_r03_campaign_payload/**'
+      - '.github/workflows/generate-omega-pct-r03-campaign.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omega-pct-r03-campaign-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  materialize-atlas:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/omega-pct-r0.2-unbounded
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Materialize 8,192-task proof-carrying atlas
+        run: python tools/generate_omega_pct_r03_campaign.py --root .
+      - name: Install test runner
+        run: python -m pip install --upgrade pip pytest
+      - name: Validate atlas
+        run: |
+          python -m pytest tests/test_omega_pct_r03_campaign_atlas.py -q
+          python tools/audit_omega_pct_r03_campaign.py --root .
+      - name: Remove runtime-only artifacts
+        shell: bash
+        run: |
+          find tests tools -type d -name __pycache__ -prune -exec rm -rf {} +
+          find tests tools -type f -name '*.pyc' -delete
+      - name: Commit and synchronize atlas
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch='feat/omega-pct-r0.2-unbounded'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            data/omega_pct_r03_campaign \
+            schemas/omega-pct-r03-campaign-task.schema.json \
+            tests/test_omega_pct_r03_campaign_atlas.py \
+            tools/audit_omega_pct_r03_campaign.py \
+            generated/omega_pct_t/r03-campaign-generation.json
+          if git diff --cached --quiet; then
+            echo 'Ω-PCT R0.3 campaign atlas already materialized.'
+            exit 0
+          fi
+          git commit -m 'data(omega-pct): materialize 8,192-task R0.3 campaign atlas'
+          git fetch origin "$branch"
+          git rebase "origin/$branch"
+          git push origin "HEAD:$branch"

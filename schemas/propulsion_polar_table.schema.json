@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/propulsion_polar_table.schema.json",
+  "title": "Omega Propulsion Polar Table",
+  "type": "object",
+  "required": ["airfoil_id", "source_type", "provenance", "samples"],
+  "properties": {
+    "airfoil_id": {"type": "string", "minLength": 1},
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "experiment",
+        "cfd",
+        "panel-method",
+        "analytic",
+        "synthetic-regression-fixture",
+        "deterministic-test-fixture",
+        "unknown"
+      ]
+    },
+    "provenance": {"type": "string", "minLength": 1},
+    "samples": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["alpha_deg", "reynolds", "mach", "lift_coefficient", "drag_coefficient"],
+        "properties": {
+          "alpha_deg": {"type": "number"},
+          "reynolds": {"type": "number", "exclusiveMinimum": 0},
+          "mach": {"type": "number", "minimum": 0},
+          "lift_coefficient": {"type": "number"},
+          "drag_coefficient": {"type": "number", "minimum": 0},
+          "moment_coefficient": {"type": "number"},
+          "lift_sigma": {"type": ["number", "null"], "minimum": 0},
+          "drag_sigma": {"type": ["number", "null"], "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

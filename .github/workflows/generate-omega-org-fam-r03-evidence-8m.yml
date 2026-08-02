@@ -1,0 +1,67 @@
+name: Generate Omega Organic Family R0.3 Evidence 8M
+
+on:
+  push:
+    branches:
+      - feat/omega-org-fam-t-r0-3-evidence-8m
+    paths:
+      - "omega_org_fam_t/**"
+      - "tests/test_omega_org_fam_r03.py"
+      - "tools/generate_omega_org_fam_r03_evidence.py"
+      - "schemas/omega_org_*_r03.schema.json"
+      - ".github/workflows/generate-omega-org-fam-r03-evidence-8m.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/omega-org-fam-t-r0-3-evidence-8m
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest
+      - name: Validate evidence engine
+        run: python -m pytest tests/test_omega_org_fam_r03.py
+      - name: Generate 8,388,608 synthetic evidence cases
+        run: |
+          python tools/generate_omega_org_fam_r03_evidence.py \
+            --root . \
+            --cases 8388608 \
+            --shard-cases 524288 \
+            --clean
+      - name: Audit counts, hashes, calibration and OAK boundary
+        run: |
+          python -m omega_org_fam_t.r03_cli audit-benchmark \
+            generated/omega_org_fam_t_r03_evidence_benchmark
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("generated/omega_org_fam_t_r03_evidence_benchmark")
+          manifest = json.loads((root / "manifest.json").read_text())
+          audit = json.loads((root / "oak-report.json").read_text())
+          assert manifest["cases"] == 8_388_608
+          assert manifest["correct"] + manifest["wrong"] + manifest["abstained"] == 8_388_608
+          assert manifest["generator"]["permanent_total_ceiling"] is None
+          assert manifest["status"] == "synthetic_engineering_benchmark_not_chemical_evidence"
+          assert audit["valid"] and not audit["errors"]
+          print(json.dumps({"manifest": manifest, "audit": audit}, indent=2))
+          PY
+      - name: Commit benchmark shards and audit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- generated/omega_org_fam_t_r03_evidence_benchmark
+          if git diff --cached --quiet; then
+            echo 'R0.3 evidence benchmark already current.'
+          else
+            git commit -m 'feat(org-fam-r03): materialize 8,388,608 evidence benchmark cases'
+            git push origin HEAD:feat/omega-org-fam-t-r0-3-evidence-8m
+          fi

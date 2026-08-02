@@ -1,0 +1,189 @@
+name: Omega Generator Frontier R0.5
+
+on:
+  push:
+    paths:
+      - omega_generator_discovery_t/frontier_virtual.py
+      - omega_generator_discovery_t/frontier_store.py
+      - omega_generator_discovery_t/frontier_cli.py
+      - tests/test_omega_generator_frontier_r05.py
+      - schemas/omega-generator-frontier-r05.schema.json
+      - .github/workflows/omega-generator-frontier-r05.yml
+  pull_request:
+    paths:
+      - omega_generator_discovery_t/frontier_virtual.py
+      - omega_generator_discovery_t/frontier_store.py
+      - omega_generator_discovery_t/frontier_cli.py
+      - tests/test_omega_generator_frontier_r05.py
+      - schemas/omega-generator-frontier-r05.schema.json
+      - .github/workflows/omega-generator-frontier-r05.yml
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Virtual finite workload profile
+        required: true
+        default: trillion
+        type: choice
+        options:
+          - ten-billion
+          - hundred-billion
+          - trillion
+          - ten-trillion
+          - quadrillion
+      mmr_leaves:
+        description: Number of synthetic leaves for streaming MMR stress
+        required: true
+        default: '1000000'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  frontier-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Test virtual planning, budgets, MMR, leases, OAK and SQLite
+        run: python -m pytest -q tests/test_omega_generator_frontier_r05.py
+      - name: Compile R0.5 modules
+        run: |
+          python -m py_compile \
+            omega_generator_discovery_t/frontier_virtual.py \
+            omega_generator_discovery_t/frontier_store.py \
+            omega_generator_discovery_t/frontier_cli.py
+      - name: Plan one quadrillion logical records without epoch materialization
+        run: |
+          python -m omega_generator_discovery_t.frontier_cli plan \
+            --profile quadrillion \
+            --output /tmp/quadrillion-plan.json
+          python - <<'PY'
+          import json
+          plan = json.load(open('/tmp/quadrillion-plan.json', encoding='utf-8'))
+          assert plan['requested_logical_records'] == 1_000_000_000_000_000
+          assert plan['epoch_count'] > 800_000_000
+          assert plan['total_partition_count'] > plan['epoch_count']
+          assert plan['no_permanent_total_addition_cap'] is True
+          assert 'epochs' not in plan
+          assert 'partitions' not in plan
+          PY
+      - name: Address the final four partitions directly
+        run: |
+          cursor="$(python - <<'PY'
+          import json
+          plan = json.load(open('/tmp/quadrillion-plan.json', encoding='utf-8'))
+          print(plan['total_partition_count'] - 4)
+          PY
+          )"
+          python -m omega_generator_discovery_t.frontier_cli page \
+            --profile quadrillion \
+            --cursor "$cursor" \
+            --limit 4 \
+            --output /tmp/final-page.json
+          python - <<'PY'
+          import json
+          page = json.load(open('/tmp/final-page.json', encoding='utf-8'))
+          assert page['count'] == 4
+          assert page['complete'] is True
+          keys = [entry['partition_key'] for entry in page['include']]
+          assert len(keys) == len(set(keys)) == 4
+          PY
+      - name: Schedule a bounded multi-resource wave
+        run: |
+          python -m omega_generator_discovery_t.frontier_cli schedule \
+            --profile trillion \
+            --cursor 0 \
+            --max-records 50000000 \
+            --max-bytes 40000000000 \
+            --max-seconds 1800 \
+            --max-cost-microunits 50000000 \
+            --max-api-calls 10000 \
+            --max-files 1000 \
+            --max-commits 20 \
+            --output /tmp/wave.json
+          python - <<'PY'
+          import json
+          wave = json.load(open('/tmp/wave.json', encoding='utf-8'))
+          assert wave['status'] == 'scheduled'
+          assert wave['partition_count'] > 0
+          assert wave['logical_records'] <= 50_000_000
+          PY
+      - name: Stream one hundred thousand MMR leaves
+        run: |
+          python -m omega_generator_discovery_t.frontier_cli mmr-demo \
+            --leaves 100000 \
+            --namespace ci-r05 \
+            > /tmp/mmr.json
+          python - <<'PY'
+          import json
+          receipt = json.load(open('/tmp/mmr.json', encoding='utf-8'))
+          assert receipt['leaf_count'] == 100000
+          assert len(receipt['root']) == 64
+          assert receipt['peak_count'] <= 17
+          PY
+      - name: Exercise transactional SQLite control plane
+        run: |
+          python -m omega_generator_discovery_t.frontier_cli db-seed \
+            --db /tmp/frontier.sqlite3 \
+            --profile ten-billion \
+            --cursor 0 \
+            --limit 8 \
+            > /tmp/seed.json
+          plan_sha="$(python - <<'PY'
+          import json
+          print(json.load(open('/tmp/seed.json'))['plan_fingerprint'])
+          PY
+          )"
+          python -m omega_generator_discovery_t.frontier_cli db-claim \
+            --db /tmp/frontier.sqlite3 \
+            --plan-fingerprint "$plan_sha" \
+            --worker-id ci-worker \
+            > /tmp/claim.json
+          python - <<'PY'
+          import json
+          seed = json.load(open('/tmp/seed.json'))
+          claim = json.load(open('/tmp/claim.json'))
+          assert seed['seeded_partitions'] == 8
+          assert claim['status'] == 'claimed'
+          assert claim['claim']['global_partition_index'] == 0
+          PY
+
+  profile-plan:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Plan selected profile
+        run: |
+          python -m omega_generator_discovery_t.frontier_cli plan \
+            --profile "${{ inputs.profile }}" \
+            --page-cursor 0 \
+            --page-limit 64 \
+            --output /tmp/selected-frontier-plan.json
+          cat /tmp/selected-frontier-plan.json
+
+  manual-mmr-stress:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Stream requested MMR leaves
+        run: |
+          python -m omega_generator_discovery_t.frontier_cli mmr-demo \
+            --leaves "${{ inputs.mmr_leaves }}" \
+            --namespace manual-r05 \
+            > /tmp/manual-mmr.json
+          cat /tmp/manual-mmr.json
