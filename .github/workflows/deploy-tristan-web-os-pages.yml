@@ -13,6 +13,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  issues: write
 
 concurrency:
   group: tristan-web-os-pages
@@ -62,3 +63,25 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Publish verifiable deployment receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          DEPLOYED_SHA: ${{ github.sha }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          body=$(cat <<EOF
+          <!-- tristan-web-os-live-deployment -->
+          ## Tristan Web OS est publié
+
+          - **Site public :** ${PAGE_URL}
+          - **Commit déployé :** \`${DEPLOYED_SHA}\`
+          - **Exécution GitHub Pages :** ${RUN_URL}
+          - **Statut :** déploiement GitHub Pages réussi
+
+          Ce reçu est produit uniquement après la réussite de \`actions/deploy-pages\`.
+          EOF
+          )
+          gh api "repos/${GITHUB_REPOSITORY}/issues/248/comments" -f body="$body"
