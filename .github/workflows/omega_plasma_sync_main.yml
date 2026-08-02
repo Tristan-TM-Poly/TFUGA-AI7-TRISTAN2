@@ -1,0 +1,94 @@
+name: omega-plasma-sync-main
+
+on:
+  push:
+    branches:
+      - feat/omega-plasma-t-infinite-r0.1
+    paths:
+      - .github/workflows/omega_plasma_sync_main.yml
+      - omega_plasma_t/sync_main_nonce.txt
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omega-plasma-sync-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/omega-plasma-t-infinite-r0.1
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Merge latest main with guarded conflict policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+
+          set +e
+          git merge --no-ff --no-commit origin/main
+          merge_status=$?
+          set -e
+
+          if [ "$merge_status" -ne 0 ]; then
+            mapfile -t conflicts < <(git diff --name-only --diff-filter=U)
+            printf 'Conflicts: %s\n' "${conflicts[*]:-none}"
+            if [ "${#conflicts[@]}" -ne 1 ] || [ "${conflicts[0]}" != 'pyproject.toml' ]; then
+              echo 'Unexpected merge conflict set; refusing automatic resolution.'
+              exit 1
+            fi
+
+            git checkout --theirs pyproject.toml
+            python - <<'PY'
+          from pathlib import Path
+
+          path = Path('pyproject.toml')
+          text = path.read_text(encoding='utf-8')
+          entry = 'omega-plasma = "omega_plasma_t.cli:main"'
+          if entry not in text:
+              marker = '\n[tool.pytest.ini_options]'
+              if marker not in text:
+                  raise SystemExit('pytest section marker missing; refusing unsafe edit')
+              text = text.replace(marker, f'\n{entry}\n{marker}', 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+            git add pyproject.toml
+          fi
+
+          unresolved="$(git diff --name-only --diff-filter=U)"
+          if [ -n "$unresolved" ]; then
+            echo "Unresolved conflicts remain: $unresolved"
+            exit 1
+          fi
+
+      - name: Validate plasma package after merge
+        run: |
+          python -m pip install --upgrade pip pytest jsonschema
+          python -m compileall -q omega_plasma_t
+          python -m pytest omega_plasma_t/tests -q
+          python -m omega_plasma_t.cli assess examples/omega_plasma_state.json --output-dir generated/omega-plasma-sync-check
+
+      - name: Commit and push merge resolution
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --cached --quiet && git diff --quiet; then
+            echo 'Branch is already synchronized.'
+            exit 0
+          fi
+          git add pyproject.toml
+          git commit -m 'merge: synchronize Ω-PLASMA-T∞ with latest main'
+          git push origin HEAD:feat/omega-plasma-t-infinite-r0.1
