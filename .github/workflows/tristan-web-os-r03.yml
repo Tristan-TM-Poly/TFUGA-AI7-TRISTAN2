@@ -11,9 +11,11 @@ on:
       - scripts/audit_tristan_web_provenance.py
       - scripts/generate_tristan_web_os_catalog.py
       - scripts/generate_tristan_web_provenance.py
+      - scripts/generate_tristan_web_build_manifest.py
       - scripts/tristan_web_catalog_seed_*.py
       - tests/test_tristan_web_os*.py
       - tests/test_tristan_web_provenance.py
+      - tests/test_tristan_web_build_manifest.py
       - tests/js/**
       - .github/workflows/tristan-web-os-r03.yml
   pull_request:
@@ -26,9 +28,11 @@ on:
       - scripts/audit_tristan_web_provenance.py
       - scripts/generate_tristan_web_os_catalog.py
       - scripts/generate_tristan_web_provenance.py
+      - scripts/generate_tristan_web_build_manifest.py
       - scripts/tristan_web_catalog_seed_*.py
       - tests/test_tristan_web_os*.py
       - tests/test_tristan_web_provenance.py
+      - tests/test_tristan_web_build_manifest.py
       - tests/js/**
       - .github/workflows/tristan-web-os-r03.yml
   workflow_dispatch:
@@ -63,10 +67,11 @@ jobs:
       - name: Install deterministic test dependency
         run: python -m pip install --disable-pip-version-check pytest
 
-      - name: Regenerate deterministic catalog and provenance
+      - name: Regenerate deterministic catalog, provenance and build root
         run: |
           python scripts/generate_tristan_web_os_catalog.py
           python scripts/generate_tristan_web_provenance.py
+          python scripts/generate_tristan_web_build_manifest.py
 
       - name: Ensure generated corpus is committed
         run: |
@@ -99,7 +104,8 @@ jobs:
           python -m pytest -q \
             tests/test_tristan_web_os.py \
             tests/test_tristan_web_os_r03.py \
-            tests/test_tristan_web_provenance.py
+            tests/test_tristan_web_provenance.py \
+            tests/test_tristan_web_build_manifest.py
 
       - name: Verify no external network calls in client modules
         shell: bash
