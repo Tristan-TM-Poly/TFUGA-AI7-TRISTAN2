@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """Materialize and audit Ω-ORG-FAM-T R0.2 Ultra packed atlas."""
 from __future__ import annotations
-import argparse, json, shutil, traceback
+import argparse, json, shutil, sys, traceback
 from pathlib import Path
+
+# Direct script execution puts tools/ rather than the repository root on
+# sys.path. Bootstrap the root explicitly so CI and local module execution are
+# equivalent without requiring an editable install.
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
 from omega_org_fam_t.packed_atlas import audit_packed_atlas, generate_packed_atlas
 
 
