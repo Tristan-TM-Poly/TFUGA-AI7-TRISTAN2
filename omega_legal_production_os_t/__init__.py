@@ -1,9 +1,16 @@
-"""Ω-LEGAL-PRODUCTION-OS-T∞ public API through R0.5."""
+"""Ω-LEGAL-PRODUCTION-OS-T∞ public API through R0.6."""
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
 
+from .filing_packets import (
+    FilingDocument,
+    GovernmentFilingPacket,
+    build_packet,
+    load_packet,
+    record_official_receipt,
+)
 from .ledger import ActionLedger, LedgerEntry
 from .models import (
     ActionState,
@@ -58,9 +65,11 @@ __all__ = [
     "DryRunReleaseProvider",
     "ExecutionReceipt",
     "ExternalActionEnvelope",
+    "FilingDocument",
     "GateDecision",
     "GmailSendProvider",
     "GitHubDraftReleaseProvider",
+    "GovernmentFilingPacket",
     "LedgerEntry",
     "LegalProductionPolicyGate",
     "PolicyReport",
@@ -72,14 +81,17 @@ __all__ = [
     "RiskLevel",
     "StripeTestPaymentProvider",
     "audit_policy_atlas",
+    "build_packet",
     "detect_forbidden_payload_keys",
     "doctor",
     "execute_action",
     "generate_policy_atlas",
     "hash_payload",
     "iso_utc",
+    "load_packet",
     "reconcile_action",
+    "record_official_receipt",
     "summarize_artifacts",
 ]
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
