@@ -1,0 +1,162 @@
+name: Omega Cyber Physical Systems R0.1
+
+on:
+  push:
+    branches:
+      - feat/omega-cyber-physical-systems-r0-1-max
+    paths:
+      - "omega_cyber_physical_systems_t/**"
+      - "tests/test_omega_cyber_physical_systems_r01.py"
+      - "schemas/cyber_physical_*.json"
+      - "docs/omega-cyber-physical-systems-t/**"
+      - "examples/omega_cyber_physical_systems_r01_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-cyber-physical-systems-r01.yml"
+  pull_request:
+    paths:
+      - "omega_cyber_physical_systems_t/**"
+      - "tests/test_omega_cyber_physical_systems_r01.py"
+      - "schemas/cyber_physical_*.json"
+      - "docs/omega-cyber-physical-systems-t/**"
+      - "examples/omega_cyber_physical_systems_r01_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-cyber-physical-systems-r01.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cps-r01-oak:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile whole-system package
+        run: python -m compileall omega_cyber_physical_systems_t
+      - name: Run focused cyberphysical regressions
+        run: python -m pytest -q tests/test_omega_cyber_physical_systems_r01.py
+      - name: Run OAK benchmark
+        run: python -m omega_cyber_physical_systems_t benchmark > /tmp/cps-oak.json
+      - name: Materialize blueprint and simulations
+        run: |
+          python -m omega_cyber_physical_systems_t blueprint-demo > /tmp/cps-blueprint.json
+          python -m omega_cyber_physical_systems_t dynamics-demo --model mechanical --summary-only > /tmp/cps-mechanical.json
+          python -m omega_cyber_physical_systems_t dynamics-demo --model motor --summary-only > /tmp/cps-motor.json
+          python -m omega_cyber_physical_systems_t cosim-demo > /tmp/cps-cosim.json
+          python -m omega_cyber_physical_systems_t cosim-demo --faulted --summary-only > /tmp/cps-cosim-faulted.json
+      - name: Materialize compiler, FMEA, evidence and repository inventory
+        run: |
+          python -m omega_cyber_physical_systems_t compiler-demo > /tmp/cps-compiler.json
+          python -m omega_cyber_physical_systems_t fault-demo > /tmp/cps-faults.json
+          python -m omega_cyber_physical_systems_t evidence-demo > /tmp/cps-evidence.json
+          python -m omega_cyber_physical_systems_t inventory --root . --max-files-per-system 96 --max-bytes-per-file 48000 --summary-only > /tmp/cps-inventory.json
+          python examples/omega_cyber_physical_systems_r01_demo.py > /tmp/cps-example.json
+      - name: Validate JSON contracts and OAK boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          blueprint = json.loads(Path('/tmp/cps-blueprint.json').read_text())
+          cosim = json.loads(Path('/tmp/cps-cosim.json').read_text())
+          blueprint_schema = json.loads(Path('schemas/cyber_physical_system_blueprint_r01.schema.json').read_text())
+          cosim_schema = json.loads(Path('schemas/cyber_physical_cosim_report_r01.schema.json').read_text())
+          jsonschema.validate(blueprint, blueprint_schema)
+          jsonschema.validate(cosim, cosim_schema)
+
+          oak = json.loads(Path('/tmp/cps-oak.json').read_text())
+          mechanical = json.loads(Path('/tmp/cps-mechanical.json').read_text())
+          motor = json.loads(Path('/tmp/cps-motor.json').read_text())
+          faulted = json.loads(Path('/tmp/cps-cosim-faulted.json').read_text())
+          compiler = json.loads(Path('/tmp/cps-compiler.json').read_text())
+          faults = json.loads(Path('/tmp/cps-faults.json').read_text())
+          evidence = json.loads(Path('/tmp/cps-evidence.json').read_text())
+          inventory = json.loads(Path('/tmp/cps-inventory.json').read_text())
+          example = json.loads(Path('/tmp/cps-example.json').read_text())
+
+          assert oak['passed'] is True
+          assert oak['status'] == 'CERTIFIED_COMPUTATIONAL_CYBER_PHYSICAL_SYSTEMS_R0_1'
+          assert oak['physics_certified'] is False
+          assert oak['software_certified'] is False
+          assert oak['safety_certified'] is False
+          assert oak['regulatory_certified'] is False
+
+          assert len(blueprint['components']) == 7
+          assert len(blueprint['connections']) == 6
+          assert blueprint['permanent_total_cap'] is None
+          assert blueprint['physics_certified'] is False
+          assert blueprint['software_certified'] is False
+          assert blueprint['regulatory_certified'] is False
+          assert len(blueprint['evidence_hash']) == 64
+
+          assert mechanical['finite'] is True
+          assert motor['finite'] is True
+          assert mechanical['final_outputs'][0] > 0
+          assert motor['final_outputs'][0] > 0
+          assert motor['final_outputs'][1] > 0
+
+          assert cosim['sample_count'] == 7501
+          assert cosim['finite'] is True
+          assert abs(cosim['final_error_m']) < abs(cosim['scenario']['setpoint_m'])
+          assert cosim['absolute_electrical_energy_j'] >= abs(cosim['net_electrical_energy_j'])
+          assert cosim['physics_certified'] is False
+          assert cosim['software_certified'] is False
+          assert cosim['hardware_validated'] is False
+          assert faulted['deadline_miss_count'] > 0
+
+          assert compiler['best'] is not None
+          assert compiler['best']['architecture']['architecture_id'] == 'mobile-robot-platform'
+          assert compiler['eligible_count'] >= 2
+          assert compiler['permanent_total_cap'] is None
+          assert compiler['engineering_recommendation'] is False
+
+          assert faults['record_count'] if 'record_count' in faults else len(faults['records']) == 3
+          assert faults['probability_claim'] is False
+          assert faults['safety_certified'] is False
+          assert evidence['contiguous_tier'] == 'D3_COSIMULATED_SYSTEM'
+          assert evidence['highest_supported_tier'] == 'D3_COSIMULATED_SYSTEM'
+          assert evidence['automatic_model_promotion'] is False
+          assert evidence['software_granted_certification'] is False
+          assert evidence['regulatory_certified'] is False
+
+          assert inventory['cyberphysical_candidate_count'] >= 2
+          assert inventory['integrated_candidate_count'] >= 1
+          assert inventory['permanent_total_cap'] is None
+          assert inventory['exhaustive_claim'] is False
+          assert example['blueprint']['component_count'] == 7
+          assert example['compiled_prototype']['engineering_recommendation'] is False
+
+          print(json.dumps({
+              'status': 'passed',
+              'blueprint_hash': blueprint['evidence_hash'],
+              'cosim_hash': cosim['evidence_hash'],
+              'compiler_hash': compiler['evidence_hash'],
+              'inventory_hash': inventory['evidence_hash'],
+              'inventory_records': inventory['record_count'],
+              'cyberphysical_candidates': inventory['cyberphysical_candidate_count'],
+              'integrated_candidates': inventory['integrated_candidate_count'],
+          }, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-cyber-physical-systems-r01-evidence
+          path: |
+            /tmp/cps-oak.json
+            /tmp/cps-blueprint.json
+            /tmp/cps-mechanical.json
+            /tmp/cps-motor.json
+            /tmp/cps-cosim.json
+            /tmp/cps-cosim-faulted.json
+            /tmp/cps-compiler.json
+            /tmp/cps-faults.json
+            /tmp/cps-evidence.json
+            /tmp/cps-inventory.json
+            /tmp/cps-example.json
+          retention-days: 14
