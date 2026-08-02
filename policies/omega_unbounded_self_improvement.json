@@ -1,0 +1,36 @@
+{
+  "policy_id": "omega-unbounded-self-improvement-r0.4",
+  "status": "offline_oak_gated_prototype",
+  "objective": "Use measured saturation and performance evidence to propose better controller policies without granting the system authority to edit, publish, merge, spend, or bypass provider constraints.",
+  "candidate_stream": {
+    "permanent_candidate_cap": null,
+    "termination": [
+      "candidate_stream_exhausted",
+      "unrecoverable_evaluation_failure",
+      "human_or_safety_gate"
+    ],
+    "default_seed": "derive a finite initial neighborhood from observed M-minus events"
+  },
+  "promotion_gates": {
+    "all_scenarios_complete": true,
+    "integrated_work_must_not_regress": true,
+    "rejections_must_not_increase": true,
+    "duplicates_must_not_increase": true,
+    "iterations_must_not_increase": true,
+    "saturations_must_not_increase": true,
+    "minimum_efficiency_improvement_ratio": 0.02,
+    "independent_reproduction_required_before_canonization": true
+  },
+  "authority": {
+    "source_mutation": false,
+    "remote_github_mutation": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "human_approval_required": true
+  },
+  "memory": {
+    "candidate_regressions": "self_improvement_m_minus.jsonl",
+    "measured_breakthroughs": "m_plus.jsonl",
+    "promotion_evidence": "promotion-plan.json"
+  }
+}
