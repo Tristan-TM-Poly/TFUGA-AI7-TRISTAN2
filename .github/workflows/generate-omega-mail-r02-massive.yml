@@ -1,5 +1,6 @@
 name: Generate Ω-MAIL-T R0.2 Massive
 
+# Bootstrap rerun after workflow registration on the feature branch.
 on:
   push:
     branches:
