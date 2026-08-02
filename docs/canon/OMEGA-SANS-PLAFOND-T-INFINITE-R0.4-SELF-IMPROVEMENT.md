@@ -1,148 +1,167 @@
 # Ω-SANS-PLAFOND-T∞ R0.4
 
-## Boucle d’auto-amélioration OAK-safe
+## Boucle d’auto-amélioration récursive OAK-safe
 
-**Statut :** prototype logiciel hors ligne, déterministe, mesurable et réversible. Il ne constitue ni une autonomie générale, ni une permission de modifier ou publier automatiquement du code.
+**Statut :** prototype logiciel hors ligne, déterministe, mesurable et réversible. R0.4 améliore une politique de contrôle; il ne reçoit aucune autonomie générale ni permission de modifier, publier ou fusionner du code.
 
-## 1. But
-
-R0.4 applique Ω-SANS-PLAFOND-T∞ à sa propre politique de contrôle :
+## 1. Boucle canonique
 
 ```text
 INCUMBENT
   → OAKBENCH MULTI-ÉCHELLE
-  → M⁻ DES SATURATIONS
+  → M⁻ DES SATURATIONS ET FAUX GAINS
   → CANDIDATS DE RECONCEPTION
   → OAKBENCH COMPARATIF
-  → REJET DES RÉGRESSIONS
+  → JUGE ANTI-RÉGRESSION ET ANTI-REWARD-HACKING
   → M⁺ DU GAIN MESURÉ
   → PLAN DE PROMOTION HUMAIN
   → NOUVEL INCUMBENT APRÈS APPROBATION
   → RÉPÉTITION
 ```
 
-Le système ne suppose jamais qu’une nouvelle version est meilleure parce qu’elle est plus agressive, plus volumineuse ou plus complexe. Elle doit gagner sa promotion par mesure comparative.
+Le système ne suppose jamais qu’une version plus agressive, volumineuse ou complexe est meilleure. Elle doit gagner sa promotion par mesure comparative, sans exploiter une faiblesse de la métrique.
 
-## 2. Distinction fondamentale
+## 2. Objectif sans plafond, exécutions gouvernées
 
-L’objectif global reste ouvert :
+R0.4 ne contient aucun `MAX_CANDIDATES` ni `MAX_SELF_IMPROVEMENT_ROUNDS`. Il consomme un flux de variantes jusqu’à son épuisement ou jusqu’à un arrêt réel gouverné.
 
-```text
-aucun plafond permanent de candidats, d’itérations ou d’ajouts
-```
+Chaque expérience demeure bornée par :
 
-Une expérience concrète reste bornée par :
-
-- le flux de candidats fourni;
 - les scénarios finis choisis;
 - les ressources physiques;
-- les exigences de qualité et de récupération;
-- les permissions;
-- les règles de sécurité, de droit, d’IP et des fournisseurs.
+- la qualité et la récupérabilité;
+- les permissions et coûts;
+- les contraintes de sécurité, de droit, d’IP et des fournisseurs.
 
-R0.4 ne contient aucun `MAX_CANDIDATES` ou `MAX_SELF_IMPROVEMENT_ROUNDS`. Le laboratoire consomme un itérable jusqu’à son épuisement ou jusqu’à un arrêt réel gouverné.
+## 3. Objet actuellement améliorable
 
-## 3. Objet amélioré
-
-La première version améliore les paramètres mesurables du contrôleur et de l’exécuteur synthétique :
+La première couche compare des variantes sérialisables de la politique :
 
 ```yaml
-stable_growth: croissance après un lot très stable
+stable_growth: croissance après un lot stable
 cautious_growth: croissance près de la pression douce
 redesign_factor: amplitude d’une reconception de frontière
 pressure_soft: seuil de croissance prudente
 pressure_hard: seuil d’échec du lot
 quality_floor: qualité minimale acceptée
+fingerprint: empreinte déterministe de la configuration
 ```
 
-Cette portée limitée est intentionnelle. Elle démontre une boucle récursive falsifiable avant toute tentative de modification structurelle du code.
+Deux variantes ayant la même configuration partagent la même empreinte même si leur nom diffère. Le doublon est rejeté avant calcul et conservé dans M⁻.
 
-## 4. Cellule de candidat
+## 4. OAKBench multi-échelle
 
-Chaque variante est sérialisable et possède une empreinte déterministe :
+Les variantes sont comparées sur trois échelles finies et reproductibles. Chaque résultat conserve :
+
+- travail intégré, rejets et doublons;
+- itérations, saturations et reconceptions;
+- plus grand lot démontré sûr;
+- capacité finale allouée;
+- événements M⁻;
+- statut d’achèvement.
+
+## 5. Juge de ressources
+
+Le premier cycle avait utilisé :
+
+```text
+efficiency_raw = integrated_work /
+                 (iterations + 8*saturations + 4*redesigns)
+```
+
+Cette fonction contenait une faille : une variante pouvait augmenter excessivement la capacité allouée, réduire ses saturations et paraître meilleure sans payer le coût de la surallocation.
+
+R0.4 a détecté ce **reward hacking** pendant son propre cycle. Le juge corrigé utilise :
+
+```text
+overshoot = Σ max(0, final_capacity / largest_safe_batch - 1)
+
+efficiency_oak = integrated_work /
+                 (iterations
+                  + 8*saturations
+                  + 4*redesigns
+                  + 10*overshoot)
+```
+
+Un candidat est aussi rejeté lorsque son overshoot total dépasse le multiplicateur OAK permis relativement à l’incumbent.
+
+## 6. Résultat reproductible du 2 août 2026
+
+### Incumbent R0.3
+
+```yaml
+redesign_factor: 2.0
+integrated_work: 60000
+iterations: 60
+saturations: 18
+redesigns: 18
+efficiency_oak: 209.13358941527954
+```
+
+### Candidat promu conditionnellement
+
+```yaml
+name: mminus-capacity-redesign
+fingerprint: 413ca87f21b78239
+redesign_factor: 3.0
+integrated_work: 60000
+iterations: 50
+saturations: 12
+redesigns: 12
+efficiency_oak: 279.55736750145604
+measured_improvement_ratio: 0.33674063684879907
+```
+
+Le candidat ×3 conserve tout le travail, réduit les itérations de 60 à 50, réduit les saturations de 18 à 12 et améliore le score corrigé de **33,67 %** sur ces scénarios synthétiques.
+
+### Faux gagnant converti en M⁻
 
 ```yaml
 name: mminus-capacity-redesign-plus
-stable_growth: 2.0
-cautious_growth: 1.25
 redesign_factor: 4.0
-pressure_soft: 0.75
-pressure_hard: 1.0
-quality_floor: 0.95
-fingerprint: sha256-tronqué
+raw_apparent_improvement: environ 55 pour cent
+resource_aware_efficiency: 226.66344047895834
+oak_status: rejected
+reason: capacity overshoot exceeded the permitted multiplier
 ```
 
-Deux variantes sémantiquement identiques ont la même empreinte même si leur nom diffère. Les doublons sont rejetés avant évaluation et inscrits dans M⁻.
+Le facteur ×4 avait gagné avec la métrique naïve, mais seulement au prix d’une forte surallocation. Cette découverte devient une mémoire négative permanente : **optimiser la métrique n’est pas nécessairement améliorer le système**.
 
-## 5. OAKBench multi-échelle
-
-Une variante est évaluée sur plusieurs scénarios de tailles et capacités différentes. Pour chaque scénario, R0.4 conserve :
-
-- statut final;
-- travail intégré;
-- rejets et doublons;
-- nombre d’itérations;
-- saturations;
-- reconceptions;
-- plus grand lot sûr;
-- capacité finale observée;
-- nombre d’événements M⁻.
-
-La métrique d’efficacité actuelle est :
-
-```text
-efficiency = integrated_work /
-             (iterations + 8*saturations + 4*redesigns)
-```
-
-Cette métrique est une fonction de sélection interne, pas une loi universelle. Son poids doit lui-même devenir un futur objet d’expérience et de falsification.
-
-## 6. Conditions de promotion
+## 7. Conditions de promotion
 
 Une variante n’est admissible que si :
 
 1. tous les scénarios se terminent;
 2. le travail intégré ne diminue pas;
-3. les rejets n’augmentent pas;
-4. les doublons n’augmentent pas;
-5. les itérations n’augmentent pas;
-6. les saturations n’augmentent pas;
-7. le gain d’efficacité dépasse le seuil expérimental;
-8. la promotion reste soumise à approbation humaine.
+3. les rejets et doublons n’augmentent pas;
+4. les itérations et saturations n’augmentent pas;
+5. le score corrigé dépasse le seuil expérimental;
+6. la surallocation reste dans le multiplicateur OAK;
+7. le plan conserve zéro mutation automatique;
+8. la promotion reste soumise à approbation humaine;
+9. une reproduction indépendante précède la canonisation définitive.
 
-La meilleure variante admissible est sélectionnée selon :
-
-```text
-efficacité maximale
-→ saturations minimales
-→ itérations minimales
-→ plus grand lot sûr
-```
-
-## 7. Mémoire récursive
+## 8. Mémoire récursive
 
 ### M⁻
 
-`self_improvement_m_minus.jsonl` contient notamment :
+`self_improvement_m_minus.jsonl` conserve :
 
-- candidats dupliqués;
-- candidats non promus;
-- régressions mesurées;
+- variantes dupliquées;
+- régressions;
+- variantes non promues;
+- surallocation et reward hacking;
 - résultats complets permettant de reproduire le rejet.
-
-Chaque scénario possède également son propre journal M⁻ de saturation.
 
 ### M⁺
 
-`m_plus.jsonl` enregistre une amélioration mesurée seulement lorsqu’une variante franchit tous les gates. Le statut reste :
+`m_plus.jsonl` conserve uniquement les gains ayant franchi tous les gates. Leur statut reste :
 
 ```text
 promotion_candidate_requires_human_approval
 ```
 
-Une seule exécution ne canonise pas le gain. Une reproduction indépendante reste nécessaire.
-
-## 8. Sorties
+## 9. Sorties
 
 ```text
 self-improvement-report.json
@@ -151,11 +170,9 @@ candidate-results.jsonl
 self_improvement_m_minus.jsonl
 m_plus.jsonl
 variants/
-  baseline-<fingerprint>/
-  candidate-<fingerprint>/
 ```
 
-Le plan de promotion contient explicitement :
+Le plan contient obligatoirement :
 
 ```yaml
 automatic: false
@@ -165,61 +182,31 @@ remote_mutations: 0
 merge: false
 ```
 
-## 9. CLI
+## 10. CLI
 
 ```bash
 omega-unbounded self-improve \
   --work-items 60000 \
   --minimum-improvement-ratio 0.02 \
+  --overshoot-penalty-weight 10 \
+  --maximum-overshoot-multiplier 2 \
   --output-dir generated/omega_unbounded_self_improvement
 ```
 
-Flux externe extensible de variantes :
+Un flux JSONL externe de variantes peut remplacer le voisinage initial. Il est lu en streaming sans plafond permanent de nombre de candidats.
 
-```bash
-omega-unbounded self-improve \
-  --candidates candidates.jsonl \
-  --work-items 60000 \
-  --output-dir generated/omega_unbounded_self_improvement
-```
+## 11. Limites actuelles
 
-Le fichier JSONL est lu en streaming jusqu’à épuisement; le laboratoire ne lui impose pas de nombre maximal permanent.
-
-## 10. Ce que R0.4 améliore réellement
-
-R0.4 peut découvrir qu’une reconception de capacité plus forte réduit simultanément le nombre de saturations et le nombre d’itérations sur les scénarios testés. Il peut alors proposer ce nouveau paramètre comme prochain incumbent.
-
-Il ne prouve pas que le candidat sera meilleur :
-
-- sur tous les matériels;
-- sur tout type de charge;
-- avec des API réelles;
-- sur des dépôts géants;
-- face à des coûts, latences ou erreurs non simulés;
-- pour une modification structurelle du code.
-
-## 11. Limites et M⁻ initiale
-
-- Le premier benchmark utilise encore un exécuteur synthétique.
-- La métrique d’efficacité est conçue manuellement.
-- Les scénarios par défaut ne couvrent pas les API GitHub réelles.
-- La promotion est configurationnelle; elle ne produit pas encore un patch de code vérifié.
-- Un facteur de reconception plus grand pourrait surallouer des ressources dans le monde réel.
-- Le journal M⁺ représente une preuve interne, pas une validation indépendante.
+- Le benchmark est encore synthétique.
+- Les poids du juge sont des hypothèses testables, non des lois universelles.
+- Le gain ×3 n’est pas encore démontré sur les API GitHub réelles.
+- La promotion est configurationnelle; aucun patch source n’est auto-appliqué.
+- Une reproduction indépendante reste requise.
 
 ## 12. Frontière R0.5
 
-La prochaine couche doit coupler la même boucle à des mesures réelles et réversibles :
-
-1. profiler mémoire, disque et temps du planificateur streaming;
-2. générer des candidats de sharding, cache, batch et index SQLite;
-3. exécuter des benchmarks différentiels sur plusieurs tailles de corpus;
-4. produire des patches dans un arbre temporaire isolé;
-5. compiler et tester chaque patch;
-6. comparer baseline et patch;
-7. ouvrir une PR brouillon seulement après approbation explicite;
-8. ne jamais fusionner automatiquement.
+R0.5 doit appliquer la boucle à des mesures réelles et réversibles : mémoire, disque, temps, SQLite, sharding, cache et reprise après interruption. Les patches candidats devront être produits dans des arbres temporaires isolés, compilés, testés et comparés, puis seulement proposés dans une PR brouillon explicitement autorisée. Aucune auto-fusion.
 
 ## 13. Règle canonique
 
-> Ω-SANS-PLAFOND-T∞ peut s’améliorer lui-même seulement en transformant ses erreurs en candidats falsifiables, en mesurant chaque candidat contre l’incumbent, en rejetant toute régression, en conservant M⁻ et M⁺, et en laissant toute mutation durable sous souveraineté humaine.
+> Ω-SANS-PLAFOND-T∞ peut s’améliorer lui-même seulement en transformant ses erreurs et faux gains en candidats falsifiables, en mesurant chaque candidat contre l’incumbent avec un juge résistant au reward hacking, en rejetant toute régression ou surallocation, en conservant M⁻ et M⁺, et en laissant toute mutation durable sous souveraineté humaine.
