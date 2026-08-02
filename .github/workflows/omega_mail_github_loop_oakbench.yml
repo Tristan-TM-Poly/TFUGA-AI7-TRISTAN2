@@ -1,0 +1,41 @@
+name: Ω Mail GitHub Loop OAKBench
+
+on:
+  pull_request:
+    paths:
+      - 'omega_mail_github_loop_t/**'
+      - 'tests/test_omega_mail_github_loop.py'
+      - 'docs/OMEGA_MAIL_GITHUB_LOOP_T.md'
+      - 'examples/omega_mail_github_loop/**'
+      - '.github/workflows/omega_mail_github_loop_oakbench.yml'
+      - 'pyproject.toml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --upgrade pip pytest
+      - name: Compile
+        run: python -m compileall -q omega_mail_github_loop_t
+      - name: Targeted tests
+        run: python -m pytest -q tests/test_omega_mail_github_loop.py
+      - name: Dry-run command
+        run: python -m omega_mail_github_loop_t.cli dry-run-email examples/omega_mail_github_loop/command_email.txt --out /tmp/mail-github-loop.json
+      - name: Generate and audit 147,456-cell atlas
+        run: |
+          python -m omega_mail_github_loop_t.cli generate-atlas /tmp/omega-mail-github-atlas
+          python -m omega_mail_github_loop_t.cli audit-atlas /tmp/omega-mail-github-atlas
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-mail-github-loop-oakbench
+          path: |
+            /tmp/mail-github-loop.json
+            /tmp/omega-mail-github-atlas
