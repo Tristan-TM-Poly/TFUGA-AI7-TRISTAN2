@@ -1,6 +1,6 @@
-# Ω-LEGAL-PRODUCTION-OS-T∞ R0.3–R0.5 — real connectors
+# Ω-LEGAL-PRODUCTION-OS-T∞ R0.3–R0.6 — real operations
 
-This release replaces provider simulations with code paths that perform real HTTPS requests when exact credentials and one-action interlocks are supplied.
+This release replaces provider simulations with code paths that perform real HTTPS requests when exact credentials and one-action interlocks are supplied. It also builds content-addressed government and incorporation packets that can be submitted through an authorized official portal session.
 
 ## Implemented provider calls
 
@@ -79,7 +79,40 @@ The canonical action hash is sent as the Stripe `Idempotency-Key`. Only test key
 
 The local durable ledger is the primary anti-replay mechanism. The action id and hash are also included as provider metadata. GitHub-hosted execution is intentionally not enabled for this provider because the hosted runner ledger is ephemeral.
 
-## CLI
+## Government and incorporation packets
+
+`filing_packets.py` performs real artifact production:
+
+- validates Québec or Canada jurisdiction;
+- requires content hashes for every source document;
+- blocks missing or modified documents;
+- requires professional-review and founder-approval hashes;
+- requires articles, registered office, directors and share structure for incorporation packets;
+- blocks secret-like keys in metadata;
+- writes a deterministic manifest and submission checklist into a ZIP;
+- marks the package `READY_FOR_AUTHORIZED_PORTAL_SUBMISSION`;
+- records the official portal receipt later without retaining the raw reference number.
+
+It does not log into a government portal, answer a personal attestation, invent legal facts or declare an entity incorporated before an official accepted receipt exists.
+
+Build a packet:
+
+```bash
+omega-legal-real build-filing-packet filing-manifest.json \
+  --output filing-packet.zip
+```
+
+Record the official result after authorized submission:
+
+```bash
+omega-legal-real record-filing-receipt \
+  filing-manifest.json official-receipt.pdf \
+  --reference-number QC-REFERENCE \
+  --status ACCEPTED \
+  --output recorded-receipt.json
+```
+
+## Provider CLI
 
 Check configuration without revealing values:
 
@@ -130,10 +163,12 @@ The OAKBench injects a fake HTTP transport and checks the exact request shapes w
 - document byte hash validation;
 - reservation before provider call;
 - replay rejection before a second network request;
-- secret-free doctor output.
+- filing role completeness and document integrity;
+- secret-free filing metadata and provider doctor output;
+- official receipt hashing without storing the raw portal reference.
 
 ## Still requiring real account setup
 
-The code is executable, but a provider call requires credentials from the corresponding account. No credentials are generated or stored by this repository.
+The provider code is executable, but a provider call requires credentials from the corresponding account. No credentials are generated or stored by this repository.
 
-Government filing, incorporation and legally binding signature execution remain separate fronts because they require verified legal identities, portal authentication, attestations and professional review. Their GitHub role is packet generation, approval and evidence capture; the portal submission cannot be truthfully marked automated without an authorized supported interface.
+A legally binding signature, live payment, public release, government submission or production deployment remains blocked until the corresponding company identity, account, authority, professional review and protected execution environment are configured.
