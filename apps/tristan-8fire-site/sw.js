@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE = "tristan-web-os-r03-v2";
+const CACHE = "tristan-web-os-r03-v3";
 const SHELL = [
   "./",
   "./index.html",
@@ -23,11 +23,13 @@ const SHELL = [
   "./src/views/evidence.js",
   "./src/views/graph.js",
   "./src/views/mminus.js",
+  "./src/views/provenance.js",
   "./src/views/roadmap.js",
   "./src/views/theory.js",
   "./data/theories.json",
   "./data/claims.json",
-  "./data/relations.json"
+  "./data/relations.json",
+  "./data/provenance.json"
 ];
 
 self.addEventListener("install", (event) => {
