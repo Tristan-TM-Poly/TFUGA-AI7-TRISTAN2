@@ -49,9 +49,18 @@ jobs:
           assert payload['acoustic']['physics_certified'] is False
           assert payload['robust_mission']['physics_certified'] is False
           assert payload['fault_envelope']['physics_certified'] is False
-          assert payload['fault_envelope']['critical_scenario'] == 'motor-out'
+          cases = payload['fault_envelope']['cases']
+          motor_out = next(case for case in cases if case['scenario']['name'] == 'motor-out')
+          assert motor_out['mission_feasible'] is False
+          assert motor_out['minimum_thrust_margin'] < 0
+          assert payload['fault_envelope']['critical_scenario'] in {case['scenario']['name'] for case in cases}
           assert 'not flight' in payload['epistemic_status']
-          print(json.dumps({'status': 'passed', 'fault_cases': payload['fault_envelope']['case_count'], 'robust_cases': len(payload['robust_mission']['cases'])}, sort_keys=True))
+          print(json.dumps({
+              'status': 'passed',
+              'critical_scenario': payload['fault_envelope']['critical_scenario'],
+              'fault_cases': payload['fault_envelope']['case_count'],
+              'robust_cases': len(payload['robust_mission']['cases'])
+          }, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
         with:
