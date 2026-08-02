@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-fluid-t/fluid_genome.schema.json",
+  "title": "Ω-FLUID-T Fluid Genome",
+  "type": "object",
+  "required": [
+    "genome_id",
+    "fluid_family",
+    "regime",
+    "phenomenon",
+    "geometry",
+    "boundary",
+    "solver",
+    "scale",
+    "object_type",
+    "uncertainty_class",
+    "evidence_status",
+    "epoch",
+    "local_index"
+  ],
+  "properties": {
+    "genome_id": {"type": "string", "minLength": 1},
+    "fluid_family": {"type": "string", "minLength": 1},
+    "regime": {"type": "string", "minLength": 1},
+    "phenomenon": {"type": "string", "minLength": 1},
+    "geometry": {"type": "string", "minLength": 1},
+    "boundary": {"type": "string", "minLength": 1},
+    "solver": {"type": "string", "minLength": 1},
+    "scale": {"type": "string", "minLength": 1},
+    "object_type": {"type": "string", "minLength": 1},
+    "uncertainty_class": {"type": "string", "minLength": 1},
+    "evidence_status": {
+      "enum": [
+        "IDEA", "FORMALIZED", "IMPLEMENTED", "TESTED", "BENCHMARKED", "SIMULATED",
+        "MEASURED", "CERTIFIED_COMPUTATIONAL", "CERTIFIED_PHYSICS", "REFUTED", "ARCHIVED"
+      ]
+    },
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "quantities": {"type": "object", "additionalProperties": {"type": "string"}},
+    "provenance": {"type": "object"},
+    "epoch": {"type": "integer", "minimum": 0},
+    "local_index": {"type": "integer", "minimum": 0}
+  },
+  "additionalProperties": true
+}
