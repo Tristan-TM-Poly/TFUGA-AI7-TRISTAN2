@@ -8,9 +8,12 @@ on:
       - apps/tristan-8fire-site/**
       - schemas/tristan_web_os/**
       - scripts/audit_tristan_web_os_r03.py
+      - scripts/audit_tristan_web_provenance.py
       - scripts/generate_tristan_web_os_catalog.py
+      - scripts/generate_tristan_web_provenance.py
       - scripts/tristan_web_catalog_seed_*.py
       - tests/test_tristan_web_os*.py
+      - tests/test_tristan_web_provenance.py
       - .github/workflows/tristan-web-os-r03.yml
   pull_request:
     branches:
@@ -19,9 +22,12 @@ on:
       - apps/tristan-8fire-site/**
       - schemas/tristan_web_os/**
       - scripts/audit_tristan_web_os_r03.py
+      - scripts/audit_tristan_web_provenance.py
       - scripts/generate_tristan_web_os_catalog.py
+      - scripts/generate_tristan_web_provenance.py
       - scripts/tristan_web_catalog_seed_*.py
       - tests/test_tristan_web_os*.py
+      - tests/test_tristan_web_provenance.py
       - .github/workflows/tristan-web-os-r03.yml
   workflow_dispatch:
 
@@ -52,8 +58,13 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Regenerate deterministic catalog
-        run: python scripts/generate_tristan_web_os_catalog.py
+      - name: Install deterministic test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Regenerate deterministic catalog and provenance
+        run: |
+          python scripts/generate_tristan_web_os_catalog.py
+          python scripts/generate_tristan_web_provenance.py
 
       - name: Ensure generated corpus is committed
         run: |
@@ -71,11 +82,19 @@ jobs:
             node --check "$file"
           done < <(find apps/tristan-8fire-site -type f -name '*.js' -print0)
 
-      - name: Run deterministic OAK audit
-        run: python scripts/audit_tristan_web_os_r03.py --output out/tristan-web-os-r03-audit.json
+      - name: Run deterministic OAK audits
+        run: |
+          python scripts/audit_tristan_web_os_r03.py \
+            --output out/tristan-web-os-r03-audit.json
+          python scripts/audit_tristan_web_provenance.py \
+            --output out/tristan-web-os-provenance-audit.json
 
       - name: Run Web OS regression tests
-        run: python -m pytest -q tests/test_tristan_web_os.py tests/test_tristan_web_os_r03.py
+        run: |
+          python -m pytest -q \
+            tests/test_tristan_web_os.py \
+            tests/test_tristan_web_os_r03.py \
+            tests/test_tristan_web_provenance.py
 
       - name: Verify no external network calls in client modules
         shell: bash
@@ -86,11 +105,13 @@ jobs:
             exit 1
           fi
 
-      - name: Upload audit report
+      - name: Upload audit reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tristan-web-os-r03-audit
-          path: out/tristan-web-os-r03-audit.json
+          name: tristan-web-os-r03-audits
+          path: |
+            out/tristan-web-os-r03-audit.json
+            out/tristan-web-os-provenance-audit.json
           if-no-files-found: warn
           retention-days: 14
