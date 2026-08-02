@@ -1,0 +1,240 @@
+{
+  "valid": true,
+  "routing_count": 65536,
+  "aggregate": {
+    "generators": 65536,
+    "benchmarks": 131072,
+    "hyperedges": 65536,
+    "negative_controls": 65536,
+    "validations": 65536
+  },
+  "partitions": 32,
+  "maximum_partition_bytes": 15917056,
+  "source_removed": true,
+  "per_domain": {
+    "spectral": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "crystal": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "elastic": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "thermal": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "electromagnetic": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "chemical": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "quantum": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "stochastic": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "fluid": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "battery": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "optical": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "photonic": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "acoustic": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "biological": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "ecological": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "climate": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "materials": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "calibration": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "control": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "robotics": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "computing": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "neural": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "epistemic": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "software": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "economic": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "energy": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "transport": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "geological": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "astronomical": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "linguistic": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "social": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    },
+    "game": {
+      "generators": 2048,
+      "benchmarks": 4096,
+      "hyperedges": 2048,
+      "negative_controls": 2048,
+      "validations": 2048
+    }
+  }
+}
