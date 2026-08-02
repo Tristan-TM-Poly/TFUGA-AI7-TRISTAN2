@@ -51,6 +51,29 @@ from .core import (
 )
 from .crystal import HolonomyReport, crystal_holonomy
 from .epistemic import EpistemicTransition, evidence_growth_transition
+from .frontier_store import FrontierStore
+from .frontier_virtual import (
+    FRONTIER_PROFILES,
+    AdaptiveWaveScheduler,
+    BaseCampaignShape,
+    BudgetEnvelope,
+    FrontierReceipt,
+    LeaseAuthority,
+    MerkleMountainRange,
+    PromotionDecision,
+    PromotionEvidence,
+    ResourceModel,
+    ResourceUsage,
+    VirtualEpoch,
+    VirtualFrontierPlan,
+    VirtualFrontierPolicy,
+    VirtualPartition,
+    WavePlan,
+    WorkLease,
+    evaluate_promotion,
+    receipt_chain_valid,
+    resolve_frontier_target,
+)
 from .fronts import FRONTS, FrontSpec, front_registry
 from .protocol import InstrumentProtocol, compile_protocol
 from .spectral import SpectralMorph, compare_spectra, lorentzian, mixture
@@ -68,28 +91,36 @@ from .ultra_catalog import (
 )
 
 __all__ = [
-    "AffineGenerator1D", "CampaignAxes", "CampaignEmitter",
+    "AdaptiveWaveScheduler", "AffineGenerator1D", "BaseCampaignShape",
+    "BudgetEnvelope", "CampaignAxes", "CampaignEmitter",
     "CampaignEmissionReport", "CampaignPartition", "CampaignSpec",
     "EpistemicTransition", "ExperimentCandidate", "ExperimentDecision",
-    "FRONTS", "FrontSpec", "FrontierDecision", "FrontierLedger",
-    "FrontierObservation", "FrontierPolicy", "GeneratorSyndrome",
-    "HolonomyReport", "InstrumentProtocol", "LinearGeneratorOperator",
-    "MorphIR", "OrderExperiment", "PROFILE_MULTIPLIERS", "ScaleEmissionReport",
-    "ScaleEpoch", "ScalePartition", "ScalePartitionEmitter", "ScalePlan",
-    "ScalePlanner", "ScalePolicy", "SpectralMorph", "UltraAuditReport",
-    "UltraGeneratorRecord", "ValidationPolicy", "ValidationReport",
-    "audit_ultra_catalog", "benchmark_addition", "catalog_statistics",
-    "compare_spectra", "compile_morph_ir", "compile_protocol",
-    "crystal_holonomy", "decide_next_frontier", "design_order_experiment",
-    "deterministic_validation_sample", "epoch_spec", "epochize_record",
+    "FRONTIER_PROFILES", "FRONTS", "FrontSpec", "FrontierDecision",
+    "FrontierLedger", "FrontierObservation", "FrontierPolicy",
+    "FrontierReceipt", "FrontierStore", "GeneratorSyndrome",
+    "HolonomyReport", "InstrumentProtocol", "LeaseAuthority",
+    "LinearGeneratorOperator", "MerkleMountainRange", "MorphIR",
+    "OrderExperiment", "PROFILE_MULTIPLIERS", "PromotionDecision",
+    "PromotionEvidence", "ResourceModel", "ResourceUsage",
+    "ScaleEmissionReport", "ScaleEpoch", "ScalePartition",
+    "ScalePartitionEmitter", "ScalePlan", "ScalePlanner", "ScalePolicy",
+    "SpectralMorph", "UltraAuditReport", "UltraGeneratorRecord",
+    "ValidationPolicy", "ValidationReport", "VirtualEpoch",
+    "VirtualFrontierPlan", "VirtualFrontierPolicy", "VirtualPartition",
+    "WavePlan", "WorkLease", "audit_ultra_catalog", "benchmark_addition",
+    "catalog_statistics", "compare_spectra", "compile_morph_ir",
+    "compile_protocol", "crystal_holonomy", "decide_next_frontier",
+    "design_order_experiment", "deterministic_validation_sample",
+    "epoch_spec", "epochize_record", "evaluate_promotion",
     "evidence_growth_transition", "export_subatlas", "fit_scalar_generator",
     "front_registry", "generator_addition", "generator_syndrome",
     "get_generator", "identify_affine_1d", "iter_epoch_bundles",
     "iter_generator_bundles", "load_campaign_spec", "load_manifest",
     "lorentzian", "mixed_radix_decode", "mixture", "partition_campaign",
-    "prioritize_experiments", "query_generators", "related_bundle",
-    "resolve_target_records", "semigroup_defect", "stream_digest",
-    "validate_epoch_range", "write_partition_matrix",
+    "prioritize_experiments", "query_generators", "receipt_chain_valid",
+    "related_bundle", "resolve_frontier_target", "resolve_target_records",
+    "semigroup_defect", "stream_digest", "validate_epoch_range",
+    "write_partition_matrix",
 ]
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
