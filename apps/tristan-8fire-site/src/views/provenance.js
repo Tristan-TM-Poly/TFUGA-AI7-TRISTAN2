@@ -16,7 +16,7 @@ function sourceTone(status) {
   return "danger";
 }
 
-function renderManifest(root, manifest, route) {
+function renderManifest(root, manifest, route, store) {
   const query = (route.query.get("q") || "").toLowerCase();
   const status = route.query.get("status") || "";
   const kind = route.query.get("kind") || "";
@@ -61,7 +61,7 @@ function renderManifest(root, manifest, route) {
         source.sha256 ? element("code", { text: source.sha256 }) : "—",
         source.size_bytes === null ? "—" : formatNumber(source.size_bytes),
         element("div", { className: "provenance-links" }, source.theory_ids.map((id) => {
-          const theory = root.ownerDocument.defaultView.TristanWebOS?.store.getTheory(id);
+          const theory = store.getTheory(id);
           return link(theory?.symbol || id, `#/theory/${encodeURIComponent(id)}`);
         })),
         element("div", { className: "provenance-links" }, source.claim_ids.slice(0, 8).map((id) => link(id, `#/claim/${encodeURIComponent(id)}`)))
@@ -71,13 +71,13 @@ function renderManifest(root, manifest, route) {
   ]));
 }
 
-export function renderProvenance({ route }) {
+export function renderProvenance({ route, store }) {
   const root = element("div", { className: "view provenance-view" });
   root.append(sectionHeader("Info² / Provenance", "Du claim au fichier et à son empreinte", "Le manifeste distingue références résolues, dossiers, chemins manquants et empreintes. Une provenance forte améliore la traçabilité sans transformer une source en preuve."));
   const loading = element("section", { className: "loading-state compact-loading", "aria-busy": "true" }, [element("span", { className: "loading-orbit", "aria-hidden": "true" }), element("p", { text: "Chargement du manifeste de provenance…" })]);
   root.append(loading);
   loadManifest()
-    .then((manifest) => { loading.remove(); renderManifest(root, manifest, route); })
+    .then((manifest) => { loading.remove(); renderManifest(root, manifest, route, store); })
     .catch((error) => { loading.replaceWith(emptyState("Provenance indisponible", `Le manifeste n’est pas encore matérialisé ou ne peut pas être chargé : ${error.message}`)); });
   return root;
 }
