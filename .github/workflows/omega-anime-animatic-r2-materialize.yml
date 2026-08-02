@@ -1,6 +1,12 @@
 name: Materialize Omega Anime Animatic R2
 
 on:
+  push:
+    branches:
+      - "feat/omega-anime-t-r0-1"
+    paths:
+      - ".github/workflows/omega-anime-animatic-r2-materialize.yml"
+      - "tools/anime_animatic_r2_payload/**"
   pull_request:
     paths:
       - ".github/workflows/omega-anime-animatic-r2-materialize.yml"
@@ -16,7 +22,7 @@ concurrency:
 
 jobs:
   materialize:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
