@@ -1,0 +1,153 @@
+{
+  "cell_id": "KC-OMEGA-LIN-T-001",
+  "subject": "Ω-LIN-T",
+  "definition": "OAKBench for local linearization that records the approximation point, Jacobian or local operator, residual, validity domain, baseline, and reproducible numerical result.",
+  "domain": "scientific-computing",
+  "oak_status": "DEMONSTRATED",
+  "claims": [
+    {
+      "claim_id": "CLM-LIN-LOCAL-001",
+      "text": "A local linear model can approximate a nonlinear system within an explicitly measured validity domain when its residual remains below a declared tolerance.",
+      "canonical_key": "local linear model is valid within measured residual domain",
+      "domain": "mathematics",
+      "polarity": "affirm",
+      "scope": "local neighborhoods with declared tolerance",
+      "status": "measured_claim",
+      "assumptions": [
+        "the nonlinear map is differentiable in the tested neighborhood",
+        "the residual metric matches the intended downstream use",
+        "sampling covers the declared local domain"
+      ],
+      "failure_conditions": [
+        "the residual exceeds tolerance inside the claimed validity domain",
+        "the estimated domain changes materially under denser sampling",
+        "a simpler baseline yields equal or lower error with lower complexity"
+      ],
+      "source_paths": [
+        "scripts/omega_lin_oakbench.py",
+        "docs/omega-lin/"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVD-LIN-EQ-001",
+      "kind": "equation",
+      "title": "First-order local linear approximation and residual definition",
+      "source_path": "docs/omega-lin/",
+      "locator": "local model and residual sections",
+      "content_hash": null,
+      "status": "verified_metadata",
+      "supports_claim_ids": ["CLM-LIN-LOCAL-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {
+        "model": "f(x0 + delta) approximately f(x0) + J(x0) delta",
+        "residual": "norm(f(x0 + delta) - f(x0) - J(x0) delta)"
+      }
+    },
+    {
+      "evidence_id": "EVD-LIN-CODE-001",
+      "kind": "code",
+      "title": "Omega LIN OAKBench implementation",
+      "source_path": "scripts/omega_lin_oakbench.py",
+      "locator": null,
+      "content_hash": null,
+      "status": "reproduced",
+      "supports_claim_ids": ["CLM-LIN-LOCAL-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-LIN-TEST-001",
+      "kind": "test",
+      "title": "Deterministic local-linearization tests",
+      "source_path": "tests/",
+      "locator": "omega_lin tests",
+      "content_hash": null,
+      "status": "reproduced",
+      "supports_claim_ids": ["CLM-LIN-LOCAL-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-LIN-BASELINE-001",
+      "kind": "baseline",
+      "title": "Constant and direct nonlinear evaluation baselines",
+      "source_path": "scripts/omega_lin_oakbench.py",
+      "locator": "benchmark comparison",
+      "content_hash": null,
+      "status": "reproduced",
+      "supports_claim_ids": ["CLM-LIN-LOCAL-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-LIN-RESULT-001",
+      "kind": "result",
+      "title": "Local residual and validity-domain report",
+      "source_path": "reports/",
+      "locator": "Omega LIN generated report",
+      "content_hash": null,
+      "status": "reproduced",
+      "supports_claim_ids": ["CLM-LIN-LOCAL-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {
+        "boundary": "Demonstrates the benchmark machinery, not universal superiority of linearization."
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "transition_id": "TR-LIN-001",
+      "timestamp": "2026-06-25T00:00:00Z",
+      "from_status": "IDEA",
+      "to_status": "FORMALIZED",
+      "cause": "Local model, residual, and validity-domain contract were documented.",
+      "evidence_ids": ["EVD-LIN-EQ-001"],
+      "residues": ["benchmark coverage limited to selected examples"],
+      "approved_by": "Tristan"
+    },
+    {
+      "transition_id": "TR-LIN-002",
+      "timestamp": "2026-06-26T00:00:00Z",
+      "from_status": "FORMALIZED",
+      "to_status": "IMPLEMENTED",
+      "cause": "Executable OAKBench and deterministic tests were added.",
+      "evidence_ids": ["EVD-LIN-CODE-001", "EVD-LIN-TEST-001"],
+      "residues": ["broader nonlinear families and noise studies missing"],
+      "approved_by": "Tristan"
+    },
+    {
+      "transition_id": "TR-LIN-003",
+      "timestamp": "2026-06-27T00:00:00Z",
+      "from_status": "IMPLEMENTED",
+      "to_status": "DEMONSTRATED",
+      "cause": "The implementation produced a reproducible residual and validity-domain report against baselines.",
+      "evidence_ids": ["EVD-LIN-BASELINE-001", "EVD-LIN-RESULT-001"],
+      "residues": ["independent reproduction and external benchmark suite missing"],
+      "approved_by": "Tristan"
+    }
+  ],
+  "risks": [
+    "local model extrapolated beyond validity domain",
+    "residual metric mismatched to downstream use",
+    "insufficient domain sampling"
+  ],
+  "next_actions": [
+    "Add nonlinear systems with known Taylor remainder bounds.",
+    "Run noise and sampling-density sweeps.",
+    "Publish a machine-readable validity-domain report with uncertainty fields."
+  ],
+  "aliases": ["Omega Linearization Tristan", "Local Linearization OAKBench"],
+  "source_paths": [
+    "scripts/omega_lin_oakbench.py",
+    "docs/omega-lin/",
+    "MASTER_SYSTEM_INDEX.md"
+  ],
+  "owner": "Tristan",
+  "public_disclosure": true,
+  "metadata": {
+    "knowledge_cell_version": "0.3",
+    "oak_boundary": "Demonstrated locally; not a universal theorem about all nonlinear systems."
+  }
+}
