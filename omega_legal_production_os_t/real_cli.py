@@ -5,6 +5,7 @@ import argparse
 import json
 from typing import Sequence
 
+from .filing_packets import build_packet, record_official_receipt
 from .real_execution import doctor, execute_action, reconcile_action
 from .real_providers import PROVIDERS
 
@@ -13,8 +14,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="omega-legal-real",
         description=(
-            "Execute one exact approved action through a real provider. "
-            "No provider is called without exact environment interlocks."
+            "Execute one exact approved action through a real provider or build "
+            "content-addressed government filing handoff packets."
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True)
@@ -34,6 +35,27 @@ def build_parser() -> argparse.ArgumentParser:
     reconcile_parser.add_argument("receipt")
     reconcile_parser.add_argument("--ledger", required=True)
     reconcile_parser.add_argument("--output", required=True)
+
+    filing_parser = commands.add_parser(
+        "build-filing-packet",
+        help="Build a verified ZIP for authorized government portal submission",
+    )
+    filing_parser.add_argument("manifest")
+    filing_parser.add_argument("--output", required=True)
+
+    filing_receipt_parser = commands.add_parser(
+        "record-filing-receipt",
+        help="Hash and record an official portal receipt after human submission",
+    )
+    filing_receipt_parser.add_argument("manifest")
+    filing_receipt_parser.add_argument("official_receipt")
+    filing_receipt_parser.add_argument("--reference-number", required=True)
+    filing_receipt_parser.add_argument(
+        "--status",
+        required=True,
+        choices=["SUBMITTED", "ACCEPTED", "REJECTED", "REQUIRES_CORRECTION"],
+    )
+    filing_receipt_parser.add_argument("--output", required=True)
     return parser
 
 
@@ -52,13 +74,27 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         print(json.dumps(result.to_mapping(), indent=2, sort_keys=True))
         return 0
-    result = reconcile_action(
-        args.action,
-        args.receipt,
-        ledger_path=args.ledger,
+    if args.command == "reconcile":
+        result = reconcile_action(
+            args.action,
+            args.receipt,
+            ledger_path=args.ledger,
+            output_path=args.output,
+        )
+        print(json.dumps(result.to_mapping(), indent=2, sort_keys=True))
+        return 0
+    if args.command == "build-filing-packet":
+        result = build_packet(args.manifest, args.output)
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
+    result = record_official_receipt(
+        packet_manifest_path=args.manifest,
+        official_receipt_path=args.official_receipt,
+        reference_number=args.reference_number,
+        status=args.status,
         output_path=args.output,
     )
-    print(json.dumps(result.to_mapping(), indent=2, sort_keys=True))
+    print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
 
