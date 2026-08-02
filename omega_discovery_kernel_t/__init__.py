@@ -39,11 +39,13 @@ from .kernel import (
 from .million_frontier import (
     COMPACT_CORE_EVENT_TYPES,
     CompactEventRecord,
-    CompactMillionFrontier,
     ForcedInterruption,
     MillionFrontierConfig,
     MillionTelemetry,
     SaturationRecord,
+)
+from .million_optimized import (
+    CompactMillionFrontier,
     run_forced_resume_million_frontier,
 )
 from .quantity import (
