@@ -1,0 +1,16 @@
+{
+  "case_id": "OUT-2026-0002",
+  "company_unit": "tristan_research_foundry",
+  "kind": "research_pilot",
+  "target_organization": "Polytechnique Montréal",
+  "recipient_hash": "sha256:32e43d287513a0fddefd693069222c680400c5f77dce0111f239f2220a091ab8",
+  "subject": "Re: Proposition de pilote limité — cartographie vérifiable des groupes de recherche",
+  "purpose": "Single bounded follow-up on a public-data research mapping pilot, with no personal-data processing, publication commitment or institutional claim.",
+  "status": "sent",
+  "sent_at": "2026-08-02",
+  "provider_receipt_hash": "sha256:e3173dbe6d29425615f26ee115127ce0d547b36765acace4e8d33be0447da1db",
+  "source_issue": 278,
+  "follow_up_after": "2026-08-16",
+  "legal_entity_claimed": false,
+  "corporate_domain_verified": false
+}
