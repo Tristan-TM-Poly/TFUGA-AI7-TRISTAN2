@@ -18,6 +18,10 @@ on:
       - 'docs/OMEGA_COMPANY_OUTREACH_T.md'
       - 'pyproject.toml'
 
+concurrency:
+  group: omega-company-outreach-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
