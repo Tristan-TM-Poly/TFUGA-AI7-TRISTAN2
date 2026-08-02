@@ -1,7 +1,7 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "3.4.0"
-description = "Omega absorb, convergence, company, mail and OAK-safe public research tooling"
+version = "3.3.0"
+description = "Omega absorb, convergence and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
 [project.scripts]
