@@ -1,0 +1,177 @@
+{
+  "cell_id": "KC-FFWT-HAC-CVCD-001",
+  "subject": "FFWT-HAC-CVCD",
+  "definition": "Experimental multiscale signal branch combining fractal-weighted transforms, hierarchical analysis, and controlled compression/decompression under OAK benchmarking.",
+  "domain": "signals-and-spectroscopy",
+  "oak_status": "REFORMULATED",
+  "claims": [
+    {
+      "claim_id": "CLM-FFWT-ANOMALY-001",
+      "text": "A task-specific FFWT representation may improve anomaly detection for some multiscale non-stationary signals when compared under matched protocols.",
+      "canonical_key": "ffwt improves anomaly detection under matched protocols",
+      "domain": "signal-processing",
+      "polarity": "affirm",
+      "scope": "multiscale anomaly detection",
+      "status": "hypothesis",
+      "assumptions": [
+        "anomalies have useful multiscale structure",
+        "baselines are tuned with the same validation budget",
+        "train-test leakage is prevented"
+      ],
+      "failure_conditions": [
+        "FFWT fails to improve AUROC or localization error across preregistered datasets and seeds",
+        "observed gains disappear under ablation or matched hyperparameter search"
+      ],
+      "source_paths": ["prototypes/omega_ffwt_hac_cvcd/"]
+    },
+    {
+      "claim_id": "CLM-FFWT-RECON-NEG-001",
+      "text": "Naive fractal weighting does not generally outperform an unweighted Haar transform for sparse reconstruction at the same coefficient retention fraction.",
+      "canonical_key": "naive fractal weighting improves sparse reconstruction",
+      "domain": "signal-processing",
+      "polarity": "deny",
+      "scope": "synthetic sparse reconstruction keep_fraction 0.2",
+      "status": "observation",
+      "assumptions": [
+        "the recorded synthetic benchmark and metric are reproduced"
+      ],
+      "failure_conditions": [
+        "a fair reproduced benchmark shows consistent lower reconstruction error for the naive weighting"
+      ],
+      "source_paths": ["omega_transform_t_package.zip"]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVD-FFWT-CODE-001",
+      "kind": "code",
+      "title": "FFWT-HAC-CVCD prototype implementation",
+      "source_path": "prototypes/omega_ffwt_hac_cvcd/",
+      "locator": null,
+      "content_hash": null,
+      "status": "candidate",
+      "supports_claim_ids": ["CLM-FFWT-ANOMALY-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {"reproducibility": "requires environment capture"}
+    },
+    {
+      "evidence_id": "EVD-FFWT-TEST-001",
+      "kind": "test",
+      "title": "Deterministic transform and reconstruction tests",
+      "source_path": "tests/",
+      "locator": "FFWT/FWT tests",
+      "content_hash": null,
+      "status": "reproduced",
+      "supports_claim_ids": ["CLM-FFWT-ANOMALY-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-FFWT-BASELINE-001",
+      "kind": "baseline",
+      "title": "Unweighted Haar FWT baseline",
+      "source_path": "omega_transform_t_package.zip",
+      "locator": "OAKBench synthetic reconstruction",
+      "content_hash": null,
+      "status": "reproduced",
+      "supports_claim_ids": [],
+      "contradicts_claim_ids": ["CLM-FFWT-RECON-NEG-001"],
+      "metadata": {"keep_fraction": 0.2}
+    },
+    {
+      "evidence_id": "EVD-FFWT-RESULT-NEG-001",
+      "kind": "result",
+      "title": "Naive fractal weighting lost to Haar FWT on synthetic reconstruction",
+      "source_path": "omega_transform_t_package.zip",
+      "locator": "initial OAK benchmark",
+      "content_hash": null,
+      "status": "reproduced",
+      "supports_claim_ids": ["CLM-FFWT-RECON-NEG-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {"interpretation": "task-specific negative result, not universal refutation"}
+    },
+    {
+      "evidence_id": "EVD-FFWT-MMINUS-001",
+      "kind": "negative_memory",
+      "title": "M-minus rule: fractal weighting is not automatically superior",
+      "source_path": "omega_transform_t_package.zip",
+      "locator": "M-minus registry",
+      "content_hash": null,
+      "status": "reproduced",
+      "supports_claim_ids": ["CLM-FFWT-RECON-NEG-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {
+        "reusable_rules": [
+          "always compare against unweighted transforms",
+          "separate reconstruction utility from anomaly utility",
+          "ablate every weighting component"
+        ]
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "transition_id": "TR-FFWT-001",
+      "timestamp": "2026-06-20T00:00:00Z",
+      "from_status": "IDEA",
+      "to_status": "FORMALIZED",
+      "cause": "Transform family and OAK benchmark path were documented.",
+      "evidence_ids": [],
+      "residues": ["formal equations and external baselines incomplete"],
+      "approved_by": "Tristan"
+    },
+    {
+      "transition_id": "TR-FFWT-002",
+      "timestamp": "2026-06-21T00:00:00Z",
+      "from_status": "FORMALIZED",
+      "to_status": "SIMULATED",
+      "cause": "Exact Haar reconstruction and compressed synthetic benchmark were executed.",
+      "evidence_ids": ["EVD-FFWT-TEST-001", "EVD-FFWT-RESULT-NEG-001"],
+      "residues": ["no real spectroscopy dataset yet"],
+      "approved_by": "Tristan"
+    },
+    {
+      "transition_id": "TR-FFWT-003",
+      "timestamp": "2026-06-21T00:01:00Z",
+      "from_status": "SIMULATED",
+      "to_status": "REFUTED",
+      "cause": "Naive fractal weighting failed to beat the Haar baseline on the recorded reconstruction task.",
+      "evidence_ids": ["EVD-FFWT-BASELINE-001", "EVD-FFWT-RESULT-NEG-001"],
+      "residues": ["negative result applies to one task and one heuristic"],
+      "approved_by": "Tristan"
+    },
+    {
+      "transition_id": "TR-FFWT-004",
+      "timestamp": "2026-06-21T00:02:00Z",
+      "from_status": "REFUTED",
+      "to_status": "REFORMULATED",
+      "cause": "The universal superiority claim was narrowed to anomaly, denoising, and classification tasks requiring new baselines.",
+      "evidence_ids": ["EVD-FFWT-MMINUS-001"],
+      "residues": ["DWT and scattering comparisons missing", "real Raman and FTIR datasets missing"],
+      "approved_by": "Tristan"
+    }
+  ],
+  "risks": [
+    "claim before baseline",
+    "benchmark selection bias",
+    "hyperparameter budget mismatch",
+    "visual pattern overinterpretation"
+  ],
+  "next_actions": [
+    "Run anomaly benchmarks against DWT and scattering transforms with identical seeds and tuning budgets.",
+    "Add real Raman or FTIR datasets with provenance and train-test isolation.",
+    "Measure runtime, memory, robustness, and localization error in addition to reconstruction error."
+  ],
+  "aliases": ["Omega-Transform-T signal branch", "Fractal Fertility Weighted Transform"],
+  "source_paths": [
+    "prototypes/omega_ffwt_hac_cvcd/",
+    "omega_transform_t_package.zip",
+    "MASTER_SYSTEM_INDEX.md"
+  ],
+  "owner": "Tristan",
+  "public_disclosure": false,
+  "metadata": {
+    "knowledge_cell_version": "0.3",
+    "oak_boundary": "The anomaly-detection claim remains unverified until matched external baselines and datasets are run."
+  }
+}
