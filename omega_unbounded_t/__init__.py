@@ -24,11 +24,19 @@ from .github_planner import (
     iter_jsonl,
     synthetic_additions,
 )
+from .streaming import (
+    BreakthroughEvent,
+    MPlusLedger,
+    RangeWorkSource,
+    ResourceSampler,
+    ResourceSnapshot,
+)
 
 __all__ = [
     "AdaptiveController",
     "AdditionRecord",
     "BatchResult",
+    "BreakthroughEvent",
     "CapacityPolicy",
     "CapacityState",
     "GitHubDryRunPlanner",
@@ -36,6 +44,10 @@ __all__ = [
     "GitHubPlanReport",
     "ListWorkSource",
     "MMinusLedger",
+    "MPlusLedger",
+    "RangeWorkSource",
+    "ResourceSampler",
+    "ResourceSnapshot",
     "RunReport",
     "ShardRecord",
     "SyntheticCapacityExecutor",
@@ -43,4 +55,4 @@ __all__ = [
     "synthetic_additions",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
