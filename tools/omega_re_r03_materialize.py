@@ -9,13 +9,15 @@ import json
 from pathlib import Path, PurePosixPath
 import zipfile
 
-PART_SHA256 = (
-    "711ff36646ab165b028fdbaf25b0fcf4d06e881b27253b2a8a280a6de14ea7fe",
-    "2893240e06b8b8286f6e1f7bf6112329a9ded1d87496a71a053dfa4f72c09c48",
-    "942ec1680fc4f8139c660a5f41bb3b98b6efce643ed66e37107e4b64a9b1acd4",
-    "701c932063a90816e2c0a3ab1a72f234903f289fa7ebe1633639c0f4e4a7f0ef",
-    "dbbb6b24961c632239d8943748261acfc9709b6913c7da76c17c5567b94c6be0",
-    "2a037396893c21d305b4f855e1f22bb59be30ce1c939756411dbd7ae76f54629",
+PARTS = (
+    ("part00.txt", "711ff36646ab165b028fdbaf25b0fcf4d06e881b27253b2a8a280a6de14ea7fe"),
+    ("part01.txt", "2893240e06b8b8286f6e1f7bf6112329a9ded1d87496a71a053dfa4f72c09c48"),
+    ("part02.txt", "942ec1680fc4f8139c660a5f41bb3b98b6efce643ed66e37107e4b64a9b1acd4"),
+    ("part03.txt", "701c932063a90816e2c0a3ab1a72f234903f289fa7ebe1633639c0f4e4a7f0ef"),
+    ("part04.txt", "dbbb6b24961c632239d8943748261acfc9709b6913c7da76c17c5567b94c6be0"),
+    ("part05_0.txt", "e68c967e68473db8b251830511f29398be24fced741f84cc2a1a00c75aa2764c"),
+    ("part05_1.txt", "252f27a3a9933fcada3ca161c10d1688a19a71687ff8d2893f8a8db8020b0af5"),
+    ("part05_2.txt", "c2f20d649dc4b92293c23cf18df193cb19cddcfab4703af95b93ec88a890eaf6"),
 )
 ARCHIVE_SHA256 = "b1eb6be9785649c6dc9b7fb1d8c85218ecf55b9fb296cc4404bd2940e3d9ad62"
 FILE_SHA256 = {
@@ -49,10 +51,10 @@ def sha256(data: bytes) -> str:
 
 def payload(root: Path) -> bytes:
     chunks = []
-    for index, expected in enumerate(PART_SHA256):
-        data = (root / "tools" / "omega_re_r03_payload" / f"part{index:02d}.txt").read_bytes()
+    for filename, expected in PARTS:
+        data = (root / "tools" / "omega_re_r03_payload" / filename).read_bytes()
         if sha256(data) != expected:
-            raise RuntimeError(f"payload part {index:02d} SHA-256 mismatch")
+            raise RuntimeError(f"payload part {filename} SHA-256 mismatch")
         chunks.append(data)
     try:
         archive = base64.b85decode(b"".join(chunks))
@@ -134,7 +136,7 @@ def verify(root: Path, *, require_extracted: bool = False) -> dict[str, object]:
     return {
         "schema": "omega-re-r03-materializer/1.0",
         "archive_sha256": ARCHIVE_SHA256,
-        "payload_parts": len(PART_SHA256),
+        "payload_parts": len(PARTS),
         "allowlisted_files": len(FILE_SHA256),
         "extracted_files": extracted,
         "pyproject_needs_patch": pyproject_needs_patch,
