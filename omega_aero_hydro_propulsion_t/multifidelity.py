@@ -235,7 +235,7 @@ class MMinusRecord:
 
 
 @dataclass(frozen=True)
-class CampaignCheckpoint:
+class MultiFidelityCheckpoint:
     next_index: int
     evidence_event_count: int
     consumed_cost_units: float
@@ -296,7 +296,7 @@ class MultiFidelityCampaignReport:
     pareto_front: tuple[SystemCandidateResult, ...]
     best: SystemCandidateResult | None
     m_minus: tuple[MMinusRecord, ...]
-    checkpoints: tuple[CampaignCheckpoint, ...]
+    checkpoints: tuple[MultiFidelityCheckpoint, ...]
     consumed_cost_units: float
     final_chain_digest: str
     backpressure: BackpressureState
@@ -656,7 +656,7 @@ def run_multifidelity_campaign(
     candidates: list[MultiFidelityCandidate] = []
     promotions: list[PromotionDecision] = []
     events: list[EvidenceEvent] = []
-    checkpoints: list[CampaignCheckpoint] = []
+    checkpoints: list[MultiFidelityCheckpoint] = []
     stop_reason = "requested_batch_completed"
 
     for offset in range(count):
@@ -769,7 +769,7 @@ def run_multifidelity_campaign(
 
         if len(candidates) % resources.checkpoint_interval == 0 or len(candidates) == count:
             checkpoints.append(
-                CampaignCheckpoint(
+                MultiFidelityCheckpoint(
                     next_index=index + 1,
                     evidence_event_count=len(events),
                     consumed_cost_units=consumed,
@@ -780,7 +780,7 @@ def run_multifidelity_campaign(
     next_index = start_index + len(candidates)
     if candidates and (not checkpoints or checkpoints[-1].next_index != next_index):
         checkpoints.append(
-            CampaignCheckpoint(
+            MultiFidelityCheckpoint(
                 next_index=next_index,
                 evidence_event_count=len(events),
                 consumed_cost_units=consumed,
