@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_org_family.schema.json",
+  "title": "Omega Organic Family Cell",
+  "type": "object",
+  "required": ["id", "coordinate", "compatibility_score", "contradictions", "spectral_markers", "evidence_ids", "oak_status", "provenance"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^ORG-FAM-[0-9]{8,}$"},
+    "coordinate": {
+      "type": "object",
+      "required": ["skeleton", "functional_family", "electronic_class", "reaction_archetype", "stereo_class", "environment"],
+      "additionalProperties": false,
+      "properties": {
+        "skeleton": {"type": "string"},
+        "functional_family": {"type": "string"},
+        "electronic_class": {"type": "string"},
+        "reaction_archetype": {"type": "string"},
+        "stereo_class": {"type": "string"},
+        "environment": {"type": "string"}
+      }
+    },
+    "compatibility_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "contradictions": {"type": "array", "items": {"type": "string"}},
+    "spectral_markers": {"type": "array", "items": {"type": "string"}},
+    "evidence_ids": {"type": "array", "minItems": 3, "items": {"type": "string"}},
+    "oak_status": {"type": "string"},
+    "provenance": {"type": "string"}
+  },
+  "additionalProperties": false
+}

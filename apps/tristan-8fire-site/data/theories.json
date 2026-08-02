@@ -1,0 +1,3241 @@
+{
+  "schema_version": "0.2.0",
+  "generated_at": "2026-08-02T18:12:00-04:00",
+  "locale": "fr-CA",
+  "title": "Tristan Web OS — Atlas public",
+  "disclaimer": "Scores OAK provisoires; aucune certification scientifique, médicale, juridique ou financière.",
+  "publication_rule": "PUBLIC = OAKGate AND IPGate AND PrivacyGate AND SecurityGate",
+  "theories": [
+    {
+      "id": "omega-tristan-self-os",
+      "symbol": "Ω-TRISTAN-SELF-OS",
+      "title": "Système opératoire de cristallisation",
+      "summary": "Transforme l’expansion conceptuelle en définitions, preuves, code, tests, actifs, offres et décisions traçables.",
+      "domains": [
+        "méta-système",
+        "recherche",
+        "entrepreneuriat"
+      ],
+      "maturity": "architecture",
+      "evidence": "structuration",
+      "artifacts": 8,
+      "status_note": "L’efficacité doit être mesurée par le débit d’artefacts fermés, pas par le nombre de branches nommées.",
+      "next_action": "Mesurer chaque semaine le ratio idées capturées / artefacts vérifiables livrés.",
+      "source_path": "docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+      "family": "platform",
+      "ordinal": 1,
+      "slug": "tristan-self-os",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "développeurs",
+        "chercheurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "cristallisation",
+        "de",
+        "entrepreneuriat",
+        "méta-système",
+        "opératoire",
+        "recherche",
+        "système",
+        "tristan-self-os"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.46,
+        "utilite": 0.86,
+        "testabilite": 0.82,
+        "simplicite": 0.51,
+        "valeur": 0.73,
+        "protection": 0.66
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-tristan-self-os",
+        "claims_route": "#/claims?theory=omega-tristan-self-os",
+        "source_route": "#/sources?path=docs/00_MASTER_CANON_TFUGA_AI7_AIT.md"
+      }
+    },
+    {
+      "id": "omega-transform-t",
+      "symbol": "Ω-TRANSFORM-T",
+      "title": "Transformées multi-échelles de Tristan",
+      "summary": "Relie FWT, extensions fractales, tensorisation et analyse multi-échelle pour compression, reconstruction et détection.",
+      "domains": [
+        "mathématiques",
+        "signal",
+        "IA"
+      ],
+      "maturity": "prototype",
+      "evidence": "test partiel",
+      "artifacts": 12,
+      "status_note": "La pondération fractale naïve n’a pas battu la FWT standard sur le premier benchmark de reconstruction.",
+      "next_action": "Comparer sur anomalies, débruitage, classification et coût de calcul.",
+      "source_path": "docs/theory_cards/OMEGA_TRANSFORM_T.md",
+      "family": "science",
+      "ordinal": 2,
+      "slug": "transform-t",
+      "claims_count": 4,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "ingénieurs",
+        "étudiants"
+      ],
+      "keywords": [
+        "de",
+        "ia",
+        "mathématiques",
+        "multi-échelles",
+        "signal",
+        "transform-t",
+        "transformées",
+        "tristan"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.61,
+        "utilite": 0.85,
+        "testabilite": 0.84,
+        "simplicite": 0.48,
+        "valeur": 0.75,
+        "protection": 0.63
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-transform-t",
+        "claims_route": "#/claims?theory=omega-transform-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_TRANSFORM_T.md"
+      }
+    },
+    {
+      "id": "omega-unc2-t",
+      "symbol": "Ω-UNC²-T",
+      "title": "Incertitude de l’incertitude",
+      "summary": "Structure provenance, calibration, résidus, désaccords de modèles et décisions robustes contre la surconfiance.",
+      "domains": [
+        "épistémologie",
+        "statistiques",
+        "IA"
+      ],
+      "maturity": "architecture",
+      "evidence": "pré-prototype",
+      "artifacts": 5,
+      "status_note": "Les niveaux d’incertitude proposés doivent être calibrés sur des décisions et jeux de données réels.",
+      "next_action": "Implémenter un registre U² et tester sa calibration sur des claims de dépôts.",
+      "source_path": "docs/theory_cards/OMEGA_UNC2_T.md",
+      "family": "governance",
+      "ordinal": 3,
+      "slug": "unc2-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "produit",
+        "chercheurs",
+        "auditeurs"
+      ],
+      "keywords": [
+        "de",
+        "ia",
+        "incertitude",
+        "statistiques",
+        "unc²-t",
+        "épistémologie"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.42,
+        "utilite": 0.81,
+        "testabilite": 0.79,
+        "simplicite": 0.5,
+        "valeur": 0.71,
+        "protection": 0.65
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-unc2-t",
+        "claims_route": "#/claims?theory=omega-unc2-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_UNC2_T.md"
+      }
+    },
+    {
+      "id": "omega-cvcd-t",
+      "symbol": "Ω-CVCD-T",
+      "title": "Calcul virtuel compressé-décompressé",
+      "summary": "Explore un espace de possibilités sous forme comprimée puis décompresse seulement les régions prometteuses et vérifiables.",
+      "domains": [
+        "calcul",
+        "optimisation",
+        "IA"
+      ],
+      "maturity": "hypothèse",
+      "evidence": "benchmark requis",
+      "artifacts": 4,
+      "status_note": "Une reconstruction plausible ou compacte ne constitue ni une vérité, ni une preuve, ni un optimum global.",
+      "next_action": "Comparer à la recherche exhaustive, au beam search et à l’échantillonnage bayésien.",
+      "source_path": "docs/theory_cards/OMEGA_CVCD_T.md",
+      "family": "compute",
+      "ordinal": 4,
+      "slug": "cvcd-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "développeurs",
+        "chercheurs HPC",
+        "ingénieurs"
+      ],
+      "keywords": [
+        "calcul",
+        "compressé-décompressé",
+        "cvcd-t",
+        "ia",
+        "optimisation",
+        "virtuel"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "définition falsifiable",
+        "contre-hypothèses",
+        "expérience discriminante"
+      ],
+      "oak": {
+        "verite": 0.23,
+        "utilite": 0.76,
+        "testabilite": 0.68,
+        "simplicite": 0.44,
+        "valeur": 0.62,
+        "protection": 0.58
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-cvcd-t",
+        "claims_route": "#/claims?theory=omega-cvcd-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_CVCD_T.md"
+      }
+    },
+    {
+      "id": "omega-cpufmt",
+      "symbol": "Ω-CPUFMT",
+      "title": "CPU fractal mycélien",
+      "summary": "Architecture de calcul modulaire explorant topologies NoC, caches multi-échelles, redondance et contrôle thermo-énergétique.",
+      "domains": [
+        "matériel",
+        "RISC-V",
+        "systèmes"
+      ],
+      "maturity": "architecture",
+      "evidence": "simulation requise",
+      "artifacts": 3,
+      "status_note": "Aucune supériorité PPA, thermique ou manufacturière n’est revendiquée avant synthèse, simulation et comparaison.",
+      "next_action": "Construire un simulateur de topologies et comparer latence, énergie, surface et tolérance aux défauts.",
+      "source_path": "docs/theory_cards/OMEGA_CPUFMT.md",
+      "family": "hardware",
+      "ordinal": 5,
+      "slug": "cpufmt",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "ingénieurs",
+        "chercheurs",
+        "industrie"
+      ],
+      "keywords": [
+        "cpu",
+        "cpufmt",
+        "fractal",
+        "matériel",
+        "mycélien",
+        "risc-v",
+        "systèmes"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.47,
+        "utilite": 0.86,
+        "testabilite": 0.77,
+        "simplicite": 0.52,
+        "valeur": 0.76,
+        "protection": 0.62
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-cpufmt",
+        "claims_route": "#/claims?theory=omega-cpufmt",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_CPUFMT.md"
+      }
+    },
+    {
+      "id": "omega-bat-t",
+      "symbol": "Ω-BAT-T",
+      "title": "Batteries de Tristan",
+      "summary": "Modélise les batteries comme systèmes électro-chemo-thermo-mécaniques avec diagnostic, BMS, vieillissement et sécurité.",
+      "domains": [
+        "énergie",
+        "matériaux",
+        "contrôle"
+      ],
+      "maturity": "architecture",
+      "evidence": "simulation requise",
+      "artifacts": 6,
+      "status_note": "Simulation-first; aucune instruction de fabrication ou manipulation dangereuse de cellules et packs.",
+      "next_action": "Créer un analyseur EIS public avec baselines, incertitudes et détection de dérive.",
+      "source_path": "docs/theory_cards/OMEGA_BAT_T.md",
+      "family": "energy",
+      "ordinal": 6,
+      "slug": "bat-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "ingénieurs énergie",
+        "chercheurs",
+        "industrie"
+      ],
+      "keywords": [
+        "bat-t",
+        "batteries",
+        "contrôle",
+        "de",
+        "matériaux",
+        "tristan",
+        "énergie"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.44,
+        "utilite": 0.82,
+        "testabilite": 0.79,
+        "simplicite": 0.44,
+        "valeur": 0.76,
+        "protection": 0.67
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-bat-t",
+        "claims_route": "#/claims?theory=omega-bat-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_BAT_T.md"
+      }
+    },
+    {
+      "id": "omega-3dp-t",
+      "symbol": "Ω-3DP-T",
+      "title": "Fabrication additive vérifiable",
+      "summary": "Relie géométrie, matériau, procédé, trajectoire, capteurs, défauts et métrologie dans un jumeau numérique auditable.",
+      "domains": [
+        "fabrication",
+        "matériaux",
+        "métrologie"
+      ],
+      "maturity": "architecture",
+      "evidence": "pré-prototype",
+      "artifacts": 4,
+      "status_note": "Une pièce imprimée n’est pas une pièce qualifiée; essais, tolérances et traçabilité restent indispensables.",
+      "next_action": "Générer des coupons de calibration et mesurer anisotropie, porosité et gauchissement.",
+      "source_path": "docs/theory_cards/OMEGA_3DP_T.md",
+      "family": "manufacturing",
+      "ordinal": 7,
+      "slug": "3dp-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "fabrication",
+        "laboratoires",
+        "qualité"
+      ],
+      "keywords": [
+        "3dp-t",
+        "additive",
+        "fabrication",
+        "matériaux",
+        "métrologie",
+        "vérifiable"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.46,
+        "utilite": 0.76,
+        "testabilite": 0.77,
+        "simplicite": 0.51,
+        "valeur": 0.75,
+        "protection": 0.62
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-3dp-t",
+        "claims_route": "#/claims?theory=omega-3dp-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_3DP_T.md"
+      }
+    },
+    {
+      "id": "omega-company-qc-ca-t",
+      "symbol": "Ω-COMPANY-QC-CA-T",
+      "title": "Compagnie et usine d’actifs Québec–Canada",
+      "summary": "Convertit les actifs scientifiques en offres, pilotes et produits avec gouvernance, propriété intellectuelle et conformité.",
+      "domains": [
+        "entrepreneuriat",
+        "Québec",
+        "gouvernance"
+      ],
+      "maturity": "architecture",
+      "evidence": "validation marché requise",
+      "artifacts": 9,
+      "status_note": "Aucun revenu ni marché n’est présumé; une offre, un client et un usage répété sont les premiers tests.",
+      "next_action": "Cristalliser une offre d’audit OAK, la tester avec un pilote et mesurer le temps économisé.",
+      "source_path": "docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md",
+      "family": "venture",
+      "ordinal": 8,
+      "slug": "company-qc-ca-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "entrepreneurs",
+        "partenaires",
+        "clients pilotes"
+      ],
+      "keywords": [
+        "actifs",
+        "canada",
+        "compagnie",
+        "company-qc-ca-t",
+        "entrepreneuriat",
+        "et",
+        "gouvernance",
+        "québec",
+        "usine"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "confidentialité",
+        "droits et permissions"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.43,
+        "utilite": 0.84,
+        "testabilite": 0.75,
+        "simplicite": 0.51,
+        "valeur": 0.75,
+        "protection": 0.59
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-company-qc-ca-t",
+        "claims_route": "#/claims?theory=omega-company-qc-ca-t",
+        "source_route": "#/sources?path=docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md"
+      }
+    },
+    {
+      "id": "omega-neuro-t",
+      "symbol": "Ω-NEURO-T",
+      "title": "Neurosciences hypergraphiques",
+      "summary": "Formalise cognition, mémoire, attention, action et apprentissage comme hypergraphe dynamique multi-échelle.",
+      "domains": [
+        "neurosciences",
+        "cognition",
+        "modélisation"
+      ],
+      "maturity": "architecture",
+      "evidence": "recherche seulement",
+      "artifacts": 4,
+      "status_note": "Ce cadre n’est ni un diagnostic, ni une prescription, ni une preuve clinique; les analogies doivent rester falsifiables.",
+      "next_action": "Construire un notebook sur données publiques et séparer faits établis, modèle et hypothèses.",
+      "source_path": "docs/theory_cards/OMEGA_NEURO_T.md",
+      "family": "health-research",
+      "ordinal": 9,
+      "slug": "neuro-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "étudiants",
+        "professionnels qualifiés"
+      ],
+      "keywords": [
+        "cognition",
+        "hypergraphiques",
+        "modélisation",
+        "neuro-t",
+        "neurosciences"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "mauvaise interprétation",
+        "usage hors cadre"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.41,
+        "utilite": 0.77,
+        "testabilite": 0.76,
+        "simplicite": 0.5,
+        "valeur": 0.73,
+        "protection": 0.61
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-neuro-t",
+        "claims_route": "#/claims?theory=omega-neuro-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_NEURO_T.md"
+      }
+    },
+    {
+      "id": "omega-oem-mtd-t",
+      "symbol": "Ω-OEMMTD-T",
+      "title": "Opto-électro-magnéto-mécano-thermodynamique",
+      "summary": "Couple lumière, champs, charges, déformation, chaleur et transitions de phase dans des modèles multi-physiques.",
+      "domains": [
+        "physique",
+        "matériaux",
+        "multi-physique"
+      ],
+      "maturity": "architecture",
+      "evidence": "réduction aux cas connus",
+      "artifacts": 4,
+      "status_note": "Toute extension doit respecter unités, conservation, entropie non négative et validation expérimentale.",
+      "next_action": "Implémenter un cas piézoélectrique ou thermoélectrique réduit et comparer à un solveur de référence.",
+      "source_path": "docs/theory_cards/OMEGA_OEMMTD_T.md",
+      "family": "science",
+      "ordinal": 10,
+      "slug": "oem-mtd-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "ingénieurs",
+        "étudiants"
+      ],
+      "keywords": [
+        "matériaux",
+        "multi-physique",
+        "oemmtd-t",
+        "opto-électro-magnéto-mécano-thermodynamique",
+        "physique"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.48,
+        "utilite": 0.81,
+        "testabilite": 0.75,
+        "simplicite": 0.49,
+        "valeur": 0.7,
+        "protection": 0.59
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-oem-mtd-t",
+        "claims_route": "#/claims?theory=omega-oem-mtd-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_OEMMTD_T.md"
+      }
+    },
+    {
+      "id": "omega-opt-solar-t",
+      "symbol": "Ω-OPT-SOLAR-T",
+      "title": "Miroir fractal troué solaire",
+      "summary": "Explore des surfaces optiques multi-échelles où trous, canaux et étages redistribuent un flux solaire mesurable.",
+      "domains": [
+        "optique",
+        "solaire",
+        "géométrie"
+      ],
+      "maturity": "architecture",
+      "evidence": "ray tracing requis",
+      "artifacts": 5,
+      "status_note": "Le concept ne contourne ni diffraction, ni étendue optique, ni pertes, ni limites thermiques.",
+      "next_action": "Construire un ray tracer et comparer PSF, flux utile, tolérance d’alignement et température.",
+      "source_path": "docs/theory_cards/OMEGA_OPT_SOLAR_T.md",
+      "family": "energy",
+      "ordinal": 11,
+      "slug": "opt-solar-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "ingénieurs énergie",
+        "chercheurs",
+        "industrie"
+      ],
+      "keywords": [
+        "fractal",
+        "géométrie",
+        "miroir",
+        "opt-solar-t",
+        "optique",
+        "solaire",
+        "troué"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.45,
+        "utilite": 0.82,
+        "testabilite": 0.75,
+        "simplicite": 0.45,
+        "valeur": 0.74,
+        "protection": 0.61
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-opt-solar-t",
+        "claims_route": "#/claims?theory=omega-opt-solar-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_OPT_SOLAR_T.md"
+      }
+    },
+    {
+      "id": "omega-mems-cpu-t",
+      "symbol": "Ω-MEMS-CPU-T",
+      "title": "MEMS et CPU fractal mycélien",
+      "summary": "Applique motifs troués, canaux et réseaux multi-échelles aux MEMS, interconnexions, capteurs et refroidissement.",
+      "domains": [
+        "MEMS",
+        "microfabrication",
+        "matériel"
+      ],
+      "maturity": "architecture",
+      "evidence": "simulation requise",
+      "artifacts": 4,
+      "status_note": "La fabricabilité dépend des outils, matériaux, rendements, overlays, rugosités, contamination et coûts.",
+      "next_action": "Créer une bibliothèque de motifs et un OAKBench lithographie, thermique, RC et variabilité.",
+      "source_path": "docs/theory_cards/OMEGA_MEMS_CPU_T.md",
+      "family": "hardware",
+      "ordinal": 12,
+      "slug": "mems-cpu-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "ingénieurs",
+        "chercheurs",
+        "industrie"
+      ],
+      "keywords": [
+        "cpu",
+        "et",
+        "fractal",
+        "matériel",
+        "mems",
+        "mems-cpu-t",
+        "microfabrication",
+        "mycélien"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.44,
+        "utilite": 0.82,
+        "testabilite": 0.75,
+        "simplicite": 0.45,
+        "valeur": 0.79,
+        "protection": 0.62
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-mems-cpu-t",
+        "claims_route": "#/claims?theory=omega-mems-cpu-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_MEMS_CPU_T.md"
+      }
+    },
+    {
+      "id": "omega-laser-mems-cpu-t",
+      "symbol": "Ω-LASER-MEMS-CPU-T",
+      "title": "Laser pour microfabrication et photonique",
+      "summary": "Utilise le laser comme outil de mesure, écriture, activation, recuit et correction dans des systèmes microfabriqués.",
+      "domains": [
+        "laser",
+        "photonique",
+        "microfabrication"
+      ],
+      "maturity": "architecture",
+      "evidence": "simulation et sécurité",
+      "artifacts": 3,
+      "status_note": "Aucune promesse sub-nanométrique arbitraire; diffraction, absorption, dégâts et sécurité oculaire s’appliquent.",
+      "next_action": "Simuler le budget thermique et la résolution d’un motif direct-writing basse énergie.",
+      "source_path": "docs/theory_cards/OMEGA_LASER_MEMS_CPU_T.md",
+      "family": "hardware",
+      "ordinal": 13,
+      "slug": "laser-mems-cpu-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "ingénieurs",
+        "chercheurs",
+        "industrie"
+      ],
+      "keywords": [
+        "et",
+        "laser",
+        "laser-mems-cpu-t",
+        "microfabrication",
+        "photonique",
+        "pour"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "fabricabilité"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.46,
+        "utilite": 0.77,
+        "testabilite": 0.81,
+        "simplicite": 0.43,
+        "valeur": 0.73,
+        "protection": 0.69
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-laser-mems-cpu-t",
+        "claims_route": "#/claims?theory=omega-laser-mems-cpu-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_LASER_MEMS_CPU_T.md"
+      }
+    },
+    {
+      "id": "omega-corp-jarvis-t",
+      "symbol": "Ω-CORP-JARVIS-T",
+      "title": "Compagnie-cerveau corporative",
+      "summary": "Orchestre projets, contrats, IP, tâches, CRM et décisions avec approbation humaine pour les actions sensibles.",
+      "domains": [
+        "entreprise",
+        "agents IA",
+        "gouvernance"
+      ],
+      "maturity": "architecture",
+      "evidence": "workflow requis",
+      "artifacts": 7,
+      "status_note": "Aucune signature, publication, dépense ou communication externe sensible sans permission explicite.",
+      "next_action": "Implémenter un registre d’actions proposé/approuvé/exécuté avec rollback et journal append-only.",
+      "source_path": "docs/theory_cards/OMEGA_CORP_JARVIS_T.md",
+      "family": "venture",
+      "ordinal": 14,
+      "slug": "corp-jarvis-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "entrepreneurs",
+        "partenaires",
+        "clients pilotes"
+      ],
+      "keywords": [
+        "agents",
+        "compagnie-cerveau",
+        "corp-jarvis-t",
+        "corporative",
+        "entreprise",
+        "gouvernance",
+        "ia"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "confidentialité",
+        "droits et permissions"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.47,
+        "utilite": 0.84,
+        "testabilite": 0.83,
+        "simplicite": 0.45,
+        "valeur": 0.7,
+        "protection": 0.64
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-corp-jarvis-t",
+        "claims_route": "#/claims?theory=omega-corp-jarvis-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_CORP_JARVIS_T.md"
+      }
+    },
+    {
+      "id": "omega-lin-t",
+      "symbol": "Ω-LIN-T",
+      "title": "Linéarisation multi-échelle",
+      "summary": "Traite la linéarisation comme atlas de modèles locaux avec domaines de validité et résidus non linéaires conservés.",
+      "domains": [
+        "mathématiques",
+        "contrôle",
+        "modélisation"
+      ],
+      "maturity": "architecture",
+      "evidence": "prototype ciblé",
+      "artifacts": 6,
+      "status_note": "Une stabilité locale ou un bon ajustement local ne prouve pas un comportement global.",
+      "next_action": "Créer un atlas Jacobien/Koopman et mesurer l’erreur hors domaine sur systèmes non linéaires.",
+      "source_path": "docs/theory_cards/OMEGA_LIN_T.md",
+      "family": "science",
+      "ordinal": 15,
+      "slug": "lin-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "ingénieurs",
+        "étudiants"
+      ],
+      "keywords": [
+        "contrôle",
+        "lin-t",
+        "linéarisation",
+        "mathématiques",
+        "modélisation",
+        "multi-échelle"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.47,
+        "utilite": 0.8,
+        "testabilite": 0.75,
+        "simplicite": 0.46,
+        "valeur": 0.74,
+        "protection": 0.66
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-lin-t",
+        "claims_route": "#/claims?theory=omega-lin-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_LIN_T.md"
+      }
+    },
+    {
+      "id": "omega-chem-log-lin-t",
+      "symbol": "Ω-CHEM-LOG-LIN-T",
+      "title": "Cinétique chimique en coordonnées logarithmiques",
+      "summary": "Transforme les lois multiplicatives et vitesses relatives en représentations log pour analyse et approximation.",
+      "domains": [
+        "chimie",
+        "EDO",
+        "mathématiques"
+      ],
+      "maturity": "architecture",
+      "evidence": "cas tests requis",
+      "artifacts": 5,
+      "status_note": "Toutes les EDO chimiques ne deviennent pas globalement linéaires et les concentrations doivent rester positives.",
+      "next_action": "Comparer réactions d’ordre 1/2, Michaelis–Menten et autocatalyse aux solveurs standards.",
+      "source_path": "docs/theory_cards/OMEGA_CHEM_LOG_LIN_T.md",
+      "family": "science",
+      "ordinal": 16,
+      "slug": "chem-log-lin-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "ingénieurs",
+        "étudiants"
+      ],
+      "keywords": [
+        "chem-log-lin-t",
+        "chimie",
+        "chimique",
+        "cinétique",
+        "coordonnées",
+        "edo",
+        "en",
+        "logarithmiques",
+        "mathématiques"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.45,
+        "utilite": 0.77,
+        "testabilite": 0.73,
+        "simplicite": 0.5,
+        "valeur": 0.71,
+        "protection": 0.67
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-chem-log-lin-t",
+        "claims_route": "#/claims?theory=omega-chem-log-lin-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_CHEM_LOG_LIN_T.md"
+      }
+    },
+    {
+      "id": "omega-energy-t",
+      "symbol": "Ω-ENERGY-T",
+      "title": "Systèmes énergétiques de Tristan",
+      "summary": "Relie sources, stockage, conversion, réseau, contrôle, pertes, mesure, sécurité et économie dans un microgrid auditable.",
+      "domains": [
+        "énergie",
+        "contrôle",
+        "simulation"
+      ],
+      "maturity": "architecture",
+      "evidence": "MVP simulé",
+      "artifacts": 7,
+      "status_note": "L’énergie ne se crée pas; tous rendements, pertes, bilans thermiques et incertitudes doivent être explicités.",
+      "next_action": "Livrer un microgrid PV–batterie–charge avec bilan énergétique et baselines de contrôle.",
+      "source_path": "docs/theory_cards/OMEGA_ENERGY_T.md",
+      "family": "energy",
+      "ordinal": 17,
+      "slug": "energy-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "ingénieurs énergie",
+        "chercheurs",
+        "industrie"
+      ],
+      "keywords": [
+        "contrôle",
+        "de",
+        "energy-t",
+        "simulation",
+        "systèmes",
+        "tristan",
+        "énergie",
+        "énergétiques"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "sécurité physique",
+        "thermique",
+        "rendement non validé"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.42,
+        "utilite": 0.84,
+        "testabilite": 0.76,
+        "simplicite": 0.49,
+        "valeur": 0.7,
+        "protection": 0.65
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-energy-t",
+        "claims_route": "#/claims?theory=omega-energy-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_ENERGY_T.md"
+      }
+    },
+    {
+      "id": "omega-game-t",
+      "symbol": "Ω-GAME-T",
+      "title": "GameEngine et GameMaster de Tristan",
+      "summary": "Traite règles, mondes, quêtes, narration, économie et agents comme hypergraphe interactif vérifiable.",
+      "domains": [
+        "jeu",
+        "simulation",
+        "IA"
+      ],
+      "maturity": "architecture",
+      "evidence": "prototype ludique",
+      "artifacts": 5,
+      "status_note": "Éviter dark patterns, manipulation addictive, collecte abusive et confusion entre jeu et preuve scientifique.",
+      "next_action": "Créer un monde minimal déterministe avec journal d’événements, tests de règles et maître de jeu réversible.",
+      "source_path": "docs/theory_cards/OMEGA_GAME_T.md",
+      "family": "creative",
+      "ordinal": 18,
+      "slug": "game-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "de",
+        "et",
+        "game-t",
+        "gameengine",
+        "gamemaster",
+        "ia",
+        "jeu",
+        "simulation",
+        "tristan"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.47,
+        "utilite": 0.78,
+        "testabilite": 0.76,
+        "simplicite": 0.45,
+        "valeur": 0.7,
+        "protection": 0.61
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-game-t",
+        "claims_route": "#/claims?theory=omega-game-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_GAME_T.md"
+      }
+    },
+    {
+      "id": "omega-neg-t",
+      "symbol": "Ω-NEG-T",
+      "title": "Néguentropie de Tristan",
+      "summary": "Mesure l’ordre utile local par compression, prédiction, stabilité et réparation tout en comptant les coûts et dissipations.",
+      "domains": [
+        "thermodynamique",
+        "information",
+        "complexité"
+      ],
+      "maturity": "hypothèse",
+      "evidence": "métrique à calibrer",
+      "artifacts": 4,
+      "status_note": "Toute baisse d’entropie locale exige un système ouvert, un coût énergétique et un export d’entropie.",
+      "next_action": "Comparer plusieurs indices sur compression, prédiction et auto-réparation de systèmes simulés.",
+      "source_path": "docs/theory_cards/OMEGA_NEG_T.md",
+      "family": "science",
+      "ordinal": 19,
+      "slug": "neg-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "ingénieurs",
+        "étudiants"
+      ],
+      "keywords": [
+        "complexité",
+        "de",
+        "information",
+        "neg-t",
+        "néguentropie",
+        "thermodynamique",
+        "tristan"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "définition falsifiable",
+        "contre-hypothèses",
+        "expérience discriminante"
+      ],
+      "oak": {
+        "verite": 0.28,
+        "utilite": 0.7,
+        "testabilite": 0.71,
+        "simplicite": 0.45,
+        "valeur": 0.67,
+        "protection": 0.55
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-neg-t",
+        "claims_route": "#/claims?theory=omega-neg-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_NEG_T.md"
+      }
+    },
+    {
+      "id": "omega-learn-t",
+      "symbol": "Ω-LEARN-T",
+      "title": "Apprentissage de Tristan",
+      "summary": "Convertit expérience, erreur, attention et pratique en modèles internes testés par rétention, transfert et action.",
+      "domains": [
+        "apprentissage",
+        "éducation",
+        "IA"
+      ],
+      "maturity": "architecture",
+      "evidence": "protocoles à tester",
+      "artifacts": 6,
+      "status_note": "Il faut distinguer apprentissage humain, machine, métaphore computationnelle et preuve empirique.",
+      "next_action": "Construire un tracker de maîtrise et mesurer rétention, transfert, coût et fatigue.",
+      "source_path": "docs/theory_cards/OMEGA_LEARN_T.md",
+      "family": "education",
+      "ordinal": 20,
+      "slug": "learn-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "étudiants",
+        "enseignants",
+        "institutions"
+      ],
+      "keywords": [
+        "apprentissage",
+        "de",
+        "ia",
+        "learn-t",
+        "tristan",
+        "éducation"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.49,
+        "utilite": 0.84,
+        "testabilite": 0.75,
+        "simplicite": 0.53,
+        "valeur": 0.71,
+        "protection": 0.6
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-learn-t",
+        "claims_route": "#/claims?theory=omega-learn-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_LEARN_T.md"
+      }
+    },
+    {
+      "id": "omega-jkd-t",
+      "symbol": "Ω-JKD-T",
+      "title": "Interception lucide multi-domaine",
+      "summary": "Formalise perception précoce, désescalade, sortie, action minimale et apprentissage par résidus.",
+      "domains": [
+        "sécurité",
+        "cognition",
+        "entraînement"
+      ],
+      "maturity": "architecture",
+      "evidence": "sécurité d’abord",
+      "artifacts": 4,
+      "status_note": "Ce système n’est pas un manuel de blessure ni une garantie de défense; priorité à l’évitement et aux professionnels.",
+      "next_action": "Créer un simulateur de décisions non violentes avec scénarios, sorties et journal M⁻.",
+      "source_path": "docs/theory_cards/OMEGA_JKD_T.md",
+      "family": "safety",
+      "ordinal": 21,
+      "slug": "jkd-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "formateurs",
+        "sécurité",
+        "pratiquants"
+      ],
+      "keywords": [
+        "cognition",
+        "entraînement",
+        "interception",
+        "jkd-t",
+        "lucide",
+        "multi-domaine",
+        "sécurité"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "escalade",
+        "mauvaise application"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.4,
+        "utilite": 0.78,
+        "testabilite": 0.78,
+        "simplicite": 0.44,
+        "valeur": 0.7,
+        "protection": 0.67
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-jkd-t",
+        "claims_route": "#/claims?theory=omega-jkd-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_JKD_T.md"
+      }
+    },
+    {
+      "id": "omega-calib-t",
+      "symbol": "Ω-CALIB-T",
+      "title": "Calibrations instrumentales",
+      "summary": "Relie instrument, référence, procédure, environnement, incertitude, dérive et certificat dans un graphe traçable.",
+      "domains": [
+        "métrologie",
+        "instrumentation",
+        "qualité"
+      ],
+      "maturity": "architecture",
+      "evidence": "prototype ciblé",
+      "artifacts": 7,
+      "status_note": "Une calibration n’est jamais vérité absolue; domaine, conditions, versions et incertitudes doivent être enregistrés.",
+      "next_action": "Créer un passeport d’instrument et un détecteur de dérive sur données publiques ou synthétiques.",
+      "source_path": "docs/theory_cards/OMEGA_CALIB_T.md",
+      "family": "measurement",
+      "ordinal": 22,
+      "slug": "calib-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "calib-t",
+        "calibrations",
+        "instrumentales",
+        "instrumentation",
+        "métrologie",
+        "qualité"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.46,
+        "utilite": 0.8,
+        "testabilite": 0.8,
+        "simplicite": 0.48,
+        "valeur": 0.77,
+        "protection": 0.6
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-calib-t",
+        "claims_route": "#/claims?theory=omega-calib-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_CALIB_T.md"
+      }
+    },
+    {
+      "id": "omega-zeta-mandel-t",
+      "symbol": "Ω-ZETA-MANDEL-T",
+      "title": "Zêta–Mandelbrot computationnel",
+      "summary": "Laboratoire numérique reliant fonctions zêta, dynamiques complexes et algèbres de Cayley–Dickson.",
+      "domains": [
+        "mathématiques",
+        "fractales",
+        "calcul numérique"
+      ],
+      "maturity": "prototype",
+      "evidence": "exploration numérique",
+      "artifacts": 8,
+      "status_note": "Aucune image, corrélation ou stabilité d’orbite ne constitue une preuve de l’hypothèse de Riemann.",
+      "next_action": "Tester stabilité sous précision, projection, norme, parenthésage et pas numérique.",
+      "source_path": "docs/theory_cards/OMEGA_ZETA_MANDEL_T.md",
+      "family": "math",
+      "ordinal": 23,
+      "slug": "zeta-mandel-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "calcul",
+        "computationnel",
+        "fractales",
+        "mandelbrot",
+        "mathématiques",
+        "numérique",
+        "zeta-mandel-t",
+        "zêta"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.57,
+        "utilite": 0.82,
+        "testabilite": 0.86,
+        "simplicite": 0.57,
+        "valeur": 0.81,
+        "protection": 0.59
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-zeta-mandel-t",
+        "claims_route": "#/claims?theory=omega-zeta-mandel-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_ZETA_MANDEL_T.md"
+      }
+    },
+    {
+      "id": "omega-natsci-t",
+      "symbol": "Ω-NATSCI-T",
+      "title": "Méta-laboratoire des sciences naturelles",
+      "summary": "Unifie flux de matière, énergie, information et formes dans des modèles réduits avec provenance et résidus.",
+      "domains": [
+        "sciences naturelles",
+        "modélisation",
+        "données"
+      ],
+      "maturity": "architecture",
+      "evidence": "cas réduits requis",
+      "artifacts": 6,
+      "status_note": "Analogie, visualisation, simulation, hypothèse, découverte et preuve doivent rester séparées.",
+      "next_action": "Livrer six exemples réduits avec unités, conservation, baseline et prédictions falsifiables.",
+      "source_path": "docs/theory_cards/OMEGA_NATSCI_T.md",
+      "family": "science",
+      "ordinal": 24,
+      "slug": "natsci-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "ingénieurs",
+        "étudiants"
+      ],
+      "keywords": [
+        "des",
+        "données",
+        "modélisation",
+        "méta-laboratoire",
+        "natsci-t",
+        "naturelles",
+        "sciences"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.47,
+        "utilite": 0.78,
+        "testabilite": 0.77,
+        "simplicite": 0.51,
+        "valeur": 0.77,
+        "protection": 0.6
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-natsci-t",
+        "claims_route": "#/claims?theory=omega-natsci-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_NATSCI_T.md"
+      }
+    },
+    {
+      "id": "omega-atlas-t",
+      "symbol": "Ω-ATLAS-T",
+      "title": "HyperAtlas polyglotte multi-niveaux",
+      "summary": "Cartographie connaissances, fichiers, code, agents, droits, preuves, routes d’action et potentiel de valeur.",
+      "domains": [
+        "connaissance",
+        "hypergraphe",
+        "outillage"
+      ],
+      "maturity": "architecture",
+      "evidence": "prototype CLI",
+      "artifacts": 9,
+      "status_note": "Une carte n’est jamais le territoire; toute route doit conserver provenance, permissions et incertitudes.",
+      "next_action": "Implémenter ingestion Markdown/YAML et produire atlas JSON, GraphML et rapport OAK.",
+      "source_path": "docs/theory_cards/OMEGA_ATLAS_T.md",
+      "family": "platform",
+      "ordinal": 25,
+      "slug": "atlas-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "développeurs",
+        "chercheurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "atlas-t",
+        "connaissance",
+        "hyperatlas",
+        "hypergraphe",
+        "multi-niveaux",
+        "outillage",
+        "polyglotte"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.43,
+        "utilite": 0.83,
+        "testabilite": 0.79,
+        "simplicite": 0.48,
+        "valeur": 0.78,
+        "protection": 0.61
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-atlas-t",
+        "claims_route": "#/claims?theory=omega-atlas-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_ATLAS_T.md"
+      }
+    },
+    {
+      "id": "omega-vtp-t",
+      "symbol": "Ω-VTP-T",
+      "title": "Vectorisation, tensorisation et parallélisme",
+      "summary": "Transforme calculs et graphes en représentations exécutables en parallèle sans perdre précision ni causalité.",
+      "domains": [
+        "calcul haute performance",
+        "tensorisation",
+        "GPU"
+      ],
+      "maturity": "architecture",
+      "evidence": "benchmark requis",
+      "artifacts": 6,
+      "status_note": "Un speedup apparent peut être annulé par transferts mémoire, overhead, précision ou non-déterminisme.",
+      "next_action": "Comparer CPU scalaire, NumPy et GPU avec exactitude, mémoire, énergie et taille de problème.",
+      "source_path": "docs/theory_cards/OMEGA_VTP_T.md",
+      "family": "compute",
+      "ordinal": 26,
+      "slug": "vtp-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "développeurs",
+        "chercheurs HPC",
+        "ingénieurs"
+      ],
+      "keywords": [
+        "calcul",
+        "et",
+        "gpu",
+        "haute",
+        "parallélisme",
+        "performance",
+        "tensorisation",
+        "vectorisation",
+        "vtp-t"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.4,
+        "utilite": 0.81,
+        "testabilite": 0.82,
+        "simplicite": 0.44,
+        "valeur": 0.78,
+        "protection": 0.66
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-vtp-t",
+        "claims_route": "#/claims?theory=omega-vtp-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_VTP_T.md"
+      }
+    },
+    {
+      "id": "omega-oss-digest-t",
+      "symbol": "Ω-OSS-DIGEST-T",
+      "title": "Digestion open source et Stack Exchange",
+      "summary": "Absorbe dépôts, licences, issues, tests et connaissances externes avec provenance, sécurité et attribution.",
+      "domains": [
+        "open source",
+        "GitHub",
+        "supply chain"
+      ],
+      "maturity": "architecture",
+      "evidence": "prototype ciblé",
+      "artifacts": 8,
+      "status_note": "Ne jamais copier aveuglément; licence, attribution, vulnérabilités, secrets et compatibilité doivent être vérifiés.",
+      "next_action": "Créer un pipeline SBOM, licence, provenance, tests sandbox et registre M⁻.",
+      "source_path": "docs/theory_cards/OMEGA_OSS_DIGEST_T.md",
+      "family": "developer-tools",
+      "ordinal": 27,
+      "slug": "oss-digest-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "chain",
+        "digestion",
+        "et",
+        "exchange",
+        "github",
+        "open",
+        "oss-digest-t",
+        "source",
+        "stack",
+        "supply"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.44,
+        "utilite": 0.83,
+        "testabilite": 0.8,
+        "simplicite": 0.44,
+        "valeur": 0.74,
+        "protection": 0.61
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-oss-digest-t",
+        "claims_route": "#/claims?theory=omega-oss-digest-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_OSS_DIGEST_T.md"
+      }
+    },
+    {
+      "id": "omega-pdf-hypergraph-github-t",
+      "symbol": "Ω-PDF-HYPERGRAPH-GITHUB-T",
+      "title": "Absorption PDF vers hypergraphe et GitHub",
+      "summary": "Ingest ZIP/PDF, extrait claims, équations et figures, puis produit graphes, rapports et artefacts traçables.",
+      "domains": [
+        "documents",
+        "extraction",
+        "hypergraphe"
+      ],
+      "maturity": "architecture",
+      "evidence": "prototype d’ingestion",
+      "artifacts": 10,
+      "status_note": "Chaque extraction doit conserver page, zone, source, confiance, droits et distinction extraction/interprétation.",
+      "next_action": "Tester un corpus contrôlé et mesurer rappel, précision, erreurs d’équations et provenance.",
+      "source_path": "docs/theory_cards/OMEGA_PDF_HYPERGRAPH_GITHUB_T.md",
+      "family": "developer-tools",
+      "ordinal": 28,
+      "slug": "pdf-hypergraph-github-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "absorption",
+        "documents",
+        "et",
+        "extraction",
+        "github",
+        "hypergraphe",
+        "pdf",
+        "pdf-hypergraph-github-t",
+        "vers"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.42,
+        "utilite": 0.83,
+        "testabilite": 0.82,
+        "simplicite": 0.44,
+        "valeur": 0.7,
+        "protection": 0.65
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-pdf-hypergraph-github-t",
+        "claims_route": "#/claims?theory=omega-pdf-hypergraph-github-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_PDF_HYPERGRAPH_GITHUB_T.md"
+      }
+    },
+    {
+      "id": "omega-fpg-t",
+      "symbol": "Ω-FPG-T",
+      "title": "Groupes ponctuels fractals",
+      "summary": "Généralise les symétries locales exactes ou approximatives à plusieurs échelles avec métriques et résidus.",
+      "domains": [
+        "mathématiques",
+        "symétrie",
+        "cristallographie"
+      ],
+      "maturity": "hypothèse",
+      "evidence": "formalisation requise",
+      "artifacts": 3,
+      "status_note": "Un motif visuel ou une invariance numérique n’est pas automatiquement un groupe exact.",
+      "next_action": "Définir espace, action, générateurs, métrique, tolérance et contre-exemples pour un premier cas.",
+      "source_path": "docs/theory_cards/OMEGA_FPG_T.md",
+      "family": "math",
+      "ordinal": 29,
+      "slug": "fpg-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "cristallographie",
+        "fpg-t",
+        "fractals",
+        "groupes",
+        "mathématiques",
+        "ponctuels",
+        "symétrie"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "définition falsifiable",
+        "contre-hypothèses",
+        "expérience discriminante"
+      ],
+      "oak": {
+        "verite": 0.3,
+        "utilite": 0.69,
+        "testabilite": 0.67,
+        "simplicite": 0.43,
+        "valeur": 0.65,
+        "protection": 0.54
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-fpg-t",
+        "claims_route": "#/claims?theory=omega-fpg-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_FPG_T.md"
+      }
+    },
+    {
+      "id": "omega-fcryst-t",
+      "symbol": "Ω-FCRYST-T",
+      "title": "Théorie des cristaux fractals",
+      "summary": "Étudie ordre multi-échelle, défauts, pores, interfaces, diffraction et propriétés de matériaux architecturés.",
+      "domains": [
+        "cristallographie",
+        "matériaux",
+        "fractales"
+      ],
+      "maturity": "architecture",
+      "evidence": "simulation et expérience",
+      "artifacts": 5,
+      "status_note": "Il faut distinguer cristal classique, quasi-cristal, motif artificiel, modèle et matériau expérimental.",
+      "next_action": "Simuler une structure architecturée et prédire une signature de diffraction mesurable.",
+      "source_path": "docs/theory_cards/OMEGA_FCRYST_T.md",
+      "family": "materials",
+      "ordinal": 30,
+      "slug": "fcryst-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "cristallographie",
+        "cristaux",
+        "des",
+        "fcryst-t",
+        "fractales",
+        "fractals",
+        "matériaux",
+        "théorie"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.43,
+        "utilite": 0.76,
+        "testabilite": 0.73,
+        "simplicite": 0.48,
+        "valeur": 0.72,
+        "protection": 0.63
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-fcryst-t",
+        "claims_route": "#/claims?theory=omega-fcryst-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_FCRYST_T.md"
+      }
+    },
+    {
+      "id": "omega-doc-t",
+      "symbol": "Ω-DOC-T",
+      "title": "Documentation vivante et exécutable",
+      "summary": "Traite la documentation comme mémoire versionnée reliant claims, preuves, code, tests, versions et permissions.",
+      "domains": [
+        "documentation",
+        "qualité",
+        "outillage"
+      ],
+      "maturity": "architecture",
+      "evidence": "premier produit défini",
+      "artifacts": 9,
+      "status_note": "Un document récent peut rester faux; la cohérence avec code, exemples et tests doit être vérifiée.",
+      "next_action": "Construire un audit détectant une divergence réelle entre affirmation, exemple et code.",
+      "source_path": "docs/theory_cards/OMEGA_DOC_T.md",
+      "family": "developer-tools",
+      "ordinal": 31,
+      "slug": "doc-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "doc-t",
+        "documentation",
+        "et",
+        "exécutable",
+        "outillage",
+        "qualité",
+        "vivante"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.47,
+        "utilite": 0.77,
+        "testabilite": 0.8,
+        "simplicite": 0.51,
+        "valeur": 0.72,
+        "protection": 0.6
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-doc-t",
+        "claims_route": "#/claims?theory=omega-doc-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_DOC_T.md"
+      }
+    },
+    {
+      "id": "omega-sans-plafond-t",
+      "symbol": "Ω-SANS-PLAFOND-T",
+      "title": "Architecture d’itération sans plafond arbitraire",
+      "summary": "Remplace les limites fixes par budgets adaptatifs, sharding, streaming, backpressure, checkpoints et rollback.",
+      "domains": [
+        "systèmes distribués",
+        "scalabilité",
+        "automatisation"
+      ],
+      "maturity": "prototype",
+      "evidence": "frontière finie testée",
+      "artifacts": 11,
+      "status_note": "Sans plafond arbitraire ne signifie pas sans limites physiques, coûts, quotas, risques ou contrôle de qualité.",
+      "next_action": "Mesurer la prochaine saturation réelle puis modifier l’architecture plutôt que relever une constante.",
+      "source_path": "docs/theory_cards/OMEGA_SANS_PLAFOND_T.md",
+      "family": "platform",
+      "ordinal": 32,
+      "slug": "sans-plafond-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "développeurs",
+        "chercheurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "arbitraire",
+        "architecture",
+        "automatisation",
+        "distribués",
+        "itération",
+        "plafond",
+        "sans",
+        "sans-plafond-t",
+        "scalabilité",
+        "systèmes"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.59,
+        "utilite": 0.85,
+        "testabilite": 0.84,
+        "simplicite": 0.53,
+        "valeur": 0.82,
+        "protection": 0.58
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-sans-plafond-t",
+        "claims_route": "#/claims?theory=omega-sans-plafond-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_SANS_PLAFOND_T.md"
+      }
+    },
+    {
+      "id": "omega-mail-t",
+      "symbol": "Ω-MAIL-T",
+      "title": "Laboratoire de courriels intercompagnies",
+      "summary": "Génère et teste des fils de courriels synthétiques entre compagnies et agents dans un transport fermé.",
+      "domains": [
+        "courriel",
+        "simulation",
+        "agents IA"
+      ],
+      "maturity": "architecture",
+      "evidence": "MVP fermé",
+      "artifacts": 5,
+      "status_note": "Aucun envoi externe, massif ou commercial sans consentement, conformité, throttling et approbation.",
+      "next_action": "Implémenter boîtes en mémoire, scénarios YAML, assertions, erreurs simulées et rapports de couverture.",
+      "source_path": "docs/theory_cards/OMEGA_MAIL_T.md",
+      "family": "platform",
+      "ordinal": 33,
+      "slug": "mail-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "développeurs",
+        "chercheurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "agents",
+        "courriel",
+        "courriels",
+        "de",
+        "ia",
+        "intercompagnies",
+        "laboratoire",
+        "mail-t",
+        "simulation"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.45,
+        "utilite": 0.85,
+        "testabilite": 0.83,
+        "simplicite": 0.45,
+        "valeur": 0.75,
+        "protection": 0.59
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-mail-t",
+        "claims_route": "#/claims?theory=omega-mail-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_MAIL_T.md"
+      }
+    },
+    {
+      "id": "omega-web-tristan-t",
+      "symbol": "Ω-WEB-TRISTAN-T",
+      "title": "Tristan Web OS",
+      "summary": "Interface publique et privée reliant théories, claims, preuves, code, risques, IP, produits et prochaines actions.",
+      "domains": [
+        "web",
+        "connaissance",
+        "publication"
+      ],
+      "maturity": "prototype",
+      "evidence": "R0.2 en construction",
+      "artifacts": 14,
+      "status_note": "Le site doit montrer moins de grandeur déclarée et davantage d’artefacts, limites et résultats reproductibles.",
+      "next_action": "Relier chaque carte publique à un claim, une preuve, un test, un commit et une politique de visibilité.",
+      "source_path": "docs/theory_cards/OMEGA_WEB_TRISTAN_T.md",
+      "family": "platform",
+      "ordinal": 34,
+      "slug": "web-tristan-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "développeurs",
+        "chercheurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "connaissance",
+        "os",
+        "publication",
+        "tristan",
+        "web",
+        "web-tristan-t"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.55,
+        "utilite": 0.87,
+        "testabilite": 0.85,
+        "simplicite": 0.54,
+        "valeur": 0.82,
+        "protection": 0.59
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-web-tristan-t",
+        "claims_route": "#/claims?theory=omega-web-tristan-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_WEB_TRISTAN_T.md"
+      }
+    },
+    {
+      "id": "omega-wiki-t",
+      "symbol": "Ω-WIKI-T∞",
+      "title": "WikiForge multilingue et sourcé",
+      "summary": "Lit des articles révisionnés, extrait claims et sources, traduit sous garde-fous et construit des graphes de connaissance.",
+      "domains": [
+        "Wikipedia",
+        "sources",
+        "multilingue"
+      ],
+      "maturity": "prototype",
+      "evidence": "extraction traçable",
+      "artifacts": 10,
+      "status_note": "Wikipedia n’est pas une certification; une citation présente n’implique pas qu’elle soutient le claim.",
+      "next_action": "Ajouter validation de support claim–source, comparaison de révisions et divergences entre langues.",
+      "source_path": "docs/theory_cards/OMEGA_WIKI_T.md",
+      "family": "developer-tools",
+      "ordinal": 35,
+      "slug": "wiki-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "et",
+        "multilingue",
+        "sources",
+        "sourcé",
+        "wiki-t∞",
+        "wikiforge",
+        "wikipedia"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.54,
+        "utilite": 0.85,
+        "testabilite": 0.87,
+        "simplicite": 0.53,
+        "valeur": 0.76,
+        "protection": 0.56
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-wiki-t",
+        "claims_route": "#/claims?theory=omega-wiki-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_WIKI_T.md"
+      }
+    },
+    {
+      "id": "omega-logexp-morph-t",
+      "symbol": "Ω-LOGEXP-MORPH-T∞²",
+      "title": "Calcul des générateurs LOG/EXP",
+      "summary": "Modélise translations, dilatations, rotations et morphismes par générateurs, exponentielles et résidus.",
+      "domains": [
+        "algèbre",
+        "dynamique",
+        "calcul scientifique"
+      ],
+      "maturity": "prototype",
+      "evidence": "noyau testé",
+      "artifacts": 12,
+      "status_note": "L’existence d’un logarithme ou d’une représentation ne prouve ni compression utile ni causalité physique.",
+      "next_action": "Ajouter identification parcimonieuse, BCH/Magnus adaptatif et validation hors échantillon.",
+      "source_path": "docs/theory_cards/OMEGA_LOGEXP_MORPH_T.md",
+      "family": "math",
+      "ordinal": 36,
+      "slug": "logexp-morph-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "algèbre",
+        "calcul",
+        "des",
+        "dynamique",
+        "exp",
+        "générateurs",
+        "log",
+        "logexp-morph-t∞²",
+        "scientifique"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.61,
+        "utilite": 0.8,
+        "testabilite": 0.85,
+        "simplicite": 0.55,
+        "valeur": 0.74,
+        "protection": 0.57
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-logexp-morph-t",
+        "claims_route": "#/claims?theory=omega-logexp-morph-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_LOGEXP_MORPH_T.md"
+      }
+    },
+    {
+      "id": "omega-quaternion-crystal-t",
+      "symbol": "Ω-QUATERNION-CRYSTAL-T",
+      "title": "Quaternions, cristaux, déformation et stress",
+      "summary": "Sépare orientation quaternionique, transformation affine, tenseurs de contrainte/déformation et élasticité.",
+      "domains": [
+        "quaternions",
+        "cristallographie",
+        "mécanique"
+      ],
+      "maturity": "prototype",
+      "evidence": "noyau 3D testé",
+      "artifacts": 10,
+      "status_note": "Rotation, déformation et contrainte sont des objets distincts; les fusionner sans unités crée des erreurs.",
+      "next_action": "Étendre aux groupes ponctuels, désorientations minimales et champs EBSD avec incertitudes.",
+      "source_path": "docs/theory_cards/OMEGA_QUATERNION_CRYSTAL_T.md",
+      "family": "materials",
+      "ordinal": 37,
+      "slug": "quaternion-crystal-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "cristallographie",
+        "cristaux",
+        "déformation",
+        "et",
+        "mécanique",
+        "quaternion-crystal-t",
+        "quaternions",
+        "stress"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.62,
+        "utilite": 0.84,
+        "testabilite": 0.91,
+        "simplicite": 0.56,
+        "valeur": 0.79,
+        "protection": 0.58
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-quaternion-crystal-t",
+        "claims_route": "#/claims?theory=omega-quaternion-crystal-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_QUATERNION_CRYSTAL_T.md"
+      }
+    },
+    {
+      "id": "omega-ecc-t",
+      "symbol": "Ω-ECC-T",
+      "title": "Correction d’erreurs de Tristan",
+      "summary": "Relie codes classiques, syndromes, hypergraphes de parité et mémoire négative dans un laboratoire reproductible.",
+      "domains": [
+        "information",
+        "codes correcteurs",
+        "fiabilité"
+      ],
+      "maturity": "prototype",
+      "evidence": "tests déterministes",
+      "artifacts": 9,
+      "status_note": "Un score de syndrome ne remplace ni preuve de correction générale ni modèle réaliste du canal.",
+      "next_action": "Comparer Hamming, BCH/LDPC simples et canaux burst avec coût, latence et taux résiduel.",
+      "source_path": "docs/theory_cards/OMEGA_ECC_T.md",
+      "family": "compute",
+      "ordinal": 38,
+      "slug": "ecc-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "développeurs",
+        "chercheurs HPC",
+        "ingénieurs"
+      ],
+      "keywords": [
+        "codes",
+        "correcteurs",
+        "correction",
+        "de",
+        "ecc-t",
+        "erreurs",
+        "fiabilité",
+        "information",
+        "tristan"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.56,
+        "utilite": 0.84,
+        "testabilite": 0.92,
+        "simplicite": 0.55,
+        "valeur": 0.76,
+        "protection": 0.63
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-ecc-t",
+        "claims_route": "#/claims?theory=omega-ecc-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_ECC_T.md"
+      }
+    },
+    {
+      "id": "omega-prime-object-t",
+      "symbol": "Ω-PRIME-OBJECT-T",
+      "title": "Objets premiers relatifs",
+      "summary": "Définit l’irréductibilité relativement à un domaine, une composition, des invariants et des tentatives de factorisation.",
+      "domains": [
+        "mathématiques",
+        "algèbre",
+        "génération"
+      ],
+      "maturity": "prototype",
+      "evidence": "noyau et CLI",
+      "artifacts": 11,
+      "status_note": "Le score local ne certifie ni primalité absolue, ni preuve, ni potentiel commercial.",
+      "next_action": "Tester plusieurs domaines algébriques et vérifier recomposition, résidus et faux positifs.",
+      "source_path": "docs/theory_cards/OMEGA_PRIME_OBJECT_T.md",
+      "family": "math",
+      "ordinal": 39,
+      "slug": "prime-object-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "algèbre",
+        "génération",
+        "mathématiques",
+        "objets",
+        "premiers",
+        "prime-object-t",
+        "relatifs"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.61,
+        "utilite": 0.87,
+        "testabilite": 0.92,
+        "simplicite": 0.5,
+        "valeur": 0.73,
+        "protection": 0.6
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-prime-object-t",
+        "claims_route": "#/claims?theory=omega-prime-object-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_PRIME_OBJECT_T.md"
+      }
+    },
+    {
+      "id": "omega-fact-infinity-t",
+      "symbol": "Ω-FACT∞-T",
+      "title": "Factorisation multi-domaine",
+      "summary": "Décompose objets, opérateurs, invariants et cofactors puis mesure la qualité de recomposition.",
+      "domains": [
+        "mathématiques",
+        "décomposition",
+        "outillage"
+      ],
+      "maturity": "prototype",
+      "evidence": "OAKBench local",
+      "artifacts": 8,
+      "status_note": "Une décomposition pratique n’est pas nécessairement unique, minimale ou mathématiquement canonique.",
+      "next_action": "Ajouter ambiguïté de factorisation, coût descriptif et comparaison à des décompositions standards.",
+      "source_path": "docs/theory_cards/OMEGA_FACT_INFINITY_T.md",
+      "family": "math",
+      "ordinal": 40,
+      "slug": "fact-infinity-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "développeurs",
+        "partenaires"
+      ],
+      "keywords": [
+        "décomposition",
+        "factorisation",
+        "fact∞-t",
+        "mathématiques",
+        "multi-domaine",
+        "outillage"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.59,
+        "utilite": 0.86,
+        "testabilite": 0.87,
+        "simplicite": 0.49,
+        "valeur": 0.76,
+        "protection": 0.59
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-fact-infinity-t",
+        "claims_route": "#/claims?theory=omega-fact-infinity-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_FACT_INFINITY_T.md"
+      }
+    },
+    {
+      "id": "omega-generator-discovery-stack",
+      "symbol": "Ω-GENERATOR-DISCOVERY-STACK",
+      "title": "Découverte de générateurs et résidus",
+      "summary": "Couple identification de transformations, spectres, commutateurs, holonomie, protocoles et classement d’expériences.",
+      "domains": [
+        "dynamique",
+        "spectres",
+        "expérimentation"
+      ],
+      "maturity": "prototype",
+      "evidence": "dix fronts exécutables",
+      "artifacts": 16,
+      "status_note": "Reconstruction, compression, prédiction, causalité et validation expérimentale sont des niveaux distincts.",
+      "next_action": "Ajouter Jacobiennes analytiques, incertitudes, cross-validation et baselines physiques.",
+      "source_path": "docs/theory_cards/OMEGA_GENERATOR_DISCOVERY_STACK.md",
+      "family": "science",
+      "ordinal": 41,
+      "slug": "generator-discovery-stack",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "ingénieurs",
+        "étudiants"
+      ],
+      "keywords": [
+        "de",
+        "dynamique",
+        "découverte",
+        "et",
+        "expérimentation",
+        "generator-discovery-stack",
+        "générateurs",
+        "résidus",
+        "spectres"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "code exécutable",
+        "tests",
+        "benchmark"
+      ],
+      "oak": {
+        "verite": 0.53,
+        "utilite": 0.84,
+        "testabilite": 0.85,
+        "simplicite": 0.49,
+        "valeur": 0.78,
+        "protection": 0.61
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-generator-discovery-stack",
+        "claims_route": "#/claims?theory=omega-generator-discovery-stack",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_GENERATOR_DISCOVERY_STACK.md"
+      }
+    },
+    {
+      "id": "omega-life-t",
+      "symbol": "Ω-VIE-T∞",
+      "title": "Vie, abiogenèse et évolution",
+      "summary": "Organise chimie prébiotique, évolution, transitions biologiques, cognition et technosphère dans un graphe de recherche.",
+      "domains": [
+        "biologie",
+        "évolution",
+        "systèmes complexes"
+      ],
+      "maturity": "architecture",
+      "evidence": "recherche exploratoire",
+      "artifacts": 5,
+      "status_note": "Aucune expérience n’a reconstruit tout le passage continu de la géochimie abiotique à une cellule autonome.",
+      "next_action": "Créer une chronologie sourcée et un simulateur réduit de réseaux autocatalytiques sans prétention d’abiogenèse complète.",
+      "source_path": "docs/theory_cards/OMEGA_VIE_T.md",
+      "family": "life-science",
+      "ordinal": 42,
+      "slug": "life-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "chercheurs",
+        "étudiants",
+        "biologistes"
+      ],
+      "keywords": [
+        "abiogenèse",
+        "biologie",
+        "complexes",
+        "et",
+        "systèmes",
+        "vie",
+        "vie-t∞",
+        "évolution"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.45,
+        "utilite": 0.84,
+        "testabilite": 0.83,
+        "simplicite": 0.52,
+        "valeur": 0.78,
+        "protection": 0.6
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-life-t",
+        "claims_route": "#/claims?theory=omega-life-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_VIE_T.md"
+      }
+    },
+    {
+      "id": "omega-edu-can-qc-t",
+      "symbol": "Ω-EDU-CAN-QC-T",
+      "title": "HyperSystème éducatif Québec–Canada",
+      "summary": "Cartographie programmes, diplômes, cours, compétences, prérequis, équivalences et preuves d’apprentissage.",
+      "domains": [
+        "éducation",
+        "Québec",
+        "connaissance"
+      ],
+      "maturity": "architecture",
+      "evidence": "ingestion progressive",
+      "artifacts": 7,
+      "status_note": "Le système ne doit pas imposer une fausse uniformité nationale ni remplacer les sources institutionnelles officielles.",
+      "next_action": "Ingest un petit ensemble de programmes officiels avec dates, juridictions et provenance.",
+      "source_path": "docs/theory_cards/OMEGA_EDU_CAN_QC_T.md",
+      "family": "education",
+      "ordinal": 43,
+      "slug": "edu-can-qc-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "étudiants",
+        "enseignants",
+        "institutions"
+      ],
+      "keywords": [
+        "canada",
+        "connaissance",
+        "edu-can-qc-t",
+        "hypersystème",
+        "québec",
+        "éducatif",
+        "éducation"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "spécification",
+        "schéma",
+        "protocole de test"
+      ],
+      "oak": {
+        "verite": 0.42,
+        "utilite": 0.82,
+        "testabilite": 0.79,
+        "simplicite": 0.44,
+        "valeur": 0.78,
+        "protection": 0.6
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-edu-can-qc-t",
+        "claims_route": "#/claims?theory=omega-edu-can-qc-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_EDU_CAN_QC_T.md"
+      }
+    },
+    {
+      "id": "omega-algorithmic-energy-t",
+      "symbol": "Ω-ALGO-ENERGY-T",
+      "title": "Énergie et entropie algorithmique",
+      "summary": "Explore des métriques de coût computationnel, information utile, dissipation et néguentropie de calcul.",
+      "domains": [
+        "algorithmique",
+        "énergie",
+        "information"
+      ],
+      "maturity": "hypothèse",
+      "evidence": "définitions à stabiliser",
+      "artifacts": 3,
+      "status_note": "Les métaphores thermodynamiques ne deviennent pas automatiquement des grandeurs physiques mesurables.",
+      "next_action": "Séparer énergie matérielle mesurée, complexité, entropie informationnelle et heuristiques de fertilité.",
+      "source_path": "docs/theory_cards/OMEGA_ALGO_ENERGY_T.md",
+      "family": "compute",
+      "ordinal": 44,
+      "slug": "algorithmic-energy-t",
+      "claims_count": 3,
+      "source_status": "canonical-reference",
+      "version": "R0.2-public",
+      "updated_at": "2026-08-02",
+      "visibility": "public-summary",
+      "audiences": [
+        "développeurs",
+        "chercheurs HPC",
+        "ingénieurs"
+      ],
+      "keywords": [
+        "algo-energy-t",
+        "algorithmique",
+        "entropie",
+        "et",
+        "information",
+        "énergie"
+      ],
+      "risks": [
+        "surpromesse",
+        "preuve insuffisante",
+        "artefact numérique",
+        "généralisation abusive"
+      ],
+      "outputs": [
+        "fiche publique",
+        "rapport OAK",
+        "prochaine expérience",
+        "définition falsifiable",
+        "contre-hypothèses",
+        "expérience discriminante"
+      ],
+      "oak": {
+        "verite": 0.31,
+        "utilite": 0.7,
+        "testabilite": 0.62,
+        "simplicite": 0.43,
+        "valeur": 0.67,
+        "protection": 0.53
+      },
+      "publication": {
+        "oak_gate": true,
+        "ip_gate": true,
+        "privacy_gate": true,
+        "security_gate": true,
+        "scope": "summary-only",
+        "automatic_external_action": false
+      },
+      "links": {
+        "detail_route": "#/theory/omega-algorithmic-energy-t",
+        "claims_route": "#/claims?theory=omega-algorithmic-energy-t",
+        "source_route": "#/sources?path=docs/theory_cards/OMEGA_ALGO_ENERGY_T.md"
+      }
+    }
+  ]
+}

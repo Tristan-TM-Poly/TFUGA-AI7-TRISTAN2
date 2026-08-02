@@ -1,0 +1,259 @@
+{
+  "version": "R0.1-massive",
+  "family_records": 262144,
+  "evidence_records": 786432,
+  "total_objects": 1048576,
+  "family_shards": [
+    {
+      "path": "families/family_cells_0000.jsonl.gz",
+      "count": 16384,
+      "sha256": "9cf988808e4c481ff3ad22c55426c50801538dd84071849722364c50a5c7ecc4",
+      "compressed_bytes": 306162
+    },
+    {
+      "path": "families/family_cells_0001.jsonl.gz",
+      "count": 16384,
+      "sha256": "bfa8808e9726fc7047570089fbe3152281774196dae2e63bb4bfcd5f090d65f2",
+      "compressed_bytes": 306033
+    },
+    {
+      "path": "families/family_cells_0002.jsonl.gz",
+      "count": 16384,
+      "sha256": "c1ca1ba2aa026c2f0ce60d1bdb3dc1f5d6de0f032cc069ac2d4644eb455e58b8",
+      "compressed_bytes": 303848
+    },
+    {
+      "path": "families/family_cells_0003.jsonl.gz",
+      "count": 16384,
+      "sha256": "f6d15bc628a46d3d9e4aaa8c6bc3c74a62837783ffc3f313b6240245db0be203",
+      "compressed_bytes": 303720
+    },
+    {
+      "path": "families/family_cells_0004.jsonl.gz",
+      "count": 16384,
+      "sha256": "75c852fd729491b8612436d01e9168468fe5e4a2ac2752f8407e682e83f0f725",
+      "compressed_bytes": 303667
+    },
+    {
+      "path": "families/family_cells_0005.jsonl.gz",
+      "count": 16384,
+      "sha256": "97614c0531ba816e20c26782c120fd2cedcfce87b4e5db5dddfec90ca40be7f9",
+      "compressed_bytes": 304038
+    },
+    {
+      "path": "families/family_cells_0006.jsonl.gz",
+      "count": 16384,
+      "sha256": "747467e5c9cb43d5a2f14aa0ef9d174243d2e66d4781ef2068229d32b311d5a1",
+      "compressed_bytes": 305755
+    },
+    {
+      "path": "families/family_cells_0007.jsonl.gz",
+      "count": 16384,
+      "sha256": "a9c056e3b30f112261c1fd4d24b69e0bf46e9b66d0073a121ed15129fa29c07f",
+      "compressed_bytes": 304216
+    },
+    {
+      "path": "families/family_cells_0008.jsonl.gz",
+      "count": 16384,
+      "sha256": "42f5a4d2a0412fa63982fd3a5767ddb224a4b76a886c049f7119eb6d89cb01b6",
+      "compressed_bytes": 303817
+    },
+    {
+      "path": "families/family_cells_0009.jsonl.gz",
+      "count": 16384,
+      "sha256": "9e5642571a69f86cccd17634f27f30d8a1f8bf61a51f4b4cdbb1ea0cec31231f",
+      "compressed_bytes": 304150
+    },
+    {
+      "path": "families/family_cells_0010.jsonl.gz",
+      "count": 16384,
+      "sha256": "73f1e6eff557222fe0647d310dbaecf3f4187cfb24906d8536eefa791ad9dbda",
+      "compressed_bytes": 304029
+    },
+    {
+      "path": "families/family_cells_0011.jsonl.gz",
+      "count": 16384,
+      "sha256": "ffc92054c61982b88ff35660e2daca9133f8179c36e79020e335a8ad73d90bcd",
+      "compressed_bytes": 303894
+    },
+    {
+      "path": "families/family_cells_0012.jsonl.gz",
+      "count": 16384,
+      "sha256": "87a6517bbdbcb295603df94923707684669113f5cd825dda4c1dc3ce62f2b701",
+      "compressed_bytes": 303623
+    },
+    {
+      "path": "families/family_cells_0013.jsonl.gz",
+      "count": 16384,
+      "sha256": "b0a02d64ce2db6b2db8a113f0637a9fe11a2cb22903eac87875b3ab6f75cbdb0",
+      "compressed_bytes": 303554
+    },
+    {
+      "path": "families/family_cells_0014.jsonl.gz",
+      "count": 16384,
+      "sha256": "1f4e6c3e659025c1ac9215128d053d989ce018feb9be80409eb9f7639eef35bf",
+      "compressed_bytes": 304181
+    },
+    {
+      "path": "families/family_cells_0015.jsonl.gz",
+      "count": 16384,
+      "sha256": "f1d7bd616f8a45c08d87bbd107f3088f73ae3dfbf70db9027e48d13ad6ee8138",
+      "compressed_bytes": 305679
+    }
+  ],
+  "evidence_shards": [
+    {
+      "path": "evidence/evidence_templates_0000.jsonl.gz",
+      "count": 32768,
+      "sha256": "10b68cd757eaaff72cd78b95cdb4bfe8eb6b022b45e5a760cb845247de4944b5",
+      "compressed_bytes": 216524
+    },
+    {
+      "path": "evidence/evidence_templates_0001.jsonl.gz",
+      "count": 32768,
+      "sha256": "ec8098c8b926da48afa1674299e08828c313f62f68b85eae591e9ec2a0d98350",
+      "compressed_bytes": 216094
+    },
+    {
+      "path": "evidence/evidence_templates_0002.jsonl.gz",
+      "count": 32768,
+      "sha256": "d306f9153d08a8600d18ae9717e8e31dc0cba3a17da73f7ba25ef68887ab1d7e",
+      "compressed_bytes": 216308
+    },
+    {
+      "path": "evidence/evidence_templates_0003.jsonl.gz",
+      "count": 32768,
+      "sha256": "150dbadc376ac3648ff6d630fe86e8bd3ec258bfad42a0738f8ae29d94b7e286",
+      "compressed_bytes": 216618
+    },
+    {
+      "path": "evidence/evidence_templates_0004.jsonl.gz",
+      "count": 32768,
+      "sha256": "3ce15d31b1734731e97f06318e366e8cbc91d1399710b861afe80a3fff2ad3c8",
+      "compressed_bytes": 216048
+    },
+    {
+      "path": "evidence/evidence_templates_0005.jsonl.gz",
+      "count": 32768,
+      "sha256": "5408b5ef9466c8d793c1bea6378d31912f66e343ffb507960d59459fa47ed2f6",
+      "compressed_bytes": 216260
+    },
+    {
+      "path": "evidence/evidence_templates_0006.jsonl.gz",
+      "count": 32768,
+      "sha256": "00dfaa2fab3e9b049477214218feac7a4f7f088275ca33197061dd50dedc3559",
+      "compressed_bytes": 216568
+    },
+    {
+      "path": "evidence/evidence_templates_0007.jsonl.gz",
+      "count": 32768,
+      "sha256": "18ab73a53bafef31d84c8ed4962eb2d14a5593581749bc4a0117e2111a43f96a",
+      "compressed_bytes": 216075
+    },
+    {
+      "path": "evidence/evidence_templates_0008.jsonl.gz",
+      "count": 32768,
+      "sha256": "7cda2fc1577e23f5841090f6769c71d277b7505697626c70a4706a835f257fc6",
+      "compressed_bytes": 216289
+    },
+    {
+      "path": "evidence/evidence_templates_0009.jsonl.gz",
+      "count": 32768,
+      "sha256": "60e24ac461bc98cdbe73390384626a56972bb02ed347c0bff1ab533ad4556b00",
+      "compressed_bytes": 216570
+    },
+    {
+      "path": "evidence/evidence_templates_0010.jsonl.gz",
+      "count": 32768,
+      "sha256": "6599e54f8dcd09c427821f88b5dfa92cc3a2729eed732cd3abd24ca8a37df81e",
+      "compressed_bytes": 216140
+    },
+    {
+      "path": "evidence/evidence_templates_0011.jsonl.gz",
+      "count": 32768,
+      "sha256": "3358a0943873dabb5c85c92a14e980b615e63d781597406f7d4b77d82d0f0682",
+      "compressed_bytes": 216286
+    },
+    {
+      "path": "evidence/evidence_templates_0012.jsonl.gz",
+      "count": 32768,
+      "sha256": "03b959b19a6c0d1f4a8cbe81aa11c950ccc2672b6a3e0ce9396e09eb2eaee834",
+      "compressed_bytes": 216545
+    },
+    {
+      "path": "evidence/evidence_templates_0013.jsonl.gz",
+      "count": 32768,
+      "sha256": "a7796005272b625c1dee0dc229816bc6ee23b6b7603cf74d3c2b6800b37eea60",
+      "compressed_bytes": 216000
+    },
+    {
+      "path": "evidence/evidence_templates_0014.jsonl.gz",
+      "count": 32768,
+      "sha256": "872fad29301b318f54295609f6b66e673a1d9e23dbeb9052c7ce9236ab7cd7a3",
+      "compressed_bytes": 216303
+    },
+    {
+      "path": "evidence/evidence_templates_0015.jsonl.gz",
+      "count": 32768,
+      "sha256": "a59e1fe869aa4a81738b1afd99c3dca0197e33c23bb6c873677e1b8e9b356071",
+      "compressed_bytes": 216608
+    },
+    {
+      "path": "evidence/evidence_templates_0016.jsonl.gz",
+      "count": 32768,
+      "sha256": "3229044824bedac7c56b8a066ba2c09d5d8292fee7d64dc091655b84e256a8f7",
+      "compressed_bytes": 216059
+    },
+    {
+      "path": "evidence/evidence_templates_0017.jsonl.gz",
+      "count": 32768,
+      "sha256": "57887164358d12def3cbeba1e43892b10a37813209ddeb337c5cc22fd965f1f7",
+      "compressed_bytes": 216264
+    },
+    {
+      "path": "evidence/evidence_templates_0018.jsonl.gz",
+      "count": 32768,
+      "sha256": "ab66b5f5947cdb1105c444a64cde4637d4bdcc83755e936275742077fe1a5378",
+      "compressed_bytes": 216615
+    },
+    {
+      "path": "evidence/evidence_templates_0019.jsonl.gz",
+      "count": 32768,
+      "sha256": "9aa477b66de3d293b2e153c46681345992de24140f4fe0d8fab0a4de7133a311",
+      "compressed_bytes": 216041
+    },
+    {
+      "path": "evidence/evidence_templates_0020.jsonl.gz",
+      "count": 32768,
+      "sha256": "194f6ae7ae1a4f5aed2c609ddb0d68d5f52b409822cf20bbe751e514c96c0648",
+      "compressed_bytes": 216306
+    },
+    {
+      "path": "evidence/evidence_templates_0021.jsonl.gz",
+      "count": 32768,
+      "sha256": "3e83f5bbd4a2cc0c6da9a1d1caf61adaa09dff291ca0b0927ed98f8d40b50f49",
+      "compressed_bytes": 216575
+    },
+    {
+      "path": "evidence/evidence_templates_0022.jsonl.gz",
+      "count": 32768,
+      "sha256": "a5efd09a8288fe9316f3876dd4896b7de444c22a40c18f3960a1f5c6050f2576",
+      "compressed_bytes": 216066
+    },
+    {
+      "path": "evidence/evidence_templates_0023.jsonl.gz",
+      "count": 32768,
+      "sha256": "a6cfe75e06c41435518c93408fd215180674c81f555ba760748f757181c0afee",
+      "compressed_bytes": 216273
+    }
+  ],
+  "generator": {
+    "finite_experiment_parameter": 262144,
+    "permanent_total_ceiling": null,
+    "streaming": true,
+    "compressed": true,
+    "deterministic_gzip_mtime": 0
+  },
+  "record_status": "machine_generated_family_space_candidates",
+  "oak_boundary": "The atlas enumerates candidate family-space cells and evidence templates. It does not certify molecular existence, stability, synthesis, identity, safety or utility."
+}
