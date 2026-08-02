@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: omega-anime-animatic-r2-${{ github.event.pull_request.number || github.ref }}-${{ matrix.python-version }}
+  group: omega-anime-animatic-r2-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
