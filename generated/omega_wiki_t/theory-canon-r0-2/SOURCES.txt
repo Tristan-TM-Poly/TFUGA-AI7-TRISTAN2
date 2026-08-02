@@ -1,3 +1,0 @@
-interfaces/chatgpt-tristan-v2/data/theory-canon.json
-docs/00_MASTER_CANON_TFUGA_AI7_AIT.md
-MASTER_SYSTEM_INDEX.md
