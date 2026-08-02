@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import json
 from typing import Any
 
 
@@ -157,4 +158,5 @@ class AnimaticTimeline:
             raise TimelineValidationError("\n".join(errors))
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        """Return only JSON-native dict/list/scalar objects for schema validation."""
+        return json.loads(json.dumps(asdict(self), ensure_ascii=False))
