@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/discovery-event.schema.json",
+  "title": "Omega Discovery Kernel Event R0.3",
+  "description": "Hash-verified workflow event. Schema validity is not scientific certification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "subject_id",
+    "timestamp",
+    "parent_ids",
+    "source_hash",
+    "provenance",
+    "domain",
+    "status",
+    "payload",
+    "units",
+    "uncertainty",
+    "human_approval",
+    "reversible",
+    "event_hash"
+  ],
+  "properties": {
+    "event_id": {"type": "string", "pattern": "^evt_[0-9a-f]{24}$"},
+    "event_type": {
+      "enum": [
+        "ObservationEvent",
+        "ImportEvent",
+        "NormalizationEvent",
+        "CalibrationEvent",
+        "SegmentationEvent",
+        "FeatureExtractionEvent",
+        "ProvenanceEvent",
+        "QualityGateEvent",
+        "DefinitionEvent",
+        "ClaimEvent",
+        "AssumptionEvent",
+        "EquationEvent",
+        "PredictionEvent",
+        "ContradictionEvent",
+        "ScopeRevisionEvent",
+        "RefutationEvent",
+        "GeneratorCandidate",
+        "GeneratorFitEvent",
+        "ModelSelectionEvent",
+        "ReconstructionEvent",
+        "ForecastEvent",
+        "ResidualEvent",
+        "SyndromeEvent",
+        "ModelRejectedEvent",
+        "ExperimentSpec",
+        "SimulationRun",
+        "MeasurementRun",
+        "BaselineComparison",
+        "AblationRun",
+        "ReplicationEvent",
+        "ResultPacket",
+        "ExperimentClosedEvent",
+        "OAKTransition",
+        "PromotionEvent",
+        "DemotionEvent",
+        "ApprovalEvent",
+        "RejectionEvent",
+        "QuarantineEvent",
+        "ArchiveEvent",
+        "RestorationEvent",
+        "MMinusRule",
+        "MPlusRule",
+        "CounterexampleEvent",
+        "FailureContextEvent",
+        "AntiPatternEvent",
+        "LessonEvent",
+        "ConstraintEvent",
+        "MemoryPropagationEvent",
+        "ActionProposal",
+        "TaskPlannedEvent",
+        "RollbackEvent",
+        "CompensationEvent",
+        "PublicationEvent",
+        "IPClassificationEvent",
+        "ProductHypothesisEvent",
+        "CustomerEvidenceEvent",
+        "RevenueEvidenceEvent",
+        "CostEvidenceEvent",
+        "RiskAssessmentEvent",
+        "ComplianceEvent",
+        "DeploymentEvent",
+        "IncidentEvent",
+        "MaintenanceEvent",
+        "RetirementEvent"
+      ]
+    },
+    "subject_id": {"type": "string", "minLength": 1},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "parent_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^evt_[0-9a-f]{24}$"},
+      "uniqueItems": true
+    },
+    "source_hash": {"type": ["string", "null"]},
+    "provenance": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "domain": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "minLength": 1},
+    "payload": {"type": "object"},
+    "units": {
+      "type": "object",
+      "additionalProperties": {"type": "string", "minLength": 1}
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": {"type": "number", "minimum": 0}
+    },
+    "human_approval": {"type": "boolean"},
+    "reversible": {"type": "boolean"},
+    "event_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "ObservationEvent"}}},
+      "then": {"properties": {"payload": {"required": ["observation_kind"]}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "ClaimEvent"}}},
+      "then": {"properties": {"payload": {"required": ["claim_id", "text", "failure_conditions"]}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "GeneratorCandidate"}}},
+      "then": {"properties": {"payload": {"required": ["continuous_generators", "discrete_events", "residual"]}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "ExperimentSpec"}}},
+      "then": {"properties": {"payload": {"required": ["protocol", "success_criteria", "rollback"]}}}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "ResultPacket"}}},
+      "then": {
+        "properties": {
+          "payload": {"required": ["success", "metric", "value", "baseline", "protocol"]},
+          "units": {"minProperties": 1},
+          "uncertainty": {"minProperties": 1}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "OAKTransition"}}},
+      "then": {
+        "properties": {
+          "payload": {"required": ["from_status", "to_status", "cause"]}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "MMinusRule"}}},
+      "then": {
+        "properties": {
+          "payload": {"required": ["context", "prohibited_inference", "reusable_rule"]}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "ActionProposal"}}},
+      "then": {
+        "properties": {
+          "payload": {"required": ["action", "expected_information_gain", "rollback"]}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "MeasurementRun",
+              "PromotionEvent",
+              "ApprovalEvent",
+              "RestorationEvent",
+              "RollbackEvent",
+              "CompensationEvent",
+              "PublicationEvent",
+              "IPClassificationEvent",
+              "CustomerEvidenceEvent",
+              "RevenueEvidenceEvent",
+              "ComplianceEvent",
+              "DeploymentEvent",
+              "RetirementEvent"
+            ]
+          }
+        },
+        "required": ["event_type"]
+      },
+      "then": {"properties": {"human_approval": {"const": true}}}
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": ["PublicationEvent", "RetirementEvent"]
+          }
+        },
+        "required": ["event_type"]
+      },
+      "then": {"properties": {"reversible": {"const": false}}}
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {"const": "ExperimentSpec"},
+          "reversible": {"const": false}
+        },
+        "required": ["event_type", "reversible"]
+      },
+      "then": {"properties": {"human_approval": {"const": true}}}
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {"const": "ActionProposal"},
+          "status": {"const": "autonomous_execution"}
+        },
+        "required": ["event_type", "status"]
+      },
+      "then": {
+        "properties": {
+          "human_approval": {"const": true},
+          "reversible": {"const": true}
+        }
+      }
+    }
+  ],
+  "x-catalog-migration": {
+    "restored": "ResultPacket",
+    "payload-subtype": "SensitivityRun",
+    "reason": "all eight closed-loop events must be first-class canonical contracts"
+  },
+  "x-oak-boundary": "Schema validity proves workflow-record conformance only, not scientific truth or authorization."
+}

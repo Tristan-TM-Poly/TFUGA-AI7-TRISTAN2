@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/knowledge-frontier-targets.schema.json",
+  "title": "Omega Knowledge Frontier Targets R0.2",
+  "description": "Finite scale-experiment targets. They are not permanent architecture ceilings.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cells",
+    "claims_per_cell",
+    "evidence_per_claim",
+    "experiments_per_claim",
+    "results_per_experiment",
+    "actions_per_result",
+    "memory_rules_per_result",
+    "identities_per_claim",
+    "benchmark_cases"
+  ],
+  "properties": {
+    "cells": {"type": "integer", "minimum": 0},
+    "claims_per_cell": {"type": "integer", "minimum": 0},
+    "evidence_per_claim": {"type": "integer", "minimum": 0},
+    "experiments_per_claim": {"type": "integer", "minimum": 0},
+    "results_per_experiment": {"type": "integer", "minimum": 0},
+    "actions_per_result": {"type": "integer", "minimum": 0},
+    "memory_rules_per_result": {"type": "integer", "minimum": 0},
+    "identities_per_claim": {"type": "integer", "minimum": 0},
+    "benchmark_cases": {"type": "integer", "minimum": 0}
+  },
+  "examples": [
+    {
+      "cells": 100,
+      "claims_per_cell": 10,
+      "evidence_per_claim": 5,
+      "experiments_per_claim": 1,
+      "results_per_experiment": 10,
+      "actions_per_result": 1,
+      "memory_rules_per_result": 1,
+      "identities_per_claim": 1,
+      "benchmark_cases": 12000
+    }
+  ],
+  "x-omega-boundary": {
+    "permanent_total_addition_cap": null,
+    "default_profile_total_additions": 50100,
+    "interpretation": "The profile is a finite validation workload, not a controller limit. Physical, quality, legal, safety, cost, storage, provider, and rollback constraints still bound each execution."
+  }
+}

@@ -1,0 +1,140 @@
+name: Omega Generator Scale R0.4
+
+on:
+  push:
+    paths:
+      - omega_generator_discovery_t/campaign_scale.py
+      - omega_generator_discovery_t/campaign_scale_emitter.py
+      - omega_generator_discovery_t/campaign_scale_cli.py
+      - tests/test_omega_generator_scale.py
+      - .github/workflows/omega-generator-scale-r04.yml
+  pull_request:
+    paths:
+      - omega_generator_discovery_t/campaign_scale.py
+      - omega_generator_discovery_t/campaign_scale_emitter.py
+      - omega_generator_discovery_t/campaign_scale_cli.py
+      - tests/test_omega_generator_scale.py
+      - .github/workflows/omega-generator-scale-r04.yml
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Finite workload profile to plan
+        required: true
+        default: hundred-million
+        type: choice
+        options:
+          - million
+          - ten-million
+          - hundred-million
+          - billion
+      full_epoch_validation:
+        description: Validate all 1,179,648 records in epoch zero
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  scale-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test runner
+        run: python -m pip install pytest
+      - name: Test R0.3 and R0.4 campaign engines
+        run: |
+          python -m pytest -q \
+            tests/test_omega_generator_campaign.py \
+            tests/test_omega_generator_scale.py
+      - name: Plan 1,179,648,000 logical records without payload materialization
+        run: |
+          python -m omega_generator_discovery_t.campaign_scale_cli plan \
+            --profile billion \
+            --summary-only \
+            --output /tmp/billion-plan.json
+          python - <<'PY'
+          import json
+          plan = json.load(open('/tmp/billion-plan.json', encoding='utf-8'))
+          assert plan['planned_logical_records'] == 1_179_648_000
+          assert plan['epoch_count'] == 1000
+          assert plan['no_permanent_total_addition_cap'] is True
+          PY
+      - name: Validate and deeply inspect 18,432 logical records
+        run: |
+          python -m omega_generator_discovery_t.campaign_scale_cli validate \
+            --epoch-index 0 \
+            --generator-bundles 2048 \
+            --sample-ppm 1000000 \
+            --output /tmp/validation.json
+      - name: Emit and resume one atomic 18,432-record partition
+        run: |
+          python -m omega_generator_discovery_t.campaign_scale_cli emit \
+            --profile million \
+            --target-records-per-partition 20000 \
+            --global-partition-index 0 \
+            --bundles-per-shard 512 \
+            --output-dir /tmp/scale-partition
+          python -m omega_generator_discovery_t.campaign_scale_cli emit \
+            --profile million \
+            --target-records-per-partition 20000 \
+            --global-partition-index 0 \
+            --bundles-per-shard 512 \
+            --output-dir /tmp/scale-partition \
+            --resume
+          test -z "$(find /tmp/scale-partition -name '*.tmp' -print -quit)"
+
+  validation-slices:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        epoch: [0, 1, 7, 31]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate deterministic epoch slice
+        run: |
+          python -m omega_generator_discovery_t.campaign_scale_cli validate \
+            --epoch-index ${{ matrix.epoch }} \
+            --generator-bundles 512 \
+            --sample-ppm 1000000
+
+  selected-profile-plan:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Plan selected finite workload
+        run: |
+          python -m omega_generator_discovery_t.campaign_scale_cli plan \
+            --profile ${{ inputs.profile }} \
+            --summary-only \
+            --output /tmp/selected-plan.json
+          cat /tmp/selected-plan.json
+
+  full-epoch-validation:
+    if: github.event_name == 'workflow_dispatch' && inputs.full_epoch_validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate all epoch-zero logical records
+        run: |
+          python -m omega_generator_discovery_t.campaign_scale_cli validate \
+            --epoch-index 0 \
+            --generator-bundles 131072 \
+            --sample-ppm 10000 \
+            --output /tmp/full-epoch-validation.json
+          cat /tmp/full-epoch-validation.json

@@ -1,0 +1,134 @@
+name: Omega Discovery Kernel R0.3
+
+on:
+  pull_request:
+    paths:
+      - "omega_discovery_kernel_t/**"
+      - "tests/test_omega_discovery_kernel_t.py"
+      - "tests/test_omega_discovery_kernel_frontier_r0_2.py"
+      - "tests/test_omega_discovery_knowledge_frontier_r0_2.py"
+      - "tests/test_omega_discovery_kernel_million_r0_3.py"
+      - "schemas/discovery-event.schema.json"
+      - "schemas/compact-discovery-record.schema.json"
+      - "schemas/knowledge-frontier-targets.schema.json"
+      - "schemas/quantity.schema.json"
+      - "schemas/universal-identity.schema.json"
+      - "policies/omega_discovery_frontier_r0_2.json"
+      - "policies/omega_discovery_million_frontier_r0_3.json"
+      - ".github/workflows/omega-discovery-kernel-r0-3.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-discovery-kernel-r0-3-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  targeted-discovery-kernel:
+    name: Targeted 1M forced-resume OAKBench
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test runner
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Compile Discovery Kernel
+        run: |
+          python -m compileall \
+            omega_discovery_kernel_t \
+            tests/test_omega_discovery_kernel_t.py \
+            tests/test_omega_discovery_kernel_frontier_r0_2.py \
+            tests/test_omega_discovery_knowledge_frontier_r0_2.py \
+            tests/test_omega_discovery_kernel_million_r0_3.py
+
+      - name: Validate machine-readable contracts and catalog equality
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from omega_discovery_kernel_t import EVENT_TYPES, catalog_manifest
+
+          paths = [
+              "schemas/discovery-event.schema.json",
+              "schemas/compact-discovery-record.schema.json",
+              "schemas/knowledge-frontier-targets.schema.json",
+              "schemas/quantity.schema.json",
+              "schemas/universal-identity.schema.json",
+              "policies/omega_discovery_frontier_r0_2.json",
+              "policies/omega_discovery_million_frontier_r0_3.json",
+          ]
+          documents = {}
+          for raw in paths:
+              path = Path(raw)
+              value = json.loads(path.read_text(encoding="utf-8"))
+              if not isinstance(value, dict):
+                  raise SystemExit(f"{path} must contain a JSON object")
+              documents[raw] = value
+              print(f"validated {path}")
+
+          schema_types = tuple(
+              documents["schemas/discovery-event.schema.json"]
+              ["properties"]["event_type"]["enum"]
+          )
+          if schema_types != EVENT_TYPES:
+              missing_in_schema = sorted(set(EVENT_TYPES) - set(schema_types))
+              extra_in_schema = sorted(set(schema_types) - set(EVENT_TYPES))
+              raise SystemExit(
+                  "catalog/schema drift: "
+                  f"missing_in_schema={missing_in_schema}, extra_in_schema={extra_in_schema}"
+              )
+          manifest = catalog_manifest()
+          if manifest["event_type_count"] != 64 or len(EVENT_TYPES) != 64:
+              raise SystemExit("Omega64 catalog must contain exactly 64 event contracts")
+          core = {
+              "ObservationEvent",
+              "ClaimEvent",
+              "GeneratorCandidate",
+              "ExperimentSpec",
+              "ResultPacket",
+              "OAKTransition",
+              "MMinusRule",
+              "ActionProposal",
+          }
+          if not core <= set(EVENT_TYPES):
+              raise SystemExit(f"core-loop events missing from catalog: {sorted(core - set(EVENT_TYPES))}")
+          print("catalog/schema equality PASS: 64 contracts and complete core loop")
+          PY
+
+      - name: Run targeted Discovery Kernel suite
+        shell: bash
+        run: |
+          set -o pipefail
+          pytest -q \
+            tests/test_omega_discovery_kernel_t.py \
+            tests/test_omega_discovery_kernel_frontier_r0_2.py \
+            tests/test_omega_discovery_knowledge_frontier_r0_2.py \
+            tests/test_omega_discovery_kernel_million_r0_3.py \
+            --durations=25 \
+            2>&1 | tee omega-discovery-kernel-r0-3-pytest.log
+
+      - name: Verify CLI surface
+        run: |
+          python -m omega_discovery_kernel_t --help
+          python -m omega_discovery_kernel_t million-frontier --help
+
+      - name: Upload targeted validation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-discovery-kernel-r0-3-validation
+          path: omega-discovery-kernel-r0-3-pytest.log
+          if-no-files-found: warn
+          retention-days: 14
