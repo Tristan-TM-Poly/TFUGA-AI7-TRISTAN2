@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-re-r05-demo.schema.json",
+  "title": "Omega RE R0.5 deterministic demo",
+  "type": "object",
+  "required": [
+    "schema",
+    "probabilistic",
+    "model_expansion",
+    "grammar",
+    "hybrid",
+    "leases",
+    "public_receipts",
+    "re1024_calibration",
+    "boundaries",
+    "probabilistic_cfg",
+    "protocol_negotiation",
+    "drift_monitor",
+    "worker_audit",
+    "orchestrator"
+  ],
+  "properties": {
+    "schema": {"const": "omega-re-r05-demo/1"},
+    "probabilistic": {"type": "object"},
+    "model_expansion": {"type": "object"},
+    "grammar": {"type": "object"},
+    "hybrid": {"type": "object"},
+    "leases": {"type": "object"},
+    "public_receipts": {
+      "type": "object",
+      "required": ["valid", "errors", "receipt_digests", "public_key_ids", "claim"],
+      "properties": {"valid": {"const": true}}
+    },
+    "re1024_calibration": {
+      "type": "object",
+      "required": ["report", "windows"],
+      "properties": {
+        "report": {
+          "type": "object",
+          "required": [
+            "logical_cases",
+            "materialized_cases",
+            "executed_cases",
+            "software_tested_cases",
+            "scientifically_verified_cases",
+            "digest"
+          ],
+          "properties": {
+            "logical_cases": {"const": 1024},
+            "materialized_cases": {"const": 1024},
+            "executed_cases": {"const": 1024},
+            "software_tested_cases": {"const": 1024},
+            "scientifically_verified_cases": {"const": 0},
+            "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          }
+        }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "required": ["external_execution", "scientific_validation", "internal_identity_claimed", "permanent_total_cap"],
+      "properties": {
+        "external_execution": {"const": false},
+        "scientific_validation": {"const": false},
+        "internal_identity_claimed": {"const": false},
+        "permanent_total_cap": {"type": "null"}
+      }
+    },
+    "probabilistic_cfg": {"type": "object"},
+    "protocol_negotiation": {"type": "object"},
+    "drift_monitor": {"type": "object"},
+    "worker_audit": {"type": "object"},
+    "orchestrator": {"type": "object"}
+  },
+  "additionalProperties": false
+}
