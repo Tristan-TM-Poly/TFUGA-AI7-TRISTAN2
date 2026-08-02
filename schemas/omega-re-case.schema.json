@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-re-case.schema.json",
+  "title": "Omega RE Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "system_id", "authorization", "observations", "claim_status"],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "system_id": {"type": "string", "minLength": 1},
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "purpose", "permitted_actions"],
+      "properties": {
+        "mode": {"enum": ["owned", "express_permission", "open_specification", "public_interoperability", "research_sandbox"]},
+        "purpose": {"type": "string", "minLength": 1},
+        "permitted_actions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "prohibited_actions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "reference": {"type": ["string", "null"]}
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["inputs", "outputs", "source", "uncertainty"],
+        "properties": {
+          "inputs": {"type": "array", "items": {"type": "string"}},
+          "outputs": {"type": "array", "items": {"type": "string"}},
+          "source": {"type": "string"},
+          "uncertainty": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "claim_status": {"enum": ["OBSERVED", "MEASURED", "DERIVED", "INFERRED", "PLAUSIBLE", "RECONSTRUCTED", "VERIFIED", "FALSIFIED", "UNKNOWN"]},
+    "evidence_root": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
