@@ -8,6 +8,9 @@ on:
       - configs/omega_generator_r03_ultra.json
       - tools/generate_omega_generator_r03_ultra.py
       - .github/workflows/generate-omega-generator-r03-ultra.yml
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -15,13 +18,15 @@ permissions:
 
 jobs:
   generate-and-audit:
-    if: github.actor != 'github-actions[bot]'
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.ref == 'feat/omega-generator-discovery-r0-3-ultra')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feat/omega-generator-discovery-r0-3-ultra
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || 'feat/omega-generator-discovery-r0-3-ultra' }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -85,6 +90,7 @@ jobs:
           find generated/omega_generator_discovery_r03_ultra -name '*.jsonl' -print0 | xargs -0 wc -l | tail -1
       - name: Commit validated ultra atlas
         run: |
+          target_branch="${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || 'feat/omega-generator-discovery-r0-3-ultra' }}"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- generated/omega_generator_discovery_r03_ultra
@@ -92,5 +98,5 @@ jobs:
             echo 'Ultra atlas already current.'
           else
             git commit -m 'feat(generator-r03): materialize 393216 linked ultra records'
-            git push origin HEAD:feat/omega-generator-discovery-r0-3-ultra
+            git push origin "HEAD:${target_branch}"
           fi
