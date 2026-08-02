@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.example/schemas/cyber_physical_system_blueprint_r01.schema.json",
+  "title": "Omega Cyber Physical System Blueprint R0.1",
+  "type": "object",
+  "required": [
+    "system_id",
+    "name",
+    "components",
+    "connections",
+    "requirements",
+    "fault_modes",
+    "domains",
+    "lifecycle_stage",
+    "permanent_total_cap",
+    "physics_certified",
+    "software_certified",
+    "regulatory_certified",
+    "evidence_hash"
+  ],
+  "properties": {
+    "system_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "component_id",
+          "kind",
+          "domains",
+          "ports",
+          "parameters",
+          "criticality",
+          "physical",
+          "software",
+          "provenance"
+        ],
+        "properties": {
+          "component_id": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "domains": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "mechanical_translational",
+                "mechanical_rotational",
+                "electrical_power",
+                "electronic_signal",
+                "thermal",
+                "fluid",
+                "software",
+                "data"
+              ]
+            }
+          },
+          "ports": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "port_id",
+                "domain",
+                "direction",
+                "effort_unit",
+                "flow_unit",
+                "capacity",
+                "description"
+              ],
+              "properties": {
+                "port_id": {"type": "string", "minLength": 1},
+                "domain": {
+                  "enum": [
+                    "mechanical_translational",
+                    "mechanical_rotational",
+                    "electrical_power",
+                    "electronic_signal",
+                    "thermal",
+                    "fluid",
+                    "software",
+                    "data"
+                  ]
+                },
+                "direction": {"enum": ["input", "output", "bidirectional"]},
+                "effort_unit": {"type": "string", "minLength": 1},
+                "flow_unit": {"type": "string", "minLength": 1},
+                "capacity": {"type": ["number", "null"]},
+                "description": {"type": "string"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "parameters": {"type": "object"},
+          "criticality": {"type": "integer", "minimum": 1, "maximum": 5},
+          "physical": {"type": "boolean"},
+          "software": {"type": "boolean"},
+          "provenance": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "connections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "connection_id",
+          "source_component",
+          "source_port",
+          "target_component",
+          "target_port",
+          "interface_contract",
+          "latency_s",
+          "efficiency"
+        ],
+        "properties": {
+          "connection_id": {"type": "string", "minLength": 1},
+          "source_component": {"type": "string", "minLength": 1},
+          "source_port": {"type": "string", "minLength": 1},
+          "target_component": {"type": "string", "minLength": 1},
+          "target_port": {"type": "string", "minLength": 1},
+          "interface_contract": {"type": "string", "minLength": 1},
+          "latency_s": {"type": "number", "minimum": 0},
+          "efficiency": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "requirements": {"type": "array"},
+    "fault_modes": {"type": "array"},
+    "domains": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string"}
+    },
+    "lifecycle_stage": {"type": "string", "minLength": 1},
+    "permanent_total_cap": {"type": "null"},
+    "physics_certified": {"const": false},
+    "software_certified": {"const": false},
+    "regulatory_certified": {"const": false},
+    "evidence_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}
