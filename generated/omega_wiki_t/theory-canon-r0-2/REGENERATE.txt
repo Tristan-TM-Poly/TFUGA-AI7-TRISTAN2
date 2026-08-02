@@ -1,1 +1,0 @@
-omega-wiki absorb-theory --canon-json interfaces/chatgpt-tristan-v2/data/theory-canon.json --master-canon docs/00_MASTER_CANON_TFUGA_AI7_AIT.md --system-index MASTER_SYSTEM_INDEX.md --output-dir generated/omega_wiki_t/theory-canon-r0-2
