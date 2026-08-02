@@ -1,9 +1,16 @@
-"""Ω-LEGAL-PRODUCTION-OS-T∞ R0.1/R0.2 public API."""
+"""Ω-LEGAL-PRODUCTION-OS-T∞ public API through R0.6."""
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
 
+from .filing_packets import (
+    FilingDocument,
+    GovernmentFilingPacket,
+    build_packet,
+    load_packet,
+    record_official_receipt,
+)
 from .ledger import ActionLedger, LedgerEntry
 from .models import (
     ActionState,
@@ -18,6 +25,15 @@ from .models import (
     iso_utc,
 )
 from .policy import LegalProductionPolicyGate, PolicyReport
+from .real_execution import ExecutionReceipt, doctor, execute_action, reconcile_action
+from .real_providers import (
+    DropboxSignTestProvider,
+    GmailSendProvider,
+    GitHubDraftReleaseProvider,
+    ProviderError,
+    ProviderReceipt,
+    StripeTestPaymentProvider,
+)
 from .release import (
     DryRunReleaseProvider,
     ReleaseArtifact,
@@ -45,22 +61,37 @@ __all__ = [
     "ActionType",
     "ApprovalRecord",
     "AuthorityGrant",
+    "DropboxSignTestProvider",
     "DryRunReleaseProvider",
+    "ExecutionReceipt",
     "ExternalActionEnvelope",
+    "FilingDocument",
     "GateDecision",
+    "GmailSendProvider",
+    "GitHubDraftReleaseProvider",
+    "GovernmentFilingPacket",
     "LedgerEntry",
     "LegalProductionPolicyGate",
     "PolicyReport",
+    "ProviderError",
+    "ProviderReceipt",
     "ReleaseArtifact",
     "ReleaseCandidate",
     "ReleaseDryRunReceipt",
     "RiskLevel",
+    "StripeTestPaymentProvider",
     "audit_policy_atlas",
+    "build_packet",
     "detect_forbidden_payload_keys",
+    "doctor",
+    "execute_action",
     "generate_policy_atlas",
     "hash_payload",
     "iso_utc",
+    "load_packet",
+    "reconcile_action",
+    "record_official_receipt",
     "summarize_artifacts",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.6.0"
