@@ -1,0 +1,9 @@
+{
+  "valid": true,
+  "errors": [],
+  "samples_checked": 176,
+  "family_records": 16777216,
+  "evidence_records": 50331648,
+  "total_objects": 67108864,
+  "merkle_root": "a7d8758c9721ca063391c7043e0c4b7dd70236bbf4a4d95762cdd531326c2ea6"
+}

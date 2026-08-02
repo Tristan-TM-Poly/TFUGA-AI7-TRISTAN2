@@ -1,0 +1,323 @@
+{
+  "version": "R0.2-ultra-packed",
+  "encoding": "fixed_width_binary_gzip",
+  "registry_fingerprint": "a9807beea636a5c36634cfa9969d477f283b9474fb66ff39876806ec7270ed38",
+  "logical_family_space": 17179869184,
+  "logical_linked_object_space": 68719476736,
+  "start_index": 0,
+  "family_records": 16777216,
+  "evidence_records": 50331648,
+  "total_objects": 67108864,
+  "family_record_schema": "<BHB: compatibility_percent, contradiction_bits, warning_flags; index implicit",
+  "evidence_record_schema": "u8: bits[1:0]=kind, bits[4:2]=modality; family index implicit",
+  "family_shards": [
+    {
+      "path": "families/family_00000.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 0,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00001.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 1048576,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00002.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 2097152,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00003.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 3145728,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00004.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 4194304,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00005.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 5242880,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00006.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 6291456,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00007.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 7340032,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00008.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 8388608,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00009.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 9437184,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00010.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 10485760,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00011.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 11534336,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00012.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 12582912,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00013.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 13631488,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00014.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 14680064,
+      "count": 1048576,
+      "record_bytes": 4
+    },
+    {
+      "path": "families/family_00015.bin.gz",
+      "sha256": "a43dfa9c61d060506cb5f00d808b7c99c85690ab251541dd45d26459c05fa785",
+      "compressed_bytes": 15089,
+      "raw_bytes": 4194304,
+      "start": 15728640,
+      "count": 1048576,
+      "record_bytes": 4
+    }
+  ],
+  "evidence_shards": [
+    {
+      "path": "evidence/evidence_00000.bin.gz",
+      "sha256": "716509e7b2dc244150eeb087e2f3ca111ee53abf6048ea4b7ef47b2faec41b8e",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 0,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00001.bin.gz",
+      "sha256": "83e62960f17a0eb470d6369ba5a1a32597b5a4308f4f831c06cc559912ece04a",
+      "compressed_bytes": 6148,
+      "raw_bytes": 3145728,
+      "family_start": 1048576,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00002.bin.gz",
+      "sha256": "f077ad9cff7ec0a738fb3023044ab78c17b96b62b6dbbb253bbf141391e0154b",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 2097152,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00003.bin.gz",
+      "sha256": "9569b5ade471956bd1133f2dd6698052db41dd3dd6c2374f7ccae1f45fa2e5e4",
+      "compressed_bytes": 6148,
+      "raw_bytes": 3145728,
+      "family_start": 3145728,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00004.bin.gz",
+      "sha256": "ab8b77dff072536b27fe8d25c90772e0dbf5f0661647185b1f50a253d648efc1",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 4194304,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00005.bin.gz",
+      "sha256": "716509e7b2dc244150eeb087e2f3ca111ee53abf6048ea4b7ef47b2faec41b8e",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 5242880,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00006.bin.gz",
+      "sha256": "83e62960f17a0eb470d6369ba5a1a32597b5a4308f4f831c06cc559912ece04a",
+      "compressed_bytes": 6148,
+      "raw_bytes": 3145728,
+      "family_start": 6291456,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00007.bin.gz",
+      "sha256": "f077ad9cff7ec0a738fb3023044ab78c17b96b62b6dbbb253bbf141391e0154b",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 7340032,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00008.bin.gz",
+      "sha256": "9569b5ade471956bd1133f2dd6698052db41dd3dd6c2374f7ccae1f45fa2e5e4",
+      "compressed_bytes": 6148,
+      "raw_bytes": 3145728,
+      "family_start": 8388608,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00009.bin.gz",
+      "sha256": "ab8b77dff072536b27fe8d25c90772e0dbf5f0661647185b1f50a253d648efc1",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 9437184,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00010.bin.gz",
+      "sha256": "716509e7b2dc244150eeb087e2f3ca111ee53abf6048ea4b7ef47b2faec41b8e",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 10485760,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00011.bin.gz",
+      "sha256": "83e62960f17a0eb470d6369ba5a1a32597b5a4308f4f831c06cc559912ece04a",
+      "compressed_bytes": 6148,
+      "raw_bytes": 3145728,
+      "family_start": 11534336,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00012.bin.gz",
+      "sha256": "f077ad9cff7ec0a738fb3023044ab78c17b96b62b6dbbb253bbf141391e0154b",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 12582912,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00013.bin.gz",
+      "sha256": "9569b5ade471956bd1133f2dd6698052db41dd3dd6c2374f7ccae1f45fa2e5e4",
+      "compressed_bytes": 6148,
+      "raw_bytes": 3145728,
+      "family_start": 13631488,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00014.bin.gz",
+      "sha256": "ab8b77dff072536b27fe8d25c90772e0dbf5f0661647185b1f50a253d648efc1",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 14680064,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    },
+    {
+      "path": "evidence/evidence_00015.bin.gz",
+      "sha256": "716509e7b2dc244150eeb087e2f3ca111ee53abf6048ea4b7ef47b2faec41b8e",
+      "compressed_bytes": 6147,
+      "raw_bytes": 3145728,
+      "family_start": 15728640,
+      "family_count": 1048576,
+      "count": 3145728,
+      "record_bytes": 1
+    }
+  ],
+  "merkle_root": "a7d8758c9721ca063391c7043e0c4b7dd70236bbf4a4d95762cdd531326c2ea6",
+  "oak_boundary": "Packed objects are deterministic research addresses and test templates, not certified molecules, syntheses, spectra or safety claims."
+}
