@@ -6,7 +6,7 @@ on:
       - feat/omega-cyber-physical-systems-r0-1-max
     paths:
       - "omega_cyber_physical_systems_t/**"
-      - "tests/test_omega_cyber_physical_systems_r01.py"
+      - "tests/test_omega_cyber_physical_systems*.py"
       - "schemas/cyber_physical_*.json"
       - "docs/omega-cyber-physical-systems-t/**"
       - "examples/omega_cyber_physical_systems_r01_demo.py"
@@ -15,7 +15,7 @@ on:
   pull_request:
     paths:
       - "omega_cyber_physical_systems_t/**"
-      - "tests/test_omega_cyber_physical_systems_r01.py"
+      - "tests/test_omega_cyber_physical_systems*.py"
       - "schemas/cyber_physical_*.json"
       - "docs/omega-cyber-physical-systems-t/**"
       - "examples/omega_cyber_physical_systems_r01_demo.py"
@@ -40,7 +40,10 @@ jobs:
       - name: Compile whole-system package
         run: python -m compileall omega_cyber_physical_systems_t
       - name: Run focused cyberphysical regressions
-        run: python -m pytest -q tests/test_omega_cyber_physical_systems_r01.py
+        run: >-
+          python -m pytest -q
+          tests/test_omega_cyber_physical_systems_r01.py
+          tests/test_omega_cyber_physical_systems_r01_evidence.py
       - name: Run OAK benchmark
         run: python -m omega_cyber_physical_systems_t benchmark > /tmp/cps-oak.json
       - name: Materialize blueprint and simulations
@@ -117,7 +120,7 @@ jobs:
           assert compiler['permanent_total_cap'] is None
           assert compiler['engineering_recommendation'] is False
 
-          assert faults['record_count'] if 'record_count' in faults else len(faults['records']) == 3
+          assert len(faults['records']) == 3
           assert faults['probability_claim'] is False
           assert faults['safety_certified'] is False
           assert evidence['contiguous_tier'] == 'D3_COSIMULATED_SYSTEM'
