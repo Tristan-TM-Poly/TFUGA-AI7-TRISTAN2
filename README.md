@@ -1,6 +1,6 @@
 # TFUGA / SAGE-TRISTAN
 
-**Status:** v0.4 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
+**Status:** v0.5 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
 
 This repository crystallizes a rigorous, testable, reusable layer of the TFUGA / SAGE-TRISTAN mathematical biosphere.
 
@@ -25,6 +25,8 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `Ω-ECC-T`: OAK-safe error-correction lab: Hamming(7,4), channel models, Syndrome-CVCD, HyperParityGraph-T, M⁻ hooks, and deterministic OAKBench.
 - `Ω-PDF-HYPERGRAPH-GITHUB-T`: OAK-safe universal absorber for PDF/ZIP/text/code corpora -> chunks -> claim candidates -> HGFM/CVCD hypergraph -> GitHub-ready artifacts.
 - `Ω-WIKI-T∞ / WikiForge-T`: multilingual Wikipedia reader and repository-theory absorber -> revision-pinned articles or canon files -> traceable claims/nodes -> citations, risks, next actions, and knowledge hypergraphs.
+- `Ω-QUATERNION-CRYSTAL-T`: tested 3D kernel separating quaternion orientation, affine deformation, stress/strain tensors, cubic elasticity, and Schmid projection.
+- `Ω-LOGEXP-MORPH-T∞²`: guarded generator calculus with matrix exp/log, nilpotent lifting, BCH, active singular sectors, polar-log, Magnus, commutator graphs, MorphCodex, and basis compression.
 
 ## Repository structure
 
@@ -36,6 +38,8 @@ omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
 ecc_tristan/   Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
 omega_prof_poly_t/ Omega absorb systems, including the universal corpus absorber.
 omega_wiki_t/  Ω-WIKI-T∞ multilingual evidence compiler, translation guard, and theory hypergraph builder.
+omega_quaternion_crystal_t/ Quaternion, affine, crystal, stress, and elasticity operators.
+omega_logexp_morph_t/ Logarithmic/exponential morphism, active-factorization, and generator-compression kernel.
 generated/omega_wiki_t/ Reproducible WikiForge evidence and theory-knowledge artifacts.
 tests/         Unit tests for the executable core.
 examples/      Example branches and DCT++ packets.
@@ -59,6 +63,11 @@ python examples/omega_deeptech_forge_demo.py
 python examples/omega_ecc_t_demo.py
 python examples/omega_universal_absorber_demo.py
 python examples/omega_wiki_t_demo.py
+python examples/omega_quaternion_crystal_demo.py
+python examples/omega_logexp_morph_demo.py
+python examples/omega_logexp_morph_r0_3_demo.py
+omega-quaternion-crystal --axis 0 0 1 --angle-deg 90 --vector 1 0 0
+omega-logexp-morph --generator '[[0,0.1],[-0.1,0]]'
 ```
 
 Universal corpus absorption dry-run:
@@ -149,6 +158,8 @@ Immediate canonizable modules:
 
 Crystallizable modules:
 
+- Ω-QUATERNION-CRYSTAL-T
+- Ω-LOGEXP-MORPH-T∞² R0.3
 - FractalLC
 - NavierTardif
 - FFWT-HGFM
