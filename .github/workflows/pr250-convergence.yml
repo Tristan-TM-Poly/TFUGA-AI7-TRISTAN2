@@ -6,6 +6,11 @@ on:
       - feat/omega-mail-t-r0-1
     paths:
       - .github/workflows/pr250-convergence.yml
+  pull_request:
+    types: [synchronize, reopened, ready_for_review]
+    branches: [main]
+    paths:
+      - .github/workflows/pr250-convergence.yml
 
 permissions:
   contents: write
@@ -49,8 +54,6 @@ jobs:
               git merge --abort || true
               exit 1
             fi
-            # The branch version already contains main's metadata and CLI entries
-            # plus the Company/Mail entry points, so preserve it as the reviewed union.
             git checkout --ours -- pyproject.toml
             git add -- pyproject.toml
           fi
