@@ -7,8 +7,11 @@ on:
       - 'tests/test_omega_unbounded_t.py'
       - 'tests/test_omega_unbounded_github_planner.py'
       - 'tests/test_omega_unbounded_streaming.py'
+      - 'tests/test_omega_unbounded_self_improvement.py'
       - 'schemas/omega_unbounded_addition.schema.json'
+      - 'schemas/omega_unbounded_self_improvement_report.schema.json'
       - 'policies/omega_unbounded_growth.json'
+      - 'policies/omega_unbounded_self_improvement.json'
       - '.github/workflows/omega_unbounded_t_ci.yml'
   push:
     branches:
@@ -18,8 +21,11 @@ on:
       - 'tests/test_omega_unbounded_t.py'
       - 'tests/test_omega_unbounded_github_planner.py'
       - 'tests/test_omega_unbounded_streaming.py'
+      - 'tests/test_omega_unbounded_self_improvement.py'
       - 'schemas/omega_unbounded_addition.schema.json'
+      - 'schemas/omega_unbounded_self_improvement_report.schema.json'
       - 'policies/omega_unbounded_growth.json'
+      - 'policies/omega_unbounded_self_improvement.json'
       - '.github/workflows/omega_unbounded_t_ci.yml'
   workflow_dispatch:
 
@@ -50,6 +56,7 @@ jobs:
           tests/test_omega_unbounded_t.py
           tests/test_omega_unbounded_github_planner.py
           tests/test_omega_unbounded_streaming.py
+          tests/test_omega_unbounded_self_improvement.py
           -q
 
       - name: Build a 100k-addition dry-run plan
@@ -79,10 +86,42 @@ jobs:
           assert (root / 'rollback.jsonl').stat().st_size > 0
           PY
 
-      - name: Upload frontier report
+      - name: Run recursive self-improvement benchmark
+        run: |
+          python -m omega_unbounded_t.cli self-improve \
+            --work-items 60000 \
+            --minimum-improvement-ratio 0.02 \
+            --output-dir generated/omega-unbounded-self-ci
+
+      - name: Verify self-improvement authority and evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('generated/omega-unbounded-self-ci')
+          report = json.loads((root / 'self-improvement-report.json').read_text(encoding='utf-8'))
+          plan = json.loads((root / 'promotion-plan.json').read_text(encoding='utf-8'))
+          assert report['baseline']['completed'] is True
+          assert report['decision']['status'] == 'promotion_proposed'
+          assert report['decision']['improvement_ratio'] >= 0.02
+          assert report['decision']['remote_mutations'] == 0
+          assert report['no_permanent_candidate_cap'] is True
+          assert report['no_source_mutation'] is True
+          assert report['no_auto_merge'] is True
+          assert plan['apply']['automatic'] is False
+          assert plan['apply']['requires_human_approval'] is True
+          assert plan['apply']['source_mutations'] == 0
+          assert plan['apply']['remote_mutations'] == 0
+          assert plan['apply']['merge'] is False
+          assert (root / 'm_plus.jsonl').stat().st_size > 0
+          assert (root / 'self_improvement_m_minus.jsonl').stat().st_size > 0
+          PY
+
+      - name: Upload frontier and self-improvement evidence
         uses: actions/upload-artifact@v7
         with:
-          name: omega-unbounded-ci-100k
+          name: omega-unbounded-ci-evidence
           path: |
             generated/omega-unbounded-ci-100k/manifest.json
             generated/omega-unbounded-ci-100k/semantic-diff.json
@@ -90,3 +129,8 @@ jobs:
             generated/omega-unbounded-ci-100k/tree.jsonl
             generated/omega-unbounded-ci-100k/commit-plan.jsonl
             generated/omega-unbounded-ci-100k/rollback.jsonl
+            generated/omega-unbounded-self-ci/self-improvement-report.json
+            generated/omega-unbounded-self-ci/promotion-plan.json
+            generated/omega-unbounded-self-ci/candidate-results.jsonl
+            generated/omega-unbounded-self-ci/self_improvement_m_minus.jsonl
+            generated/omega-unbounded-self-ci/m_plus.jsonl
