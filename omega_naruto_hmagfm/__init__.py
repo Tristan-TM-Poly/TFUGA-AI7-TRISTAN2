@@ -29,6 +29,24 @@ from .frontier import (
     write_corpus,
 )
 from .frontier_index import FrontierScaleIndex, build_scale_index, write_scale_index
+from .frontier_ledger import (
+    FrontierRunEntry,
+    FrontierRunLedger,
+    LedgerFinding,
+    build_run_ledger,
+    write_run_ledger,
+)
+from .frontier_parallel import (
+    ParallelFinding,
+    ParallelScaleIndex,
+    ParallelValidationReport,
+    ShardIndexPartial,
+    ShardValidationProof,
+    build_scale_index_parallel,
+    validate_scale_corpus_parallel,
+    write_parallel_index,
+    write_parallel_validation,
+)
 from .frontier_scale import (
     ScaleManifest,
     ScalePartition,
@@ -97,11 +115,21 @@ __all__ = [
     "ScaleShardReceipt",
     "ScaleValidationFinding",
     "ScaleValidationReport",
+    "ParallelFinding",
+    "ParallelScaleIndex",
+    "ParallelValidationReport",
+    "ShardIndexPartial",
+    "ShardValidationProof",
+    "FrontierRunEntry",
+    "FrontierRunLedger",
+    "LedgerFinding",
     "analyze_decision_robustness",
     "audit_proposal",
     "benchmark_strategies",
     "build_hgfmn_graph",
+    "build_run_ledger",
     "build_scale_index",
+    "build_scale_index_parallel",
     "decode_ordinal",
     "default_axes",
     "default_robustness_scenarios",
@@ -118,7 +146,11 @@ __all__ = [
     "to_mminus_registry",
     "validate_frontier",
     "validate_scale_corpus",
+    "validate_scale_corpus_parallel",
     "write_corpus",
+    "write_parallel_index",
+    "write_parallel_validation",
+    "write_run_ledger",
     "write_scale_corpus",
     "write_scale_index",
 ]
