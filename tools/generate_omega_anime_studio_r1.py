@@ -2041,16 +2041,20 @@ manifest = {
     json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True)+'\n', encoding='utf-8'
 )
 
-# Source inventory (generated files only; caches and helper script excluded).
+# Source inventory: only artifacts produced by this generator.
 inventory = []
-for path in sorted(ROOT.rglob('*')):
-    if not path.is_file():
+inventory_candidates = [ROOT / rel for rel in sorted(files)] + [
+    matrix_path,
+    frontier_path,
+    ROOT / 'generated/omega_anime_studio_t/generated-manifest.json',
+]
+seen = set()
+for path in inventory_candidates:
+    resolved = path.resolve()
+    if resolved in seen or not path.is_file():
         continue
+    seen.add(resolved)
     rel = path.relative_to(ROOT)
-    if '__pycache__' in rel.parts or '.pytest_cache' in rel.parts:
-        continue
-    if rel == Path('tools/generate_omega_anime_studio_r1.py'):
-        continue
     data = path.read_bytes()
     try:
         text = data.decode('utf-8')
