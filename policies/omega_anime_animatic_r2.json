@@ -1,0 +1,46 @@
+{
+  "schema_version": "omega-anime-animatic-policy/r2",
+  "project": "Le Huitième Feu",
+  "publication_state": "private-draft",
+  "allowed_automation": [
+    "timeline compilation",
+    "procedural low-fidelity drawings",
+    "synthetic guide tones",
+    "subtitle generation",
+    "edit-decision-list generation",
+    "test reports",
+    "GitHub Actions artifacts"
+  ],
+  "human_approval_required": [
+    "canon promotion",
+    "public release",
+    "voice casting",
+    "music licensing",
+    "artist or studio contracts",
+    "commercial distribution",
+    "merge to main"
+  ],
+  "forbidden_defaults": [
+    "imitating a living artist or studio style",
+    "cloning a real person's voice without explicit authorization",
+    "using unlicensed music or visual assets",
+    "presenting procedural frames as final animation",
+    "claiming audience demand from synthetic evaluation",
+    "external network calls from the self-contained player"
+  ],
+  "proof_boundaries": {
+    "software_reproducibility": "testable",
+    "timeline_coherence": "testable",
+    "artistic_quality": "not proven",
+    "audience_demand": "not proven",
+    "legal_clearance": "not proven",
+    "scientific_truth": "not proven",
+    "production_feasibility": "not proven"
+  },
+  "negative_memory": [
+    "M-ANIME-R2-01: transport blobs must never replace reviewable source code",
+    "M-ANIME-R2-02: a green test suite is not an artistic review",
+    "M-ANIME-R2-03: guide audio must not be mistaken for licensed final sound",
+    "M-ANIME-R2-04: one watchable artifact is worth more than thousands of unreviewed scene variants"
+  ]
+}
