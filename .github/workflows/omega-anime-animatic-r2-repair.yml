@@ -6,17 +6,21 @@ on:
       - "feat/omega-anime-t-r0-1"
     paths:
       - ".github/workflows/omega-anime-animatic-r2-repair.yml"
+  pull_request:
+    paths:
+      - ".github/workflows/omega-anime-animatic-r2-repair.yml"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: omega-anime-animatic-r2-repair
+  group: omega-anime-animatic-r2-repair-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   repair-and-materialize:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
