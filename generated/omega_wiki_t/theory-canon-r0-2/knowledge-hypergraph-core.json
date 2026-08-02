@@ -1,0 +1,291 @@
+{
+  "manifest": {
+    "schema": "omega_wiki_t.theory_hypergraph.core.v0.2",
+    "view": "useful_core_projection",
+    "source_paths": [
+      "interfaces/chatgpt-tristan-v2/data/theory-canon.json",
+      "docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+      "MASTER_SYSTEM_INDEX.md"
+    ],
+    "full_node_count": 92,
+    "full_hyperedge_count": 94,
+    "node_count": 13,
+    "hyperedge_count": 11,
+    "oak_status": "REPOSITORY_CANON_ABSORBED_NOT_SCIENTIFICALLY_CERTIFIED",
+    "projection_boundary": "Curated operational core; run omega-wiki absorb-theory for the complete graph and all generated views."
+  },
+  "nodes": [
+    {
+      "node_id": "node_3c40cc633046604998dc",
+      "label": "TFUGA",
+      "kind": "theory_system",
+      "domain": "cross-domain",
+      "oak_status": "canonical fertile",
+      "role": "generative theory root",
+      "risk": "overgeneralization",
+      "next_action": "define executable claim cards",
+      "utility_score": 0.94,
+      "source_paths": ["interfaces/chatgpt-tristan-v2/data/theory-canon.json"]
+    },
+    {
+      "node_id": "node_aa8d5bd311ede70ca037",
+      "label": "HGFM",
+      "kind": "theory_system",
+      "domain": "cross-domain",
+      "oak_status": "operational scaffold",
+      "role": "hypergraph fractal mycelial representation",
+      "risk": "metaphor without schema",
+      "next_action": "export graph JSON and GraphML",
+      "utility_score": 0.84,
+      "source_paths": ["interfaces/chatgpt-tristan-v2/data/theory-canon.json"]
+    },
+    {
+      "node_id": "node_784c30b1fe05c047786b",
+      "label": "CVCD",
+      "kind": "theory_system",
+      "domain": "mathematics",
+      "oak_status": "master_canon_candidate",
+      "role": "compressed virtual computation by iterative decompression",
+      "risk": "plausible reconstruction confused with verified result",
+      "next_action": "define compression, reconstruction, residue, and baseline tests",
+      "utility_score": 0.5,
+      "source_paths": ["docs/00_MASTER_CANON_TFUGA_AI7_AIT.md"]
+    },
+    {
+      "node_id": "node_df877645404747cb7973",
+      "label": "OAK",
+      "kind": "theory_system",
+      "domain": "foundations",
+      "oak_status": "core safety layer",
+      "role": "verification, falsification, status, and promotion discipline",
+      "risk": "false promotion",
+      "next_action": "automated claim matrix",
+      "utility_score": 0.92,
+      "source_paths": [
+        "docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+        "interfaces/chatgpt-tristan-v2/data/theory-canon.json"
+      ]
+    },
+    {
+      "node_id": "node_3493968cee2fa202a833",
+      "label": "DCT-Ω / DCT++",
+      "kind": "theory_system",
+      "domain": "governance",
+      "oak_status": "canonical contract",
+      "role": "Document, Code, Test, Data, Risk, Ethics, Status, Next, Links evidence packet",
+      "risk": "packet completeness confused with proof",
+      "next_action": "generate reusable claim packets",
+      "utility_score": 0.9,
+      "source_paths": [
+        "docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+        "MASTER_SYSTEM_INDEX.md"
+      ]
+    },
+    {
+      "node_id": "node_af7bb1202adb6e9f3dd9",
+      "label": "AI-7",
+      "kind": "theory_system",
+      "domain": "ait",
+      "oak_status": "master_canon_candidate",
+      "role": "production-verification metabolism",
+      "risk": "generation outruns verification",
+      "next_action": "bind every production step to OAK and DCT-Ω traces",
+      "utility_score": 0.5,
+      "source_paths": ["docs/00_MASTER_CANON_TFUGA_AI7_AIT.md"]
+    },
+    {
+      "node_id": "node_2aeab3439d1287f55131",
+      "label": "Bayes-Tristan",
+      "kind": "theory_system",
+      "domain": "cross-domain",
+      "oak_status": "canonical framework",
+      "role": "posterior tensor decision layer",
+      "risk": "confusing fertility with proof",
+      "next_action": "posterior card prototype",
+      "utility_score": 0.94,
+      "source_paths": ["interfaces/chatgpt-tristan-v2/data/theory-canon.json"]
+    },
+    {
+      "node_id": "node_d829d8e0e174d5b5ee9d",
+      "label": "FailureSynth",
+      "kind": "theory_system",
+      "domain": "ait",
+      "oak_status": "master_canon_candidate",
+      "role": "negative-memory engine converting failure into reusable constraints",
+      "risk": "failure record without reproducible context",
+      "next_action": "attach counterexamples and residues to claim packets",
+      "utility_score": 0.5,
+      "source_paths": ["docs/00_MASTER_CANON_TFUGA_AI7_AIT.md"]
+    },
+    {
+      "node_id": "node_e6c4ab9d0f97cc13aee0",
+      "label": "FFWT-HAC-CVCD",
+      "kind": "theory_system",
+      "domain": "signals and spectroscopy",
+      "oak_status": "high-priority prototype",
+      "role": "multiscale signal benchmark branch",
+      "risk": "claim before baseline",
+      "next_action": "Add DWT/scattering baselines, real datasets, noise sweeps, ablations.",
+      "utility_score": 1.0,
+      "source_paths": [
+        "MASTER_SYSTEM_INDEX.md",
+        "interfaces/chatgpt-tristan-v2/data/theory-canon.json"
+      ]
+    },
+    {
+      "node_id": "node_c41e7702b3dcd44346e7",
+      "label": "AUTO² Kernel",
+      "kind": "theory_system",
+      "domain": "automation",
+      "oak_status": "D",
+      "role": "workflow compiler with forbidden actions, rollback, and telemetry",
+      "risk": "automation without sovereignty",
+      "next_action": "Add CI, CLI examples, dry-run GitHub issue generator.",
+      "utility_score": 0.958,
+      "source_paths": ["MASTER_SYSTEM_INDEX.md"]
+    },
+    {
+      "node_id": "node_f57d2090c7e6de15f19e",
+      "label": "Ω-LIN-T",
+      "kind": "theory_system",
+      "domain": "scientific computing",
+      "oak_status": "D",
+      "role": "local-linearization OAKBench with residuals and validity domains",
+      "risk": "local model extrapolated beyond its validity domain",
+      "next_action": "Package as first public prototype/paper.",
+      "utility_score": 0.948,
+      "source_paths": ["MASTER_SYSTEM_INDEX.md"]
+    },
+    {
+      "node_id": "node_b70127443c41bbda78a5",
+      "label": "Ω-DeepTech Intelligence Forge",
+      "kind": "theory_system",
+      "domain": "deeptech and company creation",
+      "oak_status": "D-MVP",
+      "role": "routes signals toward IP, revenue, publication, and prototype decisions",
+      "risk": "signal confused with validation, patentability, sale, or certification",
+      "next_action": "Connect to review packets, prior-art packs, offer cards, and Value Pipeline OAKBench.",
+      "utility_score": 0.956,
+      "source_paths": ["MASTER_SYSTEM_INDEX.md"]
+    },
+    {
+      "node_id": "node_53137295a31435253a27",
+      "label": "Company Revenue IP Publication OS",
+      "kind": "theory_system",
+      "domain": "company and IP",
+      "oak_status": "X/D",
+      "role": "turns artifacts into reviewable company, revenue, IP, and publication packets",
+      "risk": "publication or commercialization before evidence and IP gates",
+      "next_action": "Integrate Value Pipeline OAKBench scoring and approval records.",
+      "utility_score": 0.905,
+      "source_paths": ["MASTER_SYSTEM_INDEX.md"]
+    }
+  ],
+  "hyperedges": [
+    {
+      "edge_id": "hedge_b3cc1c48c6ba67342b19",
+      "kind": "root_generates_representation",
+      "node_ids": ["node_3c40cc633046604998dc", "node_aa8d5bd311ede70ca037"],
+      "weight": 0.95,
+      "rationale": "TFUGA is the generative root and HGFM its hypergraph representation layer.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_79094934f4a5332306d9",
+      "kind": "representation_supports_compression",
+      "node_ids": ["node_aa8d5bd311ede70ca037", "node_784c30b1fe05c047786b"],
+      "weight": 0.9,
+      "rationale": "HGFM organizes objects and relations that CVCD compresses and selectively expands.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_c35803a11febc47be05c",
+      "kind": "verification_governs",
+      "node_ids": [
+        "node_df877645404747cb7973",
+        "node_3c40cc633046604998dc",
+        "node_aa8d5bd311ede70ca037",
+        "node_784c30b1fe05c047786b"
+      ],
+      "weight": 0.96,
+      "rationale": "OAK gates definitions, tests, residues, and promotion across the core theory stack.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_d7ace553a736a28d3a30",
+      "kind": "evidence_contract_operationalizes",
+      "node_ids": ["node_3493968cee2fa202a833", "node_df877645404747cb7973"],
+      "weight": 0.92,
+      "rationale": "DCT-Ω/DCT++ packages document, code, tests, data, risk, ethics, status, next action, and links.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_76192ffeae34b16ff9d5",
+      "kind": "production_verification_metabolism",
+      "node_ids": [
+        "node_af7bb1202adb6e9f3dd9",
+        "node_df877645404747cb7973",
+        "node_3493968cee2fa202a833"
+      ],
+      "weight": 0.91,
+      "rationale": "AI-7 couples production, verification, testing, integration, and canonization through explicit evidence packets.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_fbaa42aceb966eb0daf9",
+      "kind": "posterior_calibration",
+      "node_ids": ["node_2aeab3439d1287f55131", "node_df877645404747cb7973"],
+      "weight": 0.86,
+      "rationale": "Bayes-Tristan supplies posterior decision structure while OAK prevents fertility from being confused with proof.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_9b23c1dac5b849f253cb",
+      "kind": "negative_memory_feedback",
+      "node_ids": ["node_d829d8e0e174d5b5ee9d", "node_df877645404747cb7973"],
+      "weight": 0.84,
+      "rationale": "FailureSynth converts errors and refutations into reusable negative memory for later gates.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_5b415035dc568d616729",
+      "kind": "signal_branch_specializes",
+      "node_ids": [
+        "node_e6c4ab9d0f97cc13aee0",
+        "node_784c30b1fe05c047786b",
+        "node_aa8d5bd311ede70ca037"
+      ],
+      "weight": 0.88,
+      "rationale": "The FFWT branch applies multiscale compression and hypergraph coherence to signals and spectroscopy.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_2adea3b582b0f190f81a",
+      "kind": "workflow_compiler_governed_by",
+      "node_ids": ["node_c41e7702b3dcd44346e7", "node_df877645404747cb7973"],
+      "weight": 0.9,
+      "rationale": "AUTO² compiles workflows with forbidden actions, rollback, and telemetry under OAK constraints.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_364594d9f72bff44f966",
+      "kind": "benchmark_governed_by",
+      "node_ids": ["node_f57d2090c7e6de15f19e", "node_df877645404747cb7973"],
+      "weight": 0.91,
+      "rationale": "Ω-LIN-T is a locally demonstrated OAKBench with residuals and validity domains.",
+      "status": "curated_relation_from_canon_cross_reading"
+    },
+    {
+      "edge_id": "hedge_f12dbd8d519125065ab3",
+      "kind": "deeptech_routes_value",
+      "node_ids": [
+        "node_b70127443c41bbda78a5",
+        "node_53137295a31435253a27",
+        "node_df877645404747cb7973"
+      ],
+      "weight": 0.9,
+      "rationale": "DeepTech Forge routes evidence-ranked signals toward IP, revenue, publication, and prototypes behind OAK review.",
+      "status": "curated_relation_from_canon_cross_reading"
+    }
+  ]
+}

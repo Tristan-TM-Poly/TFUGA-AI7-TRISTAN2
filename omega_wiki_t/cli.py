@@ -7,6 +7,7 @@ import sys
 from typing import Sequence
 
 from .core import MediaWikiClient, MediaWikiError, WikiCompiler
+from .theory_hypergraph import TheoryHypergraphBuilder
 
 
 def _language_list(raw: str) -> list[str] | str:
@@ -18,7 +19,7 @@ def _language_list(raw: str) -> list[str] | str:
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="omega-wiki",
-        description="Ω-WIKI-T∞ read-only multilingual Wikipedia evidence compiler.",
+        description="Ω-WIKI-T∞ multilingual evidence and theory hypergraph compiler.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -36,6 +37,28 @@ def _build_parser() -> argparse.ArgumentParser:
     compile_cmd.add_argument("--langs", default="en", help="Comma-separated target languages or 'all'.")
     compile_cmd.add_argument("--max-languages", type=int, default=20, help="Safety cap for --langs all; 0 disables the cap.")
     compile_cmd.add_argument("--output-dir", default="generated/omega_wiki_t")
+
+    theory = sub.add_parser("absorb-theory", help="Absorb repository canon into a useful knowledge hypergraph.")
+    theory.add_argument(
+        "--canon-json",
+        default="interfaces/chatgpt-tristan-v2/data/theory-canon.json",
+        help="Structured theory canon JSON.",
+    )
+    theory.add_argument(
+        "--master-canon",
+        default="docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+        help="Master Canon Markdown file.",
+    )
+    theory.add_argument(
+        "--system-index",
+        default="MASTER_SYSTEM_INDEX.md",
+        help="Ranked Master System Index Markdown file.",
+    )
+    theory.add_argument(
+        "--output-dir",
+        default="generated/omega_wiki_t/theory-canon-r0-2",
+        help="Output directory for JSON, JSONL, GraphML, and Markdown views.",
+    )
 
     audit = sub.add_parser("audit", help="Audit a previously generated bundle.")
     audit.add_argument("bundle")
@@ -99,6 +122,31 @@ def _compile(args: argparse.Namespace) -> int:
     return 0
 
 
+def _absorb_theory(args: argparse.Namespace) -> int:
+    graph = TheoryHypergraphBuilder.from_files(
+        theory_canon_json=args.canon_json,
+        master_canon=args.master_canon,
+        system_index=args.system_index,
+    )
+    output = TheoryHypergraphBuilder.write(graph, args.output_dir)
+    systems = [node for node in graph.nodes if node.kind == "theory_system"]
+    print(
+        json.dumps(
+            {
+                "output_dir": str(output),
+                "nodes": len(graph.nodes),
+                "theory_systems": len(systems),
+                "hyperedges": len(graph.hyperedges),
+                "top_useful_systems": [node.label for node in systems[:10]],
+                "oak_status": graph.manifest["oak_status"],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+    return 0
+
+
 def _audit(bundle: str) -> int:
     root = Path(bundle)
     required = ["manifest.json", "articles.jsonl", "claims.jsonl", "sources.jsonl", "language-matrix.json", "report.md"]
@@ -153,6 +201,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _languages(args.topic, args.lang)
         if args.command == "compile":
             return _compile(args)
+        if args.command == "absorb-theory":
+            return _absorb_theory(args)
         if args.command == "audit":
             return _audit(args.bundle)
     except (MediaWikiError, ValueError, OSError, json.JSONDecodeError) as exc:

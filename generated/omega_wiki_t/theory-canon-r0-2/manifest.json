@@ -1,0 +1,13 @@
+{
+  "schema": "omega_wiki_t.theory_hypergraph.v0.2",
+  "source_paths": [
+    "interfaces/chatgpt-tristan-v2/data/theory-canon.json",
+    "docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+    "MASTER_SYSTEM_INDEX.md"
+  ],
+  "node_count": 92,
+  "hyperedge_count": 94,
+  "oak_status": "REPOSITORY_CANON_ABSORBED_NOT_SCIENTIFICALLY_CERTIFIED",
+  "utility_score_boundary": "Transparent navigation heuristic from OAK status, rank, next action, and actionability; not truth probability.",
+  "relation_boundary": "Explicit document relations and curated cross-reading links remain candidate knowledge relations until reviewed."
+}
