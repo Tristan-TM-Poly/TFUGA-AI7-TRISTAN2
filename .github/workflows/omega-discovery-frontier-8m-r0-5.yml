@@ -1,0 +1,160 @@
+name: Omega Discovery Frontier 8M R0.5
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/omega-discovery-frontier-8m-r0-5.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-discovery-frontier-8m-r0-5-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eight-million-frontier:
+    name: Actual 8M forced-resume frontier
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile merged engines
+        run: |
+          python -m compileall \
+            omega_discovery_kernel_t/frontier_conductor.py \
+            omega_discovery_kernel_t/million_frontier.py \
+            omega_discovery_kernel_t/million_optimized.py
+
+      - name: Execute 8,000,000 events
+        run: |
+          python -m omega_discovery_kernel_t million-frontier \
+            --events 8000000 \
+            --interrupt-after 4194304 \
+            --namespaces 2048 \
+            --seed 76 \
+            --output-dir /tmp/frontier-8m-r0-5 \
+            --initial-shard-bytes 33554432 \
+            --shard-growth-factor 1.7 \
+            --checkpoint-interval 400000 \
+            --sqlite-batch-size 80000 \
+            --minimum-free-bytes 1073741824 \
+            --latency-saturation-seconds 60 \
+            --rss-saturation-bytes 8589934592 \
+            > /tmp/frontier-8m-r0-5.log
+
+      - name: Audit 8M integrity and promotion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from omega_discovery_kernel_t.frontier_conductor import (
+              ConductorPolicy,
+              Decision,
+              FrontierObservation,
+              ResourceEnvelope,
+              build_plan,
+              decide_next,
+          )
+
+          root = Path('/tmp/frontier-8m-r0-5')
+          summary = json.loads((root / 'million-experiment-summary.json').read_text())
+          manifest = summary['manifest']
+          integrity = manifest['integrity']
+          telemetry = manifest['telemetry']
+          assert summary['phase_one']['interrupted'] is True
+          assert summary['phase_one']['accepted'] == 4_194_304
+          assert summary['phase_two']['accepted'] == 3_805_696
+          assert summary['phase_two']['resumed'] is True
+          assert summary['exact_total_reached'] is True
+          assert integrity['event_count'] == 8_000_000
+          assert integrity['distinct_event_ids'] == 8_000_000
+          assert integrity['duplicate_ids'] == 0
+          assert integrity['orphan_parent_count'] == 0
+          assert integrity['subject_count'] == 1_000_000
+          assert integrity['complete_subject_count'] == 1_000_000
+          assert integrity['m_minus_event_count'] == 1_000_000
+          assert integrity['minimum_sequence'] == 0
+          assert integrity['maximum_sequence'] == 7_999_999
+          assert integrity['contiguous'] is True
+          assert integrity['all_subjects_complete'] is True
+
+          plan = build_plan(
+              ResourceEnvelope(
+                  wall_time_seconds=40_000,
+                  writable_bytes=50_000_000_000,
+                  rss_soft_bytes=8_000_000_000,
+                  rollback_reserve_bytes=2_000_000_000,
+                  minimum_throughput_events_per_second=100,
+                  maximum_error_rate=0.0,
+                  maximum_batch_latency_seconds=60.0,
+              ),
+              ConductorPolicy(
+                  initial_events=1_000_000,
+                  growth_factor=2.0,
+                  target_events_per_partition=2_000_000,
+                  bytes_per_event_estimate=300.0,
+                  throughput_estimate_events_per_second=5_000.0,
+              ),
+          )
+          elapsed = max(float(telemetry['elapsed_seconds']), 1e-9)
+          bytes_written = sum(p.stat().st_size for p in (root / 'shards').glob('*.jsonl'))
+          bytes_written += (root / 'million-index.sqlite3').stat().st_size
+          observation = FrontierObservation(
+              plan_id=plan.plan_id,
+              stage_index=3,
+              attempted_events=8_000_000,
+              accepted_events=8_000_000,
+              elapsed_seconds=elapsed,
+              bytes_written=bytes_written,
+              peak_rss_bytes=int(telemetry['peak_rss_bytes']),
+              maximum_batch_latency_seconds=float(telemetry['last_batch_seconds']),
+              error_count=int(telemetry['rejected_events']),
+              duplicate_count=int(integrity['duplicate_ids']),
+              orphan_parent_count=int(integrity['orphan_parent_count']),
+              complete_subjects=int(integrity['complete_subject_count']),
+              interrupted_and_resumed=True,
+              ledger_digest=str(integrity['ledger_digest']),
+          )
+          decision = decide_next(plan, observation)
+          assert decision.decision is Decision.EXPAND
+          assert decision.next_target_events == 16_000_000
+          assert decision.m_minus == ()
+          result = {
+              'event_count': integrity['event_count'],
+              'complete_subjects': integrity['complete_subject_count'],
+              'duplicates': integrity['duplicate_ids'],
+              'orphan_parents': integrity['orphan_parent_count'],
+              'elapsed_seconds': elapsed,
+              'bytes_written': bytes_written,
+              'peak_rss_bytes': telemetry['peak_rss_bytes'],
+              'maximum_batch_latency_seconds': telemetry['last_batch_seconds'],
+              'decision': decision.decision.value,
+              'next_target_events': decision.next_target_events,
+          }
+          Path('/tmp/frontier-8m-r0-5-result.json').write_text(json.dumps(result, indent=2) + '\n')
+          print(json.dumps(result, indent=2))
+          PY
+
+      - name: Upload 8M evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-discovery-frontier-8m-r0-5
+          path: |
+            /tmp/frontier-8m-r0-5.log
+            /tmp/frontier-8m-r0-5-result.json
+            /tmp/frontier-8m-r0-5/million-experiment-summary.json
+            /tmp/frontier-8m-r0-5/million-manifest.json
+            /tmp/frontier-8m-r0-5/million-telemetry.json
+            /tmp/frontier-8m-r0-5/saturation-m-minus.jsonl
+          if-no-files-found: warn
+          retention-days: 14
