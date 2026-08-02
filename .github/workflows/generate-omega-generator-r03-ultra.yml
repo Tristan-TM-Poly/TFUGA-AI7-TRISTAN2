@@ -1,0 +1,96 @@
+name: Generate Omega Generator R0.3 Ultra
+
+on:
+  push:
+    branches:
+      - feat/omega-generator-discovery-r0-3-ultra
+    paths:
+      - configs/omega_generator_r03_ultra.json
+      - tools/generate_omega_generator_r03_ultra.py
+      - .github/workflows/generate-omega-generator-r03-ultra.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-and-audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/omega-generator-discovery-r0-3-ultra
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate 393216 linked records and SQLite index
+        run: python tools/generate_omega_generator_r03_ultra.py --root .
+      - name: Capture first deterministic fingerprint
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('generated/omega_generator_discovery_r03_ultra/manifest.json').read_text())
+          Path('/tmp/r03-fingerprint').write_text(manifest['combined_fingerprint'])
+          assert manifest['counts'] == {
+              'generators': 65536,
+              'benchmarks': 131072,
+              'hyperedges': 65536,
+              'negative_controls': 65536,
+              'validations': 65536,
+              'total_jsonl_records': 393216,
+          }
+          assert manifest['audit']['valid'] is True
+          PY
+      - name: Regenerate and verify determinism
+        run: |
+          python tools/generate_omega_generator_r03_ultra.py --root . >/tmp/r03-second-run.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          first = Path('/tmp/r03-fingerprint').read_text()
+          second = json.loads(Path('generated/omega_generator_discovery_r03_ultra/manifest.json').read_text())['combined_fingerprint']
+          assert first == second, (first, second)
+          PY
+      - name: Verify line counts and SQLite cross-links
+        run: |
+          test "$(find generated/omega_generator_discovery_r03_ultra/catalogs -name '*.jsonl' -print0 | xargs -0 cat | wc -l)" -eq 65536
+          test "$(find generated/omega_generator_discovery_r03_ultra/benchmarks -name '*.jsonl' -print0 | xargs -0 cat | wc -l)" -eq 131072
+          test "$(find generated/omega_generator_discovery_r03_ultra/hyperedges -name '*.jsonl' -print0 | xargs -0 cat | wc -l)" -eq 65536
+          test "$(find generated/omega_generator_discovery_r03_ultra/negative_controls -name '*.jsonl' -print0 | xargs -0 cat | wc -l)" -eq 65536
+          test "$(find generated/omega_generator_discovery_r03_ultra/validation -name '*.jsonl' -print0 | xargs -0 cat | wc -l)" -eq 65536
+          python - <<'PY'
+          import sqlite3
+          db = sqlite3.connect('generated/omega_generator_discovery_r03_ultra/index/omega_generator_r03_ultra.sqlite3')
+          expected = {
+              'generators': 65536,
+              'benchmarks': 131072,
+              'hyperedges': 65536,
+              'negative_controls': 65536,
+              'validations': 65536,
+          }
+          for table, count in expected.items():
+              actual = db.execute(f'SELECT COUNT(*) FROM {table}').fetchone()[0]
+              assert actual == count, (table, actual, count)
+          assert db.execute("SELECT COUNT(*) FROM validations WHERE risk_tier='high' AND validation_mode!='exhaustive_required'").fetchone()[0] == 0
+          db.close()
+          PY
+      - name: Record inventory
+        run: |
+          du -sh generated/omega_generator_discovery_r03_ultra
+          find generated/omega_generator_discovery_r03_ultra -type f | sort
+          find generated/omega_generator_discovery_r03_ultra -name '*.jsonl' -print0 | xargs -0 wc -l | tail -1
+      - name: Commit validated ultra atlas
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- generated/omega_generator_discovery_r03_ultra
+          if git diff --cached --quiet; then
+            echo 'Ultra atlas already current.'
+          else
+            git commit -m 'feat(generator-r03): materialize 393216 linked ultra records'
+            git push origin HEAD:feat/omega-generator-discovery-r0-3-ultra
+          fi
