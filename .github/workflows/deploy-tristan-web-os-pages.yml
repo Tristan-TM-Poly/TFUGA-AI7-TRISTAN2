@@ -1,0 +1,64 @@
+name: Deploy Tristan Web OS to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/tristan-8fire-site/**
+      - .github/workflows/deploy-tristan-web-os-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: tristan-web-os-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build public Pages artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+
+      - name: Verify public site payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f apps/tristan-8fire-site/index.html
+          test -f apps/tristan-8fire-site/app.js
+          test -f apps/tristan-8fire-site/sw.js
+          test -f apps/tristan-8fire-site/app.webmanifest
+          test -f apps/tristan-8fire-site/data/theories.json
+          test -f apps/tristan-8fire-site/data/claims.json
+          test -f apps/tristan-8fire-site/data/relations.json
+          test -f apps/tristan-8fire-site/data/provenance.json
+          test -f apps/tristan-8fire-site/data/build-manifest.json
+          printf 'Tristan Web OS public payload verified.\n'
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Tristan Web OS artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: apps/tristan-8fire-site
+
+  deploy:
+    name: Publish live site
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
