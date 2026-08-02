@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.example/schemas/anime-project-r0-1.schema.json",
+  "title": "Omega Anime T R0.1 Project",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "project_id",
+    "title",
+    "logline",
+    "theme_question",
+    "audience",
+    "format_name",
+    "target_duration_seconds",
+    "visual_invariants",
+    "world_rules",
+    "characters",
+    "episode_beats",
+    "promises",
+    "oak_status",
+    "evidence",
+    "risks",
+    "next_actions",
+    "metadata"
+  ],
+  "properties": {
+    "project_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "logline": {"type": "string", "minLength": 20},
+    "theme_question": {"type": "string", "pattern": "\\?$"},
+    "audience": {"type": "string", "minLength": 1},
+    "format_name": {"type": "string", "minLength": 1},
+    "target_duration_seconds": {"type": "integer", "minimum": 30},
+    "visual_invariants": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "world_rules": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "characters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/character"}
+    },
+    "episode_beats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/beat"}
+    },
+    "promises": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/promise"}
+    },
+    "oak_status": {
+      "enum": [
+        "EXPLORATORY",
+        "FORMALIZED",
+        "SIMULATED",
+        "DEMONSTRATED",
+        "REPLICATED",
+        "CANONICAL"
+      ]
+    },
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "risks": {"type": "array", "items": {"type": "string"}},
+    "next_actions": {"type": "array", "items": {"type": "string"}},
+    "metadata": {"type": "object"}
+  },
+  "$defs": {
+    "character": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "character_id",
+        "name",
+        "desire",
+        "need",
+        "fear",
+        "contradiction",
+        "power",
+        "limitation",
+        "knowledge",
+        "relationships"
+      ],
+      "properties": {
+        "character_id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "desire": {"type": "string", "minLength": 1},
+        "need": {"type": "string", "minLength": 1},
+        "fear": {"type": "string", "minLength": 1},
+        "contradiction": {"type": "string", "minLength": 1},
+        "power": {"type": "string", "minLength": 1},
+        "limitation": {"type": "string", "minLength": 1},
+        "knowledge": {"type": "array", "items": {"type": "string"}},
+        "relationships": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "beat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "beat_id",
+        "order",
+        "title",
+        "objective",
+        "conflict",
+        "irreversible_change",
+        "information_revealed",
+        "estimated_seconds"
+      ],
+      "properties": {
+        "beat_id": {"type": "string", "minLength": 1},
+        "order": {"type": "integer", "minimum": 1},
+        "title": {"type": "string", "minLength": 1},
+        "objective": {"type": "string", "minLength": 1},
+        "conflict": {"type": "string", "minLength": 1},
+        "irreversible_change": {"type": "string", "minLength": 1},
+        "information_revealed": {"type": "array", "items": {"type": "string"}},
+        "estimated_seconds": {"type": "integer", "minimum": 1}
+      }
+    },
+    "promise": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promise_id",
+        "introduced_in",
+        "setup",
+        "expected_payoff",
+        "status"
+      ],
+      "properties": {
+        "promise_id": {"type": "string", "minLength": 1},
+        "introduced_in": {"type": "string", "minLength": 1},
+        "setup": {"type": "string", "minLength": 1},
+        "expected_payoff": {"type": "string"},
+        "status": {"enum": ["OPEN", "PARTIAL", "RESOLVED", "ABANDONED"]}
+      }
+    }
+  }
+}
