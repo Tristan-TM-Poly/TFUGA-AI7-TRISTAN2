@@ -12,9 +12,9 @@ from omega_unbounded_t import (
 
 def _scenarios():
     return (
-        SelfImprovementScenario("small", 1_200, 32, 16),
-        SelfImprovementScenario("medium", 3_600, 64, 32),
-        SelfImprovementScenario("large", 7_200, 128, 64),
+        SelfImprovementScenario("small", 10_000, 64, 32),
+        SelfImprovementScenario("medium", 20_000, 128, 64),
+        SelfImprovementScenario("large", 30_000, 256, 128),
     )
 
 
@@ -100,5 +100,6 @@ def test_external_candidate_stream_is_consumed_until_exhaustion(tmp_path):
 
     assert len(candidates) == 2
     assert len(report.candidates) == 2
+    assert report.decision.selected == "redesign-3x"
     assert report.candidate_stream_exhausted is True
     assert report.no_permanent_candidate_cap is True
