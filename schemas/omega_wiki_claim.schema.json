@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/omega_wiki_claim.schema.json",
+  "title": "Omega Wiki Claim Candidate R0.1",
+  "description": "A revision-pinned sentence extracted as a claim candidate. This schema does not imply factual verification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claim_id",
+    "article_id",
+    "language",
+    "section",
+    "paragraph_index",
+    "sentence_index",
+    "original_text",
+    "citation_markers",
+    "source_ids",
+    "status",
+    "oak_residues"
+  ],
+  "properties": {
+    "claim_id": {"type": "string", "pattern": "^claim_[a-f0-9]{20}$"},
+    "article_id": {"type": "string", "minLength": 1},
+    "language": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,19}$"},
+    "section": {"type": "string"},
+    "paragraph_index": {"type": "integer", "minimum": 0},
+    "sentence_index": {"type": "integer", "minimum": 0},
+    "original_text": {"type": "string", "minLength": 1},
+    "citation_markers": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^source_[a-f0-9]{20}$"},
+      "uniqueItems": true
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "claim_candidate",
+        "supported",
+        "partially_supported",
+        "contested",
+        "contradicted",
+        "uncited",
+        "obsolete",
+        "unresolved",
+        "generated_hypothesis"
+      ]
+    },
+    "oak_residues": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    }
+  }
+}
