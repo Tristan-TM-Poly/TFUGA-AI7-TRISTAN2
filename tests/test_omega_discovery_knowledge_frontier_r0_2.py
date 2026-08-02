@@ -130,7 +130,7 @@ def test_github_dry_run_plans_50100_additions_with_hashes_and_rollback(tmp_path:
         "semantic-diff.json",
         "tree.jsonl",
     }
-    # GitHubDryRunPlanner names its index plan-index.sqlite3.  The frontier-index
+    # GitHubDryRunPlanner names its index plan-index.sqlite3. The frontier-index
     # name is not required here; retain the assertion set dynamically below.
     existing = {path.name for path in output.iterdir()}
     assert required - {"frontier-index.sqlite3"} <= existing
@@ -172,8 +172,9 @@ def test_custom_targets_scale_without_a_permanent_total_cap() -> None:
         actions_per_result=2,
         memory_rules_per_result=2,
         identities_per_claim=2,
-        benchmark_cases=100_000,
+        benchmark_cases=1_000_000,
     )
     assert targets.validate() == []
+    assert targets.total_additions == 5_301_000
     assert targets.total_additions > 5_000_000
     assert not hasattr(targets, "max_total_additions")
