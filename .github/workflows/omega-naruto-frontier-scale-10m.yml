@@ -1,9 +1,7 @@
 name: Omega Naruto Frontier Scale 10M
 
 on:
-  push:
-    branches:
-      - 'feat/omega-naruto-hmagfm-r12'
+  pull_request:
     paths:
       - 'omega_naruto_hmagfm/frontier_parallel.py'
       - 'omega_naruto_hmagfm/frontier_ledger.py'
@@ -37,7 +35,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: omega-naruto-frontier-scale-10m-${{ github.ref }}
+  group: omega-naruto-frontier-scale-10m-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -52,7 +50,7 @@ jobs:
       PROOF_WORKERS: ${{ github.event_name == 'workflow_dispatch' && inputs.proof_workers || '4' }}
 
     steps:
-      - name: Checkout branch head
+      - name: Checkout merge ref
         uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -156,11 +154,11 @@ jobs:
           ledger_stdout = json.loads((root / 'run-ledger-10m-stdout.json').read_text(encoding='utf-8'))
 
           schemas = (
-              ('validation', validation, 'schemas/omega_naruto_parallel_validation_v3.schema.json'),
-              ('index', index, 'schemas/omega_naruto_parallel_index_v3.schema.json'),
-              ('ledger', ledger, 'schemas/omega_naruto_run_ledger_v3.schema.json'),
+              (validation, 'schemas/omega_naruto_parallel_validation_v3.schema.json'),
+              (index, 'schemas/omega_naruto_parallel_index_v3.schema.json'),
+              (ledger, 'schemas/omega_naruto_run_ledger_v3.schema.json'),
           )
-          for _, payload, schema_path in schemas:
+          for payload, schema_path in schemas:
               schema = json.loads(Path(schema_path).read_text(encoding='utf-8'))
               Draft202012Validator.check_schema(schema)
               Draft202012Validator(schema).validate(payload)
