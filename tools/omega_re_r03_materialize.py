@@ -20,7 +20,12 @@ PARTS = (
     ("part05_1_1.txt", "1b5846f89dab995035f2164a36c131a1849ff3809c4daa055af095cebc6aa99b"),
     ("part05_1_2.txt", "9b48f01524cb05fc8c20be98985a2a4bbcb705d36d65ad6cb931a84ac7074400"),
     ("part05_1_3.txt", "5774b8e63cba76573ca128953803cd2bf06b35df5aa16b65bec0df291b02c818"),
-    ("part05_2.txt", "c2f20d649dc4b92293c23cf18df193cb19cddcfab4703af95b93ec88a890eaf6"),
+    ("part05_2_0.txt", "3737fcf496211107ab10769808a12d2b1d1a7d8a572cf18b9f541a18df82ad81"),
+    ("part05_2_1.txt", "f6db568892e83fbdbc06b72175c8e2b5ce5e56e726b78386823e2d30a4a44aca"),
+    ("part05_2_2.txt", "5dd7a3b92c92221de25514ead74c75e2c967d791a976bf0f93203258f74e2e5b"),
+    ("part05_2_3_0.txt", "19cbc5d0d5ea4902b549ed3314f5083c41dcf8ade875412b4aa462e0ea63748a"),
+    ("part05_2_3_1.txt", "51a4fafb7c6014da3cc4563e6505eebca8efebf8c1ab59aabb897a8329c1f9bb"),
+    ("part05_2_3_2.txt", "c1add2c4ff8d625d41de3189a2b3c181a0c0dad0fd05369fe1e4770d813941d7"),
 )
 ARCHIVE_SHA256 = "b1eb6be9785649c6dc9b7fb1d8c85218ecf55b9fb296cc4404bd2940e3d9ad62"
 FILE_SHA256 = {
