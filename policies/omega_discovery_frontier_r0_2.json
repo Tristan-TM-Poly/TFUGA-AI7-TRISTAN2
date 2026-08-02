@@ -1,0 +1,153 @@
+{
+  "schema": "omega_discovery_kernel.frontier_policy.v0.2",
+  "name": "Omega Discovery Frontier R0.2",
+  "status": "active_software_policy_not_scientific_certification",
+  "architecture": {
+    "permanent_total_event_cap": null,
+    "permanent_total_addition_cap": null,
+    "finite_default_event_experiment": 50000,
+    "finite_default_addition_experiment": 50100,
+    "core_loop_event_types": 8,
+    "catalog_event_types": 64,
+    "benchmark_families": 36,
+    "storage": [
+      "jsonl_shards",
+      "sqlite_wal_index",
+      "checkpoint",
+      "telemetry",
+      "quarantine",
+      "m_minus",
+      "rollback"
+    ]
+  },
+  "adaptive_budget": {
+    "initial_shard_bytes": 262144,
+    "shard_growth_factor": 2.0,
+    "checkpoint_interval_events": 1000,
+    "sqlite_commit_interval_events": 1000,
+    "minimum_free_bytes": 67108864,
+    "backpressure_on_disk_reserve": true,
+    "resume_enabled": true,
+    "deduplication_enabled": true
+  },
+  "required_event_properties": [
+    "event_id",
+    "event_type",
+    "subject_id",
+    "timestamp",
+    "parent_ids",
+    "domain",
+    "status",
+    "payload",
+    "event_hash"
+  ],
+  "promotion_gates": {
+    "claim": [
+      "scope",
+      "failure_conditions",
+      "provenance_or_source_hash"
+    ],
+    "result": [
+      "experiment_ancestry",
+      "metric",
+      "baseline",
+      "units",
+      "uncertainty",
+      "protocol"
+    ],
+    "demonstrated": [
+      "result_ancestry",
+      "matched_baseline",
+      "held_out_or_preregistered_evaluation"
+    ],
+    "measured": [
+      "calibrated_measurement",
+      "traceable_reference",
+      "uncertainty_budget"
+    ],
+    "canonical": [
+      "decisive_evidence",
+      "known_counterexamples",
+      "validity_domain",
+      "reproducibility",
+      "human_review"
+    ],
+    "certified_physics": [
+      "units",
+      "derivation",
+      "calibrated_measurements",
+      "uncertainty",
+      "independent_replication",
+      "comparison_to_established_models"
+    ]
+  },
+  "human_approval_required": [
+    "irreversible_experiment",
+    "publication",
+    "external_deployment",
+    "financial_commitment",
+    "legal_or_ip_classification",
+    "personal_data_processing",
+    "physical_instrument_action",
+    "retirement_without_reversible_migration"
+  ],
+  "anti_false_density": {
+    "generated_contract_is_evidence": false,
+    "schema_validity_is_truth": false,
+    "internal_consistency_is_external_validation": false,
+    "passing_tests_are_scientific_proof": false,
+    "node_count_is_knowledge": false,
+    "event_count_is_discovery": false,
+    "citation_marker_is_support": false,
+    "code_is_validation": false
+  },
+  "negative_memory": {
+    "required_for_failed_result": true,
+    "fields": [
+      "context",
+      "metric",
+      "baseline",
+      "conditions",
+      "prohibited_inference",
+      "reusable_rule",
+      "propagation_targets"
+    ],
+    "universal_refutation_from_local_failure": false
+  },
+  "validation_frontiers": [
+    {
+      "name": "event_frontier_50k",
+      "events": 50000,
+      "subjects": 6250,
+      "expected_complete_core_loops": 6250,
+      "expected_m_minus_records": 6250,
+      "remote_mutations": 0
+    },
+    {
+      "name": "knowledge_addition_frontier_50100",
+      "logical_additions": 50100,
+      "knowledge_cells": 100,
+      "claims": 1000,
+      "evidence_contracts": 5000,
+      "experiments": 1000,
+      "results": 10000,
+      "actions": 10000,
+      "m_minus_rules": 10000,
+      "universal_identities": 1000,
+      "benchmark_cases": 12000,
+      "remote_mutations": 0
+    }
+  ],
+  "next_frontier": {
+    "target_events": 1000000,
+    "conditions": [
+      "forced_interruption_recovery",
+      "multiple_producers",
+      "partitioned_index",
+      "resource_telemetry",
+      "validation_sampling_with_deep_audits",
+      "m_minus_for_each_saturation"
+    ]
+  },
+  "oak_boundary": "The policy governs software workflow integrity and reversible planning. It does not certify scientific truth, physical safety, legal compliance, patentability, or market value."
+}
