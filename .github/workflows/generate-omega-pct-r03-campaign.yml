@@ -45,7 +45,7 @@ jobs:
       - name: Validate atlas
         run: |
           python -m pytest tests/test_omega_pct_r03_campaign_atlas.py -q
-          python tools/audit_omega_pct_r03_campaign.py data/omega_pct_r03_campaign
+          python tools/audit_omega_pct_r03_campaign.py --root data/omega_pct_r03_campaign
       - name: Remove runtime-only artifacts
         shell: bash
         run: |
