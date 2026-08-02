@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "omega_org_pattern_registry_r03.schema.json",
+  "title": "Omega Organic Pattern Registry R0.3",
+  "type": "object",
+  "required": ["version", "patterns", "transformations", "fingerprint"],
+  "properties": {
+    "version": {"type": "string"},
+    "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "patterns": {"type": "array"},
+    "transformations": {"type": "array"}
+  },
+  "additionalProperties": false
+}

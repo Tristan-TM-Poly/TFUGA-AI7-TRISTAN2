@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "omega_org_evidence_benchmark_r03.schema.json",
+  "title": "Omega Organic Evidence Benchmark R0.3",
+  "type": "object",
+  "required": ["version", "status", "cases", "correct", "wrong", "abstained", "shards", "merkle_root", "generator"],
+  "properties": {
+    "cases": {"type": "integer", "minimum": 0},
+    "correct": {"type": "integer", "minimum": 0},
+    "wrong": {"type": "integer", "minimum": 0},
+    "abstained": {"type": "integer", "minimum": 0},
+    "merkle_root": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "shards": {"type": "array"},
+    "generator": {"type": "object", "required": ["permanent_total_ceiling", "finite_run_cases"]}
+  },
+  "additionalProperties": true
+}
