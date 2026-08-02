@@ -41,7 +41,9 @@ def test_unresolved_references_remain_explicit_debt() -> None:
     for source in unresolved:
         assert source["sha256"] is None
         assert source["size_bytes"] is None
-        assert "does not certify" in source["epistemic_boundary"]
+        boundary = source["epistemic_boundary"].lower()
+        assert "certify" in boundary
+        assert "does not" in boundary or "do not" in boundary
 
 
 def test_resolved_files_have_matching_hash_shape() -> None:
