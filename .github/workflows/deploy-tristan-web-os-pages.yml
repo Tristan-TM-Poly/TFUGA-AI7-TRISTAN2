@@ -56,32 +56,61 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Publish verifiable deployment receipt
+  report:
+    name: Publish deployment receipt
+    if: always()
+    needs:
+      - build
+      - deploy
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Write public deployment receipt to PR 248
         env:
           GH_TOKEN: ${{ github.token }}
-          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
           DEPLOYED_SHA: ${{ github.sha }}
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: bash
         run: |
+          if [ "$DEPLOY_RESULT" = "success" ] && [ -n "$PAGE_URL" ]; then
+            headline="## Tristan Web OS est publié"
+            site_line="- **Site public :** ${PAGE_URL}"
+            final_status="déploiement GitHub Pages réussi"
+          else
+            headline="## Diagnostic de publication Tristan Web OS"
+            site_line="- **Site public :** non disponible"
+            final_status="publication non confirmée; consulter l’exécution"
+          fi
+
           body=$(cat <<EOF
           <!-- tristan-web-os-live-deployment -->
-          ## Tristan Web OS est publié
+          ${headline}
 
-          - **Site public :** ${PAGE_URL}
-          - **Commit déployé :** \`${DEPLOYED_SHA}\`
-          - **Exécution GitHub Pages :** ${RUN_URL}
-          - **Statut :** déploiement GitHub Pages réussi
+          ${site_line}
+          - **Build :** ${BUILD_RESULT}
+          - **Déploiement :** ${DEPLOY_RESULT}
+          - **Commit :** \`${DEPLOYED_SHA}\`
+          - **Exécution :** ${RUN_URL}
+          - **Statut :** ${final_status}
 
-          Ce reçu est produit uniquement après la réussite de \`actions/deploy-pages\`.
+          Ce reçu est généré automatiquement par le pipeline de production de Tristan Web OS.
           EOF
           )
           gh api "repos/${GITHUB_REPOSITORY}/issues/248/comments" -f body="$body"
