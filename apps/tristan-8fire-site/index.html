@@ -1,177 +1,86 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr-CA" data-theme="dark" data-density="comfortable" data-motion="system">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Tristan Web OS — atlas vivant de théories, preuves, prototypes et actifs vérifiables.">
-  <meta name="theme-color" content="#101418">
-  <title>Tristan Web OS — Théories, preuves et prototypes</title>
+  <meta name="description" content="Tristan Web OS — atlas vivant de théories, claims, preuves, prototypes, limites et prochaines expériences.">
+  <meta name="theme-color" content="#0b0e11">
+  <meta name="color-scheme" content="dark light">
+  <title>Tableau de preuve — Tristan Web OS</title>
+  <link rel="manifest" href="app.webmanifest">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="r03.css">
 </head>
 <body>
-  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <a class="skip-link" href="#app">Aller au contenu</a>
+  <div id="live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-  <header class="site-header">
-    <a class="brand" href="#accueil" aria-label="Tristan Web OS, accueil">
+  <header class="app-header">
+    <a class="brand" href="#/dashboard" aria-label="Tristan Web OS, tableau de preuve">
       <span class="brand-mark" aria-hidden="true">Ω</span>
-      <span><strong>Tristan Web OS</strong><small>R0.1 · public proof interface</small></span>
+      <span>
+        <strong>Tristan Web OS</strong>
+        <small>R0.3 · proof-first knowledge system</small>
+      </span>
     </a>
-    <nav aria-label="Navigation principale">
-      <a href="#atlas">Atlas</a>
-      <a href="#oak">OAK</a>
-      <a href="#pipeline">Pipeline</a>
-      <a href="#collaboration">Collaborer</a>
-    </nav>
+
+    <form id="global-search" class="global-search" role="search" autocomplete="off">
+      <label class="sr-only" for="global-search-input">Rechercher dans les théories et claims</label>
+      <span aria-hidden="true">⌕</span>
+      <input id="global-search-input" type="search" placeholder="Rechercher théorie, claim, domaine…" aria-controls="global-search-results">
+      <kbd>Ctrl K</kbd>
+      <div id="global-search-results" class="global-search-results" hidden></div>
+    </form>
+
+    <div class="header-actions">
+      <button id="install-app" class="icon-button" type="button" hidden aria-label="Installer Tristan Web OS">↓</button>
+      <button id="toggle-density" class="icon-button" type="button" aria-label="Changer la densité">↕</button>
+      <button id="toggle-theme" class="icon-button" type="button" aria-label="Changer le thème">◐</button>
+    </div>
   </header>
 
-  <main id="contenu">
-    <section class="hero" id="accueil">
-      <div class="hero-copy">
-        <p class="eyebrow">Architectures scientifiques, computationnelles et entrepreneuriales</p>
-        <h1>Des idées transdisciplinaires transformées en <em>preuves, code et actifs vérifiables</em>.</h1>
-        <p class="hero-lead">Ce site ne présente pas toutes les propositions comme acquises. Il relie chaque théorie à son état épistémique, ses limites, ses artefacts et sa prochaine expérience.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#atlas">Explorer l’Atlas</a>
-          <a class="button secondary" href="#oak">Comprendre OAK</a>
-        </div>
-      </div>
-      <aside class="hero-panel" aria-label="Chaîne de cristallisation">
-        <p>Chaîne de cristallisation</p>
-        <ol>
-          <li><span>01</span> Idée</li>
-          <li><span>02</span> Théorie</li>
-          <li><span>03</span> Claim</li>
-          <li><span>04</span> Test</li>
-          <li><span>05</span> Prototype</li>
-          <li><span>06</span> Usage</li>
-        </ol>
-      </aside>
-    </section>
+  <div class="app-layout">
+    <aside class="app-sidebar" aria-label="Navigation principale">
+      <nav class="side-nav">
+        <a href="#/dashboard" data-route="dashboard"><span aria-hidden="true">◫</span><span>Tableau de preuve</span></a>
+        <a href="#/atlas" data-route="atlas"><span aria-hidden="true">⌘</span><span>Atlas</span></a>
+        <a href="#/claims" data-route="claims"><span aria-hidden="true">≣</span><span>Claims</span></a>
+        <a href="#/graph" data-route="graph"><span aria-hidden="true">⌬</span><span>Hypergraphe</span></a>
+        <a href="#/evidence" data-route="evidence"><span aria-hidden="true">⊢</span><span>Evidence Fabric</span></a>
+        <a href="#/mminus" data-route="mminus"><span aria-hidden="true">M⁻</span><span>Mémoire négative</span></a>
+        <a href="#/roadmap" data-route="roadmap"><span aria-hidden="true">↗</span><span>GO Cristallise</span></a>
+        <a href="#/about" data-route="about"><span aria-hidden="true">i</span><span>Gouvernance</span></a>
+      </nav>
 
-    <section class="metrics" aria-label="Mesures publiques du corpus">
-      <article><strong id="metric-theories">—</strong><span>branches publiées</span></article>
-      <article><strong id="metric-artifacts">—</strong><span>artefacts liés</span></article>
-      <article><strong id="metric-prototypes">—</strong><span>prototypes déclarés</span></article>
-      <article><strong id="metric-negative">1</strong><span>résultat négatif exposé</span></article>
-    </section>
+      <section class="sidebar-gate" aria-label="Invariant de publication">
+        <p>Publication</p>
+        <code>OAK ∧ IP ∧ Privacy ∧ Security</code>
+        <small>Aucune promotion automatique.</small>
+      </section>
+    </aside>
 
-    <section class="section" id="atlas">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Atlas public R0.1</p>
-          <h2>Explorer par domaine, maturité et preuve</h2>
-        </div>
-        <p>Chaque carte distingue potentiel, état actuel et prochaine action. Les scores OAK sont provisoires et non des probabilités de vérité.</p>
-      </div>
+    <main id="app" class="app-main" tabindex="-1">
+      <section id="app-loading" class="loading-state" aria-busy="true">
+        <span class="loading-orbit" aria-hidden="true"></span>
+        <h1>Chargement du corpus</h1>
+        <p>Vérification des théories, claims et relations…</p>
+      </section>
+      <p id="app-error" class="error-banner" hidden></p>
+    </main>
+  </div>
 
-      <form class="filters" id="filters" aria-label="Filtres de l’Atlas">
-        <label>
-          <span>Rechercher</span>
-          <input id="search" type="search" placeholder="FFWT, batterie, incertitude…" autocomplete="off">
-        </label>
-        <label>
-          <span>Maturité</span>
-          <select id="maturity">
-            <option value="">Toutes</option>
-            <option value="hypothèse">Hypothèse</option>
-            <option value="architecture">Architecture</option>
-            <option value="prototype">Prototype</option>
-          </select>
-        </label>
-        <label>
-          <span>Domaine</span>
-          <select id="domain"><option value="">Tous</option></select>
-        </label>
-        <button class="button tertiary" type="reset">Réinitialiser</button>
-      </form>
-
-      <p class="result-count" id="result-count" aria-live="polite"></p>
-      <div class="atlas-grid" id="atlas-grid" aria-live="polite"></div>
-      <noscript>Activez JavaScript pour afficher l’Atlas filtrable. Les données restent disponibles dans <code>data/theories.json</code>.</noscript>
-    </section>
-
-    <section class="section oak-section" id="oak">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">OAK · discipline anti-surpromesse</p>
-          <h2>Six questions avant toute promotion</h2>
-        </div>
-        <p>Une théorie peut être fertile sans être démontrée. OAK rend visibles la preuve, la testabilité, la valeur et les risques de publication.</p>
-      </div>
-      <div class="oak-grid">
-        <article><span>V</span><h3>Vérité</h3><p>Qu’est-ce qui est établi, inféré, proposé ou encore inconnu?</p></article>
-        <article><span>U</span><h3>Utilité</h3><p>Quel problème concret est mieux résolu?</p></article>
-        <article><span>T</span><h3>Testabilité</h3><p>Quelle expérience peut confirmer, limiter ou réfuter?</p></article>
-        <article><span>S</span><h3>Simplicité</h3><p>Une explication plus simple suffit-elle?</p></article>
-        <article><span>V</span><h3>Valeur</h3><p>Qui bénéficie du résultat, et comment le mesurer?</p></article>
-        <article><span>P</span><h3>Protection</h3><p>Faut-il publier, breveter, garder secret ou licencier?</p></article>
-      </div>
-      <div class="gate">
-        <strong>Publication autorisée</strong>
-        <code>OAKGate ∧ IPGate ∧ PrivacyGate ∧ SecurityGate</code>
-      </div>
-    </section>
-
-    <section class="section" id="pipeline">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Theory Compiler</p>
-          <h2>Un corpus qui produit des artefacts</h2>
-        </div>
-        <p>La source canonique doit pouvoir générer une page, un README, une expérience, un rapport OAK et une piste produit sans perdre la provenance.</p>
-      </div>
-      <div class="pipeline" role="list" aria-label="Pipeline de transformation">
-        <div role="listitem"><span>01</span><strong>Capturer</strong><small>intuition + provenance</small></div>
-        <div role="listitem"><span>02</span><strong>Canoniser</strong><small>définition + limites</small></div>
-        <div role="listitem"><span>03</span><strong>Tester</strong><small>baseline + résidu</small></div>
-        <div role="listitem"><span>04</span><strong>Implémenter</strong><small>code + CI</small></div>
-        <div role="listitem"><span>05</span><strong>Livrer</strong><small>usage + preuve</small></div>
-      </div>
-    </section>
-
-    <section class="section collaboration" id="collaboration">
-      <div>
-        <p class="eyebrow">Collaborations ciblées</p>
-        <h2>Recherche, prototypage et audit de systèmes complexes</h2>
-        <p>Les collaborations prioritaires relient une question précise à un prototype mesurable, un jeu de données, une expérience ou un dépôt vérifiable.</p>
-      </div>
-      <ul>
-        <li>Analyse scientifique et spectrale</li>
-        <li>Architecture logicielle OAK-safe</li>
-        <li>Prototypes deeptech simulation-first</li>
-        <li>Audit de claims, code, tests et IP</li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    <p><strong>Tristan Web OS R0.1</strong> — Moins de brouillard, plus de preuves.</p>
-    <p>Contenu expérimental; aucune affirmation scientifique, médicale, juridique ou financière n’est certifiée par cette interface.</p>
+  <footer class="app-footer">
+    <p><strong>Tristan Web OS R0.3</strong> — Moins de brouillard, plus de preuves.</p>
+    <p>Les scores OAK sont des signaux provisoires de navigation; ils ne sont ni probabilités de vérité, ni certifications.</p>
   </footer>
 
-  <template id="theory-template">
-    <article class="theory-card">
-      <div class="card-topline">
-        <span class="symbol"></span>
-        <span class="maturity badge"></span>
-      </div>
-      <h3></h3>
-      <p class="summary"></p>
-      <div class="tags" aria-label="Domaines"></div>
-      <dl class="card-meta">
-        <div><dt>Preuve</dt><dd class="evidence"></dd></div>
-        <div><dt>Artefacts</dt><dd class="artifacts"></dd></div>
-      </dl>
-      <div class="oak-bars" aria-label="Profil OAK"></div>
-      <details>
-        <summary>État, limites et prochaine action</summary>
-        <p class="status-note"></p>
-        <p><strong>Prochaine action :</strong> <span class="next-action"></span></p>
-        <p class="source"></p>
-      </details>
-    </article>
-  </template>
+  <noscript>
+    <section class="noscript-warning">
+      <h1>JavaScript est requis pour l’interface interactive.</h1>
+      <p>Les registres restent accessibles dans <code>data/theories.json</code>, <code>data/claims.json</code> et <code>data/relations.json</code>.</p>
+    </section>
+  </noscript>
 
-  <script src="app.js" defer></script>
+  <script src="app.js" type="module"></script>
 </body>
 </html>
