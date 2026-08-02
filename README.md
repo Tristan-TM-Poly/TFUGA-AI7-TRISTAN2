@@ -1,6 +1,6 @@
 # TFUGA / SAGE-TRISTAN
 
-**Status:** v0.2 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
+**Status:** v0.3 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
 
 This repository crystallizes a rigorous, testable, reusable layer of the TFUGA / SAGE-TRISTAN mathematical biosphere.
 
@@ -24,23 +24,25 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `Ω-DeepTech Intelligence Forge`: OAK-safe layer for deeptech signals -> IP triage -> prototype tasks -> revenue routing -> GitHub artifacts.
 - `Ω-ECC-T`: OAK-safe error-correction lab: Hamming(7,4), channel models, Syndrome-CVCD, HyperParityGraph-T, M⁻ hooks, and deterministic OAKBench.
 - `Ω-PDF-HYPERGRAPH-GITHUB-T`: OAK-safe universal absorber for PDF/ZIP/text/code corpora -> chunks -> claim candidates -> HGFM/CVCD hypergraph -> GitHub-ready artifacts.
+- `Ω-WIKI-T∞ / WikiForge-T`: read-only multilingual Wikipedia reader -> revision-pinned articles -> claim candidates -> citation/source links -> OAK manifests -> reproducible reports.
 - `Ω-QUATERNION-CRYSTAL-T`: tested 3D kernel separating quaternion orientation, affine deformation, stress/strain tensors, cubic elasticity, and Schmid projection.
 - `Ω-LOGEXP-MORPH-T∞`: guarded generator calculus with matrix exp/log, nilpotent lifting, BCH, semigroup defects, discrete sectors, and basis compression.
 
 ## Repository structure
 
 ```text
-docs/       Manifest, roadmap, canon analysis, publication plan.
-schemas/    JSON schemas for DCT++, research cards, HGFM, status vectors.
-sage_tristan/ Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
+docs/          Manifest, roadmap, canon analysis, publication plan.
+schemas/       JSON schemas for DCT++, research cards, HGFM, status vectors, WikiForge claims.
+sage_tristan/  Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
 omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
-ecc_tristan/ Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
+ecc_tristan/   Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
 omega_prof_poly_t/ Omega absorb systems, including the universal corpus absorber.
+omega_wiki_t/  Ω-WIKI-T∞ multilingual evidence compiler and citation-preserving translation guard.
 omega_quaternion_crystal_t/ Quaternion, affine, crystal, stress, and elasticity operators.
 omega_logexp_morph_t/ Logarithmic/exponential morphism and generator-compression kernel.
-tests/      Unit tests for the executable core.
-examples/   Example branches and DCT++ packets.
-reports/    Generated audit and publication reports.
+tests/         Unit tests for the executable core.
+examples/      Example branches and DCT++ packets.
+reports/       Generated audit and publication reports.
 ```
 
 ## Scientific hygiene
@@ -59,6 +61,7 @@ python -m sage_tristan.demo
 python examples/omega_deeptech_forge_demo.py
 python examples/omega_ecc_t_demo.py
 python examples/omega_universal_absorber_demo.py
+python examples/omega_wiki_t_demo.py
 python examples/omega_quaternion_crystal_demo.py
 python examples/omega_logexp_morph_demo.py
 omega-quaternion-crystal --axis 0 0 1 --angle-deg 90 --vector 1 0 0
@@ -71,7 +74,18 @@ Universal corpus absorption dry-run:
 omega-corpus-absorb path/to/corpus_or_zip --output-dir generated/omega_corpus
 ```
 
-Outputs:
+Multilingual Wikipedia evidence bundle:
+
+```bash
+omega-wiki read "Mécanique quantique" --lang fr
+omega-wiki languages "Mécanique quantique" --lang fr
+omega-wiki compile "Mécanique quantique" --lang fr --langs en,de,ja --output-dir generated/q944
+omega-wiki audit generated/q944
+```
+
+WikiForge-T R0.1 is extraction infrastructure, not factual certification. Wikipedia text is not proof; a citation marker is not automatically support; multilingual agreement is not automatically consensus.
+
+Universal absorber outputs:
 
 ```text
 manifest.json
@@ -80,6 +94,17 @@ claims.jsonl
 hypergraph.json
 hypergraph.graphml
 oak_report.json
+```
+
+WikiForge-T outputs:
+
+```text
+manifest.json
+articles.jsonl
+claims.jsonl
+sources.jsonl
+language-matrix.json
+report.md
 ```
 
 ## Current canon layer
@@ -97,6 +122,7 @@ Immediate canonizable modules:
 - Ω-DeepTech Intelligence Forge
 - Ω-ECC-T / Error Correction Codes de Tristan
 - Ω-PDF-HYPERGRAPH-GITHUB-T / AIT-Frédéric
+- Ω-WIKI-T∞ / WikiForge-T R0.1 extraction kernel
 
 Crystallizable modules:
 
@@ -114,5 +140,8 @@ Crystallizable modules:
 - PDF Rosette Extractor
 - Claim-Evidence-Residue Graph
 - Drive↔GitHub OAK Sync
+- Exact citation-entry parsing and Citoid enrichment
+- Cross-language claim alignment and contradiction detection
+- Citation-safe multilingual generation
 
 Exploratory branches stay labeled as exploratory until proven, simulated, or experimentally validated.
