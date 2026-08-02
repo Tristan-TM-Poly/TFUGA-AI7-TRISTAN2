@@ -6,6 +6,7 @@ on:
       - 'omega_unbounded_t/**'
       - 'tests/test_omega_unbounded_t.py'
       - 'tests/test_omega_unbounded_github_planner.py'
+      - 'tests/test_omega_unbounded_streaming.py'
       - 'schemas/omega_unbounded_addition.schema.json'
       - 'policies/omega_unbounded_growth.json'
       - '.github/workflows/omega_unbounded_t_ci.yml'
@@ -16,6 +17,7 @@ on:
       - 'omega_unbounded_t/**'
       - 'tests/test_omega_unbounded_t.py'
       - 'tests/test_omega_unbounded_github_planner.py'
+      - 'tests/test_omega_unbounded_streaming.py'
       - 'schemas/omega_unbounded_addition.schema.json'
       - 'policies/omega_unbounded_growth.json'
       - '.github/workflows/omega_unbounded_t_ci.yml'
@@ -40,7 +42,12 @@ jobs:
         run: python -m compileall -q omega_unbounded_t
 
       - name: Run targeted tests
-        run: python -m pytest tests/test_omega_unbounded_t.py tests/test_omega_unbounded_github_planner.py -q
+        run: >-
+          python -m pytest
+          tests/test_omega_unbounded_t.py
+          tests/test_omega_unbounded_github_planner.py
+          tests/test_omega_unbounded_streaming.py
+          -q
 
       - name: Build a 100k-addition dry-run plan
         run: |
