@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega_external_action.schema.json",
+  "title": "Omega External Action Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action_id",
+    "action_type",
+    "company_id",
+    "requested_by",
+    "requested_at",
+    "purpose",
+    "payload",
+    "required_approvals",
+    "professional_review_required",
+    "risk_level",
+    "state",
+    "approvals",
+    "policy_id",
+    "evidence_ids",
+    "metadata"
+  ],
+  "properties": {
+    "action_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9_-]{2,79}$"},
+    "action_type": {
+      "enum": [
+        "EXTERNAL_MAIL",
+        "RELEASE",
+        "PAYMENT",
+        "SIGNATURE",
+        "GOVERNMENT_FILING",
+        "INCORPORATION",
+        "PRODUCTION_ACTIVATION"
+      ]
+    },
+    "company_id": {"type": "string", "minLength": 1},
+    "requested_by": {"type": "string", "minLength": 1},
+    "requested_at": {"type": "string", "format": "date-time"},
+    "purpose": {"type": "string", "minLength": 1},
+    "payload": {"type": "object"},
+    "required_approvals": {"enum": [1, 2]},
+    "professional_review_required": {"type": "boolean"},
+    "risk_level": {"enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]},
+    "state": {"type": "string"},
+    "approvals": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action_hash", "approver", "role", "approved_at", "scope", "note"],
+        "properties": {
+          "action_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "approver": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "approved_at": {"type": "string", "format": "date-time"},
+          "scope": {"const": "ONE_ACTION"},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "source_issue": {"type": ["integer", "null"], "minimum": 1},
+    "source_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{7,40}$"},
+    "policy_id": {"type": "string", "minLength": 1},
+    "evidence_ids": {"type": "array", "items": {"type": "string"}},
+    "metadata": {"type": "object"},
+    "action_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}
