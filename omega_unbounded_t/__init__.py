@@ -24,6 +24,18 @@ from .github_planner import (
     iter_jsonl,
     synthetic_additions,
 )
+from .self_improvement import (
+    ControllerVariant,
+    PromotionDecision,
+    ScenarioOutcome,
+    SelfImprovementLab,
+    SelfImprovementReport,
+    SelfImprovementScenario,
+    VariantOutcome,
+    adaptive_candidate_stream,
+    default_scenarios,
+    iter_variants_jsonl,
+)
 from .streaming import (
     BreakthroughEvent,
     MPlusLedger,
@@ -39,20 +51,30 @@ __all__ = [
     "BreakthroughEvent",
     "CapacityPolicy",
     "CapacityState",
+    "ControllerVariant",
     "GitHubDryRunPlanner",
     "GitHubPlanPolicy",
     "GitHubPlanReport",
     "ListWorkSource",
     "MMinusLedger",
     "MPlusLedger",
+    "PromotionDecision",
     "RangeWorkSource",
     "ResourceSampler",
     "ResourceSnapshot",
     "RunReport",
+    "ScenarioOutcome",
+    "SelfImprovementLab",
+    "SelfImprovementReport",
+    "SelfImprovementScenario",
     "ShardRecord",
     "SyntheticCapacityExecutor",
+    "VariantOutcome",
+    "adaptive_candidate_stream",
+    "default_scenarios",
     "iter_jsonl",
+    "iter_variants_jsonl",
     "synthetic_additions",
 ]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
