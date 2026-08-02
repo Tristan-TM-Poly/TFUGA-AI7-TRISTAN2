@@ -1,6 +1,6 @@
 # Ω-WIKI-T∞ — Hypergraphe des connaissances utiles
 
-- Nœuds: **96**
+- Nœuds: **92**
 - Hyperarêtes: **94**
 - Sources canoniques: `interfaces/chatgpt-tristan-v2/data/theory-canon.json`, `docs/00_MASTER_CANON_TFUGA_AI7_AIT.md`, `MASTER_SYSTEM_INDEX.md`
 - Statut OAK: **absorption structurée du dépôt, pas certification scientifique**
