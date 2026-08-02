@@ -1,0 +1,60 @@
+name: Omega Propulsion R0.3
+
+on:
+  pull_request:
+    paths:
+      - "omega_aero_hydro_propulsion_t/**"
+      - "tests/test_omega_aero_hydro_propulsion*.py"
+      - "schemas/propulsion_*.json"
+      - "docs/omega-aero-hydro-propulsion-t/**"
+      - "examples/omega_aero_hydro_propulsion_*.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-propulsion-r03.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  propulsion-r03-oak:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile
+        run: python -m compileall omega_aero_hydro_propulsion_t
+      - name: Run R0.1-R0.3 regressions
+        run: python -m pytest -q tests/test_omega_aero_hydro_propulsion.py tests/test_omega_aero_hydro_propulsion_r02.py tests/test_omega_aero_hydro_propulsion_r03.py
+      - name: OAK R0.1
+        run: python -m omega_aero_hydro_propulsion_t benchmark
+      - name: OAK R0.2
+        run: python -m omega_aero_hydro_propulsion_t.r02_cli benchmark
+      - name: OAK R0.3
+        run: python -m omega_aero_hydro_propulsion_t.r03_cli benchmark
+      - name: Materialize system evidence
+        run: python -m omega_aero_hydro_propulsion_t.r03_cli system-demo > /tmp/propulsion-r03.json
+      - name: Audit evidence boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(Path('/tmp/propulsion-r03.json').read_text())
+          assert payload['oak']['passed'] is True
+          assert payload['oak']['status'] == 'CERTIFIED_COMPUTATIONAL_SYSTEM_SCREENING_R0_3'
+          assert payload['structural']['physics_certified'] is False
+          assert payload['acoustic']['physics_certified'] is False
+          assert payload['robust_mission']['physics_certified'] is False
+          assert payload['fault_envelope']['physics_certified'] is False
+          assert payload['fault_envelope']['critical_scenario'] == 'motor-out'
+          assert 'not flight' in payload['epistemic_status']
+          print(json.dumps({'status': 'passed', 'fault_cases': payload['fault_envelope']['case_count'], 'robust_cases': len(payload['robust_mission']['cases'])}, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-propulsion-r03-evidence
+          path: /tmp/propulsion-r03.json
+          retention-days: 14
