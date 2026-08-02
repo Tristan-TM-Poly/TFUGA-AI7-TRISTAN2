@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-re-r03.schema.json",
+  "title": "Omega RE R0.3 synthetic frontier",
+  "type": "object",
+  "required": ["cases", "manifest"],
+  "properties": {
+    "cases": {
+      "type": "array",
+      "minItems": 1024,
+      "maxItems": 1024,
+      "items": {"$ref": "#/$defs/case"}
+    },
+    "manifest": {"$ref": "#/$defs/manifest"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "case": {
+      "type": "object",
+      "required": [
+        "case_id", "seed_id", "family", "variant", "title",
+        "truth_model", "observations", "candidate_models", "expected",
+        "controls", "failure_modes", "tags", "perturbation",
+        "authorization", "budget", "oak_claims", "digest"
+      ],
+      "properties": {
+        "case_id": {"type": "string", "pattern": "^RE1024-RE64-[0-9]{2}-[0-9]{2}-[0-9]{2}$"},
+        "seed_id": {"type": "string", "pattern": "^RE64-[0-9]{2}-[0-9]{2}$"},
+        "family": {
+          "enum": [
+            "active_automata", "partial_nondeterministic", "probabilistic", "timed",
+            "causal", "formats", "protocols", "hybrid", "physical", "process",
+            "versions", "ai_behavior", "cleanroom", "residuals", "constraints",
+            "sharded_campaigns"
+          ]
+        },
+        "variant": {"enum": ["minimal", "ambiguous", "noisy", "boundary"]},
+        "title": {"type": "string", "minLength": 1},
+        "truth_model": {"type": "object"},
+        "observations": {"type": "array", "items": {"type": "object"}},
+        "candidate_models": {"type": "array", "items": {"type": "object"}},
+        "expected": {"type": "object"},
+        "controls": {"type": "array", "items": {"type": "string"}},
+        "failure_modes": {"type": "array", "items": {"type": "string"}},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "perturbation": {
+          "type": "object",
+          "required": ["id", "name"],
+          "properties": {
+            "id": {"type": "string", "pattern": "^P[0-9]{2}$"},
+            "name": {"type": "string"}
+          }
+        },
+        "authorization": {
+          "type": "object",
+          "required": ["mode", "synthetic", "external_actions", "destructive_actions", "promotion_requires_independent_validation"],
+          "properties": {
+            "mode": {"const": "research_sandbox"},
+            "synthetic": {"const": true},
+            "external_actions": {"const": false},
+            "destructive_actions": {"const": false},
+            "promotion_requires_independent_validation": {"const": true}
+          },
+          "additionalProperties": false
+        },
+        "budget": {
+          "type": "object",
+          "required": ["max_experiments", "max_sequence_length", "cost", "time_units"],
+          "properties": {
+            "max_experiments": {"type": "integer", "minimum": 0},
+            "max_sequence_length": {"type": "integer", "minimum": 0},
+            "cost": {"type": "number", "minimum": 0},
+            "time_units": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        "oak_claims": {
+          "type": "object",
+          "required": ["logical_case", "materialized", "executed", "scientifically_verified", "external_system_claim"],
+          "properties": {
+            "logical_case": {"const": true},
+            "materialized": {"const": true},
+            "executed": {"const": false},
+            "scientifically_verified": {"const": false},
+            "external_system_claim": {"const": false}
+          },
+          "additionalProperties": false
+        },
+        "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    },
+    "manifest": {
+      "type": "object",
+      "required": ["schema", "seed_count", "perturbation_count", "case_count", "family_counts", "perturbation_counts", "merkle_like_digest", "claims", "authority"],
+      "properties": {
+        "schema": {"const": "omega-re-frontier/0.3"},
+        "seed_count": {"const": 64},
+        "perturbation_count": {"const": 16},
+        "case_count": {"const": 1024},
+        "family_counts": {"type": "object", "minProperties": 16, "maxProperties": 16},
+        "perturbation_counts": {"type": "object", "minProperties": 16, "maxProperties": 16},
+        "merkle_like_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "claims": {
+          "type": "object",
+          "required": ["logical_cases", "materialized_cases", "executed_cases", "software_tested_cases", "scientifically_verified_cases", "logical_space_is_not_execution", "materialization_is_not_validation"],
+          "properties": {
+            "logical_cases": {"const": 1024},
+            "materialized_cases": {"const": 1024},
+            "executed_cases": {"const": 0},
+            "software_tested_cases": {"const": 0},
+            "scientifically_verified_cases": {"const": 0},
+            "logical_space_is_not_execution": {"const": true},
+            "materialization_is_not_validation": {"const": true}
+          }
+        },
+        "authority": {
+          "type": "object",
+          "required": ["external_actions", "destructive_actions", "automatic_merge", "scientific_promotion"],
+          "properties": {
+            "external_actions": {"const": false},
+            "destructive_actions": {"const": false},
+            "automatic_merge": {"const": false},
+            "scientific_promotion": {"const": false}
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
