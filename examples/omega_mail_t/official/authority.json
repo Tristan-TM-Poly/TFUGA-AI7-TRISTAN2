@@ -1,0 +1,9 @@
+{
+  "identity": "tristan",
+  "mailbox": "corporate@replace-with-controlled-domain.example",
+  "permissions": [
+    "send_external"
+  ],
+  "active": true,
+  "valid_until": null
+}

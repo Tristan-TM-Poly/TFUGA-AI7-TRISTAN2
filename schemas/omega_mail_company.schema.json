@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_mail_company.schema.json",
+  "title": "Ω-MAIL-T Company Identity",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "company_id",
+    "conceptual_name",
+    "state",
+    "legal_identity_verified",
+    "domain_control_verified",
+    "spf_verified",
+    "dkim_verified",
+    "dmarc_verified",
+    "external_send_enabled"
+  ],
+  "properties": {
+    "company_id": {"type": "string", "minLength": 1},
+    "conceptual_name": {"type": "string", "minLength": 1},
+    "state": {
+      "enum": [
+        "IDEA",
+        "CANDIDATE_BRAND",
+        "INTERNAL_DIVISION",
+        "FOUNDING_PACKET_READY",
+        "FILING_SUBMITTED",
+        "REGISTERED",
+        "INCORPORATED",
+        "DOMAIN_VERIFIED",
+        "MAIL_AUTHENTICATED",
+        "PRODUCTION_AUTHORIZED"
+      ]
+    },
+    "legal_name": {"type": ["string", "null"]},
+    "operating_name": {"type": ["string", "null"]},
+    "jurisdiction": {"type": ["string", "null"]},
+    "neq": {"type": ["string", "null"]},
+    "corporation_number": {"type": ["string", "null"]},
+    "domain": {"type": ["string", "null"]},
+    "legal_identity_verified": {"type": "boolean"},
+    "domain_control_verified": {"type": "boolean"},
+    "spf_verified": {"type": "boolean"},
+    "dkim_verified": {"type": "boolean"},
+    "dmarc_verified": {"type": "boolean"},
+    "external_send_enabled": {"type": "boolean"},
+    "evidence_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    }
+  }
+}

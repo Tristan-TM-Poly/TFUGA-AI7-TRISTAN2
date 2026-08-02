@@ -1,0 +1,59 @@
+name: Generate Ω-MAIL-T R0.2 Massive
+
+# Bootstrap rerun after workflow registration on the feature branch.
+on:
+  push:
+    branches:
+      - feat/omega-mail-t-r0-1
+    paths:
+      - tools/generate_omega_mail_r02_massive.py
+      - .github/workflows/generate-omega-mail-r02-massive.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/omega-mail-t-r0-1
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate 49,152 linked records
+        run: python tools/generate_omega_mail_r02_massive.py --root .
+
+      - name: Verify deterministic regeneration
+        run: |
+          first=$(sha256sum generated/omega_mail_t_r02/manifest.json | cut -d' ' -f1)
+          python tools/generate_omega_mail_r02_massive.py --root . >/tmp/omega-mail-second-run.json
+          second=$(sha256sum generated/omega_mail_t_r02/manifest.json | cut -d' ' -f1)
+          test "$first" = "$second"
+
+      - name: Audit record counts and links
+        run: |
+          python -m omega_mail_t.catalog_cli audit
+          test "$(find generated/omega_mail_t_r02/scenarios -name '*.jsonl' -type f -print0 | xargs -0 cat | wc -l)" -eq 16384
+          test "$(find generated/omega_mail_t_r02/benchmarks -name '*.jsonl' -type f -print0 | xargs -0 cat | wc -l)" -eq 32768
+
+      - name: Run Ω-MAIL-T tests
+        run: python -m pytest tests/test_omega_mail_t.py tests/test_omega_mail_catalog.py
+
+      - name: Commit generated atlas
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- generated/omega_mail_t_r02
+          if git diff --cached --quiet; then
+            echo 'Generated atlas already current.'
+          else
+            git commit -m 'feat(mail-r02): materialize 49,152 scenario and benchmark records'
+            git push origin HEAD:feat/omega-mail-t-r0-1
+          fi

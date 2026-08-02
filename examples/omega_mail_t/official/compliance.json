@@ -1,0 +1,14 @@
+{
+  "message_class": "E2_PREINCORPORATION_INQUIRY",
+  "commercial": false,
+  "consent_basis": null,
+  "consent_evidence_id": null,
+  "sender_identified": true,
+  "contact_information_present": true,
+  "unsubscribe_present": false,
+  "contains_personal_information": false,
+  "privacy_reviewed": false,
+  "cross_border_transfer": false,
+  "cross_border_assessment_id": null,
+  "ip_reviewed": true
+}

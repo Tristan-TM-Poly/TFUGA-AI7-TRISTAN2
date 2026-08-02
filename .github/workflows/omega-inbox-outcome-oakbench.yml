@@ -1,0 +1,37 @@
+name: Omega Inbox-to-Outcome OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_inbox_outcome_t/**"
+      - "tests/test_omega_inbox_outcome.py"
+      - "docs/OMEGA_INBOX_TO_OUTCOME_T.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-inbox-outcome-oakbench.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  targeted-oakbench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile
+        run: python -m compileall -q omega_inbox_outcome_t
+      - name: Targeted tests
+        run: python -m pytest -q tests/test_omega_inbox_outcome.py
+      - name: Generate policy atlas
+        run: python -m omega_inbox_outcome_t.atlas generate generated/inbox_policy_atlas
+      - name: Audit policy atlas
+        run: python -m omega_inbox_outcome_t.atlas audit generated/inbox_policy_atlas
+      - name: Upload deterministic atlas
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-inbox-policy-atlas-110592
+          path: generated/inbox_policy_atlas
+          retention-days: 14

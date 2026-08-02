@@ -1,0 +1,13 @@
+{
+  "sender": "corporate@replace-with-controlled-domain.example",
+  "recipients": [
+    "replace-with-known-recipient@example.net"
+  ],
+  "subject": "Demande administrative — statut préconstitution",
+  "body": "Bonjour,\n\nJe prépare actuellement la structure corporative de Tristan Company Foundry. Ce message est une demande administrative préconstitution et ne représente pas une société déjà constituée.\n\nCordialement,\nTristan",
+  "attachments": [],
+  "metadata": {
+    "purpose": "professional_inquiry",
+    "status_disclosure": "preincorporation"
+  }
+}
