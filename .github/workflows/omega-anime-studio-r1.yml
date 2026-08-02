@@ -1,0 +1,99 @@
+name: Omega Anime Studio R1
+
+on:
+  pull_request:
+    paths:
+      - "omega_anime_studio_t/**"
+      - "tests/test_omega_anime_studio_t_r1.py"
+      - "schemas/anime-ir-r1.schema.json"
+      - "policies/omega_anime_studio_r1.json"
+      - "docs/omega_anime_studio_t_r1.md"
+      - "examples/omega_anime_studio_r1_demo.py"
+      - "generated/omega_anime_studio_t/**"
+      - ".github/workflows/omega-anime-studio-r1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-anime-studio-r1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  anime-studio-oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pip pytest jsonschema
+      - name: Compile
+        run: |
+          python -m compileall omega_anime_studio_t tests/test_omega_anime_studio_t_r1.py examples/omega_anime_studio_r1_demo.py
+      - name: Run targeted tests
+        run: |
+          pytest -q tests/test_omega_anime_studio_t_r1.py --durations=20 \
+            2>&1 | tee /tmp/omega-anime-studio-r1-tests.log
+      - name: Validate Anime-IR schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_anime_studio_t import build_eighth_fire_r1
+          schema = json.loads(Path('schemas/anime-ir-r1.schema.json').read_text())
+          payload = build_eighth_fire_r1().to_dict()
+          Draft202012Validator(schema).validate(payload)
+          print(json.dumps({'scenes':len(payload['scenes']),'shots':len(payload['shots'])}, indent=2))
+          PY
+      - name: Compile deterministic R1 evidence
+        run: |
+          python -m omega_anime_studio_t validate-demo
+          python -m omega_anime_studio_t compile-demo \
+            --output-dir /tmp/omega-anime-studio-r1 \
+            --frontier-work-items 2048 \
+            | tee /tmp/omega-anime-studio-manifest.stdout.json
+          PYTHONPATH=. python examples/omega_anime_studio_r1_demo.py
+      - name: Enforce proof gates
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root = Path('/tmp/omega-anime-studio-r1')
+          manifest = json.loads((root/'manifest.json').read_text())
+          matrix = (root/'matrix-8192.jsonl').read_text().splitlines()
+          frontier = (root/'shot-frontier.jsonl').read_text().splitlines()
+          anime = json.loads((root/'anime-ir.json').read_text())
+          assert manifest['matrix_cell_count'] == 8192
+          assert len(matrix) == 8192
+          assert len(frontier) == 2048
+          assert manifest['shot_count'] == 30
+          assert len(anime['scenes']) == 5
+          assert sum(s['duration_target_s'] for s in anime['scenes']) == 180
+          assert all(c['limitation'] and c['moral_boundary'] for c in anime['characters'])
+          assert all(a['provenance']['private'] for a in anime['assets'])
+          assert len(manifest['manifest_sha256']) == 64
+          checked = Path('generated/omega_anime_studio_t/matrix-8192.jsonl')
+          assert checked.exists() and len(checked.read_text().splitlines()) == 8192
+          expected = hashlib.sha256(checked.read_bytes()).hexdigest()
+          recorded = json.loads(Path('generated/omega_anime_studio_t/generated-manifest.json').read_text())
+          assert recorded['matrix_sha256'] == expected
+          print(json.dumps({'manifest':manifest['manifest_sha256'],'matrix':expected}, indent=2))
+          PY
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-anime-studio-r1
+          path: |
+            /tmp/omega-anime-studio-r1-tests.log
+            /tmp/omega-anime-studio-manifest.stdout.json
+            /tmp/omega-anime-studio-r1/manifest.json
+            /tmp/omega-anime-studio-r1/matrix-summary.json
+            /tmp/omega-anime-studio-r1/frontier-report.json
+            /tmp/omega-anime-studio-r1/report.md
+          retention-days: 14
