@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega Plasma OAK Report",
+  "type": "object",
+  "required": ["status","findings","checks","epistemic_status"],
+  "properties": {
+    "status": {"enum":["passed","review","blocked"]},
+    "findings": {"type":"array"},
+    "checks": {"type":"object"},
+    "epistemic_status": {"type":"string"}
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "species": [
+    {
+      "name": "electron",
+      "charge_state": -1,
+      "mass_kg": 9.1093837015e-31,
+      "density_m3": 1e+17,
+      "temperature_ev": 5.0,
+      "collision_frequency_hz": 2000000.0
+    },
+    {
+      "name": "argon+",
+      "charge_state": 1,
+      "mass_kg": 6.6421562664e-26,
+      "density_m3": 1e+17,
+      "temperature_ev": 0.2,
+      "collision_frequency_hz": 100000.0
+    },
+    {
+      "name": "argon",
+      "charge_state": 0,
+      "mass_kg": 6.6421562664e-26,
+      "density_m3": 1e+20,
+      "temperature_ev": 0.03,
+      "collision_frequency_hz": 10000000.0,
+      "neutral": true
+    }
+  ],
+  "geometry": {
+    "characteristic_length_m": 0.05,
+    "dimensionality": 2,
+    "boundary_type": "conducting",
+    "surface_present": true
+  },
+  "magnetic_field_t": 0.03,
+  "electric_field_v_m": 1000,
+  "ionization_fraction": 0.001,
+  "requested_observables": [
+    "ion_flux",
+    "electron_temperature",
+    "species_density"
+  ]
+}

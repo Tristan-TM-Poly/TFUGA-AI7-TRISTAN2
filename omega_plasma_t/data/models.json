@@ -1,0 +1,596 @@
+[
+  {
+    "id": "global_chemistry",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 0
+  },
+  {
+    "id": "drift_diffusion",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 1
+  },
+  {
+    "id": "single_fluid_mhd",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 2
+  },
+  {
+    "id": "resistive_mhd",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 3
+  },
+  {
+    "id": "hall_mhd",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 4
+  },
+  {
+    "id": "two_fluid",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 5
+  },
+  {
+    "id": "multi_fluid",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 6
+  },
+  {
+    "id": "vlasov_poisson",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 7
+  },
+  {
+    "id": "vlasov_maxwell",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 8
+  },
+  {
+    "id": "pic_es",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 9
+  },
+  {
+    "id": "pic_em",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 10
+  },
+  {
+    "id": "pic_mcc",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 11
+  },
+  {
+    "id": "hybrid_kinetic_ion",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 12
+  },
+  {
+    "id": "gyrokinetic",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 13
+  },
+  {
+    "id": "quantum_hydrodynamics",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 14
+  },
+  {
+    "id": "wigner_poisson",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 15
+  },
+  {
+    "id": "radiation_mhd",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 16
+  },
+  {
+    "id": "relativistic_pic",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 17
+  },
+  {
+    "id": "dusty_plasma",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 18
+  },
+  {
+    "id": "sheath_model",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 19
+  },
+  {
+    "id": "surface_reaction_model",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 20
+  },
+  {
+    "id": "warm_dense_matter_eos",
+    "state_variables": [
+      "density",
+      "momentum",
+      "energy",
+      "fields"
+    ],
+    "strengths": [
+      "explicit assumptions",
+      "benchmarkable",
+      "composable"
+    ],
+    "failure_modes": [
+      "closure mismatch",
+      "unresolved scale",
+      "boundary artifact",
+      "parameter uncertainty"
+    ],
+    "required_oak_tests": [
+      "analytic limit",
+      "convergence",
+      "conservation",
+      "cross-model comparison"
+    ],
+    "index": 21
+  }
+]

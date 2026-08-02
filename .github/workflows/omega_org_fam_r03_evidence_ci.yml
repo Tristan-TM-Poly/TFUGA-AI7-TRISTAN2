@@ -1,0 +1,43 @@
+name: omega-org-fam-r03-evidence
+
+on:
+  push:
+    paths:
+      - "omega_org_fam_t/**"
+      - "tests/test_omega_org_fam*.py"
+      - "tools/generate_omega_org_fam_r03_evidence.py"
+      - "schemas/omega_org_*_r03.schema.json"
+      - ".github/workflows/omega_org_fam_r03_evidence_ci.yml"
+  pull_request:
+    paths:
+      - "omega_org_fam_t/**"
+      - "tests/test_omega_org_fam*.py"
+      - "tools/generate_omega_org_fam_r03_evidence.py"
+      - "schemas/omega_org_*_r03.schema.json"
+      - ".github/workflows/omega_org_fam_r03_evidence_ci.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest
+      - name: Run R0.1-R0.3 organic-family tests
+        run: >-
+          python -m pytest
+          tests/test_omega_org_fam_t.py
+          tests/test_omega_org_fam_massive.py
+          tests/test_omega_org_fam_ultra.py
+          tests/test_omega_org_fam_r03.py
+      - name: Direct-script benchmark smoke test
+        run: |
+          python tools/generate_omega_org_fam_r03_evidence.py \
+            --root "$RUNNER_TEMP/omega-r03" \
+            --cases 262144 \
+            --shard-cases 65536 \
+            --clean
+          python -m omega_org_fam_t.r03_cli audit-benchmark \
+            "$RUNNER_TEMP/omega-r03/generated/omega_org_fam_t_r03_evidence_benchmark"
