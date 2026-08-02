@@ -1,0 +1,204 @@
+name: Repair Omega Anime Animatic R2
+
+on:
+  push:
+    branches:
+      - "feat/omega-anime-t-r0-1"
+    paths:
+      - ".github/workflows/omega-anime-animatic-r2-repair.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omega-anime-animatic-r2-repair
+  cancel-in-progress: true
+
+jobs:
+  repair-and-materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout writable Anime branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/omega-anime-t-r0-1
+          fetch-depth: 1
+
+      - name: Reconstruct verified R2 archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64
+          import hashlib
+          import io
+          import json
+          import tarfile
+          from pathlib import Path
+
+          root = Path.cwd().resolve()
+          payload_root = Path('tools/anime_animatic_r2_payload')
+          parts = sorted(payload_root.glob('part-*.b64'))
+          if len(parts) != 4:
+              raise SystemExit(f'expected 4 payload parts, found {len(parts)}')
+
+          encoded = ''.join(path.read_text(encoding='ascii').strip() for path in parts)
+          archive = base64.b64decode(encoded, validate=True)
+          digest = hashlib.sha256(archive).hexdigest()
+          expected = '60ca43c5fee5f323bb8bc8073e606900add8444ac646c5cd59f28afc149061c3'
+          if digest != expected:
+              raise SystemExit(f'archive hash mismatch {digest} != {expected}')
+
+          with tarfile.open(fileobj=io.BytesIO(archive), mode='r:gz') as bundle:
+              members = bundle.getmembers()
+              for member in members:
+                  destination = (root / member.name).resolve()
+                  if destination != root and root not in destination.parents:
+                      raise SystemExit(f'unsafe archive path: {member.name}')
+              bundle.extractall(root)
+
+          receipt = {
+              'parts': [path.name for path in parts],
+              'archive_bytes': len(archive),
+              'archive_sha256': digest,
+              'members': len(members),
+          }
+          Path('/tmp/anime-r2-reconstruction.json').write_text(
+              json.dumps(receipt, indent=2) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(receipt, indent=2))
+          PY
+
+      - name: Register R2 CLI
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('pyproject.toml')
+          text = path.read_text(encoding='utf-8')
+          entry = 'omega-anime-animatic = "omega_anime_animatic_t.__main__:main"'
+          marker = '\n[tool.pytest.ini_options]'
+          if marker not in text:
+              raise SystemExit('pyproject pytest marker missing')
+          if entry not in text:
+              text = text.replace(marker, f'\n{entry}\n{marker}', 1)
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Test and compile R2 animatic
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip pytest jsonschema
+          python -m compileall \
+            omega_anime_animatic_t \
+            tests/test_omega_anime_animatic_t_r2.py \
+            examples/omega_anime_animatic_r2_demo.py
+          pytest -q tests/test_omega_anime_animatic_t_r2.py --durations=20
+          python -m omega_anime_animatic_t validate-demo
+          rm -rf /tmp/eighth-fire-r2
+          python -m omega_anime_animatic_t compile-demo --output-dir /tmp/eighth-fire-r2
+
+      - name: Enforce R2 proof gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          actual = Path('/tmp/eighth-fire-r2')
+          tracked = Path('generated/omega_anime_animatic_t/eighth_fire_r2')
+          timeline = json.loads((actual / 'timeline.json').read_text(encoding='utf-8'))
+          manifest = json.loads((actual / 'manifest.json').read_text(encoding='utf-8'))
+          schema = json.loads(Path('schemas/animatic-timeline-r2.schema.json').read_text(encoding='utf-8'))
+          Draft202012Validator(schema).validate(timeline)
+
+          assert len(timeline['scenes']) == 5
+          assert len(timeline['shots']) == 30
+          assert timeline['duration_s'] == 180.0
+          assert timeline['shots'][0]['start_s'] == 0.0
+          assert timeline['shots'][-1]['end_s'] == 180.0
+          assert timeline['shots'][-1]['dialogue'] == 'Et maintenant, elle te voit.'
+          assert manifest['external_network_dependencies'] == 0
+          assert manifest['self_contained_browser_player'] is True
+
+          html = (actual / 'eighth-fire-animatic.html').read_text(encoding='utf-8')
+          assert '<canvas' in html
+          assert 'AudioContext' in html
+          assert 'fetch(' not in html
+          assert 'https://' not in html
+          assert 'http://' not in html
+
+          expected_names = {
+              'audio-cues.jsonl',
+              'edit-decision-list.csv',
+              'eighth-fire-animatic.html',
+              'manifest.json',
+              'report.md',
+              'storyboard-contact-sheet.svg',
+              'subtitles.fr.vtt',
+              'timeline.json',
+          }
+          assert {path.name for path in actual.iterdir()} == expected_names
+          assert {path.name for path in tracked.iterdir()} == expected_names
+          for name in sorted(expected_names):
+              actual_hash = hashlib.sha256((actual / name).read_bytes()).hexdigest()
+              tracked_hash = hashlib.sha256((tracked / name).read_bytes()).hexdigest()
+              assert actual_hash == tracked_hash, (name, actual_hash, tracked_hash)
+
+          proof = {
+              'manifest_sha256': manifest['manifest_sha256'],
+              'scenes': 5,
+              'shots': 30,
+              'duration_s': 180,
+              'artifacts': len(expected_names),
+              'external_network_dependencies': 0,
+              'self_contained_browser_player': True,
+          }
+          Path('/tmp/anime-r2-proof.json').write_text(
+              json.dumps(proof, indent=2) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(proof, indent=2))
+          PY
+
+      - name: Finalize clean Git tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p generated/omega_anime_animatic_t
+          printf '%s\n' 'omega-anime-animatic/r2' > generated/omega_anime_animatic_t/.materialized-r2
+          rm -f generated/omega_anime_animatic_t/materializer-diagnostic.txt
+          rm -rf tools/anime_animatic_r2_payload
+          rm -f tools/anime_animatic_r2_force.ready
+          rm -f .github/workflows/omega-anime-animatic-r2-materialize.yml
+          rm -f .github/workflows/omega-anime-animatic-r2-force-materialize.yml
+          rm -f .github/workflows/omega-anime-animatic-r2-repair.yml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            omega_anime_animatic_t \
+            tests/test_omega_anime_animatic_t_r2.py \
+            examples/omega_anime_animatic_r2_demo.py \
+            docs/omega_anime_animatic_t_r2.md \
+            schemas/animatic-timeline-r2.schema.json \
+            policies/omega_anime_animatic_r2.json \
+            generated/omega_anime_animatic_t \
+            .github/workflows/omega-anime-animatic-r2.yml \
+            pyproject.toml
+          git add -u -- \
+            tools/anime_animatic_r2_payload \
+            tools/anime_animatic_r2_force.ready \
+            .github/workflows/omega-anime-animatic-r2-materialize.yml \
+            .github/workflows/omega-anime-animatic-r2-force-materialize.yml \
+            .github/workflows/omega-anime-animatic-r2-repair.yml
+          git diff --cached --stat
+          git diff --cached --quiet && exit 0
+          git commit -m "feat(anime): materialize Omega Anime Animatic R2"
+          git push origin HEAD:feat/omega-anime-t-r0-1
