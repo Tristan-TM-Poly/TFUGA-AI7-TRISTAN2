@@ -1,0 +1,181 @@
+name: Validate Omega Unbounded R0.6 Temporary
+
+on:
+  push:
+    branches:
+      - feat/omega-unbounded-self-improvement-r0.4
+    paths:
+      - '.github/workflows/validate-omega-unbounded-r06-temporary.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-crystallize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact feature head
+        uses: actions/checkout@v6
+        with:
+          ref: feat/omega-unbounded-self-improvement-r0.4
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install validation tools
+        run: python -m pip install --upgrade pip pytest jsonschema
+
+      - name: Compile package
+        run: python -m compileall -q omega_unbounded_t
+
+      - name: Run complete Omega Unbounded targeted suite
+        run: >-
+          python -m pytest
+          tests/test_omega_unbounded_t.py
+          tests/test_omega_unbounded_github_planner.py
+          tests/test_omega_unbounded_streaming.py
+          tests/test_omega_unbounded_self_improvement.py
+          tests/test_omega_unbounded_governance.py
+          tests/test_omega_unbounded_recursive_evolution.py
+          -q
+
+      - name: Run 100k streaming planner
+        run: |
+          python -m omega_unbounded_t.cli synthetic-plan \
+            --work-items 100000 \
+            --namespaces 16 \
+            --initial-shard-bytes 32768 \
+            --shard-growth-factor 2 \
+            --output-dir generated/omega-unbounded-r06-validation/frontier
+
+      - name: Run R0.4 self-improvement
+        run: |
+          python -m omega_unbounded_t.cli self-improve \
+            --work-items 60000 \
+            --minimum-improvement-ratio 0.02 \
+            --overshoot-penalty-weight 10 \
+            --maximum-overshoot-multiplier 2 \
+            --output-dir generated/omega-unbounded-r06-validation/self-improvement
+
+      - name: Run R0.5 governance
+        run: |
+          python -m omega_unbounded_t.cli governance-check \
+            --output-dir generated/omega-unbounded-r06-validation/governance
+
+      - name: Run R0.6 recursive evolution
+        run: |
+          python -m omega_unbounded_t.cli evolution-check \
+            --output-dir generated/omega-unbounded-r06-validation/evolution
+
+      - name: Verify all OAK invariants and crystallize report
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          from jsonschema import Draft202012Validator
+
+          root = Path('generated/omega-unbounded-r06-validation')
+          frontier = json.loads((root / 'frontier/manifest.json').read_text())
+          frontier_oak = json.loads((root / 'frontier/oak-report.json').read_text())
+          self_report = json.loads((root / 'self-improvement/self-improvement-report.json').read_text())
+          self_plan = json.loads((root / 'self-improvement/promotion-plan.json').read_text())
+          governance = json.loads((root / 'governance/governance-report.json').read_text())
+          evolution = json.loads((root / 'evolution/evolution-report.json').read_text())
+          schema = json.loads(Path('schemas/omega_unbounded_evolution_report.schema.json').read_text())
+          Draft202012Validator(schema).validate(evolution)
+
+          assert frontier['raw_records'] == 100000
+          assert frontier['unique_additions'] == 100000
+          assert frontier['no_total_addition_cap'] is True
+          assert frontier_oak['checks']['remote_mutations'] == 0
+          assert frontier_oak['checks']['rollback_ledger'] is True
+
+          assert self_report['decision']['selected'] == 'mminus-capacity-redesign'
+          assert self_report['decision']['improvement_ratio'] >= 0.02
+          assert self_report['decision']['remote_mutations'] == 0
+          assert self_plan['apply']['automatic'] is False
+          assert self_plan['apply']['remote_mutations'] == 0
+          assert self_plan['apply']['merge'] is False
+
+          assert governance['status'] == 'passed'
+          assert governance['final_decision']['action'] == 'STOP'
+          assert governance['known_overiteration_blocked'] is True
+          assert {item['name'] for item in governance['pareto_front']} == {'fast', 'lean'}
+
+          assert evolution['status'] == 'passed'
+          assert set(evolution['pareto_front']) == {'fast', 'lean'}
+          assert evolution['dominated'] == ['dominated']
+          assert evolution['rejected'] == ['fragile']
+          assert evolution['safe_canary']['status'] == 'promotion_candidate'
+          assert evolution['rollback_demonstration']['status'] == 'rolled_back'
+          assert evolution['rollback_demonstration']['decisions'][-1]['stage'] == 0.2
+          authority = evolution['authority']
+          assert authority['source_mutations'] == 0
+          assert authority['remote_mutations'] == 0
+          assert authority['automatic_pull_request'] is False
+          assert authority['automatic_merge'] is False
+          assert authority['automatic_promotion'] is False
+          assert authority['human_approval_required'] is True
+          assert authority['scalar_score_has_final_authority'] is False
+
+          bundle_ids = {}
+          for name, bundle in evolution['proof_bundles'].items():
+              bundle_root = Path(bundle['path'])
+              manifest = json.loads((bundle_root / 'manifest.json').read_text())
+              assert manifest['bundle_id'] == bundle['bundle_id']
+              for relative, expected in manifest['files'].items():
+                  actual = hashlib.sha256((bundle_root / relative).read_bytes()).hexdigest()
+                  assert actual == expected
+              bundle_ids[name] = bundle['bundle_id']
+
+          report = {
+              'status': 'passed',
+              'validated_commit': os.environ['GITHUB_SHA'],
+              'targeted_tests': 'passed',
+              'frontier_records': 100000,
+              'self_improvement_selected': self_report['decision']['selected'],
+              'self_improvement_ratio': self_report['decision']['improvement_ratio'],
+              'stopgate': governance['final_decision']['action'],
+              'reflex_m_minus_blocked': governance['known_overiteration_blocked'],
+              'pareto_front': evolution['pareto_front'],
+              'adversarial_rejected': evolution['rejected'],
+              'canary_status': evolution['safe_canary']['status'],
+              'rollback_status': evolution['rollback_demonstration']['status'],
+              'rollback_stage': evolution['rollback_demonstration']['decisions'][-1]['stage'],
+              'proof_bundle_ids': bundle_ids,
+              'source_mutations': 0,
+              'remote_mutations': 0,
+              'automatic_merge': False,
+              'human_approval_required': True,
+          }
+          out = Path('reports/omega_unbounded_r06_validation.json')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload complete validation evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: omega-unbounded-r06-validation
+          path: |
+            generated/omega-unbounded-r06-validation/**
+            reports/omega_unbounded_r06_validation.json
+
+      - name: Crystallize report and remove temporary workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- reports/omega_unbounded_r06_validation.json
+          git rm .github/workflows/validate-omega-unbounded-r06-temporary.yml
+          git commit -m 'test: crystallize Ω-SANS-PLAFOND R0.6 validation evidence'
+          git push origin HEAD:feat/omega-unbounded-self-improvement-r0.4
