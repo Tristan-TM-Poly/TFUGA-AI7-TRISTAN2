@@ -1,0 +1,18 @@
+{
+  "records": 4096,
+  "records_per_shard": 2048,
+  "shards": [
+    {
+      "bytes": 724416,
+      "path": "mappings_00000.jsonl",
+      "records": 2048,
+      "sha256": "5134d81d2875af4245e6fa1b5716329bc11bd30651813c01c52a33273e4d9e11"
+    },
+    {
+      "bytes": 730752,
+      "path": "mappings_00001.jsonl",
+      "records": 2048,
+      "sha256": "ef08870e0fbb31fb223143e99854f09a9a05210ff470131217e7754fc082ba79"
+    }
+  ]
+}

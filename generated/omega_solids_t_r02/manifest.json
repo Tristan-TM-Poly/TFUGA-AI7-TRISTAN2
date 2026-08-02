@@ -1,0 +1,488 @@
+{
+  "boundary": "Generated objects are ontology/campaign records, not discoveries, certified materials, experiments or safety claims.",
+  "campaign": {
+    "base_cardinality": 524288,
+    "boundary": "Each execution is finite and bounded by explicit work, resources, quality, rollback, safety, IP and provider constraints.",
+    "campaign_fingerprint": "1f192ba975aace016feae01ab68084915184df3b8b790a71a0d7b3db5ae2ba79",
+    "campaign_id": "omega-solid-64x64x16x8-r02",
+    "contextual_cardinality": 2097152,
+    "environment_variants": 4,
+    "no_permanent_total_candidate_cap": true,
+    "partition_count": 64,
+    "partition_target": 8192,
+    "partitions": [
+      {
+        "partition": 0,
+        "records": 8192,
+        "start": 0,
+        "stop": 8192
+      },
+      {
+        "partition": 1,
+        "records": 8192,
+        "start": 8192,
+        "stop": 16384
+      },
+      {
+        "partition": 2,
+        "records": 8192,
+        "start": 16384,
+        "stop": 24576
+      },
+      {
+        "partition": 3,
+        "records": 8192,
+        "start": 24576,
+        "stop": 32768
+      },
+      {
+        "partition": 4,
+        "records": 8192,
+        "start": 32768,
+        "stop": 40960
+      },
+      {
+        "partition": 5,
+        "records": 8192,
+        "start": 40960,
+        "stop": 49152
+      },
+      {
+        "partition": 6,
+        "records": 8192,
+        "start": 49152,
+        "stop": 57344
+      },
+      {
+        "partition": 7,
+        "records": 8192,
+        "start": 57344,
+        "stop": 65536
+      },
+      {
+        "partition": 8,
+        "records": 8192,
+        "start": 65536,
+        "stop": 73728
+      },
+      {
+        "partition": 9,
+        "records": 8192,
+        "start": 73728,
+        "stop": 81920
+      },
+      {
+        "partition": 10,
+        "records": 8192,
+        "start": 81920,
+        "stop": 90112
+      },
+      {
+        "partition": 11,
+        "records": 8192,
+        "start": 90112,
+        "stop": 98304
+      },
+      {
+        "partition": 12,
+        "records": 8192,
+        "start": 98304,
+        "stop": 106496
+      },
+      {
+        "partition": 13,
+        "records": 8192,
+        "start": 106496,
+        "stop": 114688
+      },
+      {
+        "partition": 14,
+        "records": 8192,
+        "start": 114688,
+        "stop": 122880
+      },
+      {
+        "partition": 15,
+        "records": 8192,
+        "start": 122880,
+        "stop": 131072
+      },
+      {
+        "partition": 16,
+        "records": 8192,
+        "start": 131072,
+        "stop": 139264
+      },
+      {
+        "partition": 17,
+        "records": 8192,
+        "start": 139264,
+        "stop": 147456
+      },
+      {
+        "partition": 18,
+        "records": 8192,
+        "start": 147456,
+        "stop": 155648
+      },
+      {
+        "partition": 19,
+        "records": 8192,
+        "start": 155648,
+        "stop": 163840
+      },
+      {
+        "partition": 20,
+        "records": 8192,
+        "start": 163840,
+        "stop": 172032
+      },
+      {
+        "partition": 21,
+        "records": 8192,
+        "start": 172032,
+        "stop": 180224
+      },
+      {
+        "partition": 22,
+        "records": 8192,
+        "start": 180224,
+        "stop": 188416
+      },
+      {
+        "partition": 23,
+        "records": 8192,
+        "start": 188416,
+        "stop": 196608
+      },
+      {
+        "partition": 24,
+        "records": 8192,
+        "start": 196608,
+        "stop": 204800
+      },
+      {
+        "partition": 25,
+        "records": 8192,
+        "start": 204800,
+        "stop": 212992
+      },
+      {
+        "partition": 26,
+        "records": 8192,
+        "start": 212992,
+        "stop": 221184
+      },
+      {
+        "partition": 27,
+        "records": 8192,
+        "start": 221184,
+        "stop": 229376
+      },
+      {
+        "partition": 28,
+        "records": 8192,
+        "start": 229376,
+        "stop": 237568
+      },
+      {
+        "partition": 29,
+        "records": 8192,
+        "start": 237568,
+        "stop": 245760
+      },
+      {
+        "partition": 30,
+        "records": 8192,
+        "start": 245760,
+        "stop": 253952
+      },
+      {
+        "partition": 31,
+        "records": 8192,
+        "start": 253952,
+        "stop": 262144
+      },
+      {
+        "partition": 32,
+        "records": 8192,
+        "start": 262144,
+        "stop": 270336
+      },
+      {
+        "partition": 33,
+        "records": 8192,
+        "start": 270336,
+        "stop": 278528
+      },
+      {
+        "partition": 34,
+        "records": 8192,
+        "start": 278528,
+        "stop": 286720
+      },
+      {
+        "partition": 35,
+        "records": 8192,
+        "start": 286720,
+        "stop": 294912
+      },
+      {
+        "partition": 36,
+        "records": 8192,
+        "start": 294912,
+        "stop": 303104
+      },
+      {
+        "partition": 37,
+        "records": 8192,
+        "start": 303104,
+        "stop": 311296
+      },
+      {
+        "partition": 38,
+        "records": 8192,
+        "start": 311296,
+        "stop": 319488
+      },
+      {
+        "partition": 39,
+        "records": 8192,
+        "start": 319488,
+        "stop": 327680
+      },
+      {
+        "partition": 40,
+        "records": 8192,
+        "start": 327680,
+        "stop": 335872
+      },
+      {
+        "partition": 41,
+        "records": 8192,
+        "start": 335872,
+        "stop": 344064
+      },
+      {
+        "partition": 42,
+        "records": 8192,
+        "start": 344064,
+        "stop": 352256
+      },
+      {
+        "partition": 43,
+        "records": 8192,
+        "start": 352256,
+        "stop": 360448
+      },
+      {
+        "partition": 44,
+        "records": 8192,
+        "start": 360448,
+        "stop": 368640
+      },
+      {
+        "partition": 45,
+        "records": 8192,
+        "start": 368640,
+        "stop": 376832
+      },
+      {
+        "partition": 46,
+        "records": 8192,
+        "start": 376832,
+        "stop": 385024
+      },
+      {
+        "partition": 47,
+        "records": 8192,
+        "start": 385024,
+        "stop": 393216
+      },
+      {
+        "partition": 48,
+        "records": 8192,
+        "start": 393216,
+        "stop": 401408
+      },
+      {
+        "partition": 49,
+        "records": 8192,
+        "start": 401408,
+        "stop": 409600
+      },
+      {
+        "partition": 50,
+        "records": 8192,
+        "start": 409600,
+        "stop": 417792
+      },
+      {
+        "partition": 51,
+        "records": 8192,
+        "start": 417792,
+        "stop": 425984
+      },
+      {
+        "partition": 52,
+        "records": 8192,
+        "start": 425984,
+        "stop": 434176
+      },
+      {
+        "partition": 53,
+        "records": 8192,
+        "start": 434176,
+        "stop": 442368
+      },
+      {
+        "partition": 54,
+        "records": 8192,
+        "start": 442368,
+        "stop": 450560
+      },
+      {
+        "partition": 55,
+        "records": 8192,
+        "start": 450560,
+        "stop": 458752
+      },
+      {
+        "partition": 56,
+        "records": 8192,
+        "start": 458752,
+        "stop": 466944
+      },
+      {
+        "partition": 57,
+        "records": 8192,
+        "start": 466944,
+        "stop": 475136
+      },
+      {
+        "partition": 58,
+        "records": 8192,
+        "start": 475136,
+        "stop": 483328
+      },
+      {
+        "partition": 59,
+        "records": 8192,
+        "start": 483328,
+        "stop": 491520
+      },
+      {
+        "partition": 60,
+        "records": 8192,
+        "start": 491520,
+        "stop": 499712
+      },
+      {
+        "partition": 61,
+        "records": 8192,
+        "start": 499712,
+        "stop": 507904
+      },
+      {
+        "partition": 62,
+        "records": 8192,
+        "start": 507904,
+        "stop": 516096
+      },
+      {
+        "partition": 63,
+        "records": 8192,
+        "start": 516096,
+        "stop": 524288
+      }
+    ]
+  },
+  "evidence_manifest": {
+    "records": 8192,
+    "records_per_shard": 2048,
+    "shards": [
+      {
+        "bytes": 891008,
+        "path": "evidence_00000.jsonl",
+        "records": 2048,
+        "sha256": "209781118853e16467c620a06a02827bed59917a7ba3ef7e628299025a64653d"
+      },
+      {
+        "bytes": 891008,
+        "path": "evidence_00001.jsonl",
+        "records": 2048,
+        "sha256": "1f10544976b11ece1f199ec37416dba7f0a55497efe6e6c276ddd49a4cba2770"
+      },
+      {
+        "bytes": 891008,
+        "path": "evidence_00002.jsonl",
+        "records": 2048,
+        "sha256": "057ec2805b740b7edbd2094a1b7f7f8c8727e1c93cfd166053c1e511a2a08e3c"
+      },
+      {
+        "bytes": 898728,
+        "path": "evidence_00003.jsonl",
+        "records": 2048,
+        "sha256": "308b6eb257e4faa6bf118107af2bfbd4a0de3597f32830f23f866246325a380e"
+      }
+    ]
+  },
+  "evidence_templates": 8192,
+  "hot_atlas_manifest": {
+    "records": 8192,
+    "records_per_shard": 2048,
+    "shards": [
+      {
+        "bytes": 2339247,
+        "path": "candidates_00000.jsonl",
+        "records": 2048,
+        "sha256": "8b6e33b5769185561a28e94ac72270653a6a2dab98c2aa4e9f4ec0c507bbd7cf"
+      },
+      {
+        "bytes": 2338480,
+        "path": "candidates_00001.jsonl",
+        "records": 2048,
+        "sha256": "364646f822f903c5cb1b9fceee03e88c8ec779ac865ead08fb3b9b060d0fb902"
+      },
+      {
+        "bytes": 2355920,
+        "path": "candidates_00002.jsonl",
+        "records": 2048,
+        "sha256": "1bd54b89481348dda15fa97eb4ab05f1418bf5f5ca03ecf5baacfa7534bb4d6a"
+      },
+      {
+        "bytes": 2350256,
+        "path": "candidates_00003.jsonl",
+        "records": 2048,
+        "sha256": "009b4a2d54ca046c564b94f089f10812f061709a3727de94eb1192a044a62db6"
+      }
+    ]
+  },
+  "hot_projection": {
+    "architectures": 16,
+    "processes": 8,
+    "records": 8192,
+    "worlds": 64
+  },
+  "mapping_manifest": {
+    "records": 4096,
+    "records_per_shard": 2048,
+    "shards": [
+      {
+        "bytes": 724416,
+        "path": "mappings_00000.jsonl",
+        "records": 2048,
+        "sha256": "5134d81d2875af4245e6fa1b5716329bc11bd30651813c01c52a33273e4d9e11"
+      },
+      {
+        "bytes": 730752,
+        "path": "mappings_00001.jsonl",
+        "records": 2048,
+        "sha256": "ef08870e0fbb31fb223143e99854f09a9a05210ff470131217e7754fc082ba79"
+      }
+    ]
+  },
+  "system": "Ω-SOLID-T∞ R0.2",
+  "total_materialized_logical_objects": 20480,
+  "world_mechanism_mappings": 4096
+}

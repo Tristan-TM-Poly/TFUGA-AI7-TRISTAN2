@@ -1,0 +1,30 @@
+{
+  "records": 8192,
+  "records_per_shard": 2048,
+  "shards": [
+    {
+      "bytes": 2339247,
+      "path": "candidates_00000.jsonl",
+      "records": 2048,
+      "sha256": "8b6e33b5769185561a28e94ac72270653a6a2dab98c2aa4e9f4ec0c507bbd7cf"
+    },
+    {
+      "bytes": 2338480,
+      "path": "candidates_00001.jsonl",
+      "records": 2048,
+      "sha256": "364646f822f903c5cb1b9fceee03e88c8ec779ac865ead08fb3b9b060d0fb902"
+    },
+    {
+      "bytes": 2355920,
+      "path": "candidates_00002.jsonl",
+      "records": 2048,
+      "sha256": "1bd54b89481348dda15fa97eb4ab05f1418bf5f5ca03ecf5baacfa7534bb4d6a"
+    },
+    {
+      "bytes": 2350256,
+      "path": "candidates_00003.jsonl",
+      "records": 2048,
+      "sha256": "009b4a2d54ca046c564b94f089f10812f061709a3727de94eb1192a044a62db6"
+    }
+  ]
+}
