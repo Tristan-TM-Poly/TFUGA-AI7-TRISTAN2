@@ -1,0 +1,72 @@
+name: Converge Anime Branch With Current Main
+
+on:
+  push:
+    branches:
+      - "feat/omega-anime-t-r0-1"
+    paths:
+      - ".github/workflows/omega-anime-converge-current-main.yml"
+      - "tools/anime_converge_current_main.ready"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omega-anime-converge-current-main
+  cancel-in-progress: true
+
+jobs:
+  converge:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout writable Anime branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/omega-anime-t-r0-1
+          fetch-depth: 0
+
+      - name: Merge current main without losing Anime CLI entries
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          set +e
+          git merge --no-ff --no-commit origin/main
+          merge_code=$?
+          set -e
+          if [[ $merge_code -ne 0 ]]; then
+            conflicts=$(git diff --name-only --diff-filter=U)
+            unexpected=$(printf '%s\n' "$conflicts" | grep -v '^pyproject.toml$' || true)
+            if [[ -n "$unexpected" ]]; then
+              echo "Unexpected merge conflicts:"
+              printf '%s\n' "$unexpected"
+              exit 1
+            fi
+            git checkout --theirs pyproject.toml
+            python - <<'PY'
+          from pathlib import Path
+          path = Path('pyproject.toml')
+          text = path.read_text(encoding='utf-8')
+          entries = [
+              'omega-anime = "omega_anime_t.__main__:main"',
+              'omega-anime-studio = "omega_anime_studio_t.__main__:main"',
+          ]
+          marker = '\n[tool.pytest.ini_options]'
+          if marker not in text:
+              raise SystemExit('pytest marker missing from main pyproject')
+          missing = [entry for entry in entries if entry not in text]
+          if missing:
+              text = text.replace(marker, '\n' + '\n'.join(missing) + marker, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+            git add -- pyproject.toml
+          fi
+          rm -f .github/workflows/omega-anime-converge-current-main.yml
+          rm -f tools/anime_converge_current_main.ready
+          git add -u -- .github/workflows/omega-anime-converge-current-main.yml tools/anime_converge_current_main.ready || true
+          git status --short
+          git commit -m "merge(anime): converge R2 work with current main"
+          git push origin HEAD:feat/omega-anime-t-r0-1
