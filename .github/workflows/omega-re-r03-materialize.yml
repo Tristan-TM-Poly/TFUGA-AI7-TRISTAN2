@@ -8,22 +8,31 @@ on:
       - "tools/omega_re_r03_payload/**"
       - "tools/omega_re_r03_materialize.py"
       - ".github/workflows/omega-re-r03-materialize.yml"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "tools/omega_re_r03_payload/**"
+      - "tools/omega_re_r03_materialize.py"
+      - ".github/workflows/omega-re-r03-materialize.yml"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: omega-re-r03-materialize-${{ github.ref }}
+  group: omega-re-r03-materialize-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
   validate-materialize:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
@@ -127,4 +136,4 @@ jobs:
             exit 0
           fi
           git commit -m "feat(omega-re-r03): materialize active causal RE-1024 forge"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git push origin HEAD:${TARGET_BRANCH}
