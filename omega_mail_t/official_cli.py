@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from .hardening import OneMessageLedger
 from .officialization import (
     ApprovalRecord,
     CompanyIdentity,
@@ -59,7 +60,16 @@ def build_parser() -> argparse.ArgumentParser:
     send_one = sub.add_parser("send-one", help="Dry-run by default; --execute opens SMTP")
     _add_gate_inputs(send_one)
     send_one.add_argument("--execute", action="store_true")
+    send_one.add_argument(
+        "--ledger",
+        type=Path,
+        help="Append-only execution ledger; mandatory for --execute unless set by environment",
+    )
     send_one.add_argument("--receipt", type=Path)
+
+    audit_ledger = sub.add_parser("audit-ledger", help="Validate a hash-chained execution ledger")
+    audit_ledger.add_argument("ledger", type=Path)
+    audit_ledger.add_argument("--report", type=Path)
     return parser
 
 
@@ -120,6 +130,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         _write(args.out, record.to_mapping())
         return 0
 
+    if args.command == "audit-ledger":
+        _write(args.report, OneMessageLedger(args.ledger).audit())
+        return 0
+
     company, draft, authority, compliance, approval = _objects(args)
     gate = OfficializationGate()
 
@@ -144,7 +158,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             approval=approval,
             production=args.execute,
         )
-        receipt = deliver_one(report=report, draft=draft, execute=args.execute)
+        ledger = OneMessageLedger(args.ledger) if args.ledger else None
+        receipt = deliver_one(
+            report=report,
+            draft=draft,
+            execute=args.execute,
+            approval=approval,
+            ledger=ledger,
+        )
         payload = {"gate": report.to_mapping(), "receipt": receipt.to_mapping()}
         _write(args.receipt, payload)
         return 0
