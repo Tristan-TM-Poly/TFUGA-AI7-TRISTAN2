@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-pct-theory-r03.schema.json",
+  "title": "Omega PCT R0.3 Theory",
+  "type": "object",
+  "required": ["id", "status", "gauge_groups", "fields", "operators", "falsifiers"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "name": {"type": "string"},
+    "status": {
+      "enum": ["established", "effective", "calculated", "simulated", "reconstructed", "hypothetical", "excluded", "falsified", "exploratory", "unknown"]
+    },
+    "baseline": {"type": ["string", "null"]},
+    "gauge_groups": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "fields": {"type": "array", "items": {"$ref": "#/$defs/field"}},
+    "parameters": {"type": "array", "items": {"type": "object", "required": ["id"]}},
+    "operators": {"type": "array", "items": {"$ref": "#/$defs/operator"}},
+    "falsifiers": {"type": "array", "items": {"$ref": "#/$defs/falsifier"}}
+  },
+  "$defs": {
+    "charge": {
+      "type": "object",
+      "required": ["group_id", "representation"],
+      "properties": {
+        "group_id": {"type": "string"},
+        "representation": {"type": "string"},
+        "u1_charge": {"type": ["number", "integer", "string", "null"]}
+      }
+    },
+    "field": {
+      "type": "object",
+      "required": ["id", "kind", "lorentz_representation", "mass_dimension", "status"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["scalar", "fermion", "vector", "tensor", "ghost", "auxiliary"]},
+        "lorentz_representation": {"type": "string"},
+        "mass_dimension": {"type": ["number", "integer", "string", "object"]},
+        "status": {"type": "string"},
+        "gauge_charges": {"type": "array", "items": {"$ref": "#/$defs/charge"}}
+      }
+    },
+    "factor": {
+      "type": "object",
+      "required": ["field_id"],
+      "properties": {
+        "field_id": {"type": "string"},
+        "multiplicity": {"type": "integer", "minimum": 1},
+        "conjugated": {"type": "boolean"},
+        "derivatives": {"type": "integer", "minimum": 0}
+      }
+    },
+    "operator": {
+      "type": "object",
+      "required": ["id", "coefficient", "factors"],
+      "properties": {
+        "id": {"type": "string"},
+        "coefficient": {"type": "string"},
+        "factors": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/factor"}},
+        "declared_dimension": {"type": ["number", "integer", "string", "object", "null"]},
+        "hermitian": {"type": ["boolean", "null"]},
+        "lorentz_scalar": {"type": ["boolean", "null"]}
+      }
+    },
+    "falsifier": {
+      "type": "object",
+      "required": ["id", "statement"],
+      "properties": {
+        "id": {"type": "string"},
+        "statement": {"type": "string", "minLength": 1},
+        "observable": {"type": ["string", "null"]},
+        "threshold": {"type": ["string", "null"]},
+        "experiment": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
