@@ -1,0 +1,409 @@
+{
+  "$defs": {
+    "character": {
+      "additionalProperties": false,
+      "properties": {
+        "character_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "contradiction": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "desire": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "fear": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "knowledge": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "limitation": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "moral_boundary": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "motion_markers": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "need": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "power": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "relationships": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "voice_markers": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "character_id",
+        "name",
+        "desire",
+        "need",
+        "fear",
+        "contradiction",
+        "power",
+        "limitation",
+        "moral_boundary",
+        "voice_markers",
+        "motion_markers",
+        "knowledge",
+        "relationships"
+      ],
+      "type": "object"
+    },
+    "scene": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "audience_after": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "audience_before": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "causal_debt_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "characters": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "conflict": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "duration_target_s": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "episode_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "irreversible_change": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "location_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "oak_status": {
+          "type": "string"
+        },
+        "objective": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "order": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "promise_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "scene_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sequence_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "scene_id",
+        "episode_id",
+        "sequence_id",
+        "order",
+        "title",
+        "duration_target_s",
+        "objective",
+        "conflict",
+        "irreversible_change",
+        "audience_before",
+        "audience_after",
+        "characters",
+        "location_id",
+        "promise_ids",
+        "causal_debt_ids",
+        "asset_ids",
+        "oak_status"
+      ],
+      "type": "object"
+    },
+    "shot": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "camera_motion": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "continuity_in": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "continuity_out": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "duration_s": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        "estimated_cost_units": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "framing": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "information_revealed": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "order": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "purpose": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "scene_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "shot_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "subject_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "shot_id",
+        "scene_id",
+        "order",
+        "duration_s",
+        "purpose",
+        "framing",
+        "camera_motion",
+        "subject_ids",
+        "information_revealed",
+        "continuity_in",
+        "continuity_out",
+        "asset_ids",
+        "estimated_cost_units"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://tfuga.example/schemas/anime-ir-r1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assets": {
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "causal_debts": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "characters": {
+      "items": {
+        "$ref": "#/$defs/character"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "edges": {
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "logline": {
+      "minLength": 20,
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "next_actions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "nodes": {
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "oak_status": {
+      "enum": [
+        "EXPLORATORY",
+        "FORMALIZED",
+        "SIMULATED",
+        "DEMONSTRATED",
+        "REPLICATED",
+        "CANONICAL"
+      ]
+    },
+    "project_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "risks": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "scenes": {
+      "items": {
+        "$ref": "#/$defs/scene"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "shots": {
+      "items": {
+        "$ref": "#/$defs/shot"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "target_duration_s": {
+      "minimum": 30,
+      "type": "integer"
+    },
+    "theme_question": {
+      "pattern": "\\?$",
+      "type": "string"
+    },
+    "title": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "visual_invariants": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "world_rules": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "logline",
+    "theme_question",
+    "target_duration_s",
+    "world_rules",
+    "visual_invariants",
+    "characters",
+    "scenes",
+    "shots",
+    "causal_debts",
+    "assets",
+    "nodes",
+    "edges",
+    "oak_status",
+    "risks",
+    "next_actions",
+    "metadata"
+  ],
+  "title": "Omega Anime Studio R1 Anime-IR",
+  "type": "object"
+}

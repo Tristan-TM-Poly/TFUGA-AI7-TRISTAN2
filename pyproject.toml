@@ -48,5 +48,7 @@ omega-anime = "omega_anime_t.__main__:main"
 
 omega-re-r03 = "omega_re_t.r03_cli:main"
 omega-re-re1024 = "omega_re_t.r03_frontier:main"
+omega-anime-studio = "omega_anime_studio_t.__main__:main"
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
