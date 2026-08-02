@@ -1,6 +1,6 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "2.11.0"
+version = "2.12.0"
 description = "Omega absorb and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
@@ -20,6 +20,8 @@ omega-mail = "omega_mail_t.cli:main"
 omega-mail-catalog = "omega_mail_t.catalog_cli:main"
 omega-mail-cvcd = "omega_mail_t.cvcd_atlas:main"
 omega-mail-official = "omega_mail_t.official_cli:main"
+omega-company-autopilot = "omega_company_autopilot_t.cli:main"
+omega-company-policy-atlas = "omega_company_autopilot_t.policy_atlas:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
