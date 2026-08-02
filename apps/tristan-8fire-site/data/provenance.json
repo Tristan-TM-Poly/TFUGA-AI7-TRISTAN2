@@ -1,0 +1,3752 @@
+{
+  "schema_version": "0.3.0",
+  "generated_from": "2026-08-02T18:12:00-04:00",
+  "repository_scope": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "hash_algorithm": "sha256",
+  "disclaimer": "Provenance records repository references and byte identity. It does not certify truth, authorship, safety, legal status, IP ownership, or scientific validity.",
+  "metrics": {
+    "sources": 45,
+    "resolved_files": 2,
+    "resolved_directories": 0,
+    "unresolved": 43,
+    "blocked_outside_repository": 0,
+    "theories": 44,
+    "claims": 133
+  },
+  "sources": [
+    {
+      "id": "source-0001",
+      "path": "docs/00_MASTER_CANON_TFUGA_AI7_AIT.md",
+      "kind": "document",
+      "status": "resolved-file",
+      "sha256": "45d60d5bc8ae5cb9d0838ce0628b7bc6b297263d0385c6ca341d339459b8c36d",
+      "size_bytes": 4703,
+      "theory_ids": [
+        "omega-tristan-self-os"
+      ],
+      "claim_ids": [
+        "claim-omega-tristan-self-os-01",
+        "claim-omega-tristan-self-os-02",
+        "claim-omega-tristan-self-os-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-tristan-self-os-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-tristan-self-os-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-tristan-self-os-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-tristan-self-os",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0002",
+      "path": "docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-company-qc-ca-t"
+      ],
+      "claim_ids": [
+        "claim-omega-company-qc-ca-t-01",
+        "claim-omega-company-qc-ca-t-02",
+        "claim-omega-company-qc-ca-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-company-qc-ca-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-company-qc-ca-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-company-qc-ca-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-company-qc-ca-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0003",
+      "path": "docs/theory_cards/OMEGA_3DP_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-3dp-t"
+      ],
+      "claim_ids": [
+        "claim-omega-3dp-t-01",
+        "claim-omega-3dp-t-02",
+        "claim-omega-3dp-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-3dp-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-3dp-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-3dp-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-3dp-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0004",
+      "path": "docs/theory_cards/OMEGA_ALGO_ENERGY_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-algorithmic-energy-t"
+      ],
+      "claim_ids": [
+        "claim-omega-algorithmic-energy-t-01",
+        "claim-omega-algorithmic-energy-t-02",
+        "claim-omega-algorithmic-energy-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-algorithmic-energy-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-algorithmic-energy-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-algorithmic-energy-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-algorithmic-energy-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0005",
+      "path": "docs/theory_cards/OMEGA_ATLAS_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-atlas-t"
+      ],
+      "claim_ids": [
+        "claim-omega-atlas-t-01",
+        "claim-omega-atlas-t-02",
+        "claim-omega-atlas-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-atlas-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-atlas-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-atlas-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-atlas-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0006",
+      "path": "docs/theory_cards/OMEGA_BAT_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-bat-t"
+      ],
+      "claim_ids": [
+        "claim-omega-bat-t-01",
+        "claim-omega-bat-t-02",
+        "claim-omega-bat-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-bat-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-bat-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-bat-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-bat-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0007",
+      "path": "docs/theory_cards/OMEGA_CALIB_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-calib-t"
+      ],
+      "claim_ids": [
+        "claim-omega-calib-t-01",
+        "claim-omega-calib-t-02",
+        "claim-omega-calib-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-calib-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-calib-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-calib-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-calib-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0008",
+      "path": "docs/theory_cards/OMEGA_CHEM_LOG_LIN_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-chem-log-lin-t"
+      ],
+      "claim_ids": [
+        "claim-omega-chem-log-lin-t-01",
+        "claim-omega-chem-log-lin-t-02",
+        "claim-omega-chem-log-lin-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-chem-log-lin-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-chem-log-lin-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-chem-log-lin-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-chem-log-lin-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0009",
+      "path": "docs/theory_cards/OMEGA_CORP_JARVIS_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-corp-jarvis-t"
+      ],
+      "claim_ids": [
+        "claim-omega-corp-jarvis-t-01",
+        "claim-omega-corp-jarvis-t-02",
+        "claim-omega-corp-jarvis-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-corp-jarvis-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-corp-jarvis-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-corp-jarvis-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-corp-jarvis-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0010",
+      "path": "docs/theory_cards/OMEGA_CPUFMT.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-cpufmt"
+      ],
+      "claim_ids": [
+        "claim-omega-cpufmt-01",
+        "claim-omega-cpufmt-02",
+        "claim-omega-cpufmt-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-cpufmt-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-cpufmt-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-cpufmt-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-cpufmt",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0011",
+      "path": "docs/theory_cards/OMEGA_CVCD_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-cvcd-t"
+      ],
+      "claim_ids": [
+        "claim-omega-cvcd-t-01",
+        "claim-omega-cvcd-t-02",
+        "claim-omega-cvcd-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-cvcd-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-cvcd-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-cvcd-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-cvcd-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0012",
+      "path": "docs/theory_cards/OMEGA_DOC_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-doc-t"
+      ],
+      "claim_ids": [
+        "claim-omega-doc-t-01",
+        "claim-omega-doc-t-02",
+        "claim-omega-doc-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-doc-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-doc-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-doc-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-doc-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0013",
+      "path": "docs/theory_cards/OMEGA_ECC_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-ecc-t"
+      ],
+      "claim_ids": [
+        "claim-omega-ecc-t-01",
+        "claim-omega-ecc-t-02",
+        "claim-omega-ecc-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-ecc-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-ecc-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-ecc-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-ecc-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0014",
+      "path": "docs/theory_cards/OMEGA_EDU_CAN_QC_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-edu-can-qc-t"
+      ],
+      "claim_ids": [
+        "claim-omega-edu-can-qc-t-01",
+        "claim-omega-edu-can-qc-t-02",
+        "claim-omega-edu-can-qc-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-edu-can-qc-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-edu-can-qc-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-edu-can-qc-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-edu-can-qc-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0015",
+      "path": "docs/theory_cards/OMEGA_ENERGY_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-energy-t"
+      ],
+      "claim_ids": [
+        "claim-omega-energy-t-01",
+        "claim-omega-energy-t-02",
+        "claim-omega-energy-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-energy-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-energy-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-energy-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-energy-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0016",
+      "path": "docs/theory_cards/OMEGA_FACT_INFINITY_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-fact-infinity-t"
+      ],
+      "claim_ids": [
+        "claim-omega-fact-infinity-t-01",
+        "claim-omega-fact-infinity-t-02",
+        "claim-omega-fact-infinity-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-fact-infinity-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-fact-infinity-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-fact-infinity-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-fact-infinity-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0017",
+      "path": "docs/theory_cards/OMEGA_FCRYST_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-fcryst-t"
+      ],
+      "claim_ids": [
+        "claim-omega-fcryst-t-01",
+        "claim-omega-fcryst-t-02",
+        "claim-omega-fcryst-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-fcryst-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-fcryst-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-fcryst-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-fcryst-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0018",
+      "path": "docs/theory_cards/OMEGA_FPG_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-fpg-t"
+      ],
+      "claim_ids": [
+        "claim-omega-fpg-t-01",
+        "claim-omega-fpg-t-02",
+        "claim-omega-fpg-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-fpg-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-fpg-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-fpg-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-fpg-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0019",
+      "path": "docs/theory_cards/OMEGA_GAME_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-game-t"
+      ],
+      "claim_ids": [
+        "claim-omega-game-t-01",
+        "claim-omega-game-t-02",
+        "claim-omega-game-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-game-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-game-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-game-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-game-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0020",
+      "path": "docs/theory_cards/OMEGA_GENERATOR_DISCOVERY_STACK.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-generator-discovery-stack"
+      ],
+      "claim_ids": [
+        "claim-omega-generator-discovery-stack-01",
+        "claim-omega-generator-discovery-stack-02",
+        "claim-omega-generator-discovery-stack-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-generator-discovery-stack-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-generator-discovery-stack-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-generator-discovery-stack-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-generator-discovery-stack",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0021",
+      "path": "docs/theory_cards/OMEGA_JKD_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-jkd-t"
+      ],
+      "claim_ids": [
+        "claim-omega-jkd-t-01",
+        "claim-omega-jkd-t-02",
+        "claim-omega-jkd-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-jkd-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-jkd-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-jkd-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-jkd-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0022",
+      "path": "docs/theory_cards/OMEGA_LASER_MEMS_CPU_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-laser-mems-cpu-t"
+      ],
+      "claim_ids": [
+        "claim-omega-laser-mems-cpu-t-01",
+        "claim-omega-laser-mems-cpu-t-02",
+        "claim-omega-laser-mems-cpu-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-laser-mems-cpu-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-laser-mems-cpu-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-laser-mems-cpu-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-laser-mems-cpu-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0023",
+      "path": "docs/theory_cards/OMEGA_LEARN_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-learn-t"
+      ],
+      "claim_ids": [
+        "claim-omega-learn-t-01",
+        "claim-omega-learn-t-02",
+        "claim-omega-learn-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-learn-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-learn-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-learn-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-learn-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0024",
+      "path": "docs/theory_cards/OMEGA_LIN_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-lin-t"
+      ],
+      "claim_ids": [
+        "claim-omega-lin-t-01",
+        "claim-omega-lin-t-02",
+        "claim-omega-lin-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-lin-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-lin-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-lin-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-lin-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0025",
+      "path": "docs/theory_cards/OMEGA_LOGEXP_MORPH_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-logexp-morph-t"
+      ],
+      "claim_ids": [
+        "claim-omega-logexp-morph-t-01",
+        "claim-omega-logexp-morph-t-02",
+        "claim-omega-logexp-morph-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-logexp-morph-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-logexp-morph-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-logexp-morph-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-logexp-morph-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0026",
+      "path": "docs/theory_cards/OMEGA_MAIL_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-mail-t"
+      ],
+      "claim_ids": [
+        "claim-omega-mail-t-01",
+        "claim-omega-mail-t-02",
+        "claim-omega-mail-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-mail-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-mail-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-mail-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-mail-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0027",
+      "path": "docs/theory_cards/OMEGA_MEMS_CPU_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-mems-cpu-t"
+      ],
+      "claim_ids": [
+        "claim-omega-mems-cpu-t-01",
+        "claim-omega-mems-cpu-t-02",
+        "claim-omega-mems-cpu-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-mems-cpu-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-mems-cpu-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-mems-cpu-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-mems-cpu-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0028",
+      "path": "docs/theory_cards/OMEGA_NATSCI_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-natsci-t"
+      ],
+      "claim_ids": [
+        "claim-omega-natsci-t-01",
+        "claim-omega-natsci-t-02",
+        "claim-omega-natsci-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-natsci-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-natsci-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-natsci-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-natsci-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0029",
+      "path": "docs/theory_cards/OMEGA_NEG_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-neg-t"
+      ],
+      "claim_ids": [
+        "claim-omega-neg-t-01",
+        "claim-omega-neg-t-02",
+        "claim-omega-neg-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-neg-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-neg-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-neg-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-neg-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0030",
+      "path": "docs/theory_cards/OMEGA_NEURO_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-neuro-t"
+      ],
+      "claim_ids": [
+        "claim-omega-neuro-t-01",
+        "claim-omega-neuro-t-02",
+        "claim-omega-neuro-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-neuro-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-neuro-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-neuro-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-neuro-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0031",
+      "path": "docs/theory_cards/OMEGA_OEMMTD_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-oem-mtd-t"
+      ],
+      "claim_ids": [
+        "claim-omega-oem-mtd-t-01",
+        "claim-omega-oem-mtd-t-02",
+        "claim-omega-oem-mtd-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-oem-mtd-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-oem-mtd-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-oem-mtd-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-oem-mtd-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0032",
+      "path": "docs/theory_cards/OMEGA_OPT_SOLAR_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-opt-solar-t"
+      ],
+      "claim_ids": [
+        "claim-omega-opt-solar-t-01",
+        "claim-omega-opt-solar-t-02",
+        "claim-omega-opt-solar-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-opt-solar-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-opt-solar-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-opt-solar-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-opt-solar-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0033",
+      "path": "docs/theory_cards/OMEGA_OSS_DIGEST_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-oss-digest-t"
+      ],
+      "claim_ids": [
+        "claim-omega-oss-digest-t-01",
+        "claim-omega-oss-digest-t-02",
+        "claim-omega-oss-digest-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-oss-digest-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-oss-digest-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-oss-digest-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-oss-digest-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0034",
+      "path": "docs/theory_cards/OMEGA_PDF_HYPERGRAPH_GITHUB_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-pdf-hypergraph-github-t"
+      ],
+      "claim_ids": [
+        "claim-omega-pdf-hypergraph-github-t-01",
+        "claim-omega-pdf-hypergraph-github-t-02",
+        "claim-omega-pdf-hypergraph-github-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-pdf-hypergraph-github-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-pdf-hypergraph-github-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-pdf-hypergraph-github-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-pdf-hypergraph-github-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0035",
+      "path": "docs/theory_cards/OMEGA_PRIME_OBJECT_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-prime-object-t"
+      ],
+      "claim_ids": [
+        "claim-omega-prime-object-t-01",
+        "claim-omega-prime-object-t-02",
+        "claim-omega-prime-object-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-prime-object-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-prime-object-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-prime-object-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-prime-object-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0036",
+      "path": "docs/theory_cards/OMEGA_QUATERNION_CRYSTAL_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-quaternion-crystal-t"
+      ],
+      "claim_ids": [
+        "claim-omega-quaternion-crystal-t-01",
+        "claim-omega-quaternion-crystal-t-02",
+        "claim-omega-quaternion-crystal-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-quaternion-crystal-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-quaternion-crystal-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-quaternion-crystal-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-quaternion-crystal-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0037",
+      "path": "docs/theory_cards/OMEGA_SANS_PLAFOND_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-sans-plafond-t"
+      ],
+      "claim_ids": [
+        "claim-omega-sans-plafond-t-01",
+        "claim-omega-sans-plafond-t-02",
+        "claim-omega-sans-plafond-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-sans-plafond-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-sans-plafond-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-sans-plafond-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-sans-plafond-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0038",
+      "path": "docs/theory_cards/OMEGA_TRANSFORM_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-transform-t"
+      ],
+      "claim_ids": [
+        "claim-omega-transform-t-01",
+        "claim-omega-transform-t-02",
+        "claim-omega-transform-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-transform-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-transform-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-transform-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-transform-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0039",
+      "path": "docs/theory_cards/OMEGA_UNC2_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-unc2-t"
+      ],
+      "claim_ids": [
+        "claim-omega-unc2-t-01",
+        "claim-omega-unc2-t-02",
+        "claim-omega-unc2-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-unc2-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-unc2-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-unc2-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-unc2-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0040",
+      "path": "docs/theory_cards/OMEGA_VIE_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-life-t"
+      ],
+      "claim_ids": [
+        "claim-omega-life-t-01",
+        "claim-omega-life-t-02",
+        "claim-omega-life-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-life-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-life-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-life-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-life-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0041",
+      "path": "docs/theory_cards/OMEGA_VTP_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-vtp-t"
+      ],
+      "claim_ids": [
+        "claim-omega-vtp-t-01",
+        "claim-omega-vtp-t-02",
+        "claim-omega-vtp-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-vtp-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-vtp-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-vtp-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-vtp-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0042",
+      "path": "docs/theory_cards/OMEGA_WEB_TRISTAN_T.md",
+      "kind": "document",
+      "status": "resolved-file",
+      "sha256": "5d2f37bdf10062fda369cd0981466ffab333649db82c977b62464dd043c63863",
+      "size_bytes": 4654,
+      "theory_ids": [
+        "omega-web-tristan-t"
+      ],
+      "claim_ids": [
+        "claim-omega-web-tristan-t-01",
+        "claim-omega-web-tristan-t-02",
+        "claim-omega-web-tristan-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-web-tristan-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-web-tristan-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-web-tristan-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-web-tristan-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0043",
+      "path": "docs/theory_cards/OMEGA_WIKI_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-wiki-t"
+      ],
+      "claim_ids": [
+        "claim-omega-wiki-t-01",
+        "claim-omega-wiki-t-02",
+        "claim-omega-wiki-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-wiki-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-wiki-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-wiki-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-wiki-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0044",
+      "path": "docs/theory_cards/OMEGA_ZETA_MANDEL_T.md",
+      "kind": "document",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-zeta-mandel-t"
+      ],
+      "claim_ids": [
+        "claim-omega-zeta-mandel-t-01",
+        "claim-omega-zeta-mandel-t-02",
+        "claim-omega-zeta-mandel-t-03"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-zeta-mandel-t-01",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-zeta-mandel-t-02",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-zeta-mandel-t-03",
+          "locator": "R0.2-public",
+          "note": "Référence de conception, pas validation externe."
+        },
+        {
+          "object_type": "theory",
+          "object_id": "omega-zeta-mandel-t",
+          "locator": "R0.2-public",
+          "note": "Source canonique déclarée par la fiche publique."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    },
+    {
+      "id": "source-0045",
+      "path": "omega_transform_t_package.zip",
+      "kind": "other",
+      "status": "unresolved",
+      "sha256": null,
+      "size_bytes": null,
+      "theory_ids": [
+        "omega-transform-t"
+      ],
+      "claim_ids": [
+        "claim-omega-transform-t-negative-01"
+      ],
+      "references": [
+        {
+          "object_type": "claim",
+          "object_id": "claim-omega-transform-t-negative-01",
+          "locator": "keep_fraction=0.2",
+          "note": "Conserver comme mémoire M⁻."
+        }
+      ],
+      "epistemic_boundary": "Byte identity and repository presence do not certify the referenced claim."
+    }
+  ],
+  "theory_provenance": [
+    {
+      "theory_id": "omega-tristan-self-os",
+      "source_ids": [
+        "source-0001"
+      ],
+      "resolved_sources": 1,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-transform-t",
+      "source_ids": [
+        "source-0038"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 4
+    },
+    {
+      "theory_id": "omega-unc2-t",
+      "source_ids": [
+        "source-0039"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-cvcd-t",
+      "source_ids": [
+        "source-0011"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-cpufmt",
+      "source_ids": [
+        "source-0010"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-bat-t",
+      "source_ids": [
+        "source-0006"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-3dp-t",
+      "source_ids": [
+        "source-0003"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-company-qc-ca-t",
+      "source_ids": [
+        "source-0002"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-neuro-t",
+      "source_ids": [
+        "source-0030"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-oem-mtd-t",
+      "source_ids": [
+        "source-0031"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-opt-solar-t",
+      "source_ids": [
+        "source-0032"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-mems-cpu-t",
+      "source_ids": [
+        "source-0027"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-laser-mems-cpu-t",
+      "source_ids": [
+        "source-0022"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-corp-jarvis-t",
+      "source_ids": [
+        "source-0009"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-lin-t",
+      "source_ids": [
+        "source-0024"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-chem-log-lin-t",
+      "source_ids": [
+        "source-0008"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-energy-t",
+      "source_ids": [
+        "source-0015"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-game-t",
+      "source_ids": [
+        "source-0019"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-neg-t",
+      "source_ids": [
+        "source-0029"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-learn-t",
+      "source_ids": [
+        "source-0023"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-jkd-t",
+      "source_ids": [
+        "source-0021"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-calib-t",
+      "source_ids": [
+        "source-0007"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-zeta-mandel-t",
+      "source_ids": [
+        "source-0044"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-natsci-t",
+      "source_ids": [
+        "source-0028"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-atlas-t",
+      "source_ids": [
+        "source-0005"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-vtp-t",
+      "source_ids": [
+        "source-0041"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-oss-digest-t",
+      "source_ids": [
+        "source-0033"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-pdf-hypergraph-github-t",
+      "source_ids": [
+        "source-0034"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-fpg-t",
+      "source_ids": [
+        "source-0018"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-fcryst-t",
+      "source_ids": [
+        "source-0017"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-doc-t",
+      "source_ids": [
+        "source-0012"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-sans-plafond-t",
+      "source_ids": [
+        "source-0037"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-mail-t",
+      "source_ids": [
+        "source-0026"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-web-tristan-t",
+      "source_ids": [
+        "source-0042"
+      ],
+      "resolved_sources": 1,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-wiki-t",
+      "source_ids": [
+        "source-0043"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-logexp-morph-t",
+      "source_ids": [
+        "source-0025"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-quaternion-crystal-t",
+      "source_ids": [
+        "source-0036"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-ecc-t",
+      "source_ids": [
+        "source-0013"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-prime-object-t",
+      "source_ids": [
+        "source-0035"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-fact-infinity-t",
+      "source_ids": [
+        "source-0016"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-generator-discovery-stack",
+      "source_ids": [
+        "source-0020"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-life-t",
+      "source_ids": [
+        "source-0040"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-edu-can-qc-t",
+      "source_ids": [
+        "source-0014"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    },
+    {
+      "theory_id": "omega-algorithmic-energy-t",
+      "source_ids": [
+        "source-0004"
+      ],
+      "resolved_sources": 0,
+      "claim_count": 3
+    }
+  ],
+  "claim_provenance": [
+    {
+      "claim_id": "claim-omega-tristan-self-os-01",
+      "theory_id": "omega-tristan-self-os",
+      "source_ids": [
+        "source-0001"
+      ],
+      "resolved_sources": 1,
+      "unresolved_sources": 0,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-tristan-self-os-02",
+      "theory_id": "omega-tristan-self-os",
+      "source_ids": [
+        "source-0001"
+      ],
+      "resolved_sources": 1,
+      "unresolved_sources": 0,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-tristan-self-os-03",
+      "theory_id": "omega-tristan-self-os",
+      "source_ids": [
+        "source-0001"
+      ],
+      "resolved_sources": 1,
+      "unresolved_sources": 0,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-transform-t-01",
+      "theory_id": "omega-transform-t",
+      "source_ids": [
+        "source-0038"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-transform-t-02",
+      "theory_id": "omega-transform-t",
+      "source_ids": [
+        "source-0038"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-transform-t-03",
+      "theory_id": "omega-transform-t",
+      "source_ids": [
+        "source-0038"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-unc2-t-01",
+      "theory_id": "omega-unc2-t",
+      "source_ids": [
+        "source-0039"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-unc2-t-02",
+      "theory_id": "omega-unc2-t",
+      "source_ids": [
+        "source-0039"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-unc2-t-03",
+      "theory_id": "omega-unc2-t",
+      "source_ids": [
+        "source-0039"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-cvcd-t-01",
+      "theory_id": "omega-cvcd-t",
+      "source_ids": [
+        "source-0011"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-cvcd-t-02",
+      "theory_id": "omega-cvcd-t",
+      "source_ids": [
+        "source-0011"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-cvcd-t-03",
+      "theory_id": "omega-cvcd-t",
+      "source_ids": [
+        "source-0011"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-cpufmt-01",
+      "theory_id": "omega-cpufmt",
+      "source_ids": [
+        "source-0010"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-cpufmt-02",
+      "theory_id": "omega-cpufmt",
+      "source_ids": [
+        "source-0010"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-cpufmt-03",
+      "theory_id": "omega-cpufmt",
+      "source_ids": [
+        "source-0010"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-bat-t-01",
+      "theory_id": "omega-bat-t",
+      "source_ids": [
+        "source-0006"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-bat-t-02",
+      "theory_id": "omega-bat-t",
+      "source_ids": [
+        "source-0006"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-bat-t-03",
+      "theory_id": "omega-bat-t",
+      "source_ids": [
+        "source-0006"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-3dp-t-01",
+      "theory_id": "omega-3dp-t",
+      "source_ids": [
+        "source-0003"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-3dp-t-02",
+      "theory_id": "omega-3dp-t",
+      "source_ids": [
+        "source-0003"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-3dp-t-03",
+      "theory_id": "omega-3dp-t",
+      "source_ids": [
+        "source-0003"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-company-qc-ca-t-01",
+      "theory_id": "omega-company-qc-ca-t",
+      "source_ids": [
+        "source-0002"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-company-qc-ca-t-02",
+      "theory_id": "omega-company-qc-ca-t",
+      "source_ids": [
+        "source-0002"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-company-qc-ca-t-03",
+      "theory_id": "omega-company-qc-ca-t",
+      "source_ids": [
+        "source-0002"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-neuro-t-01",
+      "theory_id": "omega-neuro-t",
+      "source_ids": [
+        "source-0030"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-neuro-t-02",
+      "theory_id": "omega-neuro-t",
+      "source_ids": [
+        "source-0030"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-neuro-t-03",
+      "theory_id": "omega-neuro-t",
+      "source_ids": [
+        "source-0030"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-oem-mtd-t-01",
+      "theory_id": "omega-oem-mtd-t",
+      "source_ids": [
+        "source-0031"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-oem-mtd-t-02",
+      "theory_id": "omega-oem-mtd-t",
+      "source_ids": [
+        "source-0031"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-oem-mtd-t-03",
+      "theory_id": "omega-oem-mtd-t",
+      "source_ids": [
+        "source-0031"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-opt-solar-t-01",
+      "theory_id": "omega-opt-solar-t",
+      "source_ids": [
+        "source-0032"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-opt-solar-t-02",
+      "theory_id": "omega-opt-solar-t",
+      "source_ids": [
+        "source-0032"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-opt-solar-t-03",
+      "theory_id": "omega-opt-solar-t",
+      "source_ids": [
+        "source-0032"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-mems-cpu-t-01",
+      "theory_id": "omega-mems-cpu-t",
+      "source_ids": [
+        "source-0027"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-mems-cpu-t-02",
+      "theory_id": "omega-mems-cpu-t",
+      "source_ids": [
+        "source-0027"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-mems-cpu-t-03",
+      "theory_id": "omega-mems-cpu-t",
+      "source_ids": [
+        "source-0027"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-laser-mems-cpu-t-01",
+      "theory_id": "omega-laser-mems-cpu-t",
+      "source_ids": [
+        "source-0022"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-laser-mems-cpu-t-02",
+      "theory_id": "omega-laser-mems-cpu-t",
+      "source_ids": [
+        "source-0022"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-laser-mems-cpu-t-03",
+      "theory_id": "omega-laser-mems-cpu-t",
+      "source_ids": [
+        "source-0022"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-corp-jarvis-t-01",
+      "theory_id": "omega-corp-jarvis-t",
+      "source_ids": [
+        "source-0009"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-corp-jarvis-t-02",
+      "theory_id": "omega-corp-jarvis-t",
+      "source_ids": [
+        "source-0009"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-corp-jarvis-t-03",
+      "theory_id": "omega-corp-jarvis-t",
+      "source_ids": [
+        "source-0009"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-lin-t-01",
+      "theory_id": "omega-lin-t",
+      "source_ids": [
+        "source-0024"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-lin-t-02",
+      "theory_id": "omega-lin-t",
+      "source_ids": [
+        "source-0024"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-lin-t-03",
+      "theory_id": "omega-lin-t",
+      "source_ids": [
+        "source-0024"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-chem-log-lin-t-01",
+      "theory_id": "omega-chem-log-lin-t",
+      "source_ids": [
+        "source-0008"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-chem-log-lin-t-02",
+      "theory_id": "omega-chem-log-lin-t",
+      "source_ids": [
+        "source-0008"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-chem-log-lin-t-03",
+      "theory_id": "omega-chem-log-lin-t",
+      "source_ids": [
+        "source-0008"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-energy-t-01",
+      "theory_id": "omega-energy-t",
+      "source_ids": [
+        "source-0015"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-energy-t-02",
+      "theory_id": "omega-energy-t",
+      "source_ids": [
+        "source-0015"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-energy-t-03",
+      "theory_id": "omega-energy-t",
+      "source_ids": [
+        "source-0015"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-game-t-01",
+      "theory_id": "omega-game-t",
+      "source_ids": [
+        "source-0019"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-game-t-02",
+      "theory_id": "omega-game-t",
+      "source_ids": [
+        "source-0019"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-game-t-03",
+      "theory_id": "omega-game-t",
+      "source_ids": [
+        "source-0019"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-neg-t-01",
+      "theory_id": "omega-neg-t",
+      "source_ids": [
+        "source-0029"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-neg-t-02",
+      "theory_id": "omega-neg-t",
+      "source_ids": [
+        "source-0029"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-neg-t-03",
+      "theory_id": "omega-neg-t",
+      "source_ids": [
+        "source-0029"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-learn-t-01",
+      "theory_id": "omega-learn-t",
+      "source_ids": [
+        "source-0023"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-learn-t-02",
+      "theory_id": "omega-learn-t",
+      "source_ids": [
+        "source-0023"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-learn-t-03",
+      "theory_id": "omega-learn-t",
+      "source_ids": [
+        "source-0023"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-jkd-t-01",
+      "theory_id": "omega-jkd-t",
+      "source_ids": [
+        "source-0021"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-jkd-t-02",
+      "theory_id": "omega-jkd-t",
+      "source_ids": [
+        "source-0021"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-jkd-t-03",
+      "theory_id": "omega-jkd-t",
+      "source_ids": [
+        "source-0021"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-calib-t-01",
+      "theory_id": "omega-calib-t",
+      "source_ids": [
+        "source-0007"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-calib-t-02",
+      "theory_id": "omega-calib-t",
+      "source_ids": [
+        "source-0007"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-calib-t-03",
+      "theory_id": "omega-calib-t",
+      "source_ids": [
+        "source-0007"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-zeta-mandel-t-01",
+      "theory_id": "omega-zeta-mandel-t",
+      "source_ids": [
+        "source-0044"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-zeta-mandel-t-02",
+      "theory_id": "omega-zeta-mandel-t",
+      "source_ids": [
+        "source-0044"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-zeta-mandel-t-03",
+      "theory_id": "omega-zeta-mandel-t",
+      "source_ids": [
+        "source-0044"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-natsci-t-01",
+      "theory_id": "omega-natsci-t",
+      "source_ids": [
+        "source-0028"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-natsci-t-02",
+      "theory_id": "omega-natsci-t",
+      "source_ids": [
+        "source-0028"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-natsci-t-03",
+      "theory_id": "omega-natsci-t",
+      "source_ids": [
+        "source-0028"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-atlas-t-01",
+      "theory_id": "omega-atlas-t",
+      "source_ids": [
+        "source-0005"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-atlas-t-02",
+      "theory_id": "omega-atlas-t",
+      "source_ids": [
+        "source-0005"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-atlas-t-03",
+      "theory_id": "omega-atlas-t",
+      "source_ids": [
+        "source-0005"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-vtp-t-01",
+      "theory_id": "omega-vtp-t",
+      "source_ids": [
+        "source-0041"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-vtp-t-02",
+      "theory_id": "omega-vtp-t",
+      "source_ids": [
+        "source-0041"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-vtp-t-03",
+      "theory_id": "omega-vtp-t",
+      "source_ids": [
+        "source-0041"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-oss-digest-t-01",
+      "theory_id": "omega-oss-digest-t",
+      "source_ids": [
+        "source-0033"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-oss-digest-t-02",
+      "theory_id": "omega-oss-digest-t",
+      "source_ids": [
+        "source-0033"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-oss-digest-t-03",
+      "theory_id": "omega-oss-digest-t",
+      "source_ids": [
+        "source-0033"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-pdf-hypergraph-github-t-01",
+      "theory_id": "omega-pdf-hypergraph-github-t",
+      "source_ids": [
+        "source-0034"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-pdf-hypergraph-github-t-02",
+      "theory_id": "omega-pdf-hypergraph-github-t",
+      "source_ids": [
+        "source-0034"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-pdf-hypergraph-github-t-03",
+      "theory_id": "omega-pdf-hypergraph-github-t",
+      "source_ids": [
+        "source-0034"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-fpg-t-01",
+      "theory_id": "omega-fpg-t",
+      "source_ids": [
+        "source-0018"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-fpg-t-02",
+      "theory_id": "omega-fpg-t",
+      "source_ids": [
+        "source-0018"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-fpg-t-03",
+      "theory_id": "omega-fpg-t",
+      "source_ids": [
+        "source-0018"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-fcryst-t-01",
+      "theory_id": "omega-fcryst-t",
+      "source_ids": [
+        "source-0017"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-fcryst-t-02",
+      "theory_id": "omega-fcryst-t",
+      "source_ids": [
+        "source-0017"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-fcryst-t-03",
+      "theory_id": "omega-fcryst-t",
+      "source_ids": [
+        "source-0017"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-doc-t-01",
+      "theory_id": "omega-doc-t",
+      "source_ids": [
+        "source-0012"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-doc-t-02",
+      "theory_id": "omega-doc-t",
+      "source_ids": [
+        "source-0012"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-doc-t-03",
+      "theory_id": "omega-doc-t",
+      "source_ids": [
+        "source-0012"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-sans-plafond-t-01",
+      "theory_id": "omega-sans-plafond-t",
+      "source_ids": [
+        "source-0037"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-sans-plafond-t-02",
+      "theory_id": "omega-sans-plafond-t",
+      "source_ids": [
+        "source-0037"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-sans-plafond-t-03",
+      "theory_id": "omega-sans-plafond-t",
+      "source_ids": [
+        "source-0037"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-mail-t-01",
+      "theory_id": "omega-mail-t",
+      "source_ids": [
+        "source-0026"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-mail-t-02",
+      "theory_id": "omega-mail-t",
+      "source_ids": [
+        "source-0026"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-mail-t-03",
+      "theory_id": "omega-mail-t",
+      "source_ids": [
+        "source-0026"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-web-tristan-t-01",
+      "theory_id": "omega-web-tristan-t",
+      "source_ids": [
+        "source-0042"
+      ],
+      "resolved_sources": 1,
+      "unresolved_sources": 0,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-web-tristan-t-02",
+      "theory_id": "omega-web-tristan-t",
+      "source_ids": [
+        "source-0042"
+      ],
+      "resolved_sources": 1,
+      "unresolved_sources": 0,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-web-tristan-t-03",
+      "theory_id": "omega-web-tristan-t",
+      "source_ids": [
+        "source-0042"
+      ],
+      "resolved_sources": 1,
+      "unresolved_sources": 0,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-wiki-t-01",
+      "theory_id": "omega-wiki-t",
+      "source_ids": [
+        "source-0043"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-wiki-t-02",
+      "theory_id": "omega-wiki-t",
+      "source_ids": [
+        "source-0043"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-wiki-t-03",
+      "theory_id": "omega-wiki-t",
+      "source_ids": [
+        "source-0043"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-logexp-morph-t-01",
+      "theory_id": "omega-logexp-morph-t",
+      "source_ids": [
+        "source-0025"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-logexp-morph-t-02",
+      "theory_id": "omega-logexp-morph-t",
+      "source_ids": [
+        "source-0025"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-logexp-morph-t-03",
+      "theory_id": "omega-logexp-morph-t",
+      "source_ids": [
+        "source-0025"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-quaternion-crystal-t-01",
+      "theory_id": "omega-quaternion-crystal-t",
+      "source_ids": [
+        "source-0036"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-quaternion-crystal-t-02",
+      "theory_id": "omega-quaternion-crystal-t",
+      "source_ids": [
+        "source-0036"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-quaternion-crystal-t-03",
+      "theory_id": "omega-quaternion-crystal-t",
+      "source_ids": [
+        "source-0036"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-ecc-t-01",
+      "theory_id": "omega-ecc-t",
+      "source_ids": [
+        "source-0013"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-ecc-t-02",
+      "theory_id": "omega-ecc-t",
+      "source_ids": [
+        "source-0013"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-ecc-t-03",
+      "theory_id": "omega-ecc-t",
+      "source_ids": [
+        "source-0013"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-prime-object-t-01",
+      "theory_id": "omega-prime-object-t",
+      "source_ids": [
+        "source-0035"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-prime-object-t-02",
+      "theory_id": "omega-prime-object-t",
+      "source_ids": [
+        "source-0035"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-prime-object-t-03",
+      "theory_id": "omega-prime-object-t",
+      "source_ids": [
+        "source-0035"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-fact-infinity-t-01",
+      "theory_id": "omega-fact-infinity-t",
+      "source_ids": [
+        "source-0016"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-fact-infinity-t-02",
+      "theory_id": "omega-fact-infinity-t",
+      "source_ids": [
+        "source-0016"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-fact-infinity-t-03",
+      "theory_id": "omega-fact-infinity-t",
+      "source_ids": [
+        "source-0016"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-generator-discovery-stack-01",
+      "theory_id": "omega-generator-discovery-stack",
+      "source_ids": [
+        "source-0020"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-generator-discovery-stack-02",
+      "theory_id": "omega-generator-discovery-stack",
+      "source_ids": [
+        "source-0020"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-generator-discovery-stack-03",
+      "theory_id": "omega-generator-discovery-stack",
+      "source_ids": [
+        "source-0020"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-life-t-01",
+      "theory_id": "omega-life-t",
+      "source_ids": [
+        "source-0040"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-life-t-02",
+      "theory_id": "omega-life-t",
+      "source_ids": [
+        "source-0040"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-life-t-03",
+      "theory_id": "omega-life-t",
+      "source_ids": [
+        "source-0040"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-edu-can-qc-t-01",
+      "theory_id": "omega-edu-can-qc-t",
+      "source_ids": [
+        "source-0014"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-edu-can-qc-t-02",
+      "theory_id": "omega-edu-can-qc-t",
+      "source_ids": [
+        "source-0014"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-edu-can-qc-t-03",
+      "theory_id": "omega-edu-can-qc-t",
+      "source_ids": [
+        "source-0014"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-algorithmic-energy-t-01",
+      "theory_id": "omega-algorithmic-energy-t",
+      "source_ids": [
+        "source-0004"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-algorithmic-energy-t-02",
+      "theory_id": "omega-algorithmic-energy-t",
+      "source_ids": [
+        "source-0004"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-algorithmic-energy-t-03",
+      "theory_id": "omega-algorithmic-energy-t",
+      "source_ids": [
+        "source-0004"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    },
+    {
+      "claim_id": "claim-omega-transform-t-negative-01",
+      "theory_id": "omega-transform-t",
+      "source_ids": [
+        "source-0045"
+      ],
+      "resolved_sources": 0,
+      "unresolved_sources": 1,
+      "support_count": 1,
+      "automatic_promotion": false
+    }
+  ]
+}
