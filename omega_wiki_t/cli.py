@@ -7,6 +7,8 @@ import sys
 from typing import Sequence
 
 from .core import MediaWikiClient, MediaWikiError, WikiCompiler
+from .hyperknowledge import HyperKnowledgeCompiler
+from .knowledge_cell import KnowledgeCell
 from .theory_hypergraph import TheoryHypergraphBuilder
 
 
@@ -19,7 +21,7 @@ def _language_list(raw: str) -> list[str] | str:
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="omega-wiki",
-        description="Ω-WIKI-T∞ multilingual evidence and theory hypergraph compiler.",
+        description="Ω-WIKI-T∞ multilingual evidence, theory hypergraph, and knowledge-cell compiler.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -60,7 +62,22 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Output directory for JSON, JSONL, GraphML, and Markdown views.",
     )
 
-    audit = sub.add_parser("audit", help="Audit a previously generated bundle.")
+    cells = sub.add_parser(
+        "build-cells",
+        help="Compile R0.3 knowledge cells into evidence audits, contradictions, metrics, and a P0-P6 action queue.",
+    )
+    cells.add_argument(
+        "cells",
+        nargs="+",
+        help="Knowledge-cell JSON files. Shell globs may be expanded by the shell.",
+    )
+    cells.add_argument(
+        "--output-dir",
+        default="generated/omega_wiki_t/hyperknowledge-r0-3",
+        help="Output directory for the R0.3 bundle.",
+    )
+
+    audit = sub.add_parser("audit", help="Audit a previously generated Wikipedia evidence bundle.")
     audit.add_argument("bundle")
     return parser
 
@@ -147,6 +164,26 @@ def _absorb_theory(args: argparse.Namespace) -> int:
     return 0
 
 
+def _build_cells(args: argparse.Namespace) -> int:
+    cells = [KnowledgeCell.read(path) for path in args.cells]
+    bundle = HyperKnowledgeCompiler.compile(cells)
+    output = HyperKnowledgeCompiler.write(bundle, args.output_dir)
+    manifest = bundle["manifest"]
+    audit = bundle["audit"]
+    print(
+        json.dumps(
+            {
+                "output_dir": str(output),
+                **manifest,
+                "coverage": audit.metrics,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+    return 0
+
+
 def _audit(bundle: str) -> int:
     root = Path(bundle)
     required = ["manifest.json", "articles.jsonl", "claims.jsonl", "sources.jsonl", "language-matrix.json", "report.md"]
@@ -203,9 +240,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _compile(args)
         if args.command == "absorb-theory":
             return _absorb_theory(args)
+        if args.command == "build-cells":
+            return _build_cells(args)
         if args.command == "audit":
             return _audit(args.bundle)
-    except (MediaWikiError, ValueError, OSError, json.JSONDecodeError) as exc:
+    except (MediaWikiError, ValueError, OSError, KeyError, TypeError, json.JSONDecodeError) as exc:
         print(f"omega-wiki: {exc}", file=sys.stderr)
         return 2
     raise AssertionError(f"Unhandled command: {args.command}")
