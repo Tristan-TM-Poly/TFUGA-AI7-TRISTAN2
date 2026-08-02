@@ -1,0 +1,95 @@
+"""Ω-GENERATOR-DISCOVERY-STACK public API."""
+from .autolab import ExperimentCandidate, ExperimentDecision, prioritize_experiments
+from .campaign import (
+    CampaignAxes,
+    CampaignEmitter,
+    CampaignEmissionReport,
+    CampaignPartition,
+    CampaignSpec,
+    benchmark_addition,
+    generator_addition,
+    iter_generator_bundles,
+    load_campaign_spec,
+    mixed_radix_decode,
+    partition_campaign,
+    stream_digest,
+)
+from .campaign_scale import (
+    PROFILE_MULTIPLIERS,
+    FrontierDecision,
+    FrontierLedger,
+    FrontierObservation,
+    FrontierPolicy,
+    ScaleEpoch,
+    ScalePartition,
+    ScalePlan,
+    ScalePlanner,
+    ScalePolicy,
+    ValidationPolicy,
+    ValidationReport,
+    decide_next_frontier,
+    epoch_spec,
+    epochize_record,
+    iter_epoch_bundles,
+    resolve_target_records,
+    validate_epoch_range,
+    write_partition_matrix,
+)
+from .campaign_scale_emitter import ScaleEmissionReport, ScalePartitionEmitter
+from .core import (
+    AffineGenerator1D,
+    GeneratorSyndrome,
+    LinearGeneratorOperator,
+    MorphIR,
+    OrderExperiment,
+    compile_morph_ir,
+    design_order_experiment,
+    fit_scalar_generator,
+    generator_syndrome,
+    identify_affine_1d,
+    semigroup_defect,
+)
+from .crystal import HolonomyReport, crystal_holonomy
+from .epistemic import EpistemicTransition, evidence_growth_transition
+from .fronts import FRONTS, FrontSpec, front_registry
+from .protocol import InstrumentProtocol, compile_protocol
+from .spectral import SpectralMorph, compare_spectra, lorentzian, mixture
+from .ultra_catalog import (
+    UltraAuditReport,
+    UltraGeneratorRecord,
+    audit_ultra_catalog,
+    catalog_statistics,
+    deterministic_validation_sample,
+    export_subatlas,
+    get_generator,
+    load_manifest,
+    query_generators,
+    related_bundle,
+)
+
+__all__ = [
+    "AffineGenerator1D", "CampaignAxes", "CampaignEmitter",
+    "CampaignEmissionReport", "CampaignPartition", "CampaignSpec",
+    "EpistemicTransition", "ExperimentCandidate", "ExperimentDecision",
+    "FRONTS", "FrontSpec", "FrontierDecision", "FrontierLedger",
+    "FrontierObservation", "FrontierPolicy", "GeneratorSyndrome",
+    "HolonomyReport", "InstrumentProtocol", "LinearGeneratorOperator",
+    "MorphIR", "OrderExperiment", "PROFILE_MULTIPLIERS", "ScaleEmissionReport",
+    "ScaleEpoch", "ScalePartition", "ScalePartitionEmitter", "ScalePlan",
+    "ScalePlanner", "ScalePolicy", "SpectralMorph", "UltraAuditReport",
+    "UltraGeneratorRecord", "ValidationPolicy", "ValidationReport",
+    "audit_ultra_catalog", "benchmark_addition", "catalog_statistics",
+    "compare_spectra", "compile_morph_ir", "compile_protocol",
+    "crystal_holonomy", "decide_next_frontier", "design_order_experiment",
+    "deterministic_validation_sample", "epoch_spec", "epochize_record",
+    "evidence_growth_transition", "export_subatlas", "fit_scalar_generator",
+    "front_registry", "generator_addition", "generator_syndrome",
+    "get_generator", "identify_affine_1d", "iter_epoch_bundles",
+    "iter_generator_bundles", "load_campaign_spec", "load_manifest",
+    "lorentzian", "mixed_radix_decode", "mixture", "partition_campaign",
+    "prioritize_experiments", "query_generators", "related_bundle",
+    "resolve_target_records", "semigroup_defect", "stream_digest",
+    "validate_epoch_range", "write_partition_matrix",
+]
+
+__version__ = "0.4.0"

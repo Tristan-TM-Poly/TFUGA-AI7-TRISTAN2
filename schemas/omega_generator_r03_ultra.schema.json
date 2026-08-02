@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/omega_generator_r03_ultra.schema.json",
+  "title": "Omega Generator Discovery R0.3 Ultra records",
+  "description": "Schemas for generated candidate, benchmark, hyperedge, negative-control and validation-ledger records. Conformance is not scientific validation.",
+  "$defs": {
+    "epistemicStatus": {
+      "type": "string",
+      "enum": [
+        "machine_generated_candidate_not_evidence",
+        "synthetic_benchmark_specification_not_experiment",
+        "generated_hyperedge_requires_domain_validation",
+        "mandatory_negative_control_specification"
+      ]
+    },
+    "coordinates": {
+      "type": "object",
+      "required": ["domain", "family", "scale", "representation", "regime"],
+      "additionalProperties": false,
+      "properties": {
+        "domain": {"type": "string", "minLength": 1},
+        "family": {"type": "string", "minLength": 1},
+        "scale": {"type": "string", "minLength": 1},
+        "representation": {"type": "string", "enum": ["state", "operator", "observable", "hypergraph"]},
+        "regime": {"type": "string", "enum": ["local_linear", "finite_nonlinear"]}
+      }
+    },
+    "generator": {
+      "type": "object",
+      "required": [
+        "id", "ordinal", "coordinates", "operator_dsl", "parameter_schema",
+        "status", "invariant", "risk", "risk_tier", "supports_inverse",
+        "requires_discrete_sector", "requires_singular_sector", "oak_gate",
+        "benchmark_ids", "hyperedge_id", "negative_control_id", "validation_id",
+        "epistemic_status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^GEN3-[0-9]{6}$"},
+        "ordinal": {"type": "integer", "minimum": 0},
+        "coordinates": {"$ref": "#/$defs/coordinates"},
+        "operator_dsl": {"type": "string", "minLength": 3},
+        "parameter_schema": {"type": "object"},
+        "status": {"type": "string", "enum": ["established_tool", "computational_model", "prototype", "fertile_hypothesis"]},
+        "invariant": {"type": "string"},
+        "risk": {"type": "string"},
+        "risk_tier": {"type": "string", "enum": ["low", "medium", "high"]},
+        "supports_inverse": {"type": "boolean"},
+        "requires_discrete_sector": {"type": "boolean"},
+        "requires_singular_sector": {"type": "boolean"},
+        "oak_gate": {
+          "type": "array",
+          "minItems": 8,
+          "uniqueItems": true,
+          "items": {"type": "string"}
+        },
+        "benchmark_ids": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"type": "string", "pattern": "^BEN3-[0-9]{7}$"}
+        },
+        "hyperedge_id": {"type": "string", "pattern": "^EDGE3-[0-9]{6}$"},
+        "negative_control_id": {"type": "string", "pattern": "^NEG3-[0-9]{6}$"},
+        "validation_id": {"type": "string", "pattern": "^VAL3-[0-9]{6}$"},
+        "epistemic_status": {"const": "machine_generated_candidate_not_evidence"}
+      }
+    },
+    "benchmark": {
+      "type": "object",
+      "required": [
+        "id", "generator_id", "variant", "input_seed", "domain", "family",
+        "scale", "representation", "regime", "parameters", "expected",
+        "baseline", "epistemic_status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^BEN3-[0-9]{7}$"},
+        "generator_id": {"type": "string", "pattern": "^GEN3-[0-9]{6}$"},
+        "variant": {"type": "string", "enum": ["nominal", "perturbed"]},
+        "input_seed": {"type": "integer", "minimum": 0},
+        "domain": {"type": "string"},
+        "family": {"type": "string"},
+        "scale": {"type": "string"},
+        "representation": {"type": "string"},
+        "regime": {"type": "string"},
+        "parameters": {
+          "type": "object",
+          "required": ["theta_0", "duration", "noise_fraction"],
+          "additionalProperties": false,
+          "properties": {
+            "theta_0": {"type": "number"},
+            "duration": {"type": "number", "exclusiveMinimum": 0},
+            "noise_fraction": {"type": "number", "minimum": 0}
+          }
+        },
+        "expected": {"type": "object"},
+        "baseline": {"type": "string"},
+        "epistemic_status": {"const": "synthetic_benchmark_specification_not_experiment"}
+      }
+    },
+    "hyperedge": {
+      "type": "object",
+      "required": [
+        "id", "left_generator_id", "right_generator_id", "relation",
+        "same_domain", "expected_commutator", "experiment", "epistemic_status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^EDGE3-[0-9]{6}$"},
+        "left_generator_id": {"type": "string", "pattern": "^GEN3-[0-9]{6}$"},
+        "right_generator_id": {"type": "string", "pattern": "^GEN3-[0-9]{6}$"},
+        "relation": {"const": "ordered_composition_and_commutator_candidate"},
+        "same_domain": {"type": "boolean"},
+        "expected_commutator": {"type": "string"},
+        "experiment": {"type": "object"},
+        "epistemic_status": {"const": "generated_hyperedge_requires_domain_validation"}
+      }
+    },
+    "negativeControl": {
+      "type": "object",
+      "required": [
+        "id", "generator_id", "negative_family", "perturbation",
+        "expected_outcome", "failure_if_not_rejected", "epistemic_status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^NEG3-[0-9]{6}$"},
+        "generator_id": {"type": "string", "pattern": "^GEN3-[0-9]{6}$"},
+        "negative_family": {"type": "string"},
+        "perturbation": {"type": "string"},
+        "expected_outcome": {"type": "string"},
+        "failure_if_not_rejected": {"type": "string"},
+        "epistemic_status": {"const": "mandatory_negative_control_specification"}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "id", "generator_id", "risk_tier", "validation_mode", "checks",
+        "promotion_allowed", "promotion_blocker"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^VAL3-[0-9]{6}$"},
+        "generator_id": {"type": "string", "pattern": "^GEN3-[0-9]{6}$"},
+        "risk_tier": {"type": "string", "enum": ["low", "medium", "high"]},
+        "validation_mode": {
+          "type": "string",
+          "enum": [
+            "exhaustive_required",
+            "deterministic_stratified_sample",
+            "deferred_low_or_medium_risk"
+          ]
+        },
+        "checks": {"type": "array", "minItems": 7, "items": {"type": "string"}},
+        "promotion_allowed": {"const": false},
+        "promotion_blocker": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/generator"},
+    {"$ref": "#/$defs/benchmark"},
+    {"$ref": "#/$defs/hyperedge"},
+    {"$ref": "#/$defs/negativeControl"},
+    {"$ref": "#/$defs/validation"}
+  ]
+}

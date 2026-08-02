@@ -1,0 +1,91 @@
+{
+  "policy_id": "OMEGA-GENERATOR-R03-ULTRA-OAK",
+  "version": "1.0.0",
+  "default_status": "candidate_only",
+  "automatic_promotion": false,
+  "principles": [
+    "volume_is_not_evidence_density",
+    "representation_is_not_compression",
+    "compression_is_not_causal_explanation",
+    "synthetic_benchmark_is_not_experiment",
+    "shared_operator_name_is_not_cross_domain_equivalence",
+    "high_risk_candidates_require_exhaustive_validation",
+    "irreversible_actions_require_human_approval"
+  ],
+  "required_for_scientific_promotion": [
+    "explicit_units",
+    "source_provenance",
+    "domain_of_validity",
+    "baseline_comparison",
+    "uncertainty_quantification",
+    "negative_control_pass",
+    "reconstruction_test",
+    "out_of_sample_prediction",
+    "falsification_attempt",
+    "domain_expert_review",
+    "independent_reproduction_or_strong_replication_plan"
+  ],
+  "risk_tiers": {
+    "high": {
+      "validation_mode": "exhaustive_required",
+      "sampling_allowed": false,
+      "families": [
+        "projection", "deconvolution", "merging", "branching", "hysteresis",
+        "memory", "symmetry_break", "topology_change", "rank_change",
+        "measurement", "control", "compression"
+      ]
+    },
+    "medium": {
+      "validation_mode": "deterministic_stratified_plus_triggered_exhaustive",
+      "sampling_allowed": true,
+      "exhaustive_triggers": [
+        "unexpected_invariant_violation",
+        "branch_instability",
+        "negative_control_not_rejected",
+        "semigroup_defect_above_threshold",
+        "high_uncertainty",
+        "cross_domain_transfer_claim"
+      ]
+    },
+    "low": {
+      "validation_mode": "deterministic_stratified",
+      "sampling_allowed": true
+    }
+  },
+  "promotion_states": [
+    "candidate_only",
+    "schema_valid",
+    "synthetic_reconstruction_valid",
+    "baseline_beaten",
+    "real_data_supported",
+    "independently_reproduced",
+    "canon_candidate"
+  ],
+  "forbidden_inferences": [
+    "record_count_to_truth",
+    "record_count_to_novelty",
+    "record_count_to_patentability",
+    "record_count_to_market_value",
+    "commutator_to_fundamental_causality",
+    "holonomy_to_dislocation_density_without_calibration",
+    "logarithm_fit_to_physical_law",
+    "cross_domain_name_match_to_unification"
+  ],
+  "human_approval_required_for": [
+    "external_instrument_execution",
+    "irreversible_experiment",
+    "high_energy_or_high_temperature_operation",
+    "public_scientific_claim",
+    "patent_or_publication_decision",
+    "commercial_outreach",
+    "dataset_with_personal_or_confidential_information"
+  ],
+  "rollback_requirements": [
+    "append_only_execution_ledger",
+    "input_manifest",
+    "generated_file_fingerprints",
+    "branch_isolation",
+    "reproducible_regeneration",
+    "deletion_manifest_for_generated_artifacts"
+  ]
+}

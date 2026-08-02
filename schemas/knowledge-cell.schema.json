@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/knowledge-cell.schema.json",
+  "title": "Omega HyperKnowledge R0.3 Knowledge Cell",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cell_id",
+    "subject",
+    "definition",
+    "domain",
+    "oak_status",
+    "claims",
+    "evidence",
+    "transitions",
+    "risks",
+    "next_actions",
+    "aliases",
+    "source_paths",
+    "public_disclosure",
+    "metadata"
+  ],
+  "properties": {
+    "cell_id": {"type": "string", "minLength": 1},
+    "subject": {"type": "string", "minLength": 1},
+    "definition": {"type": "string", "minLength": 1},
+    "domain": {"type": "string", "minLength": 1},
+    "oak_status": {
+      "enum": [
+        "IDEA", "ACTIVE", "FORMALIZED", "IMPLEMENTED", "SIMULATED",
+        "DEMONSTRATED", "MEASURED", "CANONICAL", "CERTIFIED_MATH",
+        "CERTIFIED_COMPUTATIONAL", "CERTIFIED_PHYSICS", "REFUTED",
+        "REFORMULATED", "ARCHIVED"
+      ]
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim_id", "text", "canonical_key", "domain", "polarity",
+          "scope", "status", "assumptions", "failure_conditions", "source_paths"
+        ],
+        "properties": {
+          "claim_id": {"type": "string", "minLength": 1},
+          "text": {"type": "string", "minLength": 1},
+          "canonical_key": {"type": "string", "minLength": 1},
+          "domain": {"type": "string"},
+          "polarity": {"enum": ["affirm", "deny", "uncertain"]},
+          "scope": {"type": "string"},
+          "status": {
+            "enum": [
+              "idea", "hypothesis", "prediction", "observation",
+              "measured_claim", "theorem_candidate", "proven", "refuted",
+              "context_dependent"
+            ]
+          },
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "failure_conditions": {"type": "array", "items": {"type": "string"}},
+          "source_paths": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id", "kind", "title", "source_path", "locator",
+          "content_hash", "status", "supports_claim_ids", "contradicts_claim_ids", "metadata"
+        ],
+        "properties": {
+          "evidence_id": {"type": "string", "minLength": 1},
+          "kind": {
+            "enum": [
+              "source", "equation", "derivation", "code", "test", "dataset",
+              "baseline", "simulation", "measurement", "result", "proof",
+              "counterexample", "negative_memory", "external_reference"
+            ]
+          },
+          "title": {"type": "string", "minLength": 1},
+          "source_path": {"type": ["string", "null"]},
+          "locator": {"type": ["string", "null"]},
+          "content_hash": {"type": ["string", "null"]},
+          "status": {"enum": ["candidate", "verified_metadata", "reproduced", "disputed", "refuted"]},
+          "supports_claim_ids": {"type": "array", "items": {"type": "string"}},
+          "contradicts_claim_ids": {"type": "array", "items": {"type": "string"}},
+          "metadata": {"type": "object"}
+        }
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "transition_id", "timestamp", "from_status", "to_status", "cause",
+          "evidence_ids", "residues", "approved_by"
+        ],
+        "properties": {
+          "transition_id": {"type": "string", "minLength": 1},
+          "timestamp": {"type": "string", "format": "date-time"},
+          "from_status": {"type": "string"},
+          "to_status": {"type": "string"},
+          "cause": {"type": "string", "minLength": 1},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "residues": {"type": "array", "items": {"type": "string"}},
+          "approved_by": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "risks": {"type": "array", "items": {"type": "string"}},
+    "next_actions": {"type": "array", "items": {"type": "string"}},
+    "aliases": {"type": "array", "items": {"type": "string"}},
+    "source_paths": {"type": "array", "items": {"type": "string"}},
+    "owner": {"type": ["string", "null"]},
+    "public_disclosure": {"type": "boolean"},
+    "metadata": {"type": "object"}
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "policy_id": "omega-unbounded-governance-r0.5",
+  "status": "offline_oak_gated_prototype",
+  "objective": "Continue only while additional work produces material information or resolves a critical risk; stop after sufficient proof and prevent known overiteration patterns from recurring.",
+  "stop_gate": {
+    "minimum_marginal_information": 0.02,
+    "maximum_repetition_score": 0.9,
+    "maximum_equivalent_validations": 2,
+    "maximum_stagnant_observations": 2,
+    "user_interrupt_priority": 100,
+    "critical_new_risk_keeps_investigation_open": true,
+    "objective_reached_and_authoritative_validation_required_for_evidence_stop": true
+  },
+  "negative_memory_reflex": {
+    "append_only": true,
+    "known_failure_actions_can_be_blocked": true,
+    "overiteration_rule": {
+      "trigger": "objective_reached_and_authoritative_validation_obtained",
+      "blocked_action": "repeat_equivalent_validation",
+      "regression_tests": [
+        "no_third_equivalent_validation",
+        "user_interrupt_stops_immediately"
+      ]
+    }
+  },
+  "multi_objective_governance": {
+    "selection_model": "pareto_front",
+    "scalar_score_has_final_authority": false,
+    "requires_same_objective_keys": true,
+    "preserve_non_dominated_tradeoffs": true,
+    "reject_dominated_candidates": true
+  },
+  "authority": {
+    "source_mutation": false,
+    "remote_github_mutation": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "human_approval_required": true
+  },
+  "evidence": {
+    "command": "omega-unbounded governance-check",
+    "report": "governance-report.json",
+    "negative_memory": "m_minus_reflex.jsonl"
+  }
+}

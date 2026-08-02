@@ -1,6 +1,6 @@
 # TFUGA / SAGE-TRISTAN
 
-**Status:** v0.5 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
+**Status:** v0.6 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
 
 This repository crystallizes a rigorous, testable, reusable layer of the TFUGA / SAGE-TRISTAN mathematical biosphere.
 
@@ -27,23 +27,26 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `Ω-WIKI-T∞ / WikiForge-T`: multilingual Wikipedia reader and repository-theory absorber -> revision-pinned articles or canon files -> traceable claims/nodes -> citations, risks, next actions, and knowledge hypergraphs.
 - `Ω-QUATERNION-CRYSTAL-T`: tested 3D kernel separating quaternion orientation, affine deformation, stress/strain tensors, cubic elasticity, and Schmid projection.
 - `Ω-LOGEXP-MORPH-T∞²`: guarded generator calculus with matrix exp/log, nilpotent lifting, BCH, active singular sectors, polar-log, Magnus, commutator graphs, MorphCodex, and basis compression.
+- `Ω-SANS-PLAFOND-T∞`: adaptive capacity controller plus streaming GitHub dry-run planner -> disk-backed deduplication -> adaptive shards -> hashes -> commit/rollback plans, without a permanent total-addition ceiling.
 
 ## Repository structure
 
 ```text
-docs/          Manifest, roadmap, canon analysis, publication plan.
-schemas/       JSON schemas for DCT++, research cards, HGFM, status vectors, WikiForge claims.
-sage_tristan/  Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
-omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
-ecc_tristan/   Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
-omega_prof_poly_t/ Omega absorb systems, including the universal corpus absorber.
-omega_wiki_t/  Ω-WIKI-T∞ multilingual evidence compiler, translation guard, and theory hypergraph builder.
+docs/                       Manifest, roadmap, canon analysis, publication plan.
+schemas/                    JSON schemas for DCT++, research cards, HGFM, WikiForge and unbounded additions.
+sage_tristan/               Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
+omega_deeptech_forge/       Minimal OAK-safe deeptech/IP/revenue triage engine.
+ecc_tristan/                Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
+omega_prof_poly_t/          Omega absorb systems, including the universal corpus absorber.
+omega_wiki_t/               Ω-WIKI-T∞ evidence compiler, translation guard, and theory hypergraph builder.
 omega_quaternion_crystal_t/ Quaternion, affine, crystal, stress, and elasticity operators.
-omega_logexp_morph_t/ Logarithmic/exponential morphism, active-factorization, and generator-compression kernel.
-generated/omega_wiki_t/ Reproducible WikiForge evidence and theory-knowledge artifacts.
-tests/         Unit tests for the executable core.
-examples/      Example branches and DCT++ packets.
-reports/       Generated audit and publication reports.
+omega_logexp_morph_t/       Logarithmic/exponential morphism, active-factorization, and generator-compression kernel.
+omega_unbounded_t/          Ω-SANS-PLAFOND-T∞ frontier controller and streaming GitHub plan compiler.
+generated/omega_wiki_t/    Reproducible WikiForge evidence and theory-knowledge artifacts.
+policies/                   Machine-readable OAK and adaptive growth policies.
+tests/                      Unit and scale tests for the executable core.
+examples/                   Example branches and DCT++ packets.
+reports/                    Generated audit and publication reports.
 ```
 
 ## Scientific hygiene
@@ -66,6 +69,7 @@ python examples/omega_wiki_t_demo.py
 python examples/omega_quaternion_crystal_demo.py
 python examples/omega_logexp_morph_demo.py
 python examples/omega_logexp_morph_r0_3_demo.py
+python examples/omega_unbounded_t_demo.py
 omega-quaternion-crystal --axis 0 0 1 --angle-deg 90 --vector 1 0 0
 omega-logexp-morph --generator '[[0,0.1],[-0.1,0]]'
 ```
@@ -99,7 +103,44 @@ The current canon absorption emits 92 nodes and 94 hyperedges. It preserves syst
 
 WikiForge-T remains extraction and knowledge-organization infrastructure, not factual certification. Wikipedia text is not proof; a citation marker is not automatically support; repository canon is not automatically scientific validation; a generated hyperedge remains a reviewable knowledge candidate.
 
-Universal absorber outputs:
+Adaptive capacity-frontier simulation:
+
+```bash
+omega-unbounded simulate \
+  --work-items 50000 \
+  --initial-batch 256 \
+  --initial-capacity 1024 \
+  --redesign-factor 2 \
+  --output-dir generated/omega_unbounded_t
+```
+
+Streaming GitHub tree plan from JSONL additions:
+
+```bash
+omega-unbounded plan additions.jsonl \
+  --output-dir generated/omega_unbounded_github_plan \
+  --initial-shard-bytes 262144 \
+  --shard-growth-factor 2 \
+  --require-provenance \
+  --branch feat/generated-canon
+```
+
+Large finite frontier experiment without materializing the source file:
+
+```bash
+omega-unbounded synthetic-plan \
+  --work-items 100000 \
+  --namespaces 16 \
+  --output-dir generated/frontier-100k
+```
+
+`--work-items` defines a finite experiment; it is not a permanent controller or planner ceiling. Ω-SANS-PLAFOND-T∞ removes arbitrary total-addition caps, not physical, quality, legal, cost, rollback, IP or provider constraints.
+
+R0.2 performs zero remote GitHub mutations. It generates a reviewable local plan before any separately authorized branch, stage, commit, push or PR phase.
+
+## Main outputs
+
+Universal absorber:
 
 ```text
 manifest.json
@@ -138,6 +179,31 @@ A compact checked-in core projection is available at:
 generated/omega_wiki_t/theory-canon-r0-2/knowledge-hypergraph-core.json
 ```
 
+Ω-SANS-PLAFOND-T∞ controller:
+
+```text
+checkpoint.json
+m_minus.jsonl
+m_plus.jsonl
+report.json
+```
+
+Ω-SANS-PLAFOND-T∞ GitHub dry-run planner:
+
+```text
+shards/
+plan-index.sqlite3
+tree.jsonl
+commit-plan.jsonl
+rollback.jsonl
+checkpoint.json
+manifest.json
+semantic-diff.json
+oak-report.json
+```
+
+Optional ledgers appear when relevant: `duplicates.jsonl`, `quarantine.jsonl`, and `m_minus.jsonl`.
+
 ## Current canon layer
 
 Immediate canonizable modules:
@@ -155,6 +221,9 @@ Immediate canonizable modules:
 - Ω-PDF-HYPERGRAPH-GITHUB-T / AIT-Frédéric
 - Ω-WIKI-T∞ / WikiForge-T R0.1 Wikipedia extraction kernel
 - Ω-WIKI-T∞ / WikiForge-T R0.2 repository-theory hypergraph builder
+- Ω-SANS-PLAFOND-T∞ / adaptive frontier controller R0.1
+- Ω-SANS-PLAFOND-T∞ / streaming GitHub dry-run planner R0.2
+- Ω-SANS-PLAFOND-T∞ / lazy source, telemetry and M⁺ R0.3
 
 Crystallizable modules:
 
@@ -177,5 +246,8 @@ Crystallizable modules:
 - Citation-safe multilingual generation
 - GitHub-wide incremental theory absorption and semantic deduplication
 - External source enrichment for each theory node through Wikipedia, Wikidata, DOI, ISBN, and PMID
+- Resume-from-checkpoint for partial Ω-SANS-PLAFOND runs
+- Dependency-aware differential CI routing
+- Explicitly authorized GitHub actuator over reviewed R0.2 plans
 
 Exploratory branches stay labeled as exploratory until proven, simulated, or experimentally validated.

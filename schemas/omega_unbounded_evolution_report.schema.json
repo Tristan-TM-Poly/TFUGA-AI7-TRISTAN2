@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega_unbounded_evolution_report.schema.json",
+  "title": "Omega Unbounded Recursive Evolution Report R0.6",
+  "type": "object",
+  "required": [
+    "run_id",
+    "generated_at",
+    "status",
+    "baseline",
+    "candidates",
+    "pareto_front",
+    "dominated",
+    "rejected",
+    "safe_canary",
+    "rollback_demonstration",
+    "proof_bundles",
+    "authority",
+    "next_gate"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "const": "passed"
+    },
+    "baseline": {
+      "$ref": "#/$defs/aggregateEvidence"
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/aggregateEvidence"
+      }
+    },
+    "pareto_front": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "dominated": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "rejected": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "safe_canary": {
+      "$ref": "#/$defs/canaryReport"
+    },
+    "rollback_demonstration": {
+      "$ref": "#/$defs/canaryReport"
+    },
+    "proof_bundles": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/proofManifest"
+      }
+    },
+    "authority": {
+      "type": "object",
+      "required": [
+        "source_mutations",
+        "remote_mutations",
+        "automatic_pull_request",
+        "automatic_merge",
+        "automatic_promotion",
+        "human_approval_required",
+        "scalar_score_has_final_authority"
+      ],
+      "properties": {
+        "source_mutations": {
+          "const": 0
+        },
+        "remote_mutations": {
+          "const": 0
+        },
+        "automatic_pull_request": {
+          "const": false
+        },
+        "automatic_merge": {
+          "const": false
+        },
+        "automatic_promotion": {
+          "const": false
+        },
+        "human_approval_required": {
+          "const": true
+        },
+        "scalar_score_has_final_authority": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "next_gate": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "candidateProfile": {
+      "type": "object",
+      "required": [
+        "name",
+        "throughput",
+        "memory_bytes",
+        "latency_ms",
+        "quality",
+        "recovery_rate",
+        "complexity",
+        "overshoot",
+        "source_mutations",
+        "remote_mutations",
+        "fingerprint"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "throughput": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "memory_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "latency_ms": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "quality": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "recovery_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "complexity": {
+          "type": "number",
+          "minimum": 0
+        },
+        "overshoot": {
+          "type": "number",
+          "minimum": 0
+        },
+        "source_mutations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "remote_mutations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{16}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "aggregateEvidence": {
+      "type": "object",
+      "required": [
+        "profile",
+        "scenarios",
+        "hard_gates_passed",
+        "mean_throughput",
+        "peak_memory_bytes",
+        "maximum_latency_ms",
+        "worst_quality",
+        "worst_recovery_rate",
+        "failures",
+        "objective_vector"
+      ],
+      "properties": {
+        "profile": {
+          "$ref": "#/$defs/candidateProfile"
+        },
+        "scenarios": {
+          "type": "array"
+        },
+        "hard_gates_passed": {
+          "type": "boolean"
+        },
+        "mean_throughput": {
+          "type": "number"
+        },
+        "peak_memory_bytes": {
+          "type": "integer"
+        },
+        "maximum_latency_ms": {
+          "type": "number"
+        },
+        "worst_quality": {
+          "type": "number"
+        },
+        "worst_recovery_rate": {
+          "type": "number"
+        },
+        "failures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "objective_vector": {
+          "type": "object"
+        }
+      }
+    },
+    "canaryReport": {
+      "type": "object",
+      "required": [
+        "status",
+        "decisions",
+        "rollback_plan",
+        "automatic_promotion",
+        "automatic_merge"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "promotion_candidate",
+            "rolled_back",
+            "not_run"
+          ]
+        },
+        "decisions": {
+          "type": "array"
+        },
+        "rollback_plan": {
+          "type": "object"
+        },
+        "automatic_promotion": {
+          "const": false
+        },
+        "automatic_merge": {
+          "const": false
+        }
+      }
+    },
+    "proofManifest": {
+      "type": "object",
+      "required": [
+        "path",
+        "candidate",
+        "fingerprint",
+        "files",
+        "hard_gates_passed",
+        "canary_status",
+        "source_mutations",
+        "remote_mutations",
+        "bundle_id",
+        "generated_at"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "candidate": {
+          "type": "string"
+        },
+        "fingerprint": {
+          "type": "string"
+        },
+        "files": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "hard_gates_passed": {
+          "type": "boolean"
+        },
+        "canary_status": {
+          "type": "string"
+        },
+        "source_mutations": {
+          "const": 0
+        },
+        "remote_mutations": {
+          "const": 0
+        },
+        "bundle_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}
