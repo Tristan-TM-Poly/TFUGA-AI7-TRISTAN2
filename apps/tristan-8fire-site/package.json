@@ -1,0 +1,11 @@
+{
+  "name": "tristan-web-os",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Proof-first static knowledge application for the public Tristan corpus.",
+  "scripts": {
+    "check": "node --check app.js && find src -type f -name '*.js' -print0 | xargs -0 -n1 node --check",
+    "test": "node --test ../../tests/js/*.test.mjs"
+  }
+}
