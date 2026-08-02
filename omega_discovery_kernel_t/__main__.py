@@ -19,7 +19,8 @@ from .catalog import catalog_manifest
 from .demo import build_raman_closed_loop
 from .factory import KnowledgeFrontierTargets, plan_knowledge_frontier
 from .kernel import DiscoveryLedger
-from .million_frontier import MillionFrontierConfig, run_forced_resume_million_frontier
+from .million_frontier import MillionFrontierConfig
+from .million_optimized import run_forced_resume_million_frontier
 from .streaming import AdaptiveFrontierConfig, FrontierExperimentConfig, run_frontier_experiment
 
 
