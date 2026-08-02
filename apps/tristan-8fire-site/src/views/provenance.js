@@ -2,11 +2,11 @@
 
 import { badge, element, emptyState, formatNumber, link, sectionHeader, table } from "../ui.js";
 
-async function loadManifest() {
-  const response = await fetch("data/provenance.json", { headers: { Accept: "application/json" }, cache: "no-cache" });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+async function loadJson(path, arrayKey) {
+  const response = await fetch(path, { headers: { Accept: "application/json" }, cache: "no-cache" });
+  if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
   const payload = await response.json();
-  if (!Array.isArray(payload.sources)) throw new TypeError("Invalid provenance manifest");
+  if (arrayKey && !Array.isArray(payload[arrayKey])) throw new TypeError(`Invalid ${path}`);
   return payload;
 }
 
@@ -16,7 +16,23 @@ function sourceTone(status) {
   return "danger";
 }
 
-function renderManifest(root, manifest, route, store) {
+function buildPanel(build) {
+  return element("section", { className: "panel build-integrity" }, [
+    element("header", { className: "panel-header" }, [
+      element("div", {}, [element("p", { className: "eyebrow", text: "Build root" }), element("h2", { text: "Intégrité du snapshot public" })]),
+      badge(`${build.metrics.files} fichiers`, "success")
+    ]),
+    element("dl", { className: "definition-list" }, [
+      element("div", {}, [element("dt", { text: "Racine SHA-256" }), element("dd", {}, [element("code", { text: build.root_sha256 })])]),
+      element("div", {}, [element("dt", { text: "Octets" }), element("dd", { text: formatNumber(build.metrics.bytes) })]),
+      element("div", {}, [element("dt", { text: "Algorithme" }), element("dd", { text: build.algorithm })]),
+      element("div", {}, [element("dt", { text: "Schéma" }), element("dd", { text: build.schema_version })])
+    ]),
+    element("p", { className: "fine-print", text: build.epistemic_boundary })
+  ]);
+}
+
+function renderManifest(root, manifest, build, route, store) {
   const query = (route.query.get("q") || "").toLowerCase();
   const status = route.query.get("status") || "";
   const kind = route.query.get("kind") || "";
@@ -27,6 +43,7 @@ function renderManifest(root, manifest, route, store) {
     return (!query || searchable.includes(query)) && (!status || source.status === status) && (!kind || source.kind === kind);
   });
 
+  root.append(buildPanel(build));
   root.append(element("section", { className: "metric-grid compact-metrics" }, [
     element("article", { className: "metric-card" }, [element("strong", { text: formatNumber(manifest.metrics.sources) }), element("span", { text: "sources" })]),
     element("article", { className: "metric-card" }, [element("strong", { text: formatNumber(manifest.metrics.resolved_files) }), element("span", { text: "fichiers résolus" })]),
@@ -73,11 +90,14 @@ function renderManifest(root, manifest, route, store) {
 
 export function renderProvenance({ route, store }) {
   const root = element("div", { className: "view provenance-view" });
-  root.append(sectionHeader("Info² / Provenance", "Du claim au fichier et à son empreinte", "Le manifeste distingue références résolues, dossiers, chemins manquants et empreintes. Une provenance forte améliore la traçabilité sans transformer une source en preuve."));
-  const loading = element("section", { className: "loading-state compact-loading", "aria-busy": "true" }, [element("span", { className: "loading-orbit", "aria-hidden": "true" }), element("p", { text: "Chargement du manifeste de provenance…" })]);
+  root.append(sectionHeader("Info² / Provenance", "Du claim au fichier, puis à la racine du build", "Le manifeste distingue références résolues, chemins manquants et empreintes. La racine de build détecte les changements de bytes sans transformer l’intégrité en preuve scientifique."));
+  const loading = element("section", { className: "loading-state compact-loading", "aria-busy": "true" }, [element("span", { className: "loading-orbit", "aria-hidden": "true" }), element("p", { text: "Chargement des manifestes de provenance et de build…" })]);
   root.append(loading);
-  loadManifest()
-    .then((manifest) => { loading.remove(); renderManifest(root, manifest, route, store); })
-    .catch((error) => { loading.replaceWith(emptyState("Provenance indisponible", `Le manifeste n’est pas encore matérialisé ou ne peut pas être chargé : ${error.message}`)); });
+  Promise.all([
+    loadJson("data/provenance.json", "sources"),
+    loadJson("data/build-manifest.json", "files")
+  ])
+    .then(([manifest, build]) => { loading.remove(); renderManifest(root, manifest, build, route, store); })
+    .catch((error) => { loading.replaceWith(emptyState("Provenance indisponible", `Un manifeste n’est pas encore matérialisé ou ne peut pas être chargé : ${error.message}`)); });
   return root;
 }
