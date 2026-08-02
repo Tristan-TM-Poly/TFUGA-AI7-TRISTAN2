@@ -1,0 +1,50 @@
+name: Generate Omega Generator R0.2 Massive
+
+on:
+  push:
+    branches:
+      - feat/omega-generator-discovery-r0-2-massive
+    paths:
+      - tools/generate_omega_generator_r02_massive.py
+      - .github/workflows/generate-omega-generator-r02-massive.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/omega-generator-discovery-r0-2-massive
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate 24,576 linked records
+        run: python tools/generate_omega_generator_r02_massive.py --root .
+      - name: Verify deterministic regeneration
+        run: |
+          first=$(sha256sum generated/omega_generator_discovery_r02/manifest.json | cut -d' ' -f1)
+          python tools/generate_omega_generator_r02_massive.py --root . >/tmp/r02-second-run.json
+          second=$(sha256sum generated/omega_generator_discovery_r02/manifest.json | cut -d' ' -f1)
+          test "$first" = "$second"
+      - name: Count generated additions
+        run: |
+          find generated/omega_generator_discovery_r02 -type f -print0 | xargs -0 wc -l
+          test "$(find generated/omega_generator_discovery_r02/catalogs -name '*.jsonl' -type f -print0 | xargs -0 cat | wc -l)" -eq 8192
+          test "$(find generated/omega_generator_discovery_r02/benchmarks -name '*.jsonl' -type f -print0 | xargs -0 cat | wc -l)" -eq 16384
+      - name: Commit generated atlas
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- generated/omega_generator_discovery_r02
+          if git diff --cached --quiet; then
+            echo 'Generated atlas already current.'
+          else
+            git commit -m 'feat(generator-r02): materialize 24,576 catalog and benchmark records'
+            git push origin HEAD:feat/omega-generator-discovery-r0-2-massive
+          fi
