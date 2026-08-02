@@ -1,6 +1,21 @@
 name: Omega RE R0.2 Materialize
 
 on:
+  pull_request:
+    paths:
+      - "omega_re_t/authorization.py"
+      - "omega_re_t/re_ir.py"
+      - "omega_re_t/probabilistic.py"
+      - "omega_re_t/timed.py"
+      - "omega_re_t/constraints.py"
+      - "omega_re_t/residuals.py"
+      - "omega_re_t/storage.py"
+      - "omega_re_t/re16.py"
+      - "omega_re_t/frontier.py"
+      - "omega_re_t/r02_cli.py"
+      - "tests/test_omega_re_r02_*.py"
+      - "schemas/omega-re-r02.schema.json"
+      - ".github/workflows/omega-re-r02-materialize.yml"
   push:
     branches:
       - feat/omega-re-t-r0-1
@@ -24,16 +39,17 @@ permissions:
   contents: write
 
 concurrency:
-  group: omega-re-r02-materialize-${{ github.ref }}
+  group: omega-re-r02-materialize-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
   validate-and-materialize:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
@@ -75,7 +91,9 @@ jobs:
           assert len(path.read_text(encoding="utf-8").splitlines()) > 15_000
           PY
 
-      - name: Commit deterministic frontier
+      - name: Commit deterministic frontier to PR branch
+        env:
+          TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -85,4 +103,4 @@ jobs:
             exit 0
           fi
           git commit -m "data(omega-re-r02): materialize 256-case OAK frontier"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git push origin HEAD:"$TARGET_BRANCH"
