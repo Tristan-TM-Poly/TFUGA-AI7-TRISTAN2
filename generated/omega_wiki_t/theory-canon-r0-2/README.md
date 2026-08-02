@@ -2,7 +2,7 @@
 
 This directory contains a checked-in manifest, a human-readable useful-knowledge report, and a compact machine-readable core projection.
 
-Regenerate the complete 96-node / 94-hyperedge bundle with:
+Regenerate the complete 92-node / 94-hyperedge bundle with:
 
 ```bash
 omega-wiki absorb-theory \
