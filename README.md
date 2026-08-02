@@ -24,6 +24,7 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `Ω-DeepTech Intelligence Forge`: OAK-safe layer for deeptech signals -> IP triage -> prototype tasks -> revenue routing -> GitHub artifacts.
 - `Ω-ECC-T`: OAK-safe error-correction lab: Hamming(7,4), channel models, Syndrome-CVCD, HyperParityGraph-T, M⁻ hooks, and deterministic OAKBench.
 - `Ω-PDF-HYPERGRAPH-GITHUB-T`: OAK-safe universal absorber for PDF/ZIP/text/code corpora -> chunks -> claim candidates -> HGFM/CVCD hypergraph -> GitHub-ready artifacts.
+- `Ω-NARUTO-HMAGFM-HGFMnD²`: exploratory, public-safe multi-agent architecture mapping narrative operators to bounded budgets, parallel hypotheses, evidence-aware OAKMerge, contradictions, and M⁻.
 
 ## Repository structure
 
@@ -33,6 +34,7 @@ schemas/    JSON schemas for DCT++, research cards, HGFM, status vectors.
 sage_tristan/ Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
 omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
 ecc_tristan/ Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
+omega_naruto_hmagfm/ Kage Bunshin parallel proposals, ChakraBudget, and deterministic OAKMerge.
 omega_prof_poly_t/ Omega absorb systems, including the universal corpus absorber.
 tests/      Unit tests for the executable core.
 examples/   Example branches and DCT++ packets.
@@ -55,6 +57,7 @@ python -m sage_tristan.demo
 python examples/omega_deeptech_forge_demo.py
 python examples/omega_ecc_t_demo.py
 python examples/omega_universal_absorber_demo.py
+python examples/omega_naruto_hmagfm_demo.py
 ```
 
 Universal corpus absorption dry-run:
@@ -104,5 +107,6 @@ Crystallizable modules:
 - PDF Rosette Extractor
 - Claim-Evidence-Residue Graph
 - Drive↔GitHub OAK Sync
+- Ω-NARUTO-HMAGFM-HGFMnD² / Kage Bunshin–OAKMerge
 
 Exploratory branches stay labeled as exploratory until proven, simulated, or experimentally validated.
