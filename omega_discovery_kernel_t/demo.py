@@ -21,6 +21,7 @@ def build_raman_closed_loop() -> DiscoveryLedger:
             domain="raman-spectroscopy",
             status="synthetic_observation",
             payload={
+                "observation_kind": "synthetic_before_after_raman_peak_pair",
                 "before_peak_cm-1": 1000.0,
                 "after_peak_cm-1": 1002.0,
                 "before_hwhm_cm-1": 4.0,
@@ -42,6 +43,7 @@ def build_raman_closed_loop() -> DiscoveryLedger:
             domain="raman-spectroscopy",
             status="hypothesis",
             payload={
+                "claim_id": "CLM-RAMAN-TEMP-MORPH-001",
                 "text": "Temperature produces a reusable shift-plus-broadening Raman generator.",
                 "canonical_key": "temperature causes reusable Raman shift and broadening generator",
                 "scope": "synthetic single-peak Lorentzian pair",
@@ -86,6 +88,9 @@ def build_raman_closed_loop() -> DiscoveryLedger:
             status="dry_run_approved",
             payload={
                 "name": "held_out_temperature_ramp",
+                "protocol": "held_out_temperature_ramp",
+                "success_criteria": "normalized spectral RMSE <= 0.02 and no worse than baseline",
+                "rollback": "restore_previous_temperature_and_disable_laser",
                 "baseline": "independent Lorentzian nonlinear least squares",
                 "metric": "normalized spectral RMSE",
                 "success_threshold": 0.02,
@@ -118,7 +123,7 @@ def build_raman_closed_loop() -> DiscoveryLedger:
                 "protocol": "held_out_temperature_ramp",
                 "interpretation": "The two-generator model is insufficient for this scoped task.",
             },
-            units={"spectral_rmse": "dimensionless"},
+            units={"spectral_rmse": "1"},
             uncertainty={"spectral_rmse": 0.003},
         )
     )
@@ -152,8 +157,9 @@ def build_raman_closed_loop() -> DiscoveryLedger:
             domain="epistemic-governance",
             status="active_constraint",
             payload={
-                "failure_context": "Held-out temperature ramp with overlapping background drift.",
+                "context": "Held-out temperature ramp with overlapping background drift.",
                 "prohibited_inference": "Shift plus broadening alone is a reusable physical explanation.",
+                "reusable_rule": "Include baseline drift, matched tuning, and preregistered held-out tolerance.",
                 "reusable_rules": [
                     "include baseline drift as a competing generator",
                     "compare against independently tuned nonlinear least squares",
