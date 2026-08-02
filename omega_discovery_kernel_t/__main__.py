@@ -15,7 +15,7 @@ import json
 from pathlib import Path
 from typing import Sequence
 
-from .catalog import catalog_manifest
+from .catalog_r03 import catalog_manifest
 from .demo import build_raman_closed_loop
 from .factory import KnowledgeFrontierTargets, plan_knowledge_frontier
 from .kernel import DiscoveryLedger
@@ -38,7 +38,7 @@ def _parser() -> argparse.ArgumentParser:
     audit.add_argument("events_jsonl")
     audit.add_argument("--output-dir", default=None)
 
-    catalog = sub.add_parser("catalog", help="Emit the 64-event canonical contract catalog.")
+    catalog = sub.add_parser("catalog", help="Emit the corrected 64-event canonical contract catalog.")
     catalog.add_argument("--output", default=None)
 
     frontier = sub.add_parser(
