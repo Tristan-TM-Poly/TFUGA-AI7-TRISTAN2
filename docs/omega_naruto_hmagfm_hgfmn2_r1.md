@@ -101,13 +101,15 @@ Robustness is a sensitivity diagnostic, not scientific truth or global optimalit
 ## Run
 
 ```bash
-omega-naruto-oak
-omega-naruto-oak \
+python -m omega_naruto_hmagfm.cli
+python -m omega_naruto_hmagfm.cli \
   --output generated/omega_naruto/report.json \
   --graphml-output generated/omega_naruto/graph.graphml
 
 python -m pytest -q tests/test_omega_naruto*.py
 ```
+
+The module invocation avoids modifying the rapidly changing repository-wide CLI manifest. A console-script registration can be added later from a branch synchronized with the then-current `main`.
 
 ## CI
 
