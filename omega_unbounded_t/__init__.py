@@ -28,7 +28,7 @@ from .self_improvement import (
     ControllerVariant,
     PromotionDecision,
     ScenarioOutcome,
-    SelfImprovementLab,
+    SelfImprovementLab as RawSelfImprovementLab,
     SelfImprovementReport,
     SelfImprovementScenario,
     VariantOutcome,
@@ -36,6 +36,7 @@ from .self_improvement import (
     default_scenarios,
     iter_variants_jsonl,
 )
+from .self_improvement_judge import ResourceAwareSelfImprovementLab
 from .streaming import (
     BreakthroughEvent,
     MPlusLedger,
@@ -43,6 +44,8 @@ from .streaming import (
     ResourceSampler,
     ResourceSnapshot,
 )
+
+SelfImprovementLab = ResourceAwareSelfImprovementLab
 
 __all__ = [
     "AdaptiveController",
@@ -60,6 +63,8 @@ __all__ = [
     "MPlusLedger",
     "PromotionDecision",
     "RangeWorkSource",
+    "RawSelfImprovementLab",
+    "ResourceAwareSelfImprovementLab",
     "ResourceSampler",
     "ResourceSnapshot",
     "RunReport",
@@ -77,4 +82,4 @@ __all__ = [
     "synthetic_additions",
 ]
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
