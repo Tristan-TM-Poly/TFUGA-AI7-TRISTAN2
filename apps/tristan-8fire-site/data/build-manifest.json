@@ -2,12 +2,11 @@
   "schema_version": "0.3.0",
   "generated_from": "2026-08-02T18:12:00-04:00",
   "algorithm": "sha256(path\\0sha256\\0size\\n)",
-  "root_sha256": "5e160930c9c6698c46c6ddd9affaffa1539c17ea4ae7c664ec6333f8f5a9cbb7",
+  "root_sha256": "98046738c6bd60080f78bf76a2b18b6ce22ad9f7bc09f90c203dd911d7c2672f",
   "metrics": {
-    "files": 35,
-    "bytes": 638663,
+    "files": 34,
+    "bytes": 638575,
     "roles": {
-      "asset": 1,
       "document-shell": 1,
       "documentation": 1,
       "javascript-module": 22,
@@ -21,7 +20,6 @@
       ".js": 22,
       ".json": 5,
       ".md": 1,
-      ".txt": 1,
       ".webmanifest": 1
     }
   },
@@ -150,13 +148,6 @@
       "role": "javascript-module",
       "size_bytes": 1366,
       "sha256": "13e83fa8768fd0f31d64c9785447a9335ac326cd3bbae44f2a4e2b474b19d937",
-      "cache_candidate": true
-    },
-    {
-      "path": "src/r03-marker.txt",
-      "role": "asset",
-      "size_bytes": 88,
-      "sha256": "3a54c4f48de698dc3e80582231ef237cd001caa6b7a3b0bd85d770f4cc10fa2f",
       "cache_candidate": true
     },
     {
