@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_naruto_hgfmn_graph.schema.json",
+  "title": "Omega Naruto HGFMnD Graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "directed", "nodes", "edges"],
+  "properties": {
+    "schema": {"const": "omega_naruto_hgfmn.graph.v1"},
+    "directed": {"const": true},
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "label", "attributes"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "label": {"type": "string"},
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "source", "target", "relation", "attributes"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "source": {"type": "string", "minLength": 1},
+          "target": {"type": "string", "minLength": 1},
+          "relation": {"type": "string", "minLength": 1},
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          }
+        }
+      }
+    }
+  }
+}
