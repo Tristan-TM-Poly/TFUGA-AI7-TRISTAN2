@@ -11,7 +11,12 @@ from .benchmark import benchmark_strategies
 from .core import AgentProposal, ChakraBudget, ClaimStatus, oak_merge
 from .gates import evaluate_publication
 from .genjutsu import audit_proposal
+from .graph import build_hgfmn_graph
 from .integration import to_claim_packet, to_mminus_registry
+from .robustness import (
+    analyze_decision_robustness,
+    default_robustness_scenarios,
+)
 
 
 def _fixture() -> tuple[AgentProposal, ...]:
@@ -77,9 +82,14 @@ def build_report() -> dict[str, Any]:
         for proposal in proposals
     }
     mminus = to_mminus_registry(merged)
+    graph = build_hgfmn_graph(proposals, merged)
+    robustness = analyze_decision_robustness(
+        proposals,
+        default_robustness_scenarios("SUPPORTED", "HYPE-A"),
+    )
 
     return {
-        "schema": "omega_naruto_hmagfm.report.v1.1",
+        "schema": "omega_naruto_hmagfm.report.v1.2",
         "oak_boundary": (
             "Local deterministic fixture only; not external validation, "
             "certification, or a physical claim."
@@ -104,6 +114,24 @@ def build_report() -> dict[str, Any]:
             "majority_vote_correct": benchmark.majority_vote_correct,
             "highest_confidence_correct": benchmark.highest_confidence_correct,
         },
+        "robustness": {
+            "base_winner_id": robustness.base_winner_id,
+            "stable_fraction": robustness.stable_fraction,
+            "unstable_scenarios": list(robustness.unstable_scenarios),
+            "scenario_decisions": [
+                {
+                    "scenario": item.scenario,
+                    "winner_id": item.winner_id,
+                    "changed": item.changed,
+                }
+                for item in robustness.scenario_decisions
+            ],
+            "non_claim": (
+                "Sensitivity diagnostics do not establish scientific truth or "
+                "global optimality."
+            ),
+        },
+        "hgfmn_graph": graph.to_dict(),
         "mminus": {
             "entries": [
                 {
@@ -128,13 +156,24 @@ def main(argv: Sequence[str] | None = None) -> int:
         type=Path,
         help="Optional JSON output path; stdout is always emitted.",
     )
+    parser.add_argument(
+        "--graphml-output",
+        type=Path,
+        help="Optional deterministic HGFMnD² GraphML output path.",
+    )
     args = parser.parse_args(argv)
 
-    rendered = json.dumps(build_report(), ensure_ascii=False, indent=2, sort_keys=True)
+    report = build_report()
+    rendered = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True)
     print(rendered)
     if args.output is not None:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(rendered + "\n", encoding="utf-8")
+    if args.graphml_output is not None:
+        proposals = _fixture()
+        graph = build_hgfmn_graph(proposals, oak_merge(proposals))
+        args.graphml_output.parent.mkdir(parents=True, exist_ok=True)
+        args.graphml_output.write_text(graph.to_graphml(), encoding="utf-8")
     return 0
 
 
