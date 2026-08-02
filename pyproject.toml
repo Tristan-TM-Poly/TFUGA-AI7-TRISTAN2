@@ -1,6 +1,6 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "2.6.0"
+version = "2.8.0"
 description = "Omega absorb and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
@@ -15,6 +15,8 @@ omega-quaternion-crystal = "omega_quaternion_crystal_t.cli:main"
 omega-logexp-morph = "omega_logexp_morph_t.cli:main"
 omega-unbounded = "omega_unbounded_t.cli:main"
 omega-generator-discovery = "omega_generator_discovery_t.cli:main"
+omega-generator-catalog = "omega_generator_discovery_t.catalog_cli:main"
+omega-generator-ultra = "omega_generator_discovery_t.ultra_cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
