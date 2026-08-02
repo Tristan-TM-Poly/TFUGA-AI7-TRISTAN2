@@ -1,0 +1,18 @@
+{
+  "name": "Tristan Web OS",
+  "short_name": "Tristan OS",
+  "description": "Atlas vivant de théories, claims, preuves, limites, prototypes et prochaines expériences.",
+  "lang": "fr-CA",
+  "start_url": "./#/dashboard",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0e11",
+  "theme_color": "#0b0e11",
+  "categories": ["education", "productivity", "science"],
+  "shortcuts": [
+    { "name": "Atlas", "url": "./#/atlas" },
+    { "name": "Claims", "url": "./#/claims" },
+    { "name": "Hypergraphe", "url": "./#/graph" },
+    { "name": "Mémoire négative", "url": "./#/mminus" }
+  ]
+}
