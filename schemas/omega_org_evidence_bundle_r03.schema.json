@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "omega_org_evidence_bundle_r03.schema.json",
+  "title": "Omega Organic Family Evidence Bundle R0.3",
+  "type": "object",
+  "required": ["bundle_id", "candidate_families", "observations", "sources", "status"],
+  "properties": {
+    "bundle_id": {"type": "string", "minLength": 1},
+    "candidate_families": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "formula": {"type": ["string", "null"]},
+    "charge": {"type": "integer"},
+    "status": {"type": "string"},
+    "claims": {"type": "array", "items": {"type": "string"}},
+    "sources": {"type": "array", "items": {"type": "object", "required": ["source_id", "title", "locator", "license", "retrieved_at", "content_sha256", "quality"]}},
+    "observations": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}

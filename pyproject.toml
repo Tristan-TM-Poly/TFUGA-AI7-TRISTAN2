@@ -23,6 +23,7 @@ omega-generator-frontier = "omega_generator_discovery_t.frontier_cli:main"
 omega-organic-family = "omega_org_fam_t.cli:main"
 omega-organic-family-ultra = "omega_org_fam_t.ultra_cli:main"
 omega-organic-evidence = "omega_org_fam_t.r03_cli:main"
+
 omega-plasma = "omega_plasma_t.cli:main"
 
 [tool.pytest.ini_options]
