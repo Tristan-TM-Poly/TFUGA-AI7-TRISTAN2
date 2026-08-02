@@ -15,16 +15,32 @@ from .core import (
     RunReport,
     SyntheticCapacityExecutor,
 )
+from .github_planner import (
+    AdditionRecord,
+    GitHubDryRunPlanner,
+    GitHubPlanPolicy,
+    GitHubPlanReport,
+    ShardRecord,
+    iter_jsonl,
+    synthetic_additions,
+)
 
 __all__ = [
     "AdaptiveController",
+    "AdditionRecord",
     "BatchResult",
     "CapacityPolicy",
     "CapacityState",
+    "GitHubDryRunPlanner",
+    "GitHubPlanPolicy",
+    "GitHubPlanReport",
     "ListWorkSource",
     "MMinusLedger",
     "RunReport",
+    "ShardRecord",
     "SyntheticCapacityExecutor",
+    "iter_jsonl",
+    "synthetic_additions",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
