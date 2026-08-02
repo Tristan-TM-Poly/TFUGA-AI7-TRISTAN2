@@ -8,10 +8,12 @@ on:
       - 'tests/test_omega_unbounded_github_planner.py'
       - 'tests/test_omega_unbounded_streaming.py'
       - 'tests/test_omega_unbounded_self_improvement.py'
+      - 'tests/test_omega_unbounded_governance.py'
       - 'schemas/omega_unbounded_addition.schema.json'
       - 'schemas/omega_unbounded_self_improvement_report.schema.json'
       - 'policies/omega_unbounded_growth.json'
       - 'policies/omega_unbounded_self_improvement.json'
+      - 'policies/omega_unbounded_governance.json'
       - '.github/workflows/omega_unbounded_t_ci.yml'
   push:
     branches:
@@ -22,10 +24,12 @@ on:
       - 'tests/test_omega_unbounded_github_planner.py'
       - 'tests/test_omega_unbounded_streaming.py'
       - 'tests/test_omega_unbounded_self_improvement.py'
+      - 'tests/test_omega_unbounded_governance.py'
       - 'schemas/omega_unbounded_addition.schema.json'
       - 'schemas/omega_unbounded_self_improvement_report.schema.json'
       - 'policies/omega_unbounded_growth.json'
       - 'policies/omega_unbounded_self_improvement.json'
+      - 'policies/omega_unbounded_governance.json'
       - '.github/workflows/omega_unbounded_t_ci.yml'
   workflow_dispatch:
 
@@ -57,6 +61,7 @@ jobs:
           tests/test_omega_unbounded_github_planner.py
           tests/test_omega_unbounded_streaming.py
           tests/test_omega_unbounded_self_improvement.py
+          tests/test_omega_unbounded_governance.py
           -q
 
       - name: Build a 100k-addition dry-run plan
@@ -134,7 +139,33 @@ jobs:
           assert (root / 'self_improvement_m_minus.jsonl').stat().st_size > 0
           PY
 
-      - name: Upload frontier and self-improvement evidence
+      - name: Run governance self-check
+        run: |
+          python -m omega_unbounded_t.cli governance-check \
+            --output-dir generated/omega-unbounded-governance-ci
+
+      - name: Verify StopGate reflex and Pareto invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('generated/omega-unbounded-governance-ci')
+          report = json.loads((root / 'governance-report.json').read_text(encoding='utf-8'))
+          front = {item['name'] for item in report['pareto_front']}
+
+          assert report['status'] == 'passed'
+          assert report['initial_decision']['action'] == 'CONTINUE'
+          assert report['final_decision']['action'] == 'STOP'
+          assert report['known_overiteration_blocked'] is True
+          assert front == {'fast', 'lean'}
+          assert report['scalar_score_has_final_authority'] is False
+          assert report['source_mutations'] == 0
+          assert report['remote_mutations'] == 0
+          assert (root / 'm_minus_reflex.jsonl').stat().st_size > 0
+          PY
+
+      - name: Upload frontier self-improvement and governance evidence
         uses: actions/upload-artifact@v7
         with:
           name: omega-unbounded-ci-evidence
@@ -150,3 +181,5 @@ jobs:
             generated/omega-unbounded-self-ci/candidate-results.jsonl
             generated/omega-unbounded-self-ci/self_improvement_m_minus.jsonl
             generated/omega-unbounded-self-ci/m_plus.jsonl
+            generated/omega-unbounded-governance-ci/governance-report.json
+            generated/omega-unbounded-governance-ci/m_minus_reflex.jsonl
