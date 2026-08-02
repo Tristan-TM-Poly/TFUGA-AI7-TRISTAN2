@@ -21,7 +21,7 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `PowerScore`: log-stable maturity score balancing fertility, verifiability, reusability, impact, compression, and stability against complexity, noise, untested speculation, risk, and duplication.
 - `Omega6`: parallel HGFM64 architecture: 64 coupled crystals across 8 master hyperedges.
 - `AI-7`: metabolism of production, verification, testing, analysis, optimization, reproduction, integration, crystallization, stabilization, documentation, and promotion.
-- `OAKGate`: deterministic evidence, uncertainty, execution, privacy, attribution, and IP guardrail for claim promotion and publication.
+- `OAKGate R0.2`: deterministic evidence, uncertainty, provenance, execution, privacy, attribution, IP, Markdown, SARIF, and GitHub guardrail for claim promotion and publication.
 - `Ω-DeepTech Intelligence Forge`: OAK-safe layer for deeptech signals -> IP triage -> prototype tasks -> revenue routing -> GitHub artifacts.
 - `Ω-ECC-T`: OAK-safe error-correction lab: Hamming(7,4), channel models, Syndrome-CVCD, HyperParityGraph-T, M⁻ hooks, and deterministic OAKBench.
 - `Ω-PDF-HYPERGRAPH-GITHUB-T`: OAK-safe universal absorber for PDF/ZIP/text/code corpora -> chunks -> claim candidates -> HGFM/CVCD hypergraph -> GitHub-ready artifacts.
@@ -30,15 +30,16 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 
 ```text
 docs/       Manifest, roadmap, canon analysis, publication plan.
-schemas/    JSON schemas for DCT++, research cards, HGFM, status vectors, and OAK claims.
+schemas/    JSON schemas for DCT++, research cards, HGFM, OAK claims, and rule packs.
+rules/      Domain and product OAKGate policies.
 sage_tristan/ Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
-oakgate/    Executable OAK claim model, deterministic gates, and CLI.
+oakgate/    Executable claim model, deterministic gates, U², provenance, scanner, SARIF, and CLI.
 omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
 ecc_tristan/ Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
 omega_prof_poly_t/ Omega absorb systems, including the universal corpus absorber.
-tests/      Unit tests for the executable core.
-examples/   Example branches, DCT++ packets, and OAK claims.
-reports/    Generated audit and publication reports.
+tests/      Unit, adversarial, and integration tests for the executable core.
+examples/   Example branches, DCT++ packets, JSON claims, and Markdown claims.
+reports/    Generated audit, provenance, SARIF, and publication reports.
 ```
 
 ## Scientific hygiene
@@ -55,7 +56,7 @@ OAKGate enforces the complementary publication invariant:
 myth != theory != prototype != measurement != certification != deployment
 ```
 
-A passing OAKGate report is a local guardrail result, not external scientific, legal, patent, or institutional certification.
+A passing OAKGate report is a local deterministic guardrail result, not external scientific, legal, privacy, patent, security, deployment, or institutional certification.
 
 ## Quick start
 
@@ -67,12 +68,16 @@ python examples/omega_ecc_t_demo.py
 python examples/omega_universal_absorber_demo.py
 ```
 
-OAKGate claim scan:
+OAKGate JSON and Markdown scans:
 
 ```bash
 oakgate scan examples/oakgate_claim.json
-oakgate scan examples/oakgate_claim.json --format json
-oakgate scan examples/oakgate_claim.json --output reports/oakgate.md
+oakgate scan examples/oakgate_claims.md --format json
+oakgate scan examples/oakgate_claims.md --format github
+oakgate scan examples/oakgate_claims.md --format sarif --output reports/oakgate.sarif
+oakgate scan examples/oakgate_claims.md --rules rules/oakgate.deeptech.json
+oakgate scan docs --recursive
+oakgate hash examples/oakgate_claim.json examples/oakgate_claims.md
 ```
 
 OAKGate exit codes:
@@ -81,8 +86,10 @@ OAKGate exit codes:
 0 PASS
 1 WARN
 2 BLOCK
-3 invalid input or I/O failure
+3 invalid input, policy, or I/O failure
 ```
+
+See [`docs/OAKGATE_R0_2.md`](docs/OAKGATE_R0_2.md) for the formal scope and non-claims.
 
 Universal corpus absorption dry-run:
 
@@ -113,7 +120,7 @@ Immediate canonizable modules:
 - StatusVector
 - ArtifactForge
 - ArchitectureAI7
-- OAKGate R0.1
+- OAKGate R0.2
 - Ω-DeepTech Intelligence Forge
 - Ω-ECC-T / Error Correction Codes de Tristan
 - Ω-PDF-HYPERGRAPH-GITHUB-T / AIT-Frédéric
@@ -132,8 +139,10 @@ Crystallizable modules:
 - PDF Rosette Extractor
 - Claim-Evidence-Residue Graph
 - Drive↔GitHub OAK Sync
-- configurable OAK rule packs
-- pull-request claim annotations
-- U² confidence-debt calibration
+- evidence-file existence verification
+- signed provenance manifests
+- changed-file PR scanning
+- U² calibration profiles
+- false-positive benchmark corpus
 
 Exploratory branches stay labeled as exploratory until proven, simulated, or experimentally validated.
