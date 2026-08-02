@@ -1,0 +1,16 @@
+{
+  "authority_level": 4,
+  "allow_issue": true,
+  "allow_branch": true,
+  "allow_commit": true,
+  "allow_draft_pr": true,
+  "allow_mark_ready": false,
+  "allow_merge": false,
+  "allow_release": false,
+  "allow_default_branch_write": false,
+  "maximum_consecutive_no_gain": 2,
+  "maximum_repeated_failure": 2,
+  "adaptive_cost_budget": 100.0,
+  "minimum_progress_score": 0.01,
+  "kill_switch": false
+}
