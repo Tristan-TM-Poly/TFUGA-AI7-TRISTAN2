@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_org_family_evidence.schema.json",
+  "title": "Omega Organic Family Evidence Template",
+  "type": "object",
+  "required": ["id", "family_id", "kind", "modality", "expected", "contradiction_if", "status"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^ORG-EVD-[0-9]{9,}$"},
+    "family_id": {"type": "string", "pattern": "^ORG-FAM-[0-9]{8,}$"},
+    "kind": {"enum": ["positive_bundle", "negative_control", "cross_modal_corroboration"]},
+    "modality": {"type": "string"},
+    "expected": {"type": "array", "items": {"type": "string"}},
+    "contradiction_if": {"type": "array", "items": {"type": "string"}},
+    "status": {"const": "synthetic_template_not_empirical_evidence"}
+  },
+  "additionalProperties": false
+}
