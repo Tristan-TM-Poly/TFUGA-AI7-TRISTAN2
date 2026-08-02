@@ -1,0 +1,117 @@
+"""Ω-REVOLUTION-DIVERSIFICATION-T∞ R0.1."""
+
+from .ablation import (
+    FailureCase,
+    MMinusAblationReport,
+    canonical_ablation_fixture,
+    run_mminus_ablation,
+)
+from .adapters import event_records_to_mminus, knowledge_cell_to_discovery_cell
+from .compiler import (
+    CompiledDiversification,
+    RevolutionDiversificationCompiler,
+    canonical_compiler,
+    render_report,
+)
+from .demo_data import build_demo_cells
+from .models import (
+    ActionProposal,
+    ActionSensitivity,
+    ConductorDecision,
+    DiscoveryCell,
+    Evidence,
+    EvidenceKind,
+    Hypothesis,
+    MMinusRule,
+    OakStatus,
+    Quantity,
+    stable_id,
+    validate_cells,
+)
+from .portfolio import (
+    BudgetAllocation,
+    QualityDecision,
+    QualityObservation,
+    ScoredHypothesis,
+    allocate_budget,
+    decide_quality,
+    hypothesis_priority,
+    score_hypotheses,
+)
+from .raman_loop import (
+    DiscriminatingExperiment,
+    Peak,
+    RamanCandidate,
+    RamanLoopResult,
+    RamanModelKind,
+    Spectrum,
+    canonical_raman_fixture,
+    run_raman_loop,
+)
+from .registry import REGISTRY, build_registry, registry_by_group, registry_payload
+from .truth_audit import (
+    AuditFinding,
+    BenchmarkObservation,
+    DocumentationClaim,
+    FindingSeverity,
+    RepositorySnapshot,
+    TruthAuditReport,
+    audit_repository,
+    canonical_truth_audit_fixture,
+)
+
+__all__ = [
+    "ActionProposal",
+    "ActionSensitivity",
+    "AuditFinding",
+    "BenchmarkObservation",
+    "BudgetAllocation",
+    "CompiledDiversification",
+    "ConductorDecision",
+    "DiscoveryCell",
+    "DiscriminatingExperiment",
+    "DocumentationClaim",
+    "Evidence",
+    "EvidenceKind",
+    "FailureCase",
+    "FindingSeverity",
+    "Hypothesis",
+    "MMinusAblationReport",
+    "MMinusRule",
+    "OakStatus",
+    "Peak",
+    "QualityDecision",
+    "QualityObservation",
+    "Quantity",
+    "REGISTRY",
+    "RamanCandidate",
+    "RamanLoopResult",
+    "RamanModelKind",
+    "RepositorySnapshot",
+    "RevolutionDiversificationCompiler",
+    "ScoredHypothesis",
+    "Spectrum",
+    "TruthAuditReport",
+    "allocate_budget",
+    "audit_repository",
+    "build_demo_cells",
+    "build_registry",
+    "canonical_ablation_fixture",
+    "canonical_compiler",
+    "canonical_raman_fixture",
+    "canonical_truth_audit_fixture",
+    "decide_quality",
+    "event_records_to_mminus",
+    "hypothesis_priority",
+    "knowledge_cell_to_discovery_cell",
+    "registry_by_group",
+    "registry_payload",
+    "render_report",
+    "run_mminus_ablation",
+    "run_raman_loop",
+    "score_hypotheses",
+    "stable_id",
+    "validate_cells",
+]
+
+__version__ = "0.1.0"

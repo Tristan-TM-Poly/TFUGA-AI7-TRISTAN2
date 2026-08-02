@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/discovery-cell-r0-1.schema.json",
+  "title": "Omega Revolution Diversification DiscoveryCell R0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cell_id", "version", "title", "domain", "problem", "user",
+    "observable_pain", "current_baseline", "hypotheses", "evidence",
+    "m_minus", "quantities", "code_refs", "test_refs", "next_actions",
+    "scientific_value", "engineering_value", "product_value", "ip_status",
+    "status", "parent_ids", "supersedes", "created_at", "metrics"
+  ],
+  "properties": {
+    "cell_id": {"type": "string", "pattern": "^urn:omega:discovery-cell:[0-9a-f]{24}$"},
+    "version": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "domain": {"type": "string", "minLength": 1},
+    "problem": {"type": "string", "minLength": 1},
+    "user": {"type": "string", "minLength": 1},
+    "observable_pain": {"type": "string", "minLength": 1},
+    "current_baseline": {"type": "string", "minLength": 1},
+    "hypotheses": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hypothesis"}},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "m_minus": {"type": "array", "items": {"$ref": "#/$defs/mminus"}},
+    "quantities": {"type": "object", "additionalProperties": {"$ref": "#/$defs/quantity"}},
+    "code_refs": {"type": "array", "items": {"type": "string"}},
+    "test_refs": {"type": "array", "items": {"type": "string"}},
+    "next_actions": {"type": "array", "items": {"$ref": "#/$defs/action"}},
+    "scientific_value": {"type": "number", "minimum": 0, "maximum": 1},
+    "engineering_value": {"type": "number", "minimum": 0, "maximum": 1},
+    "product_value": {"type": "number", "minimum": 0, "maximum": 1},
+    "ip_status": {"type": "string", "minLength": 1},
+    "status": {"enum": ["IDEA", "FORMALIZED", "IMPLEMENTED", "SIMULATED", "DEMONSTRATED", "REPLICATED", "REFORMULATED", "REFUTED", "CANONICAL", "ARCHIVED"]},
+    "parent_ids": {"type": "array", "items": {"type": "string"}},
+    "supersedes": {"type": "array", "items": {"type": "string"}},
+    "created_at": {"type": "string", "minLength": 1},
+    "metrics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_coverage", "falsification_coverage", "negative_memory_coverage"],
+      "properties": {
+        "evidence_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "falsification_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "negative_memory_coverage": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    }
+  },
+  "$defs": {
+    "hypothesis": {
+      "type": "object", "additionalProperties": false,
+      "required": ["statement", "domain", "assumptions", "falsification_conditions", "value_potential", "information_gain", "falsifiability", "reusability", "cost", "time_cost", "operational_uncertainty", "dependency_load", "prior_probability", "hypothesis_id", "status"],
+      "properties": {
+        "statement": {"type": "string", "minLength": 1},
+        "domain": {"type": "string", "minLength": 1},
+        "assumptions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "falsification_conditions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "value_potential": {"type": "number", "minimum": 0, "maximum": 1},
+        "information_gain": {"type": "number", "minimum": 0, "maximum": 1},
+        "falsifiability": {"type": "number", "minimum": 0, "maximum": 1},
+        "reusability": {"type": "number", "minimum": 0, "maximum": 1},
+        "cost": {"type": "number", "minimum": 0},
+        "time_cost": {"type": "number", "minimum": 0},
+        "operational_uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+        "dependency_load": {"type": "number", "minimum": 0},
+        "prior_probability": {"type": "number", "minimum": 0, "maximum": 1},
+        "hypothesis_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["IDEA", "FORMALIZED", "IMPLEMENTED", "SIMULATED", "DEMONSTRATED", "REPLICATED", "REFORMULATED", "REFUTED", "CANONICAL", "ARCHIVED"]}
+      }
+    },
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "title", "source", "supports", "contradicts", "independence", "reproducibility", "uncertainty", "limitations", "content_hash", "evidence_id", "created_at"],
+      "properties": {
+        "kind": {"enum": ["definition", "equation", "derivation", "code", "test", "dataset", "baseline", "simulation", "measurement", "result", "replication", "counterexample", "user_evidence", "market_evidence", "safety_evidence", "provenance", "negative_memory"]},
+        "title": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1},
+        "supports": {"type": "array", "items": {"type": "string"}},
+        "contradicts": {"type": "array", "items": {"type": "string"}},
+        "independence": {"type": "string"},
+        "reproducibility": {"type": "string"},
+        "uncertainty": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "limitations": {"type": "array", "items": {"type": "string"}},
+        "content_hash": {"type": ["string", "null"]},
+        "evidence_id": {"type": "string", "minLength": 1},
+        "created_at": {"type": "string", "minLength": 1}
+      }
+    },
+    "mminus": {
+      "type": "object", "additionalProperties": false,
+      "required": ["trigger", "root_cause", "forbidden_inference", "safe_replacement", "prevention_test", "domain", "severity", "source_event_ids", "rule_id", "created_at"],
+      "properties": {
+        "trigger": {"type": "string", "minLength": 1},
+        "root_cause": {"type": "string", "minLength": 1},
+        "forbidden_inference": {"type": "string", "minLength": 1},
+        "safe_replacement": {"type": "string", "minLength": 1},
+        "prevention_test": {"type": "string", "minLength": 1},
+        "domain": {"type": "string", "minLength": 1},
+        "severity": {"type": "integer", "minimum": 1, "maximum": 5},
+        "source_event_ids": {"type": "array", "items": {"type": "string"}},
+        "rule_id": {"type": "string", "minLength": 1},
+        "created_at": {"type": "string", "minLength": 1}
+      }
+    },
+    "quantity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["value", "unit", "uncertainty", "distribution", "calibration_ref"],
+      "properties": {
+        "value": {"type": "number"}, "unit": {"type": "string", "minLength": 1},
+        "uncertainty": {"type": ["number", "null"], "minimum": 0},
+        "distribution": {"type": "string"}, "calibration_ref": {"type": ["string", "null"]}
+      }
+    },
+    "action": {
+      "type": "object", "additionalProperties": false,
+      "required": ["title", "rationale", "sensitivity", "reversible", "expected_value", "required_approvals", "action_id"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "rationale": {"type": "string", "minLength": 1},
+        "sensitivity": {"enum": ["reversible", "review_required", "human_approval_required", "prohibited_autonomously"]},
+        "reversible": {"type": "boolean"},
+        "expected_value": {"type": "number", "minimum": 0, "maximum": 1},
+        "required_approvals": {"type": "array", "items": {"type": "string"}},
+        "action_id": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

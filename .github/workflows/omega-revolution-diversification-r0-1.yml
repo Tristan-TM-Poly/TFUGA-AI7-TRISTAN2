@@ -1,0 +1,140 @@
+name: Omega Revolution Diversification R0.1
+
+on:
+  pull_request:
+    paths:
+      - "omega_revolution_diversification_t/**"
+      - "tests/test_omega_revolution_diversification_r0_1.py"
+      - "schemas/discovery-cell-r0-1.schema.json"
+      - "policies/omega_revolution_diversification_r0_1.json"
+      - "docs/omega_revolution_diversification_r0_1.md"
+      - "examples/omega_revolution_diversification_r0_1_demo.py"
+      - ".github/workflows/omega-revolution-diversification-r0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-revolution-diversification-r0-1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  diversification-oakbench:
+    name: DiscoveryCell, M-minus, Truth Audit and Raman OAKBench
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pip pytest jsonschema
+
+      - name: Compile package, tests and example
+        run: |
+          python -m compileall \
+            omega_revolution_diversification_t \
+            tests/test_omega_revolution_diversification_r0_1.py \
+            examples/omega_revolution_diversification_r0_1_demo.py
+
+      - name: Run 33 targeted tests
+        run: |
+          pytest -q tests/test_omega_revolution_diversification_r0_1.py --durations=20 \
+            2>&1 | tee /tmp/omega-revolution-diversification-r0-1-tests.log
+
+      - name: Validate DiscoveryCell schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_revolution_diversification_t import build_demo_cells
+          schema = json.loads(Path('schemas/discovery-cell-r0-1.schema.json').read_text())
+          validator = Draft202012Validator(schema)
+          cells = build_demo_cells()
+          assert len(cells) == 3
+          for cell in cells:
+              validator.validate(cell.to_dict())
+              assert cell.validate() == []
+          print(json.dumps({'validated_cells': len(cells)}, indent=2))
+          PY
+
+      - name: Validate policy and registry
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from omega_revolution_diversification_t import registry_by_group, registry_payload
+          policy = json.loads(Path('policies/omega_revolution_diversification_r0_1.json').read_text())
+          registry = registry_payload()
+          groups = registry_by_group()
+          assert policy['deep_front_limit'] == 3
+          assert policy['no_permanent_total_object_cap'] is True
+          assert 'max_total' not in json.dumps(policy)
+          assert registry['module_count'] == 64
+          assert registry['group_count'] == 8
+          assert all(len(modules) == 8 for modules in groups.values())
+          PY
+
+      - name: Execute CLI surfaces and compile evidence bundle
+        run: |
+          python -m omega_revolution_diversification_t registry --output /tmp/registry.json >/tmp/registry.stdout.json
+          python -m omega_revolution_diversification_t mminus-ablation --output /tmp/mminus.json >/tmp/mminus.stdout.json
+          python -m omega_revolution_diversification_t truth-audit --output /tmp/truth-audit.json >/tmp/truth-audit.stdout.json
+          python -m omega_revolution_diversification_t raman-loop --output /tmp/raman.json >/tmp/raman.stdout.json
+          python -m omega_revolution_diversification_t quality-demo --output /tmp/quality.json >/tmp/quality.stdout.json
+          python -m omega_revolution_diversification_t compile-demo --output-dir /tmp/diversification-bundle >/tmp/compile.stdout.json
+
+      - name: Enforce proof gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          mminus = json.loads(Path('/tmp/mminus.json').read_text())
+          truth = json.loads(Path('/tmp/truth-audit.json').read_text())
+          raman = json.loads(Path('/tmp/raman.json').read_text())
+          metrics = json.loads(Path('/tmp/diversification-bundle/metrics.json').read_text())
+          manifest = json.loads(Path('/tmp/diversification-bundle/manifest.json').read_text())
+          assert mminus['with_memory']['repeated_failures'] == 0
+          assert mminus['without_memory']['repeated_failures'] > 0
+          assert mminus['cost_reduction'] > 0.40
+          assert truth['finding_count'] >= 6 and truth['blocking'] is True
+          assert raman['best_candidate']['kind'] == 'shift_broadening_baseline'
+          assert raman['best_candidate']['holdout_rmse'] < raman['baseline_rmse']
+          assert raman['oak_transition'] == ['SIMULATED', 'DEMONSTRATED']
+          assert metrics['module_count'] == 64 and metrics['cell_count'] == 3
+          assert len(manifest['manifest_sha256']) == 64
+          print(json.dumps({
+              'mminus_cost_reduction': mminus['cost_reduction'],
+              'truth_audit_findings': truth['finding_count'],
+              'raman_holdout_rmse': raman['best_candidate']['holdout_rmse'],
+              'raman_baseline_rmse': raman['baseline_rmse'],
+              'quality_decision': metrics['quality_decision'],
+              'manifest_sha256': manifest['manifest_sha256'],
+          }, indent=2))
+          PY
+
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-revolution-diversification-r0-1
+          path: |
+            /tmp/omega-revolution-diversification-r0-1-tests.log
+            /tmp/registry.json
+            /tmp/mminus.json
+            /tmp/truth-audit.json
+            /tmp/raman.json
+            /tmp/quality.json
+            /tmp/diversification-bundle/manifest.json
+            /tmp/diversification-bundle/metrics.json
+            /tmp/diversification-bundle/report.md
+          if-no-files-found: warn
+          retention-days: 14
