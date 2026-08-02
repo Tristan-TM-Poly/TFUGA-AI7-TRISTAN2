@@ -7,13 +7,21 @@ on:
     paths:
       - 'tools/generate_omega_pct_r03max.py'
       - '.github/workflows/generate-omega-pct-r03max.yml'
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'tools/generate_omega_pct_r03max.py'
+      - 'tools/omega_pct_r03max_payload/**'
+      - '.github/workflows/generate-omega-pct-r03max.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: omega-pct-r03max-${{ github.ref }}
+  group: omega-pct-r03max-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
