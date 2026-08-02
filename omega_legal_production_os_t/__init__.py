@@ -1,7 +1,9 @@
 """Ω-LEGAL-PRODUCTION-OS-T∞ R0.1/R0.2 public API."""
+from __future__ import annotations
 
-from .atlas import audit as audit_policy_atlas
-from .atlas import generate as generate_policy_atlas
+from pathlib import Path
+from typing import Any
+
 from .ledger import ActionLedger, LedgerEntry
 from .models import (
     ActionState,
@@ -23,6 +25,19 @@ from .release import (
     ReleaseDryRunReceipt,
     summarize_artifacts,
 )
+
+
+def generate_policy_atlas(root: str | Path) -> dict[str, Any]:
+    from .atlas import generate
+
+    return generate(root)
+
+
+def audit_policy_atlas(root: str | Path) -> dict[str, Any]:
+    from .atlas import audit
+
+    return audit(root)
+
 
 __all__ = [
     "ActionLedger",
