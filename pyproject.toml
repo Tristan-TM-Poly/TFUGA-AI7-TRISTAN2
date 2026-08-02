@@ -17,6 +17,9 @@ omega-unbounded = "omega_unbounded_t.cli:main"
 omega-fluid = "omega_fluid_t.cli:main"
 omega-propulsion = "omega_aero_hydro_propulsion_t.cli:main"
 omega-propulsion-r02 = "omega_aero_hydro_propulsion_t.r02_cli:main"
+omega-propulsion-r03 = "omega_aero_hydro_propulsion_t.r03_cli:main"
+omega-propulsion-r03-max = "omega_aero_hydro_propulsion_t.r03_max_cli:main"
+omega-propulsion-r04 = "omega_aero_hydro_propulsion_t.r04_cli:main"
 omega-generator-discovery = "omega_generator_discovery_t.cli:main"
 omega-generator-catalog = "omega_generator_discovery_t.catalog_cli:main"
 omega-generator-ultra = "omega_generator_discovery_t.ultra_cli:main"
@@ -47,6 +50,7 @@ omega-legal-atlas = "omega_legal_production_os_t.atlas:main"
 omega-legal-real = "omega_legal_production_os_t.real_cli:main"
 omega-re-r03 = "omega_re_t.r03_cli:main"
 omega-re-re1024 = "omega_re_t.r03_frontier:main"
+omega-re-r04 = "omega_re_t.r04_cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
