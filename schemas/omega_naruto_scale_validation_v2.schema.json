@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_naruto_scale_validation_v2.schema.json",
+  "title": "Omega Naruto Frontier Scale Validation v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "valid", "manifest_records", "observed_records",
+    "observed_shards", "expected_next_ordinal", "observed_next_ordinal",
+    "compressed_bytes", "uncompressed_bytes", "logical_corpus_sha256",
+    "merkle_root_sha256", "findings", "non_claim"
+  ],
+  "properties": {
+    "schema": {"const": "omega_naruto_frontier.scale_validation.v2"},
+    "valid": {"type": "boolean"},
+    "manifest_records": {"type": "integer", "minimum": 0},
+    "observed_records": {"type": "integer", "minimum": 0},
+    "observed_shards": {"type": "integer", "minimum": 0},
+    "expected_next_ordinal": {"type": "integer", "minimum": 0},
+    "observed_next_ordinal": {"type": "integer", "minimum": 0},
+    "compressed_bytes": {"type": "integer", "minimum": 0},
+    "uncompressed_bytes": {"type": "integer", "minimum": 0},
+    "logical_corpus_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "merkle_root_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "non_claim": {"type": "string", "minLength": 1},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "severity", "message", "path", "line_number"],
+        "properties": {
+          "code": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["P0", "P1", "P2"]},
+          "message": {"type": "string", "minLength": 1},
+          "path": {"type": ["string", "null"]},
+          "line_number": {"type": ["integer", "null"], "minimum": 1}
+        }
+      }
+    }
+  }
+}
