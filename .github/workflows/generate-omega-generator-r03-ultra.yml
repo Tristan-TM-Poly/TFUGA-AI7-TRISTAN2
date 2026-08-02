@@ -7,6 +7,9 @@ on:
     paths:
       - configs/omega_generator_r03_ultra.json
       - tools/generate_omega_generator_r03_ultra.py
+      - tools/partition_omega_generator_r03_index.py
+      - omega_generator_discovery_t/ultra_catalog.py
+      - tests/test_generator_discovery_r03_ultra.py
       - .github/workflows/generate-omega-generator-r03-ultra.yml
   pull_request:
     types: [opened, synchronize, reopened]
@@ -33,7 +36,7 @@ jobs:
           python-version: '3.12'
       - name: Install test runner
         run: python -m pip install --disable-pip-version-check pytest
-      - name: Generate 393216 linked records and SQLite index
+      - name: Generate 393216 linked records and monolithic validation index
         run: python tools/generate_omega_generator_r03_ultra.py --root .
       - name: Capture first deterministic fingerprint
         run: |
@@ -62,7 +65,7 @@ jobs:
           second = json.loads(Path('generated/omega_generator_discovery_r03_ultra/manifest.json').read_text())['combined_fingerprint']
           assert first == second, (first, second)
           PY
-      - name: Verify line counts and SQLite cross-links
+      - name: Verify exact JSONL counts and monolithic cross-links
         run: |
           test "$(find generated/omega_generator_discovery_r03_ultra/catalogs -name '*.jsonl' -print0 | xargs -0 cat | wc -l)" -eq 65536
           test "$(find generated/omega_generator_discovery_r03_ultra/benchmarks -name '*.jsonl' -print0 | xargs -0 cat | wc -l)" -eq 131072
@@ -85,14 +88,53 @@ jobs:
           assert db.execute("SELECT COUNT(*) FROM validations WHERE risk_tier='high' AND validation_mode!='exhaustive_required'").fetchone()[0] == 0
           db.close()
           PY
-      - name: Run R0.3 Ultra OAKBench
+      - name: Partition SQLite index below GitHub per-file limits
+        run: python tools/partition_omega_generator_r03_index.py --root .
+      - name: Verify partitioned database routing and aggregate counts
+        run: |
+          test ! -e generated/omega_generator_discovery_r03_ultra/index/omega_generator_r03_ultra.sqlite3
+          test -e generated/omega_generator_discovery_r03_ultra/index/routing.sqlite3
+          test "$(find generated/omega_generator_discovery_r03_ultra/index/domains -name '*.sqlite3' -type f | wc -l)" -eq 32
+          python - <<'PY'
+          import json
+          import sqlite3
+          from pathlib import Path
+          root = Path('generated/omega_generator_discovery_r03_ultra')
+          manifest = json.loads((root / 'manifest.json').read_text())
+          database = manifest['database']
+          assert database['mode'] == 'partitioned_by_domain'
+          assert database['counts'] == {
+              'generators': 65536,
+              'benchmarks': 131072,
+              'hyperedges': 65536,
+              'negative_controls': 65536,
+              'validations': 65536,
+          }
+          paths = [root / database['routing'], *(root / item for item in database['partitions'])]
+          assert len(paths) == 33
+          assert all(path.exists() for path in paths)
+          assert all(path.stat().st_size < 100_000_000 for path in paths)
+          routing = sqlite3.connect(root / database['routing'])
+          assert routing.execute('SELECT COUNT(*) FROM generators').fetchone()[0] == 65536
+          routing.close()
+          aggregate = {key: 0 for key in ('generators','benchmarks','hyperedges','negative_controls','validations')}
+          for relative in database['partitions']:
+              db = sqlite3.connect(root / relative)
+              for table in aggregate:
+                  aggregate[table] += db.execute(f'SELECT COUNT(*) FROM {table}').fetchone()[0]
+              assert db.execute("SELECT COUNT(*) FROM validations WHERE risk_tier='high' AND validation_mode!='exhaustive_required'").fetchone()[0] == 0
+              db.close()
+          assert aggregate == database['counts']
+          PY
+      - name: Run R0.3 Ultra OAKBench against partitioned index
         run: python -m pytest tests/test_generator_discovery_r03_ultra.py
       - name: Record inventory
         run: |
           du -sh generated/omega_generator_discovery_r03_ultra
           find generated/omega_generator_discovery_r03_ultra -type f | sort
           find generated/omega_generator_discovery_r03_ultra -name '*.jsonl' -print0 | xargs -0 wc -l | tail -1
-      - name: Commit validated ultra atlas
+          find generated/omega_generator_discovery_r03_ultra/index -name '*.sqlite3' -printf '%s %p\n' | sort -nr | head
+      - name: Commit validated partitioned ultra atlas
         run: |
           target_branch="${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || 'feat/omega-generator-discovery-r0-3-ultra' }}"
           git config user.name 'github-actions[bot]'
@@ -101,6 +143,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'Ultra atlas already current.'
           else
-            git commit -m 'feat(generator-r03): materialize 393216 linked ultra records'
+            git commit -m 'feat(generator-r03): materialize 393216 linked partitioned records'
             git push origin "HEAD:${target_branch}"
           fi
