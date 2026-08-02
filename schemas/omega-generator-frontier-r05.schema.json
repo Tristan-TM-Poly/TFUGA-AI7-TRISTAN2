@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.example/schemas/omega-generator-frontier-r05.schema.json",
+  "title": "Omega Generator Discovery Frontier R0.5",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "shape",
+    "policy",
+    "requested_logical_records",
+    "planned_logical_records",
+    "epoch_count",
+    "total_partition_count",
+    "plan_fingerprint",
+    "no_permanent_total_addition_cap"
+  ],
+  "properties": {
+    "schema_version": {"const": "R0.5"},
+    "shape": {
+      "type": "object",
+      "required": [
+        "campaign_id",
+        "campaign_fingerprint",
+        "generator_count",
+        "records_per_bundle"
+      ],
+      "properties": {
+        "campaign_id": {"type": "string", "minLength": 1},
+        "campaign_fingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "generator_count": {"type": "integer", "minimum": 1},
+        "records_per_bundle": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "policy": {
+      "type": "object",
+      "required": [
+        "target_records_per_partition",
+        "bundles_per_shard",
+        "max_partitions_per_wave",
+        "max_matrix_entries",
+        "lease_seconds",
+        "validation_sample_ppm"
+      ],
+      "properties": {
+        "target_records_per_partition": {"type": "integer", "minimum": 1},
+        "bundles_per_shard": {"type": "integer", "minimum": 1},
+        "max_partitions_per_wave": {"type": "integer", "minimum": 1},
+        "max_matrix_entries": {"type": "integer", "minimum": 1},
+        "lease_seconds": {"type": "integer", "minimum": 1},
+        "validation_sample_ppm": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      },
+      "additionalProperties": false
+    },
+    "requested_logical_records": {"type": "integer", "minimum": 1},
+    "planned_logical_records": {"type": "integer", "minimum": 1},
+    "rounding_overage_records": {"type": "integer", "minimum": 0},
+    "total_generator_bundles": {"type": "integer", "minimum": 1},
+    "full_epochs": {"type": "integer", "minimum": 0},
+    "tail_generator_bundles": {"type": "integer", "minimum": 0},
+    "epoch_count": {"type": "integer", "minimum": 1},
+    "bundles_per_partition": {"type": "integer", "minimum": 1},
+    "full_epoch_partition_count": {"type": "integer", "minimum": 1},
+    "tail_partition_count": {"type": "integer", "minimum": 0},
+    "total_partition_count": {"type": "integer", "minimum": 1},
+    "plan_fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "generated_at": {"type": "string", "format": "date-time"},
+    "no_permanent_total_addition_cap": {"const": true},
+    "oak_boundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "frontierReceipt": {
+      "type": "object",
+      "required": [
+        "plan_fingerprint",
+        "partition_key",
+        "worker_id",
+        "logical_records",
+        "generator_bundles",
+        "mmr_root",
+        "leaf_count",
+        "validation_status",
+        "previous_receipt_hash",
+        "completed_at",
+        "receipt_hash"
+      ],
+      "properties": {
+        "plan_fingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "partition_key": {
+          "type": "string",
+          "pattern": "^P-[0-9]{15}-[0-9a-f]{16}$"
+        },
+        "worker_id": {"type": "string", "minLength": 1},
+        "logical_records": {"type": "integer", "minimum": 1},
+        "generator_bundles": {"type": "integer", "minimum": 1},
+        "mmr_root": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "leaf_count": {"type": "integer", "minimum": 1},
+        "validation_status": {
+          "enum": ["valid", "invalid", "partial", "blocked"]
+        },
+        "previous_receipt_hash": {
+          "type": "string",
+          "pattern": "^$|^[0-9a-f]{64}$"
+        },
+        "completed_at": {"type": "string", "format": "date-time"},
+        "receipt_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

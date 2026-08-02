@@ -1,0 +1,226 @@
+name: Omega Naruto Frontier Scale 1M
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_records:
+        description: Finite records for this experiment; not a permanent maximum
+        required: false
+        default: '1000000'
+      shard_records:
+        description: Records per deterministic gzip shard
+        required: false
+        default: '25000'
+      workers:
+        description: Local generation workers
+        required: false
+        default: '2'
+  pull_request:
+    paths:
+      - 'omega_naruto_hmagfm/frontier*.py'
+      - 'omega_naruto_hmagfm/scale_cli.py'
+      - 'tests/test_omega_naruto_frontier_scale.py'
+      - 'schemas/omega_naruto_scale_*.json'
+      - '.github/workflows/omega-naruto-frontier-scale.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-naruto-frontier-scale-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontier-scale:
+    name: Generate and validate 1M
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TARGET_RECORDS: ${{ github.event_name == 'workflow_dispatch' && inputs.target_records || '1000000' }}
+      SHARD_RECORDS: ${{ github.event_name == 'workflow_dispatch' && inputs.shard_records || '25000' }}
+      WORKERS: ${{ github.event_name == 'workflow_dispatch' && inputs.workers || '2' }}
+
+    steps:
+      - name: Checkout merge ref
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pip pytest jsonschema
+
+      - name: Compile scale engine
+        run: |
+          python -m compileall -q omega_naruto_hmagfm
+          python -m compileall -q tests/test_omega_naruto_frontier_scale.py
+
+      - name: Run scale unit and integration tests
+        run: python -m pytest -q tests/test_omega_naruto_frontier_scale.py
+
+      - name: Plan finite million-scale run
+        run: |
+          mkdir -p generated/omega_naruto/scale-1m
+          python -m omega_naruto_hmagfm.scale_cli plan \
+            --target "$TARGET_RECORDS" \
+            --shard-records "$SHARD_RECORDS" \
+            > generated/omega_naruto/scale-plan.json
+
+      - name: Generate compressed deterministic frontier
+        run: |
+          python -m omega_naruto_hmagfm.scale_cli generate \
+            --output-dir generated/omega_naruto/scale-1m \
+            --target "$TARGET_RECORDS" \
+            --shard-records "$SHARD_RECORDS" \
+            --workers "$WORKERS" \
+            --compression-level 6 \
+            > generated/omega_naruto/scale-generation.json
+          cp generated/omega_naruto/scale-1m/scale-manifest.json \
+            generated/omega_naruto/scale-manifest-first.json
+
+      - name: Prove zero-regeneration resume
+        run: |
+          python -m omega_naruto_hmagfm.scale_cli generate \
+            --output-dir generated/omega_naruto/scale-1m \
+            --target "$TARGET_RECORDS" \
+            --shard-records "$SHARD_RECORDS" \
+            --workers "$WORKERS" \
+            --compression-level 6 \
+            > generated/omega_naruto/scale-resume.json
+
+      - name: Stream-validate corpus
+        run: |
+          python -m omega_naruto_hmagfm.scale_cli validate \
+            --output-dir generated/omega_naruto/scale-1m \
+            --report generated/omega_naruto/scale-validation.json \
+            > generated/omega_naruto/scale-validation-stdout.json
+
+      - name: Build exact index and M-minus telemetry
+        run: |
+          python -m omega_naruto_hmagfm.scale_cli index \
+            --output-dir generated/omega_naruto/scale-1m \
+            --destination generated/omega_naruto/scale-index.json \
+            --sample-limit 128 \
+            > generated/omega_naruto/scale-index-stdout.json
+
+      - name: Validate schemas, hashes, coverage, and deterministic routing
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          from jsonschema import Draft202012Validator
+
+          root = Path('generated/omega_naruto')
+          target = int(os.environ['TARGET_RECORDS'])
+          shard_records = int(os.environ['SHARD_RECORDS'])
+          plan = json.loads((root / 'scale-plan.json').read_text(encoding='utf-8'))
+          first = json.loads((root / 'scale-manifest-first.json').read_text(encoding='utf-8'))
+          resumed = json.loads((root / 'scale-resume.json').read_text(encoding='utf-8'))
+          validation = json.loads((root / 'scale-validation.json').read_text(encoding='utf-8'))
+          validation_stdout = json.loads((root / 'scale-validation-stdout.json').read_text(encoding='utf-8'))
+          index = json.loads((root / 'scale-index.json').read_text(encoding='utf-8'))
+          index_stdout = json.loads((root / 'scale-index-stdout.json').read_text(encoding='utf-8'))
+
+          schemas = {
+              'manifest': json.loads(Path('schemas/omega_naruto_scale_manifest_v2.schema.json').read_text(encoding='utf-8')),
+              'validation': json.loads(Path('schemas/omega_naruto_scale_validation_v2.schema.json').read_text(encoding='utf-8')),
+              'index': json.loads(Path('schemas/omega_naruto_scale_index_v2.schema.json').read_text(encoding='utf-8')),
+          }
+          for schema in schemas.values():
+              Draft202012Validator.check_schema(schema)
+          Draft202012Validator(schemas['manifest']).validate(resumed)
+          Draft202012Validator(schemas['validation']).validate(validation)
+          Draft202012Validator(schemas['index']).validate(index)
+
+          expected_shards = (target + shard_records - 1) // shard_records
+          assert plan['partition_count'] == expected_shards
+          assert first['written_records'] == target
+          assert first['generated_shards'] == expected_shards
+          assert first['resumed_shards'] == 0
+          assert first['complete'] is True
+          assert first['compression'] == 'gzip'
+          assert first['compression_ratio'] > 1.0
+          assert resumed['written_records'] == target
+          assert resumed['generated_shards'] == 0
+          assert resumed['resumed_shards'] == expected_shards
+          assert resumed['logical_corpus_sha256'] == first['logical_corpus_sha256']
+          assert resumed['merkle_root_sha256'] == first['merkle_root_sha256']
+
+          assert validation == validation_stdout
+          assert validation['valid'] is True
+          assert validation['observed_records'] == target
+          assert validation['observed_shards'] == expected_shards
+          assert validation['findings'] == []
+          assert validation['logical_corpus_sha256'] == first['logical_corpus_sha256']
+          assert validation['merkle_root_sha256'] == first['merkle_root_sha256']
+
+          assert index == index_stdout
+          assert index['indexed_records'] == target
+          assert index['indexed_shards'] == expected_shards
+          assert sum(index['counts_by_epoch'].values()) == target
+          assert sum(index['counts_by_operator'].values()) == target
+          assert sum(index['counts_by_domain'].values()) == target
+          assert sum(index['counts_by_oak_action'].values()) == target
+
+          if target == 1_000_000:
+              assert first['shard_count'] == 40
+              assert first['completed_epochs_after'] == 15
+              assert first['partial_epoch_records_after'] == 32_320
+              assert index['covered_local_combinations'] == 64_512
+              assert index['local_coverage_fraction'] == 1.0
+              assert len(index['counts_by_epoch']) == 16
+              assert index['blocked_records'] == 500_000
+              assert index['mminus_records'] == 625_004
+              assert index['human_review_records'] == 187_498
+              assert index['locally_ranked_records'] == 156_249
+              assert index['counts_by_oak_action']['RECOMPUTE_GATES_BEFORE_SELECTION'] == 31_249
+              assert index['repeated_axis_realizations'] == 935_488
+              assert len(index['samples']) == 128
+          PY
+
+      - name: Write compact proof summary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('generated/omega_naruto')
+          manifest = json.loads((root / 'scale-manifest-first.json').read_text(encoding='utf-8'))
+          validation = json.loads((root / 'scale-validation.json').read_text(encoding='utf-8'))
+          index = json.loads((root / 'scale-index.json').read_text(encoding='utf-8'))
+          summary = {
+              'schema': 'omega_naruto_frontier.scale_proof.v2',
+              'records': manifest['written_records'],
+              'shards': manifest['shard_count'],
+              'workers': manifest['worker_count'],
+              'compression_ratio': manifest['compression_ratio'],
+              'records_per_second_initial': manifest['records_per_second'],
+              'logical_corpus_sha256': manifest['logical_corpus_sha256'],
+              'merkle_root_sha256': manifest['merkle_root_sha256'],
+              'validation_valid': validation['valid'],
+              'local_coverage_fraction': index['local_coverage_fraction'],
+              'completed_epochs': index['completed_epochs'],
+              'mminus_records': index['mminus_records'],
+              'blocked_records': index['blocked_records'],
+              'non_claim': 'Scale proof demonstrates deterministic capacity and integrity, not scientific truth.',
+          }
+          (root / 'scale-proof.json').write_text(
+              json.dumps(summary, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload full compressed million-scale proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-naruto-frontier-scale-${{ env.TARGET_RECORDS }}
+          path: generated/omega_naruto/**
+          if-no-files-found: error
+          retention-days: 30

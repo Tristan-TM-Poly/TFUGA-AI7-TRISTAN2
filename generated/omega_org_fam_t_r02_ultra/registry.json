@@ -1,0 +1,186 @@
+{
+  "version": "R0.2-ultra",
+  "axes": [
+    {
+      "name": "skeleton",
+      "values": [
+        "acyclic_linear",
+        "acyclic_branched",
+        "monocyclic_aliphatic",
+        "fused_polycyclic",
+        "bridged_polycyclic",
+        "spirocyclic",
+        "monocyclic_aromatic",
+        "fused_aromatic",
+        "heterocyclic_saturated",
+        "heteroaromatic",
+        "macrocyclic",
+        "cage",
+        "polymeric_linear",
+        "polymeric_crosslinked",
+        "dendritic",
+        "conjugated_backbone"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "functional_family",
+      "values": [
+        "hydrocarbon",
+        "alkene_alkyne",
+        "alcohol_phenol",
+        "ether_epoxide",
+        "aldehyde_ketone",
+        "carboxylic_acid",
+        "ester_anhydride",
+        "amide_imide",
+        "amine_imine",
+        "nitrile_isocyanate",
+        "thiol_sulfide",
+        "sulfoxide_sulfone",
+        "organohalogen",
+        "organophosphorus",
+        "organosilicon",
+        "multifunctional_mixed"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "electronic_class",
+      "values": [
+        "saturated_sigma",
+        "isolated_pi",
+        "conjugated_pi",
+        "aromatic_delocalized",
+        "electron_rich_donor",
+        "electron_poor_acceptor",
+        "push_pull_charge_transfer",
+        "radical_or_open_shell"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "reaction_archetype",
+      "values": [
+        "substitution",
+        "addition",
+        "elimination",
+        "oxidation_reduction",
+        "condensation_hydrolysis",
+        "cyclization_ring_opening",
+        "polymerization_depolymerization",
+        "rearrangement_fragmentation"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "stereo_class",
+      "values": [
+        "achiral_or_unspecified",
+        "central_chirality",
+        "geometric_e_z",
+        "axial_planar_or_topological"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "environment",
+      "values": [
+        "gas_phase",
+        "neat_or_liquid",
+        "solid_or_crystalline",
+        "solution_or_interface"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "isotope_profile",
+      "values": [
+        "natural_abundance",
+        "deuterium_enriched",
+        "carbon13_enriched",
+        "heteroatom_isotope_enriched"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "protonation_state",
+      "values": [
+        "neutral",
+        "cationic",
+        "anionic",
+        "zwitterionic",
+        "protonated",
+        "deprotonated",
+        "multiply_charged",
+        "unspecified_charge_state"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "conformer_class",
+      "values": [
+        "rigid",
+        "single_rotor",
+        "few_rotors",
+        "flexible_chain",
+        "ring_pucker",
+        "folded",
+        "extended",
+        "conformational_ensemble"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "solvent_class",
+      "values": [
+        "vacuum_or_gas",
+        "nonpolar_aprotic",
+        "polar_aprotic",
+        "polar_protic",
+        "aqueous",
+        "ionic_liquid",
+        "supercritical",
+        "heterogeneous_interface"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "temperature_regime",
+      "values": [
+        "cryogenic",
+        "low",
+        "ambient",
+        "moderate",
+        "high",
+        "very_high",
+        "phase_transition_window",
+        "unspecified_temperature"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    },
+    {
+      "name": "pressure_regime",
+      "values": [
+        "low_pressure",
+        "ambient_pressure",
+        "high_pressure",
+        "extreme_pressure"
+      ],
+      "provenance": "omega_org_fam_t_curated_r02",
+      "status": "controlled_vocabulary"
+    }
+  ],
+  "fingerprint": "a9807beea636a5c36634cfa9969d477f283b9474fb66ff39876806ec7270ed38"
+}

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_naruto_report_v1_2.schema.json",
+  "title": "Omega Naruto OAK Report v1.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "oak_boundary",
+    "accepted",
+    "ranked_proposal_ids",
+    "contradictions",
+    "publication_gate",
+    "genjutsu_findings",
+    "benchmark",
+    "robustness",
+    "hgfmn_graph",
+    "mminus"
+  ],
+  "properties": {
+    "schema": {"const": "omega_naruto_hmagfm.report.v1.2"},
+    "oak_boundary": {"type": "string", "minLength": 1},
+    "accepted": {"type": ["object", "null"]},
+    "ranked_proposal_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [{"type": "string"}, {"type": "string"}],
+        "minItems": 2,
+        "maxItems": 2
+      }
+    },
+    "publication_gate": {"type": ["object", "null"]},
+    "genjutsu_findings": {"type": "object"},
+    "benchmark": {
+      "type": "object",
+      "required": [
+        "expected_proposal_id",
+        "oak_merge_id",
+        "majority_vote_id",
+        "highest_confidence_id",
+        "oak_merge_correct",
+        "majority_vote_correct",
+        "highest_confidence_correct"
+      ]
+    },
+    "robustness": {
+      "type": "object",
+      "required": [
+        "base_winner_id",
+        "stable_fraction",
+        "unstable_scenarios",
+        "scenario_decisions",
+        "non_claim"
+      ],
+      "properties": {
+        "base_winner_id": {"type": ["string", "null"]},
+        "stable_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "unstable_scenarios": {"type": "array", "items": {"type": "string"}},
+        "scenario_decisions": {"type": "array", "items": {"type": "object"}},
+        "non_claim": {"type": "string", "minLength": 1}
+      }
+    },
+    "hgfmn_graph": {
+      "$ref": "omega_naruto_hgfmn_graph.schema.json"
+    },
+    "mminus": {
+      "type": "object",
+      "required": ["entries", "next_action"]
+    }
+  }
+}
