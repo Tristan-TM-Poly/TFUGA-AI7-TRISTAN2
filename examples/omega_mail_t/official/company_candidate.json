@@ -1,0 +1,18 @@
+{
+  "company_id": "tristan_parent_opco",
+  "conceptual_name": "Tristan Company Foundry",
+  "state": "IDEA",
+  "legal_name": null,
+  "operating_name": null,
+  "jurisdiction": "QC",
+  "neq": null,
+  "corporation_number": null,
+  "domain": null,
+  "legal_identity_verified": false,
+  "domain_control_verified": false,
+  "spf_verified": false,
+  "dkim_verified": false,
+  "dmarc_verified": false,
+  "external_send_enabled": false,
+  "evidence_ids": []
+}
