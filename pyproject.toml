@@ -14,7 +14,6 @@ omega-wiki = "omega_wiki_t.cli:main"
 omega-quaternion-crystal = "omega_quaternion_crystal_t.cli:main"
 omega-logexp-morph = "omega_logexp_morph_t.cli:main"
 omega-unbounded = "omega_unbounded_t.cli:main"
-omega-naruto-oak = "omega_naruto_hmagfm.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
