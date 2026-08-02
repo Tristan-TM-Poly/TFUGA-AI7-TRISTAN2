@@ -1,0 +1,90 @@
+name: OAKGate CI
+
+on:
+  pull_request:
+    paths:
+      - "oakgate/**"
+      - "schemas/oak_*.schema.json"
+      - "rules/oakgate.*.json"
+      - "tests/test_oakgate*.py"
+      - "examples/oakgate_claim*"
+      - "docs/OAKGATE_R0_*.md"
+      - "pyproject.toml"
+      - ".github/workflows/oakgate-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "oakgate/**"
+      - "schemas/oak_*.schema.json"
+      - "rules/oakgate.*.json"
+      - "tests/test_oakgate*.py"
+      - "examples/oakgate_claim*"
+      - "docs/OAKGATE_R0_*.md"
+      - "pyproject.toml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install test runner
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+
+      - name: Compile OAKGate
+        run: python -m compileall -q oakgate
+
+      - name: Run OAKGate tests
+        run: python -m pytest tests/test_oakgate.py tests/test_oakgate_max.py -q
+
+      - name: Scan JSON example
+        run: python -m oakgate.cli scan examples/oakgate_claim.json --format json
+
+      - name: Scan Markdown example with deeptech rules
+        run: |
+          python -m oakgate.cli scan examples/oakgate_claims.md \
+            --rules rules/oakgate.deeptech.json \
+            --format markdown >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Generate provenance manifest
+        run: |
+          mkdir -p reports
+          python -m oakgate.cli hash \
+            examples/oakgate_claim.json \
+            examples/oakgate_claims.md \
+            --output reports/oakgate-provenance.json
+
+      - name: Generate SARIF report
+        run: |
+          python -m oakgate.cli scan \
+            examples/oakgate_claim.json \
+            examples/oakgate_claims.md \
+            --format sarif \
+            --output reports/oakgate.sarif
+
+      - name: Upload OAKGate reports
+        if: always() && matrix.python-version == '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: oakgate-r0-2-reports
+          path: |
+            reports/oakgate.sarif
+            reports/oakgate-provenance.json
+          if-no-files-found: error

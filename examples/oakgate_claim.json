@@ -1,0 +1,21 @@
+{
+  "claim_id": "OAK-R0.2-EXAMPLE-JSON-001",
+  "text": "OAKGate R0.2 is a deterministic local software guardrail that reports configured claim failures.",
+  "status": "F2",
+  "layer": "TheoryOS",
+  "evidence": [
+    "docs/OAKGATE_R0_2.md",
+    "tests/test_oakgate.py",
+    "tests/test_oakgate_max.py"
+  ],
+  "artifacts": [],
+  "uncertainty": 0.35,
+  "risks": [
+    "false_positive",
+    "false_negative",
+    "policy_drift"
+  ],
+  "ip_classification": "OPEN_SOURCE",
+  "public_intent": true,
+  "source_attributions": []
+}

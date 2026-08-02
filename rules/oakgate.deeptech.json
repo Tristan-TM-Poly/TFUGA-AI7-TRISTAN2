@@ -1,0 +1,41 @@
+{
+  "name": "oakgate-deeptech-public-safe",
+  "version": "0.2.0",
+  "rules": [
+    {
+      "code": "DEEPTECH-FREE-ENERGY-001",
+      "pattern": "(?:énergie gratuite|free energy|over-unity)",
+      "severity": "BLOCK",
+      "message": "Unbounded energy language detected.",
+      "remediation": "Provide a complete measured energy balance or remove the claim."
+    },
+    {
+      "code": "DEEPTECH-CERTIFICATION-001",
+      "pattern": "(?:certifié|certified) (?:device|performance|credit|reactor)",
+      "severity": "BLOCK",
+      "message": "Certification is asserted without a named certifier and record.",
+      "remediation": "Attach the certification record or use prototype/simulation wording."
+    },
+    {
+      "code": "DEEPTECH-AUTONOMY-001",
+      "pattern": "(?:autonomous final decision|décision publique automatique)",
+      "severity": "BLOCK",
+      "message": "A sensitive final decision is delegated without human authority.",
+      "remediation": "Convert the output to review support and require explicit human approval."
+    },
+    {
+      "code": "DEEPTECH-PATENT-001",
+      "pattern": "(?:patent-proven|brevet prouvé|brevet garanti)",
+      "severity": "BLOCK",
+      "message": "Patent validity or grant is overstated.",
+      "remediation": "Use patent candidate or patent-like technical record pending legal review."
+    },
+    {
+      "code": "DEEPTECH-REVENUE-001",
+      "pattern": "(?:guaranteed revenue|revenu garanti)",
+      "severity": "BLOCK",
+      "message": "Guaranteed revenue language detected.",
+      "remediation": "Report observed sales or a bounded scenario with costs and uncertainty."
+    }
+  ]
+}
