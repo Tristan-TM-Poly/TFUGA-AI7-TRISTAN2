@@ -13,12 +13,26 @@ from .core import (
     MMinusLedger,
     SyntheticCapacityExecutor,
 )
+from .github_planner import (
+    GitHubDryRunPlanner,
+    GitHubPlanPolicy,
+    iter_jsonl,
+    synthetic_additions,
+)
+
+
+def _add_plan_policy_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--initial-shard-bytes", type=int, default=262_144)
+    parser.add_argument("--shard-growth-factor", type=float, default=2.0)
+    parser.add_argument("--strict-records", action="store_true")
+    parser.add_argument("--require-provenance", action="store_true")
+    parser.add_argument("--branch", default="feat/omega-unbounded-generated")
 
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="omega-unbounded",
-        description="Ω-SANS-PLAFOND-T∞ adaptive frontier-discovery engine.",
+        description="Ω-SANS-PLAFOND-T∞ adaptive frontier-discovery and GitHub planning engine.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -37,6 +51,23 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Pause at the first discovered frontier instead of adapting the synthetic executor.",
     )
+
+    plan = sub.add_parser(
+        "plan",
+        help="Compile a JSONL stream of logical additions into a reversible GitHub dry-run tree plan.",
+    )
+    plan.add_argument("input", help="JSONL file containing one logical addition object per line.")
+    plan.add_argument("--output-dir", default="generated/omega_unbounded_github_plan")
+    _add_plan_policy_arguments(plan)
+
+    synthetic_plan = sub.add_parser(
+        "synthetic-plan",
+        help="Stress the streaming GitHub planner with a finite generated workload.",
+    )
+    synthetic_plan.add_argument("--work-items", type=int, default=100_000)
+    synthetic_plan.add_argument("--namespaces", type=int, default=8)
+    synthetic_plan.add_argument("--output-dir", default="generated/omega_unbounded_synthetic_plan")
+    _add_plan_policy_arguments(synthetic_plan)
     return parser
 
 
@@ -78,12 +109,39 @@ def _simulate(args: argparse.Namespace) -> int:
     return 0 if report.status == "completed" else 2
 
 
+def _plan_policy(args: argparse.Namespace) -> GitHubPlanPolicy:
+    return GitHubPlanPolicy(
+        initial_shard_bytes=args.initial_shard_bytes,
+        shard_growth_factor=args.shard_growth_factor,
+        strict_records=args.strict_records,
+        require_provenance=args.require_provenance,
+    )
+
+
+def _run_plan(args: argparse.Namespace, records: object) -> int:
+    planner = GitHubDryRunPlanner(
+        args.output_dir,
+        policy=_plan_policy(args),
+        proposed_branch=args.branch,
+    )
+    report = planner.plan(records)  # type: ignore[arg-type]
+    print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     try:
         if args.command == "simulate":
             return _simulate(args)
-    except (OSError, ValueError) as exc:
+        if args.command == "plan":
+            return _run_plan(args, iter_jsonl(args.input))
+        if args.command == "synthetic-plan":
+            return _run_plan(
+                args,
+                synthetic_additions(args.work_items, namespaces=args.namespaces),
+            )
+    except (OSError, ValueError, TypeError, sqlite3.Error) as exc:
         print(f"omega-unbounded: {exc}", file=sys.stderr)
         return 2
     raise AssertionError(f"Unhandled command: {args.command}")
