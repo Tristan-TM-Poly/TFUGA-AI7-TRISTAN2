@@ -1,7 +1,7 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "3.2.0"
-description = "Omega absorb and OAK-safe public research tooling"
+version = "3.3.0"
+description = "Omega absorb, convergence and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
 [project.scripts]
@@ -24,8 +24,8 @@ omega-generator-frontier = "omega_generator_discovery_t.frontier_cli:main"
 omega-organic-family = "omega_org_fam_t.cli:main"
 omega-organic-family-ultra = "omega_org_fam_t.ultra_cli:main"
 omega-organic-evidence = "omega_org_fam_t.r03_cli:main"
-
 omega-plasma = "omega_plasma_t.cli:main"
+omega-convergence = "omega_convergence_os.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
