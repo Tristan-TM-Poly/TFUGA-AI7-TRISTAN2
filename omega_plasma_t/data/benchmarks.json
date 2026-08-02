@@ -1,0 +1,212 @@
+[
+  {
+    "id": "plasma_oscillation",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 0
+  },
+  {
+    "id": "debye_shielding",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 1
+  },
+  {
+    "id": "landau_damping",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 2
+  },
+  {
+    "id": "two_stream",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 3
+  },
+  {
+    "id": "buneman",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 4
+  },
+  {
+    "id": "ion_acoustic_wave",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 5
+  },
+  {
+    "id": "alfven_wave",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 6
+  },
+  {
+    "id": "whistler_wave",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 7
+  },
+  {
+    "id": "cyclotron_motion",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 8
+  },
+  {
+    "id": "exb_drift",
+    "tier": 1,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 9
+  },
+  {
+    "id": "planar_sheath",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 10
+  },
+  {
+    "id": "child_langmuir_law",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 11
+  },
+  {
+    "id": "ambipolar_diffusion",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 12
+  },
+  {
+    "id": "classical_resistivity",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 13
+  },
+  {
+    "id": "braginskii_transport",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 14
+  },
+  {
+    "id": "orszag_tang_mhd",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 15
+  },
+  {
+    "id": "brio_wu_shock_tube",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 16
+  },
+  {
+    "id": "tearing_mode",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 17
+  },
+  {
+    "id": "magnetic_reconnection_gem",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 18
+  },
+  {
+    "id": "kelvin_helmholtz",
+    "tier": 2,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 19
+  },
+  {
+    "id": "rayleigh_taylor",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 20
+  },
+  {
+    "id": "weibel",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 21
+  },
+  {
+    "id": "laser_wakefield",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 22
+  },
+  {
+    "id": "dust_acoustic_wave",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 23
+  },
+  {
+    "id": "saha_equilibrium",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 24
+  },
+  {
+    "id": "coronal_equilibrium",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 25
+  },
+  {
+    "id": "global_chemistry_conservation",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 26
+  },
+  {
+    "id": "surface_charge_balance",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 27
+  },
+  {
+    "id": "warm_dense_eos_limit",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 28
+  },
+  {
+    "id": "pair_plasma_symmetry",
+    "tier": 3,
+    "required_metrics": ["error norm", "conservation residue", "runtime", "resolution", "reproducibility"],
+    "pass_policy": {"analytic_or_reference_agreement": true, "convergence_required": true, "negative_control_required": true},
+    "index": 29
+  }
+]
