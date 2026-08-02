@@ -1,0 +1,77 @@
+name: Tristan Web OS Catalog Expansion
+
+on:
+  push:
+    branches:
+      - feat/tristan-web-os-r0-1
+    paths:
+      - scripts/generate_tristan_web_os_catalog.py
+      - scripts/tristan_web_catalog_seed_*.py
+      - .github/workflows/tristan-web-os-catalog.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tristan-web-os-catalog-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate-public-catalog:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate reviewable catalog
+        run: python scripts/generate_tristan_web_os_catalog.py
+
+      - name: Verify exact public counts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = Path('apps/tristan-8fire-site/data')
+          expected = {'theories': 44, 'claims': 133, 'relations': 268}
+          actual = {
+              key: len(json.loads((data / f'{key}.json').read_text(encoding='utf-8'))[key])
+              for key in expected
+          }
+          if actual != expected:
+              raise SystemExit(f'catalog mismatch: expected={expected}, actual={actual}')
+          cards = list(Path('content/generated/theory-cards').glob('*.md'))
+          if len(cards) != 44:
+              raise SystemExit(f'expected 44 theory cards, got {len(cards)}')
+          print({'counts': actual, 'theory_cards': len(cards)})
+          PY
+
+      - name: Commit generated public artifacts
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            apps/tristan-8fire-site/data/theories.json \
+            apps/tristan-8fire-site/data/claims.json \
+            apps/tristan-8fire-site/data/relations.json \
+            content/generated/CATALOG_SUMMARY.md \
+            content/generated/CLAIM_INDEX.md \
+            content/generated/RELATION_INDEX.md \
+            content/generated/theory-cards
+          if git diff --cached --quiet; then
+            echo 'Generated catalog is already current.'
+            exit 0
+          fi
+          git commit -m 'generated(web): materialize 44 theories, 133 claims and 268 relations [skip ci]'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
