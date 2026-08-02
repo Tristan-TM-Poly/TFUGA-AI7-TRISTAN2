@@ -2,6 +2,14 @@
 
 from .cvcd_atlas import AtlasAudit, AtlasCell, CVCDAtlas
 from .engine import ScenarioRunner, run_scenario
+from .hardening import (
+    LedgerEntry,
+    LedgerReservation,
+    OneMessageLedger,
+    recipient_hash,
+    validate_approval_for_execution,
+    validate_delivery_draft,
+)
 from .models import MailMessage, Mailbox
 from .oak import OAKDecision, OAKMailGate
 from .officialization import (
@@ -16,7 +24,14 @@ from .officialization import (
     OfficialMessageDraft,
     OfficializationGate,
 )
-from .production import DeliveryReceipt, DryRunProvider, SMTPConfig, SMTPProvider, deliver_one
+from .production import (
+    DeliveryReceipt,
+    DryRunProvider,
+    SMTPConfig,
+    SMTPProvider,
+    deliver_one,
+    render_message,
+)
 from .transport import InMemoryTransport
 
 __all__ = [
@@ -30,6 +45,8 @@ __all__ = [
     "DeliveryReceipt",
     "DryRunProvider",
     "InMemoryTransport",
+    "LedgerEntry",
+    "LedgerReservation",
     "MailAuthority",
     "MailMessage",
     "Mailbox",
@@ -40,11 +57,16 @@ __all__ = [
     "OfficialGateReport",
     "OfficialMessageDraft",
     "OfficializationGate",
+    "OneMessageLedger",
     "SMTPConfig",
     "SMTPProvider",
     "ScenarioRunner",
     "deliver_one",
+    "recipient_hash",
+    "render_message",
     "run_scenario",
+    "validate_approval_for_execution",
+    "validate_delivery_draft",
 ]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
