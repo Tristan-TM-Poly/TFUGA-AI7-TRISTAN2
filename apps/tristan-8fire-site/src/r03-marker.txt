@@ -1,2 +1,0 @@
-Tristan Web OS R0.3 application layer
-Merge-max validation marker: 2026-08-02T19:20:00Z
