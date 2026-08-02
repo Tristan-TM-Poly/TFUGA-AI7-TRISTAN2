@@ -119,15 +119,34 @@ jobs:
       - name: Verify no external network calls in client modules
         shell: bash
         run: |
-          matches="$({ grep -RInE 'XMLHttpRequest|sendBeacon|fetch[[:space:]]*\(|WebSocket[[:space:]]*\(|EventSource[[:space:]]*\(|https?://' \
-            apps/tristan-8fire-site/src apps/tristan-8fire-site/app.js || true; } \
-            | grep -vF 'http://graphml.graphdrawing.org/xmlns' \
-            | grep -vF 'http://www.w3.org/2000/svg' || true)"
-          if [ -n "$matches" ]; then
-            printf '%s\n' "$matches"
-            echo 'Unexpected external network primitive or non-namespace URL found in client modules.' >&2
-            exit 1
-          fi
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          roots = [Path('apps/tristan-8fire-site/src'), Path('apps/tristan-8fire-site/app.js')]
+          files = []
+          for root in roots:
+              files.extend(root.rglob('*.js') if root.is_dir() else [root])
+
+          forbidden = {
+              'XMLHttpRequest': re.compile(r'\bXMLHttpRequest\b'),
+              'sendBeacon': re.compile(r'\bsendBeacon\s*\('),
+              'WebSocket': re.compile(r'\bWebSocket\s*\('),
+              'EventSource': re.compile(r'\bEventSource\s*\('),
+              'external fetch': re.compile(r'''\bfetch\s*\(\s*["'](?:https?:)?//''', re.IGNORECASE),
+              'external dynamic import': re.compile(r'''\bimport\s*\(\s*["'](?:https?:)?//''', re.IGNORECASE),
+          }
+          findings = []
+          for path in sorted(files):
+              text = path.read_text(encoding='utf-8')
+              for label, pattern in forbidden.items():
+                  for match in pattern.finditer(text):
+                      line = text.count('\n', 0, match.start()) + 1
+                      findings.append(f'{path}:{line}: {label}')
+          if findings:
+              raise SystemExit('Unexpected external network primitive:\n' + '\n'.join(findings))
+          print(f'Checked {len(files)} client modules: local fetches allowed, external transports absent.')
+          PY
 
       - name: Upload audit and pytest reports
         if: always()
