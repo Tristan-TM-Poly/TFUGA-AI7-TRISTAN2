@@ -86,7 +86,7 @@ omega-wiki absorb-theory \
   --output-dir generated/omega_wiki_t/theory-canon-r0-2
 ```
 
-The current canon absorption emits 96 nodes and 94 hyperedges. It preserves systems, layers, workflow stages, OAK statuses, risks, next actions, repository paths, priorities, and curated core relations. The utility score is a navigation heuristic, not a truth probability or economic valuation.
+The current canon absorption emits 92 nodes and 94 hyperedges. It preserves systems, layers, workflow stages, OAK statuses, risks, next actions, repository paths, priorities, and curated core relations. The utility score is a navigation heuristic, not a truth probability or economic valuation.
 
 WikiForge-T remains extraction and knowledge-organization infrastructure, not factual certification. Wikipedia text is not proof; a citation marker is not automatically support; repository canon is not automatically scientific validation; a generated hyperedge remains a reviewable knowledge candidate.
 
