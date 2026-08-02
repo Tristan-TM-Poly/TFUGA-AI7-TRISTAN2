@@ -11,6 +11,7 @@ import { renderDashboard } from "./views/dashboard.js";
 import { renderEvidence } from "./views/evidence.js";
 import { renderGraph } from "./views/graph.js";
 import { renderMminus } from "./views/mminus.js";
+import { renderOakGate } from "./views/oakgate.js";
 import { renderProvenance } from "./views/provenance.js";
 import { renderRoadmap } from "./views/roadmap.js";
 import { renderTheory } from "./views/theory.js";
@@ -24,6 +25,7 @@ const ROUTES = Object.freeze({
   graph: renderGraph,
   evidence: renderEvidence,
   provenance: renderProvenance,
+  oakgate: renderOakGate,
   mminus: renderMminus,
   roadmap: renderRoadmap,
   about: renderAbout
