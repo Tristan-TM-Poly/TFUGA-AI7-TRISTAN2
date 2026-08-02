@@ -19,11 +19,8 @@ from .github_planner import (
     iter_jsonl,
     synthetic_additions,
 )
-from .self_improvement import (
-    SelfImprovementLab,
-    default_scenarios,
-    iter_variants_jsonl,
-)
+from .self_improvement import default_scenarios, iter_variants_jsonl
+from .self_improvement_judge import ResourceAwareSelfImprovementLab
 from .streaming import MPlusLedger, RangeWorkSource, ResourceSampler
 
 
@@ -88,6 +85,8 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Optional JSONL stream of controller variants; consumed until file exhaustion.",
     )
     self_improve.add_argument("--minimum-improvement-ratio", type=float, default=0.02)
+    self_improve.add_argument("--overshoot-penalty-weight", type=float, default=10.0)
+    self_improve.add_argument("--maximum-overshoot-multiplier", type=float, default=2.0)
     self_improve.add_argument(
         "--output-dir",
         default="generated/omega_unbounded_self_improvement",
@@ -176,10 +175,12 @@ def _run_plan(args: argparse.Namespace, records: Any) -> int:
 def _self_improve(args: argparse.Namespace) -> int:
     scenarios = default_scenarios(args.work_items)
     candidates = iter_variants_jsonl(args.candidates) if args.candidates else None
-    report = SelfImprovementLab(
+    report = ResourceAwareSelfImprovementLab(
         args.output_dir,
         scenarios=scenarios,
         minimum_improvement_ratio=args.minimum_improvement_ratio,
+        overshoot_penalty_weight=args.overshoot_penalty_weight,
+        maximum_overshoot_multiplier=args.maximum_overshoot_multiplier,
     ).run(candidates)
     payload = report.to_dict()
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
