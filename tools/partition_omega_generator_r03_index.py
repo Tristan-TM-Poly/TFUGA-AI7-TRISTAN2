@@ -177,11 +177,15 @@ def partition_index(root: Path) -> dict[str, object]:
         "negative_controls": int(manifest["counts"]["negative_controls"]),
         "validations": int(manifest["counts"]["validations"]),
     }
-    routing_count = sqlite3.connect(routing_path).execute("SELECT COUNT(*) FROM generators").fetchone()[0]
+    routing_connection = sqlite3.connect(routing_path)
+    try:
+        routing_count = routing_connection.execute("SELECT COUNT(*) FROM generators").fetchone()[0]
+    finally:
+        routing_connection.close()
     if aggregate != expected or routing_count != expected["generators"]:
         raise ValueError({"aggregate": aggregate, "expected": expected, "routing_count": routing_count})
 
-    sizes = {str(path.relative_to(root)): path.stat().st_size for path in [routing_path, *partition_paths]}
+    sizes = {str(path.relative_to(output)): path.stat().st_size for path in [routing_path, *partition_paths]}
     too_large = {path: size for path, size in sizes.items() if size >= 100_000_000}
     if too_large:
         raise ValueError({"files_over_github_limit": too_large})
@@ -189,8 +193,8 @@ def partition_index(root: Path) -> dict[str, object]:
     source_path.unlink()
     manifest["database"] = {
         "mode": "partitioned_by_domain",
-        "routing": str(routing_path.relative_to(root)),
-        "partitions": [str(path.relative_to(root)) for path in partition_paths],
+        "routing": str(routing_path.relative_to(output)),
+        "partitions": [str(path.relative_to(output)) for path in partition_paths],
         "counts": aggregate,
         "maximum_partition_bytes": max(sizes.values()),
     }
