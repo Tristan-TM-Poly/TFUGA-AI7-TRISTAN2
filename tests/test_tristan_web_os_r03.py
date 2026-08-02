@@ -74,10 +74,10 @@ def test_all_public_theories_have_four_gates_and_negative_memory() -> None:
 def test_application_registers_all_public_views() -> None:
     app = (SITE / "src" / "application.js").read_text(encoding="utf-8")
     html = (SITE / "index.html").read_text(encoding="utf-8")
-    routes = ["dashboard", "atlas", "theory", "claims", "claim", "graph", "evidence", "mminus", "roadmap", "about"]
+    routes = ["dashboard", "atlas", "theory", "claims", "claim", "graph", "evidence", "provenance", "mminus", "roadmap", "about"]
     for route in routes:
         assert f"{route}:" in app
-    for route in ["dashboard", "atlas", "claims", "graph", "evidence", "mminus", "roadmap", "about"]:
+    for route in ["dashboard", "atlas", "claims", "graph", "evidence", "provenance", "mminus", "roadmap", "about"]:
         assert f'data-route="{route}"' in html
     assert 'type="module"' in html
     assert 'id="global-search"' in html
@@ -87,8 +87,8 @@ def test_application_registers_all_public_views() -> None:
 def test_offline_shell_covers_data_and_modules() -> None:
     worker = (SITE / "sw.js").read_text(encoding="utf-8")
     for item in [
-        "data/theories.json", "data/claims.json", "data/relations.json",
-        "src/application.js", "src/data-store.js", "src/views/graph.js",
+        "data/theories.json", "data/claims.json", "data/relations.json", "data/provenance.json",
+        "src/application.js", "src/data-store.js", "src/views/graph.js", "src/views/provenance.js",
     ]:
         assert item in worker
     assert "fetch(" in worker
@@ -97,7 +97,7 @@ def test_offline_shell_covers_data_and_modules() -> None:
 
 def test_machine_contracts_are_valid_json() -> None:
     schema_dir = ROOT / "schemas" / "tristan_web_os"
-    for name in ["theory.schema.json", "claim.schema.json", "relation.schema.json"]:
+    for name in ["theory.schema.json", "claim.schema.json", "relation.schema.json", "provenance.schema.json"]:
         schema = json.loads((schema_dir / name).read_text(encoding="utf-8"))
         assert schema["$schema"].endswith("2020-12/schema")
         assert schema["type"] == "object"
