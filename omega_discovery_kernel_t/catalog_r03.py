@@ -1,13 +1,17 @@
-"""R0.3 compatibility correction for the canonical Ω64 event catalog.
+"""R0.3 correction for the canonical Ω64 event catalog.
 
-R0.2 accidentally referenced ``ResultPacket`` throughout the graph while
-omitting it from the 64 registered contracts. R0.3 restores the core-loop
-result event and moves sensitivity sweeps to an experiment subtype expressed
-inside ``ExperimentSpec``/``ResultPacket`` payloads. This preserves exactly 64
-first-class contracts and ensures every core-loop event is canonical.
+R0.2 referenced ``ResultPacket`` throughout the graph while omitting it from
+the 64 registered contracts. R0.3 restores the core-loop result event and moves
+sensitivity sweeps to an experiment subtype inside
+``ExperimentSpec``/``ResultPacket`` payloads.
+
+Some R0.2 modules imported the original catalog directly. During migration this
+module synchronizes those legacy module globals to the corrected immutable
+contract so every import path observes the same Ω64 registry.
 """
 from __future__ import annotations
 
+from . import catalog as _legacy_catalog
 from .catalog import EVENT_CATALOG as R02_EVENT_CATALOG, EventTypeSpec
 
 
@@ -69,6 +73,7 @@ def catalog_manifest() -> dict[str, object]:
                 "Never allow internal references to an event type that is absent "
                 "from the machine-readable catalog."
             ),
+            "legacy_import_paths_synchronized": True,
         },
         "oak_boundary": (
             "Catalog membership defines a workflow contract, not scientific truth, "
@@ -77,8 +82,22 @@ def catalog_manifest() -> dict[str, object]:
     }
 
 
+def _synchronize_legacy_import_paths() -> None:
+    """Make modules importing ``.catalog`` observe the corrected R0.3 registry."""
+
+    _legacy_catalog.EVENT_CATALOG = EVENT_CATALOG
+    _legacy_catalog.EVENT_SPEC_BY_NAME = EVENT_SPEC_BY_NAME
+    _legacy_catalog.EVENT_TYPES = EVENT_TYPES
+    _legacy_catalog.EVENT_FAMILIES = EVENT_FAMILIES
+    _legacy_catalog.event_spec = event_spec
+    _legacy_catalog.catalog_manifest = catalog_manifest
+
+
+_synchronize_legacy_import_paths()
+
 assert len(EVENT_CATALOG) == 64
 assert len(EVENT_SPEC_BY_NAME) == 64
 assert len(EVENT_FAMILIES) == 8
 assert "ResultPacket" in EVENT_TYPES
 assert "SensitivityRun" not in EVENT_TYPES
+assert _legacy_catalog.event_spec("ResultPacket") == RESULT_PACKET_SPEC
