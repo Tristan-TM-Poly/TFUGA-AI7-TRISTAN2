@@ -51,5 +51,6 @@ omega-legal-atlas = "omega_legal_production_os_t.atlas:main"
 omega-re-r03 = "omega_re_t.r03_cli:main"
 omega-re-re1024 = "omega_re_t.r03_frontier:main"
 omega-re-r04 = "omega_re_t.r04_cli:main"
+omega-re-r05 = "omega_re_t.r05_cli:main"
 [tool.pytest.ini_options]
 pythonpath = ["."]
