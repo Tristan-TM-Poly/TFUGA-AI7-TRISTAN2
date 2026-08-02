@@ -81,6 +81,15 @@ def test_manifest_covers_critical_application_assets() -> None:
     assert required <= paths
 
 
+def test_build_manifest_is_cached_and_visible_in_provenance() -> None:
+    worker = (SITE / "sw.js").read_text(encoding="utf-8")
+    provenance = (SITE / "src" / "views" / "provenance.js").read_text(encoding="utf-8")
+    assert "data/build-manifest.json" in worker
+    assert 'loadJson("data/build-manifest.json", "files")' in provenance
+    assert "Intégrité du snapshot public" in provenance
+    assert "SHA-256 ≠ preuve" in provenance
+
+
 def test_build_manifest_is_not_a_security_certificate() -> None:
     payload = manifest()
     boundary = payload["epistemic_boundary"].lower()
