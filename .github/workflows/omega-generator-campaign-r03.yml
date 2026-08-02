@@ -1,0 +1,59 @@
+name: Omega Generator Campaign R0.3
+
+on:
+  push:
+    paths:
+      - omega_generator_discovery_t/campaign.py
+      - omega_generator_discovery_t/campaign_cli.py
+      - tests/test_omega_generator_campaign.py
+      - .github/workflows/omega-generator-campaign-r03.yml
+  pull_request:
+    paths:
+      - omega_generator_discovery_t/campaign.py
+      - omega_generator_discovery_t/campaign_cli.py
+      - tests/test_omega_generator_campaign.py
+      - .github/workflows/omega-generator-campaign-r03.yml
+  workflow_dispatch:
+    inputs:
+      full_million_stress:
+        description: Stream and hash all 1,179,648 default campaign records
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  campaign-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test campaign engine
+        run: python -m pytest -q tests/test_omega_generator_campaign.py
+      - name: Plan 1,179,648 logical records
+        run: python -m omega_generator_discovery_t.campaign_cli plan --partition-count 64 --output /tmp/campaign-plan.json
+      - name: Stream 147,456 logical records
+        run: python -m omega_generator_discovery_t.campaign_cli stress --generator-bundles 16384 > /tmp/stress.json
+      - name: Emit one 18,432-record partition sample
+        run: |
+          python -m omega_generator_discovery_t.campaign_cli emit \
+            --partition-count 64 \
+            --partition-index 0 \
+            --bundles-per-shard 512 \
+            --output-dir /tmp/omega-campaign-p000
+          test "$(find /tmp/omega-campaign-p000/records -name '*.jsonl' -type f -print0 | xargs -0 cat | wc -l)" -eq 18432
+
+  full-million-stress:
+    if: github.event_name == 'workflow_dispatch' && inputs.full_million_stress
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Stream all 1,179,648 records without materializing the Cartesian product
+        run: python -m omega_generator_discovery_t.campaign_cli stress --generator-bundles 131072
