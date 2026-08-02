@@ -1,0 +1,26 @@
+{
+  "policy_id": "omega-pct-oak-r0.2",
+  "default_status": "exploratory",
+  "hard_gates": [
+    "dimensional_consistency",
+    "declared_domain_of_validity",
+    "lorentz_or_declared_medium_covariance",
+    "gauge_consistency_when_applicable",
+    "unitarity_or_explicit_open_system_model",
+    "causality",
+    "positive_probability",
+    "conservation_or_declared_breaking_mechanism",
+    "anomaly_audit",
+    "known_limit_recovery",
+    "numerical_stability",
+    "independent_falsifier",
+    "provenance"
+  ],
+  "promotion_states": ["idea", "formalized", "implemented", "unit-tested", "benchmarked", "externally-compared", "experiment-ready", "replicated", "canon-candidate"],
+  "irreversible_actions_requiring_human_approval": ["public scientific claim", "publication", "patent disclosure", "experimental control", "external mass communication", "legal submission"],
+  "growth": {
+    "permanent_item_ceiling": null,
+    "controller": "adaptive_resource_budget",
+    "required_controls": ["backpressure", "checkpoint", "deduplication", "quality_gate", "rollback_plan", "M-minus logging", "cost telemetry"]
+  }
+}

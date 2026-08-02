@@ -1,0 +1,165 @@
+{
+  "authority": {
+    "automatic_merge": false,
+    "automatic_scientific_promotion": false,
+    "human_approval_required": true
+  },
+  "files": [
+    {
+      "bytes": 1722,
+      "lines": 51,
+      "path": ".github/workflows/omega-pct-ci.yml",
+      "sha256": "7ebbf843d45911e80206df63d2658b61687e17f71d7a982fc7effa668f216ff9"
+    },
+    {
+      "bytes": 7897,
+      "lines": 242,
+      "path": "docs/OMEGA_PCT_R03_MAX_ARCHITECTURE.md",
+      "sha256": "2919f992fca248cb1b6ebb47f6de7681debcb781f6ac6eccd8a6b680914cde98"
+    },
+    {
+      "bytes": 592,
+      "lines": 20,
+      "path": "examples/omega_pct_r03max_demo.py",
+      "sha256": "52195b43ff94a0907edec2eee80502db59f83fc05a1d11357deae6ff29db4c38"
+    },
+    {
+      "bytes": 33,
+      "lines": 1,
+      "path": "omega_pct_t/__init__.py",
+      "sha256": "b2da8f298a3aaea643a06cfbdce9dc1b078e0a2254391316909718835276ce8d"
+    },
+    {
+      "bytes": 1256,
+      "lines": 39,
+      "path": "omega_pct_t/r03max/__init__.py",
+      "sha256": "4f2a767159a535e020fd41516e4bdc5a5dbae770bfbd4930f5d0d1b7b2ec9b06"
+    },
+    {
+      "bytes": 2567,
+      "lines": 68,
+      "path": "omega_pct_t/r03max/__main__.py",
+      "sha256": "3c2501200859bb70d7a7af0801dcf7745f661118682519cef1d6c16c97797daa"
+    },
+    {
+      "bytes": 7321,
+      "lines": 192,
+      "path": "omega_pct_t/r03max/campaign.py",
+      "sha256": "93105df2d9765d01b6da5f68a76bf12b6f10e1a2538b6e494b14c575e6883a7b"
+    },
+    {
+      "bytes": 11205,
+      "lines": 317,
+      "path": "omega_pct_t/r03max/lagrangian_ir.py",
+      "sha256": "404a41e2eceb396ecaa941ab1943aa49669218e5bd69965431f924f0653cab1e"
+    },
+    {
+      "bytes": 8746,
+      "lines": 242,
+      "path": "omega_pct_t/r03max/model_generator.py",
+      "sha256": "f469ed5016801f884237975da3eecbaecabb767f7ab9b111b567945a555cc149"
+    },
+    {
+      "bytes": 10487,
+      "lines": 275,
+      "path": "omega_pct_t/r03max/oakbench.py",
+      "sha256": "f5465f0fe3829d61b99e508f0a19802c92746da1c997973aa44ade843b28cb54"
+    },
+    {
+      "bytes": 6320,
+      "lines": 166,
+      "path": "omega_pct_t/r03max/operators.py",
+      "sha256": "f41d502352cb3f0748f13e07e3c9cfe0123b2ba303ce1861a3d8583dbf7ba33e"
+    },
+    {
+      "bytes": 4525,
+      "lines": 140,
+      "path": "omega_pct_t/r03max/pdg_absorber.py",
+      "sha256": "5ec0257ad710bdbda8f6948b9781247e9e6b2cfda19ce566a2051bb44039011a"
+    },
+    {
+      "bytes": 13946,
+      "lines": 346,
+      "path": "omega_pct_t/r03max/symmetry.py",
+      "sha256": "3c67571faeaa535d028977b8694b348e8cad7ceb5d54014e4b22e86211ba375d"
+    },
+    {
+      "bytes": 13446,
+      "lines": 417,
+      "path": "omega_pct_t/r03max/types.py",
+      "sha256": "8a92885e83f2e96ad7c3fd9e987d811d9b3573db42ba65e7453e50449612aa89"
+    },
+    {
+      "bytes": 1085,
+      "lines": 47,
+      "path": "policies/omega-pct-r03-oak.json",
+      "sha256": "2ddd57bdcd18c32a8367faeb1226b4f4e80c9e53a859e84f355bbc4480642438"
+    },
+    {
+      "bytes": 842,
+      "lines": 17,
+      "path": "schemas/omega-pct-pdg-snapshot-r03.schema.json",
+      "sha256": "44ebd8c17609824ab0a254c0b69aab031b0e1e33d609741c012eb975d573e4b6"
+    },
+    {
+      "bytes": 3027,
+      "lines": 76,
+      "path": "schemas/omega-pct-theory-r03.schema.json",
+      "sha256": "a7a1437999d6059078bca89ae3a7198c4970f4ac8ef090c6c4913d35ab0bde9f"
+    },
+    {
+      "bytes": 1018,
+      "lines": 31,
+      "path": "tests/test_omega_pct_r03_campaign.py",
+      "sha256": "2ea04803d2641cc78241c49ab572639cbda92d6b69a05ad0548629765c48fe9a"
+    },
+    {
+      "bytes": 1033,
+      "lines": 27,
+      "path": "tests/test_omega_pct_r03_lagrangian.py",
+      "sha256": "df2ef5ba964d0e63cc8ccdb756fbe97c639c5e1788e945fd5d02c5ed734b7867"
+    },
+    {
+      "bytes": 1512,
+      "lines": 37,
+      "path": "tests/test_omega_pct_r03_oak.py",
+      "sha256": "005c9567fe6824af5da7808385f8f718abd31c8ca9ef9f3ec2b885f27be87b01"
+    },
+    {
+      "bytes": 1006,
+      "lines": 31,
+      "path": "tests/test_omega_pct_r03_operators.py",
+      "sha256": "6ddf2c5da4e09064929168b9bafaf58dce1130a93b1c0480c3e449a9c2d2ce1d"
+    },
+    {
+      "bytes": 809,
+      "lines": 23,
+      "path": "tests/test_omega_pct_r03_pdg.py",
+      "sha256": "623a330a19f6e3f4becf1583ebd674468bb690195c72890b29d8896649f9baeb"
+    },
+    {
+      "bytes": 1789,
+      "lines": 64,
+      "path": "tests/test_omega_pct_r03_symmetry.py",
+      "sha256": "e4b906668389fcfff834dffbb4239118c3993166f5c60b624bf55e9f7fa27380"
+    },
+    {
+      "bytes": 804,
+      "lines": 28,
+      "path": "tests/test_omega_pct_r03_types.py",
+      "sha256": "aa2de6594551f2e29c6cf03678b531b753b8beac92590ed25748a9f41bf127ef"
+    }
+  ],
+  "metrics": {
+    "bytes": 102988,
+    "files": 24,
+    "lines": 2897
+  },
+  "scientific_boundary": "structural compiler and synthetic candidate generation; no physical discovery claim",
+  "status": "local validation passed",
+  "system": "Ω-PARTICULES-CHAMPS-T∞ R0.3 MAX",
+  "tests": {
+    "failed": 0,
+    "passed": 17
+  }
+}

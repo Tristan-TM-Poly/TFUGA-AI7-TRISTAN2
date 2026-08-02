@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-pct-candidate.schema.json",
+  "title": "Ω-PCT∞ candidate object",
+  "type": "object",
+  "required": ["id", "status", "ontology_level", "provenance", "falsifier"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["established", "effective", "parametrization", "hypothesis", "exploratory", "excluded", "unknown"]},
+    "ontology_level": {"enum": ["fundamental", "composite", "effective", "collective", "topological", "hypothetical", "measurement"]},
+    "provenance": {"type": "string", "minLength": 1},
+    "falsifier": {"type": "string", "minLength": 1},
+    "claim": {"type": "string"},
+    "uncertainty": {"type": "object"},
+    "domain": {"type": "object"},
+    "evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  },
+  "additionalProperties": true
+}
