@@ -24,24 +24,25 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `Ω-DeepTech Intelligence Forge`: OAK-safe layer for deeptech signals -> IP triage -> prototype tasks -> revenue routing -> GitHub artifacts.
 - `Ω-ECC-T`: OAK-safe error-correction lab: Hamming(7,4), channel models, Syndrome-CVCD, HyperParityGraph-T, M⁻ hooks, and deterministic OAKBench.
 - `Ω-PDF-HYPERGRAPH-GITHUB-T`: OAK-safe universal absorber for PDF/ZIP/text/code corpora -> chunks -> claim candidates -> HGFM/CVCD hypergraph -> GitHub-ready artifacts.
-- `Ω-WIKI-T∞ / WikiForge-T`: read-only multilingual Wikipedia reader -> revision-pinned articles -> claim candidates -> citation/source links -> OAK manifests -> reproducible reports.
+- `Ω-WIKI-T∞ / WikiForge-T`: multilingual Wikipedia reader and repository-theory absorber -> revision-pinned articles or canon files -> traceable claims/nodes -> citations, risks, next actions, and knowledge hypergraphs.
 - `Ω-SANS-PLAFOND-T∞`: adaptive capacity controller plus streaming GitHub dry-run planner -> disk-backed dedup -> adaptive shards -> hashes -> commit/rollback plans, without a permanent total-addition ceiling.
 
 ## Repository structure
 
 ```text
-docs/                Manifest, roadmap, canon analysis, publication plan.
-schemas/             JSON schemas for DCT++, research cards, HGFM, WikiForge and unbounded additions.
-sage_tristan/        Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
-omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
-ecc_tristan/         Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
-omega_prof_poly_t/   Omega absorb systems, including the universal corpus absorber.
-omega_wiki_t/        Ω-WIKI-T∞ multilingual evidence compiler and citation-preserving translation guard.
-omega_unbounded_t/   Ω-SANS-PLAFOND-T∞ frontier controller and streaming GitHub plan compiler.
-policies/            Machine-readable OAK and adaptive growth policies.
-tests/               Unit and scale tests for the executable core.
-examples/            Example branches and DCT++ packets.
-reports/             Generated audit and publication reports.
+docs/                  Manifest, roadmap, canon analysis, publication plan.
+schemas/               JSON schemas for DCT++, research cards, HGFM, WikiForge and unbounded additions.
+sage_tristan/          Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
+omega_deeptech_forge/  Minimal OAK-safe deeptech/IP/revenue triage engine.
+ecc_tristan/           Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
+omega_prof_poly_t/     Omega absorb systems, including the universal corpus absorber.
+omega_wiki_t/          Ω-WIKI-T∞ evidence compiler, translation guard, and theory hypergraph builder.
+omega_unbounded_t/     Ω-SANS-PLAFOND-T∞ frontier controller and streaming GitHub plan compiler.
+generated/omega_wiki_t/ Reproducible WikiForge evidence and theory-knowledge artifacts.
+policies/              Machine-readable OAK and adaptive growth policies.
+tests/                 Unit and scale tests for the executable core.
+examples/              Example branches and DCT++ packets.
+reports/               Generated audit and publication reports.
 ```
 
 ## Scientific hygiene
@@ -79,7 +80,19 @@ omega-wiki compile "Mécanique quantique" --lang fr --langs en,de,ja --output-di
 omega-wiki audit generated/q944
 ```
 
-WikiForge-T R0.1 is extraction infrastructure, not factual certification. Wikipedia text is not proof; a citation marker is not automatically support; multilingual agreement is not automatically consensus.
+Repository theory absorption and useful knowledge hypergraph:
+
+```bash
+omega-wiki absorb-theory \
+  --canon-json interfaces/chatgpt-tristan-v2/data/theory-canon.json \
+  --master-canon docs/00_MASTER_CANON_TFUGA_AI7_AIT.md \
+  --system-index MASTER_SYSTEM_INDEX.md \
+  --output-dir generated/omega_wiki_t/theory-canon-r0-2
+```
+
+The current canon absorption emits 92 nodes and 94 hyperedges. It preserves systems, layers, workflow stages, OAK statuses, risks, next actions, repository paths, priorities, and curated core relations. The utility score is a navigation heuristic, not a truth probability or economic valuation.
+
+WikiForge-T remains extraction and knowledge-organization infrastructure, not factual certification. Wikipedia text is not proof; a citation marker is not automatically support; repository canon is not automatically scientific validation; a generated hyperedge remains a reviewable knowledge candidate.
 
 Adaptive capacity-frontier simulation:
 
@@ -129,7 +142,7 @@ hypergraph.graphml
 oak_report.json
 ```
 
-WikiForge-T:
+WikiForge-T Wikipedia outputs:
 
 ```text
 manifest.json
@@ -140,11 +153,29 @@ language-matrix.json
 report.md
 ```
 
+WikiForge-T theory hypergraph outputs:
+
+```text
+manifest.json
+knowledge-hypergraph.json
+knowledge-hypergraph.graphml
+theory-nodes.jsonl
+knowledge-hyperedges.jsonl
+useful-knowledge.md
+```
+
+A compact checked-in core projection is available at:
+
+```text
+generated/omega_wiki_t/theory-canon-r0-2/knowledge-hypergraph-core.json
+```
+
 Ω-SANS-PLAFOND-T∞ controller:
 
 ```text
 checkpoint.json
 m_minus.jsonl
+m_plus.jsonl
 report.json
 ```
 
@@ -179,9 +210,11 @@ Immediate canonizable modules:
 - Ω-DeepTech Intelligence Forge
 - Ω-ECC-T / Error Correction Codes de Tristan
 - Ω-PDF-HYPERGRAPH-GITHUB-T / AIT-Frédéric
-- Ω-WIKI-T∞ / WikiForge-T R0.1 extraction kernel
+- Ω-WIKI-T∞ / WikiForge-T R0.1 Wikipedia extraction kernel
+- Ω-WIKI-T∞ / WikiForge-T R0.2 repository-theory hypergraph builder
 - Ω-SANS-PLAFOND-T∞ / adaptive frontier controller R0.1
 - Ω-SANS-PLAFOND-T∞ / streaming GitHub dry-run planner R0.2
+- Ω-SANS-PLAFOND-T∞ / lazy source, telemetry and M⁺ R0.3
 
 Crystallizable modules:
 
@@ -200,8 +233,10 @@ Crystallizable modules:
 - Exact citation-entry parsing and Citoid enrichment
 - Cross-language claim alignment and contradiction detection
 - Citation-safe multilingual generation
+- GitHub-wide incremental theory absorption and semantic deduplication
+- External source enrichment for each theory node through Wikipedia, Wikidata, DOI, ISBN, and PMID
 - Resume-from-checkpoint for partial Ω-SANS-PLAFOND runs
-- M⁺ breakthrough memory and dependency-aware differential CI routing
+- Dependency-aware differential CI routing
 - Explicitly authorized GitHub actuator over reviewed R0.2 plans
 
 Exploratory branches stay labeled as exploratory until proven, simulated, or experimentally validated.
