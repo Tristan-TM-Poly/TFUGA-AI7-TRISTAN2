@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse, base64, hashlib, io, json, lzma, tarfile
 from pathlib import Path
 
+# R0.3 MAX materialization trigger: the payload is immutable and SHA-256 verified.
 COMPRESSED_SHA256 = "01f6401d2bb2bb6cf91b7da218a4492af9bd335cdc31abea345af4faf02b7298"
 
 
