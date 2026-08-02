@@ -1,0 +1,14 @@
+{
+  "schema_version": "omega-anime-studio/build-provenance-r1",
+  "generator": "tools/generate_omega_anime_studio_r1.py",
+  "matrix_cells": 8192,
+  "shot_frontier_variants": 2048,
+  "pilot_scenes": 5,
+  "canonical_shots": 30,
+  "duration_seconds": 180,
+  "no_permanent_total_cap": true,
+  "source_inventory_scope": "anime-r1-only",
+  "tracked_python_cache_files": 0,
+  "oak_status": "FORMALIZED",
+  "publication_state": "private-draft"
+}
