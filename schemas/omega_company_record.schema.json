@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-company-record.schema.json",
+  "title": "Omega Company Autopilot Company Record",
+  "type": "object",
+  "required": ["company_id", "conceptual_name", "jurisdiction", "state", "divisions", "autonomy_level"],
+  "properties": {
+    "company_id": {"type": "string", "minLength": 1},
+    "conceptual_name": {"type": "string", "minLength": 1},
+    "jurisdiction": {"type": "string", "minLength": 1},
+    "state": {"enum": ["IDEA", "CANDIDATE_LEGAL_ENTITY", "PROFESSIONAL_REVIEW", "FILING_READY", "FILING_SUBMITTED", "REGISTERED", "INCORPORATED", "POST_FORMATION", "OPERATING", "PRODUCTION_AUTHORIZED", "M_MINUS_HOLD"]},
+    "legal_name": {"type": ["string", "null"]},
+    "legal_form": {"type": ["string", "null"]},
+    "incorporation_number": {"type": ["string", "null"]},
+    "neq": {"type": ["string", "null"]},
+    "cra_business_number": {"type": ["string", "null"]},
+    "legal_identity_verified": {"type": "boolean"},
+    "registry_snapshot_verified": {"type": "boolean"},
+    "privacy_officer": {"type": ["string", "null"]},
+    "directors": {"type": "array", "items": {"type": "string"}},
+    "shareholders": {"type": "array", "items": {"type": "string"}},
+    "officers": {"type": "array", "items": {"type": "string"}},
+    "autonomy_level": {"type": "integer", "minimum": 0, "maximum": 5},
+    "divisions": {"type": "array", "items": {"$ref": "#/$defs/division"}},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}}
+  },
+  "$defs": {
+    "division": {
+      "type": "object",
+      "required": ["division_id", "display_name", "mission", "status", "autonomy_level", "enabled"],
+      "properties": {
+        "division_id": {"type": "string", "minLength": 1},
+        "display_name": {"type": "string", "minLength": 1},
+        "mission": {"type": "string"},
+        "status": {"type": "string"},
+        "autonomy_level": {"type": "integer", "minimum": 0, "maximum": 5},
+        "enabled": {"type": "boolean"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["evidence_id", "kind", "location", "verified", "redacted"],
+      "properties": {
+        "evidence_id": {"type": "string"},
+        "kind": {"type": "string"},
+        "location": {"type": "string"},
+        "sha256": {"type": ["string", "null"]},
+        "verified": {"type": "boolean"},
+        "redacted": {"type": "boolean"}
+      }
+    }
+  }
+}
