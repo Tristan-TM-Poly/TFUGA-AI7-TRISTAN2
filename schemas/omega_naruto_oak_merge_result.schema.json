@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_naruto_oak_merge_result.schema.json",
+  "title": "Omega Naruto OAKMerge Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "accepted_proposal_id",
+    "ranked_proposal_ids",
+    "contradictions",
+    "rejected",
+    "next_experiment"
+  ],
+  "properties": {
+    "accepted_proposal_id": {"type": ["string", "null"]},
+    "ranked_proposal_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [{"type": "string"}, {"type": "string"}],
+        "items": false,
+        "minItems": 2,
+        "maxItems": 2
+      }
+    },
+    "rejected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["proposal_id", "reason", "retained_conclusion"],
+        "properties": {
+          "proposal_id": {"type": "string"},
+          "reason": {"type": "string"},
+          "retained_conclusion": {"type": "string"}
+        }
+      }
+    },
+    "next_experiment": {"type": ["string", "null"]}
+  }
+}
