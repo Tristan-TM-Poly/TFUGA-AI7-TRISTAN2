@@ -10,6 +10,7 @@ on:
       - "docs/omega_anime_studio_t_r1.md"
       - "examples/omega_anime_studio_r1_demo.py"
       - "generated/omega_anime_studio_t/**"
+      - "tools/generate_omega_anime_studio_r1.py"
       - ".github/workflows/omega-anime-studio-r1.yml"
   workflow_dispatch:
 
@@ -61,8 +62,11 @@ jobs:
       - name: Enforce proof gates
         run: |
           python - <<'PY'
-          import hashlib, json
+          import hashlib
+          import json
+          import subprocess
           from pathlib import Path
+
           root = Path('/tmp/omega-anime-studio-r1')
           manifest = json.loads((root/'manifest.json').read_text())
           matrix = (root/'matrix-8192.jsonl').read_text().splitlines()
@@ -77,12 +81,40 @@ jobs:
           assert all(c['limitation'] and c['moral_boundary'] for c in anime['characters'])
           assert all(a['provenance']['private'] for a in anime['assets'])
           assert len(manifest['manifest_sha256']) == 64
+
           checked = Path('generated/omega_anime_studio_t/matrix-8192.jsonl')
           assert checked.exists() and len(checked.read_text().splitlines()) == 8192
           expected = hashlib.sha256(checked.read_bytes()).hexdigest()
           recorded = json.loads(Path('generated/omega_anime_studio_t/generated-manifest.json').read_text())
           assert recorded['matrix_sha256'] == expected
-          print(json.dumps({'manifest':manifest['manifest_sha256'],'matrix':expected}, indent=2))
+          assert recorded['frontier_lines'] == 2048
+          assert recorded['no_permanent_total_cap'] is True
+
+          inventory = json.loads(Path('generated/omega_anime_studio_t/source-inventory.json').read_text())
+          inventory_paths = [item['path'] for item in inventory]
+          assert 15 <= len(inventory_paths) <= 30
+          assert len(inventory_paths) == len(set(inventory_paths))
+          assert not any(path.startswith('.git/') for path in inventory_paths)
+          allowed = (
+              'omega_anime_studio_t/',
+              'tests/test_omega_anime_studio_t_r1.py',
+              'schemas/anime-ir-r1.schema.json',
+              'policies/omega_anime_studio_r1.json',
+              'docs/omega_anime_studio_t_r1.md',
+              'examples/omega_anime_studio_r1_demo.py',
+              '.github/workflows/omega-anime-studio-r1.yml',
+              'generated/omega_anime_studio_t/',
+          )
+          assert all(path.startswith(allowed) for path in inventory_paths)
+
+          tracked = subprocess.check_output(['git', 'ls-files'], text=True).splitlines()
+          assert not any('__pycache__' in path or path.endswith('.pyc') for path in tracked)
+          print(json.dumps({
+              'manifest': manifest['manifest_sha256'],
+              'matrix': expected,
+              'inventory_files': len(inventory_paths),
+              'tracked_cache_files': 0,
+          }, indent=2))
           PY
       - name: Preserve evidence
         if: always()
