@@ -1,0 +1,47 @@
+{
+  "policy_id": "omega-pct-r03-oak",
+  "version": "0.3.0",
+  "authority": {
+    "automatic_scientific_promotion": false,
+    "automatic_publication": false,
+    "automatic_merge": false,
+    "human_approval_required": true
+  },
+  "epistemic_rules": {
+    "established_requires_source": true,
+    "generated_candidate_is_discovery": false,
+    "simulation_is_experiment": false,
+    "correlation_is_proof": false,
+    "visual_pattern_is_theorem": false
+  },
+  "gates": [
+    "syntax",
+    "typing",
+    "dimensions",
+    "symmetry",
+    "hermiticity_positivity",
+    "conservation",
+    "quantum_consistency",
+    "known_limits",
+    "numerics",
+    "data",
+    "falsification",
+    "replication"
+  ],
+  "growth": {
+    "permanent_item_ceiling": null,
+    "finite_run_constraints": [
+      "wall_time",
+      "memory_pressure",
+      "disk_pressure",
+      "provider_quota",
+      "validation_backlog",
+      "failure_budget",
+      "quality_floor",
+      "cost_budget"
+    ],
+    "checkpointing_required": true,
+    "rollback_required": true,
+    "deduplication_required": true
+  }
+}
