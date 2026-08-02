@@ -8,7 +8,6 @@ on:
       - 'tests/test_omega_naruto*.py'
       - 'schemas/omega_naruto*.json'
       - 'docs/omega_naruto*.md'
-      - 'pyproject.toml'
       - '.github/workflows/omega-naruto-ci.yml'
 
 permissions:
@@ -22,7 +21,7 @@ jobs:
   test:
     name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -57,7 +56,7 @@ jobs:
           from pathlib import Path
 
           paths = sorted(Path('schemas').glob('omega_naruto*.json'))
-          assert paths, 'no Omega Naruto schemas found'
+          assert len(paths) >= 6, f'expected at least 6 Omega Naruto schemas, found {len(paths)}'
           for path in paths:
               payload = json.loads(path.read_text(encoding='utf-8'))
               assert payload.get('$schema'), f'missing $schema: {path}'
@@ -65,7 +64,7 @@ jobs:
           print(f'parsed {len(paths)} schemas')
           PY
 
-      - name: Run CLI smoke and validate outputs
+      - name: Run core CLI smoke and validate outputs
         run: |
           mkdir -p generated/omega_naruto
           python -m omega_naruto_hmagfm.cli \
@@ -102,10 +101,56 @@ jobs:
           assert root.tag.endswith('graphml')
           PY
 
-      - name: Upload deterministic report
+      - name: Generate and validate 50k frontier corpus
+        if: matrix.python-version == '3.11'
+        run: |
+          python -m omega_naruto_hmagfm.corpus_cli inspect --pretty \
+            > generated/omega_naruto/frontier-axes.json
+          python -m omega_naruto_hmagfm.corpus_cli generate \
+            --output-dir generated/omega_naruto/frontier-50k \
+            --target 50000 \
+            --shard-records 5000 \
+            > generated/omega_naruto/frontier-generation.json
+          python -m omega_naruto_hmagfm.corpus_cli validate \
+            --output-dir generated/omega_naruto/frontier-50k \
+            --report generated/omega_naruto/frontier-validation.json \
+            > generated/omega_naruto/frontier-validation-stdout.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from jsonschema import Draft202012Validator
+
+          root = Path('generated/omega_naruto')
+          manifest = json.loads((root / 'frontier-50k/manifest.json').read_text(encoding='utf-8'))
+          validation = json.loads((root / 'frontier-validation.json').read_text(encoding='utf-8'))
+          generation = json.loads((root / 'frontier-generation.json').read_text(encoding='utf-8'))
+          axes = json.loads((root / 'frontier-axes.json').read_text(encoding='utf-8'))
+          manifest_schema = json.loads(Path('schemas/omega_naruto_frontier_manifest.schema.json').read_text(encoding='utf-8'))
+          validation_schema = json.loads(Path('schemas/omega_naruto_frontier_validation.schema.json').read_text(encoding='utf-8'))
+
+          Draft202012Validator.check_schema(manifest_schema)
+          Draft202012Validator(manifest_schema).validate(manifest)
+          Draft202012Validator.check_schema(validation_schema)
+          Draft202012Validator(validation_schema).validate(validation)
+
+          assert generation == manifest
+          assert axes['axis_cardinality'] == 64512
+          assert manifest['target_records'] == 50000
+          assert manifest['written_records'] == 50000
+          assert manifest['complete'] is True
+          assert len(manifest['shards']) == 10
+          assert all(item['record_count'] == 5000 for item in manifest['shards'])
+          assert validation['valid'] is True
+          assert validation['observed_records'] == 50000
+          assert validation['unique_record_ids'] == 50000
+          assert validation['findings'] == []
+          PY
+
+      - name: Upload deterministic reports and 50k corpus
         if: matrix.python-version == '3.11'
         uses: actions/upload-artifact@v4
         with:
-          name: omega-naruto-oak-report
+          name: omega-naruto-oak-frontier-50k
           path: generated/omega_naruto/**
           if-no-files-found: error
