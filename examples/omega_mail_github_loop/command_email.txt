@@ -1,0 +1,23 @@
+Bonjour Tristan Software Labs,
+
+OMEGA-GITHUB:
+repo: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+action: improve
+target: omega_inbox_outcome_t/intent.py
+objective: Réduire les faux positifs du classificateur d'intentions
+required:
+  - ajouter des frontières lexicales
+  - ajouter au moins cinq tests de régression
+  - préserver la compatibilité
+  - produire un rapport OAK
+authority:
+  create_issue: yes
+  create_branch: yes
+  commit: yes
+  open_draft_pr: yes
+  mark_ready: no
+  merge: no
+  release: no
+base_branch: main
+
+Aucune fusion ni publication automatique.
