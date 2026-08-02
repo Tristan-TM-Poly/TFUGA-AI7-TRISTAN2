@@ -10,7 +10,6 @@ from typing import Any, Sequence
 from .core import (
     AdaptiveController,
     CapacityPolicy,
-    ListWorkSource,
     MMinusLedger,
     SyntheticCapacityExecutor,
 )
@@ -20,6 +19,7 @@ from .github_planner import (
     iter_jsonl,
     synthetic_additions,
 )
+from .streaming import MPlusLedger, RangeWorkSource, ResourceSampler
 
 
 def _add_plan_policy_arguments(parser: argparse.ArgumentParser) -> None:
@@ -39,7 +39,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     simulate = sub.add_parser(
         "simulate",
-        help="Run a finite synthetic workload while discovering and surpassing temporary capacity frontiers.",
+        help="Run a finite lazy workload while discovering and surpassing temporary capacity frontiers.",
     )
     simulate.add_argument("--work-items", type=int, default=50_000)
     simulate.add_argument("--initial-batch", type=int, default=256)
@@ -78,7 +78,9 @@ def _simulate(args: argparse.Namespace) -> int:
 
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=True)
-    source = ListWorkSource(range(args.work_items))
+    sampler = ResourceSampler(output)
+    resource_before = sampler.sample()
+    source = RangeWorkSource(args.work_items)
     executor = SyntheticCapacityExecutor(
         capacity=args.initial_capacity,
         redesign_factor=args.redesign_factor,
@@ -94,9 +96,27 @@ def _simulate(args: argparse.Namespace) -> int:
         checkpoint_path=output / "checkpoint.json",
     )
     report = controller.run()
+    resource_after = sampler.sample()
+
+    m_plus = MPlusLedger(output / "m_plus.jsonl")
+    for previous, current in zip(executor.frontier_history, executor.frontier_history[1:]):
+        m_plus.record(
+            previous_frontier=previous,
+            new_frontier=current,
+            intervention=("synthetic_executor_capacity_redesign",),
+            repetitions=1,
+            quality_before=executor.quality_score,
+            quality_after=executor.quality_score,
+            status="experimental_single_run_not_canonized",
+        )
+
     payload = {
         **report.to_dict(),
         "frontier_history": executor.frontier_history,
+        "lazy_source": source.checkpoint(),
+        "resource_before": resource_before.to_dict(),
+        "resource_after": resource_after.to_dict(),
+        "m_plus_events": len(m_plus.events),
         "boundary": (
             "No permanent addition-count cap is used. This run is still bounded by its finite workload, "
             "recoverability, quality policy, available resources, and external service rules."
