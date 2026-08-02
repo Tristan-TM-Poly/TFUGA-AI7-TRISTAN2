@@ -18,7 +18,7 @@ def _scenarios():
     )
 
 
-def test_self_improvement_proposes_a_measured_nonregressing_candidate(tmp_path):
+def test_self_improvement_proposes_a_resource_aware_candidate(tmp_path):
     report = SelfImprovementLab(
         tmp_path,
         scenarios=_scenarios(),
@@ -27,7 +27,7 @@ def test_self_improvement_proposes_a_measured_nonregressing_candidate(tmp_path):
 
     assert report.baseline.completed is True
     assert report.decision.status == "promotion_proposed"
-    assert report.decision.selected is not None
+    assert report.decision.selected == "mminus-capacity-redesign"
     assert report.decision.improvement_ratio > 0.01
     assert report.decision.requires_human_approval is True
     assert report.decision.remote_mutations == 0
@@ -35,12 +35,24 @@ def test_self_improvement_proposes_a_measured_nonregressing_candidate(tmp_path):
     assert report.no_auto_merge is True
 
     promotion = json.loads((tmp_path / "promotion-plan.json").read_text(encoding="utf-8"))
+    judge = promotion["evidence"]["judge"]
+    assert judge["type"] == "resource_aware_oak_judge"
+    assert judge["overshoot_penalty_weight"] > 0
+    assert judge["selected_capacity_overshoot_ratio"] <= (
+        judge["baseline_capacity_overshoot_ratio"]
+        * judge["maximum_overshoot_multiplier"]
+    )
     assert promotion["apply"]["automatic"] is False
     assert promotion["apply"]["source_mutations"] == 0
     assert promotion["apply"]["remote_mutations"] == 0
     assert promotion["apply"]["merge"] is False
     assert (tmp_path / "m_plus.jsonl").exists()
     assert (tmp_path / "candidate-results.jsonl").exists()
+
+    negative_memory = (tmp_path / "self_improvement_m_minus.jsonl").read_text(
+        encoding="utf-8"
+    )
+    assert "capacity overshoot exceeded the permitted multiplier" in negative_memory
 
 
 def test_duplicate_and_regressing_candidates_become_negative_memory(tmp_path):
