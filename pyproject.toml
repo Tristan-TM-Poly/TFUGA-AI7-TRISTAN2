@@ -16,6 +16,7 @@ omega-logexp-morph = "omega_logexp_morph_t.cli:main"
 omega-unbounded = "omega_unbounded_t.cli:main"
 omega-generator-discovery = "omega_generator_discovery_t.cli:main"
 omega-generator-catalog = "omega_generator_discovery_t.catalog_cli:main"
+omega-generator-ultra = "omega_generator_discovery_t.ultra_cli:main"
 omega-generator-campaign = "omega_generator_discovery_t.campaign_cli:main"
 omega-generator-scale = "omega_generator_discovery_t.campaign_scale_cli:main"
 

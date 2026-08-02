@@ -1,0 +1,30 @@
+{
+  "version": "R0.3-ultra",
+  "shard_size": 4096,
+  "domains": [
+    "spectral", "crystal", "elastic", "thermal", "electromagnetic", "chemical",
+    "quantum", "stochastic", "fluid", "battery", "optical", "photonic",
+    "acoustic", "biological", "ecological", "climate", "materials", "calibration",
+    "control", "robotics", "computing", "neural", "epistemic", "software",
+    "economic", "energy", "transport", "geological", "astronomical", "linguistic",
+    "social", "game"
+  ],
+  "families": [
+    "translation", "dilation", "rotation", "shear", "diffusion", "advection",
+    "reaction", "relaxation", "oscillation", "coupling", "projection", "lift",
+    "convolution", "deconvolution", "phase_shift", "amplitude", "broadening",
+    "splitting", "merging", "branching", "threshold", "saturation", "hysteresis",
+    "memory", "symmetry_break", "topology_change", "rank_change", "noise",
+    "measurement", "control", "correction", "compression"
+  ],
+  "scales": ["atomic", "molecular", "micro", "meso", "macro", "system", "network", "multiscale"],
+  "representations": ["state", "operator", "observable", "hypergraph"],
+  "regimes": ["local_linear", "finite_nonlinear"],
+  "benchmark_variants": ["nominal", "perturbed"],
+  "validation_sample_modulus": 16,
+  "high_risk_families": [
+    "projection", "deconvolution", "merging", "branching", "hysteresis", "memory",
+    "symmetry_break", "topology_change", "rank_change", "measurement", "control", "compression"
+  ],
+  "oak_boundary": "Generated candidates are not discoveries. Generated tests are not empirical validations. Promotion requires units, provenance, uncertainty, baseline, domain, negative controls and falsification."
+}
