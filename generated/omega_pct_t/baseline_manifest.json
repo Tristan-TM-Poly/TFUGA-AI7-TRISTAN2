@@ -1,0 +1,11 @@
+{
+  "catalog": "data/omega_pct_catalog.json",
+  "entrypoint": "OMEGA_PCT_T.md",
+  "generated": "2026-08-02",
+  "hard_claims": [],
+  "modules": ["core", "physics", "transforms", "hypercomplex", "oak", "frontier", "pipeline", "cli"],
+  "notice": "Synthetic candidates and Tristan extensions are not physical discoveries.",
+  "status": "executable research scaffold",
+  "system": "Ω-PARTICULES-CHAMPS-T∞",
+  "version": "0.2.0"
+}
