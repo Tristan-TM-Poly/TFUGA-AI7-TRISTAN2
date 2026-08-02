@@ -1,18 +1,16 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import fields
 import hashlib
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from .models import CompanyUnit, OutreachCase, OutreachKind, OutreachStatus
 from .policy import audit_cases, disclosure_line, validate_policy
 
 
-def _load_case(path: Path) -> OutreachCase:
-    payload = json.loads(path.read_text(encoding="utf-8"))
+def _case_from_payload(payload: Mapping[str, Any]) -> OutreachCase:
     return OutreachCase(
         case_id=str(payload["case_id"]),
         company_unit=CompanyUnit(payload["company_unit"]),
@@ -31,6 +29,13 @@ def _load_case(path: Path) -> OutreachCase:
     )
 
 
+def _load_case(path: Path) -> OutreachCase:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("outreach case must be a JSON object")
+    return _case_from_payload(payload)
+
+
 def _entry_hash(entry: dict[str, Any]) -> str:
     canonical = json.dumps(entry, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -39,7 +44,15 @@ def _entry_hash(entry: dict[str, Any]) -> str:
 def _read_ledger(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    entries: list[dict[str, Any]] = []
+    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        if not line.strip():
+            continue
+        payload = json.loads(line)
+        if not isinstance(payload, dict):
+            raise ValueError(f"ledger line {line_number} must be a JSON object")
+        entries.append(payload)
+    return entries
 
 
 def audit_ledger(path: Path) -> list[str]:
@@ -58,12 +71,9 @@ def audit_ledger(path: Path) -> list[str]:
         previous = stored
         case_payload = entry.get("case")
         if isinstance(case_payload, dict):
-            temporary = Path(".omega-outreach-case.tmp.json")
-            temporary.write_text(json.dumps(case_payload), encoding="utf-8")
-            try:
-                cases.append(_load_case(temporary))
-            finally:
-                temporary.unlink(missing_ok=True)
+            cases.append(_case_from_payload(case_payload))
+        else:
+            errors.append(f"entry {index}: missing case object")
     errors.extend(audit_cases(cases))
     return errors
 
