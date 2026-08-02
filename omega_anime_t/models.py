@@ -24,6 +24,18 @@ class ProjectValidationError(ValueError):
     """Raised when a project violates a blocking OAK rule."""
 
 
+def _json_ready(value: Any) -> Any:
+    """Recursively convert immutable model containers to JSON-native values."""
+
+    if isinstance(value, Enum):
+        return value.value
+    if isinstance(value, dict):
+        return {str(key): _json_ready(item) for key, item in value.items()}
+    if isinstance(value, (tuple, list)):
+        return [_json_ready(item) for item in value]
+    return value
+
+
 @dataclass(frozen=True)
 class CharacterState:
     character_id: str
@@ -182,6 +194,4 @@ class AnimeProject:
             raise ProjectValidationError("\n".join(errors))
 
     def to_dict(self) -> dict[str, Any]:
-        payload = asdict(self)
-        payload["oak_status"] = self.oak_status.value
-        return payload
+        return _json_ready(asdict(self))
