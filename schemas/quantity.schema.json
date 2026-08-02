@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/quantity.schema.json",
+  "title": "Omega Quantity and Uncertainty R0.2",
+  "description": "Unit-aware quantity contract. It does not replace domain metrology, calibration, traceability, or GUM analysis.",
+  "$defs": {
+    "quantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "standard_uncertainty",
+        "distribution",
+        "coverage_factor",
+        "calibration_id",
+        "validity_domain",
+        "provenance",
+        "status"
+      ],
+      "properties": {
+        "value": {"type": "number"},
+        "unit": {"type": "string", "minLength": 1},
+        "standard_uncertainty": {"type": "number", "minimum": 0},
+        "distribution": {
+          "enum": [
+            "normal",
+            "uniform",
+            "triangular",
+            "student_t",
+            "lognormal",
+            "empirical",
+            "unknown"
+          ]
+        },
+        "coverage_factor": {"type": "number", "exclusiveMinimum": 0},
+        "calibration_id": {"type": ["string", "null"]},
+        "validity_domain": {
+          "type": "object",
+          "additionalProperties": {"type": "string"}
+        },
+        "provenance": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        },
+        "status": {"type": "string", "minLength": 1}
+      }
+    },
+    "calibration_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calibration_id",
+        "reference_id",
+        "method",
+        "valid_from",
+        "valid_until",
+        "environment",
+        "source_hash",
+        "uncertainty_budget"
+      ],
+      "properties": {
+        "calibration_id": {"type": "string", "minLength": 1},
+        "reference_id": {"type": "string", "minLength": 1},
+        "method": {"type": "string", "minLength": 1},
+        "valid_from": {"type": ["string", "null"], "format": "date-time"},
+        "valid_until": {"type": ["string", "null"], "format": "date-time"},
+        "environment": {
+          "type": "object",
+          "additionalProperties": {"type": "string"}
+        },
+        "source_hash": {"type": ["string", "null"]},
+        "uncertainty_budget": {
+          "type": "object",
+          "additionalProperties": {"type": "number", "minimum": 0}
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/quantity"},
+    {"$ref": "#/$defs/calibration_reference"},
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["names", "quantities", "covariance"],
+      "properties": {
+        "names": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "quantities": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/quantity"}
+        },
+        "covariance": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {"type": "number"}
+          }
+        }
+      }
+    }
+  ]
+}

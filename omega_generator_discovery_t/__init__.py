@@ -1,5 +1,41 @@
 """Ω-GENERATOR-DISCOVERY-STACK public API."""
 from .autolab import ExperimentCandidate, ExperimentDecision, prioritize_experiments
+from .campaign import (
+    CampaignAxes,
+    CampaignEmitter,
+    CampaignEmissionReport,
+    CampaignPartition,
+    CampaignSpec,
+    benchmark_addition,
+    generator_addition,
+    iter_generator_bundles,
+    load_campaign_spec,
+    mixed_radix_decode,
+    partition_campaign,
+    stream_digest,
+)
+from .campaign_scale import (
+    PROFILE_MULTIPLIERS,
+    FrontierDecision,
+    FrontierLedger,
+    FrontierObservation,
+    FrontierPolicy,
+    ScaleEpoch,
+    ScalePartition,
+    ScalePlan,
+    ScalePlanner,
+    ScalePolicy,
+    ValidationPolicy,
+    ValidationReport,
+    decide_next_frontier,
+    epoch_spec,
+    epochize_record,
+    iter_epoch_bundles,
+    resolve_target_records,
+    validate_epoch_range,
+    write_partition_matrix,
+)
+from .campaign_scale_emitter import ScaleEmissionReport, ScalePartitionEmitter
 from .core import (
     AffineGenerator1D,
     GeneratorSyndrome,
@@ -32,19 +68,28 @@ from .ultra_catalog import (
 )
 
 __all__ = [
-    "AffineGenerator1D", "EpistemicTransition", "ExperimentCandidate",
-    "ExperimentDecision", "GeneratorSyndrome", "HolonomyReport",
-    "InstrumentProtocol", "LinearGeneratorOperator", "MorphIR",
-    "FRONTS", "FrontSpec", "OrderExperiment", "SpectralMorph",
-    "UltraAuditReport", "UltraGeneratorRecord",
-    "audit_ultra_catalog", "catalog_statistics", "compare_spectra",
-    "compile_morph_ir", "compile_protocol", "crystal_holonomy",
-    "design_order_experiment", "deterministic_validation_sample",
-    "evidence_growth_transition", "export_subatlas",
-    "fit_scalar_generator", "front_registry", "generator_syndrome",
-    "get_generator", "identify_affine_1d", "load_manifest",
-    "lorentzian", "mixture", "prioritize_experiments",
-    "query_generators", "related_bundle", "semigroup_defect",
+    "AffineGenerator1D", "CampaignAxes", "CampaignEmitter",
+    "CampaignEmissionReport", "CampaignPartition", "CampaignSpec",
+    "EpistemicTransition", "ExperimentCandidate", "ExperimentDecision",
+    "FRONTS", "FrontSpec", "FrontierDecision", "FrontierLedger",
+    "FrontierObservation", "FrontierPolicy", "GeneratorSyndrome",
+    "HolonomyReport", "InstrumentProtocol", "LinearGeneratorOperator",
+    "MorphIR", "OrderExperiment", "PROFILE_MULTIPLIERS", "ScaleEmissionReport",
+    "ScaleEpoch", "ScalePartition", "ScalePartitionEmitter", "ScalePlan",
+    "ScalePlanner", "ScalePolicy", "SpectralMorph", "UltraAuditReport",
+    "UltraGeneratorRecord", "ValidationPolicy", "ValidationReport",
+    "audit_ultra_catalog", "benchmark_addition", "catalog_statistics",
+    "compare_spectra", "compile_morph_ir", "compile_protocol",
+    "crystal_holonomy", "decide_next_frontier", "design_order_experiment",
+    "deterministic_validation_sample", "epoch_spec", "epochize_record",
+    "evidence_growth_transition", "export_subatlas", "fit_scalar_generator",
+    "front_registry", "generator_addition", "generator_syndrome",
+    "get_generator", "identify_affine_1d", "iter_epoch_bundles",
+    "iter_generator_bundles", "load_campaign_spec", "load_manifest",
+    "lorentzian", "mixed_radix_decode", "mixture", "partition_campaign",
+    "prioritize_experiments", "query_generators", "related_bundle",
+    "resolve_target_records", "semigroup_defect", "stream_digest",
+    "validate_epoch_range", "write_partition_matrix",
 ]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
