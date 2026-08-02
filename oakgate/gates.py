@@ -1,31 +1,48 @@
-"""Deterministic OAKGate rules for evidence, execution, privacy, and claims."""
+"""Deterministic OAKGate rules for evidence, execution, privacy, IP, and U²."""
 
 from __future__ import annotations
 
 import re
 
-from .model import Claim, EpistemicLayer, EpistemicStatus, Finding, GateDecision, GateReport
-
-
-_ABSOLUTE_PATTERNS: tuple[tuple[str, str], ...] = (
-    (r"\bpreuve absolue\b", "Replace with the strongest evidence-bounded status."),
-    (r"\b100\s*%\s+(?:de\s+)?(?:consensus|approbation|gratitude)\b", "Report observed sample size and method."),
-    (r"\b(?:contr[oô]le|commande|reprogramme)\s+(?:l['’])?(?:univers|omnivers|humanit[eé]|ga[iï]a)\b", "Downgrade to MythOS or define a measurable subsystem."),
-    (r"\b(?:publication|gravure|incrustation)\s+irr[eé]versible\b", "Use versioned, reviewable, reversible publication states."),
-    (r"\bremplace\s+(?:la\s+)?constante\b", "Remove the physical-law claim or provide a formal derivation and evidence."),
-    (r"\bextraterrestres?\s+(?:confirm[eé]s?|int[eé]gr[eé]s?|soumis)\b", "Mark as speculative unless independently verified evidence exists."),
-    (r"\b(?:aucune|z[eé]ro)\s+entropie\b", "Define the system boundary and report a thermodynamic balance."),
+from .config import DEFAULT_RULE_PACK, RulePack
+from .model import (
+    Claim,
+    EpistemicLayer,
+    EpistemicStatus,
+    Finding,
+    GateDecision,
+    GateReport,
+    SourceLocation,
 )
+from .provenance import verify_claim_provenance
+from .uncertainty import assess_confidence
+
 
 _EXECUTION_WORDS = re.compile(
-    r"\b(?:publi[eé]|d[eé]ploy[eé]|commit(?:t[eé])?|push(?:[eé])?|sync(?:hronis[eé])?|envoy[eé])\b",
+    r"\b(?:publi[eé]|d[eé]ploy[eé]|commit(?:t[eé])?|push(?:[eé])?|"
+    r"sync(?:hronis[eé])?|envoy[eé]|fusionn[eé]|mis[e]?\s+en\s+production)\b",
     re.IGNORECASE,
 )
 
 _SENSITIVE_PATTERNS: tuple[tuple[str, str], ...] = (
-    (r"\bn[eé]\s+[àa]\s+[A-ZÀ-ÖØ-Ý][\wÀ-ÿ'’-]+", "Remove birthplace from public technical claims."),
-    (r"\b(?:le\s+)?\d{1,2}\s+(?:janvier|f[eé]vrier|mars|avril|mai|juin|juillet|ao[uû]t|septembre|octobre|novembre|d[eé]cembre)\s+\d{4}\b", "Remove full birth date from public artifacts."),
-    (r"\bfils\s+de\b|\bfille\s+de\b", "Do not publish family relationships without explicit consent and necessity."),
+    (
+        r"\bn[eé]\s+[àa]\s+[A-ZÀ-ÖØ-Ý][\wÀ-ÿ'’-]+",
+        "Remove birthplace from public technical claims.",
+    ),
+    (
+        r"\b(?:le\s+)?\d{1,2}\s+"
+        r"(?:janvier|f[eé]vrier|mars|avril|mai|juin|juillet|ao[uû]t|"
+        r"septembre|octobre|novembre|d[eé]cembre)\s+\d{4}\b",
+        "Remove full birth date from public artifacts.",
+    ),
+    (
+        r"\bfils\s+de\b|\bfille\s+de\b",
+        "Do not publish family relationships without explicit consent and necessity.",
+    ),
+    (
+        r"\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b",
+        "Remove personal phone numbers from public technical claims.",
+    ),
 )
 
 _ALLOWED_IP_CLASSES = {
@@ -38,6 +55,8 @@ _ALLOWED_IP_CLASSES = {
     "NOT_APPLICABLE",
 }
 
+_NON_PUBLIC_IP_CLASSES = {"PATENT_CANDIDATE", "TRADE_SECRET", "CONFIDENTIAL"}
+
 
 def _finding(
     code: str,
@@ -48,11 +67,16 @@ def _finding(
     return Finding(code, severity, message, remediation)
 
 
-def evaluate_claim(claim: Claim) -> GateReport:
+def evaluate_claim(
+    claim: Claim,
+    *,
+    rule_pack: RulePack | None = None,
+    source: SourceLocation | None = None,
+) -> GateReport:
     """Evaluate one claim with deterministic, dependency-free OAK rules."""
 
     findings: list[Finding] = []
-    normalized = claim.text.casefold()
+    pack = rule_pack or DEFAULT_RULE_PACK
 
     if claim.status.rank >= EpistemicStatus.FORMALIZATION.rank and not claim.evidence:
         findings.append(
@@ -74,42 +98,32 @@ def evaluate_claim(claim: Claim) -> GateReport:
             )
         )
 
-    if claim.status in {
-        EpistemicStatus.EMPIRICAL,
-        EpistemicStatus.REPRODUCED,
-        EpistemicStatus.CERTIFIED,
-        EpistemicStatus.DEPLOYED,
-    } and claim.uncertainty == 0.0:
-        findings.append(
-            _finding(
-                "OAK-UNCERTAINTY-001",
-                GateDecision.WARN,
-                "An empirical or deployed claim reports zero uncertainty.",
-                "Document measurement, model, sampling, and residual uncertainty.",
-            )
-        )
-
     if claim.ip_classification not in _ALLOWED_IP_CLASSES:
         findings.append(
             _finding(
                 "OAK-IP-001",
                 GateDecision.BLOCK,
                 "IP classification is missing or unsupported.",
-                "Classify as OPEN_SOURCE, PUBLICATION, PATENT_CANDIDATE, TRADE_SECRET, TRADEMARK, CONFIDENTIAL, or NOT_APPLICABLE.",
+                "Classify as OPEN_SOURCE, PUBLICATION, PATENT_CANDIDATE, "
+                "TRADE_SECRET, TRADEMARK, CONFIDENTIAL, or NOT_APPLICABLE.",
             )
         )
 
-    for pattern, remediation in _ABSOLUTE_PATTERNS:
-        if re.search(pattern, normalized, flags=re.IGNORECASE):
-            findings.append(
-                _finding(
-                    "OAK-OVERCLAIM-001",
-                    GateDecision.BLOCK,
-                    "Absolute or reality-level claim detected without an operational boundary.",
-                    remediation,
-                )
+    if claim.public_intent and claim.ip_classification in _NON_PUBLIC_IP_CLASSES:
+        findings.append(
+            _finding(
+                "OAK-IP-PUBLIC-001",
+                GateDecision.BLOCK,
+                "Public intent conflicts with a non-public IP classification.",
+                "Run IPGate and remove public intent until disclosure is authorized.",
             )
-            break
+        )
+
+    for rule in pack.rules:
+        if rule.compile().search(claim.text):
+            findings.append(
+                _finding(rule.code, rule.severity, rule.message, rule.remediation)
+            )
 
     if _EXECUTION_WORDS.search(claim.text) and not claim.artifacts:
         findings.append(
@@ -117,7 +131,18 @@ def evaluate_claim(claim: Claim) -> GateReport:
                 "OAK-EXECUTION-001",
                 GateDecision.BLOCK,
                 "An external action is described as completed without an execution artifact.",
-                "Attach a commit SHA, deployment URL, signed log, message ID, or mark the action as planned.",
+                "Attach a commit SHA, deployment URL, signed log, message ID, "
+                "or mark the action as planned.",
+            )
+        )
+
+    if "irreversible_publication" in {risk.casefold() for risk in claim.risks}:
+        findings.append(
+            _finding(
+                "OAK-RISK-IRREVERSIBLE-001",
+                GateDecision.BLOCK,
+                "The risk register explicitly contains irreversible publication.",
+                "Replace it with a versioned, retractable, human-approved release process.",
             )
         )
 
@@ -154,6 +179,49 @@ def evaluate_claim(claim: Claim) -> GateReport:
             )
         )
 
+    if (
+        claim.layer is EpistemicLayer.REALITY
+        and claim.status.rank < EpistemicStatus.EMPIRICAL.rank
+    ):
+        findings.append(
+            _finding(
+                "OAK-LAYER-REALITY-001",
+                GateDecision.WARN,
+                "RealityOS content is below the empirical evidence level.",
+                "Move it to TheoryOS/PrototypeOS or collect an observed measurement.",
+            )
+        )
+
+    if claim.provenance_hash is not None and not verify_claim_provenance(claim):
+        findings.append(
+            _finding(
+                "OAK-PROVENANCE-001",
+                GateDecision.BLOCK,
+                "The supplied provenance hash does not match the canonical claim payload.",
+                "Recompute the SHA-256 hash after the final reviewed change.",
+            )
+        )
+
+    confidence = assess_confidence(claim)
+    if confidence.debt >= 0.50:
+        findings.append(
+            _finding(
+                "OAK-U2-DEBT-001",
+                GateDecision.BLOCK,
+                f"Severe confidence debt detected ({confidence.debt:.2f}).",
+                "Increase uncertainty, downgrade status, or add evidence and artifacts.",
+            )
+        )
+    elif confidence.debt >= 0.25:
+        findings.append(
+            _finding(
+                "OAK-U2-DEBT-001",
+                GateDecision.WARN,
+                f"Confidence debt detected ({confidence.debt:.2f}).",
+                "Increase uncertainty or strengthen the evidence package.",
+            )
+        )
+
     if not findings:
         decision = GateDecision.PASS
     elif any(item.severity is GateDecision.BLOCK for item in findings):
@@ -161,4 +229,11 @@ def evaluate_claim(claim: Claim) -> GateReport:
     else:
         decision = GateDecision.WARN
 
-    return GateReport(claim.claim_id, decision, tuple(findings))
+    return GateReport(
+        claim_id=claim.claim_id,
+        decision=decision,
+        findings=tuple(findings),
+        source=source,
+        confidence_debt=confidence.debt,
+        justified_confidence=confidence.justified,
+    )
