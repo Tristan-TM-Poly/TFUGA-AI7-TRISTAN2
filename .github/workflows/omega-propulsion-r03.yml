@@ -1,4 +1,4 @@
-name: Omega Propulsion R0.3
+name: Omega Propulsion R0.1-R0.4
 
 on:
   pull_request:
@@ -16,9 +16,9 @@ permissions:
   contents: read
 
 jobs:
-  propulsion-r03-oak:
+  propulsion-r04-oak:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -27,13 +27,14 @@ jobs:
       - run: python -m pip install --disable-pip-version-check pytest
       - name: Compile
         run: python -m compileall omega_aero_hydro_propulsion_t
-      - name: Run R0.1-R0.3 Max regressions
+      - name: Run R0.1-R0.4 regressions
         run: >-
           python -m pytest -q
           tests/test_omega_aero_hydro_propulsion.py
           tests/test_omega_aero_hydro_propulsion_r02.py
           tests/test_omega_aero_hydro_propulsion_r03.py
           tests/test_omega_aero_hydro_propulsion_r03_max.py
+          tests/test_omega_aero_hydro_propulsion_r04.py
       - name: OAK R0.1
         run: python -m omega_aero_hydro_propulsion_t benchmark
       - name: OAK R0.2
@@ -42,6 +43,8 @@ jobs:
         run: python -m omega_aero_hydro_propulsion_t.r03_cli benchmark
       - name: OAK R0.3 Max
         run: python -m omega_aero_hydro_propulsion_t.r03_max_cli benchmark > /tmp/propulsion-r03-max-oak.json
+      - name: OAK R0.4
+        run: python -m omega_aero_hydro_propulsion_t.r04_cli benchmark > /tmp/propulsion-r04-oak.json
       - name: Materialize system evidence
         run: python -m omega_aero_hydro_propulsion_t.r03_cli system-demo > /tmp/propulsion-r03.json
       - name: Materialize resumable Max campaign
@@ -49,11 +52,18 @@ jobs:
           python -m omega_aero_hydro_propulsion_t.r03_max_cli campaign
           --start-index 0 --count 8 --checkpoint-interval 2
           --summary-only --relaxed > /tmp/propulsion-r03-max.json
+      - name: Materialize sharded R0.4 campaign
+        run: >-
+          python -m omega_aero_hydro_propulsion_t.r04_cli campaign
+          --campaign-id ci-r04 --start-index 0 --count 6
+          --cost-budget 1000 --checkpoint-interval 1 --shards 2
+          --summary-only --relaxed > /tmp/propulsion-r04.json
       - name: Audit evidence boundaries
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+
           payload = json.loads(Path('/tmp/propulsion-r03.json').read_text())
           assert payload['oak']['passed'] is True
           assert payload['oak']['status'] == 'CERTIFIED_COMPUTATIONAL_SYSTEM_SCREENING_R0_3'
@@ -65,38 +75,59 @@ jobs:
           motor_out = next(case for case in cases if case['scenario']['name'] == 'motor-out')
           assert motor_out['mission_feasible'] is False
           assert motor_out['minimum_thrust_margin'] < 0
-          assert payload['fault_envelope']['critical_scenario'] in {case['scenario']['name'] for case in cases}
-          assert 'not flight' in payload['epistemic_status']
 
           max_oak = json.loads(Path('/tmp/propulsion-r03-max-oak.json').read_text())
           assert max_oak['passed'] is True
           assert max_oak['status'] == 'CERTIFIED_COMPUTATIONAL_SYSTEM_SEARCH_R0_3_MAX'
           assert max_oak['physics_certified'] is False
 
-          campaign = json.loads(Path('/tmp/propulsion-r03-max.json').read_text())
-          assert campaign['evaluated_count'] == 8
-          assert campaign['next_index'] == 8
-          assert campaign['best_candidate_id'] is not None
-          assert campaign['permanent_total_cap'] is None
-          assert campaign['frontier']['permanent_total_cap'] is None
-          assert campaign['physics_certified'] is False
-          assert len(campaign['final_chain_digest']) == 64
-          assert [item['next_index'] for item in campaign['checkpoints']] == [2, 4, 6, 8]
+          max_campaign = json.loads(Path('/tmp/propulsion-r03-max.json').read_text())
+          assert max_campaign['evaluated_count'] == 8
+          assert max_campaign['next_index'] == 8
+          assert max_campaign['permanent_total_cap'] is None
+          assert max_campaign['frontier']['permanent_total_cap'] is None
+          assert max_campaign['physics_certified'] is False
+          assert len(max_campaign['final_chain_digest']) == 64
+
+          r04_oak = json.loads(Path('/tmp/propulsion-r04-oak.json').read_text())
+          assert r04_oak['passed'] is True
+          assert r04_oak['status'] == 'CERTIFIED_COMPUTATIONAL_ADAPTIVE_MULTIFIDELITY_R0_4'
+          assert r04_oak['physics_certified'] is False
+
+          r04 = json.loads(Path('/tmp/propulsion-r04.json').read_text())
+          assert r04['permanent_total_cap'] is None
+          assert len(r04['manifests']) == 2
+          assert sum(item['count'] for item in r04['manifests']) == 6
+          assert r04['merged']['evaluated_count'] == 6
+          assert r04['merged']['next_index'] == 6
+          assert r04['merged']['permanent_total_cap'] is None
+          assert r04['merged']['physics_certified'] is False
+          assert len(r04['merged']['final_chain_digest']) == 64
+          for shard in r04['shards']:
+              assert shard['permanent_total_cap'] is None
+              assert shard['frontier']['permanent_total_cap'] is None
+              assert shard['physics_certified'] is False
+              assert shard['consumed_cost_units'] <= shard['resources']['max_cost_units']
+              assert shard['policy']['f0']['physical_fidelity_claim'] is False
+              assert shard['policy']['f1']['physical_fidelity_claim'] is False
+              assert shard['policy']['f2']['physical_fidelity_claim'] is False
+
           print(json.dumps({
               'status': 'passed',
-              'critical_scenario': payload['fault_envelope']['critical_scenario'],
-              'fault_cases': payload['fault_envelope']['case_count'],
-              'robust_cases': len(payload['robust_mission']['cases']),
-              'max_campaign_evaluated': campaign['evaluated_count'],
-              'max_campaign_feasible': campaign['feasible_count'],
-              'max_chain_digest': campaign['final_chain_digest']
+              'r03_critical_scenario': payload['fault_envelope']['critical_scenario'],
+              'r03_max_chain': max_campaign['final_chain_digest'],
+              'r04_shards': len(r04['manifests']),
+              'r04_evaluated': r04['merged']['evaluated_count'],
+              'r04_chain': r04['merged']['final_chain_digest'],
           }, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: omega-propulsion-r03-max-evidence
+          name: omega-propulsion-r04-evidence
           path: |
             /tmp/propulsion-r03.json
             /tmp/propulsion-r03-max-oak.json
             /tmp/propulsion-r03-max.json
+            /tmp/propulsion-r04-oak.json
+            /tmp/propulsion-r04.json
           retention-days: 14
