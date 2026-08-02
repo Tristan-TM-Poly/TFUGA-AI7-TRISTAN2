@@ -1,6 +1,12 @@
 from __future__ import annotations
 
 import json
+import sys
+from pathlib import Path
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from omega_cyber_physical_systems_t.compiler import compile_prototype, demo_integrated_robot_intent
 from omega_cyber_physical_systems_t.cosim import demo_fault_scenario, demo_nominal_scenario, run_closed_loop_axis
