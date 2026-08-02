@@ -1,3 +1,5 @@
 "use strict";
 
-import "./src/main.js";
+import { startApplication } from "./src/application.js";
+
+startApplication();
