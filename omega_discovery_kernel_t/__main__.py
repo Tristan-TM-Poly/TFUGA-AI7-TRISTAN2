@@ -5,6 +5,7 @@ Examples:
     python -m omega_discovery_kernel_t audit path/to/events.jsonl
     python -m omega_discovery_kernel_t catalog --output event-catalog.json
     python -m omega_discovery_kernel_t frontier --events 50000 --output-dir generated/frontier-50k
+    python -m omega_discovery_kernel_t million-frontier --output-dir generated/frontier-1m
     python -m omega_discovery_kernel_t plan-additions --output-dir generated/additions-50100
 """
 from __future__ import annotations
@@ -18,6 +19,7 @@ from .catalog import catalog_manifest
 from .demo import build_raman_closed_loop
 from .factory import KnowledgeFrontierTargets, plan_knowledge_frontier
 from .kernel import DiscoveryLedger
+from .million_frontier import MillionFrontierConfig, run_forced_resume_million_frontier
 from .streaming import AdaptiveFrontierConfig, FrontierExperimentConfig, run_frontier_experiment
 
 
@@ -53,6 +55,23 @@ def _parser() -> argparse.ArgumentParser:
     frontier.add_argument("--commit-interval", type=int, default=1_000)
     frontier.add_argument("--minimum-free-bytes", type=int, default=64 * 1024 * 1024)
     frontier.add_argument("--resume", action="store_true")
+
+    million = sub.add_parser(
+        "million-frontier",
+        help="Force an interruption and exact resume across a finite million-event OAKBench frontier.",
+    )
+    million.add_argument("--events", type=int, default=1_000_000)
+    million.add_argument("--interrupt-after", type=int, default=524_288)
+    million.add_argument("--namespaces", type=int, default=256)
+    million.add_argument("--seed", type=int, default=73)
+    million.add_argument("--output-dir", default="generated/omega_discovery_kernel_t/frontier-1m-r0-3")
+    million.add_argument("--initial-shard-bytes", type=int, default=4 * 1024 * 1024)
+    million.add_argument("--shard-growth-factor", type=float, default=1.6)
+    million.add_argument("--checkpoint-interval", type=int, default=50_000)
+    million.add_argument("--sqlite-batch-size", type=int, default=10_000)
+    million.add_argument("--minimum-free-bytes", type=int, default=512 * 1024 * 1024)
+    million.add_argument("--latency-saturation-seconds", type=float, default=8.0)
+    million.add_argument("--rss-saturation-bytes", type=int, default=2 * 1024 * 1024 * 1024)
 
     plan = sub.add_parser(
         "plan-additions",
@@ -121,6 +140,30 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         print(json.dumps(summary, ensure_ascii=False, indent=2))
         return 0 if not summary["manifest"].get("integrity_findings") else 1
+    if args.command == "million-frontier":
+        config = MillionFrontierConfig(
+            target_events=args.events,
+            forced_interrupt_after=args.interrupt_after,
+            namespace_count=args.namespaces,
+            seed=args.seed,
+            initial_shard_bytes=args.initial_shard_bytes,
+            shard_growth_factor=args.shard_growth_factor,
+            checkpoint_interval=args.checkpoint_interval,
+            sqlite_batch_size=args.sqlite_batch_size,
+            minimum_free_bytes=args.minimum_free_bytes,
+            latency_saturation_seconds_per_10k=args.latency_saturation_seconds,
+            rss_saturation_bytes=args.rss_saturation_bytes,
+        )
+        summary = run_forced_resume_million_frontier(args.output_dir, config=config)
+        print(json.dumps(summary, ensure_ascii=False, indent=2))
+        integrity = summary["manifest"]["integrity"]
+        return 0 if (
+            summary["exact_total_reached"]
+            and integrity["duplicate_ids"] == 0
+            and integrity["orphan_parent_count"] == 0
+            and integrity["contiguous"]
+            and integrity["all_subjects_complete"]
+        ) else 1
     if args.command == "plan-additions":
         targets = KnowledgeFrontierTargets(
             cells=args.cells,
