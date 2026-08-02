@@ -1,0 +1,56 @@
+name: Omega Fluid T
+
+on:
+  pull_request:
+    paths:
+      - "omega_fluid_t/**"
+      - "tests/test_omega_fluid_*.py"
+      - "schemas/fluid_*.json"
+      - "docs/omega-fluid-t/**"
+      - "examples/omega_fluid_t_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-fluid-t.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oak-fluid-core:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile
+        run: python -m compileall omega_fluid_t
+      - name: Test
+        run: python -m pytest -q tests/test_omega_fluid_*.py
+      - name: OAK benchmark
+        run: python -m omega_fluid_t benchmark
+      - name: Verify large virtual frontier plan
+        run: python -m omega_fluid_t frontier-plan --start 1000000000000000000 --count 10000000
+      - name: Materialize 10,000 research cells
+        run: |
+          python -m omega_fluid_t frontier-materialize \
+            --count 10000 \
+            --output-dir /tmp/omega-fluid-frontier-10k \
+            --target-shard-bytes 1048576 \
+            --checkpoint-interval 1000
+      - name: Audit materialization
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('/tmp/omega-fluid-frontier-10k')
+          manifest = json.loads((root / 'manifest.json').read_text())
+          assert manifest['accepted'] == 10_000
+          assert manifest['duplicate_ids'] == 0
+          assert manifest['next_index'] == 10_000
+          assert manifest['remote_mutations'] == 0
+          lines = sum(1 for path in (root / 'shards').glob('*.jsonl') for _ in path.open())
+          assert lines == 10_000
+          print(json.dumps(manifest, indent=2, sort_keys=True))
+          PY
