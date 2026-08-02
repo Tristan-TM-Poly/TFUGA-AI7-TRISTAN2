@@ -1,0 +1,77 @@
+{
+  "policy_id": "omega-unbounded-recursive-evolution-r0.6",
+  "status": "offline_oak_gated_prototype",
+  "candidate_objectives": {
+    "maximize": [
+      "throughput",
+      "quality",
+      "recovery"
+    ],
+    "minimize": [
+      "memory",
+      "latency",
+      "complexity",
+      "overshoot"
+    ],
+    "scalar_score_has_final_authority": false,
+    "selection": "pareto_front_after_hard_gates"
+  },
+  "adversarial_scenarios": [
+    "nominal",
+    "duplicate_storm",
+    "invalid_input",
+    "checkpoint_corruption",
+    "api_latency_and_failure"
+  ],
+  "hard_gates": {
+    "quality_floor": true,
+    "recovery_floor": true,
+    "source_mutations_must_equal": 0,
+    "remote_mutations_must_equal": 0
+  },
+  "proof_bundle": {
+    "content_addressed": true,
+    "hash": "sha256",
+    "required_files": [
+      "candidate.json",
+      "adversarial-scenarios.json",
+      "oakbench-result.json",
+      "canary-report.json",
+      "rollback-plan.json",
+      "authority.json",
+      "manifest.json"
+    ]
+  },
+  "canary": {
+    "stages": [
+      0.01,
+      0.05,
+      0.2,
+      0.5,
+      1.0
+    ],
+    "maximum_quality_drop": 0.01,
+    "maximum_latency_ratio": 1.2,
+    "maximum_memory_ratio": 1.25,
+    "minimum_recovery_rate": 0.95,
+    "regression_action": "rollback_plan_only"
+  },
+  "authority": {
+    "source_mutation": false,
+    "remote_github_mutation": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "automatic_promotion": false,
+    "human_approval_required": true
+  },
+  "memory": {
+    "negative": "m_minus.jsonl",
+    "positive": "m_plus.jsonl",
+    "report": "evolution-report.json"
+  },
+  "canonization": {
+    "independent_reproduction_required": true,
+    "real_workload_required": true,
+    "human_approval_required": true
+  }
+}

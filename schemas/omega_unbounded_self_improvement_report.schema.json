@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/omega_unbounded_self_improvement_report.schema.json",
+  "title": "Omega Unbounded Self-Improvement Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "generated_at",
+    "baseline",
+    "candidates",
+    "decision",
+    "candidate_stream_exhausted",
+    "no_permanent_candidate_cap",
+    "no_source_mutation",
+    "no_auto_merge"
+  ],
+  "properties": {
+    "run_id": {"type": "string", "minLength": 1},
+    "generated_at": {"type": "string", "minLength": 1},
+    "baseline": {"$ref": "#/$defs/outcome"},
+    "candidates": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/outcome"}
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "incumbent",
+        "selected",
+        "selected_fingerprint",
+        "improvement_ratio",
+        "reasons",
+        "requires_human_approval",
+        "remote_mutations"
+      ],
+      "properties": {
+        "status": {"enum": ["promotion_proposed", "no_promotion"]},
+        "incumbent": {"type": "string"},
+        "selected": {"type": ["string", "null"]},
+        "selected_fingerprint": {"type": ["string", "null"]},
+        "improvement_ratio": {"type": "number"},
+        "reasons": {"type": "array", "items": {"type": "string"}},
+        "requires_human_approval": {"const": true},
+        "remote_mutations": {"const": 0}
+      }
+    },
+    "candidate_stream_exhausted": {"type": "boolean"},
+    "no_permanent_candidate_cap": {"const": true},
+    "no_source_mutation": {"const": true},
+    "no_auto_merge": {"const": true}
+  },
+  "$defs": {
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "stable_growth",
+        "cautious_growth",
+        "redesign_factor",
+        "pressure_soft",
+        "pressure_hard",
+        "quality_floor",
+        "fingerprint"
+      ],
+      "properties": {
+        "name": {"type": "string"},
+        "stable_growth": {"type": "number", "exclusiveMinimum": 1},
+        "cautious_growth": {"type": "number", "exclusiveMinimum": 1},
+        "redesign_factor": {"type": "number", "exclusiveMinimum": 1},
+        "pressure_soft": {"type": "number", "minimum": 0},
+        "pressure_hard": {"type": "number", "exclusiveMinimum": 0},
+        "quality_floor": {"type": "number", "minimum": 0, "maximum": 1},
+        "fingerprint": {"type": "string", "minLength": 16, "maxLength": 16}
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario",
+        "status",
+        "total_integrated",
+        "total_rejected",
+        "total_duplicates",
+        "iterations",
+        "saturation_count",
+        "redesign_count",
+        "largest_safe_batch",
+        "final_capacity",
+        "negative_memory_events"
+      ],
+      "properties": {
+        "scenario": {"type": "string"},
+        "status": {"type": "string"},
+        "total_integrated": {"type": "integer", "minimum": 0},
+        "total_rejected": {"type": "integer", "minimum": 0},
+        "total_duplicates": {"type": "integer", "minimum": 0},
+        "iterations": {"type": "integer", "minimum": 0},
+        "saturation_count": {"type": "integer", "minimum": 0},
+        "redesign_count": {"type": "integer", "minimum": 0},
+        "largest_safe_batch": {"type": "integer", "minimum": 0},
+        "final_capacity": {"type": "integer", "minimum": 1},
+        "negative_memory_events": {"type": "integer", "minimum": 0}
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "variant",
+        "scenarios",
+        "completed",
+        "total_integrated",
+        "total_rejected",
+        "total_duplicates",
+        "total_iterations",
+        "total_saturations",
+        "total_redesigns",
+        "largest_safe_batch",
+        "efficiency_score"
+      ],
+      "properties": {
+        "variant": {"$ref": "#/$defs/variant"},
+        "scenarios": {"type": "array", "items": {"$ref": "#/$defs/scenario"}},
+        "completed": {"type": "boolean"},
+        "total_integrated": {"type": "integer", "minimum": 0},
+        "total_rejected": {"type": "integer", "minimum": 0},
+        "total_duplicates": {"type": "integer", "minimum": 0},
+        "total_iterations": {"type": "integer", "minimum": 0},
+        "total_saturations": {"type": "integer", "minimum": 0},
+        "total_redesigns": {"type": "integer", "minimum": 0},
+        "largest_safe_batch": {"type": "integer", "minimum": 0},
+        "efficiency_score": {"type": "number", "minimum": 0}
+      }
+    }
+  }
+}
