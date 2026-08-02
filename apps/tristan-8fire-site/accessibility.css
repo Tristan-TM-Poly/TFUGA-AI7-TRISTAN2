@@ -1,0 +1,44 @@
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *::before,
+html[data-motion="reduced"] *::after {
+  scroll-behavior: auto !important;
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus, rgba(158, 232, 210, 0.35));
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .pill,
+  .panel,
+  .theory-card,
+  .claim-card,
+  .claim-ledger-card,
+  .memory-card,
+  .metric-card,
+  .filter-console,
+  .graph-controls {
+    border: 1px solid CanvasText;
+  }
+
+  .distribution-track i,
+  .oak-track i,
+  .node-prototype,
+  .node-architecture,
+  .node-hypothèse {
+    forced-color-adjust: auto;
+  }
+}

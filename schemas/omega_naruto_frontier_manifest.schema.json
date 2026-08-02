@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_naruto_frontier_manifest.schema.json",
+  "title": "Omega Naruto Frontier Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "target_records",
+    "written_records",
+    "start_ordinal",
+    "next_ordinal",
+    "axis_cardinality",
+    "completed_epochs",
+    "elapsed_seconds",
+    "shards",
+    "corpus_sha256",
+    "complete",
+    "non_claim"
+  ],
+  "properties": {
+    "schema": {"const": "omega_naruto_frontier.manifest.v1"},
+    "target_records": {"type": "integer", "minimum": 0},
+    "written_records": {"type": "integer", "minimum": 0},
+    "start_ordinal": {"type": "integer", "minimum": 0},
+    "next_ordinal": {"type": "integer", "minimum": 0},
+    "axis_cardinality": {"type": "integer", "minimum": 1},
+    "completed_epochs": {"type": "integer", "minimum": 0},
+    "elapsed_seconds": {"type": "number", "minimum": 0},
+    "corpus_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "complete": {"type": "boolean"},
+    "non_claim": {"type": "string", "minLength": 1},
+    "shards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "first_ordinal",
+          "last_ordinal",
+          "record_count",
+          "byte_count",
+          "sha256"
+        ],
+        "properties": {
+          "path": {"type": "string", "pattern": "^corpus-[0-9]{6}\\.jsonl$"},
+          "first_ordinal": {"type": "integer", "minimum": 0},
+          "last_ordinal": {"type": "integer", "minimum": 0},
+          "record_count": {"type": "integer", "minimum": 1},
+          "byte_count": {"type": "integer", "minimum": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

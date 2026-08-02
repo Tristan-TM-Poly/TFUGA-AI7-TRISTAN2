@@ -1,10 +1,10 @@
 name: omega-plasma-t-ci
 on:
   pull_request:
-    paths: ['omega_plasma_t/**','tests/test_omega_plasma_*.py','schemas/omega_plasma_*.json','policies/omega_plasma_oak.json','.github/workflows/omega_plasma_t_ci.yml']
+    paths: ['omega_plasma_t/**','docs/OMEGA_PLASMA_T_INFINITY_R0_1.md','schemas/omega_plasma_*.json','policies/omega_plasma_oak.json','.github/workflows/omega_plasma_t_ci.yml']
   push:
     branches: ['main','feat/omega-plasma-*']
-    paths: ['omega_plasma_t/**','tests/test_omega_plasma_*.py','schemas/omega_plasma_*.json','policies/omega_plasma_oak.json','.github/workflows/omega_plasma_t_ci.yml']
+    paths: ['omega_plasma_t/**','docs/OMEGA_PLASMA_T_INFINITY_R0_1.md','schemas/omega_plasma_*.json','policies/omega_plasma_oak.json','.github/workflows/omega_plasma_t_ci.yml']
   workflow_dispatch:
 jobs:
   test:
@@ -15,7 +15,7 @@ jobs:
         with: {python-version: '3.11'}
       - run: python -m pip install --upgrade pip pytest jsonschema
       - run: python -m compileall -q omega_plasma_t
-      - run: python -m pytest tests/test_omega_plasma_dimensions.py tests/test_omega_plasma_classifier.py tests/test_omega_plasma_model_compiler.py tests/test_omega_plasma_chemistry.py tests/test_omega_plasma_hypergraph.py tests/test_omega_plasma_topology.py tests/test_omega_plasma_oak.py tests/test_omega_plasma_campaign.py tests/test_omega_plasma_dispersion.py tests/test_omega_plasma_atlas.py -q
+      - run: python -m pytest omega_plasma_t/tests -q
       - run: python -m omega_plasma_t.cli assess examples/omega_plasma_state.json --output-dir generated/omega-plasma-ci
       - run: python -m omega_plasma_t.cli campaign examples/omega_plasma_campaign.json --output generated/omega-plasma-ci/campaign.jsonl
       - run: |

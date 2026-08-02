@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_naruto_agent_proposal.schema.json",
+  "title": "Omega Naruto HMAGFM Agent Proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "proposal_id",
+    "agent_id",
+    "hypothesis",
+    "conclusion",
+    "status",
+    "confidence",
+    "uncertainty",
+    "evidence",
+    "provenance",
+    "risk",
+    "chakra_budget"
+  ],
+  "properties": {
+    "proposal_id": {"type": "string", "minLength": 1},
+    "agent_id": {"type": "string", "minLength": 1},
+    "hypothesis": {"type": "string", "minLength": 1},
+    "conclusion": {"type": "string", "minLength": 1},
+    "status": {
+      "enum": [
+        "F0_FICTION",
+        "I1_INTUITION",
+        "H2_HYPOTHESIS",
+        "D3_DEFINITION",
+        "S4_SIMULATION",
+        "P5_PROTOTYPE",
+        "B6_BENCHMARK",
+        "E7_EVIDENCE",
+        "R8_REPLICATED",
+        "C9_CANON"
+      ]
+    },
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "counterevidence": {"type": "array", "items": {"type": "string"}},
+    "provenance": {"type": "array", "items": {"type": "string"}},
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["safety", "privacy", "ip"],
+      "properties": {
+        "safety": {"type": "number", "minimum": 0, "maximum": 1},
+        "privacy": {"type": "number", "minimum": 0, "maximum": 1},
+        "ip": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "chakra_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "compute",
+        "memory",
+        "energy",
+        "time",
+        "attention",
+        "human_review"
+      ],
+      "properties": {
+        "compute": {"type": "number", "minimum": 0},
+        "memory": {"type": "number", "minimum": 0},
+        "energy": {"type": "number", "minimum": 0},
+        "time": {"type": "number", "minimum": 0},
+        "attention": {"type": "number", "minimum": 0},
+        "human_review": {"type": "number", "minimum": 0}
+      }
+    }
+  }
+}

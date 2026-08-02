@@ -46,13 +46,6 @@ def audit_state(state:PlasmaState)->OAKReport:
         findings.append(OAKFinding("SHEATH_REQUIRED","info","A material boundary generally creates a sheath and surface feedback.",{},"resolve or parameterize sheath, emission, charging and surface chemistry"))
     if not state.requested_observables:
         findings.append(OAKFinding("TARGET_UNSPECIFIED","warning","No requested observables or accuracy target were provided.",{},"define observables, tolerances and comparison data before selecting a final model"))
-    checks={
-        "state_valid":True,
-        "charge_inputs_present":bool(state.charged_species()),
-        "electron_present":state.electron() is not None,
-        "geometry_bounded":state.geometry.characteristic_length_m>0,
-        "model_candidates_generated":bool(m.recommended or m.conditional),
-        "contradiction_free":not a.contradictions,
-    }
+    checks={"state_valid":True,"charge_inputs_present":bool(state.charged_species()),"electron_present":state.electron() is not None,"geometry_bounded":state.geometry.characteristic_length_m>0,"model_candidates_generated":bool(m.recommended or m.conditional),"contradiction_free":not a.contradictions}
     status="blocked" if any(x.severity=="error" for x in findings) else "review" if any(x.severity=="warning" for x in findings) else "passed"
     return OAKReport(status,tuple(findings),checks,"computed_not_experimentally_certified",a,m)

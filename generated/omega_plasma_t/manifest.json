@@ -3,30 +3,7 @@
   "release": "R0.1",
   "generated_at": "2026-08-02",
   "epistemic_status": "OAK-safe research software prototype",
-  "local_validation": {
-    "tests_passed": 15,
-    "tests_failed": 0,
-    "campaign_cases": 600,
-    "cli_assessment": "completed",
-    "hardware_actions": 0,
-    "remote_experiments": 0
-  },
-  "atlas": {
-    "source_regimes": 29,
-    "addressable_regimes": 116,
-    "cells_per_regime": 108,
-    "lazy_regime_cells": 12528,
-    "instability_families": 40,
-    "diagnostics": 30,
-    "model_families": 22,
-    "benchmarks": 30,
-    "permanent_cap": false
-  },
-  "authority": {
-    "automatic_hardware_control": false,
-    "automatic_experiment": false,
-    "automatic_publication": false,
-    "automatic_merge": false,
-    "human_approval_required": true
-  }
+  "local_validation": {"tests_passed":15,"tests_failed":0,"campaign_cases":600,"cli_assessment":"completed","hardware_actions":0,"remote_experiments":0},
+  "atlas": {"source_regimes":29,"addressable_regimes":116,"cells_per_regime":108,"lazy_regime_cells":12528,"instability_families":40,"diagnostics":30,"model_families":22,"benchmarks":30,"permanent_cap":false},
+  "authority": {"automatic_hardware_control":false,"automatic_experiment":false,"automatic_publication":false,"automatic_merge":false,"human_approval_required":true}
 }

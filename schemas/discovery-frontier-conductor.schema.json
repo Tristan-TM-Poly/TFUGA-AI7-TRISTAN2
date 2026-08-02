@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/discovery-frontier-conductor.schema.json",
+  "title": "Omega Discovery Frontier Conductor R0.4",
+  "description": "Resource-bounded adaptive frontier plan. A finite plan is not a permanent event ceiling or scientific evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "plan_id",
+    "created_at",
+    "resource_envelope",
+    "policy",
+    "stage_count",
+    "planned_events",
+    "planned_subjects",
+    "exhausted_resource",
+    "no_permanent_total_event_cap",
+    "stages",
+    "oak_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "omega_discovery_kernel.frontier_conductor.v0.4"},
+    "plan_id": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "resource_envelope": {"$ref": "#/$defs/resourceEnvelope"},
+    "policy": {"$ref": "#/$defs/policy"},
+    "stage_count": {"type": "integer", "minimum": 1},
+    "planned_events": {"type": "integer", "minimum": 8, "multipleOf": 8},
+    "planned_subjects": {"type": "integer", "minimum": 1},
+    "exhausted_resource": {"enum": ["writable_bytes", "wall_time_seconds", "none"]},
+    "no_permanent_total_event_cap": {"const": true},
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/stage"}
+    },
+    "oak_boundary": {"type": "string", "minLength": 40}
+  },
+  "$defs": {
+    "resourceEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "wall_time_seconds",
+        "writable_bytes",
+        "rss_soft_bytes",
+        "rollback_reserve_bytes",
+        "minimum_throughput_events_per_second",
+        "maximum_error_rate",
+        "maximum_batch_latency_seconds"
+      ],
+      "properties": {
+        "wall_time_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "writable_bytes": {"type": "integer", "minimum": 1},
+        "rss_soft_bytes": {"type": "integer", "minimum": 1},
+        "rollback_reserve_bytes": {"type": "integer", "minimum": 0},
+        "minimum_throughput_events_per_second": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_error_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "maximum_batch_latency_seconds": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial_events",
+        "growth_factor",
+        "target_events_per_partition",
+        "minimum_partitions",
+        "maximum_parallelism_hint",
+        "validation_sample_ppm",
+        "bytes_per_event_estimate",
+        "throughput_estimate_events_per_second",
+        "stage_time_overhead_seconds",
+        "interruption_fraction",
+        "deep_validation_subjects"
+      ],
+      "properties": {
+        "initial_events": {"type": "integer", "minimum": 8},
+        "growth_factor": {"type": "number", "exclusiveMinimum": 1},
+        "target_events_per_partition": {"type": "integer", "minimum": 8},
+        "minimum_partitions": {"type": "integer", "minimum": 1},
+        "maximum_parallelism_hint": {"type": "integer", "minimum": 1},
+        "validation_sample_ppm": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "bytes_per_event_estimate": {"type": "number", "exclusiveMinimum": 0},
+        "throughput_estimate_events_per_second": {"type": "number", "exclusiveMinimum": 0},
+        "stage_time_overhead_seconds": {"type": "number", "minimum": 0},
+        "interruption_fraction": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1},
+        "deep_validation_subjects": {"type": "integer", "minimum": 1}
+      }
+    },
+    "partition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "partition_index",
+        "event_start",
+        "event_stop",
+        "event_count",
+        "subject_start",
+        "subject_stop",
+        "subject_count"
+      ],
+      "properties": {
+        "partition_index": {"type": "integer", "minimum": 0},
+        "event_start": {"type": "integer", "minimum": 0, "multipleOf": 8},
+        "event_stop": {"type": "integer", "minimum": 8, "multipleOf": 8},
+        "event_count": {"type": "integer", "minimum": 8, "multipleOf": 8},
+        "subject_start": {"type": "integer", "minimum": 0},
+        "subject_stop": {"type": "integer", "minimum": 1},
+        "subject_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_index",
+        "target_events",
+        "target_subjects",
+        "projected_bytes",
+        "projected_seconds",
+        "cumulative_events",
+        "cumulative_bytes",
+        "cumulative_seconds",
+        "forced_interrupt_after",
+        "partition_count",
+        "parallelism_hint",
+        "validation_sample_ppm",
+        "deep_validation_subjects",
+        "stage_fingerprint",
+        "partitions"
+      ],
+      "properties": {
+        "stage_index": {"type": "integer", "minimum": 0},
+        "target_events": {"type": "integer", "minimum": 8, "multipleOf": 8},
+        "target_subjects": {"type": "integer", "minimum": 1},
+        "projected_bytes": {"type": "integer", "minimum": 1},
+        "projected_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "cumulative_events": {"type": "integer", "minimum": 8, "multipleOf": 8},
+        "cumulative_bytes": {"type": "integer", "minimum": 1},
+        "cumulative_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "forced_interrupt_after": {"type": "integer", "minimum": 8, "multipleOf": 8},
+        "partition_count": {"type": "integer", "minimum": 1},
+        "parallelism_hint": {"type": "integer", "minimum": 1},
+        "validation_sample_ppm": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "deep_validation_subjects": {"type": "integer", "minimum": 1},
+        "stage_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "partitions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/partition"}}
+      }
+    }
+  }
+}
