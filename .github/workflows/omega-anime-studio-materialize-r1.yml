@@ -1,0 +1,111 @@
+name: Materialize Omega Anime Studio R1
+
+on:
+  pull_request:
+    paths:
+      - "tools/generate_omega_anime_studio_r1.py.gz"
+      - ".github/workflows/omega-anime-studio-materialize-r1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omega-anime-studio-materialize-r1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout writable head branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 1
+
+      - name: Check one-shot sentinel
+        id: sentinel
+        shell: bash
+        run: |
+          if [[ -f generated/omega_anime_studio_t/.materialized-r1 ]]; then
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Expand audited generator
+        if: steps.sentinel.outputs.needed == 'true'
+        run: |
+          gzip -dc tools/generate_omega_anime_studio_r1.py.gz \
+            > tools/generate_omega_anime_studio_r1.py
+          python tools/generate_omega_anime_studio_r1.py
+
+      - name: Register CLI without disturbing existing scripts
+        if: steps.sentinel.outputs.needed == 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('pyproject.toml')
+          text = path.read_text(encoding='utf-8')
+          entry = 'omega-anime-studio = "omega_anime_studio_t.__main__:main"'
+          if entry not in text:
+              marker = '\n[tool.pytest.ini_options]'
+              if marker not in text:
+                  raise SystemExit('pyproject marker missing')
+              text = text.replace(marker, f'\n{entry}\n{marker}', 1)
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate generated source before mutation
+        if: steps.sentinel.outputs.needed == 'true'
+        run: |
+          python -m pip install --upgrade pip pytest jsonschema
+          python -m compileall \
+            omega_anime_studio_t \
+            tests/test_omega_anime_studio_t_r1.py \
+            examples/omega_anime_studio_r1_demo.py
+          pytest -q tests/test_omega_anime_studio_t_r1.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_anime_studio_t import build_eighth_fire_r1
+          payload = build_eighth_fire_r1().to_dict()
+          schema = json.loads(Path('schemas/anime-ir-r1.schema.json').read_text())
+          Draft202012Validator(schema).validate(payload)
+          assert len(payload['scenes']) == 5
+          assert len(payload['shots']) == 30
+          assert sum(scene['duration_target_s'] for scene in payload['scenes']) == 180
+          assert len(Path('generated/omega_anime_studio_t/matrix-8192.jsonl').read_text().splitlines()) == 8192
+          assert len(Path('generated/omega_anime_studio_t/eighth-fire-shot-frontier-2048.jsonl').read_text().splitlines()) == 2048
+          PY
+
+      - name: Create materialization sentinel
+        if: steps.sentinel.outputs.needed == 'true'
+        run: |
+          mkdir -p generated/omega_anime_studio_t
+          printf '%s\n' 'omega-anime-studio/r1' > generated/omega_anime_studio_t/.materialized-r1
+
+      - name: Commit reviewed materialization
+        if: steps.sentinel.outputs.needed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            omega_anime_studio_t \
+            tests/test_omega_anime_studio_t_r1.py \
+            schemas/anime-ir-r1.schema.json \
+            policies/omega_anime_studio_r1.json \
+            docs/omega_anime_studio_t_r1.md \
+            examples/omega_anime_studio_r1_demo.py \
+            generated/omega_anime_studio_t \
+            tools/generate_omega_anime_studio_r1.py \
+            .github/workflows/omega-anime-studio-r1.yml \
+            pyproject.toml
+          git diff --cached --stat
+          git diff --cached --quiet && exit 0
+          git commit -m "feat(anime): materialize Omega Anime Studio R1"
+          git push origin "HEAD:${{ github.head_ref || github.ref_name }}"
