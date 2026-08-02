@@ -1,4 +1,4 @@
-"""Streaming and SQLite access for Ω-GENERATOR-DISCOVERY R0.3 Ultra.
+"""Streaming and partitioned SQLite access for Ω-GENERATOR-DISCOVERY R0.3 Ultra.
 
 This module queries generated research candidates. It never promotes a candidate
 into a physical law or empirical result. All result sets remain subject to OAK
@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+from collections import defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterator, Mapping, Sequence
@@ -68,15 +69,74 @@ class UltraAuditReport:
         }
 
 
-def _database(root: Path) -> Path:
-    return root / "index" / "omega_generator_r03_ultra.sqlite3"
-
-
 def load_manifest(root: Path = DEFAULT_ROOT) -> dict[str, object]:
     path = root / "manifest.json"
     if not path.exists():
         raise FileNotFoundError(f"Ultra manifest not found: {path}")
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _safe_name(domain: str) -> str:
+    return "".join(character if character.isalnum() or character in "-_" else "_" for character in domain)
+
+
+def _resolve_path(root: Path, value: str | Path) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    atlas_relative = root / path
+    if atlas_relative.exists():
+        return atlas_relative
+    # Backward compatibility with manifests that stored repository-relative paths.
+    if len(root.parents) >= 2:
+        repository_relative = root.parents[1] / path
+        if repository_relative.exists():
+            return repository_relative
+    return atlas_relative
+
+
+def _database_config(root: Path) -> str | dict[str, object]:
+    value = load_manifest(root).get("database")
+    if isinstance(value, (str, dict)):
+        return value
+    # Fallback for an atlas generated before the manifest gained a database field.
+    return "index/omega_generator_r03_ultra.sqlite3"
+
+
+def _is_partitioned(root: Path) -> bool:
+    config = _database_config(root)
+    return isinstance(config, dict) and config.get("mode") == "partitioned_by_domain"
+
+
+def _routing_database(root: Path) -> Path:
+    config = _database_config(root)
+    if isinstance(config, dict):
+        return _resolve_path(root, str(config["routing"]))
+    return _resolve_path(root, config)
+
+
+def _domain_database(root: Path, domain: str) -> Path:
+    if _is_partitioned(root):
+        path = root / "index" / "domains" / f"{_safe_name(domain)}.sqlite3"
+        if not path.exists():
+            raise KeyError(f"Unknown or missing domain partition: {domain}")
+        return path
+    return _routing_database(root)
+
+
+def _partition_paths(root: Path) -> tuple[Path, ...]:
+    config = _database_config(root)
+    if isinstance(config, dict) and config.get("mode") == "partitioned_by_domain":
+        return tuple(_resolve_path(root, str(value)) for value in config["partitions"])
+    return (_routing_database(root),)
+
+
+def _connect(path: Path) -> sqlite3.Connection:
+    if not path.exists():
+        raise FileNotFoundError(path)
+    connection = sqlite3.connect(path)
+    connection.row_factory = sqlite3.Row
+    return connection
 
 
 def _row_to_generator(row: sqlite3.Row) -> UltraGeneratorRecord:
@@ -97,6 +157,36 @@ def _row_to_generator(row: sqlite3.Row) -> UltraGeneratorRecord:
         operator_dsl=str(payload["operator_dsl"]),
         payload=payload,
     )
+
+
+def _fetch_records_by_ids(root: Path, routing_rows: Sequence[sqlite3.Row]) -> tuple[UltraGeneratorRecord, ...]:
+    if not routing_rows:
+        return ()
+    if "payload" in routing_rows[0].keys():
+        return tuple(_row_to_generator(row) for row in routing_rows)
+
+    ids_by_domain: dict[str, list[str]] = defaultdict(list)
+    ordered_ids: list[str] = []
+    for row in routing_rows:
+        generator_id = str(row["id"])
+        ordered_ids.append(generator_id)
+        ids_by_domain[str(row["domain"])].append(generator_id)
+
+    records: dict[str, UltraGeneratorRecord] = {}
+    for domain, generator_ids in ids_by_domain.items():
+        connection = _connect(_domain_database(root, domain))
+        try:
+            for start in range(0, len(generator_ids), 500):
+                chunk = generator_ids[start : start + 500]
+                placeholders = ",".join("?" for _ in chunk)
+                for row in connection.execute(
+                    f"SELECT * FROM generators WHERE id IN ({placeholders})", chunk
+                ):
+                    record = _row_to_generator(row)
+                    records[record.id] = record
+        finally:
+            connection.close()
+    return tuple(records[generator_id] for generator_id in ordered_ids)
 
 
 def query_generators(
@@ -138,34 +228,36 @@ def query_generators(
         clauses.append("supports_inverse=?")
         parameters.append(int(supports_inverse))
     where = " WHERE " + " AND ".join(clauses) if clauses else ""
-    sql = (
-        "SELECT * FROM generators" + where
-        + " ORDER BY ordinal LIMIT ? OFFSET ?"
-    )
+    sql = "SELECT * FROM generators" + where + " ORDER BY ordinal LIMIT ? OFFSET ?"
     parameters.extend([limit, offset])
-    connection = sqlite3.connect(_database(root))
-    connection.row_factory = sqlite3.Row
+    connection = _connect(_routing_database(root))
     try:
-        return tuple(_row_to_generator(row) for row in connection.execute(sql, parameters))
+        routing_rows = tuple(connection.execute(sql, parameters))
     finally:
         connection.close()
+    return _fetch_records_by_ids(root, routing_rows)
 
 
 def get_generator(generator_id: str, root: Path = DEFAULT_ROOT) -> UltraGeneratorRecord:
-    connection = sqlite3.connect(_database(root))
-    connection.row_factory = sqlite3.Row
+    routing = _connect(_routing_database(root))
     try:
-        row = connection.execute("SELECT * FROM generators WHERE id=?", (generator_id,)).fetchone()
-        if row is None:
-            raise KeyError(generator_id)
-        return _row_to_generator(row)
+        row = routing.execute("SELECT * FROM generators WHERE id=?", (generator_id,)).fetchone()
     finally:
-        connection.close()
+        routing.close()
+    if row is None:
+        raise KeyError(generator_id)
+    return _fetch_records_by_ids(root, (row,))[0]
 
 
 def related_bundle(generator_id: str, root: Path = DEFAULT_ROOT) -> dict[str, object]:
-    connection = sqlite3.connect(_database(root))
-    connection.row_factory = sqlite3.Row
+    routing = _connect(_routing_database(root))
+    try:
+        route = routing.execute("SELECT domain FROM generators WHERE id=?", (generator_id,)).fetchone()
+    finally:
+        routing.close()
+    if route is None:
+        raise KeyError(generator_id)
+    connection = _connect(_domain_database(root, str(route["domain"])))
     try:
         generator = connection.execute("SELECT payload FROM generators WHERE id=?", (generator_id,)).fetchone()
         if generator is None:
@@ -201,12 +293,18 @@ def related_bundle(generator_id: str, root: Path = DEFAULT_ROOT) -> dict[str, ob
 
 
 def catalog_statistics(root: Path = DEFAULT_ROOT) -> dict[str, object]:
-    connection = sqlite3.connect(_database(root))
+    manifest = load_manifest(root)
+    counts_raw = manifest["counts"]
+    assert isinstance(counts_raw, dict)
+    counts = {
+        "generators": int(counts_raw["generators"]),
+        "benchmarks": int(counts_raw["benchmarks"]),
+        "hyperedges": int(counts_raw["hyperedges"]),
+        "negative_controls": int(counts_raw["negative_controls"]),
+        "validations": int(counts_raw["validations"]),
+    }
+    connection = _connect(_routing_database(root))
     try:
-        counts = {
-            table: connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-            for table in ("generators", "benchmarks", "hyperedges", "negative_controls", "validations")
-        }
         distributions = {}
         for column in ("domain", "family", "scale", "representation", "regime", "status", "risk_tier"):
             distributions[column] = dict(
@@ -214,14 +312,15 @@ def catalog_statistics(root: Path = DEFAULT_ROOT) -> dict[str, object]:
                     f"SELECT {column},COUNT(*) FROM generators GROUP BY {column} ORDER BY {column}"
                 ).fetchall()
             )
-        return {
-            "counts": counts,
-            "total_records": sum(counts.values()),
-            "distributions": distributions,
-            "manifest": load_manifest(root),
-        }
     finally:
         connection.close()
+    return {
+        "counts": counts,
+        "total_records": sum(counts.values()),
+        "distributions": distributions,
+        "database_mode": "partitioned_by_domain" if _is_partitioned(root) else "monolithic",
+        "manifest": manifest,
+    }
 
 
 def deterministic_validation_sample(
@@ -232,7 +331,7 @@ def deterministic_validation_sample(
         raise ValueError("modulus must be positive")
     if residue < 0 or residue >= modulus:
         raise ValueError("residue must satisfy 0 <= residue < modulus")
-    connection = sqlite3.connect(_database(root))
+    connection = _connect(_routing_database(root))
     try:
         if include_all_high_risk:
             rows = connection.execute(
@@ -279,64 +378,88 @@ def export_subatlas(
     }
 
 
+def _audit_connection(connection: sqlite3.Connection) -> dict[str, int]:
+    return {
+        "generators": connection.execute("SELECT COUNT(*) FROM generators").fetchone()[0],
+        "benchmarks": connection.execute("SELECT COUNT(*) FROM benchmarks").fetchone()[0],
+        "hyperedges": connection.execute("SELECT COUNT(*) FROM hyperedges").fetchone()[0],
+        "negative_controls": connection.execute("SELECT COUNT(*) FROM negative_controls").fetchone()[0],
+        "validations": connection.execute("SELECT COUNT(*) FROM validations").fetchone()[0],
+        "orphan_benchmarks": connection.execute(
+            "SELECT COUNT(*) FROM benchmarks b LEFT JOIN generators g ON g.id=b.generator_id WHERE g.id IS NULL"
+        ).fetchone()[0],
+        "orphan_hyperedges": connection.execute(
+            "SELECT COUNT(*) FROM hyperedges e LEFT JOIN generators l ON l.id=e.left_id LEFT JOIN generators r ON r.id=e.right_id WHERE l.id IS NULL OR r.id IS NULL"
+        ).fetchone()[0],
+        "missing_negative_controls": connection.execute(
+            "SELECT COUNT(*) FROM generators g LEFT JOIN negative_controls n ON n.generator_id=g.id WHERE n.id IS NULL"
+        ).fetchone()[0],
+        "missing_validations": connection.execute(
+            "SELECT COUNT(*) FROM generators g LEFT JOIN validations v ON v.generator_id=g.id WHERE v.id IS NULL"
+        ).fetchone()[0],
+        "high_risk_not_exhaustive": connection.execute(
+            "SELECT COUNT(*) FROM validations WHERE risk_tier='high' AND validation_mode!='exhaustive_required'"
+        ).fetchone()[0],
+    }
+
+
 def audit_ultra_catalog(root: Path = DEFAULT_ROOT) -> UltraAuditReport:
     manifest = load_manifest(root)
-    expected = manifest["counts"]
-    assert isinstance(expected, dict)
-    connection = sqlite3.connect(_database(root))
+    expected_raw = manifest["counts"]
+    assert isinstance(expected_raw, dict)
+    expected = {
+        "generators": int(expected_raw["generators"]),
+        "benchmarks": int(expected_raw["benchmarks"]),
+        "hyperedges": int(expected_raw["hyperedges"]),
+        "negative_controls": int(expected_raw["negative_controls"]),
+        "validations": int(expected_raw["validations"]),
+    }
+    totals = {key: 0 for key in (
+        "generators", "benchmarks", "hyperedges", "negative_controls", "validations",
+        "orphan_benchmarks", "orphan_hyperedges", "missing_negative_controls",
+        "missing_validations", "high_risk_not_exhaustive",
+    )}
+    for path in _partition_paths(root):
+        connection = _connect(path)
+        try:
+            local = _audit_connection(connection)
+        finally:
+            connection.close()
+        for key, value in local.items():
+            totals[key] += value
+
+    routing = _connect(_routing_database(root))
     try:
-        counts = {
-            table: connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-            for table in ("generators", "benchmarks", "hyperedges", "negative_controls", "validations")
-        }
-        orphan_benchmarks = connection.execute(
-            "SELECT COUNT(*) FROM benchmarks b LEFT JOIN generators g ON g.id=b.generator_id WHERE g.id IS NULL"
-        ).fetchone()[0]
-        orphan_hyperedges = connection.execute(
-            "SELECT COUNT(*) FROM hyperedges e LEFT JOIN generators l ON l.id=e.left_id LEFT JOIN generators r ON r.id=e.right_id WHERE l.id IS NULL OR r.id IS NULL"
-        ).fetchone()[0]
-        missing_negative_controls = connection.execute(
-            "SELECT COUNT(*) FROM generators g LEFT JOIN negative_controls n ON n.generator_id=g.id WHERE n.id IS NULL"
-        ).fetchone()[0]
-        missing_validations = connection.execute(
-            "SELECT COUNT(*) FROM generators g LEFT JOIN validations v ON v.generator_id=g.id WHERE v.id IS NULL"
-        ).fetchone()[0]
-        high_risk_not_exhaustive = connection.execute(
-            "SELECT COUNT(*) FROM validations WHERE risk_tier='high' AND validation_mode!='exhaustive_required'"
-        ).fetchone()[0]
-        duplicate_coordinate_groups = connection.execute(
+        routing_count = routing.execute("SELECT COUNT(*) FROM generators").fetchone()[0]
+        duplicate_coordinate_groups = routing.execute(
             "SELECT COUNT(*) FROM (SELECT domain,family,scale,representation,regime,COUNT(*) c FROM generators GROUP BY domain,family,scale,representation,regime HAVING c>1)"
         ).fetchone()[0]
-        expected_tables = {
-            "generators": int(expected["generators"]),
-            "benchmarks": int(expected["benchmarks"]),
-            "hyperedges": int(expected["hyperedges"]),
-            "negative_controls": int(expected["negative_controls"]),
-            "validations": int(expected["validations"]),
-        }
-        valid = (
-            counts == expected_tables
-            and orphan_benchmarks == 0
-            and orphan_hyperedges == 0
-            and missing_negative_controls == 0
-            and missing_validations == 0
-            and high_risk_not_exhaustive == 0
-            and duplicate_coordinate_groups == 0
-        )
-        return UltraAuditReport(
-            valid=valid,
-            counts=counts,
-            expected=expected_tables,
-            orphan_benchmarks=orphan_benchmarks,
-            orphan_hyperedges=orphan_hyperedges,
-            missing_negative_controls=missing_negative_controls,
-            missing_validations=missing_validations,
-            high_risk_not_exhaustive=high_risk_not_exhaustive,
-            duplicate_coordinate_groups=duplicate_coordinate_groups,
-            combined_fingerprint=str(manifest["combined_fingerprint"]),
-        )
     finally:
-        connection.close()
+        routing.close()
+
+    counts = {key: totals[key] for key in expected}
+    valid = (
+        counts == expected
+        and routing_count == expected["generators"]
+        and totals["orphan_benchmarks"] == 0
+        and totals["orphan_hyperedges"] == 0
+        and totals["missing_negative_controls"] == 0
+        and totals["missing_validations"] == 0
+        and totals["high_risk_not_exhaustive"] == 0
+        and duplicate_coordinate_groups == 0
+    )
+    return UltraAuditReport(
+        valid=valid,
+        counts=counts,
+        expected=expected,
+        orphan_benchmarks=totals["orphan_benchmarks"],
+        orphan_hyperedges=totals["orphan_hyperedges"],
+        missing_negative_controls=totals["missing_negative_controls"],
+        missing_validations=totals["missing_validations"],
+        high_risk_not_exhaustive=totals["high_risk_not_exhaustive"],
+        duplicate_coordinate_groups=duplicate_coordinate_groups,
+        combined_fingerprint=str(manifest["combined_fingerprint"]),
+    )
 
 
 def iter_jsonl_records(directory: Path) -> Iterator[dict[str, object]]:
