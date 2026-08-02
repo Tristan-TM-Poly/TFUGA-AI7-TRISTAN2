@@ -1,0 +1,59 @@
+name: Omega Discovery Frontier 2M R0.4
+
+on:
+  pull_request:
+    paths:
+      - "omega_discovery_kernel_t/frontier_conductor.py"
+      - "omega_discovery_kernel_t/million_frontier.py"
+      - "omega_discovery_kernel_t/million_optimized.py"
+      - "tests/test_omega_discovery_frontier_conductor_2m_r0_4.py"
+      - ".github/workflows/omega-discovery-frontier-conductor-2m-r0-4.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-discovery-frontier-2m-r0-4-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  two-million-promotion:
+    name: Actual 2M forced-resume promotion
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test runner
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Compile 2M gate
+        run: |
+          python -m compileall \
+            omega_discovery_kernel_t/frontier_conductor.py \
+            omega_discovery_kernel_t/million_frontier.py \
+            omega_discovery_kernel_t/million_optimized.py \
+            tests/test_omega_discovery_frontier_conductor_2m_r0_4.py
+
+      - name: Execute 2,000,000 events with forced interruption and exact resume
+        run: |
+          pytest -q \
+            tests/test_omega_discovery_frontier_conductor_2m_r0_4.py \
+            --durations=10 \
+            2>&1 | tee /tmp/omega-discovery-frontier-2m-r0-4.log
+
+      - name: Preserve validation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-discovery-frontier-2m-r0-4
+          path: /tmp/omega-discovery-frontier-2m-r0-4.log
+          if-no-files-found: warn
+          retention-days: 14
