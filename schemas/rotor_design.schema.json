@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/rotor_design.schema.json",
+  "title": "Omega Aero Hydro Propulsion Rotor Design",
+  "type": "object",
+  "required": ["name", "blade_count", "hub_radius", "tip_radius", "stations"],
+  "properties": {
+    "name": {"type": "string", "minLength": 1},
+    "blade_count": {"type": "integer", "minimum": 1},
+    "hub_radius": {"type": "number", "minimum": 0},
+    "tip_radius": {"type": "number", "exclusiveMinimum": 0},
+    "stations": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["radius", "chord", "twist_deg", "airfoil_id"],
+        "properties": {
+          "radius": {"type": "number", "exclusiveMinimum": 0},
+          "chord": {"type": "number", "exclusiveMinimum": 0},
+          "twist_deg": {"type": "number"},
+          "airfoil_id": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "oak_status": {
+      "type": "string",
+      "enum": ["IDEA", "FORMALIZED", "IMPLEMENTED", "TESTED", "BENCHMARKED", "MEASURED", "CERTIFIED_COMPUTATIONAL", "CERTIFIED_PHYSICS", "REFUTED", "ARCHIVED"]
+    }
+  },
+  "additionalProperties": true
+}

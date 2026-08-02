@@ -1,0 +1,54 @@
+name: Omega Aero Hydro Propulsion T
+
+on:
+  pull_request:
+    paths:
+      - "omega_aero_hydro_propulsion_t/**"
+      - "tests/test_omega_aero_hydro_propulsion.py"
+      - "schemas/rotor_design.schema.json"
+      - "docs/omega-aero-hydro-propulsion-t/**"
+      - "examples/omega_aero_hydro_propulsion_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-aero-hydro-propulsion-t.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  propulsion-oak:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile
+        run: python -m compileall omega_aero_hydro_propulsion_t
+      - name: Test
+        run: python -m pytest -q tests/test_omega_aero_hydro_propulsion.py
+      - name: OAK benchmark
+        run: python -m omega_aero_hydro_propulsion_t benchmark
+      - name: Analyze aerodynamic demo
+        run: python -m omega_aero_hydro_propulsion_t analyze-demo --medium air --velocity 22 --rpm 2200 > /tmp/aero.json
+      - name: Analyze hydrodynamic demo
+        run: python -m omega_aero_hydro_propulsion_t analyze-demo --medium water --velocity 3 --rpm 700 > /tmp/hydro.json
+      - name: Optimize design grid
+        run: python -m omega_aero_hydro_propulsion_t optimize-demo --medium air --velocity 22 --rpm 2200 > /tmp/optimize.json
+      - name: Audit epistemic status
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in (Path('/tmp/aero.json'), Path('/tmp/hydro.json')):
+              payload = json.loads(path.read_text())
+              assert 'not flight' in payload['epistemic_status']
+          report = json.loads(Path('/tmp/optimize.json').read_text())
+          assert report['best'] is not None
+          assert report['candidate_count'] == 75
+          assert report['feasible_count'] > 0
+          print(json.dumps({'status': 'passed', 'candidates': report['candidate_count']}))
+          PY
