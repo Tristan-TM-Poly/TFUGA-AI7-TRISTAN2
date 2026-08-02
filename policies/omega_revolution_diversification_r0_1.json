@@ -1,0 +1,47 @@
+{
+  "policy_id": "omega-revolution-diversification-r0-1",
+  "version": "0.1.0",
+  "deep_front_limit": 3,
+  "required_active_proofs": [
+    "mminus_ablation",
+    "github_truth_audit",
+    "raman_discovery_loop"
+  ],
+  "quality_gates": {
+    "minimum_evidence_density": 0.5,
+    "minimum_falsification_coverage": 0.7,
+    "minimum_external_validation_rate_for_expand": 0.05,
+    "maximum_noise_rate": 0.15,
+    "minimum_mminus_effectiveness": 0.5
+  },
+  "promotion_requirements": {
+    "DEMONSTRATED": ["result", "baseline", "failure_condition"],
+    "REPLICATED": ["independent_replication", "provenance", "uncertainty"],
+    "CANONICAL": ["replication", "scope", "counterexample_search", "human_review"]
+  },
+  "sensitive_actions": {
+    "publication": "human_approval_required",
+    "deployment": "human_approval_required",
+    "finance": "human_approval_required",
+    "ip_disclosure": "human_approval_required",
+    "physical_experiment": "human_approval_required",
+    "personal_data": "human_approval_required"
+  },
+  "anti_metrics": [
+    "lines_without_tests",
+    "claims_without_evidence",
+    "events_without_unique_information",
+    "modules_without_owner_or_next_action",
+    "scores_without_baselines",
+    "products_without_observable_user_pain"
+  ],
+  "boundaries": [
+    "generated volume is not evidence quality",
+    "hash integrity is not truth",
+    "internal validation is not independent replication",
+    "synthetic Raman success is not molecular identification",
+    "truth-audit findings are review candidates, not proof of intent",
+    "M-minus rules must be scoped to avoid false blocking"
+  ],
+  "no_permanent_total_object_cap": true
+}
