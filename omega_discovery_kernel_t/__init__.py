@@ -1,10 +1,10 @@
 """Ω-DISCOVERY-KERNEL-T∞ public API.
 
-R0.2 closes the workflow loop between HyperKnowledge claims and Generator
+R0.3 closes the workflow loop between HyperKnowledge claims and Generator
 Discovery candidates, adds an Ω64 event catalog, 36 benchmark families,
-universal identities, unit-aware uncertainty records, a disk-backed 50k event
-frontier, and a 50,100 logical GitHub-addition planner.  It does not certify
-causal laws or authorize irreversible actions.
+universal identities, unit-aware uncertainty records, adaptive 50k and
+one-million-event frontiers, and a 50,100 logical GitHub-addition planner. It
+does not certify causal laws or authorize irreversible actions.
 """
 from .catalog import (
     EVENT_CATALOG,
@@ -36,6 +36,16 @@ from .kernel import (
     generator_event_from_morph_ir,
     result_event_to_evidence_record,
 )
+from .million_frontier import (
+    COMPACT_CORE_EVENT_TYPES,
+    CompactEventRecord,
+    CompactMillionFrontier,
+    ForcedInterruption,
+    MillionFrontierConfig,
+    MillionTelemetry,
+    SaturationRecord,
+    run_forced_resume_million_frontier,
+)
 from .quantity import (
     CalibrationReference,
     Quantity,
@@ -61,14 +71,18 @@ __all__ = [
     "BENCHMARK_FAMILIES",
     "BenchmarkCase",
     "BenchmarkFamily",
+    "COMPACT_CORE_EVENT_TYPES",
     "CORE_LOOP_EVENT_TYPES",
     "CalibrationReference",
+    "CompactEventRecord",
+    "CompactMillionFrontier",
     "DiscoveryEvent",
     "DiscoveryLedger",
     "EVENT_CATALOG",
     "EVENT_FAMILIES",
     "EVENT_TYPES",
     "EventTypeSpec",
+    "ForcedInterruption",
     "FrontierCheckpoint",
     "FrontierExperimentConfig",
     "FrontierTelemetry",
@@ -76,9 +90,12 @@ __all__ = [
     "KernelAudit",
     "KernelFinding",
     "KnowledgeFrontierTargets",
+    "MillionFrontierConfig",
+    "MillionTelemetry",
     "OAK_STATUSES",
     "Quantity",
     "QuantityVector",
+    "SaturationRecord",
     "StreamingDiscoveryLedger",
     "UniversalIdentity",
     "benchmark_registry_manifest",
@@ -96,10 +113,11 @@ __all__ = [
     "plan_knowledge_frontier",
     "quantities_to_event_fields",
     "result_event_to_evidence_record",
+    "run_forced_resume_million_frontier",
     "run_frontier_experiment",
     "stable_id",
     "synthetic_closed_loop_stream",
     "unit_catalog_manifest",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
