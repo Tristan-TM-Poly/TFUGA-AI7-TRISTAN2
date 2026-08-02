@@ -2,10 +2,10 @@
   "schema_version": "0.3.0",
   "generated_from": "2026-08-02T18:12:00-04:00",
   "algorithm": "sha256(path\\0sha256\\0size\\n)",
-  "root_sha256": "13efcab57217d3b7440ff2372bdb98661a24779c3deafe41a51449f1993d51dc",
+  "root_sha256": "5e160930c9c6698c46c6ddd9affaffa1539c17ea4ae7c664ec6333f8f5a9cbb7",
   "metrics": {
     "files": 35,
-    "bytes": 638613,
+    "bytes": 638663,
     "roles": {
       "asset": 1,
       "document-shell": 1,
@@ -155,8 +155,8 @@
     {
       "path": "src/r03-marker.txt",
       "role": "asset",
-      "size_bytes": 38,
-      "sha256": "73cf0db24f5eefc95b53cac2a3f7084cbd969fc9592732c8e3a700e92ed6ed3d",
+      "size_bytes": 88,
+      "sha256": "3a54c4f48de698dc3e80582231ef237cd001caa6b7a3b0bd85d770f4cc10fa2f",
       "cache_candidate": true
     },
     {

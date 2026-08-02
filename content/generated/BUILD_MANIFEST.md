@@ -2,8 +2,8 @@
 
 - Schema: `0.3.0`
 - Files: **35**
-- Bytes: **638613**
-- Root SHA-256: `13efcab57217d3b7440ff2372bdb98661a24779c3deafe41a51449f1993d51dc`
+- Bytes: **638663**
+- Root SHA-256: `5e160930c9c6698c46c6ddd9affaffa1539c17ea4ae7c664ec6333f8f5a9cbb7`
 
 > The root hash identifies bytes in this repository snapshot; it is not a security or scientific certification.
 
@@ -39,7 +39,7 @@
 | `src/exporters.js` | javascript-module | 4418 | `7ec7324980bddb3121b0dd4a99229b31f28457799b010a1662f3d550a8851a69` |
 | `src/oak-engine.js` | javascript-module | 8283 | `0d142bc8a0adaa21f3e043cbb2c49adf449cd4de6008f0ed89127fa7064bedf5` |
 | `src/preferences.js` | javascript-module | 1366 | `13e83fa8768fd0f31d64c9785447a9335ac326cd3bbae44f2a4e2b474b19d937` |
-| `src/r03-marker.txt` | asset | 38 | `73cf0db24f5eefc95b53cac2a3f7084cbd969fc9592732c8e3a700e92ed6ed3d` |
+| `src/r03-marker.txt` | asset | 88 | `3a54c4f48de698dc3e80582231ef237cd001caa6b7a3b0bd85d770f4cc10fa2f` |
 | `src/router.js` | javascript-module | 1910 | `218df7262b76d0e3ae0887e5c277c1b19e8e875e4c28950c5720bc00a0360066` |
 | `src/search-engine.js` | javascript-module | 2263 | `a646fc65b96a02d5e07a4093f752b5beee679d4bcaa9f32574c920ac8c632873` |
 | `src/ui.js` | javascript-module | 4785 | `461c23f73be540ff4c0643e9d6242bfb2b96d48df4c09be9120a74c4d3b8b387` |
