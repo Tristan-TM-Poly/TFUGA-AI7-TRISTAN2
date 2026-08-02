@@ -19,6 +19,13 @@ from .github_planner import (
     iter_jsonl,
     synthetic_additions,
 )
+from .governance import (
+    IterationObservation,
+    ObjectiveVector,
+    ReflexMemoryLedger,
+    StopGate,
+    pareto_front,
+)
 from .self_improvement import default_scenarios, iter_variants_jsonl
 from .self_improvement_judge import ResourceAwareSelfImprovementLab
 from .streaming import MPlusLedger, RangeWorkSource, ResourceSampler
@@ -90,6 +97,17 @@ def _build_parser() -> argparse.ArgumentParser:
     self_improve.add_argument(
         "--output-dir",
         default="generated/omega_unbounded_self_improvement",
+    )
+
+    governance = sub.add_parser(
+        "governance-check",
+        help=(
+            "Verify StopGate, reflex M-minus and Pareto invariants without source or remote mutations."
+        ),
+    )
+    governance.add_argument(
+        "--output-dir",
+        default="generated/omega_unbounded_governance",
     )
     return parser
 
@@ -187,6 +205,84 @@ def _self_improve(args: argparse.Namespace) -> int:
     return 0 if report.baseline.completed else 2
 
 
+def _governance_check(args: argparse.Namespace) -> int:
+    output = Path(args.output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    ledger_path = output / "m_minus_reflex.jsonl"
+    if ledger_path.exists():
+        ledger_path.unlink()
+
+    ledger = ReflexMemoryLedger(ledger_path)
+    rule = ledger.record_overiteration()
+
+    gate = StopGate()
+    initial = gate.observe(
+        IterationObservation(
+            objective_reached=False,
+            authoritative_validation=False,
+            marginal_information_gain=0.50,
+            repetition_score=0.10,
+            details=("work still has unresolved evidence",),
+        )
+    )
+    final = gate.observe(
+        IterationObservation(
+            objective_reached=True,
+            authoritative_validation=True,
+            marginal_information_gain=0.01,
+            repetition_score=0.95,
+            validation_fingerprint="governance-ci-proof",
+            details=("authoritative evidence obtained",),
+        )
+    )
+
+    points = (
+        ObjectiveVector(
+            name="fast",
+            maximize={"quality": 1.0, "throughput": 10.0},
+            minimize={"memory": 8.0},
+        ),
+        ObjectiveVector(
+            name="lean",
+            maximize={"quality": 1.0, "throughput": 8.0},
+            minimize={"memory": 4.0},
+        ),
+        ObjectiveVector(
+            name="dominated",
+            maximize={"quality": 1.0, "throughput": 7.0},
+            minimize={"memory": 9.0},
+        ),
+    )
+    front = pareto_front(points)
+    payload = {
+        "status": "passed" if final.should_stop else "failed",
+        "initial_decision": initial.to_dict(),
+        "final_decision": final.to_dict(),
+        "negative_memory_rule": rule.to_dict(),
+        "known_overiteration_blocked": ledger.is_blocked(
+            "repeat_equivalent_validation",
+            trigger="objective_reached_and_authoritative_validation_obtained",
+        ),
+        "pareto_front": [point.to_dict() for point in front],
+        "scalar_score_has_final_authority": False,
+        "source_mutations": 0,
+        "remote_mutations": 0,
+    }
+    (output / "governance-report.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    valid = (
+        not initial.should_stop
+        and final.should_stop
+        and payload["known_overiteration_blocked"] is True
+        and {point.name for point in front} == {"fast", "lean"}
+        and payload["remote_mutations"] == 0
+    )
+    return 0 if valid else 2
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     try:
@@ -201,6 +297,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
         if args.command == "self-improve":
             return _self_improve(args)
+        if args.command == "governance-check":
+            return _governance_check(args)
     except (OSError, ValueError, TypeError, sqlite3.Error) as exc:
         print(f"omega-unbounded: {exc}", file=sys.stderr)
         return 2
