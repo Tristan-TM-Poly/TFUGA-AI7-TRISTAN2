@@ -77,6 +77,9 @@ def test_builds_valid_traceable_hypergraph(tmp_path: Path) -> None:
     assert graph.validate() == []
     labels = {node.label for node in graph.nodes}
     assert {"TFUGA", "HGFM", "OAK", "CVCD", "DCT-Ω / DCT++"} <= labels
+    cvcd = next(node for node in graph.nodes if node_key(node.label) == node_key("CVCD"))
+    assert cvcd.role == "compressed virtual computation."
+    assert str(master) in cvcd.source_paths
     assert any(edge.kind == "root_generates_representation" for edge in graph.hyperedges)
     assert any(edge.kind == "verification_governs" for edge in graph.hyperedges)
     assert graph.manifest["oak_status"] == "REPOSITORY_CANON_ABSORBED_NOT_SCIENTIFICALLY_CERTIFIED"
