@@ -1,0 +1,132 @@
+name: Omega Propulsion R0.1-R0.5
+
+on:
+  push:
+    branches:
+      - feat/omega-propulsion-r0-5-max
+    paths:
+      - "omega_aero_hydro_propulsion_t/**"
+      - "tests/test_omega_aero_hydro_propulsion*.py"
+      - "schemas/propulsion_*.json"
+      - "docs/omega-aero-hydro-propulsion-t/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-propulsion-r05.yml"
+  pull_request:
+    paths:
+      - "omega_aero_hydro_propulsion_t/**"
+      - "tests/test_omega_aero_hydro_propulsion*.py"
+      - "schemas/propulsion_*.json"
+      - "docs/omega-aero-hydro-propulsion-t/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-propulsion-r05.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  propulsion-r05-oak:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.1-R0.5
+        run: python -m compileall omega_aero_hydro_propulsion_t
+      - name: Run cumulative propulsion regressions
+        run: >-
+          python -m pytest -q
+          tests/test_omega_aero_hydro_propulsion.py
+          tests/test_omega_aero_hydro_propulsion_r02.py
+          tests/test_omega_aero_hydro_propulsion_r03.py
+          tests/test_omega_aero_hydro_propulsion_r03_max.py
+          tests/test_omega_aero_hydro_propulsion_r04.py
+          tests/test_omega_aero_hydro_propulsion_r05.py
+      - name: Run R0.5 OAK benchmark
+        run: python -m omega_aero_hydro_propulsion_t.r05_cli benchmark > /tmp/propulsion-r05-oak.json
+      - name: Materialize wake summary
+        run: >-
+          python -m omega_aero_hydro_propulsion_t.r05_cli wake-demo
+          --revolutions 1 --segments-per-revolution 16 --summary-only
+          > /tmp/propulsion-r05-wake.json
+      - name: Materialize architecture reports
+        run: |
+          python -m omega_aero_hydro_propulsion_t.r05_cli architecture-demo --domain air > /tmp/propulsion-r05-air.json
+          python -m omega_aero_hydro_propulsion_t.r05_cli architecture-demo --domain water > /tmp/propulsion-r05-water.json
+      - name: Materialize and validate evidence ladder
+        run: |
+          python -m omega_aero_hydro_propulsion_t.r05_cli evidence-demo > /tmp/propulsion-r05-evidence.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/propulsion_evidence_ladder_r05.schema.json').read_text())
+          evidence = json.loads(Path('/tmp/propulsion-r05-evidence.json').read_text())
+          jsonschema.validate(evidence, schema)
+          assert evidence['highest_supported_tier'] == 'F3_VORTEX_PROXY'
+          assert evidence['contiguous_tier'] == 'F3_VORTEX_PROXY'
+          assert evidence['certification_claim'] is False
+          assert evidence['physics_certified'] is False
+          assert len(evidence['evidence_hash']) == 64
+          PY
+      - name: Audit R0.5 epistemic and cardinality boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          oak = json.loads(Path('/tmp/propulsion-r05-oak.json').read_text())
+          wake = json.loads(Path('/tmp/propulsion-r05-wake.json').read_text())
+          air = json.loads(Path('/tmp/propulsion-r05-air.json').read_text())
+          water = json.loads(Path('/tmp/propulsion-r05-water.json').read_text())
+
+          assert oak['passed'] is True
+          assert oak['status'] == 'CERTIFIED_COMPUTATIONAL_WAKE_ARCHITECTURE_EVIDENCE_R0_5'
+          assert oak['physics_certified'] is False
+          assert wake['model'] == 'regularized-helical-vortex-proxy-r0.5'
+          assert wake['segment_count'] == 192
+          assert wake['filament_count'] == 12
+          assert wake['physical_fidelity_claim'] is False
+          assert wake['physics_certified'] is False
+          assert len(wake['evidence_hash']) == 64
+          assert air['inferred_domain'] == 'air'
+          assert water['inferred_domain'] == 'water'
+          assert air['permanent_total_cap'] is None
+          assert water['permanent_total_cap'] is None
+          assert air['physics_certified'] is False
+          assert water['physics_certified'] is False
+          assert air['best'] is not None
+          assert water['best'] is not None
+          assert all(
+              candidate['architecture']['domain'] == 'air'
+              for candidate in air['candidates']
+              if candidate['eligible']
+          )
+          assert all(
+              candidate['architecture']['domain'] == 'water'
+              for candidate in water['candidates']
+              if candidate['eligible']
+          )
+          print(json.dumps({
+              'status': 'passed',
+              'wake_hash': wake['evidence_hash'],
+              'wake_segments': wake['segment_count'],
+              'air_best': air['best']['architecture']['architecture_id'],
+              'water_best': water['best']['architecture']['architecture_id'],
+          }, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-propulsion-r05-evidence
+          path: |
+            /tmp/propulsion-r05-oak.json
+            /tmp/propulsion-r05-wake.json
+            /tmp/propulsion-r05-air.json
+            /tmp/propulsion-r05-water.json
+            /tmp/propulsion-r05-evidence.json
+          retention-days: 14
