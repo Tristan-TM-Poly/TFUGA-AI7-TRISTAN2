@@ -59,6 +59,7 @@ class Claim:
     ip_classification: str | None = None
     public_intent: bool = False
     source_attributions: list[str] = field(default_factory=list)
+    provenance_hash: str | None = None
 
     def __post_init__(self) -> None:
         if not self.claim_id.strip():
@@ -67,6 +68,12 @@ class Claim:
             raise ValueError("text must not be empty")
         if not 0.0 <= self.uncertainty <= 1.0:
             raise ValueError("uncertainty must be between 0 and 1")
+
+    @property
+    def claimed_confidence(self) -> float:
+        """Confidence implied by the supplied uncertainty value."""
+
+        return 1.0 - self.uncertainty
 
     @classmethod
     def from_dict(cls, raw: dict[str, Any]) -> "Claim":
@@ -84,13 +91,37 @@ class Claim:
             source_attributions=[
                 str(item) for item in raw.get("source_attributions", [])
             ],
+            provenance_hash=(
+                str(raw["provenance_hash"])
+                if raw.get("provenance_hash") is not None
+                else None
+            ),
         )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self, *, include_provenance: bool = True) -> dict[str, Any]:
         data = asdict(self)
         data["status"] = self.status.value
         data["layer"] = self.layer.value
+        if not include_provenance:
+            data.pop("provenance_hash", None)
         return data
+
+
+@dataclass(frozen=True)
+class SourceLocation:
+    path: str
+    start_line: int = 1
+    end_line: int = 1
+
+    def __post_init__(self) -> None:
+        if self.start_line < 1 or self.end_line < self.start_line:
+            raise ValueError("invalid source line range")
+
+
+@dataclass(frozen=True)
+class ScannedClaim:
+    claim: Claim
+    source: SourceLocation
 
 
 @dataclass(frozen=True)
@@ -98,16 +129,21 @@ class GateReport:
     claim_id: str
     decision: GateDecision
     findings: tuple[Finding, ...]
+    source: SourceLocation | None = None
+    confidence_debt: float = 0.0
+    justified_confidence: float = 0.0
 
     @property
     def passed(self) -> bool:
         return self.decision is GateDecision.PASS
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload: dict[str, Any] = {
             "claim_id": self.claim_id,
             "decision": self.decision.value,
             "passed": self.passed,
+            "confidence_debt": round(self.confidence_debt, 6),
+            "justified_confidence": round(self.justified_confidence, 6),
             "findings": [
                 {
                     "code": finding.code,
@@ -118,3 +154,6 @@ class GateReport:
                 for finding in self.findings
             ],
         }
+        if self.source is not None:
+            payload["source"] = asdict(self.source)
+        return payload
