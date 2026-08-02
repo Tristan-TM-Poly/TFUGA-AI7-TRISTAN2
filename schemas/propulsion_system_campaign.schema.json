@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/propulsion_system_campaign.schema.json",
+  "title": "Omega Propulsion R0.3 Max System Campaign",
+  "type": "object",
+  "required": [
+    "start_index",
+    "requested_count",
+    "evaluated_count",
+    "feasible_count",
+    "next_index",
+    "final_chain_digest",
+    "frontier",
+    "permanent_total_cap",
+    "physics_certified"
+  ],
+  "properties": {
+    "start_index": {"type": "integer", "minimum": 0},
+    "requested_count": {"type": "integer", "minimum": 1},
+    "evaluated_count": {"type": "integer", "minimum": 1},
+    "feasible_count": {"type": "integer", "minimum": 0},
+    "next_index": {"type": "integer", "minimum": 1},
+    "final_chain_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "permanent_total_cap": {"type": "null"},
+    "physics_certified": {"const": false},
+    "frontier": {
+      "type": "object",
+      "required": ["namespace", "permanent_total_cap", "execution_rule"],
+      "properties": {
+        "namespace": {"type": "string", "minLength": 1},
+        "permanent_total_cap": {"type": "null"},
+        "execution_rule": {"type": "string", "minLength": 1}
+      }
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["next_index", "run_evaluated_count", "run_feasible_count", "chain_digest"],
+        "properties": {
+          "next_index": {"type": "integer", "minimum": 1},
+          "run_evaluated_count": {"type": "integer", "minimum": 1},
+          "run_feasible_count": {"type": "integer", "minimum": 0},
+          "chain_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}
