@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_naruto_scale_manifest_v2.schema.json",
+  "title": "Omega Naruto Frontier Scale Manifest v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "start_ordinal", "target_records", "written_records",
+    "next_ordinal", "shard_records", "shard_count", "worker_count",
+    "compression", "compression_level", "axis_cardinality",
+    "completed_epochs_before", "completed_epochs_after",
+    "partial_epoch_records_after", "compressed_bytes", "uncompressed_bytes",
+    "compression_ratio", "logical_corpus_sha256", "merkle_root_sha256",
+    "elapsed_seconds", "records_per_second", "resumed_shards",
+    "generated_shards", "shards", "complete", "non_claim"
+  ],
+  "properties": {
+    "schema": {"const": "omega_naruto_frontier.scale_manifest.v2"},
+    "start_ordinal": {"type": "integer", "minimum": 0},
+    "target_records": {"type": "integer", "minimum": 0},
+    "written_records": {"type": "integer", "minimum": 0},
+    "next_ordinal": {"type": "integer", "minimum": 0},
+    "shard_records": {"type": "integer", "minimum": 1},
+    "shard_count": {"type": "integer", "minimum": 0},
+    "worker_count": {"type": "integer", "minimum": 1},
+    "compression": {"const": "gzip"},
+    "compression_level": {"type": "integer", "minimum": 0, "maximum": 9},
+    "axis_cardinality": {"type": "integer", "minimum": 1},
+    "completed_epochs_before": {"type": "integer", "minimum": 0},
+    "completed_epochs_after": {"type": "integer", "minimum": 0},
+    "partial_epoch_records_after": {"type": "integer", "minimum": 0},
+    "compressed_bytes": {"type": "integer", "minimum": 0},
+    "uncompressed_bytes": {"type": "integer", "minimum": 0},
+    "compression_ratio": {"type": "number", "minimum": 0},
+    "logical_corpus_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "merkle_root_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "elapsed_seconds": {"type": "number", "minimum": 0},
+    "records_per_second": {"type": "number", "minimum": 0},
+    "resumed_shards": {"type": "integer", "minimum": 0},
+    "generated_shards": {"type": "integer", "minimum": 0},
+    "complete": {"type": "boolean"},
+    "non_claim": {"type": "string", "minLength": 1},
+    "shards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema", "partition_id", "path", "receipt_path", "first_ordinal",
+          "last_ordinal", "record_count", "compressed_bytes",
+          "uncompressed_bytes", "compressed_sha256", "logical_sha256",
+          "compression"
+        ],
+        "properties": {
+          "schema": {"const": "omega_naruto_frontier.scale_shard_receipt.v2"},
+          "partition_id": {"type": "integer", "minimum": 0},
+          "path": {"type": "string", "pattern": "^scale-[0-9]{15}-[0-9]{15}\\.jsonl\\.gz$"},
+          "receipt_path": {"type": "string", "pattern": "^scale-[0-9]{15}-[0-9]{15}\\.receipt\\.json$"},
+          "first_ordinal": {"type": "integer", "minimum": 0},
+          "last_ordinal": {"type": "integer", "minimum": 0},
+          "record_count": {"type": "integer", "minimum": 1},
+          "compressed_bytes": {"type": "integer", "minimum": 1},
+          "uncompressed_bytes": {"type": "integer", "minimum": 1},
+          "compressed_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "logical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "compression": {"const": "gzip"}
+        }
+      }
+    }
+  }
+}
