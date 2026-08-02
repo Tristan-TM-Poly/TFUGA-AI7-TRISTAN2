@@ -1,12 +1,12 @@
 """Ω-DISCOVERY-KERNEL-T∞ public API.
 
 R0.3 closes the workflow loop between HyperKnowledge claims and Generator
-Discovery candidates, adds an Ω64 event catalog, 36 benchmark families,
-universal identities, unit-aware uncertainty records, adaptive 50k and
-one-million-event frontiers, and a 50,100 logical GitHub-addition planner. It
-does not certify causal laws or authorize irreversible actions.
+Discovery candidates, adds a corrected Ω64 event catalog, 36 benchmark
+families, universal identities, unit-aware uncertainty records, adaptive 50k
+and one-million-event frontiers, and a 50,100 logical GitHub-addition planner.
+It does not certify causal laws or authorize irreversible actions.
 """
-from .catalog import (
+from .catalog_r03 import (
     EVENT_CATALOG,
     EVENT_FAMILIES,
     EVENT_TYPES,
@@ -122,4 +122,4 @@ __all__ = [
     "unit_catalog_manifest",
 ]
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
