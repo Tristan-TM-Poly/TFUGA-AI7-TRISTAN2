@@ -35,6 +35,21 @@ from .governance import (
     dominates,
     pareto_front,
 )
+from .recursive_evolution import (
+    AdversarialOAKBench,
+    AdversarialScenario,
+    AggregateEvidence,
+    CandidateProfile,
+    CanaryDecision,
+    CanaryPolicy,
+    CanaryPromotionEngine,
+    CanaryReport,
+    CanarySample,
+    ProofBundleWriter,
+    RecursiveEvolutionLab,
+    ScenarioEvidence,
+    default_adversarial_scenarios,
+)
 from .self_improvement import (
     ControllerVariant,
     PromotionDecision,
@@ -61,8 +76,17 @@ SelfImprovementLab = ResourceAwareSelfImprovementLab
 __all__ = [
     "AdaptiveController",
     "AdditionRecord",
+    "AdversarialOAKBench",
+    "AdversarialScenario",
+    "AggregateEvidence",
     "BatchResult",
     "BreakthroughEvent",
+    "CandidateProfile",
+    "CanaryDecision",
+    "CanaryPolicy",
+    "CanaryPromotionEngine",
+    "CanaryReport",
+    "CanarySample",
     "CapacityPolicy",
     "CapacityState",
     "ControllerVariant",
@@ -74,15 +98,18 @@ __all__ = [
     "MMinusLedger",
     "MPlusLedger",
     "ObjectiveVector",
+    "ProofBundleWriter",
     "PromotionDecision",
     "RangeWorkSource",
     "RawSelfImprovementLab",
+    "RecursiveEvolutionLab",
     "ReflexMemoryLedger",
     "ReflexRule",
     "ResourceAwareSelfImprovementLab",
     "ResourceSampler",
     "ResourceSnapshot",
     "RunReport",
+    "ScenarioEvidence",
     "ScenarioOutcome",
     "SelfImprovementLab",
     "SelfImprovementReport",
@@ -94,6 +121,7 @@ __all__ = [
     "SyntheticCapacityExecutor",
     "VariantOutcome",
     "adaptive_candidate_stream",
+    "default_adversarial_scenarios",
     "default_scenarios",
     "dominates",
     "iter_jsonl",
@@ -102,4 +130,4 @@ __all__ = [
     "synthetic_additions",
 ]
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
