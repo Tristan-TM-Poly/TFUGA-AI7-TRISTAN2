@@ -119,9 +119,13 @@ jobs:
       - name: Verify no external network calls in client modules
         shell: bash
         run: |
-          if grep -RInE 'XMLHttpRequest|sendBeacon|https?://' \
-            apps/tristan-8fire-site/src apps/tristan-8fire-site/app.js; then
-            echo 'Unexpected external network primitive or URL found in client modules.' >&2
+          matches="$({ grep -RInE 'XMLHttpRequest|sendBeacon|fetch[[:space:]]*\(|WebSocket[[:space:]]*\(|EventSource[[:space:]]*\(|https?://' \
+            apps/tristan-8fire-site/src apps/tristan-8fire-site/app.js || true; } \
+            | grep -vF 'http://graphml.graphdrawing.org/xmlns' \
+            | grep -vF 'http://www.w3.org/2000/svg' || true)"
+          if [ -n "$matches" ]; then
+            printf '%s\n' "$matches"
+            echo 'Unexpected external network primitive or non-namespace URL found in client modules.' >&2
             exit 1
           fi
 
