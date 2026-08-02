@@ -1,6 +1,6 @@
 # TFUGA / SAGE-TRISTAN
 
-**Status:** v0.2 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
+**Status:** v0.3 publication scaffold, derived from *Univers mathematique TFUGA / SAGE-TRISTAN v0.1 + Omega3-Omega6*.
 
 This repository crystallizes a rigorous, testable, reusable layer of the TFUGA / SAGE-TRISTAN mathematical biosphere.
 
@@ -24,21 +24,23 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `Ω-DeepTech Intelligence Forge`: OAK-safe layer for deeptech signals -> IP triage -> prototype tasks -> revenue routing -> GitHub artifacts.
 - `Ω-ECC-T`: OAK-safe error-correction lab: Hamming(7,4), channel models, Syndrome-CVCD, HyperParityGraph-T, M⁻ hooks, and deterministic OAKBench.
 - `Ω-PDF-HYPERGRAPH-GITHUB-T`: OAK-safe universal absorber for PDF/ZIP/text/code corpora -> chunks -> claim candidates -> HGFM/CVCD hypergraph -> GitHub-ready artifacts.
-- `Ω-NARUTO-HMAGFM-HGFMnD²`: exploratory, public-safe multi-agent architecture mapping narrative operators to bounded budgets, parallel hypotheses, evidence-aware OAKMerge, contradictions, and M⁻.
+- `Ω-WIKI-T∞ / WikiForge-T`: read-only multilingual Wikipedia reader -> revision-pinned articles -> claim candidates -> citation/source links -> OAK manifests -> reproducible reports.
+- `Ω-NARUTO-HMAGFM-HGFMnD²`: exploratory public-safe multi-agent architecture -> bounded Chakra budgets -> Kage Bunshin proposals -> evidence-aware OAKMerge -> Genjutsu audit -> publication gates -> M⁻ residues.
 
 ## Repository structure
 
 ```text
-docs/       Manifest, roadmap, canon analysis, publication plan.
-schemas/    JSON schemas for DCT++, research cards, HGFM, status vectors.
-sage_tristan/ Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
+docs/          Manifest, roadmap, canon analysis, publication plan.
+schemas/       JSON schemas for DCT++, research cards, HGFM, WikiForge and Ω-NARUTO contracts.
+sage_tristan/  Minimal Python engine for scoring, cards, status, HGFM, claims, AI-7 traces.
 omega_deeptech_forge/ Minimal OAK-safe deeptech/IP/revenue triage engine.
-ecc_tristan/ Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
-omega_naruto_hmagfm/ Kage Bunshin parallel proposals, ChakraBudget, and deterministic OAKMerge.
+ecc_tristan/   Minimal Ω-ECC-T executable lab for error correction, OAK, and M⁻.
+omega_naruto_hmagfm/ Kage Bunshin proposals, ChakraBudget, OAKMerge, gates and adversarial audit.
 omega_prof_poly_t/ Omega absorb systems, including the universal corpus absorber.
-tests/      Unit tests for the executable core.
-examples/   Example branches and DCT++ packets.
-reports/    Generated audit and publication reports.
+omega_wiki_t/  Ω-WIKI-T∞ multilingual evidence compiler and citation-preserving translation guard.
+tests/         Unit tests for the executable core.
+examples/      Example branches and DCT++ packets.
+reports/       Generated audit and publication reports.
 ```
 
 ## Scientific hygiene
@@ -57,7 +59,9 @@ python -m sage_tristan.demo
 python examples/omega_deeptech_forge_demo.py
 python examples/omega_ecc_t_demo.py
 python examples/omega_universal_absorber_demo.py
+python examples/omega_wiki_t_demo.py
 python examples/omega_naruto_hmagfm_demo.py
+omega-naruto-oak --output generated/omega_naruto/report.json
 ```
 
 Universal corpus absorption dry-run:
@@ -66,7 +70,20 @@ Universal corpus absorption dry-run:
 omega-corpus-absorb path/to/corpus_or_zip --output-dir generated/omega_corpus
 ```
 
-Outputs:
+Multilingual Wikipedia evidence bundle:
+
+```bash
+omega-wiki read "Mécanique quantique" --lang fr
+omega-wiki languages "Mécanique quantique" --lang fr
+omega-wiki compile "Mécanique quantique" --lang fr --langs en,de,ja --output-dir generated/q944
+omega-wiki audit generated/q944
+```
+
+WikiForge-T R0.1 is extraction infrastructure, not factual certification. Wikipedia text is not proof; a citation marker is not automatically support; multilingual agreement is not automatically consensus.
+
+Ω-NARUTO-HMAGFM-HGFMnD² R1.1 is a deterministic software scaffold, not physical proof. Naruto operators remain engineering metaphors; OAKMerge success on a fixed fixture is not universal superiority.
+
+Universal absorber outputs:
 
 ```text
 manifest.json
@@ -75,6 +92,23 @@ claims.jsonl
 hypergraph.json
 hypergraph.graphml
 oak_report.json
+```
+
+WikiForge-T outputs:
+
+```text
+manifest.json
+articles.jsonl
+claims.jsonl
+sources.jsonl
+language-matrix.json
+report.md
+```
+
+Ω-NARUTO output:
+
+```text
+generated/omega_naruto/report.json
 ```
 
 ## Current canon layer
@@ -92,6 +126,7 @@ Immediate canonizable modules:
 - Ω-DeepTech Intelligence Forge
 - Ω-ECC-T / Error Correction Codes de Tristan
 - Ω-PDF-HYPERGRAPH-GITHUB-T / AIT-Frédéric
+- Ω-WIKI-T∞ / WikiForge-T R0.1 extraction kernel
 
 Crystallizable modules:
 
@@ -107,6 +142,9 @@ Crystallizable modules:
 - PDF Rosette Extractor
 - Claim-Evidence-Residue Graph
 - Drive↔GitHub OAK Sync
-- Ω-NARUTO-HMAGFM-HGFMnD² / Kage Bunshin–OAKMerge
+- Exact citation-entry parsing and Citoid enrichment
+- Cross-language claim alignment and contradiction detection
+- Citation-safe multilingual generation
+- Ω-NARUTO OAKMerge calibration, graph export and larger benchmark corpus
 
 Exploratory branches stay labeled as exploratory until proven, simulated, or experimentally validated.
