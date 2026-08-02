@@ -1,0 +1,21 @@
+{
+  "claim_id": "OAK-DEMO-001",
+  "text": "OAKGate is a deterministic local guardrail that reports missing evidence and publication risks.",
+  "status": "F2",
+  "layer": "TheoryOS",
+  "evidence": [
+    "docs/OAKGATE_R0_1.md"
+  ],
+  "artifacts": [
+    "oakgate/gates.py",
+    "tests/test_oakgate.py"
+  ],
+  "uncertainty": 0.2,
+  "risks": [
+    "heuristic rules may produce false positives or false negatives",
+    "human review remains mandatory"
+  ],
+  "ip_classification": "OPEN_SOURCE",
+  "public_intent": true,
+  "source_attributions": []
+}
