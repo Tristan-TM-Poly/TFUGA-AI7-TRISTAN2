@@ -27,16 +27,28 @@ jobs:
       - run: python -m pip install --disable-pip-version-check pytest
       - name: Compile
         run: python -m compileall omega_aero_hydro_propulsion_t
-      - name: Run R0.1-R0.3 regressions
-        run: python -m pytest -q tests/test_omega_aero_hydro_propulsion.py tests/test_omega_aero_hydro_propulsion_r02.py tests/test_omega_aero_hydro_propulsion_r03.py
+      - name: Run R0.1-R0.3 Max regressions
+        run: >-
+          python -m pytest -q
+          tests/test_omega_aero_hydro_propulsion.py
+          tests/test_omega_aero_hydro_propulsion_r02.py
+          tests/test_omega_aero_hydro_propulsion_r03.py
+          tests/test_omega_aero_hydro_propulsion_r03_max.py
       - name: OAK R0.1
         run: python -m omega_aero_hydro_propulsion_t benchmark
       - name: OAK R0.2
         run: python -m omega_aero_hydro_propulsion_t.r02_cli benchmark
       - name: OAK R0.3
         run: python -m omega_aero_hydro_propulsion_t.r03_cli benchmark
+      - name: OAK R0.3 Max
+        run: python -m omega_aero_hydro_propulsion_t.r03_max_cli benchmark > /tmp/propulsion-r03-max-oak.json
       - name: Materialize system evidence
         run: python -m omega_aero_hydro_propulsion_t.r03_cli system-demo > /tmp/propulsion-r03.json
+      - name: Materialize resumable Max campaign
+        run: >-
+          python -m omega_aero_hydro_propulsion_t.r03_max_cli campaign
+          --start-index 0 --count 8 --checkpoint-interval 2
+          --summary-only --relaxed > /tmp/propulsion-r03-max.json
       - name: Audit evidence boundaries
         run: |
           python - <<'PY'
@@ -55,15 +67,36 @@ jobs:
           assert motor_out['minimum_thrust_margin'] < 0
           assert payload['fault_envelope']['critical_scenario'] in {case['scenario']['name'] for case in cases}
           assert 'not flight' in payload['epistemic_status']
+
+          max_oak = json.loads(Path('/tmp/propulsion-r03-max-oak.json').read_text())
+          assert max_oak['passed'] is True
+          assert max_oak['status'] == 'CERTIFIED_COMPUTATIONAL_SYSTEM_SEARCH_R0_3_MAX'
+          assert max_oak['physics_certified'] is False
+
+          campaign = json.loads(Path('/tmp/propulsion-r03-max.json').read_text())
+          assert campaign['evaluated_count'] == 8
+          assert campaign['next_index'] == 8
+          assert campaign['best_candidate_id'] is not None
+          assert campaign['permanent_total_cap'] is None
+          assert campaign['frontier']['permanent_total_cap'] is None
+          assert campaign['physics_certified'] is False
+          assert len(campaign['final_chain_digest']) == 64
+          assert [item['next_index'] for item in campaign['checkpoints']] == [2, 4, 6, 8]
           print(json.dumps({
               'status': 'passed',
               'critical_scenario': payload['fault_envelope']['critical_scenario'],
               'fault_cases': payload['fault_envelope']['case_count'],
-              'robust_cases': len(payload['robust_mission']['cases'])
+              'robust_cases': len(payload['robust_mission']['cases']),
+              'max_campaign_evaluated': campaign['evaluated_count'],
+              'max_campaign_feasible': campaign['feasible_count'],
+              'max_chain_digest': campaign['final_chain_digest']
           }, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: omega-propulsion-r03-evidence
-          path: /tmp/propulsion-r03.json
+          name: omega-propulsion-r03-max-evidence
+          path: |
+            /tmp/propulsion-r03.json
+            /tmp/propulsion-r03-max-oak.json
+            /tmp/propulsion-r03-max.json
           retention-days: 14
