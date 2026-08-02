@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/discovery-event.schema.json",
+  "title": "Omega Discovery Kernel Event R0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "subject_id",
+    "timestamp",
+    "parent_ids",
+    "source_hash",
+    "provenance",
+    "domain",
+    "status",
+    "payload",
+    "units",
+    "uncertainty",
+    "human_approval",
+    "reversible",
+    "event_hash"
+  ],
+  "properties": {
+    "event_id": {"type": "string", "pattern": "^evt_[0-9a-f]{24}$"},
+    "event_type": {
+      "enum": [
+        "ObservationEvent",
+        "ClaimEvent",
+        "GeneratorCandidate",
+        "ExperimentSpec",
+        "ResultPacket",
+        "OAKTransition",
+        "MMinusRule",
+        "ActionProposal"
+      ]
+    },
+    "subject_id": {"type": "string", "minLength": 1},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "parent_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^evt_[0-9a-f]{24}$"},
+      "uniqueItems": true
+    },
+    "source_hash": {"type": ["string", "null"]},
+    "provenance": {"type": "array", "items": {"type": "string"}},
+    "domain": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "minLength": 1},
+    "payload": {"type": "object"},
+    "units": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": {"type": "number", "minimum": 0}
+    },
+    "human_approval": {"type": "boolean"},
+    "reversible": {"type": "boolean"},
+    "event_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "OAKTransition"}}},
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "required": ["from_status", "to_status", "cause"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {"const": "ExperimentSpec"},
+          "reversible": {"const": false}
+        },
+        "required": ["event_type", "reversible"]
+      },
+      "then": {"properties": {"human_approval": {"const": true}}}
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {"const": "ActionProposal"},
+          "status": {"const": "autonomous_execution"}
+        },
+        "required": ["event_type", "status"]
+      },
+      "then": {
+        "properties": {
+          "human_approval": {"const": true},
+          "reversible": {"const": true}
+        }
+      }
+    }
+  ]
+}
