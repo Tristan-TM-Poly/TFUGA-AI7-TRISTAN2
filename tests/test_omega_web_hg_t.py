@@ -97,6 +97,9 @@ def test_crawler_writes_provenance_bundle(tmp_path: Path) -> None:
     assert (output / "oak-report.json").is_file()
     assert len(list((output / "raw").rglob("*.html"))) == 2
     assert result.oak_report()["status"] == "PASS_R0_1"
+    graph = result.hypergraph
+    node_ids = {node["id"] for node in graph["nodes"]}
+    assert all(edge["source_id"] in node_ids and edge["target_id"] in node_ids for edge in graph["hyperedges"])
 
 
 def test_canonicalize_url_rejects_embedded_credentials() -> None:
@@ -120,3 +123,11 @@ def test_redirect_handler_blocks_out_of_scope_target() -> None:
         assert "Redirection refusée" in str(exc)
     else:
         raise AssertionError("unsafe redirect must be rejected before follow")
+
+
+def test_policy_fails_closed_when_robots_is_unavailable() -> None:
+    config = CrawlConfig("https://example.org/")
+    gate = PolicyGate(config, resolver=lambda _: PUBLIC_IP, robots_loader=lambda _: None)
+    decision = gate.decide(config.seed_url)
+    assert not decision.allowed
+    assert decision.code == "ROBOTS_DENIED"
