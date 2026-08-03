@@ -31,12 +31,12 @@ from .consent import (
     default_policies,
     resolve_consent,
 )
+from .event_store import CanonicalEventStore as EventStore
 from .events import (
     AggregateType,
     DomainEvent,
     EventActor,
     EventAuditResult,
-    EventStore,
     EventType,
     OutreachProjection,
     build_outreach_projection,
@@ -63,6 +63,7 @@ from .identity import (
     resolve_authority,
 )
 from .migration import MigratedCase, MigrationIds, audit_migrations, migrate_outreach_case
+from .migration_runtime import audit_migration_bundle, migrate_case_file, migration_to_mapping
 from .opportunities import (
     BayesianStage,
     CompanyUnit,
@@ -98,12 +99,25 @@ from .scenario_atlas import (
     RiskClass,
     ScenarioDimensions,
     ScenarioExpectation,
-    audit_atlas_directory,
     audit_scenarios,
     decide,
     generate_scenarios,
     theoretical_cardinality,
+)
+from .scenario_runtime import (
+    audit_atlas_directory,
+    read_atlas,
+    scenario_from_mapping,
+    scenario_to_mapping,
+    verify_determinism,
     write_atlas,
+)
+from .schemas import (
+    SchemaDefinition,
+    audit_schema_catalog,
+    schema_catalog,
+    schema_definitions,
+    write_schema_catalog,
 )
 
 __all__ = [name for name in globals() if not name.startswith("_")]
