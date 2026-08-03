@@ -104,7 +104,7 @@ def audit_sensitive_fields(value: object, path: str = "$") -> tuple[str, ...]:
             if normalized in _FORBIDDEN_FIELDS:
                 findings.append(f"forbidden sensitive field at {path}.{key}")
             findings.extend(audit_sensitive_fields(child, f"{path}.{key}"))
-    elif isinstance(value, list):
+    elif isinstance(value, (list, tuple)):
         for index, child in enumerate(value):
             findings.extend(audit_sensitive_fields(child, f"{path}[{index}]"))
     return tuple(findings)
