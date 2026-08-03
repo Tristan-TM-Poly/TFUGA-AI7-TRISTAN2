@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.example/schemas/propulsion_discrepancy_tensor_r05.schema.json",
+  "title": "Omega Propulsion R0.5 Discrepancy Tensor",
+  "type": "object",
+  "required": [
+    "observations",
+    "comparisons",
+    "metric_count",
+    "comparison_count",
+    "maximum_absolute_normalized_residual",
+    "evidence_hash",
+    "physics_certified",
+    "automatic_model_promotion",
+    "notice"
+  ],
+  "properties": {
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "observation_id",
+          "tier",
+          "metric",
+          "value",
+          "unit",
+          "standard_uncertainty",
+          "artifact_sha256",
+          "provenance"
+        ],
+        "properties": {
+          "observation_id": {"type": "string", "minLength": 1},
+          "tier": {"type": "string", "minLength": 1},
+          "metric": {"type": "string", "minLength": 1},
+          "value": {"type": "number"},
+          "unit": {"type": "string", "minLength": 1},
+          "standard_uncertainty": {"type": "number", "minimum": 0},
+          "artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "provenance": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "comparisons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "metric",
+          "unit",
+          "lower_observation_id",
+          "higher_observation_id",
+          "lower_tier",
+          "higher_tier",
+          "signed_delta",
+          "absolute_delta",
+          "relative_delta",
+          "combined_standard_uncertainty",
+          "normalized_residual",
+          "exceeds_two_sigma"
+        ],
+        "properties": {
+          "metric": {"type": "string"},
+          "unit": {"type": "string"},
+          "lower_observation_id": {"type": "string"},
+          "higher_observation_id": {"type": "string"},
+          "lower_tier": {"type": "string"},
+          "higher_tier": {"type": "string"},
+          "signed_delta": {"type": "number"},
+          "absolute_delta": {"type": "number", "minimum": 0},
+          "relative_delta": {"type": "number"},
+          "combined_standard_uncertainty": {"type": "number", "minimum": 0},
+          "normalized_residual": {"type": ["number", "null"]},
+          "exceeds_two_sigma": {"type": ["boolean", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "metric_count": {"type": "integer", "minimum": 0},
+    "comparison_count": {"type": "integer", "minimum": 0},
+    "maximum_absolute_normalized_residual": {"type": ["number", "null"], "minimum": 0},
+    "evidence_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "physics_certified": {"const": false},
+    "automatic_model_promotion": {"const": false},
+    "notice": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
