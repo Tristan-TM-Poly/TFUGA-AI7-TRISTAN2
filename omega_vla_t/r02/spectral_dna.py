@@ -105,13 +105,19 @@ def spectral_dna(
     order = np.lexsort((eigenvalues.imag, eigenvalues.real))
     ordered = eigenvalues[order]
     probes = _pseudospectral_probe(array, ordered, pseudospectral_points)
+    spectral_radius = (
+        float(np.max(np.abs(ordered))) if ordered.size else 0.0
+    )
+    spectral_abscissa = (
+        float(np.max(ordered.real)) if ordered.size else 0.0
+    )
 
     return SpectralDNA(
         shape=(n, n),
         eigenvalues_real=tuple(float(value.real) for value in ordered),
         eigenvalues_imag=tuple(float(value.imag) for value in ordered),
-        spectral_radius=float(np.max(np.abs(ordered), initial=0.0)),
-        spectral_abscissa=float(np.max(ordered.real, initial=0.0)),
+        spectral_radius=spectral_radius,
+        spectral_abscissa=spectral_abscissa,
         singular_values=tuple(float(value) for value in singular_values),
         numerical_rank=numerical_rank,
         effective_rank=_effective_rank(singular_values),
