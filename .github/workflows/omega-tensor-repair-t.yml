@@ -1,4 +1,4 @@
-name: Omega Tensor Repair T R0.1-R0.2
+name: Omega Tensor Repair T R0.1-R0.3
 
 on:
   pull_request:
@@ -19,7 +19,7 @@ permissions:
 jobs:
   oakbench:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -37,9 +37,14 @@ jobs:
           omega_tensor_repair_t
           tests/test_omega_tensor_repair_t.py
           tests/test_omega_tensor_repair_t_r02.py
+          tests/test_omega_tensor_repair_t_r03.py
           examples/omega_tensor_repair_demo.py
       - name: Run focused tests
-        run: pytest -q tests/test_omega_tensor_repair_t.py tests/test_omega_tensor_repair_t_r02.py
+        run: >-
+          pytest -q
+          tests/test_omega_tensor_repair_t.py
+          tests/test_omega_tensor_repair_t_r02.py
+          tests/test_omega_tensor_repair_t_r03.py
       - name: Generate deterministic receipts twice
         run: |
           python -m omega_tensor_repair_t.cli benchmark --output /tmp/tensor-a.json
@@ -48,6 +53,9 @@ jobs:
           python -m omega_tensor_repair_t.cli benchmark-r02 --output /tmp/tensor-r02-a.json
           python -m omega_tensor_repair_t.cli benchmark-r02 --output /tmp/tensor-r02-b.json
           cmp /tmp/tensor-r02-a.json /tmp/tensor-r02-b.json
+          python -m omega_tensor_repair_t.cli benchmark-r03 --output /tmp/tensor-r03-a.json
+          python -m omega_tensor_repair_t.cli benchmark-r03 --output /tmp/tensor-r03-b.json
+          cmp /tmp/tensor-r03-a.json /tmp/tensor-r03-b.json
       - name: Validate compiler schema and OAK boundaries
         run: |
           python - <<'PY'
@@ -74,5 +82,14 @@ jobs:
           assert receipt_r02['su2_dimension_conservation'] is True
           assert receipt_r02['claims']['optimal_svd_claimed'] is False
           assert receipt_r02['claims']['higher_order_general_proof_claimed'] is False
-          print(receipt['status'], receipt_r02['status'])
+
+          receipt_r03 = json.loads(Path('/tmp/tensor-r03-a.json').read_text())
+          assert receipt_r03['status'] == 'CERTIFIED_EXTENDED_SOFTWARE_FIXTURES_R0_3'
+          assert receipt_r03['basis_cases'] == 8
+          assert receipt_r03['maximum_orthonormality_error'] <= 1e-12
+          assert receipt_r03['maximum_reconstruction_error'] <= 1e-10
+          assert all(receipt_r03['invariants'].values())
+          assert receipt_r03['claims']['mixed_young_operator_is_orthogonal_projector'] is False
+          assert receipt_r03['claims']['benchmark_is_general_proof'] is False
+          print(receipt['status'], receipt_r02['status'], receipt_r03['status'])
           PY
