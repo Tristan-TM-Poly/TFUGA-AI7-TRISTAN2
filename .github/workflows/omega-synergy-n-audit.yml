@@ -9,6 +9,26 @@ on:
         default: '4'
   schedule:
     - cron: '27 6 * * 3'
+  push:
+    branches:
+      - agent/omega-synergy-n-research-engine
+    paths:
+      - 'omega_synergy_t/**'
+      - 'tools/github_reactor/synergy_n_engine.py'
+      - 'tests/test_synergy_n_engine.py'
+      - 'tests/test_synergy_foundry.py'
+      - 'tests/test_synergy_foundry_cli.py'
+      - 'docs/canon/OMEGA_SYNERGY_N_T.md'
+      - 'docs/canon/OMEGA_SYNERGY_T_INFINITY_R1.md'
+      - 'docs/architecture/OMEGA_SYNERGY_ARCHITECTURE.md'
+      - 'docs/security/OMEGA_SYNERGY_THREAT_MODEL.md'
+      - 'schemas/omega_synergy_n_report.schema.json'
+      - 'schemas/creation_dna.schema.json'
+      - 'schemas/interface_contract.schema.json'
+      - 'schemas/synergy_experiment.schema.json'
+      - 'schemas/pr_gene.schema.json'
+      - 'pyproject.toml'
+      - '.github/workflows/omega-synergy-n-audit.yml'
   pull_request:
     paths:
       - 'omega_synergy_t/**'
@@ -25,6 +45,7 @@ on:
       - 'schemas/interface_contract.schema.json'
       - 'schemas/synergy_experiment.schema.json'
       - 'schemas/pr_gene.schema.json'
+      - 'pyproject.toml'
       - '.github/workflows/omega-synergy-n-audit.yml'
 
 permissions:
