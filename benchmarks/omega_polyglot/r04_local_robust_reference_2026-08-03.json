@@ -1,0 +1,209 @@
+{
+  "benchmark_id": "omega-polyglot-r04-local-robust-2026-08-03",
+  "candidate_count_single_campaign": 530,
+  "provenance": {
+    "scope": "local container reference; not GitHub Actions certification",
+    "date": "2026-08-03",
+    "platform": "Linux x86_64",
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "c_compiler": "GCC 14.2",
+    "cpp_compiler": "G++ 14.2",
+    "openmp_threads": 5,
+    "rust_measured": false
+  },
+  "protocol": {
+    "algorithms": ["affine", "affine_chain", "sum", "dot"],
+    "sizes": [4096, 100000, 1000000],
+    "profiles": ["portable", "native", "openmp"],
+    "trials": 3,
+    "warmups_per_trial": 3,
+    "repetitions_per_trial": 7,
+    "dtype": "float64",
+    "selection": "minimum median-of-medians among candidates correct in every trial",
+    "timing_scope": "prepared zero-copy dispatch plus computation",
+    "python_reference": "plain CPython loops"
+  },
+  "robust_champions": [
+    {
+      "algorithm": "affine",
+      "size": 4096,
+      "candidate_id": "cpp:portable:unrolled4",
+      "median_of_medians_ns": 1873.0,
+      "mad_ns": 0.0,
+      "median_speedup_vs_python": 90.67912439935932,
+      "success_rate": 1.0,
+      "max_abs_error": 0.0
+    },
+    {
+      "algorithm": "affine",
+      "size": 100000,
+      "candidate_id": "cpp:openmp:parallel",
+      "median_of_medians_ns": 8453.0,
+      "mad_ns": 961.0,
+      "median_speedup_vs_python": 529.113095942268,
+      "success_rate": 1.0,
+      "max_abs_error": 0.0
+    },
+    {
+      "algorithm": "affine",
+      "size": 1000000,
+      "candidate_id": "c:openmp:parallel",
+      "median_of_medians_ns": 76023.0,
+      "mad_ns": 7090.0,
+      "median_speedup_vs_python": 666.5807852892048,
+      "success_rate": 1.0,
+      "max_abs_error": 0.0
+    },
+    {
+      "algorithm": "affine_chain",
+      "size": 4096,
+      "candidate_id": "cpp:native:fused_avx2",
+      "median_of_medians_ns": 2444.0,
+      "mad_ns": 0.0,
+      "median_speedup_vs_python": 93.41939443535188,
+      "success_rate": 1.0,
+      "max_abs_error": 0.0
+    },
+    {
+      "algorithm": "affine_chain",
+      "size": 100000,
+      "candidate_id": "cpp:openmp:fused_parallel",
+      "median_of_medians_ns": 16024.0,
+      "mad_ns": 230.0,
+      "median_speedup_vs_python": 353.30716425361957,
+      "success_rate": 1.0,
+      "max_abs_error": 0.0
+    },
+    {
+      "algorithm": "affine_chain",
+      "size": 1000000,
+      "candidate_id": "cpp:openmp:fused_parallel",
+      "median_of_medians_ns": 96543.0,
+      "mad_ns": 4313.0,
+      "median_speedup_vs_python": 674.3502149363475,
+      "success_rate": 1.0,
+      "max_abs_error": 0.0
+    },
+    {
+      "algorithm": "sum",
+      "size": 4096,
+      "candidate_id": "cpp:native:avx2_reduction",
+      "median_of_medians_ns": 1432.0,
+      "mad_ns": 0.0,
+      "median_speedup_vs_python": 17.47695530726257,
+      "success_rate": 1.0,
+      "max_abs_error": 1.1368683772161603e-13
+    },
+    {
+      "algorithm": "sum",
+      "size": 100000,
+      "candidate_id": "c:openmp:parallel_reduction",
+      "median_of_medians_ns": 18417.0,
+      "mad_ns": 587.0,
+      "median_speedup_vs_python": 35.043818211434,
+      "success_rate": 1.0,
+      "max_abs_error": 1.3642420526593924e-12
+    },
+    {
+      "algorithm": "sum",
+      "size": 1000000,
+      "candidate_id": "python:numpy:sum",
+      "median_of_medians_ns": 161610.0,
+      "mad_ns": 2675.0,
+      "median_speedup_vs_python": 40.28721489900377,
+      "success_rate": 1.0,
+      "max_abs_error": 5.343281372915953e-12
+    },
+    {
+      "algorithm": "dot",
+      "size": 4096,
+      "candidate_id": "python:numpy:dot",
+      "median_of_medians_ns": 1302.0,
+      "mad_ns": 13.0,
+      "median_speedup_vs_python": 149.68125960061444,
+      "success_rate": 1.0,
+      "max_abs_error": 2.842170943040401e-14
+    },
+    {
+      "algorithm": "dot",
+      "size": 100000,
+      "candidate_id": "python:numpy:dot",
+      "median_of_medians_ns": 7111.0,
+      "mad_ns": 29.0,
+      "median_speedup_vs_python": 649.892420193925,
+      "success_rate": 1.0,
+      "max_abs_error": 1.7053025658242404e-13
+    },
+    {
+      "algorithm": "dot",
+      "size": 1000000,
+      "candidate_id": "python:numpy:dot",
+      "median_of_medians_ns": 71626.0,
+      "mad_ns": 1451.0,
+      "median_speedup_vs_python": 643.9903387043811,
+      "success_rate": 1.0,
+      "max_abs_error": 2.0463630789890885e-12
+    }
+  ],
+  "fusion_comparison": [
+    {
+      "size": 4096,
+      "best_fused_ns": 2444,
+      "best_two_pass_ns": 4123,
+      "fusion_speedup": 1.686988133,
+      "interpretation": "one native pass versus two native passes"
+    },
+    {
+      "size": 100000,
+      "best_fused_ns": 16024,
+      "best_two_pass_ns": 48072,
+      "fusion_speedup": 3.0,
+      "interpretation": "one native pass versus two native passes"
+    },
+    {
+      "size": 1000000,
+      "best_fused_ns": 96543,
+      "best_two_pass_ns": 194965,
+      "fusion_speedup": 2.019459718,
+      "interpretation": "one native pass versus two native passes"
+    }
+  ],
+  "single_campaign_maxima": [
+    {
+      "algorithm": "affine",
+      "size": 100000,
+      "candidate_id": "cpp:openmp:parallel",
+      "median_ns": 6370,
+      "speedup_vs_python": 693.8952904238618
+    },
+    {
+      "algorithm": "affine_chain",
+      "size": 100000,
+      "candidate_id": "c:openmp:fused_parallel",
+      "median_ns": 8302,
+      "speedup_vs_python": 693.9103830402313
+    },
+    {
+      "algorithm": "dot",
+      "size": 1000000,
+      "candidate_id": "python:numpy:dot",
+      "median_ns": 35703,
+      "speedup_vs_python": 1201.1681651401843
+    }
+  ],
+  "oak": {
+    "universal_language_winner_claimed": false,
+    "scientific_validation_claimed": false,
+    "energy_measured": false,
+    "hardware_counter_bandwidth": false,
+    "cache_cold_claimed": false,
+    "rust_local_measurement_claimed": false,
+    "notes": [
+      "All speedups are relative to plain CPython loops, not to every optimized Python implementation.",
+      "NumPy is retained as a Python candidate and wins some reduction contexts.",
+      "Results are machine-, compiler-, thread-count-, size-, algorithm- and memory-boundary-specific.",
+      "GitHub Actions must independently measure Rust and the hosted runner environment."
+    ]
+  }
+}
