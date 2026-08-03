@@ -169,3 +169,33 @@ def test_audit_detects_import_tampering(tmp_path: Path) -> None:
     audit = audit_source_bundle(output)
     assert audit["valid"] is False
     assert any("imports.jsonl: sha256 mismatch" in error for error in audit["errors"])
+
+
+def test_strict_audit_detects_snapshot_digest_tampering(tmp_path: Path) -> None:
+    output = tmp_path / "bundle"
+    compile_source_bundle((FIXTURE_DIR / "clay_snapshot.sample.json",), output)
+    path = output / "source_snapshots.jsonl"
+    rows = path.read_text(encoding="utf-8").splitlines()
+    payload = json.loads(rows[0])
+    payload["snapshot_digest"] = "0" * 64
+    rows[0] = json.dumps(payload, sort_keys=True, ensure_ascii=False)
+    path.write_text("\n".join(rows) + "\n", encoding="utf-8")
+
+    audit = audit_source_bundle(output)
+    assert audit["valid"] is False
+    assert any("snapshot digest mismatch" in error for error in audit["errors"])
+
+
+def test_strict_audit_detects_receipt_digest_tampering(tmp_path: Path) -> None:
+    output = tmp_path / "bundle"
+    compile_source_bundle((FIXTURE_DIR / "clay_snapshot.sample.json",), output)
+    path = output / "status_receipts.jsonl"
+    rows = path.read_text(encoding="utf-8").splitlines()
+    payload = json.loads(rows[0])
+    payload["receipt_digest"] = "f" * 64
+    rows[0] = json.dumps(payload, sort_keys=True, ensure_ascii=False)
+    path.write_text("\n".join(rows) + "\n", encoding="utf-8")
+
+    audit = audit_source_bundle(output)
+    assert audit["valid"] is False
+    assert any("receipt digest mismatch" in error for error in audit["errors"])
