@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega_polyglot_robust_report_v4.schema.json",
+  "title": "Omega Polyglot Robust Report V4",
+  "type": "object",
+  "required": ["schema_version", "created_at_utc", "hardware", "protocol", "aggregates", "champions", "claims", "status"],
+  "properties": {
+    "schema_version": {"const": "omega-polyglot-robust-v4"},
+    "status": {"const": "OAK_REPEATED_SOFTWARE_AUTOTUNE_ONLY"},
+    "aggregates": {"type": "array"},
+    "champions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["algorithm", "size", "candidate_id", "success_rate", "median_of_medians_ns", "mad_ns"],
+        "properties": {
+          "success_rate": {"const": 1.0},
+          "median_of_medians_ns": {"type": "number", "exclusiveMinimum": 0},
+          "mad_ns": {"type": "number", "minimum": 0}
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "properties": {
+        "universal_language_winner": {"const": false},
+        "scientific_validation": {"const": false},
+        "energy_measured": {"const": false}
+      }
+    }
+  }
+}
