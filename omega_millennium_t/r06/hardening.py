@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Mapping, Sequence
 
-from .model import EvidenceEdge, EvidenceNode, PROMOTION_RANK, stable_digest
+from .model import EvidenceEdge, EvidenceNode, PROMOTION_RANK
 
 SUPPORT_RELATIONS = {"supports", "proves_restricted_case", "improves_bound", "reproduces"}
 
@@ -19,8 +19,16 @@ def assess_claims_hardened(
         incoming[edge.target_node_id].append(edge)
         outgoing[edge.source_node_id].append(edge)
 
-    discharged = {edge.target_node_id for edge in edges if edge.relation == "discharges"}
-    violated = {edge.target_node_id for edge in edges if edge.relation == "violates"}
+    discharged = {
+        edge.target_node_id
+        for edge in edges
+        if edge.relation == "discharges"
+    }
+    violated = {
+        edge.target_node_id
+        for edge in edges
+        if edge.relation == "violates"
+    }
     assessments: list[dict] = []
     for claim in sorted(
         (node for node in nodes.values() if node.node_type == "claim"),
@@ -73,9 +81,14 @@ def assess_claims_hardened(
             if source.node_type == "evidence":
                 kind = str(source.metadata.get("evidence_kind", ""))
                 if kind in {"numerical", "symbolic", "experiment", "literature", "proof_text"}:
-                    numerical_support = numerical_support or kind in {"numerical", "symbolic", "experiment"}
+                    numerical_support = numerical_support or kind in {
+                        "numerical", "symbolic", "experiment"
+                    }
                     achieved = max((achieved, "experimental"), key=PROMOTION_RANK.get)
-                if kind == "exact_computation" and source.metadata.get("certificate_verified") is True:
+                if (
+                    kind == "exact_computation"
+                    and source.metadata.get("certificate_verified") is True
+                ):
                     exact_certificate = True
                     achieved = max((achieved, "restricted_result"), key=PROMOTION_RANK.get)
             elif source.node_type == "computation_receipt":
@@ -123,7 +136,10 @@ def assess_claims_hardened(
             "canonical_problem_id": claim.canonical_problem_id,
             "requested_status": requested,
             "achieved_status": achieved,
-            "promotion_allowed": not blockers and PROMOTION_RANK[achieved] >= PROMOTION_RANK[requested],
+            "promotion_allowed": (
+                not blockers
+                and PROMOTION_RANK[achieved] >= PROMOTION_RANK[requested]
+            ),
             "support_node_ids": sorted(set(support_ids)),
             "contradiction_node_ids": sorted(set(contradiction_ids)),
             "dependency_assumption_ids": sorted(set(dependencies)),
@@ -132,6 +148,8 @@ def assess_claims_hardened(
             "mathematical_truth_probability_claimed": False,
             "general_proof_from_numerical_evidence": False,
         }
+        from .model import stable_digest
+
         row["assessment_digest"] = stable_digest(row)
         assessments.append(row)
     return assessments
