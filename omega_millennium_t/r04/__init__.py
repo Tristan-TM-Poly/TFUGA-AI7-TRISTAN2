@@ -15,10 +15,14 @@ from .source_adapters import (
     QuarantineRecord,
     SourceSnapshot,
     StatusReceipt,
-    audit_source_bundle,
+    audit_source_bundle as audit_source_bundle_basic,
     compile_source_bundle,
     load_source_snapshot,
 )
+from .strict_audit import audit_source_bundle_strict
+
+# Strict receipt, cardinality and referential verification is the public default.
+audit_source_bundle = audit_source_bundle_strict
 
 __all__ = [
     "ALLOWED_OBSERVED_STATUSES",
@@ -31,6 +35,8 @@ __all__ = [
     "SourceSnapshot",
     "StatusReceipt",
     "audit_source_bundle",
+    "audit_source_bundle_basic",
+    "audit_source_bundle_strict",
     "compile_source_bundle",
     "load_source_snapshot",
 ]
