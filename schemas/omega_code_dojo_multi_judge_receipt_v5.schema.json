@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-code-dojo/multi-judge-receipt-v5.schema.json",
+  "title": "Omega Multi-Judge Receipt R0.5",
+  "type": "object",
+  "required": [
+    "campaign_id",
+    "system_version",
+    "platform_count",
+    "logical_reference_space",
+    "discovered_references",
+    "normalized_references",
+    "selected_references",
+    "materialized_shadow_problems",
+    "solved_shadow_problems",
+    "unresolved_shadow_problems",
+    "shadow_solve_rate",
+    "blocked_references",
+    "total_cost_units",
+    "permanent_total_cap",
+    "platform_metrics",
+    "selections",
+    "resolutions",
+    "claims",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "campaign_id": {"type": "string", "minLength": 1},
+    "system_version": {"const": "R0.5"},
+    "platform_count": {"type": "integer", "minimum": 1},
+    "logical_reference_space": {"type": "integer", "minimum": 1},
+    "discovered_references": {"type": "integer", "minimum": 0},
+    "normalized_references": {"type": "integer", "minimum": 0},
+    "selected_references": {"type": "integer", "minimum": 0},
+    "materialized_shadow_problems": {"type": "integer", "minimum": 0},
+    "solved_shadow_problems": {"type": "integer", "minimum": 0},
+    "unresolved_shadow_problems": {"type": "integer", "minimum": 0},
+    "shadow_solve_rate": {"type": "number", "minimum": 0, "maximum": 1},
+    "blocked_references": {"type": "integer", "minimum": 0},
+    "total_cost_units": {"type": "integer", "minimum": 0},
+    "permanent_total_cap": {"type": ["integer", "null"], "minimum": 1},
+    "platform_metrics": {"type": "array", "items": {"type": "object"}},
+    "selections": {"type": "array", "items": {"type": "object"}},
+    "resolutions": {"type": "array", "items": {"type": "object"}},
+    "claims": {
+      "type": "object",
+      "required": [
+        "external_problem_solution_claimed",
+        "automated_external_submission_claimed",
+        "copied_external_statement_claimed",
+        "training_without_permission_claimed",
+        "no_permanent_total_cap_claimed"
+      ],
+      "additionalProperties": {"type": "boolean"}
+    },
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}
