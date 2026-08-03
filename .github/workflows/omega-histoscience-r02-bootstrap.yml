@@ -1,8 +1,8 @@
 name: Omega Histoscience R0.2 Bootstrap
 
 on:
-  push:
-    branches: [feat/omega-histoscience-hg-r0-1]
+  pull_request:
+    types: [opened, synchronize, reopened]
     paths:
       - "tools/omega_histosci_r02_payload/**"
       - "tools/materialize_omega_histosci_r02.py"
@@ -13,17 +13,22 @@ permissions:
   contents: write
 
 concurrency:
-  group: omega-histoscience-r02-bootstrap-${{ github.ref }}
+  group: omega-histoscience-r02-bootstrap-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
   materialize:
-    if: github.actor != 'github-actions[bot]'
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    env:
+      TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -37,8 +42,6 @@ jobs:
           git status --short
           git diff --stat
       - name: Commit exact generated paths
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -58,4 +61,4 @@ jobs:
             pyproject.toml
           git diff --cached --stat
           git commit -m "feat(histoscience): materialize Ω-HISTOSCI-HG-T∞ R0.2 massive frontier"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "HEAD:${TARGET_BRANCH}"
