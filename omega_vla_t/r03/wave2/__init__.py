@@ -9,18 +9,26 @@ All outputs are research-software artifacts. They do not constitute theorem,
 formal-proof or scientific-validation claims.
 """
 
+from .campaigns import CampaignPlan, OperatorCampaignAddress, OperatorCampaignCodec
 from .commutant import CommutantReport, commutant_basis, simultaneous_commutant_basis
 from .egraph import EGraphBudget, EGraphReport, RewriteRule, saturate
 from .families import OperatorFamily, OperatorFamilyCatalog, default_family_catalog
 from .genome import OperatorGenome, OperatorGenomeRegistry
 from .matrix_free import MatrixFreeAudit, MatrixFreeOperator
-from .matrix_functions import MatrixFunctionReport, matrix_exponential, matrix_logarithm, matrix_sign, matrix_square_root
+from .matrix_functions import (
+    MatrixFunctionReport,
+    matrix_exponential,
+    matrix_logarithm,
+    matrix_sign,
+    matrix_square_root,
+)
 from .oak_wave2 import Wave2OAKReport, audit_wave2
 from .properties import EvidenceLevel, PropertyEvidence, infer_properties
 from .sparse import CSRMatrix, SparseOperator
 
 __all__ = [
     "CSRMatrix",
+    "CampaignPlan",
     "CommutantReport",
     "EGraphBudget",
     "EGraphReport",
@@ -28,6 +36,8 @@ __all__ = [
     "MatrixFreeAudit",
     "MatrixFreeOperator",
     "MatrixFunctionReport",
+    "OperatorCampaignAddress",
+    "OperatorCampaignCodec",
     "OperatorFamily",
     "OperatorFamilyCatalog",
     "OperatorGenome",
