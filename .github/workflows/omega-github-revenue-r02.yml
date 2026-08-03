@@ -1,0 +1,128 @@
+name: omega-github-revenue-r02-max
+
+on:
+  pull_request:
+    paths:
+      - "omega_github_revenue_t/**"
+      - "tests/test_omega_github_revenue_t.py"
+      - "tests/test_omega_github_revenue_r02.py"
+      - "schemas/omega-github-revenue-r02.schema.json"
+      - "policies/omega-github-revenue-r02.yaml"
+      - "docs/OMEGA_GITHUB_REVENUE_R02_MAX.md"
+      - "examples/data/revenue_*"
+      - "pyproject.toml"
+      - ".github/workflows/omega-github-revenue-r02.yml"
+  push:
+    branches: [main]
+    paths:
+      - "omega_github_revenue_t/**"
+      - "tests/test_omega_github_revenue_t.py"
+      - "tests/test_omega_github_revenue_r02.py"
+      - "schemas/omega-github-revenue-r02.schema.json"
+      - "policies/omega-github-revenue-r02.yaml"
+      - "docs/OMEGA_GITHUB_REVENUE_R02_MAX.md"
+      - "examples/data/revenue_*"
+      - "pyproject.toml"
+      - ".github/workflows/omega-github-revenue-r02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    name: oakbench (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: R0.1 and R0.2 OAKBench
+        run: |
+          python -m pytest -q \
+            tests/test_omega_github_revenue_t.py \
+            tests/test_omega_github_revenue_r02.py
+      - name: Compile revenue atlas
+        run: |
+          python -m omega_github_revenue_t.r02_cli atlas \
+            > /tmp/omega-github-revenue-atlas.json
+          python -m json.tool /tmp/omega-github-revenue-atlas.json > /dev/null
+      - name: Compile Sponsor profile bundle
+        run: |
+          python -m omega_github_revenue_t.r02_cli profile \
+            --output /tmp/omega-sponsor-profile \
+            > /tmp/profile-result.json
+          test -s /tmp/omega-sponsor-profile/PROFILE_README.md
+          test -s /tmp/omega-sponsor-profile/SPONSOR_TIERS.md
+          test -s /tmp/omega-sponsor-profile/profile-manifest.json
+      - name: Analyze synthetic funnel
+        run: |
+          python -m omega_github_revenue_t.r02_cli funnel \
+            examples/data/revenue_funnel_snapshot.json \
+            > /tmp/funnel-analysis.json
+          python -m json.tool /tmp/funnel-analysis.json > /dev/null
+      - name: Reconcile synthetic provider events
+        run: |
+          python -m omega_github_revenue_t.r02_cli reconcile \
+            examples/data/revenue_events_internal.json \
+            examples/data/revenue_events_provider.json \
+            > /tmp/reconciliation.json
+          python - <<'PY'
+          import json
+          data = json.load(open('/tmp/reconciliation.json', encoding='utf-8'))
+          assert data['balanced'] is True
+          PY
+      - name: Authorized self-audit dry run
+        run: |
+          python -m omega_github_revenue_t.r02_cli oakgate-audit . \
+            --output /tmp/oakgate-self-audit \
+            --authorization-id CI-SELF-AUDIT \
+            --granted-by github-actions \
+            --granted-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --i-am-authorized \
+            > /tmp/oakgate-self-audit-result.json
+          test -s /tmp/oakgate-self-audit/audit-report.json
+          test -s /tmp/oakgate-self-audit/evidence-manifest.json
+          test -s /tmp/oakgate-self-audit/run-receipt.json
+
+  capacity-frontier:
+    name: 100k durable frontier
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run 100,000-artifact finite campaign
+        run: |
+          python -m omega_github_revenue_t.r02_cli campaign \
+            --count 100000 \
+            --database /tmp/revenue-capacity.sqlite \
+            --campaign-id ci-capacity-100k \
+            --checkpoint-every 10000 \
+            --initial-batch-size 1024 \
+            > /tmp/revenue-capacity-result.json
+      - name: Verify durable count and receipt
+        run: |
+          python - <<'PY'
+          import json
+          import sqlite3
+          result = json.load(open('/tmp/revenue-capacity-result.json', encoding='utf-8'))
+          assert result['receipt']['seen'] == 100000
+          assert result['receipt']['accepted'] == 100000
+          assert len(result['receipt']['artifact_merkle_root']) == 64
+          connection = sqlite3.connect('/tmp/revenue-capacity.sqlite')
+          count = connection.execute('select count(*) from artifacts').fetchone()[0]
+          assert count == 100000
+          PY
