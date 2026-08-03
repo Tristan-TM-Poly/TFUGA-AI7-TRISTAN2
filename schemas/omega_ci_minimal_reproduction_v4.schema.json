@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/omega_ci_minimal_reproduction_v4.schema.json",
+  "title": "Omega CI minimal reproduction v4",
+  "type": "object",
+  "required": ["schema", "reproduction_id", "failure_id", "original_items", "minimized_items", "evaluations", "preserved_failure", "limit_reached", "reduction_ratio", "trace", "execution_environment", "remote_mutations"],
+  "properties": {
+    "schema": {"const": "omega-ci-minimal-reproduction/v4"},
+    "reproduction_id": {"type": "string", "pattern": "^REPRO-[A-F0-9]{20}$"},
+    "failure_id": {"type": "string"},
+    "original_items": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "minimized_items": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "evaluations": {"type": "integer", "minimum": 1},
+    "preserved_failure": {"type": "boolean"},
+    "limit_reached": {"type": "boolean"},
+    "reduction_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+    "trace": {"type": "array"},
+    "execution_environment": {"const": "synthetic_local_fixture"},
+    "remote_mutations": {"const": 0}
+  },
+  "additionalProperties": false
+}

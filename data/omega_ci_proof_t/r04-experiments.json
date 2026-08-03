@@ -1,0 +1,82 @@
+{
+  "experiments": [
+    {
+      "experiment_id": "EXP-NORMALIZER-AB",
+      "description": "Run the same corpus through broad lstrip and exact-prefix implementations.",
+      "outcomes": ["exact_only_passes", "both_fail", "both_pass"],
+      "likelihoods": {
+        "H-LSTRIP": {"exact_only_passes": 0.94, "both_fail": 0.03, "both_pass": 0.03},
+        "H-FIXTURE": {"exact_only_passes": 0.12, "both_fail": 0.78, "both_pass": 0.10},
+        "H-OS": {"exact_only_passes": 0.20, "both_fail": 0.70, "both_pass": 0.10},
+        "H-CALLER": {"exact_only_passes": 0.10, "both_fail": 0.75, "both_pass": 0.15}
+      },
+      "compute_cost": 0.10,
+      "human_cost": 0.05,
+      "safety_risk": 0.00,
+      "required_capability": "run_tests",
+      "affected_claim_ids": ["CLAIM-ROUTER-CONSERVATIVE"]
+    },
+    {
+      "experiment_id": "EXP-DIRECT-VS-CALLER",
+      "description": "Compare the direct normalizer return value with the caller-observed value.",
+      "outcomes": ["direct_already_bad", "caller_only_bad", "neither_bad"],
+      "likelihoods": {
+        "H-LSTRIP": {"direct_already_bad": 0.92, "caller_only_bad": 0.04, "neither_bad": 0.04},
+        "H-FIXTURE": {"direct_already_bad": 0.35, "caller_only_bad": 0.45, "neither_bad": 0.20},
+        "H-OS": {"direct_already_bad": 0.55, "caller_only_bad": 0.20, "neither_bad": 0.25},
+        "H-CALLER": {"direct_already_bad": 0.05, "caller_only_bad": 0.90, "neither_bad": 0.05}
+      },
+      "compute_cost": 0.08,
+      "human_cost": 0.04,
+      "safety_risk": 0.00,
+      "required_capability": "run_tests",
+      "affected_claim_ids": ["CLAIM-ROUTER-CONSERVATIVE"]
+    },
+    {
+      "experiment_id": "EXP-CROSS-OS-REAL-RUNNERS",
+      "description": "Reproduce the minimal fixture on independent operating-system runners.",
+      "outcomes": ["all_reproduce", "one_platform_only", "none_reproduce"],
+      "likelihoods": {
+        "H-LSTRIP": {"all_reproduce": 0.90, "one_platform_only": 0.08, "none_reproduce": 0.02},
+        "H-FIXTURE": {"all_reproduce": 0.75, "one_platform_only": 0.15, "none_reproduce": 0.10},
+        "H-OS": {"all_reproduce": 0.10, "one_platform_only": 0.85, "none_reproduce": 0.05},
+        "H-CALLER": {"all_reproduce": 0.65, "one_platform_only": 0.20, "none_reproduce": 0.15}
+      },
+      "compute_cost": 0.50,
+      "human_cost": 0.10,
+      "safety_risk": 0.05,
+      "required_capability": "run_tests",
+      "affected_claim_ids": ["CLAIM-ROUTER-CONSERVATIVE"]
+    },
+    {
+      "experiment_id": "EXP-PUBLISH-PRELIMINARY",
+      "description": "Publish the preliminary causal conclusion.",
+      "outcomes": ["published", "blocked"],
+      "likelihoods": {
+        "H-LSTRIP": {"published": 0.5, "blocked": 0.5},
+        "H-FIXTURE": {"published": 0.5, "blocked": 0.5},
+        "H-OS": {"published": 0.5, "blocked": 0.5},
+        "H-CALLER": {"published": 0.5, "blocked": 0.5}
+      },
+      "compute_cost": 0.01,
+      "human_cost": 0.01,
+      "safety_risk": 0.00,
+      "required_capability": "publish"
+    },
+    {
+      "experiment_id": "EXP-HIGH-RISK-REMOTE-MUTATION",
+      "description": "Modify a remote branch to test the hypothesis.",
+      "outcomes": ["failure_changes", "failure_unchanged"],
+      "likelihoods": {
+        "H-LSTRIP": {"failure_changes": 0.8, "failure_unchanged": 0.2},
+        "H-FIXTURE": {"failure_changes": 0.5, "failure_unchanged": 0.5},
+        "H-OS": {"failure_changes": 0.3, "failure_unchanged": 0.7},
+        "H-CALLER": {"failure_changes": 0.4, "failure_unchanged": 0.6}
+      },
+      "compute_cost": 0.20,
+      "human_cost": 0.10,
+      "safety_risk": 0.90,
+      "required_capability": "push_branch"
+    }
+  ]
+}

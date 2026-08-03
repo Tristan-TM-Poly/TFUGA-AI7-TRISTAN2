@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/omega_ci_bisect_plan_v4.schema.json",
+  "title": "Omega CI bisect plan v4",
+  "type": "object",
+  "required": ["schema", "plan_id", "failure_id", "ordered_commits", "known_good_sha", "known_bad_sha", "maximum_remaining_evaluations", "tested_verdicts", "status", "execution_authorized", "remote_mutations"],
+  "properties": {
+    "schema": {"const": "omega-ci-bisect-plan/v4"},
+    "plan_id": {"type": "string", "pattern": "^BISECT-[A-F0-9]{20}$"},
+    "failure_id": {"type": "string"},
+    "ordered_commits": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+    "known_good_sha": {"type": "string"},
+    "known_bad_sha": {"type": "string"},
+    "next_step": {"type": ["object", "null"]},
+    "maximum_remaining_evaluations": {"type": "integer", "minimum": 0},
+    "tested_verdicts": {"type": "object", "additionalProperties": {"enum": ["GOOD", "BAD"]}},
+    "status": {"enum": ["NEXT_EVALUATION_PLANNED", "BOUNDARY_IDENTIFIED"]},
+    "execution_authorized": {"const": false},
+    "remote_mutations": {"const": 0}
+  },
+  "additionalProperties": false
+}

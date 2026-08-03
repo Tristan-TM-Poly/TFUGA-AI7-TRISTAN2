@@ -1,0 +1,5 @@
+{
+  "failure_id": "FAIL-DOT-GITHUB",
+  "items": ["fixture-load", "noise-a", ".github", "noise-b", "workflows/ci.yml", "noise-c", "normalize-path"],
+  "required_tokens": [".github", "workflows/ci.yml", "normalize-path"]
+}

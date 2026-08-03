@@ -1,0 +1,45 @@
+{
+  "failure_id": "FAIL-DOT-GITHUB",
+  "hypotheses": [
+    {
+      "hypothesis_id": "H-LSTRIP",
+      "statement": "Broad lstrip('./') removes the leading dot from .github paths.",
+      "cause_node_ids": ["NODE-NORMALIZER-LSTRIP"],
+      "prior_weight": 1.0,
+      "assumptions": ["the failing path reaches normalize_path", "the observed output is not post-processed"],
+      "falsifiers": ["an exact-prefix implementation still loses the leading dot", "the broad lstrip implementation preserves .github"],
+      "scope": ["relative repository path normalization"],
+      "severity": "high"
+    },
+    {
+      "hypothesis_id": "H-FIXTURE",
+      "statement": "Fixture serialization removes the leading dot before the normalizer sees the value.",
+      "cause_node_ids": ["NODE-FIXTURE-SERIALIZATION"],
+      "prior_weight": 1.0,
+      "assumptions": ["fixture serialization occurs before normalization"],
+      "falsifiers": ["raw fixture bytes preserve the leading dot"],
+      "scope": ["test fixture loading"],
+      "severity": "medium"
+    },
+    {
+      "hypothesis_id": "H-OS",
+      "statement": "Operating-system path semantics remove the leading dot.",
+      "cause_node_ids": ["NODE-PATH-ENVIRONMENT"],
+      "prior_weight": 1.0,
+      "assumptions": ["the path library applies platform-specific normalization"],
+      "falsifiers": ["the same behavior reproduces on independent operating systems"],
+      "scope": ["platform path handling"],
+      "severity": "medium"
+    },
+    {
+      "hypothesis_id": "H-CALLER",
+      "statement": "A caller strips punctuation after normalize_path returns.",
+      "cause_node_ids": ["NODE-CALLER-POSTPROCESS"],
+      "prior_weight": 0.7,
+      "assumptions": ["the direct normalizer output was not inspected"],
+      "falsifiers": ["a direct call already returns github/workflows/ci.yml"],
+      "scope": ["router caller post-processing"],
+      "severity": "medium"
+    }
+  ]
+}
