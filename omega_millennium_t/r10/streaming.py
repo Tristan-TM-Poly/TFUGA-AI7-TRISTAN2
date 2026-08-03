@@ -5,15 +5,16 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .audit import audit_streaming_atlas
-from .compiler import (
-    _file_sha256,
-    _run_campaign,
-    ingest_jsonl as _base_ingest_jsonl,
-    materialize_synthetic_campaign,
-)
+from .hardening import install_hardening
+
+install_hardening()
+
+from . import audit as _audit_module
+from .compiler import _file_sha256, _run_campaign, materialize_synthetic_campaign
 from .model import CELL_SCHEMA, RuntimePolicy, iter_jsonl, stable_digest
 from .store import AtlasStore
+
+_base_audit_streaming_atlas = _audit_module.audit_streaming_atlas
 
 
 def _last_nonempty_line(path: Path) -> int:
@@ -57,6 +58,38 @@ def ingest_jsonl(
         expected_total_rows=_last_nonempty_line(source),
         clean=clean,
     )
+
+
+def audit_streaming_atlas(output_dir: str | Path, *, chunk_size: int = 10_000) -> dict[str, Any]:
+    output = Path(output_dir)
+    result = _base_audit_streaming_atlas(output, chunk_size=chunk_size)
+    errors = list(result.get("errors", []))
+    manifest_path = output / "manifest.json"
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        compatibility = manifest.get("source_compatibility")
+        if compatibility is not None:
+            receipt_path = output / "r03_compatibility.json"
+            if not receipt_path.exists():
+                errors.append("r03_compatibility_file_missing")
+            else:
+                stored = json.loads(receipt_path.read_text(encoding="utf-8"))
+                if stored != compatibility:
+                    errors.append("r03_compatibility_manifest_mismatch")
+                digest_view = {
+                    key: value for key, value in stored.items() if key != "receipt_digest"
+                }
+                if stable_digest(digest_view) != stored.get("receipt_digest"):
+                    errors.append("r03_compatibility_receipt_digest_invalid")
+                if stored.get("valid") is not True:
+                    errors.append("r03_compatibility_receipt_not_valid")
+                if stored.get("finite_fixture_is_not_unlimited_capacity_proof") is not True:
+                    errors.append("r03_finite_fixture_disclaimer_missing")
+    result["errors"] = sorted(set(errors))
+    result["valid"] = not result["errors"]
+    result.pop("audit_digest", None)
+    result["audit_digest"] = stable_digest(result)
+    return result
 
 
 def query_portfolio(
