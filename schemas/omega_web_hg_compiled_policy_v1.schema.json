@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_web_hg_compiled_policy_v1.schema.json",
+  "title": "Omega Web HG R0.5 Compiled Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source_id",
+    "allowed_routes",
+    "allowed_content",
+    "allowed_fields",
+    "forbidden_content",
+    "forbidden_fields",
+    "retention_rules",
+    "rate_rules",
+    "identity_rules",
+    "attribution_rules",
+    "required_environment",
+    "enforcement_mode",
+    "review_status",
+    "review_reasons",
+    "policy_url",
+    "policy_observed_at",
+    "evaluated_as_of",
+    "source_profile_digest",
+    "policy_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "omega-web-hg-compiled-policy/1.0"},
+    "source_id": {"type": "string", "minLength": 1},
+    "allowed_routes": {"$ref": "#/$defs/uniqueStrings"},
+    "allowed_content": {"$ref": "#/$defs/uniqueStrings"},
+    "allowed_fields": {"$ref": "#/$defs/uniqueStrings"},
+    "forbidden_content": {"$ref": "#/$defs/uniqueStrings"},
+    "forbidden_fields": {"$ref": "#/$defs/uniqueStrings"},
+    "retention_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw_response", "normalized_metadata", "maximum_days", "encrypted_at_rest"],
+      "properties": {
+        "raw_response": {"enum": ["forbidden", "ephemeral", "allowed"]},
+        "normalized_metadata": {"enum": ["forbidden", "ephemeral", "allowed"]},
+        "maximum_days": {"type": ["integer", "null"], "minimum": 1},
+        "encrypted_at_rest": {"type": "boolean"}
+      }
+    },
+    "rate_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recommended_rps", "maximum_rps", "burst", "retry_after_required"],
+      "properties": {
+        "recommended_rps": {"type": "number", "exclusiveMinimum": 0},
+        "maximum_rps": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "burst": {"type": "integer", "minimum": 1},
+        "retry_after_required": {"type": "boolean"}
+      }
+    },
+    "identity_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["user_agent_required", "contact_email"],
+      "properties": {
+        "user_agent_required": {"type": "boolean"},
+        "contact_email": {"enum": ["required", "recommended", "optional", "forbidden"]}
+      }
+    },
+    "attribution_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "required_fields"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "required_fields": {"$ref": "#/$defs/uniqueStrings"}
+      }
+    },
+    "required_environment": {"$ref": "#/$defs/uniqueStrings"},
+    "enforcement_mode": {"enum": ["reject", "redact"]},
+    "review_status": {"enum": ["pass", "fail", "human_review"]},
+    "review_reasons": {"$ref": "#/$defs/uniqueStrings"},
+    "policy_url": {"type": "string", "format": "uri", "pattern": "^https?://"},
+    "policy_observed_at": {"type": "string", "format": "date"},
+    "evaluated_as_of": {"type": "string", "format": "date"},
+    "source_profile_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "policy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "$defs": {
+    "uniqueStrings": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    }
+  }
+}
