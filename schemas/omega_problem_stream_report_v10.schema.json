@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_problem_stream_report_v10.schema.json",
+  "title": "Omega Problem Streaming Report V10",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "status",
+    "complete",
+    "failure",
+    "rollback_receipt_digest",
+    "manifest_digest",
+    "cell_count",
+    "input_rows_seen",
+    "duplicate_count",
+    "quarantine_count",
+    "shard_count",
+    "database_bytes",
+    "batch_size",
+    "peak_memory_independent_of_total_claimed",
+    "unlimited_capacity_claimed",
+    "permanent_total_cell_cap",
+    "report_digest"
+  ],
+  "properties": {
+    "schema": {"const": "omega-problem-stream-report/10"},
+    "status": {"enum": ["complete", "checkpointed", "failed", "already_complete"]},
+    "complete": {"type": "boolean"},
+    "failure": {"type": ["string", "null"]},
+    "rollback_receipt_digest": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "manifest_digest": {"$ref": "#/$defs/sha256"},
+    "cell_count": {"type": "integer", "minimum": 0},
+    "input_rows_seen": {"type": "integer", "minimum": 0},
+    "duplicate_count": {"type": "integer", "minimum": 0},
+    "quarantine_count": {"type": "integer", "minimum": 0},
+    "shard_count": {"type": "integer", "minimum": 0},
+    "database_bytes": {"type": "integer", "minimum": 0},
+    "batch_size": {"type": "integer", "minimum": 1},
+    "r03_compatibility_receipt_digest": {"$ref": "#/$defs/sha256"},
+    "r03_manifest_digest_reproduced": {"$ref": "#/$defs/sha256"},
+    "r03_report_digest_reproduced": {"$ref": "#/$defs/sha256"},
+    "peak_memory_independent_of_total_claimed": {"const": false},
+    "unlimited_capacity_claimed": {"const": false},
+    "permanent_total_cell_cap": {"type": "null"},
+    "report_digest": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
