@@ -4,7 +4,7 @@ from __future__ import annotations
 from .core import ClaimBoundary, Evidence, NextAction, Prototype, Relation, Snapshot, DIMENSIONS, SIGNALS
 
 HEADS = {
-    "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2": "e5c79c4108ff04b07baea63a93aaa11ee2cfb0b4",
+    "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2": "8f1fca34025929889779930ebec46c68c8c11d22",
     "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2": "fb49a34d39fffbca3d3eb5d3f5ec1cf99384b049",
     "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG": "9171a06a7dbf3db1ad152008ce5d8d4896398e9d",
     "Tristan-TM-Poly/PEFA-FractalEnergySystem": "d5ee7dbf7d7eb75790f63ee3a40671f60d8c3f80",
@@ -40,4 +40,4 @@ def seed_snapshot() -> Snapshot:
     ttm = "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2"
     tfug = "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG"
     prototypes = items_a(main, ttm, tfug) + items_b(main, ttm, tfug) + items_c(main, ttm, tfug) + items_d(main, ttm, tfug)
-    return Snapshot("prototype-portfolio-2026-08-03-r01", "2026-08-03T19:18:45Z", HEADS, prototypes)
+    return Snapshot("prototype-portfolio-2026-08-03-r01", "2026-08-03T19:58:42Z", HEADS, prototypes)
