@@ -1,10 +1,10 @@
-name: Omega Tensor Repair T R0.1
+name: Omega Tensor Repair T R0.1-R0.2
 
 on:
   pull_request:
     paths:
       - "omega_tensor_repair_t/**"
-      - "tests/test_omega_tensor_repair_t.py"
+      - "tests/test_omega_tensor_repair_t*.py"
       - "examples/omega_tensor_repair_demo.py"
       - "examples/tensor_repair_spec.json"
       - "docs/omega-tensor-repair-t/**"
@@ -32,14 +32,22 @@ jobs:
       - name: Install validators
         run: python -m pip install --disable-pip-version-check pytest jsonschema
       - name: Compile module
-        run: python -m compileall -q omega_tensor_repair_t tests/test_omega_tensor_repair_t.py examples/omega_tensor_repair_demo.py
+        run: >-
+          python -m compileall -q
+          omega_tensor_repair_t
+          tests/test_omega_tensor_repair_t.py
+          tests/test_omega_tensor_repair_t_r02.py
+          examples/omega_tensor_repair_demo.py
       - name: Run focused tests
-        run: pytest -q tests/test_omega_tensor_repair_t.py
+        run: pytest -q tests/test_omega_tensor_repair_t.py tests/test_omega_tensor_repair_t_r02.py
       - name: Generate deterministic receipts twice
         run: |
           python -m omega_tensor_repair_t.cli benchmark --output /tmp/tensor-a.json
           python -m omega_tensor_repair_t.cli benchmark --output /tmp/tensor-b.json
           cmp /tmp/tensor-a.json /tmp/tensor-b.json
+          python -m omega_tensor_repair_t.cli benchmark-r02 --output /tmp/tensor-r02-a.json
+          python -m omega_tensor_repair_t.cli benchmark-r02 --output /tmp/tensor-r02-b.json
+          cmp /tmp/tensor-r02-a.json /tmp/tensor-r02-b.json
       - name: Validate compiler schema and OAK boundaries
         run: |
           python - <<'PY'
@@ -60,5 +68,11 @@ jobs:
           assert receipt['maximum_reconstruction_error'] <= 1e-12
           assert receipt['claims']['general_theorem_proved_by_benchmark'] is False
           assert receipt['claims']['new_physics_validated'] is False
-          print(receipt['status'])
+
+          receipt_r02 = json.loads(Path('/tmp/tensor-r02-a.json').read_text())
+          assert receipt_r02['status'] == 'CERTIFIED_EXTENDED_SOFTWARE_FIXTURES_R0_2'
+          assert receipt_r02['su2_dimension_conservation'] is True
+          assert receipt_r02['claims']['optimal_svd_claimed'] is False
+          assert receipt_r02['claims']['higher_order_general_proof_claimed'] is False
+          print(receipt['status'], receipt_r02['status'])
           PY
