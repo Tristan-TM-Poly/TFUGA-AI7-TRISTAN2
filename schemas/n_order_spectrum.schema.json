@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/n_order_spectrum.schema.json",
+  "type": "object",
+  "required": ["bands", "normalized_energy", "order_entropy", "dominant_order"],
+  "properties": {
+    "bands": {"type": "array"},
+    "normalized_energy": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0}},
+    "order_entropy": {"type": "number", "minimum": 0},
+    "dominant_order": {"type": ["integer", "null"]}
+  },
+  "additionalProperties": false
+}

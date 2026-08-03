@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/n_order_interaction.schema.json",
+  "type": "object",
+  "required": ["components", "order", "gross_value", "proper_interaction", "net_synergy", "interval_low", "interval_high", "authority", "certification"],
+  "properties": {
+    "components": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "order": {"type": "integer", "minimum": 1},
+    "gross_value": {"type": "number"},
+    "proper_interaction": {"type": "number"},
+    "lower_order_value": {"type": "number"},
+    "integration_cost": {"type": "number", "minimum": 0},
+    "debt": {"type": "number", "minimum": 0},
+    "residual_risk": {"type": "number", "minimum": 0},
+    "net_synergy": {"type": "number"},
+    "standard_error": {"type": "number", "minimum": 0},
+    "interval_low": {"type": "number"},
+    "interval_high": {"type": "number"},
+    "purity": {"type": "number", "minimum": 0},
+    "necessity": {"type": "object", "additionalProperties": {"type": "number"}},
+    "context_id": {"type": "string"},
+    "authority": {"enum": ["review_only", "experimental_evidence", "replicated_evidence", "canonical_validated"]},
+    "certification": {"type": "string"},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
