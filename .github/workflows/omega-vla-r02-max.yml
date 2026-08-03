@@ -1,0 +1,103 @@
+name: Omega VLA R0.2 MAX OAKBench
+
+on:
+  push:
+    branches: [feat/omega-vla-t-r0-2-max]
+    paths:
+      - "omega_vla_t/r02/**"
+      - "tests/test_omega_vla_r02_max.py"
+      - "examples/omega_vla_r02_max_demo.py"
+      - "docs/omega_vla_t/r02/**"
+      - "schemas/omega_vla_*_v2.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla-r02-max.yml"
+  pull_request:
+    paths:
+      - "omega_vla_t/r02/**"
+      - "tests/test_omega_vla_r02_max.py"
+      - "examples/omega_vla_r02_max_demo.py"
+      - "docs/omega_vla_t/r02/**"
+      - "schemas/omega_vla_*_v2.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla-r02-max.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install runtime and validators
+        run: python -m pip install --disable-pip-version-check numpy pytest jsonschema
+      - name: Compile R0.2 MAX
+        run: >-
+          python -m compileall -q
+          omega_vla_t/r02
+          tests/test_omega_vla_r02_max.py
+          examples/omega_vla_r02_max_demo.py
+      - name: Run focused tests
+        run: pytest -q tests/test_omega_vla_r02_max.py
+      - name: Generate deterministic benchmark twice
+        run: |
+          python -m omega_vla_t.r02.cli benchmark --seed 17 --campaign-items 257 --output /tmp/oak-a.json
+          python -m omega_vla_t.r02.cli benchmark --seed 17 --campaign-items 257 --output /tmp/oak-b.json
+          cmp /tmp/oak-a.json /tmp/oak-b.json
+      - name: Generate deterministic cells and campaign
+        run: |
+          python -m omega_vla_t.r02.cli sample --count 32 --seed 2026 --output /tmp/sample-a.json
+          python -m omega_vla_t.r02.cli sample --count 32 --seed 2026 --output /tmp/sample-b.json
+          cmp /tmp/sample-a.json /tmp/sample-b.json
+          python -m omega_vla_t.r02.cli campaign \
+            --work-items 513 \
+            --seed 2026 \
+            --initial-batch 32 \
+            --min-batch 8 \
+            --max-batch 128 \
+            --records-per-shard 100 \
+            --output-dir /tmp/omega-vla-campaign \
+            --report /tmp/campaign.json
+      - name: Validate JSON schemas and claim boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          problem_schema = json.loads(Path('schemas/omega_vla_problem_cell_v2.schema.json').read_text())
+          campaign_schema = json.loads(Path('schemas/omega_vla_campaign_report_v2.schema.json').read_text())
+          oak_schema = json.loads(Path('schemas/omega_vla_oak_report_v2.schema.json').read_text())
+          for schema in (problem_schema, campaign_schema, oak_schema):
+              jsonschema.Draft202012Validator.check_schema(schema)
+
+          sample = json.loads(Path('/tmp/sample-a.json').read_text())
+          for cell in sample['cells']:
+              jsonschema.validate(cell, problem_schema)
+              assert cell['theorem_claimed'] is False
+
+          campaign = json.loads(Path('/tmp/campaign.json').read_text())
+          oak = json.loads(Path('/tmp/oak-a.json').read_text())
+          jsonschema.validate(campaign, campaign_schema)
+          jsonschema.validate(oak, oak_schema)
+          assert campaign['logical_frontier_cells'] > 10**12
+          assert campaign['proposed_cells'] == 513
+          assert campaign['permanent_total_cap'] is None
+          assert campaign['theorem_claimed'] is False
+          assert campaign['formal_proof_claimed'] is False
+          assert campaign['scientific_validation_claimed'] is False
+          assert oak['passed'] is True
+          assert oak['theorem_claimed'] is False
+          assert oak['formal_proof_claimed'] is False
+          assert oak['scientific_validation_claimed'] is False
+          print('OAK_PASS_SOFTWARE_RESEARCH_FIXTURES_R0_2_MAX')
+          PY
