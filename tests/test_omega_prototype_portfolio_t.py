@@ -14,6 +14,7 @@ from omega_prototype_portfolio_t.core import (
     digest, graphml, load_snapshot, plan, snapshot_from_dict,
 )
 from omega_prototype_portfolio_t.seed import seed_snapshot
+from omega_prototype_portfolio_t.seed_grand_atlas import GRAND_ATLAS_MINIMUM
 
 
 @pytest.fixture()
@@ -33,9 +34,9 @@ def test_unknown_evidence_strength_rejects(strength):
     with pytest.raises(ValueError): Evidence("test", "fixture", strength)
 
 
-def test_seed_has_23_unique_prototypes(snapshot):
-    assert len(snapshot.prototypes) == 23
-    assert len({p.prototype_id for p in snapshot.prototypes}) == 23
+def test_seed_has_grand_atlas_minimum_unique_prototypes(snapshot):
+    assert len(snapshot.prototypes) >= GRAND_ATLAS_MINIMUM
+    assert len({p.prototype_id for p in snapshot.prototypes}) == len(snapshot.prototypes)
 
 
 def test_seed_heads_are_exact(snapshot):
@@ -219,7 +220,7 @@ def test_snapshot_roundtrip_file(snapshot, tmp_path):
 def test_cli_seed(tmp_path):
     output = tmp_path / "seed.json"
     subprocess.run([sys.executable, "-m", "omega_prototype_portfolio_t", "seed", "--output", str(output)], check=True)
-    assert len(json.loads(output.read_text())["prototypes"]) == 23
+    assert len(json.loads(output.read_text())["prototypes"]) >= GRAND_ATLAS_MINIMUM
 
 
 def test_cli_audit():
@@ -232,7 +233,10 @@ def test_cli_oak():
     completed = subprocess.run([sys.executable, "-m", "omega_prototype_portfolio_t", "oak"], check=False, capture_output=True, text=True)
     assert completed.returncode == 0
     payload = json.loads(completed.stdout)
-    assert payload["status"] == "PASS" and payload["bundle_deterministic"] is True
+    assert payload["status"] == "PASS"
+    assert payload["bundle_deterministic"] is True
+    assert payload["grand_atlas_deterministic"] is True
+    assert payload["prototype_count"] >= GRAND_ATLAS_MINIMUM
 
 
 def test_cli_compile(tmp_path):
