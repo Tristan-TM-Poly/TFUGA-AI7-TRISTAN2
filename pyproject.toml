@@ -69,6 +69,7 @@ omega-problem-evidence = "omega_millennium_t.r06.cli:main"
 omega-problem-jobs = "omega_millennium_t.r07.cli:main"
 omega-problem-routing = "omega_millennium_t.r08.cli:main"
 omega-problem-promotion = "omega_millennium_t.r09.cli:main"
+omega-problem-stream = "omega_millennium_t.r10.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
