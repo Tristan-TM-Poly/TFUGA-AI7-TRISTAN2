@@ -1,0 +1,155 @@
+name: Omega Open Problems Atlas R0.2 MAX
+
+on:
+  push:
+    branches: [feat/omega-open-problems-atlas-r0-1]
+    paths:
+      - "omega_open_problems_atlas/r02/**"
+      - "tests/test_omega_open_problems_atlas_r02*.py"
+      - "schemas/open_problems_*_r02.schema.json"
+      - "data/open_problems_atlas/r02/**"
+      - "docs/omega_open_problems_atlas/R0_2_MAX_ARCHITECTURE.md"
+      - "docs/omega_open_problems_atlas/M_MINUS_R0_2.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-open-problems-atlas-r02-max.yml"
+  pull_request:
+    paths:
+      - "omega_open_problems_atlas/r02/**"
+      - "tests/test_omega_open_problems_atlas_r02*.py"
+      - "schemas/open_problems_*_r02.schema.json"
+      - "data/open_problems_atlas/r02/**"
+      - "docs/omega_open_problems_atlas/R0_2_MAX_ARCHITECTURE.md"
+      - "docs/omega_open_problems_atlas/M_MINUS_R0_2.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-open-problems-atlas-r02-max.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-open-problems-r02-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.1 and R0.2
+        run: |
+          python -m compileall -q \
+            omega_open_problems_atlas \
+            tests/test_omega_open_problems_atlas.py \
+            tests/test_omega_open_problems_atlas_r02.py \
+            tests/test_omega_open_problems_atlas_r02_schema.py
+      - name: Run focused tests
+        run: |
+          pytest -q \
+            tests/test_omega_open_problems_atlas.py \
+            tests/test_omega_open_problems_atlas_r02.py \
+            tests/test_omega_open_problems_atlas_r02_schema.py
+      - name: Generate deterministic MAX reports twice
+        run: |
+          python -m omega_open_problems_atlas.r02.cli benchmark \
+            --leads 512 \
+            --obligations 10001 \
+            --transfer-sample 128 \
+            --sqlite /tmp/opa-a.sqlite3 \
+            --output /tmp/opa-a.json
+          python -m omega_open_problems_atlas.r02.cli benchmark \
+            --leads 512 \
+            --obligations 10001 \
+            --transfer-sample 128 \
+            --sqlite /tmp/opa-b.sqlite3 \
+            --output /tmp/opa-b.json
+          cmp /tmp/opa-a.json /tmp/opa-b.json
+      - name: Validate schemas and permanent OAK boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          for path in sorted(Path('schemas').glob('open_problems_*_r02.schema.json')):
+              schema = json.loads(path.read_text(encoding='utf-8'))
+              jsonschema.Draft202012Validator.check_schema(schema)
+              print('VALID_SCHEMA', path)
+
+          report = json.loads(Path('/tmp/opa-a.json').read_text(encoding='utf-8'))
+          schema = json.loads(Path('schemas/open_problems_benchmark_r02.schema.json').read_text())
+          jsonschema.validate(report, schema)
+          assert report['status'] == 'CERTIFIED_SOFTWARE_RESEARCH_FIXTURES_R0_2'
+          assert report['logical_frontier_count'] == 268_435_456
+          assert report['logical_frontier_materialized'] is False
+          assert report['counts']['leads'] == 512
+          assert report['counts']['methods'] == 128
+          assert report['counts']['obligations'] == 10_001
+          assert report['counts']['independently_checked_open'] == 0
+          assert report['counts']['solution_claims'] == 0
+          assert report['campaign']['allocated_units'] == 10_001
+          assert report['merkle']['sample_proof_valid'] is True
+          assert report['permanent_total_cap'] is None
+          assert report['generated_fixture_is_not_open_problem'] is True
+          assert report['finite_computation_is_not_proof'] is True
+          assert report['solution_claimed'] is False
+          assert report['automated_submission_performed'] is False
+          print('CERTIFIED_SOFTWARE_RESEARCH_FIXTURES_R0_2')
+          PY
+      - name: Upload deterministic report
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-problems-r02-py${{ matrix.python-version }}
+          path: /tmp/opa-a.json
+          if-no-files-found: error
+
+  scale-250k:
+    needs: oakbench
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run durable 250,000-obligation campaign
+        run: |
+          python -m omega_open_problems_atlas.r02.cli benchmark \
+            --leads 4096 \
+            --obligations 250000 \
+            --transfer-sample 256 \
+            --sqlite /tmp/opa-scale.sqlite3 \
+            --output /tmp/opa-scale.json
+      - name: Verify scale result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('/tmp/opa-scale.json').read_text())
+          assert report['counts']['leads'] == 4096
+          assert report['counts']['methods'] == 128
+          assert report['counts']['obligations'] == 250_000
+          assert report['counts']['independently_checked_open'] == 0
+          assert report['counts']['solution_claims'] == 0
+          assert report['merkle']['sample_proof_valid'] is True
+          assert report['logical_frontier_count'] == 268_435_456
+          assert report['permanent_total_cap'] is None
+          assert report['solution_claimed'] is False
+          print('DURABLE_250K_SOFTWARE_FIXTURE_PASS')
+          PY
+      - name: Upload scale report
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-problems-r02-scale-250k
+          path: /tmp/opa-scale.json
+          if-no-files-found: error

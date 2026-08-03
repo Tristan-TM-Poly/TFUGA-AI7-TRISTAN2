@@ -1,0 +1,78 @@
+name: Omega Open Problems Atlas R0.1 OAKBench
+
+on:
+  push:
+    branches: [feat/omega-open-problems-atlas-r0-1]
+    paths:
+      - "omega_open_problems_atlas/**"
+      - "data/open_problems_atlas/**"
+      - "schemas/open_problems_*.json"
+      - "tests/test_omega_open_problems_atlas.py"
+      - "docs/omega_open_problems_atlas/**"
+      - ".github/workflows/omega-open-problems-atlas-r01.yml"
+  pull_request:
+    paths:
+      - "omega_open_problems_atlas/**"
+      - "data/open_problems_atlas/**"
+      - "schemas/open_problems_*.json"
+      - "tests/test_omega_open_problems_atlas.py"
+      - "docs/omega_open_problems_atlas/**"
+      - ".github/workflows/omega-open-problems-atlas-r01.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile package and test
+        run: python -m compileall -q omega_open_problems_atlas tests/test_omega_open_problems_atlas.py
+      - name: Run focused tests
+        run: pytest -q tests/test_omega_open_problems_atlas.py
+      - name: Materialize seed twice
+        run: |
+          python -m omega_open_problems_atlas.cli seed-1024 --output /tmp/seed-a.json
+          python -m omega_open_problems_atlas.cli seed-1024 --output /tmp/seed-b.json
+          cmp /tmp/seed-a.json /tmp/seed-b.json
+      - name: Validate Clay seed and schema
+        run: |
+          python -m omega_open_problems_atlas.cli validate-clay --output /tmp/clay-report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/open_problems_problem_genome.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          clay = json.loads(Path('data/open_problems_atlas/clay_seed.json').read_text())
+          for record in clay['records']:
+              jsonschema.validate(record, schema)
+          seed = json.loads(Path('/tmp/seed-a.json').read_text())
+          report = json.loads(Path('/tmp/clay-report.json').read_text())
+          assert seed['research_cell_count'] == 1024
+          assert seed['domain_count'] == 32
+          assert seed['operator_count'] == 32
+          assert seed['verified_open_problem_count'] == 0
+          assert seed['solution_claimed'] is False
+          assert seed['finite_computation_is_not_proof'] is True
+          assert seed['permanent_total_cap'] is None
+          assert report['registry']['problem_count'] == 7
+          assert report['registry']['open_status_counts']['SOURCE_REPORTED_OPEN'] == 6
+          assert report['registry']['open_status_counts']['RESOLVED'] == 1
+          assert report['registry']['solution_claimed_count'] == 0
+          assert report['finite_computation_is_not_proof'] is True
+          print('CERTIFIED_SOFTWARE_RESEARCH_ATLAS_SEED_R0_1')
+          PY

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/open_problems_benchmark_r02.schema.json",
+  "title": "Omega Open Problems Atlas R0.2 benchmark",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "system",
+    "version",
+    "status",
+    "logical_frontier_count",
+    "materialized_fixture",
+    "counts",
+    "checkpoint",
+    "merkle",
+    "permanent_total_cap",
+    "generated_fixture_is_not_open_problem",
+    "finite_computation_is_not_proof",
+    "solution_claimed",
+    "report_sha256"
+  ],
+  "properties": {
+    "system": {"const": "OMEGA-OPEN-PROBLEMS-ATLAS-T-INFINITY"},
+    "version": {"const": "R0.2-MAX"},
+    "status": {"const": "CERTIFIED_SOFTWARE_RESEARCH_FIXTURES_R0_2"},
+    "logical_frontier_count": {"type": "integer", "minimum": 1000000},
+    "logical_frontier_materialized": {"const": false},
+    "materialized_fixture": {
+      "type": "object",
+      "required": ["lead_count", "obligation_budget", "method_count", "transfer_lead_sample"],
+      "properties": {
+        "lead_count": {"type": "integer", "minimum": 1},
+        "obligation_budget": {"type": "integer", "minimum": 0},
+        "method_count": {"const": 128},
+        "transfer_lead_sample": {"type": "integer", "minimum": 1}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "required": ["leads", "methods", "obligations", "transfer_edges", "independently_checked_open", "solution_claims"],
+      "properties": {
+        "leads": {"type": "integer", "minimum": 1},
+        "methods": {"const": 128},
+        "obligations": {"type": "integer", "minimum": 0},
+        "transfer_edges": {"type": "integer", "minimum": 0},
+        "independently_checked_open": {"const": 0},
+        "solution_claims": {"const": 0}
+      }
+    },
+    "merkle": {
+      "type": "object",
+      "required": ["leaf_count", "root", "sample_proof_valid"],
+      "properties": {
+        "leaf_count": {"type": "integer", "minimum": 1},
+        "root": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "sample_proof_valid": {"const": true}
+      }
+    },
+    "permanent_total_cap": {"type": "null"},
+    "priority_score_is_not_truth_probability": {"const": true},
+    "generated_fixture_is_not_open_problem": {"const": true},
+    "finite_computation_is_not_proof": {"const": true},
+    "formal_skeleton_is_not_completed_proof": {"const": true},
+    "solution_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false},
+    "competition_participation_claimed": {"const": false},
+    "automated_submission_performed": {"const": false},
+    "report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

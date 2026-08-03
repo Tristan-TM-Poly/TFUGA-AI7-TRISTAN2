@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/open_problems_receipt_r02.schema.json",
+  "title": "Omega Open Problems Atlas R0.2 evidence receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_id",
+    "subject_id",
+    "evidence_class",
+    "artifact_sha256",
+    "command",
+    "environment",
+    "observed_at",
+    "result",
+    "claim_scope"
+  ],
+  "properties": {
+    "receipt_id": {"type": "string", "minLength": 1},
+    "subject_id": {"type": "string", "minLength": 1},
+    "evidence_class": {
+      "enum": [
+        "SOURCE_SNAPSHOT",
+        "LITERATURE_CHECK",
+        "STATEMENT_NORMALIZATION",
+        "COMPUTATION",
+        "FORMAL_CHECK",
+        "INDEPENDENT_REPRODUCTION",
+        "PEER_REVIEW"
+      ]
+    },
+    "artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "command": {"type": "string"},
+    "environment": {"type": "string", "minLength": 1},
+    "observed_at": {"type": "string", "minLength": 1},
+    "result": {"type": "string", "minLength": 1},
+    "parent_receipt_hash": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "claim_scope": {
+      "enum": [
+        "FINITE_DECLARED_FIXTURE",
+        "SOURCE_METADATA_ONLY",
+        "LOCAL_FORMAL_KERNEL_CHECK",
+        "INDEPENDENT_REPRODUCTION",
+        "PEER_REVIEWED_RESULT"
+      ]
+    }
+  }
+}

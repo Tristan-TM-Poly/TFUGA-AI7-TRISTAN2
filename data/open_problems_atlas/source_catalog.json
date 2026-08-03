@@ -1,0 +1,99 @@
+{
+  "system": "OMEGA-OPEN-PROBLEMS-ATLAS-T-INFINITY",
+  "version": "R0.1",
+  "last_catalog_review": "2026-08-03",
+  "sources": [
+    {
+      "source_id": "CLAY_MILLENNIUM",
+      "name": "Clay Mathematics Institute Millennium Prize Problems",
+      "canonical_url": "https://www.claymath.org/millennium-problems/",
+      "source_type": "official_prize_problem_collection",
+      "authority_class": "PRIMARY_OFFICIAL",
+      "redistribution_policy": "STORE_NORMALIZED_METADATA_AND_CITATION; DO_NOT_MIRROR_FULL_COPYRIGHTED_DESCRIPTIONS",
+      "requires_status_recheck": true,
+      "notes": [
+        "Six problems are listed by Clay as unsolved as of the catalog review date.",
+        "Poincare is retained as a resolved benchmark.",
+        "Clay recognition rules are separate from mathematical correctness."
+      ]
+    },
+    {
+      "source_id": "AIM_PROBLEM_LISTS",
+      "name": "American Institute of Mathematics Problem Lists",
+      "canonical_url": "https://aimath.org/problemlists/",
+      "source_type": "curated_specialist_problem_lists",
+      "authority_class": "CURATED_RESEARCH_SOURCE",
+      "redistribution_policy": "STORE_CITATIONS_AND_NORMALIZED_RECORDS_AFTER_LIST_SPECIFIC_REVIEW",
+      "requires_status_recheck": true,
+      "notes": [
+        "Individual lists can contain solved or stale entries.",
+        "Every imported problem requires list-level and literature-level verification."
+      ]
+    },
+    {
+      "source_id": "ERDOS_PROBLEMS",
+      "name": "Erdos Problems database",
+      "canonical_url": "https://www.erdosproblems.com/",
+      "source_type": "curated_problem_database",
+      "authority_class": "SPECIALIST_COMMUNITY_SOURCE",
+      "redistribution_policy": "STORE_IDENTIFIERS_CITATIONS_STATUS_SNAPSHOTS_AND_DERIVED_METADATA",
+      "requires_status_recheck": true,
+      "notes": [
+        "Database status is a research lead, not independent proof that a problem remains open.",
+        "Check references and current literature before allocating major effort."
+      ]
+    },
+    {
+      "source_id": "MATHOVERFLOW_OPEN_PROBLEMS",
+      "name": "MathOverflow open-problems tag",
+      "canonical_url": "https://mathoverflow.net/questions/tagged/open-problems",
+      "source_type": "community_research_questions",
+      "authority_class": "COMMUNITY_SOURCE",
+      "redistribution_policy": "CITE_AND_RESPECT_CC_BY_SA_ATTRIBUTION; DO_NOT_ASSUME_CURRENT_STATUS",
+      "requires_status_recheck": true,
+      "notes": [
+        "Questions vary in age, scope, precision and current status.",
+        "Import only after attribution and statement normalization."
+      ]
+    },
+    {
+      "source_id": "LITERATURE_PROBLEM_SECTIONS",
+      "name": "Open-problem sections in papers, surveys and conference proceedings",
+      "canonical_url": "urn:source-class:literature-problem-sections",
+      "source_type": "distributed_primary_literature",
+      "authority_class": "PRIMARY_OR_SECONDARY_LITERATURE",
+      "redistribution_policy": "METADATA_CITATION_AND_SHORT_NORMALIZED_STATEMENT_ONLY_UNLESS_LICENSE_ALLOWS_MORE",
+      "requires_status_recheck": true,
+      "notes": [
+        "Prefer DOI, arXiv identifier, authors, version and publication date.",
+        "Later papers may solve, weaken or reformulate the listed problem."
+      ]
+    },
+    {
+      "source_id": "COMPETITION_ARCHIVES",
+      "name": "Mathematical competition and benchmark archives",
+      "canonical_url": "urn:source-class:competition-archives",
+      "source_type": "training_and_evaluation_collection",
+      "authority_class": "RULE_GOVERNED_BENCHMARK",
+      "redistribution_policy": "FOLLOW_EACH_COMPETITION_LICENSE_AND_AI_USAGE_RULES",
+      "requires_status_recheck": false,
+      "notes": [
+        "Competition problems are not automatically research-open problems.",
+        "They are stored in a distinct ProblemKind and never mixed with open-status counts."
+      ]
+    },
+    {
+      "source_id": "COMPUTATIONAL_CHALLENGES",
+      "name": "Scientific and algorithmic challenge platforms",
+      "canonical_url": "urn:source-class:computational-challenges",
+      "source_type": "time_bounded_or_permanent_challenges",
+      "authority_class": "PLATFORM_ORGANIZER_SOURCE",
+      "redistribution_policy": "STORE_RULES_METADATA_AND_RESULTS_ONLY_AS_ALLOWED",
+      "requires_status_recheck": true,
+      "notes": [
+        "Deadlines, eligibility, data licenses and AI policies can change.",
+        "No automated submission or identity-bound participation."
+      ]
+    }
+  ]
+}

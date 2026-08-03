@@ -1,0 +1,92 @@
+{
+  "system": "OMEGA-OPEN-PROBLEMS-ATLAS-T-INFINITY",
+  "version": "R0.2-MAX",
+  "method_card_count_generated_by_benchmark": 128,
+  "families": [
+    {
+      "family_id": "ALGEBRAIC",
+      "operators": ["factorization", "representation", "invariant_ring", "homological_reduction"],
+      "failure_modes": ["hidden finiteness assumption", "noncanonical decomposition", "characteristic-dependent step"]
+    },
+    {
+      "family_id": "ANALYTIC",
+      "operators": ["estimate", "continuation", "compactness", "regularity_bootstrap"],
+      "failure_modes": ["nonuniform constant", "invalid limit exchange", "loss at endpoint"]
+    },
+    {
+      "family_id": "ASYMPTOTIC",
+      "operators": ["scaling", "saddle_point", "tauberian_transfer", "singular_limit"],
+      "failure_modes": ["finite regime mistaken for asymptotic regime", "uncontrolled remainder", "nonuniform parameter dependence"]
+    },
+    {
+      "family_id": "CATEGORICAL",
+      "operators": ["functorial_translation", "adjunction", "universal_property", "derived_equivalence"],
+      "failure_modes": ["forgetful functor loses required structure", "equivalence direction missing", "size issue"]
+    },
+    {
+      "family_id": "COMBINATORIAL",
+      "operators": ["double_counting", "extremal_configuration", "probabilistic_construction", "container_method"],
+      "failure_modes": ["overcounting", "boundary configuration omitted", "random model not representative"]
+    },
+    {
+      "family_id": "COMPUTATIONAL",
+      "operators": ["exact_enumeration", "sat_smt", "integer_programming", "certified_search"],
+      "failure_modes": ["finite computation promoted to proof", "floating-point artifact", "unverified solver certificate"]
+    },
+    {
+      "family_id": "FORMAL",
+      "operators": ["definition_formalization", "lemma_formalization", "kernel_check", "independent_rebuild"],
+      "failure_modes": ["placeholder remains", "axiom imported silently", "statement mismatch"]
+    },
+    {
+      "family_id": "GEOMETRIC",
+      "operators": ["curvature", "flow", "local_to_global", "geometric_measure"],
+      "failure_modes": ["coordinate artifact", "compactness assumed", "singular set ignored"]
+    },
+    {
+      "family_id": "LOGICAL",
+      "operators": ["quantifier_normalization", "compactness_theorem", "forcing", "independence_analysis"],
+      "failure_modes": ["quantifier flip", "metatheory/object-theory confusion", "consistency mistaken for truth"]
+    },
+    {
+      "family_id": "OPTIMIZATION",
+      "operators": ["convex_relaxation", "duality", "branch_and_bound", "sum_of_squares"],
+      "failure_modes": ["relaxation gap", "duality gap", "local optimum mistaken for global"]
+    },
+    {
+      "family_id": "PROBABILISTIC",
+      "operators": ["concentration", "martingale", "coupling", "second_moment"],
+      "failure_modes": ["dependence ignored", "tail regime mismatch", "expectation mistaken for existence without justification"]
+    },
+    {
+      "family_id": "SPECTRAL",
+      "operators": ["eigenvalue_bound", "trace_formula", "functional_calculus", "spectral_gap"],
+      "failure_modes": ["nonselfadjoint instability", "multiplicity ignored", "numerical spectrum mistaken for exact spectrum"]
+    },
+    {
+      "family_id": "STATISTICAL",
+      "operators": ["estimation", "hypothesis_test", "bootstrap", "model_selection"],
+      "failure_modes": ["selection bias", "multiple testing", "simulation distribution mismatch"]
+    },
+    {
+      "family_id": "TOPOLOGICAL",
+      "operators": ["homotopy", "homology", "obstruction_theory", "surgery"],
+      "failure_modes": ["dimension-specific step generalized", "orientation assumption omitted", "local invariant incomplete"]
+    },
+    {
+      "family_id": "VARIATIONAL",
+      "operators": ["energy_minimization", "gamma_convergence", "critical_point", "monotonicity_formula"],
+      "failure_modes": ["minimizer existence absent", "coercivity failure", "critical point not global"]
+    },
+    {
+      "family_id": "ADVERSARIAL",
+      "operators": ["hypothesis_removal", "quantifier_mutation", "counterexample_generation", "proof_dependency_attack"],
+      "failure_modes": ["mutation outside original domain", "counterexample generator incomplete", "false negative interpreted as validation"]
+    }
+  ],
+  "boundaries": {
+    "method_similarity_is_not_equivalence": true,
+    "method_transfer_is_not_validation": true,
+    "benchmark_win_is_not_theorem": true
+  }
+}

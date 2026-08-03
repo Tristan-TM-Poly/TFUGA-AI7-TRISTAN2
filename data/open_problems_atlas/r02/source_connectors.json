@@ -1,0 +1,236 @@
+{
+  "system": "OMEGA-OPEN-PROBLEMS-ATLAS-T-INFINITY",
+  "version": "R0.2-MAX",
+  "catalog_review_date": "2026-08-03",
+  "network_execution_enabled": false,
+  "connectors": [
+    {
+      "source_id": "CLAY_MILLENNIUM",
+      "name": "Clay Mathematics Institute Millennium Prize Problems",
+      "canonical_url": "https://www.claymath.org/millennium-problems/",
+      "adapter_mode": "official_metadata_snapshot",
+      "authority_class": "PRIMARY_OFFICIAL",
+      "license_class": "CITATION_AND_NORMALIZED_METADATA",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "AIM_PROBLEM_LISTS",
+      "name": "American Institute of Mathematics Problem Lists",
+      "canonical_url": "https://aimath.org/problemlists/",
+      "adapter_mode": "list_index_then_list_specific_snapshot",
+      "authority_class": "CURATED_RESEARCH_SOURCE",
+      "license_class": "LIST_SPECIFIC_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "ERDOS_PROBLEMS",
+      "name": "Erdos Problems database",
+      "canonical_url": "https://www.erdosproblems.com/",
+      "adapter_mode": "identifier_status_reference_snapshot",
+      "authority_class": "SPECIALIST_COMMUNITY_SOURCE",
+      "license_class": "CITATION_STATUS_AND_DERIVED_METADATA",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "OPEN_PROBLEM_GARDEN",
+      "name": "Open Problem Garden",
+      "canonical_url": "https://www.openproblemgarden.org/",
+      "adapter_mode": "subject_index_and_page_snapshot",
+      "authority_class": "COMMUNITY_CURATED_SOURCE",
+      "license_class": "SITE_POLICY_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "UNSOLVED_MATH",
+      "name": "UnsolvedMath collection",
+      "canonical_url": "https://www.unsolvedmath.com/",
+      "adapter_mode": "collection_pointer_snapshot",
+      "authority_class": "AGGREGATOR_SOURCE",
+      "license_class": "UPSTREAM_SOURCE_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "MATHOVERFLOW_OPEN_PROBLEMS",
+      "name": "MathOverflow open-problems tag",
+      "canonical_url": "https://mathoverflow.net/questions/tagged/open-problems",
+      "adapter_mode": "attributed_post_metadata_snapshot",
+      "authority_class": "COMMUNITY_RESEARCH_SOURCE",
+      "license_class": "CC_BY_SA_ATTRIBUTION_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "ARXIV_PROBLEM_SURVEYS",
+      "name": "arXiv surveys and open-problem sections",
+      "canonical_url": "https://arxiv.org/",
+      "adapter_mode": "bibliographic_metadata_and_section_locator",
+      "authority_class": "PRIMARY_PREPRINT_SOURCE",
+      "license_class": "ITEM_LICENSE_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "CROSSREF_LITERATURE",
+      "name": "Crossref bibliographic metadata",
+      "canonical_url": "https://www.crossref.org/",
+      "adapter_mode": "doi_metadata_enrichment",
+      "authority_class": "BIBLIOGRAPHIC_INFRASTRUCTURE",
+      "license_class": "METADATA_ONLY",
+      "status_recheck_required": false,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "OPENALEX_LITERATURE",
+      "name": "OpenAlex scholarly graph",
+      "canonical_url": "https://openalex.org/",
+      "adapter_mode": "work_author_citation_graph_enrichment",
+      "authority_class": "OPEN_SCHOLARLY_GRAPH",
+      "license_class": "OPEN_METADATA_WITH_SOURCE_CHECK",
+      "status_recheck_required": false,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "OEIS_COMMENTS",
+      "name": "OEIS entries with conjectures and open questions",
+      "canonical_url": "https://oeis.org/",
+      "adapter_mode": "sequence_identifier_and_reference_snapshot",
+      "authority_class": "SPECIALIST_DATABASE",
+      "license_class": "OEIS_TERMS_AND_ATTRIBUTION_REVIEW",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "KOUROVKA_NOTEBOOK",
+      "name": "Kourovka Notebook",
+      "canonical_url": "urn:collection:kourovka-notebook",
+      "adapter_mode": "edition_problem_identifier_snapshot",
+      "authority_class": "SPECIALIST_PROBLEM_COLLECTION",
+      "license_class": "EDITION_SPECIFIC_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "KIRBY_LOW_DIMENSIONAL_TOPOLOGY",
+      "name": "Problems in low-dimensional topology",
+      "canonical_url": "urn:collection:kirby-low-dimensional-topology",
+      "adapter_mode": "problem_identifier_and_citation_snapshot",
+      "authority_class": "SPECIALIST_PROBLEM_COLLECTION",
+      "license_class": "SOURCE_SPECIFIC_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "SMALE_PROBLEMS",
+      "name": "Smale mathematical problems",
+      "canonical_url": "urn:collection:smale-problems",
+      "adapter_mode": "historical_problem_and_literature_snapshot",
+      "authority_class": "HISTORICAL_RESEARCH_COLLECTION",
+      "license_class": "CITATION_AND_NORMALIZED_METADATA",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "HILBERT_PROBLEMS",
+      "name": "Hilbert problems and modern status literature",
+      "canonical_url": "urn:collection:hilbert-problems",
+      "adapter_mode": "historical_problem_status_graph",
+      "authority_class": "HISTORICAL_RESEARCH_COLLECTION",
+      "license_class": "CITATION_AND_NORMALIZED_METADATA",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "POLYMATH_PROJECTS",
+      "name": "Polymath collaborative research projects",
+      "canonical_url": "https://polymathprojects.org/",
+      "adapter_mode": "project_problem_result_snapshot",
+      "authority_class": "OPEN_COLLABORATIVE_RESEARCH",
+      "license_class": "PROJECT_SPECIFIC_ATTRIBUTION_REVIEW",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "MAA_PUTNAM_ARCHIVE",
+      "name": "MAA Putnam competition archive",
+      "canonical_url": "https://maa.org/math-competitions/putnam-competition/",
+      "adapter_mode": "competition_metadata_only",
+      "authority_class": "OFFICIAL_COMPETITION_ORGANIZER",
+      "license_class": "RULE_AND_COPYRIGHT_REVIEW_REQUIRED",
+      "status_recheck_required": false,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "IMO_ARCHIVE",
+      "name": "International Mathematical Olympiad archive",
+      "canonical_url": "https://www.imo-official.org/",
+      "adapter_mode": "competition_metadata_only",
+      "authority_class": "OFFICIAL_COMPETITION_ORGANIZER",
+      "license_class": "RULE_AND_COPYRIGHT_REVIEW_REQUIRED",
+      "status_recheck_required": false,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "AIMO_PRIZE",
+      "name": "AI Mathematical Olympiad Prize",
+      "canonical_url": "https://aimoprize.com/",
+      "adapter_mode": "rules_benchmark_and_deadline_snapshot",
+      "authority_class": "OFFICIAL_COMPETITION_ORGANIZER",
+      "license_class": "CURRENT_RULES_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "KAGGLE_COMPETITIONS",
+      "name": "Kaggle competitions",
+      "canonical_url": "https://www.kaggle.com/competitions",
+      "adapter_mode": "rules_data_license_and_deadline_snapshot",
+      "authority_class": "PLATFORM_ORGANIZER",
+      "license_class": "COMPETITION_SPECIFIC_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "DRIVENDATA_COMPETITIONS",
+      "name": "DrivenData competitions",
+      "canonical_url": "https://www.drivendata.org/competitions/",
+      "adapter_mode": "rules_data_license_and_deadline_snapshot",
+      "authority_class": "PLATFORM_ORGANIZER",
+      "license_class": "COMPETITION_SPECIFIC_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "CODALAB_COMPETITIONS",
+      "name": "CodaLab competitions",
+      "canonical_url": "https://codalab.lisn.upsaclay.fr/competitions/",
+      "adapter_mode": "rules_data_license_and_deadline_snapshot",
+      "authority_class": "PLATFORM_ORGANIZER",
+      "license_class": "COMPETITION_SPECIFIC_REVIEW_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    },
+    {
+      "source_id": "LOCAL_AUTHORIZED_RESEARCH_NOTES",
+      "name": "Authorized local research notes",
+      "canonical_url": "urn:source:local-authorized-research-notes",
+      "adapter_mode": "private_or_public_local_snapshot",
+      "authority_class": "USER_AUTHORIZED_SOURCE",
+      "license_class": "EXPLICIT_PERMISSION_REQUIRED",
+      "status_recheck_required": true,
+      "statement_mirroring_allowed": false
+    }
+  ],
+  "global_boundaries": {
+    "network_collection": "DISABLED_IN_CORE",
+    "automatic_open_status_promotion": false,
+    "automatic_competition_submission": false,
+    "full_statement_mirroring_default": false,
+    "independent_literature_check_required": true,
+    "generated_fixture_is_not_open_problem": true
+  }
+}
