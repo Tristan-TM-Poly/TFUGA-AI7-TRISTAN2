@@ -1,0 +1,72 @@
+name: Omega Code Dojo R0.5 Multi-Judge
+
+on:
+  pull_request:
+    paths:
+      - "omega_code_dojo_t/r05/**"
+      - "omega_code_dojo_t/r04/**"
+      - "tests/test_omega_code_dojo_r05.py"
+      - "schemas/omega_code_dojo_*_v5.schema.json"
+      - "docs/omega-code-dojo-t/r05/**"
+      - "examples/omega_code_dojo_r05_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-code-dojo-r05.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.5
+        run: python -m compileall -q omega_code_dojo_t/r05 tests/test_omega_code_dojo_r05.py examples/omega_code_dojo_r05_demo.py
+      - name: Run R0.5 tests
+        run: pytest -q tests/test_omega_code_dojo_r05.py
+      - name: Generate deterministic evidence twice
+        run: |
+          python -m omega_code_dojo_t.r05 benchmark --output /tmp/r05-a.json
+          python -m omega_code_dojo_t.r05 benchmark --output /tmp/r05-b.json
+          cmp /tmp/r05-a.json /tmp/r05-b.json
+      - name: Validate schemas and invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          receipt_schema = json.loads(Path("schemas/omega_code_dojo_multi_judge_receipt_v5.schema.json").read_text())
+          policy_schema = json.loads(Path("schemas/omega_code_dojo_platform_policy_v5.schema.json").read_text())
+          jsonschema.Draft202012Validator.check_schema(receipt_schema)
+          jsonschema.Draft202012Validator.check_schema(policy_schema)
+
+          payload = json.loads(Path("/tmp/r05-a.json").read_text())
+          jsonschema.validate(payload["receipt"], receipt_schema)
+          for policy in payload["platform_catalog"]:
+              jsonschema.validate(policy, policy_schema)
+
+          assert payload["status"] == "CERTIFIED_MULTI_JUDGE_SHADOW_FIXTURES_R0_5"
+          assert payload["logical_reference_space"] == 1_236_950_581_248
+          assert payload["materialized_shadow_problems"] == 256
+          assert payload["solved_shadow_problems"] == 256
+          assert payload["shadow_solve_rate"] == 1.0
+          assert payload["blocked_references"] == 9
+          assert payload["permanent_total_cap"] is None
+          assert payload["claims"]["external_problem_solution_claimed"] is False
+          assert payload["claims"]["automated_external_submission_claimed"] is False
+          assert payload["claims"]["copied_external_statement_claimed"] is False
+          assert payload["claims"]["training_without_permission_claimed"] is False
+          print("CERTIFIED_MULTI_JUDGE_SHADOW_FIXTURES_R0_5")
+          PY
