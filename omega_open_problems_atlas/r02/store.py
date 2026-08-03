@@ -134,7 +134,16 @@ class AtlasStore:
         payload = asdict(lead)
         payload["lead_status"] = lead.lead_status.value
         self.connection.execute(
-            """INSERT INTO leads VALUES(?,?,?,?,?,?,?)
+            """INSERT INTO leads(
+                   lead_id,
+                   source_id,
+                   statement_hash,
+                   canonical_hash,
+                   status,
+                   independently_checked_open,
+                   solution_claimed,
+                   payload
+               ) VALUES(?,?,?,?,?,?,?,?)
                ON CONFLICT(lead_id) DO UPDATE SET
                  source_id=excluded.source_id,
                  statement_hash=excluded.statement_hash,
