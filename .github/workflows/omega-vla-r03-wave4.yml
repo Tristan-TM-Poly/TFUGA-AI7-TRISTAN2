@@ -1,0 +1,98 @@
+name: Omega VLA R0.3 Wave 4 Counterexample Superfactory
+
+on:
+  push:
+    branches: [feat/omega-vla-r03-wave4-counterexample-superfactory]
+    paths:
+      - "omega_vla_t/r03/wave4/**"
+      - "tests/test_omega_vla_r03_wave4.py"
+      - "examples/omega_vla_r03_wave4_counterexample_demo.py"
+      - "docs/omega_vla_t/r03/WAVE4_COUNTEREXAMPLE_SUPERFACTORY.md"
+      - "schemas/omega_vla_counterexample_*.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla-r03-wave4.yml"
+  pull_request:
+    paths:
+      - "omega_vla_t/r03/wave4/**"
+      - "tests/test_omega_vla_r03_wave4.py"
+      - "examples/omega_vla_r03_wave4_counterexample_demo.py"
+      - "docs/omega_vla_t/r03/WAVE4_COUNTEREXAMPLE_SUPERFACTORY.md"
+      - "schemas/omega_vla_counterexample_*.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla-r03-wave4.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install runtime and validators
+        run: python -m pip install --disable-pip-version-check numpy pytest jsonschema
+      - name: Compile Wave 4
+        run: >-
+          python -m compileall -q
+          omega_vla_t/r03/wave4
+          tests/test_omega_vla_r03_wave4.py
+          examples/omega_vla_r03_wave4_counterexample_demo.py
+      - name: Run focused tests
+        run: pytest -q tests/test_omega_vla_r03_wave4.py
+      - name: Generate deterministic artifacts
+        run: |
+          python -m omega_vla_t.r03.wave4.cli manifest --output /tmp/manifest-a.json
+          python -m omega_vla_t.r03.wave4.cli manifest --output /tmp/manifest-b.json
+          cmp /tmp/manifest-a.json /tmp/manifest-b.json
+          python -m omega_vla_t.r03.wave4.cli plan --start-offset 4096 --count 1024 --output /tmp/plan-a.json
+          python -m omega_vla_t.r03.wave4.cli plan --start-offset 4096 --count 1024 --output /tmp/plan-b.json
+          cmp /tmp/plan-a.json /tmp/plan-b.json
+          python -m omega_vla_t.r03.wave4.cli search unconditional_commutativity --dimension 2 --family dense --trials 16 --output /tmp/search.json
+          python -m omega_vla_t.r03.wave4.cli oak --output /tmp/oak.json
+          python examples/omega_vla_r03_wave4_counterexample_demo.py > /tmp/demo.json
+      - name: Validate schemas and claim boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          record_schema = json.loads(Path('schemas/omega_vla_counterexample_record_v1.schema.json').read_text())
+          campaign_schema = json.loads(Path('schemas/omega_vla_counterexample_campaign_v1.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(record_schema)
+          jsonschema.Draft202012Validator.check_schema(campaign_schema)
+
+          manifest = json.loads(Path('/tmp/manifest-a.json').read_text())
+          assert manifest['frontier']['logical_frontier_size'] > 10**9
+          assert manifest['frontier']['permanent_total_cap'] is None
+
+          plan = json.loads(Path('/tmp/plan-a.json').read_text())
+          jsonschema.validate(plan, campaign_schema)
+          assert plan['generated'] == 1024
+
+          search = json.loads(Path('/tmp/search.json').read_text())
+          assert search['record'] is not None
+          jsonschema.validate(search['record'], record_schema)
+          assert search['record']['witness']['relative_residual'] > 1e-8
+          assert search['theorem_claimed'] is False
+
+          oak = json.loads(Path('/tmp/oak.json').read_text())
+          assert oak['passed'] is True
+          assert oak['theorem_claimed'] is False
+          assert oak['formal_proof_claimed'] is False
+          assert oak['scientific_validation_claimed'] is False
+
+          demo = json.loads(Path('/tmp/demo.json').read_text())
+          assert demo['oak']['passed'] is True
+          assert demo['theorem_claimed'] is False
+          print('OAK_PASS_VLA_R0_3_WAVE_4')
+          PY

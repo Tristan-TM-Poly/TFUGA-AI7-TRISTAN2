@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega_vla_counterexample_record_v1.schema.json",
+  "title": "Omega VLA Wave 4 Counterexample Record",
+  "type": "object",
+  "required": [
+    "record_id",
+    "conjecture_id",
+    "plan_digest",
+    "state",
+    "witness",
+    "theorem_claimed",
+    "formal_proof_claimed",
+    "scientific_validation_claimed"
+  ],
+  "properties": {
+    "record_id": {"type": "string", "minLength": 1},
+    "conjecture_id": {"type": "string", "minLength": 1},
+    "plan_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "state": {
+      "enum": [
+        "COUNTEREXAMPLE_FOUND",
+        "MINIMIZED",
+        "REPAIR_PROPOSED",
+        "REGRESSION_EMITTED"
+      ]
+    },
+    "witness": {
+      "type": "object",
+      "required": [
+        "matrices",
+        "absolute_residual",
+        "relative_residual",
+        "assumptions_passed"
+      ],
+      "properties": {
+        "matrices": {"type": "object", "minProperties": 1},
+        "absolute_residual": {"type": "number", "minimum": 0},
+        "relative_residual": {"type": "number", "exclusiveMinimum": 0},
+        "assumptions_passed": {"const": true},
+        "assumption_audit": {"type": "array"},
+        "provenance": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "minimization": {"type": ["object", "null"]},
+    "repairs": {"type": "array"},
+    "regression_source": {"type": ["string", "null"]},
+    "tags": {"type": "array", "items": {"type": "string"}},
+    "theorem_claimed": {"const": false},
+    "formal_proof_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false}
+  },
+  "additionalProperties": false
+}
