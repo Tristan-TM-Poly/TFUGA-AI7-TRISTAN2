@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_vla_problem_cell_v2.schema.json",
+  "title": "Omega VLA Problem Cell R0.2-MAX",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cell_id",
+    "address",
+    "object_family",
+    "hypotheses",
+    "candidate_conclusion",
+    "invariants",
+    "baselines",
+    "methods",
+    "falsifiers",
+    "expected_artifacts",
+    "priority",
+    "novelty_score",
+    "testability_score",
+    "risk_score",
+    "status",
+    "theorem_claimed",
+    "utility_score"
+  ],
+  "properties": {
+    "cell_id": {"type": "string", "pattern": "^vla-cell-[0-9a-f]{20}$"},
+    "address": {"type": "string", "minLength": 1},
+    "object_family": {"type": "string", "minLength": 1},
+    "hypotheses": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "candidate_conclusion": {"type": "string", "minLength": 1},
+    "invariants": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "baselines": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "methods": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "falsifiers": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "expected_artifacts": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "priority": {"type": "number", "minimum": 0, "maximum": 1},
+    "novelty_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "testability_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "risk_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "utility_score": {"type": "number", "minimum": -1, "maximum": 1},
+    "status": {
+      "enum": [
+        "IDEA",
+        "DEFINED",
+        "NUMERICALLY_OBSERVED",
+        "COUNTEREXAMPLE_FOUND",
+        "PROPOSITION",
+        "FORMALIZED_INCOMPLETE"
+      ]
+    },
+    "theorem_claimed": {"const": false}
+  }
+}
