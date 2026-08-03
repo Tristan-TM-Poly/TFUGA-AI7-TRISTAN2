@@ -1,0 +1,84 @@
+{
+  "schema": "omega-ci-route-config/1",
+  "replacement_workflow": ".github/workflows/omega-problem-atlas-router.yml",
+  "legacy_scope": [
+    ".github/workflows/omega-problem-atlas-r0*.yml",
+    ".github/workflows/omega-problem-atlas-r0*.yaml",
+    ".github/workflows/omega-problem-atlas-r1*.yml",
+    ".github/workflows/omega-problem-atlas-r1*.yaml"
+  ],
+  "replacement_green_receipt": null,
+  "routes": [
+    {
+      "route_id": "problem-atlas-r03",
+      "owned_paths": ["omega_millennium_t/r03/**", "tests/test_omega_problem_atlas_r03*.py", "schemas/omega_problem_atlas_*", "docs/omega_millennium_t/r03/**", ".github/workflows/omega-problem-atlas-r03*.*ml"],
+      "suite_args": ["pytest", "-q", "tests/test_omega_problem_atlas_r03*.py"],
+      "legacy_workflow_patterns": [".github/workflows/omega-problem-atlas-r03*.*ml"],
+      "estimated_jobs": 4
+    },
+    {
+      "route_id": "problem-atlas-r04",
+      "owned_paths": ["omega_millennium_t/r04/**", "tests/test_omega_problem_atlas_r04*.py", "schemas/omega_problem_source_*", "docs/omega_millennium_t/r04/**", ".github/workflows/omega-problem-atlas-r04*.*ml"],
+      "suite_args": ["pytest", "-q", "tests/test_omega_problem_atlas_r04*.py"],
+      "legacy_workflow_patterns": [".github/workflows/omega-problem-atlas-r04*.*ml"],
+      "estimated_jobs": 4
+    },
+    {
+      "route_id": "problem-atlas-r05",
+      "owned_paths": ["omega_millennium_t/r05/**", "tests/test_omega_problem_atlas_r05*.py", "schemas/omega_problem_identity_*", "docs/omega_millennium_t/r05/**", ".github/workflows/omega-problem-atlas-r05*.*ml"],
+      "suite_args": ["pytest", "-q", "tests/test_omega_problem_atlas_r05*.py"],
+      "legacy_workflow_patterns": [".github/workflows/omega-problem-atlas-r05*.*ml"],
+      "estimated_jobs": 4
+    },
+    {
+      "route_id": "problem-atlas-r06",
+      "owned_paths": ["omega_millennium_t/r06/**", "tests/test_omega_problem_atlas_r06*.py", "schemas/omega_problem_evidence_*", "docs/omega_millennium_t/r06/**", ".github/workflows/omega-problem-atlas-r06*.*ml"],
+      "suite_args": ["pytest", "-q", "tests/test_omega_problem_atlas_r06*.py"],
+      "legacy_workflow_patterns": [".github/workflows/omega-problem-atlas-r06*.*ml"],
+      "estimated_jobs": 4
+    },
+    {
+      "route_id": "problem-atlas-r07",
+      "owned_paths": ["omega_millennium_t/r07/**", "tests/test_omega_problem_atlas_r07*.py", "schemas/omega_problem_job_*", "docs/omega_millennium_t/r07/**", ".github/workflows/omega-problem-atlas-r07*.*ml"],
+      "suite_args": ["pytest", "-q", "tests/test_omega_problem_atlas_r07*.py"],
+      "legacy_workflow_patterns": [".github/workflows/omega-problem-atlas-r07*.*ml"],
+      "estimated_jobs": 4
+    },
+    {
+      "route_id": "problem-atlas-r08",
+      "owned_paths": ["omega_millennium_t/r08/**", "tests/test_omega_problem_atlas_r08*.py", "schemas/omega_problem_routing_*", "docs/omega_millennium_t/r08/**", ".github/workflows/omega-problem-atlas-r08*.*ml"],
+      "suite_args": ["pytest", "-q", "tests/test_omega_problem_atlas_r08*.py"],
+      "legacy_workflow_patterns": [".github/workflows/omega-problem-atlas-r08*.*ml"],
+      "estimated_jobs": 4
+    },
+    {
+      "route_id": "problem-atlas-r09",
+      "owned_paths": ["omega_millennium_t/r09/**", "tests/test_omega_problem_atlas_r09*.py", "schemas/omega_problem_promotion_*", "docs/omega_millennium_t/r09/**", ".github/workflows/omega-problem-atlas-r09*.*ml"],
+      "suite_args": ["pytest", "-q", "tests/test_omega_problem_atlas_r09*.py"],
+      "legacy_workflow_patterns": [".github/workflows/omega-problem-atlas-r09*.*ml"],
+      "estimated_jobs": 4
+    },
+    {
+      "route_id": "problem-atlas-r10",
+      "owned_paths": ["omega_millennium_t/r10/**", "tests/test_omega_problem_atlas_r10*.py", "schemas/omega_problem_stream_*", "docs/omega_millennium_t/r10/**", ".github/workflows/omega-problem-atlas-r10*.*ml"],
+      "suite_args": ["pytest", "-q", "tests/test_omega_problem_atlas_r10*.py"],
+      "legacy_workflow_patterns": [".github/workflows/omega-problem-atlas-r10*.*ml"],
+      "estimated_jobs": 5
+    },
+    {
+      "route_id": "problem-atlas-r11",
+      "owned_paths": ["omega_millennium_t/r11/**", "tests/test_omega_problem_atlas_r11*.py", "schemas/omega_competition_ledger_*", "docs/omega_millennium_t/r11/**", ".github/workflows/omega-problem-atlas-r11*.*ml"],
+      "suite_args": ["pytest", "-q", "tests/test_omega_problem_atlas_r11*.py"],
+      "legacy_workflow_patterns": [".github/workflows/omega-problem-atlas-r11*.*ml"],
+      "estimated_jobs": 4
+    }
+  ],
+  "validators": [
+    {
+      "validator_id": "python-cli-registry",
+      "paths": ["pyproject.toml"],
+      "command_args": ["python", "tools/ci/validate_pyproject_entrypoints.py"],
+      "estimated_jobs": 1
+    }
+  ]
+}
