@@ -1,0 +1,11 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"omega-ci-epistemic-graph/v3",
+  "type":"object",
+  "required":["schema","nodes","edges"],
+  "properties":{
+    "schema":{"const":"omega-ci-epistemic-graph/v3"},
+    "nodes":{"type":"array","items":{"type":"object","required":["node_id","kind","label"],"properties":{"node_id":{"type":"string","minLength":1},"kind":{"type":"string"},"label":{"type":"string","minLength":1},"criticality":{"type":"integer","minimum":1,"maximum":5}}}},
+    "edges":{"type":"array","items":{"type":"object","required":["source","target","relation"],"properties":{"source":{"type":"string"},"target":{"type":"string"},"relation":{"type":"string"},"weight":{"type":"number","exclusiveMinimum":0}}}}
+  }
+}

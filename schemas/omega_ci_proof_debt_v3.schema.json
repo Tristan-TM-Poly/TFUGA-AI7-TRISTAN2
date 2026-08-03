@@ -1,0 +1,14 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"omega-ci-proof-debt/v3",
+  "type":"object",
+  "required":["schema","report_id","items","total_score","critical_open","automatic_merge_allowed"],
+  "properties":{
+    "schema":{"const":"omega-ci-proof-debt/v3"},
+    "report_id":{"type":"string","pattern":"^DEBT-"},
+    "items":{"type":"array"},
+    "total_score":{"type":"number","minimum":0},
+    "critical_open":{"type":"integer","minimum":0},
+    "automatic_merge_allowed":{"const":false}
+  }
+}
