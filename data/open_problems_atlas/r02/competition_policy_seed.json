@@ -1,0 +1,102 @@
+{
+  "system": "OMEGA-OPEN-PROBLEMS-ATLAS-T-INFINITY",
+  "version": "R0.2-MAX",
+  "policies": [
+    {
+      "competition_id": "PUTNAM_ARCHIVE_TRAINING",
+      "organizer": "Mathematical Association of America",
+      "canonical_url": "https://maa.org/math-competitions/putnam-competition/",
+      "problem_class": "UNIVERSITY_COMPETITION_ARCHIVE",
+      "rules_snapshot_required": true,
+      "ai_use_review_required": true,
+      "identity_bound_submission": true,
+      "automated_submission_allowed": false,
+      "redistribution_allowed": false,
+      "deadline_recheck_required": true,
+      "notes": ["Archived problems may be used only according to organizer terms.", "Training results are separate from research-open counts."]
+    },
+    {
+      "competition_id": "IMO_ARCHIVE_TRAINING",
+      "organizer": "International Mathematical Olympiad",
+      "canonical_url": "https://www.imo-official.org/",
+      "problem_class": "OLYMPIAD_ARCHIVE",
+      "rules_snapshot_required": true,
+      "ai_use_review_required": true,
+      "identity_bound_submission": true,
+      "automated_submission_allowed": false,
+      "redistribution_allowed": false,
+      "deadline_recheck_required": true,
+      "notes": ["No claim of official participation.", "Do not mirror copyrighted statements without permission."]
+    },
+    {
+      "competition_id": "AIMO_PRIZE_RULES",
+      "organizer": "AIMO Prize",
+      "canonical_url": "https://aimoprize.com/",
+      "problem_class": "AI_MATHEMATICAL_REASONING_CHALLENGE",
+      "rules_snapshot_required": true,
+      "ai_use_review_required": true,
+      "identity_bound_submission": true,
+      "automated_submission_allowed": false,
+      "redistribution_allowed": false,
+      "deadline_recheck_required": true,
+      "notes": ["Current round rules override cached metadata.", "Submission requires separate explicit authorization."]
+    },
+    {
+      "competition_id": "KAGGLE_GENERIC",
+      "organizer": "Kaggle",
+      "canonical_url": "https://www.kaggle.com/competitions",
+      "problem_class": "COMPUTATIONAL_CHALLENGE_PLATFORM",
+      "rules_snapshot_required": true,
+      "ai_use_review_required": true,
+      "identity_bound_submission": true,
+      "automated_submission_allowed": false,
+      "redistribution_allowed": false,
+      "deadline_recheck_required": true,
+      "notes": ["Each competition has independent data, license and team rules.", "No credential storage in the atlas."]
+    },
+    {
+      "competition_id": "DRIVENDATA_GENERIC",
+      "organizer": "DrivenData",
+      "canonical_url": "https://www.drivendata.org/competitions/",
+      "problem_class": "SOCIAL_IMPACT_COMPUTATIONAL_CHALLENGE",
+      "rules_snapshot_required": true,
+      "ai_use_review_required": true,
+      "identity_bound_submission": true,
+      "automated_submission_allowed": false,
+      "redistribution_allowed": false,
+      "deadline_recheck_required": true,
+      "notes": ["Dataset licenses and eligibility are challenge-specific."]
+    },
+    {
+      "competition_id": "CODALAB_GENERIC",
+      "organizer": "CodaLab competition host",
+      "canonical_url": "https://codalab.lisn.upsaclay.fr/competitions/",
+      "problem_class": "RESEARCH_BENCHMARK_PLATFORM",
+      "rules_snapshot_required": true,
+      "ai_use_review_required": true,
+      "identity_bound_submission": true,
+      "automated_submission_allowed": false,
+      "redistribution_allowed": false,
+      "deadline_recheck_required": true,
+      "notes": ["Organizer-specific rules govern each hosted challenge."]
+    },
+    {
+      "competition_id": "LOCAL_SYNTHETIC_BENCHMARK",
+      "organizer": "Ω-OPEN-PROBLEMS-ATLAS-T∞",
+      "canonical_url": "urn:benchmark:open-problems-atlas-r02",
+      "problem_class": "SYNTHETIC_SOFTWARE_FIXTURE",
+      "rules_snapshot_required": false,
+      "ai_use_review_required": false,
+      "identity_bound_submission": false,
+      "automated_submission_allowed": true,
+      "redistribution_allowed": true,
+      "deadline_recheck_required": false,
+      "notes": ["Fixture is generated locally and is not a real competition or open problem."]
+    }
+  ],
+  "global_boundaries": {
+    "external_submission_performed": false,
+    "identity_bound_action_performed": false,
+    "competition_problem_count_must_not_enter_open_research_count": true
+  }
+}
