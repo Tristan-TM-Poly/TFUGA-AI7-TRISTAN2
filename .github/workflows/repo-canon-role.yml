@@ -1,0 +1,36 @@
+name: Repo Canon Role Guardrail
+
+on:
+  pull_request:
+    paths:
+      - 'data/repo_sync_manifest.json'
+      - 'docs/**.md'
+      - '.github/workflows/repo-canon-role.yml'
+  workflow_dispatch:
+
+jobs:
+  repo-canon-role:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate JSON manifest
+        run: python -m json.tool data/repo_sync_manifest.json > /tmp/repo_sync_manifest.json
+
+      - name: Verify review docs are non-empty
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          required_paths = [
+              'docs/CANON_ROLE_2026_06_18.md',
+              'docs/REVIEW_ORDER.md',
+              'docs/REVIEW_SCORE.md',
+              'docs/JKD_SAFE_ROUTE.md',
+              'docs/TFUGA_TO_PROTOTYPE_BRIDGE.md',
+          ]
+          for raw in required_paths:
+              text = Path(raw).read_text(encoding='utf-8')
+              if len(text.strip()) < 40:
+                  raise SystemExit(f'{raw} is unexpectedly short')
+          PY
