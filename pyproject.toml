@@ -1,6 +1,6 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "3.6.0"
+version = "3.7.0"
 description = "Omega absorb, convergence and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
@@ -17,6 +17,7 @@ omega-web-hg-r03 = "omega_web_hg_t.r03.cli:main"
 omega-quaternion-crystal = "omega_quaternion_crystal_t.cli:main"
 omega-logexp-morph = "omega_logexp_morph_t.cli:main"
 omega-unbounded = "omega_unbounded_t.cli:main"
+omega-intent = "omega_intent_t.cli:main"
 omega-fluid = "omega_fluid_t.cli:main"
 omega-rigid-body = "omega_rigid_body_t.cli:main"
 omega-rigid-body-r02 = "omega_rigid_body_t.r02.cli:main"
