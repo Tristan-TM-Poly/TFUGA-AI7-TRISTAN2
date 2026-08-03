@@ -6,6 +6,30 @@ Les créations de Tristan forment un écosystème commun. Certaines sont des arc
 
 Chaque fiche distingue explicitement la **vision**, les **applications**, le **produit potentiel**, le **statut OAK** et la **prochaine preuve attendue**.
 
+## Décomposition récursive à profondeur n
+
+Chaque fiche de cet atlas est désormais une racine `n=0` du moteur **Ω-DEPTH-T∞**.
+
+```text
+création n=0
+→ systèmes n=1
+→ sous-systèmes n=2
+→ modules n=3
+→ composants n=4
+→ opérateurs n=5
+→ fonctions n=6
+→ tests n=7
+→ cas n=8
+→ preuves et résidus n≥9
+```
+
+- [Documentation Ω-DEPTH-T∞](../omega_depth_t/README_FR.md)
+- [Contrat d’un nœud récursif](../omega_depth_t/NODE_CONTRACT_FR.md)
+- [Exemple OAKGate jusqu’à n=9](../omega_depth_t/OAKGATE_DEPTH_9_FR.md)
+- [Registre généré des 40 racines](../../generated/omega_depth_t/roots/README.md)
+
+La profondeur observée d’une exécution est un résultat fini, jamais un plafond permanent. Une branche s’arrête localement lorsqu’elle devient suffisamment atomique, interfacée, testable et probatoire.
+
 ## I. Noyau de l’architecture Tristan
 
 1. [HGFM — Hypergraphes Fractals Mycéliens](./01_hgfm.md)
