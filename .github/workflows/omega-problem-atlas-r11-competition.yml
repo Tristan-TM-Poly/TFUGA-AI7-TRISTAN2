@@ -1,0 +1,153 @@
+name: Omega Problem Atlas R0.11 Competition Ledger
+
+on:
+  push:
+    branches: [feat/omega-problem-atlas-r0-11-competition-ledger]
+    paths:
+      - "omega_millennium_t/r11/**"
+      - "tests/test_omega_problem_atlas_r11*.py"
+      - "schemas/omega_competition_ledger_*_v11.schema.json"
+      - "docs/omega_millennium_t/r11/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r11-competition.yml"
+  pull_request:
+    paths:
+      - "omega_millennium_t/r11/**"
+      - "tests/test_omega_problem_atlas_r11*.py"
+      - "schemas/omega_competition_ledger_*_v11.schema.json"
+      - "docs/omega_millennium_t/r11/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r11-competition.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: omega-problem-atlas-r11-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  competition-ledger:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install validators and timezone data
+        run: python -m pip install --disable-pip-version-check pytest jsonschema tzdata
+
+      - name: Compile R0.11 modules and tests
+        run: >-
+          python -m compileall -q
+          omega_millennium_t/r11
+          tests/test_omega_problem_atlas_r11_competition_ledger.py
+          tests/test_omega_problem_atlas_r11_hardening.py
+          tests/test_omega_problem_atlas_r11_policy_cases.py
+          tests/test_omega_problem_atlas_r11_schema.py
+
+      - name: Run R0.11 tests
+        run: pytest -q tests/test_omega_problem_atlas_r11*.py
+
+      - name: Verify read-only CLI surface
+        run: |
+          python -m omega_millennium_t.r11.cli --help | tee /tmp/r11-help.txt
+          grep -q "compile" /tmp/r11-help.txt
+          grep -q "audit" /tmp/r11-help.txt
+          grep -q "recommend" /tmp/r11-help.txt
+          ! grep -Eq "(^|[[:space:]])(register|submit|pay|claim|accept-prize)([[:space:]]|$)" /tmp/r11-help.txt
+
+      - name: Materialize deterministic lifecycle fixture
+        run: |
+          python - <<'PY'
+          import json
+          import runpy
+          from pathlib import Path
+          from omega_millennium_t.r11 import (
+              audit_competition_ledger,
+              compile_competition_ledger,
+              recommend_active_cycles,
+          )
+
+          fixtures = runpy.run_path(
+              "tests/test_omega_problem_atlas_r11_competition_ledger.py"
+          )
+          bundle = fixtures["_build_bundle"]()
+          root = Path("generated/omega_competition_ledger_r11")
+          root.mkdir(parents=True, exist_ok=True)
+          bundle_path = root / "bundle.json"
+          bundle_path.write_text(
+              json.dumps(bundle, indent=2, sort_keys=True),
+              encoding="utf-8",
+          )
+          output_a = root / "a"
+          output_b = root / "b"
+          report_a = compile_competition_ledger(bundle_path, output_a)
+          report_b = compile_competition_ledger(bundle_path, output_b)
+          assert report_a == report_b
+          names_a = sorted(path.name for path in output_a.iterdir())
+          names_b = sorted(path.name for path in output_b.iterdir())
+          assert names_a == names_b
+          for name in names_a:
+              assert (output_a / name).read_bytes() == (output_b / name).read_bytes(), name
+          audit = audit_competition_ledger(output_a)
+          assert audit["valid"] is True, audit
+          recommendations = recommend_active_cycles(output_a)
+          assert recommendations["recommendation_count"] == 1
+          row = recommendations["rows"][0]
+          deadline = row["submission_close_views"]
+          assert deadline["america_montreal"] == "2026-08-10T23:59:00-04:00"
+          assert deadline["utc"] == "2026-08-11T03:59:00+00:00"
+          assert row["registration_performed"] is False
+          assert row["submission_performed"] is False
+          PY
+
+      - name: Validate generated closed schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          root = Path("generated/omega_competition_ledger_r11/a")
+          bundle = json.loads((root / "request.json").read_text(encoding="utf-8"))
+          manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+          report = json.loads((root / "report.json").read_text(encoding="utf-8"))
+          schemas = {
+              "bundle": "schemas/omega_competition_ledger_bundle_v11.schema.json",
+              "manifest": "schemas/omega_competition_ledger_manifest_v11.schema.json",
+              "report": "schemas/omega_competition_ledger_report_v11.schema.json",
+          }
+          jsonschema.validate(bundle, json.loads(Path(schemas["bundle"]).read_text(encoding="utf-8")))
+          jsonschema.validate(manifest, json.loads(Path(schemas["manifest"]).read_text(encoding="utf-8")))
+          jsonschema.validate(report, json.loads(Path(schemas["report"]).read_text(encoding="utf-8")))
+          PY
+
+      - name: Assert zero external actions and open-problem inheritance
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("generated/omega_competition_ledger_r11/a")
+          report = json.loads((root / "report.json").read_text(encoding="utf-8"))
+          manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+          assert report["registration_performed"] is False
+          assert report["submission_performed"] is False
+          assert report["payment_performed"] is False
+          assert report["winner_or_prize_guaranteed"] is False
+          assert report["open_problem_status_inherited"] is False
+          assert report["proof_claimed"] is False
+          assert report["solution_claimed"] is False
+          assert manifest["registration_performed"] is False
+          assert manifest["submission_performed"] is False
+          assert manifest["open_problem_status_inherited"] is False
+          PY
