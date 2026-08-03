@@ -1,0 +1,110 @@
+name: Omega Polyglot Autotune R0.4
+
+on:
+  push:
+    branches: [feat/omega-polyglot-bench-r01]
+    paths:
+      - "omega_polyglot_bench_t/r04/**"
+      - "native/omega_polyglot/r04/**"
+      - "tests/test_omega_polyglot_autotune_r04.py"
+      - "schemas/omega_polyglot_*_v4.schema.json"
+      - "docs/omega-polyglot-autotune-r04/**"
+      - ".github/workflows/omega-polyglot-r04.yml"
+      - "pyproject.toml"
+  pull_request:
+    paths:
+      - "omega_polyglot_bench_t/r04/**"
+      - "native/omega_polyglot/r04/**"
+      - "tests/test_omega_polyglot_autotune_r04.py"
+      - "schemas/omega_polyglot_*_v4.schema.json"
+      - "docs/omega-polyglot-autotune-r04/**"
+      - ".github/workflows/omega-polyglot-r04.yml"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  autotune-r04:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.13"]
+    env:
+      OMP_NUM_THREADS: 4
+      OMP_DYNAMIC: "FALSE"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install validators and Python candidate
+        run: python -m pip install --disable-pip-version-check pytest jsonschema numpy
+      - name: Compile Python
+        run: python -m compileall -q omega_polyglot_bench_t/r04 tests/test_omega_polyglot_autotune_r04.py
+      - name: Run unit and ABI tests
+        run: python -m pytest -q tests/test_omega_polyglot_autotune_r04.py
+      - name: Build C C++ Rust matrix
+        run: |
+          python -m omega_polyglot_bench_t.r04 build \
+            --backends c,cpp,rust \
+            --profiles portable,native,openmp \
+            > /tmp/build-matrix.json
+      - name: Run full contextual autotune
+        run: |
+          python -m omega_polyglot_bench_t.r04 autotune \
+            --backends c,cpp,rust \
+            --profiles portable,native,openmp \
+            --algorithms affine,affine_chain,sum,dot \
+            --sizes 16,256,4096,100000,1000000 \
+            --warmups 2 \
+            --repetitions 7 \
+            --output /tmp/autotune.json \
+            > /tmp/autotune.stdout.json
+      - name: Run repeated OAK campaign
+        run: |
+          python -m omega_polyglot_bench_t.r04 robust \
+            --backends c,cpp,rust \
+            --profiles portable,native,openmp \
+            --algorithms affine,affine_chain,sum,dot \
+            --sizes 4096,100000 \
+            --warmups 1 \
+            --repetitions 5 \
+            --trials 3 \
+            --output /tmp/robust.json \
+            > /tmp/robust.stdout.json
+      - name: Validate reports and OAK invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          auto = json.loads(Path('/tmp/autotune.json').read_text())
+          robust = json.loads(Path('/tmp/robust.json').read_text())
+          auto_schema = json.loads(Path('schemas/omega_polyglot_autotune_report_v4.schema.json').read_text())
+          robust_schema = json.loads(Path('schemas/omega_polyglot_robust_report_v4.schema.json').read_text())
+          jsonschema.validate(auto, auto_schema)
+          jsonschema.validate(robust, robust_schema)
+          assert len(auto['champions']) == 20
+          assert len(robust['champions']) == 8
+          assert all(c['median_ns'] > 0 for c in auto['champions'])
+          assert all(c['success_rate'] == 1.0 for c in robust['champions'])
+          assert any(m['backend'] == 'rust' and m['correct'] for m in auto['measurements'])
+          assert any(m['backend'] == 'python' and m['profile'] == 'numpy' for m in auto['measurements'])
+          assert auto['claims']['universal_language_winner'] is False
+          assert robust['claims']['universal_language_winner'] is False
+          print('CERTIFIED_SOFTWARE_AUTOTUNE_FIXTURES_R0_4')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-polyglot-r04-${{ matrix.python-version }}
+          path: |
+            /tmp/build-matrix.json
+            /tmp/autotune.json
+            /tmp/robust.json
+          retention-days: 30
