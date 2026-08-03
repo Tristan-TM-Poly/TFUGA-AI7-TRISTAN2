@@ -55,5 +55,7 @@ omega-re-r04 = "omega_re_t.r04_cli:main"
 omega-anime = "omega_anime_t.__main__:main"
 omega-anime-studio = "omega_anime_studio_t.__main__:main"
 omega-anime-animatic = "omega_anime_animatic_t.__main__:main"
+omega-anime-episode = "omega_anime_episode_t.__main__:main"
+omega-anime-season = "omega_anime_season_t.__main__:main"
 [tool.pytest.ini_options]
 pythonpath = ["."]
