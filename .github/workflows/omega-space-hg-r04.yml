@@ -1,0 +1,104 @@
+name: Omega Space HG R0.4 Reliability OAKBench
+
+on:
+  push:
+    branches: [feat/omega-space-hg-t-r01-max]
+    paths:
+      - "omega_space_hg_t/reliability.py"
+      - "omega_space_hg_t/r04.py"
+      - "omega_space_hg_t/r04_cli.py"
+      - "omega_space_hg_t/__init__.py"
+      - "tests/test_omega_space_hg_r04.py"
+      - "examples/omega_space_hg_r04_demo.py"
+      - "schemas/omega_space_r04_oak_report_v1.schema.json"
+      - "docs/omega_space_hg_t/R0_4_MAX.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-space-hg-r04.yml"
+  pull_request:
+    paths:
+      - "omega_space_hg_t/reliability.py"
+      - "omega_space_hg_t/r04.py"
+      - "omega_space_hg_t/r04_cli.py"
+      - "omega_space_hg_t/__init__.py"
+      - "tests/test_omega_space_hg_r04.py"
+      - "examples/omega_space_hg_r04_demo.py"
+      - "schemas/omega_space_r04_oak_report_v1.schema.json"
+      - "docs/omega_space_hg_t/R0_4_MAX.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-space-hg-r04.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test and schema validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.4 reliability laboratory
+        run: >-
+          python -m compileall -q
+          omega_space_hg_t/reliability.py
+          omega_space_hg_t/r04.py
+          omega_space_hg_t/r04_cli.py
+          tests/test_omega_space_hg_r04.py
+          examples/omega_space_hg_r04_demo.py
+      - name: Run focused R0.4 tests
+        run: pytest -q tests/test_omega_space_hg_r04.py
+      - name: Generate deterministic artifacts
+        run: |
+          python -m omega_space_hg_t.r04_cli manifest --output /tmp/manifest-a.json
+          python -m omega_space_hg_t.r04_cli manifest --output /tmp/manifest-b.json
+          cmp /tmp/manifest-a.json /tmp/manifest-b.json
+          python -m omega_space_hg_t.r04_cli campaign --duration-days 365.25 --start-offset 4096 --count 2048 --output /tmp/campaign-a.json
+          python -m omega_space_hg_t.r04_cli campaign --duration-days 365.25 --start-offset 4096 --count 2048 --output /tmp/campaign-b.json
+          cmp /tmp/campaign-a.json /tmp/campaign-b.json
+          python -m omega_space_hg_t.r04_cli fdir --output /tmp/fdir.json
+          python -m omega_space_hg_t.r04_cli oak --output /tmp/oak.json
+          python examples/omega_space_hg_r04_demo.py > /tmp/demo.json
+      - name: Validate R0.4 schema and claim boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/omega_space_r04_oak_report_v1.schema.json').read_text())
+          oak = json.loads(Path('/tmp/oak.json').read_text())
+          campaign = json.loads(Path('/tmp/campaign-a.json').read_text())
+          fdir = json.loads(Path('/tmp/fdir.json').read_text())
+          demo = json.loads(Path('/tmp/demo.json').read_text())
+
+          jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(oak, schema)
+          assert oak['passed'] is True
+          assert oak['theorem_claimed'] is False
+          assert oak['scientific_validation_claimed'] is False
+          assert oak['flight_qualified_claimed'] is False
+          assert oak['operational_reliability_claimed'] is False
+          assert oak['safety_certification_claimed'] is False
+          assert oak['autonomous_safety_claimed'] is False
+          assert campaign['start_offset'] == 4096
+          assert campaign['next_offset'] == 6144
+          assert campaign['permanent_total_cap'] is None
+          assert 0.0 <= campaign['estimated_success_probability'] <= 1.0
+          assert len(campaign['wilson_95_interval']) == 2
+          assert campaign['flight_qualified_claimed'] is False
+          assert campaign['operational_reliability_claimed'] is False
+          assert fdir['final_mode'] == 'NOMINAL'
+          assert fdir['flight_software_claimed'] is False
+          assert fdir['autonomous_safety_claimed'] is False
+          assert demo['oak']['passed'] is True
+          print('OAK_PASS_OMEGA_SPACE_HG_R0_4_MAX')
+          PY
