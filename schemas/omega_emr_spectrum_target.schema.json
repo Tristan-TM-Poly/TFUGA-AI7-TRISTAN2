@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.invalid/schemas/omega_emr_spectrum_target.schema.json",
+  "title": "Omega EMR Spectrum Target",
+  "description": "Analysis-only target specification for source-family selection and OAK routing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["center_frequency_hz"],
+  "properties": {
+    "center_frequency_hz": {"type": "number", "exclusiveMinimum": 0},
+    "bandwidth_hz": {"type": "number", "minimum": 0, "default": 0},
+    "power_w": {"type": "number", "exclusiveMinimum": 0, "default": 0.001},
+    "polarization": {"type": "string", "default": "unspecified"},
+    "coherence": {"type": "string", "default": "unspecified"},
+    "beam_geometry": {"type": "string", "default": "unspecified"},
+    "temporal_profile": {"type": "string", "default": "continuous"},
+    "modulation_bandwidth_hz": {"type": "number", "minimum": 0, "default": 0},
+    "environment": {
+      "type": "string",
+      "enum": ["simulation", "digital_twin", "analysis_only", "shielded_lab", "institutional_facility"],
+      "default": "simulation"
+    },
+    "intended_use": {"type": "string", "default": "research"},
+    "max_prototype_tier": {
+      "type": "string",
+      "enum": ["simulation_only", "low_power_benchtop", "certified_module", "institutional_facility"],
+      "default": "low_power_benchtop"
+    },
+    "allow_radiating_output": {"type": "boolean", "default": false},
+    "jurisdiction": {"type": "string", "default": "unspecified"},
+    "notes": {"type": "array", "items": {"type": "string"}, "default": []}
+  }
+}
