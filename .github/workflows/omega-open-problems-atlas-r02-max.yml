@@ -5,7 +5,7 @@ on:
     branches: [feat/omega-open-problems-atlas-r0-1]
     paths:
       - "omega_open_problems_atlas/r02/**"
-      - "tests/test_omega_open_problems_atlas_r02.py"
+      - "tests/test_omega_open_problems_atlas_r02*.py"
       - "schemas/open_problems_*_r02.schema.json"
       - "data/open_problems_atlas/r02/**"
       - "docs/omega_open_problems_atlas/R0_2_MAX_ARCHITECTURE.md"
@@ -15,7 +15,7 @@ on:
   pull_request:
     paths:
       - "omega_open_problems_atlas/r02/**"
-      - "tests/test_omega_open_problems_atlas_r02.py"
+      - "tests/test_omega_open_problems_atlas_r02*.py"
       - "schemas/open_problems_*_r02.schema.json"
       - "data/open_problems_atlas/r02/**"
       - "docs/omega_open_problems_atlas/R0_2_MAX_ARCHITECTURE.md"
@@ -51,12 +51,14 @@ jobs:
           python -m compileall -q \
             omega_open_problems_atlas \
             tests/test_omega_open_problems_atlas.py \
-            tests/test_omega_open_problems_atlas_r02.py
+            tests/test_omega_open_problems_atlas_r02.py \
+            tests/test_omega_open_problems_atlas_r02_schema.py
       - name: Run focused tests
         run: |
           pytest -q \
             tests/test_omega_open_problems_atlas.py \
-            tests/test_omega_open_problems_atlas_r02.py
+            tests/test_omega_open_problems_atlas_r02.py \
+            tests/test_omega_open_problems_atlas_r02_schema.py
       - name: Generate deterministic MAX reports twice
         run: |
           python -m omega_open_problems_atlas.r02.cli benchmark \
