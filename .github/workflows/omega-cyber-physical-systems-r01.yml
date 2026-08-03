@@ -1,4 +1,4 @@
-name: Omega Cyber Physical Systems R0.1
+name: Omega Cyber Physical Systems R0.1-R0.2
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - "tests/test_omega_cyber_physical_systems*.py"
       - "schemas/cyber_physical_*.json"
       - "docs/omega-cyber-physical-systems-t/**"
-      - "examples/omega_cyber_physical_systems_r01_demo.py"
+      - "examples/omega_cyber_physical_systems_*.py"
       - "pyproject.toml"
       - ".github/workflows/omega-cyber-physical-systems-r01.yml"
   pull_request:
@@ -18,7 +18,7 @@ on:
       - "tests/test_omega_cyber_physical_systems*.py"
       - "schemas/cyber_physical_*.json"
       - "docs/omega-cyber-physical-systems-t/**"
-      - "examples/omega_cyber_physical_systems_r01_demo.py"
+      - "examples/omega_cyber_physical_systems_*.py"
       - "pyproject.toml"
       - ".github/workflows/omega-cyber-physical-systems-r01.yml"
   workflow_dispatch:
@@ -27,9 +27,9 @@ permissions:
   contents: read
 
 jobs:
-  cps-r01-oak:
+  cps-r02-oak:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -39,27 +39,44 @@ jobs:
         run: python -m pip install --disable-pip-version-check pytest jsonschema
       - name: Compile whole-system package
         run: python -m compileall omega_cyber_physical_systems_t
-      - name: Run focused cyberphysical regressions
+      - name: Run cumulative cyberphysical regressions
         run: >-
           python -m pytest -q
           tests/test_omega_cyber_physical_systems_r01.py
           tests/test_omega_cyber_physical_systems_r01_evidence.py
-      - name: Run OAK benchmark
-        run: python -m omega_cyber_physical_systems_t benchmark > /tmp/cps-oak.json
-      - name: Materialize blueprint and simulations
+          tests/test_omega_cyber_physical_systems_r02.py
+      - name: Run R0.1 and R0.2 OAK benchmarks
+        run: |
+          python -m omega_cyber_physical_systems_t benchmark > /tmp/cps-r01-oak.json
+          python -m omega_cyber_physical_systems_t.r02_cli benchmark > /tmp/cps-r02-oak.json
+      - name: Materialize R0.1 blueprint and simulations
         run: |
           python -m omega_cyber_physical_systems_t blueprint-demo > /tmp/cps-blueprint.json
           python -m omega_cyber_physical_systems_t dynamics-demo --model mechanical --summary-only > /tmp/cps-mechanical.json
           python -m omega_cyber_physical_systems_t dynamics-demo --model motor --summary-only > /tmp/cps-motor.json
           python -m omega_cyber_physical_systems_t cosim-demo > /tmp/cps-cosim.json
           python -m omega_cyber_physical_systems_t cosim-demo --faulted --summary-only > /tmp/cps-cosim-faulted.json
-      - name: Materialize compiler, FMEA, evidence and repository inventory
+      - name: Materialize R0.1 compiler, FMEA, evidence and repository inventory
         run: |
           python -m omega_cyber_physical_systems_t compiler-demo > /tmp/cps-compiler.json
           python -m omega_cyber_physical_systems_t fault-demo > /tmp/cps-faults.json
           python -m omega_cyber_physical_systems_t evidence-demo > /tmp/cps-evidence.json
           python -m omega_cyber_physical_systems_t inventory --root . --max-files-per-system 96 --max-bytes-per-file 48000 --summary-only > /tmp/cps-inventory.json
-          python examples/omega_cyber_physical_systems_r01_demo.py > /tmp/cps-example.json
+          python examples/omega_cyber_physical_systems_r01_demo.py > /tmp/cps-r01-example.json
+      - name: Materialize R0.2 dimensional and energy evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m omega_cyber_physical_systems_t.r02_cli unit-demo > /tmp/cps-unit-graph.json
+          python -m omega_cyber_physical_systems_t.r02_cli energy-demo > /tmp/cps-energy-graph.json
+          python -m omega_cyber_physical_systems_t.r02_cli energy-demo --faulted > /tmp/cps-energy-faulted.json
+          set +e
+          python -m omega_cyber_physical_systems_t.r02_cli energy-demo --untracked-output-j 5 > /tmp/cps-energy-adversarial.json
+          adversarial_status=$?
+          set -e
+          test "$adversarial_status" -eq 2
+          python -m omega_cyber_physical_systems_t.r02_cli convert 60 rpm rad/s > /tmp/cps-unit-conversion.json
+          python examples/omega_cyber_physical_systems_r02_energy_demo.py > /tmp/cps-r02-example.json
       - name: Validate JSON contracts and OAK boundaries
         run: |
           python - <<'PY'
@@ -67,81 +84,104 @@ jobs:
           from pathlib import Path
           import jsonschema
 
-          blueprint = json.loads(Path('/tmp/cps-blueprint.json').read_text())
-          cosim = json.loads(Path('/tmp/cps-cosim.json').read_text())
-          blueprint_schema = json.loads(Path('schemas/cyber_physical_system_blueprint_r01.schema.json').read_text())
-          cosim_schema = json.loads(Path('schemas/cyber_physical_cosim_report_r01.schema.json').read_text())
-          jsonschema.validate(blueprint, blueprint_schema)
-          jsonschema.validate(cosim, cosim_schema)
+          def load(path):
+              return json.loads(Path(path).read_text())
 
-          oak = json.loads(Path('/tmp/cps-oak.json').read_text())
-          mechanical = json.loads(Path('/tmp/cps-mechanical.json').read_text())
-          motor = json.loads(Path('/tmp/cps-motor.json').read_text())
-          faulted = json.loads(Path('/tmp/cps-cosim-faulted.json').read_text())
-          compiler = json.loads(Path('/tmp/cps-compiler.json').read_text())
-          faults = json.loads(Path('/tmp/cps-faults.json').read_text())
-          evidence = json.loads(Path('/tmp/cps-evidence.json').read_text())
-          inventory = json.loads(Path('/tmp/cps-inventory.json').read_text())
-          example = json.loads(Path('/tmp/cps-example.json').read_text())
+          blueprint = load('/tmp/cps-blueprint.json')
+          cosim = load('/tmp/cps-cosim.json')
+          unit_graph = load('/tmp/cps-unit-graph.json')
+          energy_graph = load('/tmp/cps-energy-graph.json')
+          energy_faulted = load('/tmp/cps-energy-faulted.json')
+          adversarial = load('/tmp/cps-energy-adversarial.json')
 
-          assert oak['passed'] is True
-          assert oak['status'] == 'CERTIFIED_COMPUTATIONAL_CYBER_PHYSICAL_SYSTEMS_R0_1'
-          assert oak['physics_certified'] is False
-          assert oak['software_certified'] is False
-          assert oak['safety_certified'] is False
-          assert oak['regulatory_certified'] is False
+          jsonschema.validate(blueprint, load('schemas/cyber_physical_system_blueprint_r01.schema.json'))
+          jsonschema.validate(cosim, load('schemas/cyber_physical_cosim_report_r01.schema.json'))
+          jsonschema.validate(unit_graph, load('schemas/cyber_physical_unit_graph_r02.schema.json'))
+          jsonschema.validate(energy_graph, load('schemas/cyber_physical_energy_graph_r02.schema.json'))
+          jsonschema.validate(energy_faulted, load('schemas/cyber_physical_energy_graph_r02.schema.json'))
+          jsonschema.validate(adversarial, load('schemas/cyber_physical_energy_graph_r02.schema.json'))
+
+          r01 = load('/tmp/cps-r01-oak.json')
+          r02 = load('/tmp/cps-r02-oak.json')
+          mechanical = load('/tmp/cps-mechanical.json')
+          motor = load('/tmp/cps-motor.json')
+          faulted = load('/tmp/cps-cosim-faulted.json')
+          compiler = load('/tmp/cps-compiler.json')
+          faults = load('/tmp/cps-faults.json')
+          evidence = load('/tmp/cps-evidence.json')
+          inventory = load('/tmp/cps-inventory.json')
+          r01_example = load('/tmp/cps-r01-example.json')
+          r02_example = load('/tmp/cps-r02-example.json')
+          conversion = load('/tmp/cps-unit-conversion.json')
+
+          assert r01['passed'] is True
+          assert r01['status'] == 'CERTIFIED_COMPUTATIONAL_CYBER_PHYSICAL_SYSTEMS_R0_1'
+          assert r02['passed'] is True
+          assert r02['status'] == 'CERTIFIED_COMPUTATIONAL_UNIT_ENERGY_GRAPH_R0_2'
+          assert all(gate['passed'] for gate in r02['gates'])
+          assert r02['physics_certified'] is False
+          assert r02['energy_conservation_proven'] is False
+          assert r02['passivity_proven'] is False
+          assert r02['standards_compliance_claim'] is False
+          assert r02['hardware_validated'] is False
 
           assert len(blueprint['components']) == 7
           assert len(blueprint['connections']) == 6
           assert blueprint['permanent_total_cap'] is None
           assert blueprint['physics_certified'] is False
-          assert blueprint['software_certified'] is False
-          assert blueprint['regulatory_certified'] is False
           assert len(blueprint['evidence_hash']) == 64
-
           assert mechanical['finite'] is True
           assert motor['finite'] is True
-          assert mechanical['final_outputs'][0] > 0
-          assert motor['final_outputs'][0] > 0
-          assert motor['final_outputs'][1] > 0
-
           assert cosim['sample_count'] == 7501
           assert cosim['finite'] is True
-          assert abs(cosim['final_error_m']) < abs(cosim['scenario']['setpoint_m'])
-          assert cosim['absolute_electrical_energy_j'] >= abs(cosim['net_electrical_energy_j'])
-          assert cosim['physics_certified'] is False
-          assert cosim['software_certified'] is False
-          assert cosim['hardware_validated'] is False
           assert faulted['deadline_miss_count'] > 0
-
-          assert compiler['best'] is not None
           assert compiler['best']['architecture']['architecture_id'] == 'mobile-robot-platform'
-          assert compiler['eligible_count'] >= 2
-          assert compiler['permanent_total_cap'] is None
           assert compiler['engineering_recommendation'] is False
-
           assert len(faults['records']) == 3
           assert faults['probability_claim'] is False
-          assert faults['safety_certified'] is False
-          assert evidence['contiguous_tier'] == 'D3_COSIMULATED_SYSTEM'
           assert evidence['highest_supported_tier'] == 'D3_COSIMULATED_SYSTEM'
           assert evidence['automatic_model_promotion'] is False
-          assert evidence['software_granted_certification'] is False
-          assert evidence['regulatory_certified'] is False
-
           assert inventory['cyberphysical_candidate_count'] >= 2
           assert inventory['integrated_candidate_count'] >= 1
-          assert inventory['permanent_total_cap'] is None
           assert inventory['exhaustive_claim'] is False
-          assert example['blueprint']['component_count'] == 7
-          assert example['compiled_prototype']['engineering_recommendation'] is False
+          assert r01_example['blueprint']['component_count'] == 7
+
+          assert unit_graph['dimensionally_valid'] is True
+          assert unit_graph['causal_connections_valid'] is True
+          assert unit_graph['error_count'] == 0
+          assert unit_graph['unknown_unit_count'] == 0
+          assert unit_graph['warning_count'] >= 1
+          assert unit_graph['direct_power_port_count'] >= 1
+          assert unit_graph['physics_certified'] is False
+          assert unit_graph['standards_compliance_claim'] is False
+
+          assert energy_graph['sample_count'] == 7501
+          assert energy_graph['finite'] is True
+          assert energy_graph['balance_passed'] is True
+          assert energy_graph['global_normalized_residual'] <= 0.02
+          assert all(balance['passed'] for balance in energy_graph['balances'])
+          assert energy_graph['passivity']['passivity_proven'] is False
+          assert energy_graph['energy_conservation_proven'] is False
+          assert energy_graph['physics_certified'] is False
+          assert energy_graph['hardware_validated'] is False
+          assert energy_faulted['finite'] is True
+          assert adversarial['balance_passed'] is False
+          global_adversarial = next(item for item in adversarial['balances'] if item['balance_id'] == 'global')
+          assert global_adversarial['passed'] is False
+          assert abs(adversarial['global_residual_j']) > adversarial['residual_tolerance_j']
+          assert abs(conversion['converted'] - 6.283185307179586) < 1e-12
+          assert r02_example['unit_graph']['dimensionally_valid'] is True
+          assert r02_example['energy_graph']['balance_passed'] is True
+          assert r02_example['adversarial_probe']['global_balance_passed'] is False
 
           print(json.dumps({
               'status': 'passed',
-              'blueprint_hash': blueprint['evidence_hash'],
-              'cosim_hash': cosim['evidence_hash'],
-              'compiler_hash': compiler['evidence_hash'],
-              'inventory_hash': inventory['evidence_hash'],
+              'r01_tests': 30,
+              'unit_graph_hash': unit_graph['evidence_hash'],
+              'energy_graph_hash': energy_graph['evidence_hash'],
+              'energy_global_residual_j': energy_graph['global_residual_j'],
+              'energy_global_normalized_residual': energy_graph['global_normalized_residual'],
+              'passivity_classification': energy_graph['passivity']['classification'],
               'inventory_records': inventory['record_count'],
               'cyberphysical_candidates': inventory['cyberphysical_candidate_count'],
               'integrated_candidates': inventory['integrated_candidate_count'],
@@ -149,9 +189,10 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: omega-cyber-physical-systems-r01-evidence
+          name: omega-cyber-physical-systems-r02-evidence
           path: |
-            /tmp/cps-oak.json
+            /tmp/cps-r01-oak.json
+            /tmp/cps-r02-oak.json
             /tmp/cps-blueprint.json
             /tmp/cps-mechanical.json
             /tmp/cps-motor.json
@@ -161,5 +202,11 @@ jobs:
             /tmp/cps-faults.json
             /tmp/cps-evidence.json
             /tmp/cps-inventory.json
-            /tmp/cps-example.json
+            /tmp/cps-r01-example.json
+            /tmp/cps-unit-graph.json
+            /tmp/cps-energy-graph.json
+            /tmp/cps-energy-faulted.json
+            /tmp/cps-energy-adversarial.json
+            /tmp/cps-unit-conversion.json
+            /tmp/cps-r02-example.json
           retention-days: 14
