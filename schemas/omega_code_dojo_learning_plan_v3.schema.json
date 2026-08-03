@@ -1,0 +1,74 @@
+{
+  "$id": "https://example.invalid/omega-code-dojo-learning-plan-v3.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "pattern": "^learning-action\\.[0-9a-f]{20}$",
+            "type": "string"
+          },
+          "experiment_spec": {
+            "type": "object"
+          },
+          "kind": {
+            "enum": [
+              "repair_test",
+              "repair_skill",
+              "confirm_transfer",
+              "explore_frontier",
+              "reduce_cost",
+              "recalibrate"
+            ]
+          },
+          "priority": {
+            "type": "number"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "stop_condition": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "success_criterion": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action_id",
+          "kind",
+          "priority",
+          "target",
+          "rationale",
+          "experiment_spec",
+          "success_criterion",
+          "stop_condition"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "report_id": {
+      "type": "string"
+    },
+    "report_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "report_id",
+    "report_sha256",
+    "actions"
+  ],
+  "title": "Omega Code Dojo Learning Plan R0.3",
+  "type": "object"
+}

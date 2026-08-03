@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-code-dojo/platform-policy-v5.schema.json",
+  "title": "Omega Multi-Judge Platform Policy R0.5",
+  "type": "object",
+  "required": [
+    "platform_id",
+    "display_name",
+    "allow",
+    "review",
+    "block",
+    "discovery",
+    "allowed_content",
+    "blocked_content",
+    "attribution_required",
+    "notes"
+  ],
+  "properties": {
+    "platform_id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "allow": {"type": "array", "items": {"enum": ["discover", "practice", "submit", "train"]}, "uniqueItems": true},
+    "review": {"type": "array", "items": {"enum": ["discover", "practice", "submit", "train"]}, "uniqueItems": true},
+    "block": {"type": "array", "items": {"enum": ["discover", "practice", "submit", "train"]}, "uniqueItems": true},
+    "discovery": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "allowed_content": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "blocked_content": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "attribution_required": {"type": "boolean"},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
