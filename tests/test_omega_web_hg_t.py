@@ -6,6 +6,7 @@ from omega_web_hg_t.core import (
     CrawlConfig,
     FetchResponse,
     PolicyGate,
+    SafeRedirectHandler,
     WebHypergraphCrawler,
     canonicalize_url,
     parse_html,
@@ -96,3 +97,26 @@ def test_crawler_writes_provenance_bundle(tmp_path: Path) -> None:
     assert (output / "oak-report.json").is_file()
     assert len(list((output / "raw").rglob("*.html"))) == 2
     assert result.oak_report()["status"] == "PASS_R0_1"
+
+
+def test_canonicalize_url_rejects_embedded_credentials() -> None:
+    try:
+        canonicalize_url("https://user:secret@example.org/")
+    except ValueError as exc:
+        assert "identifiants" in str(exc)
+    else:
+        raise AssertionError("embedded credentials must be rejected")
+
+
+def test_redirect_handler_blocks_out_of_scope_target() -> None:
+    handler = SafeRedirectHandler(lambda url: url == "https://example.org/ok")
+
+    class RequestFixture:
+        full_url = "https://example.org/start"
+
+    try:
+        handler.redirect_request(RequestFixture(), None, 302, "Found", {}, "https://evil.example/target")
+    except ValueError as exc:
+        assert "Redirection refusée" in str(exc)
+    else:
+        raise AssertionError("unsafe redirect must be rejected before follow")
