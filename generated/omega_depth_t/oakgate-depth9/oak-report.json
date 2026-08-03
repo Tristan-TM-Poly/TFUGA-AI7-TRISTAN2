@@ -1,0 +1,31 @@
+{
+  "artifacts": {
+    "graphml": "generated/omega_depth_t/oakgate-depth9/depth-graph.graphml",
+    "json": "generated/omega_depth_t/oakgate-depth9/depth-graph.json",
+    "jsonl": "generated/omega_depth_t/oakgate-depth9/nodes.jsonl",
+    "markdown": "generated/omega_depth_t/oakgate-depth9/tree.md"
+  },
+  "boundary": "maximum_observed_depth describes this finite artifact; it is not a permanent architecture ceiling.",
+  "leaf_count": 65,
+  "maximum_observed_depth": 9,
+  "node_count": 80,
+  "nodes_by_depth": {
+    "0": 1,
+    "1": 10,
+    "2": 12,
+    "3": 9,
+    "4": 8,
+    "5": 7,
+    "6": 7,
+    "7": 11,
+    "8": 6,
+    "9": 9
+  },
+  "oak_status_counts": {
+    "coded": 1,
+    "defined": 79
+  },
+  "root_count": 1,
+  "validation_issue_count": 0,
+  "validation_issues": []
+}
