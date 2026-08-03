@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from hashlib import sha256
+from math import gcd
 from typing import Iterator, Mapping
 
 from .catalogs import CATALOG, Catalog
@@ -105,20 +106,7 @@ class FrontierCodec:
             coordinates=coordinates,
         )
 
-    def sample_indices(self, count: int, seed: int = 0) -> tuple[int, ...]:
-        """Deterministic full-period-style sampling without replacement.
-
-        The arithmetic progression uses a step coprime with the frontier size.
-        This avoids allocating a permutation of a potentially enormous range.
-        """
-
-        if count < 0:
-            raise ValueError("count cannot be negative")
-        if count > self.size:
-            raise ValueError("count cannot exceed logical frontier size")
-        if count == 0:
-            return ()
-
+    def _sampling_parameters(self, seed: int) -> tuple[int, int]:
         start = int.from_bytes(
             sha256(f"start:{seed}".encode()).digest()[:8], "big"
         ) % self.size
@@ -126,18 +114,30 @@ class FrontierCodec:
             sha256(f"step:{seed}".encode()).digest()[:8], "big"
         ) % self.size
         step = max(step, 1)
-
-        from math import gcd
-
         while gcd(step, self.size) != 1:
             step += 1
             if step >= self.size:
                 step = 1
+        return start, step
 
-        return tuple((start + i * step) % self.size for i in range(count))
+    def iter_indices(self, count: int, seed: int = 0) -> Iterator[int]:
+        """Stream deterministic unique indices with O(1) auxiliary memory."""
+
+        if count < 0:
+            raise ValueError("count cannot be negative")
+        if count > self.size:
+            raise ValueError("count cannot exceed logical frontier size")
+        start, step = self._sampling_parameters(seed)
+        for offset in range(count):
+            yield (start + offset * step) % self.size
+
+    def sample_indices(self, count: int, seed: int = 0) -> tuple[int, ...]:
+        """Materialize a bounded sample; use :meth:`iter_indices` at scale."""
+
+        return tuple(self.iter_indices(count=count, seed=seed))
 
     def iter_sample(self, count: int, seed: int = 0) -> Iterator[FrontierAddress]:
-        for index in self.sample_indices(count=count, seed=seed):
+        for index in self.iter_indices(count=count, seed=seed):
             yield self.decode(index)
 
     def address_from_mapping(
