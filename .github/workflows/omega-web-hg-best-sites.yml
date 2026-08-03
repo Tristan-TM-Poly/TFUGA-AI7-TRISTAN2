@@ -1,11 +1,13 @@
-name: Omega Web HG R0.4 Best Sites OAKBench
+name: Omega Web HG R0.4 Best Sites MAX OAKBench
 
 on:
   pull_request:
     paths:
       - "omega_web_hg_t/r04/**"
       - "tests/test_omega_web_hg_r04.py"
+      - "tests/test_omega_web_hg_r04_max.py"
       - "docs/omega_web_hg_t/R04_BEST_SITES.md"
+      - "docs/omega_web_hg_t/R04_MAX_ABSORPTION.md"
       - "schemas/omega_web_hg_source_profile_v4.schema.json"
       - "pyproject.toml"
       - ".github/workflows/omega-web-hg-best-sites.yml"
@@ -13,7 +15,9 @@ on:
     paths:
       - "omega_web_hg_t/r04/**"
       - "tests/test_omega_web_hg_r04.py"
+      - "tests/test_omega_web_hg_r04_max.py"
       - "docs/omega_web_hg_t/R04_BEST_SITES.md"
+      - "docs/omega_web_hg_t/R04_MAX_ABSORPTION.md"
       - "schemas/omega_web_hg_source_profile_v4.schema.json"
       - "pyproject.toml"
       - ".github/workflows/omega-web-hg-best-sites.yml"
@@ -22,10 +26,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: omega-web-hg-r04-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   oakbench:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 12
     strategy:
       fail-fast: false
       matrix:
@@ -36,8 +44,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --disable-pip-version-check pytest jsonschema
-      - run: python -m compileall -q omega_web_hg_t/r04 tests/test_omega_web_hg_r04.py
-      - run: pytest -q tests/test_omega_web_hg_r04.py
+      - run: python -m compileall -q omega_web_hg_t/r04 tests/test_omega_web_hg_r04.py tests/test_omega_web_hg_r04_max.py
+      - run: pytest -q tests/test_omega_web_hg_r04.py tests/test_omega_web_hg_r04_max.py
       - name: Materialize deterministic metadata-only plan twice
         run: |
           python -m omega_web_hg_t.r04.cli audit
@@ -58,6 +66,17 @@ jobs:
           for source in BEST_SITES_V1:
               validator.validate(source.to_dict())
           print('OMEGA_WEB_HG_R04_BEST_SITES_VALID')
+          PY
+      - name: Exercise MAX catalog and offline claim gates
+        run: |
+          python -m omega_web_hg_t.r04.max_cli catalog --pretty > /tmp/max-catalog.json
+          python - <<'PY'
+          import json
+          data = json.load(open('/tmp/max-catalog.json'))
+          assert len(data) == 11
+          assert all(item['metadata_only'] is True for item in data)
+          assert {item['source_id'] for item in data if item['access_state'] == 'key_required'} == {'nasa_open', 'openalex'}
+          print('OMEGA_WEB_HG_R04_MAX_CATALOG_VALID')
           PY
 
   live-metadata-pilot:
@@ -100,5 +119,73 @@ jobs:
         with:
           name: omega-web-hg-r04-live-pilot-receipt
           path: generated/omega_web_hg_r04_live_pilot/pilot-receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  max-metadata-campaign:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/feat/omega-web-hg-best-sites-r04')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+      NASA_API_KEY: ${{ secrets.NASA_API_KEY }}
+      CROSSREF_MAILTO: ${{ secrets.CROSSREF_MAILTO }}
+      NCBI_EMAIL: ${{ secrets.NCBI_EMAIL }}
+      NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run resumable eleven-adapter MAX campaign
+        run: |
+          python -m omega_web_hg_t.r04.max_cli run \
+            --output-dir generated/omega_web_hg_r04_max \
+            --query "hypergraph fractal mycelial science engineering" \
+            --item-budget 5000 \
+            --page-size 100 \
+            --max-pages-per-source 8 \
+            --retries 4 \
+            --max-bytes 2097152
+      - name: Audit evidence, privacy and OAK boundaries
+        run: |
+          python -m omega_web_hg_t.r04.max_cli audit generated/omega_web_hg_r04_max
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('generated/omega_web_hg_r04_max')
+          report = json.loads((root / 'campaign-report.json').read_text())
+          assert report['metadata_only'] is True
+          assert report['raw_bodies_persisted'] is False
+          assert report['full_text_collected'] is False
+          assert report['permanent_total_cap'] is None
+          assert report['request_count'] >= 9
+          assert report['oak_boundaries']['metadata_is_truth'] is False
+          records = [json.loads(line) for line in (root / 'records.jsonl').read_text().splitlines() if line]
+          forbidden = {'abstract', 'authors', 'author', 'explanation', 'body', 'full_text'}
+          assert all(not forbidden.intersection(record) for record in records)
+          print(json.dumps({
+              'record_count': report['record_count'],
+              'request_count': report['request_count'],
+              'mminus_count': report['mminus_count'],
+              'source_counts': report['source_counts'],
+              'record_merkle_root': report['record_merkle_root'],
+              'report_sha256': report['report_sha256'],
+          }, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: omega-web-hg-r04-max-evidence
+          path: |
+            generated/omega_web_hg_r04_max/campaign-report.json
+            generated/omega_web_hg_r04_max/records.jsonl
+            generated/omega_web_hg_r04_max/receipts.jsonl
+            generated/omega_web_hg_r04_max/mminus.jsonl
+            generated/omega_web_hg_r04_max/checkpoint.json
+            generated/omega_web_hg_r04_max/campaign.sqlite3
           if-no-files-found: error
           retention-days: 30
