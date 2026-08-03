@@ -1,0 +1,230 @@
+{
+  "count": 32,
+  "items": [
+    {
+      "class": "logical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.00.boundary_case",
+      "finite_harness_is_not_proof": true,
+      "name": "boundary_case"
+    },
+    {
+      "class": "analytic",
+      "deterministic": true,
+      "falsifier_id": "falsifier.01.degenerate_object",
+      "finite_harness_is_not_proof": true,
+      "name": "degenerate_object"
+    },
+    {
+      "class": "numerical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.02.quantifier_flip",
+      "finite_harness_is_not_proof": true,
+      "name": "quantifier_flip"
+    },
+    {
+      "class": "formal",
+      "deterministic": true,
+      "falsifier_id": "falsifier.03.hidden_assumption",
+      "finite_harness_is_not_proof": true,
+      "name": "hidden_assumption"
+    },
+    {
+      "class": "logical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.04.limit_exchange",
+      "finite_harness_is_not_proof": true,
+      "name": "limit_exchange"
+    },
+    {
+      "class": "analytic",
+      "deterministic": true,
+      "falsifier_id": "falsifier.05.compactness_gap",
+      "finite_harness_is_not_proof": true,
+      "name": "compactness_gap"
+    },
+    {
+      "class": "numerical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.06.regularity_leak",
+      "finite_harness_is_not_proof": true,
+      "name": "regularity_leak"
+    },
+    {
+      "class": "formal",
+      "deterministic": true,
+      "falsifier_id": "falsifier.07.circular_dependency",
+      "finite_harness_is_not_proof": true,
+      "name": "circular_dependency"
+    },
+    {
+      "class": "logical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.08.numerical_to_exact",
+      "finite_harness_is_not_proof": true,
+      "name": "numerical_to_exact"
+    },
+    {
+      "class": "analytic",
+      "deterministic": true,
+      "falsifier_id": "falsifier.09.finite_to_infinite",
+      "finite_harness_is_not_proof": true,
+      "name": "finite_to_infinite"
+    },
+    {
+      "class": "numerical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.10.restricted_to_general",
+      "finite_harness_is_not_proof": true,
+      "name": "restricted_to_general"
+    },
+    {
+      "class": "formal",
+      "deterministic": true,
+      "falsifier_id": "falsifier.11.missing_equivalence_direction",
+      "finite_harness_is_not_proof": true,
+      "name": "missing_equivalence_direction"
+    },
+    {
+      "class": "logical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.12.formal_placeholder",
+      "finite_harness_is_not_proof": true,
+      "name": "formal_placeholder"
+    },
+    {
+      "class": "analytic",
+      "deterministic": true,
+      "falsifier_id": "falsifier.13.source_provenance",
+      "finite_harness_is_not_proof": true,
+      "name": "source_provenance"
+    },
+    {
+      "class": "numerical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.14.definition_drift",
+      "finite_harness_is_not_proof": true,
+      "name": "definition_drift"
+    },
+    {
+      "class": "formal",
+      "deterministic": true,
+      "falsifier_id": "falsifier.15.notation_collision",
+      "finite_harness_is_not_proof": true,
+      "name": "notation_collision"
+    },
+    {
+      "class": "logical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.16.scaling_mismatch",
+      "finite_harness_is_not_proof": true,
+      "name": "scaling_mismatch"
+    },
+    {
+      "class": "analytic",
+      "deterministic": true,
+      "falsifier_id": "falsifier.17.dimension_mismatch",
+      "finite_harness_is_not_proof": true,
+      "name": "dimension_mismatch"
+    },
+    {
+      "class": "numerical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.18.sign_error",
+      "finite_harness_is_not_proof": true,
+      "name": "sign_error"
+    },
+    {
+      "class": "formal",
+      "deterministic": true,
+      "falsifier_id": "falsifier.19.constant_nonuniformity",
+      "finite_harness_is_not_proof": true,
+      "name": "constant_nonuniformity"
+    },
+    {
+      "class": "logical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.20.branch_cut",
+      "finite_harness_is_not_proof": true,
+      "name": "branch_cut"
+    },
+    {
+      "class": "analytic",
+      "deterministic": true,
+      "falsifier_id": "falsifier.21.domain_error",
+      "finite_harness_is_not_proof": true,
+      "name": "domain_error"
+    },
+    {
+      "class": "numerical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.22.counterexample_mutation",
+      "finite_harness_is_not_proof": true,
+      "name": "counterexample_mutation"
+    },
+    {
+      "class": "formal",
+      "deterministic": true,
+      "falsifier_id": "falsifier.23.proof_step_deletion",
+      "finite_harness_is_not_proof": true,
+      "name": "proof_step_deletion"
+    },
+    {
+      "class": "logical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.24.independent_reconstruction",
+      "finite_harness_is_not_proof": true,
+      "name": "independent_reconstruction"
+    },
+    {
+      "class": "analytic",
+      "deterministic": true,
+      "falsifier_id": "falsifier.25.random_small_model",
+      "finite_harness_is_not_proof": true,
+      "name": "random_small_model"
+    },
+    {
+      "class": "numerical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.26.adversarial_large_parameter",
+      "finite_harness_is_not_proof": true,
+      "name": "adversarial_large_parameter"
+    },
+    {
+      "class": "formal",
+      "deterministic": true,
+      "falsifier_id": "falsifier.27.singular_limit",
+      "finite_harness_is_not_proof": true,
+      "name": "singular_limit"
+    },
+    {
+      "class": "logical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.28.local_global_mismatch",
+      "finite_harness_is_not_proof": true,
+      "name": "local_global_mismatch"
+    },
+    {
+      "class": "analytic",
+      "deterministic": true,
+      "falsifier_id": "falsifier.29.discrete_continuum_mismatch",
+      "finite_harness_is_not_proof": true,
+      "name": "discrete_continuum_mismatch"
+    },
+    {
+      "class": "numerical",
+      "deterministic": true,
+      "falsifier_id": "falsifier.30.generic_universal_mismatch",
+      "finite_harness_is_not_proof": true,
+      "name": "generic_universal_mismatch"
+    },
+    {
+      "class": "formal",
+      "deterministic": true,
+      "falsifier_id": "falsifier.31.weak_strong_mismatch",
+      "finite_harness_is_not_proof": true,
+      "name": "weak_strong_mismatch"
+    }
+  ],
+  "schema": "omega-millennium-falsifiers/2"
+}

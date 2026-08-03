@@ -1,0 +1,182 @@
+{
+  "count": 16,
+  "items": [
+    {
+      "name": "lean4",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.00.lean4"
+    },
+    {
+      "name": "coq",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.01.coq"
+    },
+    {
+      "name": "isabelle_hol",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.02.isabelle_hol"
+    },
+    {
+      "name": "hol_light",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.03.hol_light"
+    },
+    {
+      "name": "metamath",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.04.metamath"
+    },
+    {
+      "name": "agda",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.05.agda"
+    },
+    {
+      "name": "smtlib",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.06.smtlib"
+    },
+    {
+      "name": "sage",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.07.sage"
+    },
+    {
+      "name": "sympy",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.08.sympy"
+    },
+    {
+      "name": "interval_arithmetic",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.09.interval_arithmetic"
+    },
+    {
+      "name": "sat_certificate",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.10.sat_certificate"
+    },
+    {
+      "name": "drat",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.11.drat"
+    },
+    {
+      "name": "lfsc",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.12.lfsc"
+    },
+    {
+      "name": "mizar",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.13.mizar"
+    },
+    {
+      "name": "acl2",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.14.acl2"
+    },
+    {
+      "name": "human_latex",
+      "placeholders": [
+        "sorry",
+        "admit",
+        "unknown"
+      ],
+      "proof_complete_default": false,
+      "requires_version_pin": true,
+      "target_id": "formal.15.human_latex"
+    }
+  ],
+  "schema": "omega-millennium-formal-targets/2"
+}

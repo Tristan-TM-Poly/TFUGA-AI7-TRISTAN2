@@ -1,0 +1,366 @@
+{
+  "accepted_outcomes": [
+    "prove_critical_line",
+    "construct_off_line_zero"
+  ],
+  "barrier_roots": [
+    "riemann_barrier_00",
+    "riemann_barrier_01",
+    "riemann_barrier_02",
+    "riemann_barrier_03",
+    "riemann_barrier_04",
+    "riemann_barrier_05",
+    "riemann_barrier_06",
+    "riemann_barrier_07"
+  ],
+  "canonical_objects": [
+    "zeta_function",
+    "explicit_formula",
+    "positivity",
+    "spectral_operator"
+  ],
+  "domains": [
+    "analytic_number_theory",
+    "spectral_theory"
+  ],
+  "forbidden_promotions": [
+    "finite_to_infinite",
+    "restricted_to_general",
+    "numeric_to_exact",
+    "skeleton_to_proof"
+  ],
+  "formal_contract": {
+    "domains_explicit": true,
+    "quantifiers_explicit": true,
+    "solution_claimed": false
+  },
+  "negative_memory": [
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "boundary_case",
+      "rule_id": "riemann.mminus.00"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "degenerate_object",
+      "rule_id": "riemann.mminus.01"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "quantifier_flip",
+      "rule_id": "riemann.mminus.02"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "hidden_assumption",
+      "rule_id": "riemann.mminus.03"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "limit_exchange",
+      "rule_id": "riemann.mminus.04"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "compactness_gap",
+      "rule_id": "riemann.mminus.05"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "regularity_leak",
+      "rule_id": "riemann.mminus.06"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "circular_dependency",
+      "rule_id": "riemann.mminus.07"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "numerical_to_exact",
+      "rule_id": "riemann.mminus.08"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "finite_to_infinite",
+      "rule_id": "riemann.mminus.09"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "restricted_to_general",
+      "rule_id": "riemann.mminus.10"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "missing_equivalence_direction",
+      "rule_id": "riemann.mminus.11"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "formal_placeholder",
+      "rule_id": "riemann.mminus.12"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "source_provenance",
+      "rule_id": "riemann.mminus.13"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "definition_drift",
+      "rule_id": "riemann.mminus.14"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "notation_collision",
+      "rule_id": "riemann.mminus.15"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "scaling_mismatch",
+      "rule_id": "riemann.mminus.16"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "dimension_mismatch",
+      "rule_id": "riemann.mminus.17"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "sign_error",
+      "rule_id": "riemann.mminus.18"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "constant_nonuniformity",
+      "rule_id": "riemann.mminus.19"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "branch_cut",
+      "rule_id": "riemann.mminus.20"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "domain_error",
+      "rule_id": "riemann.mminus.21"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "counterexample_mutation",
+      "rule_id": "riemann.mminus.22"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "proof_step_deletion",
+      "rule_id": "riemann.mminus.23"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "independent_reconstruction",
+      "rule_id": "riemann.mminus.24"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "random_small_model",
+      "rule_id": "riemann.mminus.25"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "adversarial_large_parameter",
+      "rule_id": "riemann.mminus.26"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "singular_limit",
+      "rule_id": "riemann.mminus.27"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "local_global_mismatch",
+      "rule_id": "riemann.mminus.28"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "discrete_continuum_mismatch",
+      "rule_id": "riemann.mminus.29"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "generic_universal_mismatch",
+      "rule_id": "riemann.mminus.30"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "weak_strong_mismatch",
+      "rule_id": "riemann.mminus.31"
+    }
+  ],
+  "problem_id": "riemann",
+  "research_axes": [
+    {
+      "axis_id": "riemann.axis.00",
+      "human_review_required": true,
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "axis_id": "riemann.axis.01",
+      "human_review_required": true,
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "axis_id": "riemann.axis.02",
+      "human_review_required": true,
+      "strategy": "derandomization"
+    },
+    {
+      "axis_id": "riemann.axis.03",
+      "human_review_required": true,
+      "strategy": "spectral_gap_bound"
+    },
+    {
+      "axis_id": "riemann.axis.04",
+      "human_review_required": true,
+      "strategy": "derived_category"
+    },
+    {
+      "axis_id": "riemann.axis.05",
+      "human_review_required": true,
+      "strategy": "counterexample_guided_refinement"
+    },
+    {
+      "axis_id": "riemann.axis.06",
+      "human_review_required": true,
+      "strategy": "duality_transform"
+    },
+    {
+      "axis_id": "riemann.axis.07",
+      "human_review_required": true,
+      "strategy": "blowup_contradiction"
+    },
+    {
+      "axis_id": "riemann.axis.08",
+      "human_review_required": true,
+      "strategy": "motivic_transfer"
+    },
+    {
+      "axis_id": "riemann.axis.09",
+      "human_review_required": true,
+      "strategy": "pseudorandomness"
+    },
+    {
+      "axis_id": "riemann.axis.10",
+      "human_review_required": true,
+      "strategy": "hamiltonian_reconstruction"
+    },
+    {
+      "axis_id": "riemann.axis.11",
+      "human_review_required": true,
+      "strategy": "cycle_class_map"
+    },
+    {
+      "axis_id": "riemann.axis.12",
+      "human_review_required": true,
+      "strategy": "automated_lemma_synthesis"
+    },
+    {
+      "axis_id": "riemann.axis.13",
+      "human_review_required": true,
+      "strategy": "convexity_method"
+    },
+    {
+      "axis_id": "riemann.axis.14",
+      "human_review_required": true,
+      "strategy": "compactness_rigidity"
+    },
+    {
+      "axis_id": "riemann.axis.15",
+      "human_review_required": true,
+      "strategy": "arithmetic_geometry"
+    },
+    {
+      "axis_id": "riemann.axis.16",
+      "human_review_required": true,
+      "strategy": "communication_complexity"
+    },
+    {
+      "axis_id": "riemann.axis.17",
+      "human_review_required": true,
+      "strategy": "functional_integral"
+    },
+    {
+      "axis_id": "riemann.axis.18",
+      "human_review_required": true,
+      "strategy": "deformation_specialization"
+    },
+    {
+      "axis_id": "riemann.axis.19",
+      "human_review_required": true,
+      "strategy": "formal_proof_search"
+    },
+    {
+      "axis_id": "riemann.axis.20",
+      "human_review_required": true,
+      "strategy": "variational_method"
+    },
+    {
+      "axis_id": "riemann.axis.21",
+      "human_review_required": true,
+      "strategy": "critical_space_estimate"
+    },
+    {
+      "axis_id": "riemann.axis.22",
+      "human_review_required": true,
+      "strategy": "algebraic_geometry"
+    },
+    {
+      "axis_id": "riemann.axis.23",
+      "human_review_required": true,
+      "strategy": "meta_complexity"
+    },
+    {
+      "axis_id": "riemann.axis.24",
+      "human_review_required": true,
+      "strategy": "cluster_expansion"
+    },
+    {
+      "axis_id": "riemann.axis.25",
+      "human_review_required": true,
+      "strategy": "local_global_principle"
+    },
+    {
+      "axis_id": "riemann.axis.26",
+      "human_review_required": true,
+      "strategy": "symbolic_identity"
+    },
+    {
+      "axis_id": "riemann.axis.27",
+      "human_review_required": true,
+      "strategy": "inverse_problem"
+    },
+    {
+      "axis_id": "riemann.axis.28",
+      "human_review_required": true,
+      "strategy": "renormalization_flow"
+    },
+    {
+      "axis_id": "riemann.axis.29",
+      "human_review_required": true,
+      "strategy": "geometric_measure_theory"
+    },
+    {
+      "axis_id": "riemann.axis.30",
+      "human_review_required": true,
+      "strategy": "proof_complexity"
+    },
+    {
+      "axis_id": "riemann.axis.31",
+      "human_review_required": true,
+      "strategy": "reflection_positivity"
+    }
+  ],
+  "schema": "omega-millennium-problem-spec/2",
+  "statement": "Every nontrivial zero of the Riemann zeta function has real part one half.",
+  "status": "open",
+  "title": "Riemann Hypothesis"
+}

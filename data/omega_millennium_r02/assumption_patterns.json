@@ -1,0 +1,902 @@
+{
+  "count": 128,
+  "items": [
+    {
+      "countercheck": "boundary_case",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_000",
+      "pattern_id": "assumption.000",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "hidden_assumption",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_001",
+      "pattern_id": "assumption.001",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "regularity_leak",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_002",
+      "pattern_id": "assumption.002",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "finite_to_infinite",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_003",
+      "pattern_id": "assumption.003",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "formal_placeholder",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_004",
+      "pattern_id": "assumption.004",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "notation_collision",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_005",
+      "pattern_id": "assumption.005",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "sign_error",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_006",
+      "pattern_id": "assumption.006",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "domain_error",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_007",
+      "pattern_id": "assumption.007",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "independent_reconstruction",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_008",
+      "pattern_id": "assumption.008",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "singular_limit",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_009",
+      "pattern_id": "assumption.009",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "generic_universal_mismatch",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_010",
+      "pattern_id": "assumption.010",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "degenerate_object",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_011",
+      "pattern_id": "assumption.011",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "limit_exchange",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_012",
+      "pattern_id": "assumption.012",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "circular_dependency",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_013",
+      "pattern_id": "assumption.013",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "restricted_to_general",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_014",
+      "pattern_id": "assumption.014",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "source_provenance",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_015",
+      "pattern_id": "assumption.015",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "scaling_mismatch",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_016",
+      "pattern_id": "assumption.016",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "constant_nonuniformity",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_017",
+      "pattern_id": "assumption.017",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "counterexample_mutation",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_018",
+      "pattern_id": "assumption.018",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "random_small_model",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_019",
+      "pattern_id": "assumption.019",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "local_global_mismatch",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_020",
+      "pattern_id": "assumption.020",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "weak_strong_mismatch",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_021",
+      "pattern_id": "assumption.021",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "quantifier_flip",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_022",
+      "pattern_id": "assumption.022",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "compactness_gap",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_023",
+      "pattern_id": "assumption.023",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "numerical_to_exact",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_024",
+      "pattern_id": "assumption.024",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "missing_equivalence_direction",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_025",
+      "pattern_id": "assumption.025",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "definition_drift",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_026",
+      "pattern_id": "assumption.026",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "dimension_mismatch",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_027",
+      "pattern_id": "assumption.027",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "branch_cut",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_028",
+      "pattern_id": "assumption.028",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "proof_step_deletion",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_029",
+      "pattern_id": "assumption.029",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "adversarial_large_parameter",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_030",
+      "pattern_id": "assumption.030",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "discrete_continuum_mismatch",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_031",
+      "pattern_id": "assumption.031",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "boundary_case",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_032",
+      "pattern_id": "assumption.032",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "hidden_assumption",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_033",
+      "pattern_id": "assumption.033",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "regularity_leak",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_034",
+      "pattern_id": "assumption.034",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "finite_to_infinite",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_035",
+      "pattern_id": "assumption.035",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "formal_placeholder",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_036",
+      "pattern_id": "assumption.036",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "notation_collision",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_037",
+      "pattern_id": "assumption.037",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "sign_error",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_038",
+      "pattern_id": "assumption.038",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "domain_error",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_039",
+      "pattern_id": "assumption.039",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "independent_reconstruction",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_040",
+      "pattern_id": "assumption.040",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "singular_limit",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_041",
+      "pattern_id": "assumption.041",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "generic_universal_mismatch",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_042",
+      "pattern_id": "assumption.042",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "degenerate_object",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_043",
+      "pattern_id": "assumption.043",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "limit_exchange",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_044",
+      "pattern_id": "assumption.044",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "circular_dependency",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_045",
+      "pattern_id": "assumption.045",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "restricted_to_general",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_046",
+      "pattern_id": "assumption.046",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "source_provenance",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_047",
+      "pattern_id": "assumption.047",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "scaling_mismatch",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_048",
+      "pattern_id": "assumption.048",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "constant_nonuniformity",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_049",
+      "pattern_id": "assumption.049",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "counterexample_mutation",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_050",
+      "pattern_id": "assumption.050",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "random_small_model",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_051",
+      "pattern_id": "assumption.051",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "local_global_mismatch",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_052",
+      "pattern_id": "assumption.052",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "weak_strong_mismatch",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_053",
+      "pattern_id": "assumption.053",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "quantifier_flip",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_054",
+      "pattern_id": "assumption.054",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "compactness_gap",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_055",
+      "pattern_id": "assumption.055",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "numerical_to_exact",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_056",
+      "pattern_id": "assumption.056",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "missing_equivalence_direction",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_057",
+      "pattern_id": "assumption.057",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "definition_drift",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_058",
+      "pattern_id": "assumption.058",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "dimension_mismatch",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_059",
+      "pattern_id": "assumption.059",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "branch_cut",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_060",
+      "pattern_id": "assumption.060",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "proof_step_deletion",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_061",
+      "pattern_id": "assumption.061",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "adversarial_large_parameter",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_062",
+      "pattern_id": "assumption.062",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "discrete_continuum_mismatch",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_063",
+      "pattern_id": "assumption.063",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "boundary_case",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_064",
+      "pattern_id": "assumption.064",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "hidden_assumption",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_065",
+      "pattern_id": "assumption.065",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "regularity_leak",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_066",
+      "pattern_id": "assumption.066",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "finite_to_infinite",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_067",
+      "pattern_id": "assumption.067",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "formal_placeholder",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_068",
+      "pattern_id": "assumption.068",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "notation_collision",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_069",
+      "pattern_id": "assumption.069",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "sign_error",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_070",
+      "pattern_id": "assumption.070",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "domain_error",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_071",
+      "pattern_id": "assumption.071",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "independent_reconstruction",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_072",
+      "pattern_id": "assumption.072",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "singular_limit",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_073",
+      "pattern_id": "assumption.073",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "generic_universal_mismatch",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_074",
+      "pattern_id": "assumption.074",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "degenerate_object",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_075",
+      "pattern_id": "assumption.075",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "limit_exchange",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_076",
+      "pattern_id": "assumption.076",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "circular_dependency",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_077",
+      "pattern_id": "assumption.077",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "restricted_to_general",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_078",
+      "pattern_id": "assumption.078",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "source_provenance",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_079",
+      "pattern_id": "assumption.079",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "scaling_mismatch",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_080",
+      "pattern_id": "assumption.080",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "constant_nonuniformity",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_081",
+      "pattern_id": "assumption.081",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "counterexample_mutation",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_082",
+      "pattern_id": "assumption.082",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "random_small_model",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_083",
+      "pattern_id": "assumption.083",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "local_global_mismatch",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_084",
+      "pattern_id": "assumption.084",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "weak_strong_mismatch",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_085",
+      "pattern_id": "assumption.085",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "quantifier_flip",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_086",
+      "pattern_id": "assumption.086",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "compactness_gap",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_087",
+      "pattern_id": "assumption.087",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "numerical_to_exact",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_088",
+      "pattern_id": "assumption.088",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "missing_equivalence_direction",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_089",
+      "pattern_id": "assumption.089",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "definition_drift",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_090",
+      "pattern_id": "assumption.090",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "dimension_mismatch",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_091",
+      "pattern_id": "assumption.091",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "branch_cut",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_092",
+      "pattern_id": "assumption.092",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "proof_step_deletion",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_093",
+      "pattern_id": "assumption.093",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "adversarial_large_parameter",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_094",
+      "pattern_id": "assumption.094",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "discrete_continuum_mismatch",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_095",
+      "pattern_id": "assumption.095",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "boundary_case",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_096",
+      "pattern_id": "assumption.096",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "hidden_assumption",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_097",
+      "pattern_id": "assumption.097",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "regularity_leak",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_098",
+      "pattern_id": "assumption.098",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "finite_to_infinite",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_099",
+      "pattern_id": "assumption.099",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "formal_placeholder",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_100",
+      "pattern_id": "assumption.100",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "notation_collision",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_101",
+      "pattern_id": "assumption.101",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "sign_error",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_102",
+      "pattern_id": "assumption.102",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "domain_error",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_103",
+      "pattern_id": "assumption.103",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "independent_reconstruction",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_104",
+      "pattern_id": "assumption.104",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "singular_limit",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_105",
+      "pattern_id": "assumption.105",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "generic_universal_mismatch",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_106",
+      "pattern_id": "assumption.106",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "degenerate_object",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_107",
+      "pattern_id": "assumption.107",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "limit_exchange",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_108",
+      "pattern_id": "assumption.108",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "circular_dependency",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_109",
+      "pattern_id": "assumption.109",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "restricted_to_general",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_110",
+      "pattern_id": "assumption.110",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "source_provenance",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_111",
+      "pattern_id": "assumption.111",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "scaling_mismatch",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_112",
+      "pattern_id": "assumption.112",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "constant_nonuniformity",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_113",
+      "pattern_id": "assumption.113",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "counterexample_mutation",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_114",
+      "pattern_id": "assumption.114",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "random_small_model",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_115",
+      "pattern_id": "assumption.115",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "local_global_mismatch",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_116",
+      "pattern_id": "assumption.116",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "weak_strong_mismatch",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_117",
+      "pattern_id": "assumption.117",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "quantifier_flip",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_118",
+      "pattern_id": "assumption.118",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "compactness_gap",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_119",
+      "pattern_id": "assumption.119",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "numerical_to_exact",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_120",
+      "pattern_id": "assumption.120",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "missing_equivalence_direction",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_121",
+      "pattern_id": "assumption.121",
+      "risk_class": "limit"
+    },
+    {
+      "countercheck": "definition_drift",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_122",
+      "pattern_id": "assumption.122",
+      "risk_class": "regularity"
+    },
+    {
+      "countercheck": "dimension_mismatch",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_123",
+      "pattern_id": "assumption.123",
+      "risk_class": "existence"
+    },
+    {
+      "countercheck": "branch_cut",
+      "must_be_explicit_above_oak": 1,
+      "name": "assumption_pattern_124",
+      "pattern_id": "assumption.124",
+      "risk_class": "algebraic"
+    },
+    {
+      "countercheck": "proof_step_deletion",
+      "must_be_explicit_above_oak": 2,
+      "name": "assumption_pattern_125",
+      "pattern_id": "assumption.125",
+      "risk_class": "computational"
+    },
+    {
+      "countercheck": "adversarial_large_parameter",
+      "must_be_explicit_above_oak": 3,
+      "name": "assumption_pattern_126",
+      "pattern_id": "assumption.126",
+      "risk_class": "scope"
+    },
+    {
+      "countercheck": "discrete_continuum_mismatch",
+      "must_be_explicit_above_oak": 4,
+      "name": "assumption_pattern_127",
+      "pattern_id": "assumption.127",
+      "risk_class": "limit"
+    }
+  ],
+  "schema": "omega-millennium-assumptions/2"
+}

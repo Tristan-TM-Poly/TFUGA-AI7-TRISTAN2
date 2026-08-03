@@ -1,0 +1,1798 @@
+{
+  "count": 224,
+  "items": [
+    {
+      "barrier_id": "poincare.barrier.00",
+      "failure_mode": "numerical_to_exact",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_00",
+      "strategy": "renormalization_flow"
+    },
+    {
+      "barrier_id": "poincare.barrier.01",
+      "failure_mode": "source_provenance",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_01",
+      "strategy": "arithmetic_geometry"
+    },
+    {
+      "barrier_id": "poincare.barrier.02",
+      "failure_mode": "sign_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_02",
+      "strategy": "derandomization"
+    },
+    {
+      "barrier_id": "poincare.barrier.03",
+      "failure_mode": "proof_step_deletion",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_03",
+      "strategy": "ricci_flow"
+    },
+    {
+      "barrier_id": "poincare.barrier.04",
+      "failure_mode": "local_global_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_04",
+      "strategy": "intersection_theory"
+    },
+    {
+      "barrier_id": "poincare.barrier.05",
+      "failure_mode": "degenerate_object",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_05",
+      "strategy": "inverse_problem"
+    },
+    {
+      "barrier_id": "poincare.barrier.06",
+      "failure_mode": "regularity_leak",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_06",
+      "strategy": "compactness_rigidity"
+    },
+    {
+      "barrier_id": "poincare.barrier.07",
+      "failure_mode": "missing_equivalence_direction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_07",
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "barrier_id": "poincare.barrier.08",
+      "failure_mode": "scaling_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_00",
+      "strategy": "representation_stability"
+    },
+    {
+      "barrier_id": "poincare.barrier.09",
+      "failure_mode": "domain_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_01",
+      "strategy": "minimal_surface"
+    },
+    {
+      "barrier_id": "poincare.barrier.10",
+      "failure_mode": "adversarial_large_parameter",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_02",
+      "strategy": "symbolic_identity"
+    },
+    {
+      "barrier_id": "poincare.barrier.11",
+      "failure_mode": "weak_strong_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_03",
+      "strategy": "convexity_method"
+    },
+    {
+      "barrier_id": "poincare.barrier.12",
+      "failure_mode": "limit_exchange",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_04",
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "barrier_id": "poincare.barrier.13",
+      "failure_mode": "finite_to_infinite",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_05",
+      "strategy": "descent_method"
+    },
+    {
+      "barrier_id": "poincare.barrier.14",
+      "failure_mode": "definition_drift",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_06",
+      "strategy": "constructive_field_theory"
+    },
+    {
+      "barrier_id": "poincare.barrier.15",
+      "failure_mode": "constant_nonuniformity",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_07",
+      "strategy": "local_global_principle"
+    },
+    {
+      "barrier_id": "poincare.barrier.16",
+      "failure_mode": "independent_reconstruction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_00",
+      "strategy": "automated_lemma_synthesis"
+    },
+    {
+      "barrier_id": "poincare.barrier.17",
+      "failure_mode": "discrete_continuum_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_01",
+      "strategy": "information_theoretic_bound"
+    },
+    {
+      "barrier_id": "poincare.barrier.18",
+      "failure_mode": "quantifier_flip",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_02",
+      "strategy": "microlocal_analysis"
+    },
+    {
+      "barrier_id": "poincare.barrier.19",
+      "failure_mode": "circular_dependency",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_03",
+      "strategy": "circuit_lower_bound"
+    },
+    {
+      "barrier_id": "poincare.barrier.20",
+      "failure_mode": "formal_placeholder",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_04",
+      "strategy": "cluster_expansion"
+    },
+    {
+      "barrier_id": "poincare.barrier.21",
+      "failure_mode": "dimension_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_05",
+      "strategy": "cycle_class_map"
+    },
+    {
+      "barrier_id": "poincare.barrier.22",
+      "failure_mode": "counterexample_mutation",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_06",
+      "strategy": "random_matrix_analogy"
+    },
+    {
+      "barrier_id": "poincare.barrier.23",
+      "failure_mode": "singular_limit",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_07",
+      "strategy": "spectral_reformulation"
+    },
+    {
+      "barrier_id": "poincare.barrier.24",
+      "failure_mode": "boundary_case",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_00",
+      "strategy": "operator_algebra"
+    },
+    {
+      "barrier_id": "poincare.barrier.25",
+      "failure_mode": "compactness_gap",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_01",
+      "strategy": "meta_complexity"
+    },
+    {
+      "barrier_id": "poincare.barrier.26",
+      "failure_mode": "restricted_to_general",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_02",
+      "strategy": "hamiltonian_reconstruction"
+    },
+    {
+      "barrier_id": "poincare.barrier.27",
+      "failure_mode": "notation_collision",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_03",
+      "strategy": "category_theoretic_bridge"
+    },
+    {
+      "barrier_id": "poincare.barrier.28",
+      "failure_mode": "branch_cut",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_04",
+      "strategy": "integrable_model"
+    },
+    {
+      "barrier_id": "poincare.barrier.29",
+      "failure_mode": "random_small_model",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_05",
+      "strategy": "trace_formula"
+    },
+    {
+      "barrier_id": "poincare.barrier.30",
+      "failure_mode": "generic_universal_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_06",
+      "strategy": "algebraic_geometry"
+    },
+    {
+      "barrier_id": "poincare.barrier.31",
+      "failure_mode": "hidden_assumption",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "poincare",
+      "root": "poincare_barrier_07",
+      "strategy": "pseudorandomness"
+    },
+    {
+      "barrier_id": "riemann.barrier.00",
+      "failure_mode": "circular_dependency",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_00",
+      "strategy": "renormalization_flow"
+    },
+    {
+      "barrier_id": "riemann.barrier.01",
+      "failure_mode": "formal_placeholder",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_01",
+      "strategy": "arithmetic_geometry"
+    },
+    {
+      "barrier_id": "riemann.barrier.02",
+      "failure_mode": "dimension_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_02",
+      "strategy": "derandomization"
+    },
+    {
+      "barrier_id": "riemann.barrier.03",
+      "failure_mode": "counterexample_mutation",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_03",
+      "strategy": "ricci_flow"
+    },
+    {
+      "barrier_id": "riemann.barrier.04",
+      "failure_mode": "singular_limit",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_04",
+      "strategy": "intersection_theory"
+    },
+    {
+      "barrier_id": "riemann.barrier.05",
+      "failure_mode": "boundary_case",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_05",
+      "strategy": "inverse_problem"
+    },
+    {
+      "barrier_id": "riemann.barrier.06",
+      "failure_mode": "compactness_gap",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_06",
+      "strategy": "compactness_rigidity"
+    },
+    {
+      "barrier_id": "riemann.barrier.07",
+      "failure_mode": "restricted_to_general",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_07",
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "barrier_id": "riemann.barrier.08",
+      "failure_mode": "notation_collision",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_00",
+      "strategy": "representation_stability"
+    },
+    {
+      "barrier_id": "riemann.barrier.09",
+      "failure_mode": "branch_cut",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_01",
+      "strategy": "minimal_surface"
+    },
+    {
+      "barrier_id": "riemann.barrier.10",
+      "failure_mode": "random_small_model",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_02",
+      "strategy": "symbolic_identity"
+    },
+    {
+      "barrier_id": "riemann.barrier.11",
+      "failure_mode": "generic_universal_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_03",
+      "strategy": "convexity_method"
+    },
+    {
+      "barrier_id": "riemann.barrier.12",
+      "failure_mode": "hidden_assumption",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_04",
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "barrier_id": "riemann.barrier.13",
+      "failure_mode": "numerical_to_exact",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_05",
+      "strategy": "descent_method"
+    },
+    {
+      "barrier_id": "riemann.barrier.14",
+      "failure_mode": "source_provenance",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_06",
+      "strategy": "constructive_field_theory"
+    },
+    {
+      "barrier_id": "riemann.barrier.15",
+      "failure_mode": "sign_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_07",
+      "strategy": "local_global_principle"
+    },
+    {
+      "barrier_id": "riemann.barrier.16",
+      "failure_mode": "proof_step_deletion",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_00",
+      "strategy": "automated_lemma_synthesis"
+    },
+    {
+      "barrier_id": "riemann.barrier.17",
+      "failure_mode": "local_global_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_01",
+      "strategy": "information_theoretic_bound"
+    },
+    {
+      "barrier_id": "riemann.barrier.18",
+      "failure_mode": "degenerate_object",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_02",
+      "strategy": "microlocal_analysis"
+    },
+    {
+      "barrier_id": "riemann.barrier.19",
+      "failure_mode": "regularity_leak",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_03",
+      "strategy": "circuit_lower_bound"
+    },
+    {
+      "barrier_id": "riemann.barrier.20",
+      "failure_mode": "missing_equivalence_direction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_04",
+      "strategy": "cluster_expansion"
+    },
+    {
+      "barrier_id": "riemann.barrier.21",
+      "failure_mode": "scaling_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_05",
+      "strategy": "cycle_class_map"
+    },
+    {
+      "barrier_id": "riemann.barrier.22",
+      "failure_mode": "domain_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_06",
+      "strategy": "random_matrix_analogy"
+    },
+    {
+      "barrier_id": "riemann.barrier.23",
+      "failure_mode": "adversarial_large_parameter",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_07",
+      "strategy": "spectral_reformulation"
+    },
+    {
+      "barrier_id": "riemann.barrier.24",
+      "failure_mode": "weak_strong_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_00",
+      "strategy": "operator_algebra"
+    },
+    {
+      "barrier_id": "riemann.barrier.25",
+      "failure_mode": "limit_exchange",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_01",
+      "strategy": "meta_complexity"
+    },
+    {
+      "barrier_id": "riemann.barrier.26",
+      "failure_mode": "finite_to_infinite",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_02",
+      "strategy": "hamiltonian_reconstruction"
+    },
+    {
+      "barrier_id": "riemann.barrier.27",
+      "failure_mode": "definition_drift",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_03",
+      "strategy": "category_theoretic_bridge"
+    },
+    {
+      "barrier_id": "riemann.barrier.28",
+      "failure_mode": "constant_nonuniformity",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_04",
+      "strategy": "integrable_model"
+    },
+    {
+      "barrier_id": "riemann.barrier.29",
+      "failure_mode": "independent_reconstruction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_05",
+      "strategy": "trace_formula"
+    },
+    {
+      "barrier_id": "riemann.barrier.30",
+      "failure_mode": "discrete_continuum_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_06",
+      "strategy": "algebraic_geometry"
+    },
+    {
+      "barrier_id": "riemann.barrier.31",
+      "failure_mode": "quantifier_flip",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "riemann",
+      "root": "riemann_barrier_07",
+      "strategy": "pseudorandomness"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.00",
+      "failure_mode": "circular_dependency",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_00",
+      "strategy": "renormalization_flow"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.01",
+      "failure_mode": "formal_placeholder",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_01",
+      "strategy": "arithmetic_geometry"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.02",
+      "failure_mode": "dimension_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_02",
+      "strategy": "derandomization"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.03",
+      "failure_mode": "counterexample_mutation",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_03",
+      "strategy": "ricci_flow"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.04",
+      "failure_mode": "singular_limit",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_04",
+      "strategy": "intersection_theory"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.05",
+      "failure_mode": "boundary_case",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_05",
+      "strategy": "inverse_problem"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.06",
+      "failure_mode": "compactness_gap",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_06",
+      "strategy": "compactness_rigidity"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.07",
+      "failure_mode": "restricted_to_general",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_07",
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.08",
+      "failure_mode": "notation_collision",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_00",
+      "strategy": "representation_stability"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.09",
+      "failure_mode": "branch_cut",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_01",
+      "strategy": "minimal_surface"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.10",
+      "failure_mode": "random_small_model",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_02",
+      "strategy": "symbolic_identity"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.11",
+      "failure_mode": "generic_universal_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_03",
+      "strategy": "convexity_method"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.12",
+      "failure_mode": "hidden_assumption",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_04",
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.13",
+      "failure_mode": "numerical_to_exact",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_05",
+      "strategy": "descent_method"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.14",
+      "failure_mode": "source_provenance",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_06",
+      "strategy": "constructive_field_theory"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.15",
+      "failure_mode": "sign_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_07",
+      "strategy": "local_global_principle"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.16",
+      "failure_mode": "proof_step_deletion",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_00",
+      "strategy": "automated_lemma_synthesis"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.17",
+      "failure_mode": "local_global_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_01",
+      "strategy": "information_theoretic_bound"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.18",
+      "failure_mode": "degenerate_object",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_02",
+      "strategy": "microlocal_analysis"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.19",
+      "failure_mode": "regularity_leak",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_03",
+      "strategy": "circuit_lower_bound"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.20",
+      "failure_mode": "missing_equivalence_direction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_04",
+      "strategy": "cluster_expansion"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.21",
+      "failure_mode": "scaling_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_05",
+      "strategy": "cycle_class_map"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.22",
+      "failure_mode": "domain_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_06",
+      "strategy": "random_matrix_analogy"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.23",
+      "failure_mode": "adversarial_large_parameter",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_07",
+      "strategy": "spectral_reformulation"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.24",
+      "failure_mode": "weak_strong_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_00",
+      "strategy": "operator_algebra"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.25",
+      "failure_mode": "limit_exchange",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_01",
+      "strategy": "meta_complexity"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.26",
+      "failure_mode": "finite_to_infinite",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_02",
+      "strategy": "hamiltonian_reconstruction"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.27",
+      "failure_mode": "definition_drift",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_03",
+      "strategy": "category_theoretic_bridge"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.28",
+      "failure_mode": "constant_nonuniformity",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_04",
+      "strategy": "integrable_model"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.29",
+      "failure_mode": "independent_reconstruction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_05",
+      "strategy": "trace_formula"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.30",
+      "failure_mode": "discrete_continuum_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_06",
+      "strategy": "algebraic_geometry"
+    },
+    {
+      "barrier_id": "p_vs_np.barrier.31",
+      "failure_mode": "quantifier_flip",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "p_vs_np",
+      "root": "p_vs_np_barrier_07",
+      "strategy": "pseudorandomness"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.00",
+      "failure_mode": "source_provenance",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_00",
+      "strategy": "renormalization_flow"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.01",
+      "failure_mode": "sign_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_01",
+      "strategy": "arithmetic_geometry"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.02",
+      "failure_mode": "proof_step_deletion",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_02",
+      "strategy": "derandomization"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.03",
+      "failure_mode": "local_global_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_03",
+      "strategy": "ricci_flow"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.04",
+      "failure_mode": "degenerate_object",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_04",
+      "strategy": "intersection_theory"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.05",
+      "failure_mode": "regularity_leak",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_05",
+      "strategy": "inverse_problem"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.06",
+      "failure_mode": "missing_equivalence_direction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_06",
+      "strategy": "compactness_rigidity"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.07",
+      "failure_mode": "scaling_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_07",
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.08",
+      "failure_mode": "domain_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_00",
+      "strategy": "representation_stability"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.09",
+      "failure_mode": "adversarial_large_parameter",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_01",
+      "strategy": "minimal_surface"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.10",
+      "failure_mode": "weak_strong_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_02",
+      "strategy": "symbolic_identity"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.11",
+      "failure_mode": "limit_exchange",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_03",
+      "strategy": "convexity_method"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.12",
+      "failure_mode": "finite_to_infinite",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_04",
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.13",
+      "failure_mode": "definition_drift",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_05",
+      "strategy": "descent_method"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.14",
+      "failure_mode": "constant_nonuniformity",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_06",
+      "strategy": "constructive_field_theory"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.15",
+      "failure_mode": "independent_reconstruction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_07",
+      "strategy": "local_global_principle"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.16",
+      "failure_mode": "discrete_continuum_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_00",
+      "strategy": "automated_lemma_synthesis"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.17",
+      "failure_mode": "quantifier_flip",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_01",
+      "strategy": "information_theoretic_bound"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.18",
+      "failure_mode": "circular_dependency",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_02",
+      "strategy": "microlocal_analysis"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.19",
+      "failure_mode": "formal_placeholder",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_03",
+      "strategy": "circuit_lower_bound"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.20",
+      "failure_mode": "dimension_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_04",
+      "strategy": "cluster_expansion"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.21",
+      "failure_mode": "counterexample_mutation",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_05",
+      "strategy": "cycle_class_map"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.22",
+      "failure_mode": "singular_limit",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_06",
+      "strategy": "random_matrix_analogy"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.23",
+      "failure_mode": "boundary_case",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_07",
+      "strategy": "spectral_reformulation"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.24",
+      "failure_mode": "compactness_gap",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_00",
+      "strategy": "operator_algebra"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.25",
+      "failure_mode": "restricted_to_general",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_01",
+      "strategy": "meta_complexity"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.26",
+      "failure_mode": "notation_collision",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_02",
+      "strategy": "hamiltonian_reconstruction"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.27",
+      "failure_mode": "branch_cut",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_03",
+      "strategy": "category_theoretic_bridge"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.28",
+      "failure_mode": "random_small_model",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_04",
+      "strategy": "integrable_model"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.29",
+      "failure_mode": "generic_universal_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_05",
+      "strategy": "trace_formula"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.30",
+      "failure_mode": "hidden_assumption",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_06",
+      "strategy": "algebraic_geometry"
+    },
+    {
+      "barrier_id": "navier_stokes.barrier.31",
+      "failure_mode": "numerical_to_exact",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "navier_stokes",
+      "root": "navier_stokes_barrier_07",
+      "strategy": "pseudorandomness"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.00",
+      "failure_mode": "restricted_to_general",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_00",
+      "strategy": "renormalization_flow"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.01",
+      "failure_mode": "notation_collision",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_01",
+      "strategy": "arithmetic_geometry"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.02",
+      "failure_mode": "branch_cut",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_02",
+      "strategy": "derandomization"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.03",
+      "failure_mode": "random_small_model",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_03",
+      "strategy": "ricci_flow"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.04",
+      "failure_mode": "generic_universal_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_04",
+      "strategy": "intersection_theory"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.05",
+      "failure_mode": "hidden_assumption",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_05",
+      "strategy": "inverse_problem"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.06",
+      "failure_mode": "numerical_to_exact",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_06",
+      "strategy": "compactness_rigidity"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.07",
+      "failure_mode": "source_provenance",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_07",
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.08",
+      "failure_mode": "sign_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_00",
+      "strategy": "representation_stability"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.09",
+      "failure_mode": "proof_step_deletion",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_01",
+      "strategy": "minimal_surface"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.10",
+      "failure_mode": "local_global_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_02",
+      "strategy": "symbolic_identity"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.11",
+      "failure_mode": "degenerate_object",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_03",
+      "strategy": "convexity_method"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.12",
+      "failure_mode": "regularity_leak",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_04",
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.13",
+      "failure_mode": "missing_equivalence_direction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_05",
+      "strategy": "descent_method"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.14",
+      "failure_mode": "scaling_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_06",
+      "strategy": "constructive_field_theory"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.15",
+      "failure_mode": "domain_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_07",
+      "strategy": "local_global_principle"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.16",
+      "failure_mode": "adversarial_large_parameter",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_00",
+      "strategy": "automated_lemma_synthesis"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.17",
+      "failure_mode": "weak_strong_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_01",
+      "strategy": "information_theoretic_bound"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.18",
+      "failure_mode": "limit_exchange",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_02",
+      "strategy": "microlocal_analysis"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.19",
+      "failure_mode": "finite_to_infinite",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_03",
+      "strategy": "circuit_lower_bound"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.20",
+      "failure_mode": "definition_drift",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_04",
+      "strategy": "cluster_expansion"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.21",
+      "failure_mode": "constant_nonuniformity",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_05",
+      "strategy": "cycle_class_map"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.22",
+      "failure_mode": "independent_reconstruction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_06",
+      "strategy": "random_matrix_analogy"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.23",
+      "failure_mode": "discrete_continuum_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_07",
+      "strategy": "spectral_reformulation"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.24",
+      "failure_mode": "quantifier_flip",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_00",
+      "strategy": "operator_algebra"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.25",
+      "failure_mode": "circular_dependency",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_01",
+      "strategy": "meta_complexity"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.26",
+      "failure_mode": "formal_placeholder",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_02",
+      "strategy": "hamiltonian_reconstruction"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.27",
+      "failure_mode": "dimension_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_03",
+      "strategy": "category_theoretic_bridge"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.28",
+      "failure_mode": "counterexample_mutation",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_04",
+      "strategy": "integrable_model"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.29",
+      "failure_mode": "singular_limit",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_05",
+      "strategy": "trace_formula"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.30",
+      "failure_mode": "boundary_case",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_06",
+      "strategy": "algebraic_geometry"
+    },
+    {
+      "barrier_id": "yang_mills.barrier.31",
+      "failure_mode": "compactness_gap",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "yang_mills",
+      "root": "yang_mills_barrier_07",
+      "strategy": "pseudorandomness"
+    },
+    {
+      "barrier_id": "hodge.barrier.00",
+      "failure_mode": "compactness_gap",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_00",
+      "strategy": "renormalization_flow"
+    },
+    {
+      "barrier_id": "hodge.barrier.01",
+      "failure_mode": "restricted_to_general",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_01",
+      "strategy": "arithmetic_geometry"
+    },
+    {
+      "barrier_id": "hodge.barrier.02",
+      "failure_mode": "notation_collision",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_02",
+      "strategy": "derandomization"
+    },
+    {
+      "barrier_id": "hodge.barrier.03",
+      "failure_mode": "branch_cut",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_03",
+      "strategy": "ricci_flow"
+    },
+    {
+      "barrier_id": "hodge.barrier.04",
+      "failure_mode": "random_small_model",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_04",
+      "strategy": "intersection_theory"
+    },
+    {
+      "barrier_id": "hodge.barrier.05",
+      "failure_mode": "generic_universal_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_05",
+      "strategy": "inverse_problem"
+    },
+    {
+      "barrier_id": "hodge.barrier.06",
+      "failure_mode": "hidden_assumption",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_06",
+      "strategy": "compactness_rigidity"
+    },
+    {
+      "barrier_id": "hodge.barrier.07",
+      "failure_mode": "numerical_to_exact",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_07",
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "barrier_id": "hodge.barrier.08",
+      "failure_mode": "source_provenance",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_00",
+      "strategy": "representation_stability"
+    },
+    {
+      "barrier_id": "hodge.barrier.09",
+      "failure_mode": "sign_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_01",
+      "strategy": "minimal_surface"
+    },
+    {
+      "barrier_id": "hodge.barrier.10",
+      "failure_mode": "proof_step_deletion",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_02",
+      "strategy": "symbolic_identity"
+    },
+    {
+      "barrier_id": "hodge.barrier.11",
+      "failure_mode": "local_global_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_03",
+      "strategy": "convexity_method"
+    },
+    {
+      "barrier_id": "hodge.barrier.12",
+      "failure_mode": "degenerate_object",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_04",
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "barrier_id": "hodge.barrier.13",
+      "failure_mode": "regularity_leak",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_05",
+      "strategy": "descent_method"
+    },
+    {
+      "barrier_id": "hodge.barrier.14",
+      "failure_mode": "missing_equivalence_direction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_06",
+      "strategy": "constructive_field_theory"
+    },
+    {
+      "barrier_id": "hodge.barrier.15",
+      "failure_mode": "scaling_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_07",
+      "strategy": "local_global_principle"
+    },
+    {
+      "barrier_id": "hodge.barrier.16",
+      "failure_mode": "domain_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_00",
+      "strategy": "automated_lemma_synthesis"
+    },
+    {
+      "barrier_id": "hodge.barrier.17",
+      "failure_mode": "adversarial_large_parameter",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_01",
+      "strategy": "information_theoretic_bound"
+    },
+    {
+      "barrier_id": "hodge.barrier.18",
+      "failure_mode": "weak_strong_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_02",
+      "strategy": "microlocal_analysis"
+    },
+    {
+      "barrier_id": "hodge.barrier.19",
+      "failure_mode": "limit_exchange",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_03",
+      "strategy": "circuit_lower_bound"
+    },
+    {
+      "barrier_id": "hodge.barrier.20",
+      "failure_mode": "finite_to_infinite",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_04",
+      "strategy": "cluster_expansion"
+    },
+    {
+      "barrier_id": "hodge.barrier.21",
+      "failure_mode": "definition_drift",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_05",
+      "strategy": "cycle_class_map"
+    },
+    {
+      "barrier_id": "hodge.barrier.22",
+      "failure_mode": "constant_nonuniformity",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_06",
+      "strategy": "random_matrix_analogy"
+    },
+    {
+      "barrier_id": "hodge.barrier.23",
+      "failure_mode": "independent_reconstruction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_07",
+      "strategy": "spectral_reformulation"
+    },
+    {
+      "barrier_id": "hodge.barrier.24",
+      "failure_mode": "discrete_continuum_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_00",
+      "strategy": "operator_algebra"
+    },
+    {
+      "barrier_id": "hodge.barrier.25",
+      "failure_mode": "quantifier_flip",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_01",
+      "strategy": "meta_complexity"
+    },
+    {
+      "barrier_id": "hodge.barrier.26",
+      "failure_mode": "circular_dependency",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_02",
+      "strategy": "hamiltonian_reconstruction"
+    },
+    {
+      "barrier_id": "hodge.barrier.27",
+      "failure_mode": "formal_placeholder",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_03",
+      "strategy": "category_theoretic_bridge"
+    },
+    {
+      "barrier_id": "hodge.barrier.28",
+      "failure_mode": "dimension_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_04",
+      "strategy": "integrable_model"
+    },
+    {
+      "barrier_id": "hodge.barrier.29",
+      "failure_mode": "counterexample_mutation",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_05",
+      "strategy": "trace_formula"
+    },
+    {
+      "barrier_id": "hodge.barrier.30",
+      "failure_mode": "singular_limit",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_06",
+      "strategy": "algebraic_geometry"
+    },
+    {
+      "barrier_id": "hodge.barrier.31",
+      "failure_mode": "boundary_case",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "hodge",
+      "root": "hodge_barrier_07",
+      "strategy": "pseudorandomness"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.00",
+      "failure_mode": "domain_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_00",
+      "strategy": "renormalization_flow"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.01",
+      "failure_mode": "adversarial_large_parameter",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_01",
+      "strategy": "arithmetic_geometry"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.02",
+      "failure_mode": "weak_strong_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_02",
+      "strategy": "derandomization"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.03",
+      "failure_mode": "limit_exchange",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_03",
+      "strategy": "ricci_flow"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.04",
+      "failure_mode": "finite_to_infinite",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_04",
+      "strategy": "intersection_theory"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.05",
+      "failure_mode": "definition_drift",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_05",
+      "strategy": "inverse_problem"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.06",
+      "failure_mode": "constant_nonuniformity",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_06",
+      "strategy": "compactness_rigidity"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.07",
+      "failure_mode": "independent_reconstruction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_07",
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.08",
+      "failure_mode": "discrete_continuum_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_00",
+      "strategy": "representation_stability"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.09",
+      "failure_mode": "quantifier_flip",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_01",
+      "strategy": "minimal_surface"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.10",
+      "failure_mode": "circular_dependency",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_02",
+      "strategy": "symbolic_identity"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.11",
+      "failure_mode": "formal_placeholder",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_03",
+      "strategy": "convexity_method"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.12",
+      "failure_mode": "dimension_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_04",
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.13",
+      "failure_mode": "counterexample_mutation",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_05",
+      "strategy": "descent_method"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.14",
+      "failure_mode": "singular_limit",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_06",
+      "strategy": "constructive_field_theory"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.15",
+      "failure_mode": "boundary_case",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_07",
+      "strategy": "local_global_principle"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.16",
+      "failure_mode": "compactness_gap",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_00",
+      "strategy": "automated_lemma_synthesis"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.17",
+      "failure_mode": "restricted_to_general",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_01",
+      "strategy": "information_theoretic_bound"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.18",
+      "failure_mode": "notation_collision",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_02",
+      "strategy": "microlocal_analysis"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.19",
+      "failure_mode": "branch_cut",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_03",
+      "strategy": "circuit_lower_bound"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.20",
+      "failure_mode": "random_small_model",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_04",
+      "strategy": "cluster_expansion"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.21",
+      "failure_mode": "generic_universal_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_05",
+      "strategy": "cycle_class_map"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.22",
+      "failure_mode": "hidden_assumption",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_06",
+      "strategy": "random_matrix_analogy"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.23",
+      "failure_mode": "numerical_to_exact",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_07",
+      "strategy": "spectral_reformulation"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.24",
+      "failure_mode": "source_provenance",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_00",
+      "strategy": "operator_algebra"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.25",
+      "failure_mode": "sign_error",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_01",
+      "strategy": "meta_complexity"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.26",
+      "failure_mode": "proof_step_deletion",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_02",
+      "strategy": "hamiltonian_reconstruction"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.27",
+      "failure_mode": "local_global_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_03",
+      "strategy": "category_theoretic_bridge"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.28",
+      "failure_mode": "degenerate_object",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_04",
+      "strategy": "integrable_model"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.29",
+      "failure_mode": "regularity_leak",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_05",
+      "strategy": "trace_formula"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.30",
+      "failure_mode": "missing_equivalence_direction",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_06",
+      "strategy": "algebraic_geometry"
+    },
+    {
+      "barrier_id": "birch_swinnerton_dyer.barrier.31",
+      "failure_mode": "scaling_mismatch",
+      "mminus_action": "record_refutation_or_reduce_scope",
+      "problem_id": "birch_swinnerton_dyer",
+      "root": "birch_swinnerton_dyer_barrier_07",
+      "strategy": "pseudorandomness"
+    }
+  ],
+  "schema": "omega-millennium-barriers/2"
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "formal_contract": {
+      "properties": {
+        "solution_claimed": {
+          "const": false
+        }
+      },
+      "required": [
+        "solution_claimed"
+      ],
+      "type": "object"
+    },
+    "problem_id": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "omega-millennium-problem-spec/2"
+    },
+    "statement": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "open",
+        "solved_benchmark"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "problem_id",
+    "status",
+    "statement",
+    "formal_contract"
+  ],
+  "type": "object"
+}

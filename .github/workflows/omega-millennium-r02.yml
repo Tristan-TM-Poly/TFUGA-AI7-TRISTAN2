@@ -1,0 +1,89 @@
+name: Omega Millennium R0.2 OAKBench
+
+on:
+  push:
+    branches: [feat/omega-millennium-t-r0-2]
+    paths:
+      - "omega_millennium_t/r02/**"
+      - "data/omega_millennium_r02/**"
+      - "specs/omega_millennium_r02/**"
+      - "tests/test_omega_millennium_r02.py"
+      - "schemas/omega_millennium_*_v2.schema.json"
+      - "docs/omega_millennium_t/r02/**"
+      - "examples/omega_millennium_r02_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-millennium-r02.yml"
+  pull_request:
+    paths:
+      - "omega_millennium_t/r02/**"
+      - "data/omega_millennium_r02/**"
+      - "specs/omega_millennium_r02/**"
+      - "tests/test_omega_millennium_r02.py"
+      - "schemas/omega_millennium_*_v2.schema.json"
+      - "docs/omega_millennium_t/r02/**"
+      - "examples/omega_millennium_r02_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-millennium-r02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.2
+        run: python -m compileall -q omega_millennium_t/r02 tests/test_omega_millennium_r02.py examples/omega_millennium_r02_demo.py
+      - name: Run R0.2 tests
+        run: pytest -q tests/test_omega_millennium_r02.py
+      - name: Generate deterministic evidence twice
+        run: |
+          python -m omega_millennium_t.r02.cli benchmark --output /tmp/benchmark-a.json
+          python -m omega_millennium_t.r02.cli benchmark --output /tmp/benchmark-b.json
+          cmp /tmp/benchmark-a.json /tmp/benchmark-b.json
+          python -m omega_millennium_t.r02.cli campaign --budget 10001 --output /tmp/campaign.json
+      - name: Validate schemas and OAK invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          spec_schema = json.loads(Path('schemas/omega_millennium_problem_spec_v2.schema.json').read_text())
+          benchmark_schema = json.loads(Path('schemas/omega_millennium_benchmark_v2.schema.json').read_text())
+          campaign_schema = json.loads(Path('schemas/omega_millennium_campaign_v2.schema.json').read_text())
+          for schema in (spec_schema, benchmark_schema, campaign_schema):
+              jsonschema.Draft202012Validator.check_schema(schema)
+          for path in sorted(Path('specs/omega_millennium_r02').glob('*.json')):
+              jsonschema.validate(json.loads(path.read_text()), spec_schema)
+          benchmark = json.loads(Path('/tmp/benchmark-a.json').read_text())
+          campaign = json.loads(Path('/tmp/campaign.json').read_text())
+          jsonschema.validate(benchmark, benchmark_schema)
+          jsonschema.validate(campaign, campaign_schema)
+          assert benchmark['status'] == 'CERTIFIED_SOFTWARE_RESEARCH_FIXTURES_R0_2'
+          assert benchmark['logical_frontier_cells'] == 14_680_064
+          assert benchmark['catalogs']['counts']['strategies'] == 448
+          assert benchmark['catalogs']['counts']['research_cells_seed'] == 4096
+          assert benchmark['poincare']['claims'] == 48
+          assert benchmark['poincare']['edges'] == 72
+          assert benchmark['poincare']['accepted_proof_reconstructed'] is False
+          assert benchmark['solution_claimed'] is False
+          assert benchmark['formal_proof_claimed'] is False
+          assert benchmark['scientific_validation_claimed'] is False
+          assert campaign['allocated_units'] == 10_001
+          assert campaign['permanent_total_cap'] is None
+          assert campaign['solution_claimed'] is False
+          print('CERTIFIED_SOFTWARE_RESEARCH_FIXTURES_R0_2')
+          PY
