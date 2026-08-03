@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/n_order_experiment.schema.json",
+  "type": "object",
+  "required": ["id", "components", "design_type", "runs", "identifiable_terms", "alias_groups", "authority"],
+  "properties": {
+    "id": {"type": "string"},
+    "components": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "design_type": {"enum": ["full_factorial", "fractional_half"]},
+    "runs": {"type": "array", "items": {"type": "object", "required": ["id", "active", "inactive", "replicate"]}},
+    "identifiable_terms": {"type": "array"},
+    "alias_groups": {"type": "array"},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "stopping_rules": {"type": "array", "items": {"type": "string"}},
+    "authority": {"const": "review_only"}
+  },
+  "additionalProperties": false
+}

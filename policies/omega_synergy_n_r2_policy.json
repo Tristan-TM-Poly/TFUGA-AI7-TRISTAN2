@@ -1,0 +1,26 @@
+{
+  "schema_version": "2.0",
+  "maximum_exact_order": 16,
+  "recommended_exact_order": 8,
+  "default_search_max_order": 6,
+  "default_beam_width": 64,
+  "default_exploration_rate": 0.15,
+  "maximum_authority": "review_only",
+  "human_review_required": true,
+  "automatic_merge_allowed": false,
+  "automatic_publication_allowed": false,
+  "required_gates": [
+    "typed_interfaces",
+    "declared_losses",
+    "provenance",
+    "baseline",
+    "simplest_baseline",
+    "metric",
+    "falsifier",
+    "uncertainty",
+    "rollback",
+    "budget",
+    "owner",
+    "logging"
+  ]
+}
