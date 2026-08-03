@@ -1,0 +1,187 @@
+name: Omega Sequence Forms RInf MAX OAKBench
+
+on:
+  push:
+    branches: [feat/omega-sequence-forms-r0-1]
+    paths:
+      - "omega_sequence_forms_t/rinf/theorem_miner.py"
+      - "omega_sequence_forms_t/rinf/distributed.py"
+      - "omega_sequence_forms_t/rinf/native_codegen.py"
+      - "omega_sequence_forms_t/rinf/benchmark_matrix.py"
+      - "omega_sequence_forms_t/rinf/max_report.py"
+      - "tests/test_omega_sequence_forms_rinf_max.py"
+      - ".github/workflows/omega-sequence-forms-rinf-max.yml"
+  pull_request:
+    paths:
+      - "omega_sequence_forms_t/rinf/theorem_miner.py"
+      - "omega_sequence_forms_t/rinf/distributed.py"
+      - "omega_sequence_forms_t/rinf/native_codegen.py"
+      - "omega_sequence_forms_t/rinf/benchmark_matrix.py"
+      - "omega_sequence_forms_t/rinf/max_report.py"
+      - "tests/test_omega_sequence_forms_rinf_max.py"
+      - ".github/workflows/omega-sequence-forms-rinf-max.yml"
+  workflow_dispatch:
+    inputs:
+      benchmark_cases:
+        description: Finite MAX benchmark cases for this workflow run
+        required: false
+        default: "256"
+
+permissions:
+  contents: read
+
+jobs:
+  max-oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile MAX modules
+        run: |
+          python -m py_compile \
+            omega_sequence_forms_t/rinf/theorem_miner.py \
+            omega_sequence_forms_t/rinf/distributed.py \
+            omega_sequence_forms_t/rinf/native_codegen.py \
+            omega_sequence_forms_t/rinf/benchmark_matrix.py \
+            omega_sequence_forms_t/rinf/max_report.py \
+            tests/test_omega_sequence_forms_rinf_max.py
+      - name: Run MAX OAKBench
+        run: pytest -q tests/test_omega_sequence_forms_rinf_max.py
+      - name: Verify deterministic theorem mining
+        run: |
+          python - <<'PY'
+          import json
+          from omega_sequence_forms_t.rinf.theorem_miner import MiningLimits, SequenceRecord, mine_relations
+
+          records = (
+              SequenceRecord.create('n', range(48)),
+              SequenceRecord.create('square', [n*n for n in range(48)]),
+              SequenceRecord.create('combo', [n*n + 2*n for n in range(48)]),
+          )
+          limits = MiningLimits(
+              maximum_sources=4,
+              maximum_shift=4,
+              maximum_polynomial_degree=2,
+              maximum_monomials=20,
+              maximum_relations=128,
+              holdout=12,
+          )
+          first = mine_relations(records, limits=limits).to_dict()
+          second = mine_relations(records, limits=limits).to_dict()
+          assert first == second
+          assert first['relation_count'] > 0
+          assert first['global_identity_proved'] is False
+          with open('/tmp/theorem-report.json', 'w', encoding='utf-8') as handle:
+              json.dump(first, handle, ensure_ascii=False, sort_keys=True, indent=2)
+              handle.write('\n')
+          print(first['report_digest'])
+          PY
+      - name: Verify distributed shard determinism
+        run: |
+          python - <<'PY'
+          from itertools import islice
+          from omega_sequence_forms_t.rinf.distributed import iter_shard_work, partition_ranks, shard_manifest
+
+          shards = partition_ranks(100_003, 17, seed=20260803)
+          manifest = shard_manifest(shards, campaign_id='ci-max')
+          assert manifest['planned_cells'] == 100_003
+          first = tuple(islice(iter_shard_work(shards[3], campaign_id='ci-max'), 4096))
+          second = tuple(islice(iter_shard_work(shards[3], campaign_id='ci-max'), 4096))
+          assert first == second
+          assert len({item.work_id for item in first}) == len(first)
+          assert len({item.address for item in first}) == len(first)
+          print(manifest['manifest_digest'])
+          PY
+      - name: Generate native projects without claiming compilation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from omega_sequence_forms_t.rinf.native_codegen import NativeKernelSpec, project_bundle
+
+          spec = NativeKernelSpec.create('fibonacci', [1, 1], [0, 1])
+          bundle = project_bundle(spec)
+          receipts = {}
+          for language, project in bundle.items():
+              receipts[language] = project.write(Path('/tmp/native') / language)
+              assert project.manifest()['compilation_verified'] is False
+          Path('/tmp/native/receipts.json').write_text(
+              json.dumps(receipts, sort_keys=True, indent=2) + '\n',
+              encoding='utf-8',
+          )
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-sequence-forms-rinf-max-${{ matrix.python-version }}
+          path: |
+            /tmp/theorem-report.json
+            /tmp/native
+          if-no-files-found: error
+          retention-days: 14
+
+  finite-matrix-campaign:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve finite workflow budget
+        id: budget
+        shell: bash
+        run: |
+          VALUE="${{ github.event.inputs.benchmark_cases }}"
+          if [[ -z "$VALUE" ]]; then VALUE="256"; fi
+          if ! [[ "$VALUE" =~ ^[0-9]+$ ]] || [[ "$VALUE" -lt 1 ]]; then
+            echo "invalid benchmark_cases: $VALUE" >&2
+            exit 2
+          fi
+          echo "value=$VALUE" >> "$GITHUB_OUTPUT"
+      - name: Select deterministic finite matrix slice
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from omega_sequence_forms_t.rinf.benchmark_matrix import select_campaign
+
+          count = int('${{ steps.budget.outputs.value }}')
+          campaign = select_campaign(
+              campaign_id='ci-matrix',
+              seed=314159,
+              compute_budget=max(1000, count * 10),
+              storage_budget_bytes=max(100_000_000, count * 1_000_000),
+              maximum_materialized_cases=count,
+              scouting_window=max(10_000, count * 20),
+          )
+          campaign.stop_reason = campaign.stop_reason or 'finite_workflow_budget'
+          receipt = campaign.receipt()
+          assert 0 < receipt['planned_cases'] <= count
+          assert receipt['permanent_total_cap'] is None
+          assert receipt['global_identity_proved'] is False
+          output = Path('/tmp/matrix')
+          output.mkdir(parents=True, exist_ok=True)
+          (output / 'receipt.json').write_text(
+              json.dumps(receipt, sort_keys=True, indent=2) + '\n', encoding='utf-8'
+          )
+          with (output / 'plans.jsonl').open('w', encoding='utf-8') as handle:
+              for plan in campaign.plans:
+                  handle.write(json.dumps(plan.to_dict(), sort_keys=True, separators=(',', ':')) + '\n')
+          print(receipt['receipt_digest'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-sequence-forms-rinf-max-matrix
+          path: /tmp/matrix
+          if-no-files-found: error
+          retention-days: 14
