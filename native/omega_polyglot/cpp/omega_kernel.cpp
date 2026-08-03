@@ -1,10 +1,10 @@
 #include <cstddef>
 
 extern "C" int omega_vector_affine_f64(
-    const double *x,
-    const double *y,
+    const double *__restrict x,
+    const double *__restrict y,
     double scalar,
-    double *output,
+    double *__restrict output,
     std::size_t length
 ) noexcept {
     if (length > 0 && (x == nullptr || y == nullptr || output == nullptr)) {
