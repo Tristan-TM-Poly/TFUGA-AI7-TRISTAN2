@@ -1,0 +1,43 @@
+{
+  "$id": "https://example.invalid/omega_vla_identity_instance_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "address": {
+      "additionalProperties": false,
+      "properties": {
+        "dimension": {"minimum": 1, "type": "integer"},
+        "matrix_family": {"type": "string"},
+        "mutation_policy": {"type": "string"},
+        "scalar_system": {"enum": ["real", "complex"]},
+        "schema_id": {"type": "string"},
+        "trial_profile": {"type": "string"}
+      },
+      "required": ["schema_id", "dimension", "scalar_system", "matrix_family", "mutation_policy", "trial_profile"],
+      "type": "object"
+    },
+    "assumptions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {"type": "string"},
+          "targets": {"items": {"type": "string"}, "maxItems": 2, "minItems": 1, "type": "array"},
+          "tolerance": {"exclusiveMinimum": 0, "type": "number"}
+        },
+        "required": ["kind", "targets", "tolerance"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "evidence_state": {"enum": ["DECLARED", "TYPE_CHECKED", "NUMERICALLY_SUPPORTED", "FALSIFIED", "FORMAL_TARGET_EMITTED", "FORMALLY_VERIFIED"]},
+    "formal_proof_claimed": {"const": false},
+    "instance_id": {"pattern": "^identity-[0-9a-f]{24}$", "type": "string"},
+    "mutation_notes": {"items": {"type": "string"}, "type": "array"},
+    "schema_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "scientific_validation_claimed": {"const": false},
+    "theorem_claimed": {"const": false}
+  },
+  "required": ["instance_id", "address", "schema_digest", "assumptions", "mutation_notes", "evidence_state", "theorem_claimed", "formal_proof_claimed", "scientific_validation_claimed"],
+  "title": "Omega VLA Identity Instance v1",
+  "type": "object"
+}

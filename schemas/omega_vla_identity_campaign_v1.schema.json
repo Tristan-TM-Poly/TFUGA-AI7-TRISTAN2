@@ -1,0 +1,38 @@
+{
+  "$id": "https://example.invalid/omega_vla_identity_campaign_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "aggregate_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "count_requested": {"minimum": 0, "type": "integer"},
+    "falsified": {"minimum": 0, "type": "integer"},
+    "formal_proof_claimed": {"const": false},
+    "generated": {"minimum": 0, "type": "integer"},
+    "incomplete": {"minimum": 0, "type": "integer"},
+    "logical_frontier_size": {"minimum": 10001, "type": "integer"},
+    "next_offset": {"minimum": 0, "type": "integer"},
+    "numerically_supported": {"minimum": 0, "type": "integer"},
+    "passed": {"type": "boolean"},
+    "permanent_total_cap": {"type": "null"},
+    "records": {
+      "items": {
+        "required": ["ordinal", "frontier_offset", "instance", "test_report"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "scientific_validation_claimed": {"const": false},
+    "start_offset": {"minimum": 0, "type": "integer"},
+    "theorem_claimed": {"const": false},
+    "unique_instances": {"minimum": 0, "type": "integer"}
+  },
+  "required": [
+    "count_requested", "generated", "numerically_supported", "falsified",
+    "incomplete", "unique_instances", "start_offset", "next_offset",
+    "logical_frontier_size", "aggregate_sha256", "records",
+    "permanent_total_cap", "theorem_claimed", "formal_proof_claimed",
+    "scientific_validation_claimed", "passed"
+  ],
+  "title": "Omega VLA Identity Campaign v1",
+  "type": "object"
+}
