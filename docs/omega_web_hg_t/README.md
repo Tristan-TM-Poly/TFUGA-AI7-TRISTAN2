@@ -3,7 +3,7 @@
 Ce module explore des pages Web publiques ou explicitement autorisées et construit un graphe traçable :
 
 ```text
-site → page → section → lien → preuve → version → changement → run
+site → page → section → lien → preuve → version → changement → claim candidat → requête
 ```
 
 ## R0.1 — noyau statique sûr
@@ -28,8 +28,6 @@ omega-web-hg crawl https://example.org \
   --page-budget 100 \
   --delay 1.0
 ```
-
-`--page-budget 0` retire le plafond de pages du run. Cela ne retire jamais la portée de domaine, `robots.txt`, les limites réseau, le throttling, les contraintes juridiques ou les ressources physiques.
 
 ## R0.2 MAX — observatoire incrémental
 
@@ -58,9 +56,38 @@ omega-web-hg-r02 diff <run-précédent> <run-courant> --output diff.json
 
 Une valeur `0` retire le plafond fini correspondant. Les contraintes de portée, réseau, robots, débit, stockage, droit et capacité physique restent actives. La spécification détaillée est dans [`R02_MAX.md`](R02_MAX.md).
 
-## Sorties R0.1
+## R0.3 MAX — absorption et recherche probatoires
+
+R0.3 travaille hors réseau sur un run R0.2 :
+
+- segmentation déterministe des sections en phrases candidates;
+- chaque candidate garde `page_id`, `section_id`, `evidence_id`, URL et locator;
+- hash SHA-256 du texte;
+- déduplication exacte;
+- déduplication proche par SimHash 64 bits, bandes et distance de Hamming;
+- hypergraphe `section → claim_candidate → evidence`;
+- index SQLite avec FTS5 lorsque disponible et fallback portable;
+- requêtes filtrables par type retournant texte, URL, locator, preuve, score et métadonnées;
+- audit des références, arêtes et couverture d'index.
+
+```bash
+omega-web-hg-r03 build <run-r02> \
+  --output-dir generated/omega_web_hg_t_r03/corpus
+
+omega-web-hg-r03 query generated/omega_web_hg_t_r03/corpus \
+  "preuve reproductible" \
+  --kind claim_candidate \
+  --limit 20
+
+omega-web-hg-r03 audit generated/omega_web_hg_t_r03/corpus
+```
+
+La spécification détaillée est dans [`R03_ABSORPTION_MAX.md`](R03_ABSORPTION_MAX.md).
+
+## Sorties principales
 
 ```text
+# R0.1
 manifest.json
 pages.jsonl
 sections.jsonl
@@ -72,11 +99,8 @@ hypergraph.json
 hypergraph.graphml
 oak-report.json
 raw/<préfixe>/<sha256>.html
-```
 
-## Sorties supplémentaires R0.2
-
-```text
+# R0.2
 discoveries.jsonl
 document-metadata.jsonl
 versions.jsonl
@@ -87,18 +111,27 @@ provenance.jsonld
 archive.warc
 state.snapshot.sqlite3
 objects/sha256/...
+
+# R0.3
+claim-candidates.jsonl
+duplicates.jsonl
+absorption-hypergraph.json
+absorption-report.json
+search.sqlite3
 ```
 
-Chaque page possède un `evidence_id`, un hash SHA-256, les URL demandée/finale/canonique, l'horodatage UTC, le statut HTTP, le type MIME, la taille et certains en-têtes utiles. Les relations transportent les identifiants de preuve lorsque disponibles. Les URL découvertes mais non encore visitées sont matérialisées comme nœuds candidats afin que toutes les arêtes GraphML aient des extrémités existantes.
+Chaque page possède un `evidence_id`, un hash SHA-256, les URL demandée/finale/canonique, l'horodatage UTC, le statut HTTP, le type MIME, la taille et certains en-têtes utiles. Les relations transportent les identifiants de preuve lorsque disponibles. Les URL découvertes mais non encore visitées sont matérialisées comme nœuds candidats afin que les arêtes GraphML aient des extrémités existantes.
 
 ## Statut épistémique et limites
 
-R0.2 ne fournit pas encore :
+Un `claim_candidate` est une phrase extraite, pas une proposition démontrée. La similarité ne prouve ni vérité, ni entailment, ni plagiat, ni antériorité, ni droit de republication.
+
+Le système ne fournit pas encore :
 
 - rendu JavaScript ou interaction navigateur;
 - authentification ou collecte de contenu privé;
 - PDF et documents bureautiques;
-- extraction de claims certifiés ou validation d'entailment;
+- corroboration/contradiction sémantique certifiée;
 - classification juridique automatique fiable;
 - crawling distribué multi-machine;
 - garantie absolue contre toutes les variantes de DNS rebinding;

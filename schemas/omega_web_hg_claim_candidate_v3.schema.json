@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:omega:web-hg:claim-candidate:0.3",
+  "title": "Omega Web HG R0.3 claim candidate",
+  "type": "object",
+  "required": [
+    "claim_id", "page_id", "section_id", "evidence_id", "url", "locator",
+    "text", "text_sha256", "word_count", "epistemic_status"
+  ],
+  "properties": {
+    "claim_id": {"type": "string", "pattern": "^claim_[0-9a-f]{64}$"},
+    "page_id": {"type": "string"},
+    "section_id": {"type": "string"},
+    "evidence_id": {"type": "string"},
+    "url": {"type": "string", "format": "uri"},
+    "locator": {"type": "string"},
+    "text": {"type": "string", "minLength": 1},
+    "text_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "word_count": {"type": "integer", "minimum": 1},
+    "epistemic_status": {"const": "extracted_claim_candidate_not_verified"}
+  },
+  "additionalProperties": false
+}
