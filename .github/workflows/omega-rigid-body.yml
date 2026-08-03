@@ -1,0 +1,56 @@
+name: Omega Rigid Body OAKBench
+
+on:
+  push:
+    branches: [feat/omega-rigid-body-t-r0-1]
+    paths:
+      - "omega_rigid_body_t/**"
+      - "tests/test_omega_rigid_body_t.py"
+      - "docs/OMEGA_RIGID_BODY_T.md"
+      - "examples/omega_rigid_body_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-rigid-body.yml"
+  pull_request:
+    paths:
+      - "omega_rigid_body_t/**"
+      - "tests/test_omega_rigid_body_t.py"
+      - "docs/OMEGA_RIGID_BODY_T.md"
+      - "examples/omega_rigid_body_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-rigid-body.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile
+        run: python -m compileall -q omega_rigid_body_t tests/test_omega_rigid_body_t.py examples/omega_rigid_body_demo.py
+      - name: Run tests
+        run: pytest -q tests/test_omega_rigid_body_t.py
+      - name: Run deterministic benchmark twice
+        run: |
+          python -m omega_rigid_body_t.cli benchmark > /tmp/rigid-a.json
+          python -m omega_rigid_body_t.cli benchmark > /tmp/rigid-b.json
+          cmp /tmp/rigid-a.json /tmp/rigid-b.json
+          python - <<'PY'
+          import json
+          report = json.load(open('/tmp/rigid-a.json'))
+          assert report['status'] == 'CERTIFIED_ANALYTIC_COMPUTATIONAL_CORE'
+          assert report['passed'] is True
+          assert report['certified_physical_experiment'] is False
+          PY
