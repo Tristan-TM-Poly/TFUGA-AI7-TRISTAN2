@@ -7,13 +7,16 @@ from .streaming import (
     materialize_synthetic_campaign,
     query_portfolio,
 )
+from .compatibility import ingest_r03_max, verify_r03_max_source
 
 __all__ = [
     "CELL_SCHEMA",
     "audit_streaming_atlas",
     "ingest_jsonl",
+    "ingest_r03_max",
     "materialize_synthetic_campaign",
     "query_portfolio",
+    "verify_r03_max_source",
 ]
 
 __version__ = "0.10.0"
