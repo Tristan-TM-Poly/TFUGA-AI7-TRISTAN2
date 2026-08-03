@@ -30,6 +30,41 @@ création n=0
 
 La profondeur observée d’une exécution est un résultat fini, jamais un plafond permanent. Une branche s’arrête localement lorsqu’elle devient suffisamment atomique, interfacée, testable et probatoire.
 
+## Orchestration de tous les dépôts et PR
+
+**Ω-GITHUB-MYCELIUM-T∞** relie les racines récursives de l’atlas aux dépôts, pull requests, artefacts, tests, preuves, risques, produits et mémoires globales de Tristan.
+
+```text
+intention
+→ création racine
+→ profondeur n
+→ contrats et artefacts
+→ routage public/privé
+→ campagnes multi-dépôts
+→ plans de PR dépendants
+→ CI-OAK
+→ EvidenceBundle
+→ M⁺ / M⁻
+→ proposition de synchronisation du canon
+```
+
+- [Architecture et utilisation Ω-GITHUB-MYCELIUM-T∞](../omega_github_mycelium_t/README_FR.md)
+- [Spécification des campagnes multi-dépôts](../omega_github_mycelium_t/MULTIREPO_CAMPAIGN_SPEC.md)
+- [Frontières d’automatisation et de souveraineté](../omega_github_mycelium_t/AUTOMATION_BOUNDARIES.md)
+- [Snapshot initial des dépôts autorisés](../../data/omega_github_mycelium_t/repository_snapshot_2026_08_03.json)
+
+Commande principale :
+
+```bash
+omega-mycelium plan \
+  --objective "Développer une création et ses preuves" \
+  --root-creation omega-doc-t \
+  --snapshot generated/omega_github_mycelium_t/live-snapshot.json \
+  --output-dir generated/omega_github_mycelium_t/campaign
+```
+
+R0.1 automatise la lecture, la compilation, le routage, la planification, l’audit et les rapports. Les branches, commits, PR, fusions, publications, déploiements, suppressions et changements de permissions restent des actions séparément autorisées et humainement contrôlées.
+
 ## I. Noyau de l’architecture Tristan
 
 1. [HGFM — Hypergraphes Fractals Mycéliens](./01_hgfm.md)
