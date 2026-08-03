@@ -153,7 +153,11 @@ def test_contradiction_blocks_claim_and_enters_mminus(tmp_path: Path) -> None:
     canonical = _write_canonical(tmp_path / "canonical.jsonl")
     nodes = [
         _node("claim.refuted", "claim", metadata={"requested_status": "experimental"}),
-        _node("counterexample.one", "counterexample", metadata={"independently_verified": True}),
+        _node(
+            "counterexample.one",
+            "counterexample",
+            metadata={"counterexample_scope": "general", "independently_verified": True},
+        ),
     ]
     edges = [_edge("edge.contradicts", "counterexample.one", "claim.refuted", "contradicts")]
     output = tmp_path / "output"
