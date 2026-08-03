@@ -62,6 +62,7 @@ omega-github-revenue = "omega_github_revenue_t.cli:main"
 omega-github-revenue-r02 = "omega_github_revenue_t.r02_cli:main"
 omega-millennium = "omega_millennium_t.cli:main"
 omega-millennium-r02 = "omega_millennium_t.r02.cli:main"
+omega-sequence-forms = "omega_sequence_forms_t.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
