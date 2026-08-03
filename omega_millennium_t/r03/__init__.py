@@ -31,6 +31,7 @@ from .max_engine import (
     select_balanced_portfolio,
     unicode_canonical_key,
 )
+from .strict_audit import audit_max_output_strict
 
 __all__ = [
     "ATTACK_MODES",
@@ -43,6 +44,7 @@ __all__ = [
     "ResearchTarget",
     "SourceSpec",
     "audit_max_output",
+    "audit_max_output_strict",
     "audit_output",
     "build_seed_records",
     "compile_atlas",
@@ -57,4 +59,4 @@ __all__ = [
     "unicode_canonical_key",
 ]
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"
