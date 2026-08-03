@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-sequence-forms-rinf-catalog-v1.schema.json",
+  "title": "Omega Sequence Forms RInf Catalog Receipt",
+  "type": "object",
+  "required": [
+    "schema",
+    "counts",
+    "digests",
+    "catalog_digest",
+    "permanent_total_cap",
+    "global_identity_proved"
+  ],
+  "properties": {
+    "schema": {"const": "omega-sequence-forms-rinf-catalog/1"},
+    "counts": {
+      "type": "object",
+      "required": ["families", "transformations", "antipatterns"],
+      "properties": {
+        "families": {"const": 256},
+        "transformations": {"const": 512},
+        "antipatterns": {"const": 1024}
+      },
+      "additionalProperties": false
+    },
+    "digests": {
+      "type": "object",
+      "required": ["families", "transformations", "antipatterns"],
+      "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    },
+    "catalog_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "permanent_total_cap": {"type": "null"},
+    "global_identity_proved": {"const": false}
+  },
+  "additionalProperties": false
+}
