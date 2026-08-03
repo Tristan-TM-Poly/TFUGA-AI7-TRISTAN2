@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/creation_dna.schema.json",
+  "title": "CreationDNA",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "name", "repository", "paths", "mentions", "domains", "tokens",
+    "capabilities", "needs", "evidence", "risks", "permissions", "maturity",
+    "expansion_options", "uncertainty"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^CRN-[0-9a-f]{16}$"},
+    "name": {"type": "string", "minLength": 1},
+    "repository": {"type": "string"},
+    "paths": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "mentions": {"type": "integer", "minimum": 0},
+    "domains": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "tokens": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "capabilities": {"type": "array", "items": {"type": "object"}},
+    "needs": {"type": "array", "items": {"type": "object"}},
+    "interfaces": {"type": "array", "items": {"type": "object"}},
+    "evidence": {"type": "array", "items": {"type": "object"}},
+    "risks": {
+      "type": "object",
+      "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}
+    },
+    "permissions": {"type": "object", "additionalProperties": {"type": "string"}},
+    "maturity": {"type": "string", "pattern": "^S[0-9]{1,2}_"},
+    "expansion_options": {"type": "array", "items": {"type": "string"}},
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}
+    }
+  }
+}
