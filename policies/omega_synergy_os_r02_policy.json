@@ -1,0 +1,10 @@
+{
+  "schema_version":"2.0","name":"Ω-SYNERGY-OS-T∞ R0.2 MAX policy","authority_ceiling":"A3","human_review_required":true,
+  "automatic_merge_allowed":false,"automatic_publication_allowed":false,"automatic_release_allowed":false,"automatic_spending_allowed":false,"automatic_external_outreach_allowed":false,
+  "bridge":{"threshold":0.45,"maximum_candidates_per_run":250,"maximum_materialized_interfaces_per_run":24,"require_typed_output_input_match":true,"name_similarity_is_sufficient":false,"declare_losses":true,"preserve":["provenance","authority","uncertainty","risk","evidence references"]},
+  "hard_gates":["typed_interface","baseline","simplest_baseline","metrics","falsifier","rollback","provenance","risk_isolation","recursive_governance","sensitive_human_gate"],
+  "portfolio":{"finite_budget":4.0,"maximum_items":4,"maximum_per_primary_domain":2,"non_compensatory":true,"protected_domains":["infrastructure","product","knowledge","science"]},
+  "recursive_generation":{"default":"blocked","required_governors":["portfolio_governor","proof_os","oak_stopgate","finite_budget","rollback"],"self_authority_escalation":false},
+  "evidence":{"states":["CURRENT","STALE","EXPIRED","SUPERSEDED","INVALIDATED","REVOKED"],"current_only_for_promotion":true,"integrity_is_truth":false,"independent_replication_required_for_canonical_status":true},
+  "limitations":["heuristic utility is not a probability of truth","typed compatibility does not establish semantic equivalence","local tests do not establish external validation","static graph impact may miss runtime and external dependencies","product value remains a hypothesis until observed user and payment evidence"]
+}

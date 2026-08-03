@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/synergy_experiment.schema.json",
+  "title": "SynergyExperiment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "candidate_id", "hypothesis", "baselines", "ablations", "controls",
+    "perturbations", "metrics", "success_criteria", "failure_criteria",
+    "stopping_rules", "oak_gates", "rollback", "expected_artifacts", "authority"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^EXP-[0-9a-f]{16}$"},
+    "candidate_id": {"type": "string", "pattern": "^SYN-[0-9a-f]{16}$"},
+    "hypothesis": {"type": "string"},
+    "baselines": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+    "ablations": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "controls": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "perturbations": {"type": "array", "items": {"type": "string"}},
+    "metrics": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "success_criteria": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "failure_criteria": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "stopping_rules": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "oak_gates": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "rollback": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "expected_artifacts": {"type": "array", "items": {"type": "string"}},
+    "authority": {"const": "review_only_heuristic"}
+  }
+}
