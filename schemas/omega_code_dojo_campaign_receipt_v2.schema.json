@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_code_dojo_campaign_receipt_v2.schema.json",
+  "title": "Omega Code Dojo Campaign Receipt v2",
+  "type": "object",
+  "required": [
+    "campaign_id", "system_version", "logical_frontier_cells",
+    "materialized_cells", "allocated_units", "permanent_total_cap",
+    "stop_reason", "observations", "skill_posteriors",
+    "provenance_decisions", "claims", "receipt_sha256"
+  ],
+  "properties": {
+    "campaign_id": {"type": "string", "pattern": "^campaign-"},
+    "system_version": {"const": "R0.2"},
+    "logical_frontier_cells": {"type": "integer", "minimum": 1},
+    "materialized_cells": {"type": "integer", "minimum": 0},
+    "allocated_units": {"type": "integer", "minimum": 0},
+    "permanent_total_cap": {"type": ["integer", "null"], "minimum": 1},
+    "stop_reason": {"type": "string"},
+    "observations": {"type": "array"},
+    "skill_posteriors": {"type": "array"},
+    "provenance_decisions": {"type": "object"},
+    "claims": {"type": "object"},
+    "receipt_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

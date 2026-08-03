@@ -1,0 +1,89 @@
+name: Omega Code Dojo R0.2 OAKBench
+
+on:
+  push:
+    branches: [feat/omega-code-dojo-t-r0-1]
+    paths:
+      - "omega_code_dojo_t/r02/**"
+      - "tests/test_omega_code_dojo_r02.py"
+      - "schemas/omega_code_dojo_*_v2.schema.json"
+      - "docs/omega-code-dojo-t/r02/**"
+      - "examples/omega_code_dojo_r02_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-code-dojo-r02.yml"
+  pull_request:
+    paths:
+      - "omega_code_dojo_t/r02/**"
+      - "tests/test_omega_code_dojo_r02.py"
+      - "schemas/omega_code_dojo_*_v2.schema.json"
+      - "docs/omega-code-dojo-t/r02/**"
+      - "examples/omega_code_dojo_r02_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-code-dojo-r02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench-r02:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.2
+        run: >-
+          python -m compileall -q
+          omega_code_dojo_t/r02
+          tests/test_omega_code_dojo_r02.py
+          examples/omega_code_dojo_r02_demo.py
+      - name: Run R0.2 tests
+        run: pytest -q tests/test_omega_code_dojo_r02.py
+      - name: Generate deterministic benchmark twice
+        run: |
+          python -m omega_code_dojo_t.r02.cli benchmark --budget 32 --output /tmp/r02-a.json
+          python -m omega_code_dojo_t.r02.cli benchmark --budget 32 --output /tmp/r02-b.json
+          cmp /tmp/r02-a.json /tmp/r02-b.json
+      - name: Validate schemas and OAK invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          from omega_code_dojo_t.r02.benchmark import fixture_provenance
+          from omega_code_dojo_t.r02.campaign import CampaignEngine
+          from omega_code_dojo_t.r02.frontier import DEFAULT_FRONTIER
+          from omega_code_dojo_t.r02.models import CampaignPolicy
+          from omega_code_dojo_t.r02.task_ir import TaskIRCompiler
+
+          task_schema = json.loads(Path('schemas/omega_code_dojo_task_ir_v2.schema.json').read_text())
+          receipt_schema = json.loads(Path('schemas/omega_code_dojo_campaign_receipt_v2.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(task_schema)
+          jsonschema.Draft202012Validator.check_schema(receipt_schema)
+
+          task = TaskIRCompiler().compile(DEFAULT_FRONTIER.cell_at(42), fixture_provenance(), 42)
+          receipt = CampaignEngine().run(CampaignPolicy(8), fixture_provenance())
+          jsonschema.validate(task.to_dict(), task_schema)
+          jsonschema.validate(receipt.to_dict(), receipt_schema)
+
+          benchmark = json.loads(Path('/tmp/r02-a.json').read_text())
+          assert benchmark['status'] == 'CERTIFIED_SOFTWARE_RESEARCH_FIXTURES_R0_2'
+          assert benchmark['logical_frontier_cells'] == 3_221_225_472
+          assert benchmark['materialized_cells'] == 32
+          assert benchmark['permanent_total_cap'] is None
+          assert benchmark['pass_rate'] == 1.0
+          assert benchmark['mean_mutation_score'] == 1.0
+          assert benchmark['claims']['neural_training_claimed'] is False
+          assert benchmark['claims']['codewars_affiliation_claimed'] is False
+          print('CERTIFIED_SOFTWARE_RESEARCH_FIXTURES_R0_2')
+          PY
