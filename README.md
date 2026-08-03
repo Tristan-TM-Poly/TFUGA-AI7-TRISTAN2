@@ -28,7 +28,6 @@ raw intuition -> formal object -> equation -> proof -> algorithm -> simulation -
 - `Ω-QUATERNION-CRYSTAL-T`: tested 3D kernel separating quaternion orientation, affine deformation, stress/strain tensors, cubic elasticity, and Schmid projection.
 - `Ω-LOGEXP-MORPH-T∞²`: guarded generator calculus with matrix exp/log, nilpotent lifting, BCH, active singular sectors, polar-log, Magnus, commutator graphs, MorphCodex, and basis compression.
 - `Ω-SANS-PLAFOND-T∞`: adaptive capacity controller plus streaming GitHub dry-run planner -> disk-backed deduplication -> adaptive shards -> hashes -> commit/rollback plans, without a permanent total-addition ceiling.
-- `Ω-RIGID-BODY-T`: dependency-free exact triaxial Euler-top kernel with Jacobi elliptic branches, hyperbolic separatrix, quaternion orientation reconstruction, and independent RK4/OAK cross-checks.
 
 ## Repository structure
 
@@ -43,7 +42,6 @@ omega_wiki_t/               Ω-WIKI-T∞ evidence compiler, translation guard, a
 omega_quaternion_crystal_t/ Quaternion, affine, crystal, stress, and elasticity operators.
 omega_logexp_morph_t/       Logarithmic/exponential morphism, active-factorization, and generator-compression kernel.
 omega_unbounded_t/          Ω-SANS-PLAFOND-T∞ frontier controller and streaming GitHub plan compiler.
-omega_rigid_body_t/         Exact torque-free triaxial rigid-body and geometric-phase research kernel.
 generated/omega_wiki_t/    Reproducible WikiForge evidence and theory-knowledge artifacts.
 policies/                   Machine-readable OAK and adaptive growth policies.
 tests/                      Unit and scale tests for the executable core.
@@ -72,10 +70,8 @@ python examples/omega_quaternion_crystal_demo.py
 python examples/omega_logexp_morph_demo.py
 python examples/omega_logexp_morph_r0_3_demo.py
 python examples/omega_unbounded_t_demo.py
-python examples/omega_rigid_body_demo.py
 omega-quaternion-crystal --axis 0 0 1 --angle-deg 90 --vector 1 0 0
 omega-logexp-morph --generator '[[0,0.1],[-0.1,0]]'
-omega-rigid-body benchmark
 ```
 
 Universal corpus absorption dry-run:
@@ -141,19 +137,6 @@ omega-unbounded synthetic-plan \
 `--work-items` defines a finite experiment; it is not a permanent controller or planner ceiling. Ω-SANS-PLAFOND-T∞ removes arbitrary total-addition caps, not physical, quality, legal, cost, rollback, IP or provider constraints.
 
 R0.2 performs zero remote GitHub mutations. It generates a reviewable local plan before any separately authorized branch, stage, commit, push or PR phase.
-
-## Ω-RIGID-BODY-T R0.1
-
-The triaxial torque-free rigid-body module implements both stable Jacobi-elliptic branches, the intermediate-axis hyperbolic separatrix, invariant classification, exact body-frame angular velocity, Euler-angle cone observables, quaternion orientation reconstruction, and a dependency-free OAKBench.
-
-```bash
-omega-rigid-body analyze-state --inertia 1 2 3 --omega 0.9 0.2 0.8
-omega-rigid-body sample --inertia 1 2 3 --energy 1.8 --angular-momentum 3 --duration 8 --count 129
-omega-rigid-body separatrix --inertia 1 2 3 --angular-momentum 3 --duration 10 --count 129
-pytest -q tests/test_omega_rigid_body_t.py
-```
-
-The analytic branches certify mathematical identities and numerical agreement only. They do not certify a physical experiment, a real rigid body, an IMU, a spacecraft, or any safety-critical control system. See `docs/OMEGA_RIGID_BODY_T.md` for the formulas, assumptions, geometric phase, and limits.
 
 ## Main outputs
 
@@ -241,7 +224,6 @@ Immediate canonizable modules:
 - Ω-SANS-PLAFOND-T∞ / adaptive frontier controller R0.1
 - Ω-SANS-PLAFOND-T∞ / streaming GitHub dry-run planner R0.2
 - Ω-SANS-PLAFOND-T∞ / lazy source, telemetry and M⁺ R0.3
-- Ω-RIGID-BODY-T / exact triaxial Euler-top analytic-computational core R0.1
 
 Crystallizable modules:
 

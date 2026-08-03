@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_vla_campaign_report_v2.schema.json",
+  "title": "Omega VLA Campaign Report R0.2-MAX",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "system",
+    "version",
+    "logical_frontier_cells",
+    "requested_work_items",
+    "proposed_cells",
+    "accepted_cells",
+    "rejected_quality",
+    "duplicates",
+    "batches",
+    "saturation_ledger",
+    "store_manifest",
+    "permanent_total_cap",
+    "theorem_claimed",
+    "formal_proof_claimed",
+    "scientific_validation_claimed"
+  ],
+  "properties": {
+    "system": {"const": "Ω-VLA-T∞²"},
+    "version": {"const": "R0.2-MAX"},
+    "logical_frontier_cells": {"type": "integer", "minimum": 1},
+    "requested_work_items": {"type": "integer", "minimum": 0},
+    "proposed_cells": {"type": "integer", "minimum": 0},
+    "accepted_cells": {"type": "integer", "minimum": 0},
+    "rejected_quality": {"type": "integer", "minimum": 0},
+    "duplicates": {"type": "integer", "minimum": 0},
+    "batches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "batch_index",
+          "proposed",
+          "accepted",
+          "rejected_quality",
+          "duplicates",
+          "next_batch_size",
+          "acceptance_rate",
+          "duplicate_rate"
+        ],
+        "properties": {
+          "batch_index": {"type": "integer", "minimum": 0},
+          "proposed": {"type": "integer", "minimum": 1},
+          "accepted": {"type": "integer", "minimum": 0},
+          "rejected_quality": {"type": "integer", "minimum": 0},
+          "duplicates": {"type": "integer", "minimum": 0},
+          "next_batch_size": {"type": "integer", "minimum": 1},
+          "acceptance_rate": {"type": "number", "minimum": 0, "maximum": 1},
+          "duplicate_rate": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "saturation_ledger": {"type": "array", "items": {"type": "object"}},
+    "store_manifest": {"type": ["object", "null"]},
+    "permanent_total_cap": {"type": "null"},
+    "theorem_claimed": {"const": false},
+    "formal_proof_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false}
+  }
+}
