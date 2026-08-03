@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from .address import FrontierCodec
 from .catalogs import CATALOG, Catalog
@@ -172,17 +172,6 @@ def _quality_accept(cell: ProblemCell, config: CampaignConfig) -> bool:
     )
 
 
-def _iter_batches(items: Iterable[int], batch_size: int) -> Iterable[list[int]]:
-    batch: list[int] = []
-    for item in items:
-        batch.append(item)
-        if len(batch) >= batch_size:
-            yield batch
-            batch = []
-    if batch:
-        yield batch
-
-
 def run_campaign(
     config: CampaignConfig,
     *,
@@ -200,7 +189,7 @@ def run_campaign(
     deduplicator = ContentDeduplicator()
 
     target = min(config.work_items, codec.size)
-    indices = iter(codec.sample_indices(target, seed=config.seed))
+    indices = codec.iter_indices(target, seed=config.seed)
     accepted_payloads: list[dict[str, Any]] = []
     telemetry: list[BatchTelemetry] = []
     proposed_total = 0
