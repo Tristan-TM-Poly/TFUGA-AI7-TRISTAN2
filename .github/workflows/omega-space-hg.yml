@@ -1,25 +1,27 @@
-name: Omega Space HG R0.1 MAX
+name: Omega Space HG R0.1-R0.2 MAX
 
 on:
   push:
     branches: [feat/omega-space-hg-t-r01-max]
     paths:
       - "omega_space_hg_t/**"
-      - "tests/test_omega_space_hg_t.py"
-      - "examples/omega_space_hg_demo.py"
+      - "tests/test_omega_space_hg*.py"
+      - "examples/omega_space_hg*.py"
       - "scenarios/omega_space_hg_t/**"
       - "schemas/omega_space_*.schema.json"
       - "docs/OMEGA_SPACE_HG_T.md"
+      - "docs/omega_space_hg_t/**"
       - "pyproject.toml"
       - ".github/workflows/omega-space-hg.yml"
   pull_request:
     paths:
       - "omega_space_hg_t/**"
-      - "tests/test_omega_space_hg_t.py"
-      - "examples/omega_space_hg_demo.py"
+      - "tests/test_omega_space_hg*.py"
+      - "examples/omega_space_hg*.py"
       - "scenarios/omega_space_hg_t/**"
       - "schemas/omega_space_*.schema.json"
       - "docs/OMEGA_SPACE_HG_T.md"
+      - "docs/omega_space_hg_t/**"
       - "pyproject.toml"
       - ".github/workflows/omega-space-hg.yml"
   workflow_dispatch:
@@ -47,10 +49,12 @@ jobs:
           python -m compileall -q
           omega_space_hg_t
           tests/test_omega_space_hg_t.py
+          tests/test_omega_space_hg_r02.py
           examples/omega_space_hg_demo.py
+          examples/omega_space_hg_r02_demo.py
       - name: Run focused regression suite
-        run: pytest -q tests/test_omega_space_hg_t.py
-      - name: Generate deterministic artifacts
+        run: pytest -q tests/test_omega_space_hg_t.py tests/test_omega_space_hg_r02.py
+      - name: Generate deterministic R0.1 artifacts
         run: |
           python -m omega_space_hg_t.cli atlas --output /tmp/atlas-a.json
           python -m omega_space_hg_t.cli atlas --output /tmp/atlas-b.json
@@ -61,8 +65,21 @@ jobs:
           python -m omega_space_hg_t.cli plan --start-offset 1000000000 --count 64 --output /tmp/plan-b.json
           cmp /tmp/plan-a.json /tmp/plan-b.json
           python -m omega_space_hg_t.cli optimize scenarios/omega_space_hg_t/leo_6u_observer.json --start-offset 0 --count 16 --output /tmp/optimization.json
-          python -m omega_space_hg_t.cli oak --output /tmp/oak.json
-          python examples/omega_space_hg_demo.py > /tmp/demo.json
+          python -m omega_space_hg_t.cli oak --output /tmp/oak-r01.json
+          python examples/omega_space_hg_demo.py > /tmp/demo-r01.json
+      - name: Generate deterministic R0.2 artifacts
+        run: |
+          python -m omega_space_hg_t.r02_cli manifest --output /tmp/r02-manifest-a.json
+          python -m omega_space_hg_t.r02_cli manifest --output /tmp/r02-manifest-b.json
+          cmp /tmp/r02-manifest-a.json /tmp/r02-manifest-b.json
+          python -m omega_space_hg_t.r02_cli orbit --duration-orbits 3 --step-s 20 --drag --srp --output /tmp/r02-orbit-a.json
+          python -m omega_space_hg_t.r02_cli orbit --duration-orbits 3 --step-s 20 --drag --srp --output /tmp/r02-orbit-b.json
+          cmp /tmp/r02-orbit-a.json /tmp/r02-orbit-b.json
+          python -m omega_space_hg_t.r02_cli attitude --duration-s 120 --step-s 0.2 --output /tmp/r02-attitude-a.json
+          python -m omega_space_hg_t.r02_cli attitude --duration-s 120 --step-s 0.2 --output /tmp/r02-attitude-b.json
+          cmp /tmp/r02-attitude-a.json /tmp/r02-attitude-b.json
+          python -m omega_space_hg_t.r02_cli oak --output /tmp/oak-r02.json
+          python examples/omega_space_hg_r02_demo.py > /tmp/demo-r02.json
       - name: Validate schemas and OAK boundaries
         run: |
           python - <<'PY'
@@ -71,25 +88,38 @@ jobs:
           import jsonschema
 
           mission_schema = json.loads(Path('schemas/omega_space_mission_v1.schema.json').read_text())
-          oak_schema = json.loads(Path('schemas/omega_space_oak_report_v1.schema.json').read_text())
+          oak_r01_schema = json.loads(Path('schemas/omega_space_oak_report_v1.schema.json').read_text())
+          oak_r02_schema = json.loads(Path('schemas/omega_space_r02_oak_report_v1.schema.json').read_text())
           mission = json.loads(Path('scenarios/omega_space_hg_t/leo_6u_observer.json').read_text())
-          oak = json.loads(Path('/tmp/oak.json').read_text())
+          oak_r01 = json.loads(Path('/tmp/oak-r01.json').read_text())
+          oak_r02 = json.loads(Path('/tmp/oak-r02.json').read_text())
           atlas = json.loads(Path('/tmp/atlas-a.json').read_text())
           graph = json.loads(Path('/tmp/graph.json').read_text())
           simulation = json.loads(Path('/tmp/simulation.json').read_text())
           plan = json.loads(Path('/tmp/plan-a.json').read_text())
           optimization = json.loads(Path('/tmp/optimization.json').read_text())
-          demo = json.loads(Path('/tmp/demo.json').read_text())
+          r02_orbit = json.loads(Path('/tmp/r02-orbit-a.json').read_text())
+          r02_attitude = json.loads(Path('/tmp/r02-attitude-a.json').read_text())
+          demo_r01 = json.loads(Path('/tmp/demo-r01.json').read_text())
+          demo_r02 = json.loads(Path('/tmp/demo-r02.json').read_text())
 
           jsonschema.Draft202012Validator.check_schema(mission_schema)
-          jsonschema.Draft202012Validator.check_schema(oak_schema)
+          jsonschema.Draft202012Validator.check_schema(oak_r01_schema)
+          jsonschema.Draft202012Validator.check_schema(oak_r02_schema)
           jsonschema.validate(mission, mission_schema)
-          jsonschema.validate(oak, oak_schema)
+          jsonschema.validate(oak_r01, oak_r01_schema)
+          jsonschema.validate(oak_r02, oak_r02_schema)
 
-          assert oak['passed'] is True
-          assert oak['theorem_claimed'] is False
-          assert oak['flight_qualified_claimed'] is False
-          assert oak['scientific_validation_claimed'] is False
+          assert oak_r01['passed'] is True
+          assert oak_r02['passed'] is True
+          assert oak_r01['theorem_claimed'] is False
+          assert oak_r01['flight_qualified_claimed'] is False
+          assert oak_r01['scientific_validation_claimed'] is False
+          assert oak_r02['theorem_claimed'] is False
+          assert oak_r02['flight_qualified_claimed'] is False
+          assert oak_r02['operational_ephemeris_claimed'] is False
+          assert oak_r02['conjunction_assessment_claimed'] is False
+          assert oak_r02['stability_proof_claimed'] is False
           assert atlas['counts']['mission_classes'] >= 30
           assert atlas['counts']['vehicle_and_module_classes'] >= 40
           assert atlas['permanent_generated_architecture_cap'] is None
@@ -99,6 +129,12 @@ jobs:
           assert plan['next_offset'] == 1000000064
           assert optimization['frontier']['evaluated_count'] == 16
           assert optimization['pareto_count'] >= 1
-          assert demo['oak']['passed'] is True
-          print('OAK_PASS_OMEGA_SPACE_HG_R0_1_MAX')
+          assert r02_orbit['relative_raan_rate_error'] < 0.02
+          assert r02_orbit['operational_ephemeris_claimed'] is False
+          assert r02_attitude['metrics']['final_error_rad'] < 0.01
+          assert r02_attitude['metrics']['wheel_saturation_count'] == 0
+          assert r02_attitude['flight_software_claimed'] is False
+          assert demo_r01['oak']['passed'] is True
+          assert demo_r02['oak']['passed'] is True
+          print('OAK_PASS_OMEGA_SPACE_HG_R0_1_R0_2_MAX')
           PY
