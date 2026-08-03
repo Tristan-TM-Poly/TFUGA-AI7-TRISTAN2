@@ -1,0 +1,144 @@
+name: Omega Sequence Forms RInf OAKBench
+
+on:
+  push:
+    branches: [feat/omega-sequence-forms-r0-1]
+    paths:
+      - "omega_sequence_forms_t/rinf/**"
+      - "tests/test_omega_sequence_forms_rinf*.py"
+      - "docs/omega_sequence_forms_t/RINF_*.md"
+      - "specs/omega_sequence_forms_rinf/**"
+      - "schemas/omega_sequence_forms_rinf_*"
+      - "examples/omega_sequence_forms_rinf_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-sequence-forms-rinf.yml"
+  pull_request:
+    paths:
+      - "omega_sequence_forms_t/rinf/**"
+      - "tests/test_omega_sequence_forms_rinf*.py"
+      - "docs/omega_sequence_forms_t/RINF_*.md"
+      - "specs/omega_sequence_forms_rinf/**"
+      - "schemas/omega_sequence_forms_rinf_*"
+      - "examples/omega_sequence_forms_rinf_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-sequence-forms-rinf.yml"
+  workflow_dispatch:
+    inputs:
+      materialized_cells:
+        description: Finite cells to materialize for this run
+        required: false
+        default: "100000"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile RInf
+        run: >-
+          python -m compileall -q
+          omega_sequence_forms_t/rinf
+          tests/test_omega_sequence_forms_rinf.py
+          tests/test_omega_sequence_forms_rinf_advanced.py
+          examples/omega_sequence_forms_rinf_demo.py
+      - name: Run RInf OAKBench tests
+        run: >-
+          pytest -q
+          tests/test_omega_sequence_forms_rinf.py
+          tests/test_omega_sequence_forms_rinf_advanced.py
+      - name: Validate schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          for path in sorted(Path('schemas').glob('omega_sequence_forms_rinf_*_v1.schema.json')):
+              schema = json.loads(path.read_text())
+              jsonschema.Draft202012Validator.check_schema(schema)
+              print(path)
+          PY
+      - name: Deterministic benchmark and orchestrator
+        run: |
+          python -m omega_sequence_forms_t.rinf.cli benchmark --campaign-cells 128 --output /tmp/rinf-a.json
+          python -m omega_sequence_forms_t.rinf.cli benchmark --campaign-cells 128 --output /tmp/rinf-b.json
+          cmp /tmp/rinf-a.json /tmp/rinf-b.json
+          python -m omega_sequence_forms_t.rinf.cli orchestrate \
+            "4,17,79,383,1891,9397,46879,234083,1169987,5845057,29222539,146098373" \
+            --holdout 3 --max-degree 4 --max-order 5 --output /tmp/orchestrated.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(Path('/tmp/rinf-a.json').read_text())
+          assert payload['passed'] is True
+          assert payload['catalog']['counts'] == {
+              'families': 256,
+              'transformations': 512,
+              'antipatterns': 1024,
+          }
+          assert payload['cell_space']['logical_cells'] == 34_359_738_368
+          assert payload['global_identity_proved'] is False
+          assert payload['formal_proof_completed'] is False
+          orchestrated = json.loads(Path('/tmp/orchestrated.json').read_text())
+          assert orchestrated['candidate_count'] >= 1
+          assert orchestrated['representation_graph']['validation_errors'] == []
+          assert orchestrated['global_identity_proved'] is False
+          print('OAK_SEQUENCE_FORMS_RINF_CERTIFIED_SOFTWARE_FIXTURES')
+          PY
+
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Select finite materialization size
+        id: size
+        shell: bash
+        run: |
+          VALUE="${{ github.event.inputs.materialized_cells }}"
+          if [[ -z "$VALUE" ]]; then VALUE="100000"; fi
+          if ! [[ "$VALUE" =~ ^[0-9]+$ ]] || [[ "$VALUE" -lt 1 ]]; then
+            echo "invalid materialized_cells: $VALUE" >&2
+            exit 2
+          fi
+          echo "value=$VALUE" >> "$GITHUB_OUTPUT"
+      - name: Materialize deterministic catalogs and cells
+        run: |
+          python -m omega_sequence_forms_t.rinf.cli materialize generated/rinf \
+            --cells "${{ steps.size.outputs.value }}" \
+            --storage-mb 1024 \
+            --compute-units "${{ steps.size.outputs.value }}" \
+            --output generated/rinf/receipt.json
+          test "$(wc -l < generated/rinf/catalog.jsonl)" -eq 1792
+          test "$(wc -l < generated/rinf/cells.jsonl)" -eq "${{ steps.size.outputs.value }}"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(Path('generated/rinf/receipt.json').read_text())
+          assert payload['logical_cells'] == 34_359_738_368
+          assert payload['permanent_total_cap'] is None
+          assert payload['global_identity_proved'] is False
+          print(payload['receipt_digest'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-sequence-forms-rinf-materialization
+          path: generated/rinf
+          if-no-files-found: error
+          retention-days: 14

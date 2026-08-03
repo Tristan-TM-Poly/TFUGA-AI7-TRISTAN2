@@ -1,0 +1,50 @@
+{
+  "schema": "omega-sequence-forms-rinf-genesis/1",
+  "version": "RINF-GENESIS-1",
+  "canonical_axes": {
+    "families": 256,
+    "transformations": 512,
+    "validators": 128,
+    "regimes": 64,
+    "domains": 32
+  },
+  "logical_cells": 34359738368,
+  "catalog": {
+    "family_seeds": 32,
+    "family_variants": 8,
+    "transformation_seeds": 64,
+    "transformation_modes": 8,
+    "antipattern_seeds": 16,
+    "antipattern_contexts": 8,
+    "antipattern_mutations": 8
+  },
+  "implemented_detectors": [
+    "newton_polynomial",
+    "constant_linear_recurrence",
+    "rational_ordinary_generating_function",
+    "quasi_polynomial",
+    "rational_index",
+    "hypergeometric_ratio",
+    "p_recursive_operator"
+  ],
+  "operational_materialization": {
+    "default_cells": 100000,
+    "permanent_total_cap": null,
+    "streaming": true,
+    "canonical_jsonl": true,
+    "sha256_receipts": true
+  },
+  "oak": {
+    "levels": 7,
+    "maximum_automatic_level": 3,
+    "global_identity_proved": false,
+    "formal_proof_completed": false
+  },
+  "claims": {
+    "all_catalog_families_implemented": false,
+    "all_transformations_implemented": false,
+    "scientific_validation_claimed": false,
+    "global_identity_proved": false,
+    "formal_proof_completed": false
+  }
+}

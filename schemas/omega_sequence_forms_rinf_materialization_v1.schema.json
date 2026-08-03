@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-sequence-forms-rinf-materialization-v1.schema.json",
+  "title": "Omega Sequence Forms RInf Materialization Receipt",
+  "type": "object",
+  "required": [
+    "schema",
+    "catalog",
+    "cells",
+    "budget",
+    "seed",
+    "logical_cells",
+    "materialized_cells",
+    "permanent_total_cap",
+    "global_identity_proved",
+    "receipt_digest"
+  ],
+  "properties": {
+    "schema": {"const": "omega-sequence-forms-materialization-receipt/1"},
+    "catalog": {"type": ["object", "null"]},
+    "cells": {"type": ["object", "null"]},
+    "budget": {"type": "object"},
+    "seed": {"type": "integer"},
+    "logical_cells": {"const": 34359738368},
+    "materialized_cells": {"type": "integer", "minimum": 0},
+    "permanent_total_cap": {"type": "null"},
+    "global_identity_proved": {"const": false},
+    "receipt_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}

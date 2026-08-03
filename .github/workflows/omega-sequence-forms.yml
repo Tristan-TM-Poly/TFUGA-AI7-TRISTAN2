@@ -1,0 +1,82 @@
+name: Omega Sequence Forms R0.1 OAKBench
+
+on:
+  push:
+    branches: [feat/omega-sequence-forms-r0-1]
+    paths:
+      - "omega_sequence_forms_t/**"
+      - "tests/test_omega_sequence_forms_t.py"
+      - "docs/omega_sequence_forms_t/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-sequence-forms.yml"
+  pull_request:
+    paths:
+      - "omega_sequence_forms_t/**"
+      - "tests/test_omega_sequence_forms_t.py"
+      - "docs/omega_sequence_forms_t/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-sequence-forms.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Compile package and tests
+        run: python -m compileall -q omega_sequence_forms_t tests/test_omega_sequence_forms_t.py
+
+      - name: Run exact OAKBench
+        run: pytest -q tests/test_omega_sequence_forms_t.py
+
+      - name: Verify deterministic benchmark receipt
+        run: |
+          python -m omega_sequence_forms_t.cli benchmark --output /tmp/sequence-a.json
+          python -m omega_sequence_forms_t.cli benchmark --output /tmp/sequence-b.json
+          cmp /tmp/sequence-a.json /tmp/sequence-b.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('/tmp/sequence-a.json').read_text())
+          assert payload['passed'] is True
+          assert payload['global_identity_proved'] is False
+          assert payload['status'] == 'OAK_SOFTWARE_FIXTURES_ONLY'
+          assert len(payload['fixtures']) == 3
+          print('OAK_SEQUENCE_FORMS_R0_1_CERTIFIED_SOFTWARE_FIXTURES')
+          PY
+
+      - name: Verify adversarial finite-prefix demotion
+        run: |
+          python -m omega_sequence_forms_t.cli discover \
+            "1,4,9,16,25,36,50" --output /tmp/adversarial.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('/tmp/adversarial.json').read_text())
+          polynomial = next(
+              item for item in payload['candidates']
+              if item['kind'] == 'newton_polynomial'
+          )
+          assert polynomial['oak_label'] == 'OBSERVED_FIT'
+          assert polynomial['validation']['held_out_matches'] == 1
+          assert polynomial['validation']['held_out_terms'] == 2
+          assert payload['global_identity_proved'] is False
+          PY
