@@ -5,10 +5,15 @@ import json
 from pathlib import Path
 from typing import Sequence
 
-from .audit import audit_streaming_atlas
 from .benchmark import benchmark_scaling
+from .compatibility import ingest_r03_max, verify_r03_max_source
 from .model import RuntimePolicy
-from .streaming import ingest_jsonl, materialize_synthetic_campaign, query_portfolio
+from .streaming import (
+    audit_streaming_atlas,
+    ingest_jsonl,
+    materialize_synthetic_campaign,
+    query_portfolio,
+)
 
 
 def _add_policy_args(parser: argparse.ArgumentParser) -> None:
@@ -41,6 +46,17 @@ def _parser() -> argparse.ArgumentParser:
     ingest.add_argument("--max-items", type=int)
     ingest.add_argument("--no-clean", action="store_true")
     _add_policy_args(ingest)
+
+    r03 = sub.add_parser("r03-max", help="verify and stream an R0.3 MAX materialization")
+    r03.add_argument("--source-dir", required=True)
+    r03.add_argument("--output-dir", required=True)
+    r03.add_argument("--resume", action="store_true")
+    r03.add_argument("--max-items", type=int)
+    r03.add_argument("--no-clean", action="store_true")
+    _add_policy_args(r03)
+
+    verify_r03 = sub.add_parser("verify-r03", help="verify exact R0.3 artifact receipts")
+    verify_r03.add_argument("source_dir")
 
     synthetic = sub.add_parser("synthetic", help="materialize a deterministic synthetic campaign")
     synthetic.add_argument("--output-dir", required=True)
@@ -80,6 +96,17 @@ def main(argv: Sequence[str] | None = None) -> int:
             max_items=args.max_items,
             clean=not args.no_clean,
         )
+    elif args.command == "r03-max":
+        result = ingest_r03_max(
+            Path(args.source_dir),
+            Path(args.output_dir),
+            policy=_policy(args),
+            resume=args.resume,
+            max_items=args.max_items,
+            clean=not args.no_clean,
+        )
+    elif args.command == "verify-r03":
+        result = verify_r03_max_source(Path(args.source_dir))
     elif args.command == "synthetic":
         result = materialize_synthetic_campaign(
             Path(args.output_dir),
@@ -109,7 +136,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
     if args.command == "audit":
         return 0 if result.get("valid") is True else 1
-    if args.command in {"ingest", "synthetic"}:
+    if args.command == "verify-r03":
+        return 0 if result.get("valid") is True else 1
+    if args.command in {"ingest", "r03-max", "synthetic"}:
         return 0 if result.get("status") != "failed" else 1
     return 0
 
