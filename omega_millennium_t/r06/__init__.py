@@ -5,6 +5,9 @@ computation receipts, formal artifacts and independent reviews to stable R0.5
 problem identities. It never infers a general proof from numerical evidence.
 """
 
+# Patch both compilation and strict-audit assessment references before exposing
+# the public API. This preserves deterministic recomputation while ensuring a
+# `violates` edge blocks rather than discharges an assumption or barrier.
 from . import audit as _audit_module
 from . import compiler as _compiler_module
 from .hardening import assess_claims_hardened
