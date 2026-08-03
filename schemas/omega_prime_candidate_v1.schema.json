@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_prime_candidate_v1.schema.json",
+  "title": "Omega Prime Candidate V1",
+  "type": "object",
+  "required": ["value", "family", "parameters", "status", "bit_length", "decimal_digits"],
+  "properties": {
+    "value": {"type": "integer", "minimum": 2},
+    "family": {"type": "string", "minLength": 1},
+    "parameters": {"type": "object"},
+    "status": {
+      "enum": ["candidate", "filtered_composite", "probable_prime", "proven_prime", "verified_prime"]
+    },
+    "small_factor": {"type": ["integer", "null"], "minimum": 2},
+    "witness": {"type": ["integer", "null"], "minimum": 2},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "bit_length": {"type": "integer", "minimum": 2},
+    "decimal_digits": {"type": "integer", "minimum": 1}
+  },
+  "additionalProperties": false
+}

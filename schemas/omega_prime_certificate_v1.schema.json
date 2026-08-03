@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_prime_certificate_v1.schema.json",
+  "title": "OAKPrime Certificate V1",
+  "type": "object",
+  "required": [
+    "certificate_version",
+    "certificate_id",
+    "candidate",
+    "proof",
+    "verification",
+    "applications",
+    "market_score",
+    "provenance",
+    "oak",
+    "sha256"
+  ],
+  "properties": {
+    "certificate_version": {"const": "1.0"},
+    "certificate_id": {"type": "string", "pattern": "^omega-prime-[0-9a-f]+$"},
+    "candidate": {"$ref": "#/$defs/candidate"},
+    "proof": {
+      "type": "object",
+      "required": ["method", "n", "k", "exponent", "witness", "residue", "criterion"],
+      "properties": {
+        "method": {"const": "Proth"},
+        "n": {"type": "integer", "minimum": 3},
+        "k": {"type": "integer", "minimum": 1},
+        "exponent": {"type": "integer", "minimum": 1},
+        "witness": {"type": "integer", "minimum": 2},
+        "residue": {"type": "integer", "minimum": 1},
+        "criterion": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "required": ["deterministic_miller_rabin_64", "independently_verified", "ntt_profile"],
+      "properties": {
+        "deterministic_miller_rabin_64": {"const": true},
+        "independently_verified": {"type": "boolean"},
+        "ntt_profile": {
+          "type": "object",
+          "required": ["modulus", "two_adicity", "primitive_root", "root_of_unity", "maximum_transform_length"],
+          "properties": {
+            "modulus": {"type": "integer", "minimum": 3},
+            "two_adicity": {"type": "integer", "minimum": 1},
+            "primitive_root": {"type": "integer", "minimum": 2},
+            "root_of_unity": {"type": "integer", "minimum": 2},
+            "maximum_transform_length": {"type": "integer", "minimum": 2}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "applications": {"type": "array", "items": {"type": "string"}},
+    "market_score": {"type": "object"},
+    "provenance": {"type": "object"},
+    "oak": {
+      "type": "object",
+      "required": ["status", "record_claimed", "novelty_claimed", "cryptographic_secret_material", "exclusive_ownership_of_number_claimed", "requires_external_precedence_search_for_novelty"],
+      "properties": {
+        "status": {"const": "CERTIFIED_PUBLIC_ENGINEERING_PRIME_R0_1"},
+        "record_claimed": {"const": false},
+        "novelty_claimed": {"const": false},
+        "cryptographic_secret_material": {"const": false},
+        "exclusive_ownership_of_number_claimed": {"const": false},
+        "requires_external_precedence_search_for_novelty": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "candidate": {
+      "type": "object",
+      "required": ["value", "family", "parameters", "status", "bit_length", "decimal_digits"],
+      "properties": {
+        "value": {"type": "integer", "minimum": 2},
+        "family": {"type": "string", "minLength": 1},
+        "parameters": {"type": "object"},
+        "status": {"enum": ["candidate", "filtered_composite", "probable_prime", "proven_prime", "verified_prime"]},
+        "small_factor": {"type": ["integer", "null"], "minimum": 2},
+        "witness": {"type": ["integer", "null"], "minimum": 2},
+        "notes": {"type": "array", "items": {"type": "string"}},
+        "bit_length": {"type": "integer", "minimum": 2},
+        "decimal_digits": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}
