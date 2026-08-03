@@ -179,6 +179,7 @@ class CrawlResult:
     decisions: list[PolicyDecision] = field(default_factory=list)
     errors: list[dict[str, str]] = field(default_factory=list)
     raw_blobs: dict[str, bytes] = field(default_factory=dict)
+    discovered_urls: dict[str, str] = field(default_factory=dict)
 
     @property
     def hypergraph(self) -> dict[str, object]:
@@ -187,6 +188,10 @@ class CrawlResult:
             nodes.append({"id": page.page_id, "kind": "page", "label": page.title or page.canonical_url, "properties": asdict(page)})
         for section in self.sections:
             nodes.append({"id": section.section_id, "kind": "section", "label": section.heading, "properties": asdict(section)})
+        known_ids = {str(node["id"]) for node in nodes}
+        for node_id, url in sorted(self.discovered_urls.items()):
+            if node_id not in known_ids:
+                nodes.append({"id": node_id, "kind": "page_candidate", "label": url, "properties": {"url": url}})
         hyperedges = [asdict(edge) for edge in self.edges]
         return {"schema": "omega-web-hg/0.1", "nodes": nodes, "hyperedges": hyperedges}
 
@@ -233,6 +238,7 @@ class CrawlResult:
         self._write_jsonl(root / "edges.jsonl", self.edges)
         self._write_jsonl(root / "evidence.jsonl", self.evidence)
         self._write_jsonl(root / "policy-decisions.jsonl", self.decisions)
+        self._write_jsonl(root / "url-candidates.jsonl", ({"node_id": key, "url": value} for key, value in sorted(self.discovered_urls.items())))
         (root / "hypergraph.json").write_text(json.dumps(self.hypergraph, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
         (root / "oak-report.json").write_text(json.dumps(self.oak_report(), ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
         manifest = {
@@ -248,6 +254,7 @@ class CrawlResult:
                 "edges.jsonl",
                 "evidence.jsonl",
                 "policy-decisions.jsonl",
+                "url-candidates.jsonl",
                 "hypergraph.json",
                 "hypergraph.graphml",
                 "oak-report.json",
