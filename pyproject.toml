@@ -1,6 +1,6 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "3.5.0"
+version = "3.6.0"
 description = "Omega absorb, convergence and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
@@ -21,6 +21,7 @@ omega-propulsion-r03 = "omega_aero_hydro_propulsion_t.r03_cli:main"
 omega-propulsion-r03-max = "omega_aero_hydro_propulsion_t.r03_max_cli:main"
 omega-propulsion-r04 = "omega_aero_hydro_propulsion_t.r04_cli:main"
 omega-cps = "omega_cyber_physical_systems_t.cli:main"
+omega-cps-r02 = "omega_cyber_physical_systems_t.r02_cli:main"
 omega-generator-discovery = "omega_generator_discovery_t.cli:main"
 omega-generator-catalog = "omega_generator_discovery_t.catalog_cli:main"
 omega-generator-ultra = "omega_generator_discovery_t.ultra_cli:main"
