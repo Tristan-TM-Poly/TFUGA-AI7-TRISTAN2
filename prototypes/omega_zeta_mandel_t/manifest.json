@@ -1,0 +1,23 @@
+{
+  "omega_branch": "OMEGA-ZETA-MANDEL-T",
+  "canonical_name": "Zeta-Mandelbrot-Tristan",
+  "status": "prototype_seed",
+  "default_claim_status": "visualization",
+  "oak_guardrail": "No visualization, numerical coincidence, symmetry, orbit stability, or sedenion pattern is a proof of the Riemann hypothesis.",
+  "implemented": [
+    "mandelbrot_cvcd",
+    "riemann_zeta_eta",
+    "zeta_orbit_cvcd",
+    "cayley_dickson_product",
+    "sedenion_mandelbrot_cvcd",
+    "zero_divisor_risk_probe"
+  ],
+  "next": [
+    "grid_renderers",
+    "zeta_newton_basins",
+    "high_precision_backend",
+    "parenthesization_audit",
+    "oak_report_json",
+    "m_minus_false_motif_registry"
+  ]
+}
