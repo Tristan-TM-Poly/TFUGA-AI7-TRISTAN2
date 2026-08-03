@@ -5,9 +5,24 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .audit import audit_promotion_gate
-from .compiler import compile_promotion_gate as _compile_promotion_gate
+from . import audit as _audit_module
+from . import compiler as _compiler_module
+from .hardening import evaluate_request_hardened
 from .model import BUNDLE_SCHEMA, DESTINATIONS, PROMOTION_STATUSES, stable_digest
+
+_BASE_EVALUATOR = _compiler_module.evaluate_request
+
+
+def _hardened_evaluator(request):
+    return evaluate_request_hardened(request, _BASE_EVALUATOR)
+
+
+# Patch both compilation and replay-audit references before exposing the API.
+_compiler_module.evaluate_request = _hardened_evaluator
+_audit_module.evaluate_request = _hardened_evaluator
+
+_compile_promotion_gate = _compiler_module.compile_promotion_gate
+audit_promotion_gate = _audit_module.audit_promotion_gate
 
 
 def compile_promotion_gate(
