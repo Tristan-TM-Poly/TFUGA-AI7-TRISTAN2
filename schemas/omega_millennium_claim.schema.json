@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_millennium_claim.schema.json",
+  "title": "Omega Millennium Claim R0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["claim_id", "problem_id", "kind", "statement", "assumptions", "dependencies", "evidence_ids", "oak_level", "scope"],
+  "properties": {
+    "claim_id": {"type": "string", "minLength": 1},
+    "problem_id": {"enum": ["poincare", "riemann", "p_vs_np", "navier_stokes", "yang_mills", "hodge", "birch_swinnerton_dyer"]},
+    "kind": {"enum": ["definition", "known_theorem", "equivalence", "lemma", "conjecture", "counterexample", "computation", "formal_certificate", "solution_claim"]},
+    "statement": {"type": "string", "minLength": 1},
+    "assumptions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "dependencies": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "oak_level": {"type": "integer", "minimum": 0, "maximum": 7},
+    "scope": {"type": "string", "minLength": 1},
+    "author_notes": {"type": "string"}
+  }
+}
