@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega_prime_merkle_proof_v3.schema.json",
+  "title": "Omega Prime Merkle Proof V3",
+  "type": "object",
+  "required": ["leaf_hash", "index", "leaf_count", "steps", "root"],
+  "properties": {
+    "leaf_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "index": {"type": "integer", "minimum": 0},
+    "leaf_count": {"type": "integer", "minimum": 1},
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sibling", "side"],
+        "properties": {
+          "sibling": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "side": {"enum": ["left", "right"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "root": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

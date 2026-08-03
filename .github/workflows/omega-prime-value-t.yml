@@ -1,4 +1,4 @@
-name: Omega Prime Value R0.1-R0.2
+name: Omega Prime Value R0.1-R0.3
 
 on:
   pull_request:
@@ -8,6 +8,7 @@ on:
       - "schemas/omega_prime_*"
       - "docs/omega-prime-value-t/**"
       - "examples/omega_prime_value*.py"
+      - "pyproject.toml"
       - ".github/workflows/omega-prime-value-t.yml"
   workflow_dispatch:
 
@@ -17,7 +18,7 @@ permissions:
 jobs:
   oakbench:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -31,20 +32,38 @@ jobs:
       - name: Install test validators
         run: python -m pip install --disable-pip-version-check pytest jsonschema
 
-      - name: Compile R0.1 and R0.2
+      - name: Compile Python R0.1-R0.3
         run: >-
           python -m compileall -q
           omega_prime_value_t
           tests/test_omega_prime_value_t.py
           tests/test_omega_prime_value_r02.py
+          tests/test_omega_prime_value_r03.py
           examples/omega_prime_value_demo.py
           examples/omega_prime_value_r02_demo.py
+          examples/omega_prime_value_r03_demo.py
 
-      - name: Run 80 deterministic tests
+      - name: Compile C++ and Rust parity kernels
+        run: |
+          g++ -std=c++17 -O2 -Wall -Wextra \
+            omega_prime_value_t/r03/kernels/cpp/prime_kernel.cpp \
+            -o /tmp/omega-prime-cpp
+          rustc -O \
+            omega_prime_value_t/r03/kernels/rust/prime_kernel.rs \
+            -o /tmp/omega-prime-rust
+          /tmp/omega-prime-cpp > /tmp/kernel-cpp.json
+          /tmp/omega-prime-rust > /tmp/kernel-rust.json
+          cmp /tmp/kernel-cpp.json /tmp/kernel-rust.json
+
+      - name: Run all deterministic tests
+        env:
+          OMEGA_PRIME_CPP_KERNEL: /tmp/omega-prime-cpp
+          OMEGA_PRIME_RUST_KERNEL: /tmp/omega-prime-rust
         run: >-
           pytest -q
           tests/test_omega_prime_value_t.py
           tests/test_omega_prime_value_r02.py
+          tests/test_omega_prime_value_r03.py
 
       - name: Generate R0.1 benchmark twice
         run: |
@@ -58,6 +77,15 @@ jobs:
           python -m omega_prime_value_t.r02 benchmark --output /tmp/prime-r02-b.json
           cmp /tmp/prime-r02-a.json /tmp/prime-r02-b.json
 
+      - name: Generate Pocklington and worker-lease R0.3 benchmark twice
+        env:
+          OMEGA_PRIME_CPP_KERNEL: /tmp/omega-prime-cpp
+          OMEGA_PRIME_RUST_KERNEL: /tmp/omega-prime-rust
+        run: |
+          python -m omega_prime_value_t.r03 benchmark --output /tmp/prime-r03-a.json
+          python -m omega_prime_value_t.r03 benchmark --output /tmp/prime-r03-b.json
+          cmp /tmp/prime-r03-a.json /tmp/prime-r03-b.json
+
       - name: Validate schemas and OAK invariants
         run: |
           python - <<'PY'
@@ -67,27 +95,28 @@ jobs:
 
           r01 = json.loads(Path('/tmp/prime-r01-a.json').read_text())
           r02 = json.loads(Path('/tmp/prime-r02-a.json').read_text())
+          r03 = json.loads(Path('/tmp/prime-r03-a.json').read_text())
 
-          candidate_schema = json.loads(Path('schemas/omega_prime_candidate_v1.schema.json').read_text())
-          certificate_schema = json.loads(Path('schemas/omega_prime_certificate_v1.schema.json').read_text())
-          manifest_schema = json.loads(Path('schemas/omega_prime_campaign_manifest_v2.schema.json').read_text())
-          summary_schema = json.loads(Path('schemas/omega_prime_campaign_summary_v2.schema.json').read_text())
-          portfolio_schema = json.loads(Path('schemas/omega_prime_portfolio_v2.schema.json').read_text())
-
-          for schema in (
-              candidate_schema,
-              certificate_schema,
-              manifest_schema,
-              summary_schema,
-              portfolio_schema,
-          ):
+          schema_paths = [
+              'schemas/omega_prime_candidate_v1.schema.json',
+              'schemas/omega_prime_certificate_v1.schema.json',
+              'schemas/omega_prime_campaign_manifest_v2.schema.json',
+              'schemas/omega_prime_campaign_summary_v2.schema.json',
+              'schemas/omega_prime_portfolio_v2.schema.json',
+              'schemas/omega_prime_pocklington_certificate_v3.schema.json',
+              'schemas/omega_prime_merkle_proof_v3.schema.json',
+              'schemas/omega_prime_precedence_receipt_v3.schema.json',
+              'schemas/omega_prime_lease_report_v3.schema.json',
+          ]
+          schemas = {path: json.loads(Path(path).read_text()) for path in schema_paths}
+          for schema in schemas.values():
               jsonschema.Draft202012Validator.check_schema(schema)
 
           assert r01['status'] == 'CERTIFIED_PUBLIC_ENGINEERING_PRIME_FIXTURES_R0_1'
           assert r01['all_certificates_verified'] is True
           for campaign in r01['campaigns']:
               for certificate in campaign['certificates']:
-                  jsonschema.validate(certificate, certificate_schema)
+                  jsonschema.validate(certificate, schemas['schemas/omega_prime_certificate_v1.schema.json'])
                   assert certificate['oak']['record_claimed'] is False
                   assert certificate['oak']['novelty_claimed'] is False
                   assert certificate['oak']['cryptographic_secret_material'] is False
@@ -102,16 +131,34 @@ jobs:
           assert r02['checkpoint_final']['pending'] == 0
           assert r02['ntt_convolution']['matches_naive'] is True
           assert all(value is False for value in r02['claims'].values())
+          jsonschema.validate(r02['manifest'], schemas['schemas/omega_prime_campaign_manifest_v2.schema.json'])
+          jsonschema.validate(r02['first_pass'], schemas['schemas/omega_prime_campaign_summary_v2.schema.json'])
+          jsonschema.validate(r02['second_pass'], schemas['schemas/omega_prime_campaign_summary_v2.schema.json'])
+          jsonschema.validate(r02['portfolio'], schemas['schemas/omega_prime_portfolio_v2.schema.json'])
 
-          jsonschema.validate(r02['manifest'], manifest_schema)
-          jsonschema.validate(r02['first_pass'], summary_schema)
-          jsonschema.validate(r02['second_pass'], summary_schema)
-          jsonschema.validate(r02['portfolio'], portfolio_schema)
+          assert r03['status'] == 'CERTIFIED_POCKLINGTON_MERKLE_LEASE_KERNEL_FIXTURES_R0_3'
+          assert r03['pocklington']['candidate'] > 2**64
+          assert r03['pocklington']['verified'] is True
+          assert r03['merkle']['all_proofs_verified'] is True
+          assert r03['leases']['stats']['completed'] == 8
+          assert r03['leases']['stats']['integrity_check'] is True
+          assert r03['kernels']['compiled_kernels_available'] == 2
+          assert r03['kernels']['parity'] is True
+          assert r03['precedence']['absent']['global_novelty_claim_allowed'] is False
+          assert all(value is False for value in r03['claims'].values())
+          jsonschema.validate(r03['pocklington']['certificate'], schemas['schemas/omega_prime_pocklington_certificate_v3.schema.json'])
+          jsonschema.validate(r03['leases'], schemas['schemas/omega_prime_lease_report_v3.schema.json'])
+          jsonschema.validate(r03['precedence']['known'], schemas['schemas/omega_prime_precedence_receipt_v3.schema.json'])
+          jsonschema.validate(r03['precedence']['absent'], schemas['schemas/omega_prime_precedence_receipt_v3.schema.json'])
+          for proof in r03['merkle']['proofs']:
+              jsonschema.validate(proof, schemas['schemas/omega_prime_merkle_proof_v3.schema.json'])
+
           print(r01['status'])
           print(r02['status'])
+          print(r03['status'])
           PY
 
-      - name: Exercise resumable database CLI
+      - name: Exercise resumable R0.2 database CLI
         run: |
           python -m omega_prime_value_t.r02 run \
             --database /tmp/prime-campaign.sqlite3 \
@@ -135,6 +182,21 @@ jobs:
           assert second['database_integrity'] is True
           PY
 
+      - name: Exercise Pocklington CLI round trip
+        run: |
+          python -m omega_prime_value_t.r03 prove-pocklington \
+            332041393326771929089 --factor '2^65' \
+            --output /tmp/pocklington-certificate.json
+          python -m omega_prime_value_t.r03 verify-pocklington \
+            /tmp/pocklington-certificate.json \
+            --output /tmp/pocklington-verification.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(Path('/tmp/pocklington-verification.json').read_text())
+          assert payload == {'errors': [], 'valid': True}
+          PY
+
       - name: Upload deterministic evidence
         uses: actions/upload-artifact@v4
         with:
@@ -142,7 +204,12 @@ jobs:
           path: |
             /tmp/prime-r01-a.json
             /tmp/prime-r02-a.json
+            /tmp/prime-r03-a.json
             /tmp/prime-campaign-first.json
             /tmp/prime-campaign-second.json
+            /tmp/pocklington-certificate.json
+            /tmp/pocklington-verification.json
+            /tmp/kernel-cpp.json
+            /tmp/kernel-rust.json
           if-no-files-found: error
           retention-days: 14

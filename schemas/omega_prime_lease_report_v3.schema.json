@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega_prime_lease_report_v3.schema.json",
+  "title": "Omega Prime Lease Report V3",
+  "type": "object",
+  "required": ["inserted", "alpha_claimed", "beta_claimed", "expired_requeued", "gamma_claimed", "stats", "event_count", "event_digest"],
+  "properties": {
+    "inserted": {"type": "integer", "minimum": 0},
+    "alpha_claimed": {"type": "integer", "minimum": 0},
+    "beta_claimed": {"type": "integer", "minimum": 0},
+    "expired_requeued": {"type": "integer", "minimum": 0},
+    "gamma_claimed": {"type": "integer", "minimum": 0},
+    "stats": {
+      "type": "object",
+      "required": ["pending", "leased", "completed", "failed", "events", "integrity_check"],
+      "properties": {
+        "pending": {"type": "integer", "minimum": 0},
+        "leased": {"type": "integer", "minimum": 0},
+        "completed": {"type": "integer", "minimum": 0},
+        "failed": {"type": "integer", "minimum": 0},
+        "events": {"type": "integer", "minimum": 0},
+        "integrity_check": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "event_count": {"type": "integer", "minimum": 0},
+    "event_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}
