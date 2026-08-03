@@ -1,0 +1,71 @@
+name: omega-github-revenue-oakbench
+
+on:
+  pull_request:
+    paths:
+      - "omega_github_revenue_t/**"
+      - "tests/test_omega_github_revenue_t.py"
+      - "schemas/omega-github-revenue-artifact.schema.json"
+      - "policies/omega-github-revenue.yaml"
+      - "docs/OMEGA_GITHUB_REVENUE_T.md"
+      - "SPONSORS.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-github-revenue.yml"
+  push:
+    branches: [main]
+    paths:
+      - "omega_github_revenue_t/**"
+      - "tests/test_omega_github_revenue_t.py"
+      - "schemas/omega-github-revenue-artifact.schema.json"
+      - "policies/omega-github-revenue.yaml"
+      - "docs/OMEGA_GITHUB_REVENUE_T.md"
+      - "SPONSORS.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-github-revenue.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.13"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Unit, privacy, and frontier tests
+        run: python -m pytest -q tests/test_omega_github_revenue_t.py
+      - name: Bounded demo
+        run: python -m omega_github_revenue_t.cli demo > /tmp/omega-github-revenue-demo.json
+      - name: Streaming fixture audit
+        run: |
+          python -m omega_github_revenue_t.cli audit examples/data/revenue_artifacts.jsonl \
+            --output /tmp/revenue-audit.jsonl \
+            --minimum-score 0.0
+          test "$(wc -l < /tmp/revenue-audit.jsonl)" -eq 2
+      - name: Explicit banking-field rejection contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from tempfile import TemporaryDirectory
+          from omega_github_revenue_t import AppendOnlyLedger, SensitiveDataError
+
+          with TemporaryDirectory() as directory:
+              ledger = AppendOnlyLedger(Path(directory) / "ledger.jsonl")
+              try:
+                  ledger.append({"event_id": "forbidden", "account_number": "not-stored"})
+              except SensitiveDataError:
+                  pass
+              else:
+                  raise SystemExit("privacy gate failed closed")
+          PY

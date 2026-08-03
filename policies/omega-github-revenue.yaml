@@ -1,0 +1,109 @@
+version: 0.1.0
+system: OMEGA-GITHUB-REVENUE-T
+mode: fail_closed
+
+public_release:
+  allowed_disclosure_classes:
+    - OPEN_PUBLIC
+    - PUBLIC_AFTER_REVIEW
+  explicit_review_required_for:
+    - PUBLIC_AFTER_REVIEW
+  blocked_disclosure_classes:
+    - PATENT_CANDIDATE
+    - TRADE_SECRET
+    - PRIVATE_CLIENT
+    - RESTRICTED_SAFETY
+    - ARCHIVE_ONLY
+  maximum_ip_legal_risk: 0.74
+  maximum_safety_privacy_risk: 0.74
+
+paid_offer:
+  minimum_oak_status:
+    - D
+    - C
+  required_evidence:
+    - reproducible_demo
+    - limitations_documented
+  forbid:
+    - guaranteed_income
+    - guaranteed_scientific_result
+    - guaranteed_security
+    - guaranteed_legal_compliance
+    - unlimited_custom_work
+    - inaccessible_system_inspection
+
+sponsor_tiers:
+  delivery_fraction_limit: 0.50
+  require_bounded_benefits: true
+  prohibit_individual_sensitive_disclosure: true
+  prohibit_fake_sponsors: true
+  prohibit_fake_testimonials: true
+  prohibit_synthetic_stars_or_engagement: true
+
+financial_data:
+  repository_storage: prohibited
+  forbidden_fields:
+    - account_number
+    - bank_account
+    - void_cheque
+    - transit_number
+    - institution_number
+    - routing_number
+    - swift
+    - iban
+    - sin
+    - tax_id
+    - home_address
+    - stripe_secret
+    - api_key
+    - password
+    - credential
+  permitted_event_fields:
+    - event_id
+    - source
+    - gross_minor
+    - currency
+    - fee_minor
+    - net_minor
+    - occurred_at
+    - category
+
+external_actions:
+  default: dry_run
+  require_human_approval:
+    - publish_public_profile
+    - change_sponsor_tier
+    - send_commercial_message
+    - accept_contract
+    - issue_invoice
+    - charge_payment
+    - transfer_funds
+    - file_tax_document
+    - disclose_patent_candidate
+
+unbounded_frontier:
+  permanent_total_item_ceiling: null
+  lazy_streaming_required: true
+  constraints_remain:
+    - compute
+    - storage
+    - provider_limits
+    - cost
+    - quality
+    - evidence
+    - intellectual_property
+    - privacy
+    - safety
+    - law
+    - maintenance_capacity
+
+negative_memory:
+  required_events:
+    - traffic_without_conversion
+    - visibility_mistaken_for_traction
+    - generated_volume_mistaken_for_value
+    - maintenance_cost_exceeds_revenue
+    - unsustainable_sponsor_benefit
+    - premature_public_disclosure
+    - sensitive_data_leakage
+    - evidence_claim_mismatch
