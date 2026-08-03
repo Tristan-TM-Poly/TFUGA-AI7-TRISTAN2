@@ -1,0 +1,18 @@
+{
+  "system": "Ω-HISTOSCI-HG-T∞",
+  "version": "0.1.0",
+  "seed_kind": "software_taxonomy_fixture",
+  "macro_branch_count": 10,
+  "expected_branch_count": 114,
+  "expected_node_count": 123,
+  "expected_hyperedge_count": 110,
+  "permanent_total_cap": null,
+  "historical_truth_certified": false,
+  "source_completeness_claimed": false,
+  "global_exhaustiveness_claimed": false,
+  "notes": [
+    "The seed is an executable ontology fixture, not an independently sourced history of science.",
+    "Every historical assertion must acquire primary or scholarly secondary sources before promotion.",
+    "Branch growth is unbounded architecturally but every materialization remains finite, deterministic, and auditable."
+  ]
+}
