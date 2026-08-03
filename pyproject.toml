@@ -1,6 +1,6 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "3.5.0"
+version = "3.6.0"
 description = "Omega absorb, convergence and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
@@ -54,6 +54,7 @@ omega-re-r04 = "omega_re_t.r04_cli:main"
 omega-re-r05 = "omega_re_t.r05_cli:main"
 omega-re-r06 = "omega_re_t.r06_cli:main"
 omega-github-revenue = "omega_github_revenue_t.cli:main"
+omega-github-revenue-r02 = "omega_github_revenue_t.r02_cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
