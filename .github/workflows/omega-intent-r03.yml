@@ -1,0 +1,83 @@
+name: Omega Intent R0.3 RepoTwin CI Router
+
+on:
+  push:
+    branches: [feat/omega-intent-to-everything-r01]
+    paths:
+      - "omega_intent_t/r03/**"
+      - "tests/test_omega_intent_r03.py"
+      - "examples/omega_intent_r03_demo.py"
+      - "docs/omega-intent-t/R03_REPOTWIN_CI_ROUTER.md"
+      - "schemas/omega_intent_impact_plan_v3.schema.json"
+      - ".github/workflows/omega-intent-r03.yml"
+  pull_request:
+    paths:
+      - "omega_intent_t/r03/**"
+      - "tests/test_omega_intent_r03.py"
+      - "examples/omega_intent_r03_demo.py"
+      - "docs/omega-intent-t/R03_REPOTWIN_CI_ROUTER.md"
+      - "schemas/omega_intent_impact_plan_v3.schema.json"
+      - ".github/workflows/omega-intent-r03.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-intent-r03-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  focused:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.3
+        run: python -m compileall -q omega_intent_t/r03 tests/test_omega_intent_r03.py examples/omega_intent_r03_demo.py
+      - name: Run focused tests
+        run: pytest -q tests/test_omega_intent_r03.py
+      - name: Validate impact schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          schema = json.loads(Path('schemas/omega_intent_impact_plan_v3.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          print('OMEGA_INTENT_R03_SCHEMA_VALID')
+          PY
+      - name: Run OAK fixtures
+        run: python -m omega_intent_t.r03 oak --output /tmp/oak-r03.json
+      - name: Scan repository and route this wave
+        run: |
+          python -m omega_intent_t.r03 scan . --output /tmp/repotwin.json
+          python -m omega_intent_t.r03 route . \
+            --changed omega_intent_t/r03/router.py \
+            --changed tests/test_omega_intent_r03.py \
+            --output /tmp/impact.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          schema = json.loads(Path('schemas/omega_intent_impact_plan_v3.schema.json').read_text())
+          plan = json.loads(Path('/tmp/impact.json').read_text())
+          jsonschema.validate(plan, schema)
+          assert 'omega_intent_t' in plan['affected_packages']
+          assert 'tests/test_omega_intent_r03.py' in plan['affected_tests']
+          assert plan['remote_mutations'] == 0
+          assert plan['automatic_merge'] is False
+          print('OAK_PASS_OMEGA_INTENT_R03')
+          PY
+      - name: Run deterministic demo
+        run: python examples/omega_intent_r03_demo.py > /tmp/demo-r03.json
