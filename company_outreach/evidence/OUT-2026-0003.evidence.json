@@ -1,0 +1,28 @@
+{
+  "case_id": "OUT-2026-0003",
+  "evidence_status": "public_sources_verified",
+  "verified_at": "2026-08-02T22:11:00-04:00",
+  "findings": [
+    {
+      "claim": "Marc Charest is publicly listed by Laval économique as a technological transformation commissioner.",
+      "source_hash": "sha256:5e6e09e6e50f2ff0e7bdbe4115bd034754e4e1299ae8cf03f2b5bb4fa99e9711",
+      "source_url": "https://lavaleconomique.com/a-propos/equipe/"
+    },
+    {
+      "claim": "Laval économique invites organizations with innovative projects to contact its innovation team and lists Marc Charest as a contact.",
+      "source_hash": "sha256:235c8e9649570b259d60d92bb6cf0e67234ad9f087fbf5824b2139017dfb657d",
+      "source_url": "https://lavaleconomique.com/conseil-strategique/innovation/"
+    },
+    {
+      "claim": "Laval économique offers digital-transition guidance, prioritization and identification of relevant funding programs.",
+      "source_hash": "sha256:4ed240959558729a4cc5e7af141c08a73a560ce21332acd89803e517e8b9fcf1",
+      "source_url": "https://lavaleconomique.com/conseil-strategique/innovation/virage-numerique/"
+    }
+  ],
+  "privacy": {
+    "raw_recipient_address_in_repository": false,
+    "provider_message_id_in_repository": false,
+    "private_thread_content_in_repository": false
+  },
+  "source_issue": 291
+}
