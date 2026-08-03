@@ -33,7 +33,7 @@ def assess_safety(
 ) -> SafetyAssessment:
     """Route a target to simulation, low-power work or regulated facilities.
 
-    This function is deliberately conservative.  It does not certify a device,
+    This function is deliberately conservative. It does not certify a device,
     replace a laser/radiation safety officer, or determine legal transmitter
     authorization in a jurisdiction.
     """
@@ -47,6 +47,11 @@ def assess_safety(
     ]
     required_tier = mechanism.minimum_prototype_tier if mechanism else "low_power_benchtop"
     hazards = set(mechanism.hazards if mechanism else ())
+    mechanism_id = mechanism.mechanism_id if mechanism else ""
+    simulation_request = (
+        target.max_prototype_tier == "simulation_only"
+        or target.environment.lower() in {"simulation", "digital_twin", "analysis_only"}
+    )
 
     if spectral.region in {"x_ray", "gamma"} or spectral.ionizing_candidate:
         required_tier = "institutional_facility"
@@ -76,7 +81,13 @@ def assess_safety(
     if "strong_magnetic_field" in hazards:
         required_tier = _max_tier(required_tier, "certified_module")
         controls.append("screen projectile, implant and access hazards")
-    if "laser" in hazards:
+
+    laser_active = mechanism_id in {
+        "stimulated_emission_laser",
+        "nonlinear_frequency_conversion",
+        "photomixing",
+    } or target.coherence.lower() in {"high", "coherent", "phase_locked"}
+    if "laser" in hazards and laser_active:
         required_tier = _max_tier(required_tier, "certified_module")
         controls.extend(
             (
@@ -84,7 +95,8 @@ def assess_safety(
                 "classify accessible emission and control specular reflections",
             )
         )
-    if "uv_exposure" in hazards or spectral.region == "ultraviolet":
+
+    if spectral.region == "ultraviolet":
         required_tier = _max_tier(required_tier, "certified_module")
         controls.append("fully enclose UV emission and verify leakage")
     if "chemical" in hazards or "pressurized_gas" in hazards:
@@ -105,9 +117,20 @@ def assess_safety(
             reasons.append("conservative high-power RF/microwave threshold exceeded")
             controls.append("formal RF exposure and EMC engineering review")
 
-    if target.power_w > 0.005 and "laser" in hazards:
+    if target.power_w > 0.005 and "laser" in hazards and laser_active:
         required_tier = _max_tier(required_tier, "institutional_facility")
         reasons.append("optical power requires formal laser classification and controls")
+
+    if simulation_request:
+        reasons.append("analysis is simulation-only; no physical emission is authorized")
+        controls.append("do not connect the generated plan to physical source hardware")
+        return SafetyAssessment(
+            status="simulation_only",
+            reasons=tuple(dict.fromkeys(reasons)),
+            required_controls=tuple(dict.fromkeys(controls)),
+            required_prototype_tier=required_tier,
+            local_build_permitted=False,
+        )
 
     allowed_tier = _TIER_INDEX[target.max_prototype_tier]
     needed_tier = _TIER_INDEX[required_tier]
