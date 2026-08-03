@@ -1,0 +1,25 @@
+{
+  "version": "V8.3-seed",
+  "operator": "Sigma_Meta = Canon(Gate(sum alpha_ij MS_i tensor MS_j))",
+  "scoring": "fertility + evidence + impact + compatibility - risk - cost - hype",
+  "top_couplings": [
+    {
+      "id": "MS01xMS27",
+      "pair": ["FFWT multi-scale", "ApprovalSentinel"],
+      "hypothesis": "Every FFWT output must receive an R0-R5 status before publication.",
+      "gate": "ALLOW_LOCAL_PATCH"
+    },
+    {
+      "id": "MS05xMS29",
+      "pair": ["HGFM", "EvidenceGateAgent"],
+      "hypothesis": "The HGFM graph should store evidence level and blocked claims beside concept edges.",
+      "gate": "ALLOW_LOCAL_PATCH"
+    },
+    {
+      "id": "MS23xMS42",
+      "pair": ["Human ergonomics", "healthy zero-friction automation"],
+      "hypothesis": "Automation should reduce physical and cognitive load without removing approval authority.",
+      "gate": "ALLOW_LOCAL_PATCH"
+    }
+  ]
+}
