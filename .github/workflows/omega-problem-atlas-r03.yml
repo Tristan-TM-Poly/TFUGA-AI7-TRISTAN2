@@ -6,20 +6,20 @@ on:
     paths:
       - "omega_millennium_t/r03/**"
       - "data/omega_problem_atlas_r03/**"
-      - "tests/test_omega_problem_atlas_r03.py"
-      - "schemas/omega_problem_atlas_report_v3.schema.json"
+      - "tests/test_omega_problem_atlas_r03*.py"
+      - "schemas/omega_problem_atlas*_v3.schema.json"
       - "docs/omega_millennium_t/r03/**"
-      - "examples/omega_problem_atlas_r03_demo.py"
+      - "examples/omega_problem_atlas_r03*.py"
       - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r03.yml"
   pull_request:
     paths:
       - "omega_millennium_t/r03/**"
       - "data/omega_problem_atlas_r03/**"
-      - "tests/test_omega_problem_atlas_r03.py"
-      - "schemas/omega_problem_atlas_report_v3.schema.json"
+      - "tests/test_omega_problem_atlas_r03*.py"
+      - "schemas/omega_problem_atlas*_v3.schema.json"
       - "docs/omega_millennium_t/r03/**"
-      - "examples/omega_problem_atlas_r03_demo.py"
+      - "examples/omega_problem_atlas_r03*.py"
       - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r03.yml"
   workflow_dispatch:
@@ -30,7 +30,7 @@ permissions:
 jobs:
   oakbench:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -42,38 +42,68 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install validators
         run: python -m pip install --disable-pip-version-check pytest jsonschema
-      - name: Compile R0.3
-        run: python -m compileall -q omega_millennium_t/r03 tests/test_omega_problem_atlas_r03.py examples/omega_problem_atlas_r03_demo.py
+      - name: Compile R0.3 compact and MAX
+        run: >-
+          python -m compileall -q
+          omega_millennium_t/r03
+          tests/test_omega_problem_atlas_r03.py
+          tests/test_omega_problem_atlas_r03_max.py
+          examples/omega_problem_atlas_r03_demo.py
+          examples/omega_problem_atlas_r03_max_demo.py
       - name: Run R0.3 tests
-        run: pytest -q tests/test_omega_problem_atlas_r03.py
-      - name: Materialize twice and compare
+        run: pytest -q tests/test_omega_problem_atlas_r03.py tests/test_omega_problem_atlas_r03_max.py
+      - name: Materialize compact twice and compare
         run: |
           python -m omega_millennium_t.r03.cli build --output-dir /tmp/atlas-a --primary-budget 12 --secondary-budget 36 --experiment-budget 128
           python -m omega_millennium_t.r03.cli build --output-dir /tmp/atlas-b --primary-budget 12 --secondary-budget 36 --experiment-budget 128
           diff -ru /tmp/atlas-a /tmp/atlas-b
           python -m omega_millennium_t.r03.cli audit /tmp/atlas-a
-      - name: Validate report schema and OAK invariants
+      - name: Materialize MAX twice, compare and audit receipts
+        run: |
+          python -m omega_millennium_t.r03.cli build-max --output-dir /tmp/atlas-max-a --primary-budget 24 --secondary-budget 72 --experiment-budget 256
+          python -m omega_millennium_t.r03.cli build-max --output-dir /tmp/atlas-max-b --primary-budget 24 --secondary-budget 72 --experiment-budget 256
+          diff -ru /tmp/atlas-max-a /tmp/atlas-max-b
+          python -m omega_millennium_t.r03.cli audit-max /tmp/atlas-max-a
+      - name: Validate schemas and OAK invariants
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           import jsonschema
 
-          schema = json.loads(Path('schemas/omega_problem_atlas_report_v3.schema.json').read_text())
-          report = json.loads(Path('/tmp/atlas-a/report.json').read_text())
-          jsonschema.Draft202012Validator.check_schema(schema)
-          jsonschema.validate(report, schema)
-          assert report['seed_problem_count'] == 72
-          assert report['front_count'] == 24
-          assert report['attack_mode_count'] == 8
-          assert report['materialized_research_cell_count'] == 576
-          assert report['materialized_hyperedge_count'] == 576
-          assert report['permanent_total_cap'] is None
-          assert report['records_claiming_current_open_status'] == 0
-          assert report['records_claiming_solution'] == 0
-          assert report['research_cells_claiming_proof'] == 0
-          assert report['solution_claimed'] is False
-          assert report['formal_proof_claimed'] is False
-          assert report['scientific_validation_claimed'] is False
-          print('CERTIFIED_SOFTWARE_RESEARCH_FIXTURE_R0_3')
+          compact_schema = json.loads(Path('schemas/omega_problem_atlas_report_v3.schema.json').read_text())
+          max_schema = json.loads(Path('schemas/omega_problem_atlas_max_report_v3.schema.json').read_text())
+          compact = json.loads(Path('/tmp/atlas-a/report.json').read_text())
+          maximum = json.loads(Path('/tmp/atlas-max-a/report.json').read_text())
+          for schema in (compact_schema, max_schema):
+              jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(compact, compact_schema)
+          jsonschema.validate(maximum, max_schema)
+
+          assert compact['seed_problem_count'] == 72
+          assert compact['front_count'] == 24
+          assert compact['materialized_research_cell_count'] == 576
+          assert compact['materialized_hyperedge_count'] == 576
+
+          assert maximum['seed_problem_count'] == 72
+          assert maximum['front_count'] == 24
+          assert maximum['target_kind_count'] == 12
+          assert maximum['research_target_count'] == 864
+          assert maximum['attack_mode_count'] == 8
+          assert maximum['research_cell_count'] == 6912
+          assert maximum['method_family_count'] == 32
+          assert maximum['hyperedge_count'] == 8568
+          assert maximum['portfolio_coverage']['fronts'] == 24
+          assert maximum['scoring_basis'] == 'transparent_profile_v1'
+
+          for report in (compact, maximum):
+              assert report['permanent_total_cap'] is None
+              assert report['records_claiming_current_open_status'] == 0
+              assert report['records_claiming_solution'] == 0
+              assert report['solution_claimed'] is False
+              assert report['formal_proof_claimed'] is False
+              assert report['scientific_validation_claimed'] is False
+          assert maximum['targets_claiming_proof_or_solution'] == 0
+          assert maximum['cells_claiming_proof_or_solution'] == 0
+          print('CERTIFIED_SOFTWARE_RESEARCH_FIXTURE_R0_3_MAX')
           PY
