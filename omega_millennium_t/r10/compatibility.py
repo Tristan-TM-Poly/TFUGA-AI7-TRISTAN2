@@ -3,10 +3,10 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-from typing import Any, Iterable, Iterator, Mapping
+from typing import Any, Iterator, Mapping
 
-from .compiler import _run_campaign
-from .model import CELL_SCHEMA, RuntimePolicy, canonical_json, stable_digest
+from . import compiler as _compiler_module
+from .model import CELL_SCHEMA, RuntimePolicy, canonical_json, stable_digest, write_json
 from .store import AtlasStore
 
 R03_MANIFEST_SCHEMA = "omega-problem-atlas-manifest-max/3"
@@ -152,6 +152,35 @@ def _iter_r03_cells(
             yield ordinal, row, canonical_json(row) + "\n"
 
 
+def _refresh_outputs_with_compatibility(
+    output: Path,
+    runtime: RuntimePolicy,
+    receipt: Mapping[str, Any],
+) -> dict[str, Any]:
+    with AtlasStore(output / "atlas.sqlite3", runtime) as store:
+        with store.transaction():
+            existing = store.get_metadata("source_compatibility")
+            if existing is not None and existing != receipt:
+                raise ValueError("r03_compatibility_receipt_mismatch")
+            store.set_metadata("source_compatibility", dict(receipt))
+        checkpoint = store.load_checkpoint()
+        if checkpoint is None:
+            raise ValueError("checkpoint_missing_after_r03_ingest")
+        manifest = _compiler_module._manifest(store, checkpoint)
+        report = _load_json(output / "report.json")
+        report["manifest_digest"] = manifest["manifest_digest"]
+        report["r03_compatibility_receipt_digest"] = receipt["receipt_digest"]
+        report["r03_manifest_digest_reproduced"] = receipt["r03_manifest_digest"]
+        report["r03_report_digest_reproduced"] = receipt["r03_report_digest"]
+        report["report_digest"] = stable_digest(
+            {key: value for key, value in report.items() if key != "report_digest"}
+        )
+    write_json(output / "manifest.json", manifest)
+    write_json(output / "report.json", report)
+    write_json(output / "r03_compatibility.json", dict(receipt))
+    return report
+
+
 def ingest_r03_max(
     source_dir: str | Path,
     output_dir: str | Path,
@@ -174,7 +203,7 @@ def ingest_r03_max(
             if checkpoint is not None:
                 start = int(checkpoint["next_source_ordinal"])
     rows = _iter_r03_cells(source / "research_cells.jsonl", start_ordinal=start)
-    report = _run_campaign(
+    _compiler_module._run_campaign(
         output_dir=output,
         source_kind="r03_max",
         source_digest=receipt["r03_manifest_digest"],
@@ -185,14 +214,4 @@ def ingest_r03_max(
         expected_total_rows=int(receipt["r03_cell_count"]),
         clean=clean,
     )
-    with AtlasStore(output / "atlas.sqlite3", runtime) as store:
-        with store.transaction():
-            existing = store.get_metadata("r03_compatibility_receipt")
-            if existing is not None and existing != receipt:
-                raise ValueError("r03_compatibility_receipt_mismatch")
-            store.set_metadata("r03_compatibility_receipt", receipt)
-    (output / "r03_compatibility.json").write_text(
-        json.dumps(receipt, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-    )
-    return report
+    return _refresh_outputs_with_compatibility(output, runtime, receipt)
