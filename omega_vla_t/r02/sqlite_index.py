@@ -44,8 +44,14 @@ class SQLiteDigestIndex:
             raise ValueError("commit_interval must be positive")
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        if reset and self.path.exists():
-            self.path.unlink()
+        if reset:
+            for candidate in (
+                self.path,
+                Path(f"{self.path}-wal"),
+                Path(f"{self.path}-shm"),
+            ):
+                if candidate.exists():
+                    candidate.unlink()
         self.commit_interval = int(commit_interval)
         self.connection = sqlite3.connect(str(self.path))
         self.connection.execute("PRAGMA journal_mode=WAL")
