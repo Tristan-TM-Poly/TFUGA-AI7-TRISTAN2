@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:omega:web-hg:manifest:0.2",
+  "title": "Omega Web HG R0.2 run manifest",
+  "type": "object",
+  "required": ["schema", "run_id", "started_at", "finished_at", "config", "config_sha256", "outputs"],
+  "properties": {
+    "schema": {"const": "omega-web-hg-manifest/0.2"},
+    "run_id": {"type": "string", "pattern": "^run_[0-9TZ]+_[0-9a-f]{10}$"},
+    "started_at": {"type": "string"},
+    "finished_at": {"type": "string"},
+    "config": {
+      "type": "object",
+      "required": ["seed_url", "user_agent", "resource_budget", "max_depth", "max_frontier", "store_raw", "store_warc"],
+      "properties": {
+        "seed_url": {"type": "string", "format": "uri"},
+        "allowed_domains": {"type": "array", "items": {"type": "string"}},
+        "include_subdomains": {"type": "boolean"},
+        "user_agent": {"type": "string", "minLength": 1},
+        "resource_budget": {"type": ["integer", "null"], "minimum": 1},
+        "max_depth": {"type": ["integer", "null"], "minimum": 1},
+        "max_frontier": {"type": ["integer", "null"], "minimum": 1},
+        "max_response_bytes": {"type": "integer", "minimum": 1},
+        "delay_seconds": {"type": "number", "minimum": 0},
+        "timeout_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "store_raw": {"type": "boolean"},
+        "store_warc": {"type": "boolean"},
+        "discover_standard_endpoints": {"type": "boolean"},
+        "discover_sitemaps": {"type": "boolean"},
+        "discover_feeds": {"type": "boolean"},
+        "respect_meta_robots": {"type": "boolean"},
+        "block_private_networks": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "resumed": {"type": "boolean"},
+    "frontier_remaining": {"type": "integer", "minimum": 0},
+    "state_snapshot": {"type": ["string", "null"]},
+    "warc_file": {"type": ["string", "null"]},
+    "outputs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  },
+  "additionalProperties": false
+}

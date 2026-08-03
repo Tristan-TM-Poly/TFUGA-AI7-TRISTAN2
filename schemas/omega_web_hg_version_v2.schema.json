@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:omega:web-hg:version:0.2",
+  "title": "Omega Web HG R0.2 page version",
+  "type": "object",
+  "required": ["version_id", "run_id", "url", "canonical_url", "fetched_at", "http_status", "content_type", "content_sha256", "byte_length", "evidence_id", "title", "section_digest"],
+  "properties": {
+    "version_id": {"type": "string", "pattern": "^version_[0-9a-f]{64}$"},
+    "run_id": {"type": "string"},
+    "url": {"type": "string", "format": "uri"},
+    "canonical_url": {"type": "string", "format": "uri"},
+    "fetched_at": {"type": "string"},
+    "http_status": {"type": "integer", "minimum": 100, "maximum": 599},
+    "content_type": {"type": "string"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "byte_length": {"type": "integer", "minimum": 0},
+    "evidence_id": {"type": "string"},
+    "etag": {"type": ["string", "null"]},
+    "last_modified": {"type": ["string", "null"]},
+    "title": {"type": "string"},
+    "section_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "raw_blob": {"type": ["string", "null"]},
+    "warc_record_id": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

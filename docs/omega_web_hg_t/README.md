@@ -1,12 +1,12 @@
-# Ω-WEB-HG-T∞ R0.1 — Hypergraphe Web probatoire
+# Ω-WEB-HG-T∞ — Hypergraphe Web probatoire
 
 Ce module explore des pages Web publiques ou explicitement autorisées et construit un graphe traçable :
 
 ```text
-site → page → section → lien → preuve → version
+site → page → section → lien → preuve → version → changement → run
 ```
 
-## Limites de sécurité R0.1
+## R0.1 — noyau statique sûr
 
 - HTTP(S) seulement;
 - domaines explicitement autorisés;
@@ -19,9 +19,7 @@ site → page → section → lien → preuve → version
 - corps bruts optionnels, séparés des graphes dérivés;
 - un résultat extrait n'est ni une certification factuelle ni une permission de republication.
 
-`robots.txt` est traité comme une contrainte technique minimale, pas comme une autorisation juridique. Les conditions d'utilisation, licences, droits d'auteur, renseignements personnels et autorisations explicites restent des gates séparés à développer.
-
-## Commandes
+`robots.txt` est traité comme une contrainte technique minimale, pas comme une autorisation juridique. Les conditions d'utilisation, licences, droits d'auteur, renseignements personnels et autorisations explicites restent des gates séparés.
 
 ```bash
 omega-web-hg inspect https://example.org
@@ -33,7 +31,34 @@ omega-web-hg crawl https://example.org \
 
 `--page-budget 0` retire le plafond de pages du run. Cela ne retire jamais la portée de domaine, `robots.txt`, les limites réseau, le throttling, les contraintes juridiques ou les ressources physiques.
 
-## Sorties
+## R0.2 MAX — observatoire incrémental
+
+R0.2 ajoute :
+
+- frontière SQLite persistante avec leases, reprise et recrawl;
+- requêtes conditionnelles `ETag` / `Last-Modified` et traitement `304`;
+- découverte par sitemaps, index de sitemaps, RSS, Atom, JSON Feed, `robots.txt`, HTML et en-têtes `Link`;
+- respect de `noarchive`, `nofollow` et `X-Robots-Tag`;
+- objets bruts adressés par SHA-256 et capture WARC 1.1;
+- versions et changements `ADDED`, `MODIFIED`, `UNCHANGED`, `NOT_MODIFIED`, `REMOVED`, `MISSING`;
+- hypergraphe v2, GraphML, provenance JSON-LD inspirée de PROV-O;
+- snapshots SQLite, diff inter-runs, audit structurel et schémas JSON.
+
+```bash
+omega-web-hg-r02 crawl https://example.org \
+  --output-root generated/omega_web_hg_t_r02/example \
+  --resource-budget 1000 \
+  --max-depth 12 \
+  --max-frontier 100000
+
+omega-web-hg-r02 state generated/omega_web_hg_t_r02/example
+omega-web-hg-r02 audit generated/omega_web_hg_t_r02/example/runs/<run_id>
+omega-web-hg-r02 diff <run-précédent> <run-courant> --output diff.json
+```
+
+Une valeur `0` retire le plafond fini correspondant. Les contraintes de portée, réseau, robots, débit, stockage, droit et capacité physique restent actives. La spécification détaillée est dans [`R02_MAX.md`](R02_MAX.md).
+
+## Sorties R0.1
 
 ```text
 manifest.json
@@ -49,19 +74,34 @@ oak-report.json
 raw/<préfixe>/<sha256>.html
 ```
 
-Chaque page possède un `evidence_id`, un hash SHA-256, les URL demandée/finale/canonique, l'horodatage UTC, le statut HTTP, le type MIME, la taille et certains en-têtes utiles. Les relations page→section et page→page transportent aussi l'identifiant de preuve. Les URL découvertes mais non encore visitées sont matérialisées comme nœuds candidats afin que toutes les arêtes GraphML aient des extrémités existantes.
+## Sorties supplémentaires R0.2
 
-## Statut épistémique
+```text
+discoveries.jsonl
+document-metadata.jsonl
+versions.jsonl
+changes.jsonl
+hypergraph-v2.json
+hypergraph-v2.graphml
+provenance.jsonld
+archive.warc
+state.snapshot.sqlite3
+objects/sha256/...
+```
 
-R0.1 est un crawler HTML statique et un compilateur de provenance. Il ne fournit pas encore :
+Chaque page possède un `evidence_id`, un hash SHA-256, les URL demandée/finale/canonique, l'horodatage UTC, le statut HTTP, le type MIME, la taille et certains en-têtes utiles. Les relations transportent les identifiants de preuve lorsque disponibles. Les URL découvertes mais non encore visitées sont matérialisées comme nœuds candidats afin que toutes les arêtes GraphML aient des extrémités existantes.
 
-- WARC conforme;
-- rendu JavaScript;
-- sitemap/RSS/API;
+## Statut épistémique et limites
+
+R0.2 ne fournit pas encore :
+
+- rendu JavaScript ou interaction navigateur;
+- authentification ou collecte de contenu privé;
 - PDF et documents bureautiques;
-- extraction de claims ou validation d'entailment;
-- licence automatique fiable;
-- diff temporel ou requêtes conditionnelles persistées;
-- crawling distribué.
+- extraction de claims certifiés ou validation d'entailment;
+- classification juridique automatique fiable;
+- crawling distribué multi-machine;
+- garantie absolue contre toutes les variantes de DNS rebinding;
+- certification de rejeu WARC indépendante.
 
-Ces éléments appartiennent aux versions suivantes et ne doivent pas être revendiqués par R0.1.
+Aucun de ces éléments ne doit être revendiqué sans nouvelle implémentation, tests et validation OAK.
