@@ -59,3 +59,46 @@ jobs:
               validator.validate(source.to_dict())
           print('OMEGA_WEB_HG_R04_BEST_SITES_VALID')
           PY
+
+  live-metadata-pilot:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/feat/omega-web-hg-best-sites-r04')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run five-source metadata-only pilot
+        run: |
+          python -m omega_web_hg_t.r04.pilot \
+            --output-dir generated/omega_web_hg_r04_live_pilot \
+            --delay-seconds 1.0
+      - name: Enforce OAK receipt boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('generated/omega_web_hg_r04_live_pilot/pilot-receipt.json')
+          data = json.loads(path.read_text())
+          assert data['request_count'] == 5
+          assert data['metadata_only'] is True
+          assert data['full_text_collected'] is False
+          assert data['raw_bodies_persisted'] is False
+          assert all(record['raw_body_persisted'] is False for record in data['records'])
+          print(json.dumps({
+              'request_count': data['request_count'],
+              'successful_count': data['successful_count'],
+              'manifest_sha256': data['manifest_sha256'],
+          }, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: omega-web-hg-r04-live-pilot-receipt
+          path: generated/omega_web_hg_r04_live_pilot/pilot-receipt.json
+          if-no-files-found: error
+          retention-days: 30
