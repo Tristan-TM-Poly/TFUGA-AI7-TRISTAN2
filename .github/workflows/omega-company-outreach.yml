@@ -1,0 +1,76 @@
+name: Omega Company Outreach OAKBench
+
+on:
+  pull_request:
+    paths:
+      - 'omega_company_outreach_t/**'
+      - 'company_outreach/**'
+      - 'tests/test_omega_company_outreach.py'
+      - 'docs/OMEGA_COMPANY_OUTREACH_T.md'
+      - 'pyproject.toml'
+      - '.github/workflows/omega-company-outreach.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'omega_company_outreach_t/**'
+      - 'company_outreach/**'
+      - 'tests/test_omega_company_outreach.py'
+      - 'docs/OMEGA_COMPANY_OUTREACH_T.md'
+      - 'pyproject.toml'
+
+concurrency:
+  group: omega-company-outreach-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  outreach-oakbench:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pytest
+        run: python -m pip install pytest
+      - name: Compile
+        run: python -m compileall -q omega_company_outreach_t
+      - name: Run OAKBench
+        run: python -m pytest -q tests/test_omega_company_outreach.py
+      - name: Validate public-safe cases and portfolio
+        run: |
+          python -m omega_company_outreach_t.cli validate-case company_outreach/cases/OUT-2026-0001.json
+          python -m omega_company_outreach_t.cli validate-case company_outreach/cases/OUT-2026-0002.json
+          python -m omega_company_outreach_t.cli portfolio-check company_outreach/cases
+      - name: Verify strategic scoring
+        run: |
+          python -m omega_company_outreach_t.cli score-case company_outreach/cases/OUT-2026-0001.json company_outreach/strategy/OUT-2026-0001.signals.json --out generated/score-1.json
+          python -m omega_company_outreach_t.cli score-case company_outreach/cases/OUT-2026-0002.json company_outreach/strategy/OUT-2026-0002.signals.json --out generated/score-2.json
+          cmp generated/score-1.json company_outreach/strategy/OUT-2026-0001.score.json
+          cmp generated/score-2.json company_outreach/strategy/OUT-2026-0002.score.json
+      - name: Build and audit deterministic ledger
+        run: |
+          python -m omega_company_outreach_t.cli append-case company_outreach/cases/OUT-2026-0001.json --ledger generated/outreach-ledger.jsonl
+          python -m omega_company_outreach_t.cli append-case company_outreach/cases/OUT-2026-0002.json --ledger generated/outreach-ledger.jsonl
+          python -m omega_company_outreach_t.cli audit-ledger generated/outreach-ledger.jsonl
+      - name: Build dashboard
+        run: |
+          python -m omega_company_outreach_t.cli dashboard company_outreach/cases --events-dir company_outreach/events --generated-at 2026-08-02T22:45:00+00:00 --out generated/outreach-dashboard.json
+          python -m omega_company_outreach_t.cli dashboard company_outreach/cases --events-dir company_outreach/events --generated-at 2026-08-02T22:45:00+00:00 --format markdown --out generated/outreach-dashboard.md
+      - name: Upload dashboard evidence
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-company-outreach-dashboard
+          path: |
+            generated/outreach-dashboard.json
+            generated/outreach-dashboard.md
+            generated/score-1.json
+            generated/score-2.json
+          retention-days: 14

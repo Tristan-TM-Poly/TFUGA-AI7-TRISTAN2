@@ -1,0 +1,90 @@
+{
+  "companies": [
+    {
+      "company_unit": "tristan_parent_opco",
+      "default_signature": "Tristan Tardif-Morency — pour Tristan Parent OpCo — rôle opérationnel candidat, non présenté comme entité constituée",
+      "display_name": "Tristan Parent OpCo",
+      "legal_state": "candidate_parent_operating_role",
+      "purpose": [
+        "entrepreneurship",
+        "financing programs",
+        "strategic partnerships"
+      ],
+      "voice_traits": [
+        "concise",
+        "commercially grounded",
+        "evidence-aware",
+        "non-binding"
+      ]
+    },
+    {
+      "company_unit": "tristan_oak_systems",
+      "default_signature": "Tristan Tardif-Morency — pour Tristan OAK Systems — rôle opérationnel interne, non présenté comme entité constituée",
+      "display_name": "Tristan OAK Systems",
+      "legal_state": "internal_division",
+      "purpose": [
+        "audit",
+        "governance",
+        "evidence",
+        "risk"
+      ],
+      "voice_traits": [
+        "precise",
+        "traceable",
+        "risk-explicit",
+        "non-adversarial"
+      ]
+    },
+    {
+      "company_unit": "tristan_software_labs",
+      "default_signature": "Tristan Tardif-Morency — pour Tristan Software Labs — rôle opérationnel interne, non présenté comme entité constituée",
+      "display_name": "Tristan Software Labs",
+      "legal_state": "internal_division",
+      "purpose": [
+        "software pilots",
+        "integrations",
+        "customer discovery"
+      ],
+      "voice_traits": [
+        "technical",
+        "prototype-first",
+        "measurable",
+        "low-friction"
+      ]
+    },
+    {
+      "company_unit": "tristan_research_foundry",
+      "default_signature": "Tristan Tardif-Morency — pour Tristan Research Foundry — rôle opérationnel interne, non présenté comme entité constituée",
+      "display_name": "Tristan Research Foundry",
+      "legal_state": "internal_division",
+      "purpose": [
+        "research pilots",
+        "universities",
+        "scientific partnerships"
+      ],
+      "voice_traits": [
+        "scholarly",
+        "bounded",
+        "falsifiable",
+        "institutionally respectful"
+      ]
+    }
+  ],
+  "portfolio_policy": {
+    "automatic_send_from_push": false,
+    "follow_up_cooldown_days": 14,
+    "mass_marketing_enabled": false,
+    "maximum_daily_sends": 5,
+    "maximum_open_cases": 12,
+    "maximum_sends_per_organization_30d": 2,
+    "maximum_unanswered_followups": 1
+  },
+  "schema_version": "2.0",
+  "transport": {
+    "authenticated_sender_type": "personal_account",
+    "corporate_domain_verified": false,
+    "provider": "gmail",
+    "public_evidence_policy": "Only HMAC/SHA-256 identifiers, company role, purpose, status and next action may enter GitHub.",
+    "rule": "Until a corporate domain or alias is independently verified, messages must not claim to originate from an incorporated company address."
+  }
+}
