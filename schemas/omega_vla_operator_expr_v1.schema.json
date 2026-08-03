@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_vla_operator_expr_v1.schema.json",
+  "title": "Omega VLA Operator Expression v1",
+  "$ref": "#/$defs/operator",
+  "$defs": {
+    "mathType": {
+      "type": "object",
+      "required": [
+        "structure",
+        "scalar_system",
+        "shape",
+        "units",
+        "variance",
+        "regularity",
+        "support",
+        "uncertainty",
+        "domain_id",
+        "codomain_id",
+        "tags"
+      ],
+      "properties": {
+        "structure": {"type": "string"},
+        "scalar_system": {"type": "string"},
+        "shape": {"type": "array", "items": {"type": ["integer", "string"]}},
+        "units": {"type": "object", "additionalProperties": {"type": "string"}},
+        "variance": {"type": "array", "items": {"type": "string"}},
+        "regularity": {"type": "string"},
+        "support": {"type": "string"},
+        "uncertainty": {
+          "type": "object",
+          "required": ["model", "parameters"],
+          "properties": {
+            "model": {"type": "string"},
+            "parameters": {"type": "object"}
+          },
+          "additionalProperties": false
+        },
+        "domain_id": {"type": ["string", "null"]},
+        "codomain_id": {"type": ["string", "null"]},
+        "tags": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "property": {
+      "type": "object",
+      "required": ["name", "status", "evidence"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "status": {
+          "enum": ["declared", "tested", "proved", "refuted", "unknown"]
+        },
+        "evidence": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "complexScalar": {
+      "type": "object",
+      "required": ["real", "imag"],
+      "properties": {
+        "real": {"type": "number"},
+        "imag": {"type": "number"}
+      },
+      "additionalProperties": false
+    },
+    "scalar": {
+      "anyOf": [
+        {"type": ["number", "integer", "null"]},
+        {"$ref": "#/$defs/complexScalar"}
+      ]
+    },
+    "operator": {
+      "type": "object",
+      "required": [
+        "kind",
+        "name",
+        "declared_type",
+        "scalar_value",
+        "matrix_value",
+        "exponent",
+        "attributes",
+        "properties",
+        "operands"
+      ],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "name": {"type": "string"},
+        "declared_type": {
+          "anyOf": [
+            {"$ref": "#/$defs/mathType"},
+            {"type": "null"}
+          ]
+        },
+        "scalar_value": {"$ref": "#/$defs/scalar"},
+        "matrix_value": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/scalar"}
+          }
+        },
+        "exponent": {"type": ["integer", "null"]},
+        "attributes": {"type": "object"},
+        "properties": {"type": "array", "items": {"$ref": "#/$defs/property"}},
+        "operands": {"type": "array", "items": {"$ref": "#/$defs/operator"}}
+      },
+      "additionalProperties": false
+    }
+  }
+}
