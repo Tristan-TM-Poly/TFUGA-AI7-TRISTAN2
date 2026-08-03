@@ -33,6 +33,13 @@ from .dynamics import (
     rk4_step,
     simulate_state_space,
 )
+from .energy_graph import (
+    DomainBalance,
+    EnergyGraphReport,
+    EnergyTerm,
+    PassivityAssessment,
+    audit_closed_loop_energy,
+)
 from .evidence import (
     EVIDENCE_TIERS,
     ReceiptAssessment,
@@ -64,21 +71,43 @@ from .models import (
     demo_electromechanical_axis_blueprint,
 )
 from .oak import CPSOAKGate, CPSOAKReport, run_cps_benchmarks
+from .r02_oak import CPSR02OAKGate, CPSR02OAKReport, run_cps_r02_benchmarks
+from .unit_graph import (
+    DIMENSION_NAMES,
+    POWER_DIMENSION,
+    ConnectionUnitAssessment,
+    DomainPortSemantics,
+    PortUnitAssessment,
+    UnitDefinition,
+    UnitGraphReport,
+    UnitRegistry,
+    audit_blueprint_units,
+    default_domain_semantics,
+    default_unit_registry,
+)
 
 __all__ = [
     "AxisPlantConfig",
     "COMPARATORS",
     "CPSOAKGate",
     "CPSOAKReport",
+    "CPSR02OAKGate",
+    "CPSR02OAKReport",
     "ClosedLoopReport",
     "ClosedLoopSample",
     "ClosedLoopScenario",
     "Component",
     "Connection",
+    "ConnectionUnitAssessment",
+    "DIMENSION_NAMES",
     "DOMAINS",
     "DOMAIN_KEYWORDS",
+    "DomainBalance",
+    "DomainPortSemantics",
     "EVIDENCE_TIERS",
     "ElectronicsConfig",
+    "EnergyGraphReport",
+    "EnergyTerm",
     "FaultEvent",
     "FaultMode",
     "FaultPropagationRecord",
@@ -89,7 +118,10 @@ __all__ = [
     "PIDState",
     "PIDStep",
     "PORT_DIRECTIONS",
+    "POWER_DIMENSION",
+    "PassivityAssessment",
     "Port",
+    "PortUnitAssessment",
     "PrototypeArchitecture",
     "PrototypeCandidate",
     "PrototypeCompilationReport",
@@ -105,13 +137,20 @@ __all__ = [
     "SystemBlueprint",
     "SystemEvidenceLedger",
     "SystemEvidenceReceipt",
+    "UnitDefinition",
+    "UnitGraphReport",
+    "UnitRegistry",
     "analyze_fault_propagation",
     "assess_evidence_ledger",
     "assess_receipt",
+    "audit_blueprint_units",
+    "audit_closed_loop_energy",
     "compile_prototype",
     "computational_demo_receipts",
     "dc_motor_model",
+    "default_domain_semantics",
     "default_prototype_architectures",
+    "default_unit_registry",
     "demo_electromechanical_axis_blueprint",
     "demo_fault_scenario",
     "demo_integrated_robot_intent",
@@ -123,8 +162,9 @@ __all__ = [
     "rk4_step",
     "run_closed_loop_axis",
     "run_cps_benchmarks",
+    "run_cps_r02_benchmarks",
     "simulate_state_space",
     "summarize_inventory",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
