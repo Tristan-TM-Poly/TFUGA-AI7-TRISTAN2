@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
-from .canonical import CanonicalizationError, canonical_mapping
+from .canonical import CanonicalizationError, canonical_mapping, normalize_text
 from .contacts import RoleCategory
 from .consent import ConsentBasis, ConsentScope
 from .migration import MigratedCase, MigrationIds, migrate_outreach_case
@@ -28,6 +28,34 @@ def migration_to_mapping(migrated: MigratedCase) -> dict[str, Any]:
     )
 
 
+def _resolve_organization_name(
+    payload: Mapping[str, Any], organization_name: str | None
+) -> dict[str, Any]:
+    """Resolve a public organization name without guessing.
+
+    Early R0.2 cases contained ``target_organization``. Later privacy-hardening
+    removed that field while keeping only hashes. Migration therefore accepts
+    an explicit public name supplied by the audited workflow. If both forms are
+    present they must agree exactly after whitespace normalization.
+    """
+
+    normalized_payload = dict(payload)
+    stored = payload.get("target_organization")
+    stored_name = normalize_text(stored) if isinstance(stored, str) and stored.strip() else None
+    supplied_name = normalize_text(organization_name) if organization_name else None
+    if stored_name and supplied_name and stored_name != supplied_name:
+        raise CanonicalizationError(
+            "explicit organization name conflicts with legacy target_organization"
+        )
+    resolved = stored_name or supplied_name
+    if not resolved:
+        raise CanonicalizationError(
+            "legacy case omits target_organization; provide an explicit organization_name"
+        )
+    normalized_payload["target_organization"] = resolved
+    return normalized_payload
+
+
 def migrate_case_file(
     source: Path,
     destination: Path,
@@ -41,12 +69,14 @@ def migrate_case_file(
     strategic_signals: StrategicSignals,
     proposed_asset_id: str,
     organization_domain: str | None = None,
+    organization_name: str | None = None,
 ) -> dict[str, Any]:
     payload = json.loads(source.read_text(encoding="utf-8"))
     if not isinstance(payload, Mapping):
         raise CanonicalizationError("migration source file must contain an object")
+    resolved_payload = _resolve_organization_name(payload, organization_name)
     migrated = migrate_outreach_case(
-        payload,
+        resolved_payload,
         ids=ids,
         organization_type=organization_type,
         opportunity_type=opportunity_type,
