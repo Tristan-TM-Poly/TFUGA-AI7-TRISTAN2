@@ -85,8 +85,10 @@ jobs:
           profile_validator = jsonschema.Draft202012Validator(profile_schema, format_checker=jsonschema.FormatChecker())
           compiled_validator = jsonschema.Draft202012Validator(compiled_schema, format_checker=jsonschema.FormatChecker())
           for profile in BUILTIN_POLICIES:
-              profile_validator.validate(profile.to_dict())
-              compiled_validator.validate(compile_policy(profile, as_of='2026-08-03').to_dict())
+              profile_instance = json.loads(json.dumps(profile.to_dict()))
+              compiled_instance = json.loads(json.dumps(compile_policy(profile, as_of='2026-08-03').to_dict()))
+              profile_validator.validate(profile_instance)
+              compiled_validator.validate(compiled_instance)
           print('OMEGA_WEB_HG_R05_SCHEMAS_VALID')
           PY
       - name: Prove deterministic materialization
