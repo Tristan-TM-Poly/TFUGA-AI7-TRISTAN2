@@ -1,0 +1,110 @@
+name: Omega CI Proof Autonomy A1-A3
+
+on:
+  pull_request:
+    paths:
+      - "omega_ci_proof_t/**"
+      - "tests/test_omega_ci_proof_t.py"
+      - "data/omega_ci_proof_t/**"
+      - "schemas/omega_ci_*.schema.json"
+      - "docs/omega-ci-proof-autonomy-t/**"
+      - "examples/omega_ci_proof_demo.py"
+      - ".github/workflows/omega-ci-proof-autonomy.yml"
+  push:
+    branches: [feat/omega-ci-proof-autonomy-r01]
+    paths:
+      - "omega_ci_proof_t/**"
+      - "tests/test_omega_ci_proof_t.py"
+      - "data/omega_ci_proof_t/**"
+      - "schemas/omega_ci_*.schema.json"
+      - "docs/omega-ci-proof-autonomy-t/**"
+      - "examples/omega_ci_proof_demo.py"
+      - ".github/workflows/omega-ci-proof-autonomy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-ci-proof-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof-kernel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile
+        run: python -m compileall -q omega_ci_proof_t tests/test_omega_ci_proof_t.py examples/omega_ci_proof_demo.py
+      - name: Test A1-A3 kernel
+        run: pytest -q tests/test_omega_ci_proof_t.py
+      - name: Validate schemas and registries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          pairs = [
+              ('schemas/omega_ci_claim_v1.schema.json', 'data/omega_ci_proof_t/claims.json'),
+          ]
+          for schema_path, data_path in pairs:
+              schema = json.loads(Path(schema_path).read_text())
+              jsonschema.Draft202012Validator.check_schema(schema)
+              jsonschema.validate(json.loads(Path(data_path).read_text()), schema)
+          for schema_path in ('schemas/omega_ci_proof_plan_v1.schema.json', 'schemas/omega_ci_evidence_v1.schema.json'):
+              jsonschema.Draft202012Validator.check_schema(json.loads(Path(schema_path).read_text()))
+          print('OMEGA_CI_SCHEMAS_VALID')
+          PY
+      - name: Generate deterministic proof plan twice
+        run: |
+          rm -rf /tmp/omega-ci-proof && mkdir -p /tmp/omega-ci-proof
+          python -m omega_ci_proof_t plan --impact data/omega_ci_proof_t/sample-impact.json --claims data/omega_ci_proof_t/claims.json --tests data/omega_ci_proof_t/tests.json --output /tmp/omega-ci-proof/plan-a.json
+          python -m omega_ci_proof_t plan --impact data/omega_ci_proof_t/sample-impact.json --claims data/omega_ci_proof_t/claims.json --tests data/omega_ci_proof_t/tests.json --output /tmp/omega-ci-proof/plan-b.json
+          cmp /tmp/omega-ci-proof/plan-a.json /tmp/omega-ci-proof/plan-b.json
+      - name: Generate M-minus regression candidates
+        run: |
+          python -m omega_ci_proof_t generate-regressions --mminus data/omega_ci_proof_t/mminus.json --output /tmp/omega-ci-proof/test_mminus_generated.py
+          python -m compileall -q /tmp/omega-ci-proof/test_mminus_generated.py
+          grep -q 'M_MINUS-R0.3-001' /tmp/omega-ci-proof/test_mminus_generated.py
+      - name: Produce and verify Evidence Bundle and ledger
+        run: |
+          python -m omega_ci_proof_t bundle --plan /tmp/omega-ci-proof/plan-a.json --results data/omega_ci_proof_t/sample-results.json --commit-sha "${{ github.sha }}" --artifact /tmp/omega-ci-proof/plan-a.json --output /tmp/omega-ci-proof/evidence.json --ledger /tmp/omega-ci-proof/ledger.jsonl
+          python -m omega_ci_proof_t verify --bundle /tmp/omega-ci-proof/evidence.json --plan /tmp/omega-ci-proof/plan-a.json
+          python -m omega_ci_proof_t oak --ledger /tmp/omega-ci-proof/ledger.jsonl
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          plan = json.loads(Path('/tmp/omega-ci-proof/plan-a.json').read_text())
+          evidence = json.loads(Path('/tmp/omega-ci-proof/evidence.json').read_text())
+          jsonschema.validate(plan, json.loads(Path('schemas/omega_ci_proof_plan_v1.schema.json').read_text()))
+          jsonschema.validate(evidence, json.loads(Path('schemas/omega_ci_evidence_v1.schema.json').read_text()))
+          assert evidence['decision']['automatic_merge_allowed'] is False
+          assert evidence['decision']['human_review_required'] is True
+          assert len(evidence['merkle_root']) == 64
+          print('OMEGA_CI_EVIDENCE_VALID')
+          PY
+      - name: Enforce autonomy boundary
+        run: |
+          python -m omega_ci_proof_t autonomy --level A3
+          if python -m omega_ci_proof_t autonomy --level A4; then
+            echo 'A4 must remain disabled in R0.1' >&2
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: omega-ci-proof-${{ matrix.python-version }}
+          path: /tmp/omega-ci-proof
+          if-no-files-found: error
+          retention-days: 30
