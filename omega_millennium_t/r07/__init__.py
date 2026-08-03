@@ -10,6 +10,7 @@ from .job_system import (
     RUNNER_KINDS,
     audit_job_campaign,
     compile_job_campaign,
+    replay_job,
 )
 
 __all__ = [
@@ -17,6 +18,7 @@ __all__ = [
     "RUNNER_KINDS",
     "audit_job_campaign",
     "compile_job_campaign",
+    "replay_job",
 ]
 
-__version__ = "0.7.0"
+__version__ = "0.7.1"
