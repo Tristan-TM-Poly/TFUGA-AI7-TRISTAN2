@@ -5,12 +5,10 @@ counted as independently verified open problems and never claim solutions.
 """
 from __future__ import annotations
 
-from dataclasses import asdict
 from hashlib import sha256
 import json
 from pathlib import Path
 import tempfile
-from typing import Iterable
 
 from .campaign import allocate_campaign, campaign_manifest
 from .competition import competition_count, research_open_count
@@ -150,8 +148,14 @@ def run_benchmark(
         raise ValueError("obligation_budget must be non-negative")
     leads = synthetic_leads(lead_count)
     methods = method_bank()
-    obligations = tuple(stream_obligations(leads, obligation_budget))
-    allocations = allocate_campaign(leads, obligations[: min(len(obligations), 8192)], min(10_001, obligation_budget))
+    campaign_obligations = tuple(
+        stream_obligations(leads, min(8192, obligation_budget))
+    )
+    allocations = allocate_campaign(
+        leads,
+        campaign_obligations,
+        min(10_001, obligation_budget),
+    ) if obligation_budget else ()
     candidates = candidate_transfers(
         leads[: min(transfer_lead_sample, len(leads))],
         methods[:32],
@@ -172,7 +176,7 @@ def run_benchmark(
                 store.upsert_method(method)
             for edge in edges:
                 store.upsert_edge(edge)
-        store.insert_obligations(obligations)
+        store.insert_obligations(stream_obligations(leads, obligation_budget))
         checkpoint = store.checkpoint("OPA-R02-BENCHMARK", "2026-08-03T00:00:00Z")
         counts = {
             "leads": store.count("leads"),
