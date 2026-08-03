@@ -1,0 +1,19 @@
+{
+  "checks": [
+    {"detail": "[]", "name": "hypergraph-valid", "passed": true},
+    {"detail": "nodes=38", "name": "synthetic-node-count", "passed": true},
+    {"detail": "finite DC abstraction", "name": "nominal-flow-finite", "passed": true},
+    {"detail": "residual=0.0", "name": "energy-balance-residual", "passed": true},
+    {"detail": "monotonic fixture stress", "name": "storm-not-better-than-nominal", "passed": true},
+    {"detail": "1ea94f883f6fbbf022ecd3c5c5582f28a886eee89548f836023546655278302b", "name": "campaign-deterministic", "passed": true},
+    {"detail": "outcomes=96", "name": "world-count", "passed": true},
+    {"detail": "critical", "name": "security-refusal", "passed": true},
+    {"detail": "claim boundary preserved", "name": "no-real-grid-claim", "passed": true},
+    {"detail": "SYNTHETIC_DECISION_SUPPORT_PASS", "name": "parliament-pass", "passed": true}
+  ],
+  "claims": {"hydro_quebec_affiliation_claimed": false, "operational_grid_replica_claimed": false, "real_data_validation_claimed": false, "synthetic_research_kernel_claimed": true},
+  "evidence_hash": "9015dd9bec431250a460cdf9964636beecd4578f21b1ec43207602d57f3d7aff",
+  "metrics": {"corridors": 20, "hyperedges": 37, "nodes": 38, "nominal_unserved_energy_mwh": 16700.0, "outcomes": 96, "pareto_count": 3, "regions": 17, "storm_unserved_energy_mwh": 27784.2, "worlds": 16},
+  "passed": true,
+  "status": "CERTIFIED_SYNTHETIC_PUBLIC_RESEARCH_KERNEL_R0_1"
+}

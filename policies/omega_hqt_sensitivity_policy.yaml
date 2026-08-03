@@ -1,0 +1,20 @@
+version: 1
+project: omega-hydroquebec-tristan
+public_kernel:
+  allowed:
+    - officially open data with retained provenance and licence
+    - regional aggregates
+    - deterministic synthetic fixtures
+    - public reports and research
+  forbidden:
+    - SCADA or EMS data
+    - relay and protection settings
+    - credentials or access paths
+    - precise non-public operational topology
+    - customer-level interval data
+    - commands affecting live infrastructure
+gates:
+  propose: separate_agent
+  verify: separate_agent
+  authorize: human_only
+  execute: absent_from_public_kernel

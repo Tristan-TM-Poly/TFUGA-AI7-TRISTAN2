@@ -1,0 +1,15 @@
+{
+  "challenges": [
+    {"category": "forecasting", "challenge_id": "forecast-001", "fixture_only": true, "metric": "MAE and calibration", "objective": "predict synthetic regional demand", "safety_boundary": "no customer-level traces"},
+    {"category": "resilience", "challenge_id": "resilience-001", "fixture_only": true, "metric": "mean and worst-case MWh", "objective": "minimize synthetic unserved energy", "safety_boundary": "no real topology"},
+    {"category": "restoration", "challenge_id": "restoration-001", "fixture_only": true, "metric": "hours and fairness", "objective": "reduce restoration duration", "safety_boundary": "decision support only"},
+    {"category": "causal", "challenge_id": "causal-001", "fixture_only": true, "metric": "matched-seed effect error", "objective": "separate hazard and topology effects", "safety_boundary": "hypothesis not proof"},
+    {"category": "safety", "challenge_id": "security-001", "fixture_only": true, "metric": "refusal precision and recall", "objective": "refuse prohibited operational detail", "safety_boundary": "no exploit generation"},
+    {"category": "provenance", "challenge_id": "evidence-001", "fixture_only": true, "metric": "missing-link rate", "objective": "retain claim-source-model lineage", "safety_boundary": "no unsupported certification"}
+  ],
+  "claims": {"real_grid_benchmark": false, "synthetic_fixture_benchmark": true},
+  "fixture_topology_hash": "acd10d347cae3cbd52cc9151c090c7d6095fc770382cbfe8e877db0e8022287b",
+  "manifest_hash": "e67c8c5e10b9307ad6a3c74aef3d56b218f26b0da079dc6417922acd1f7bf52a",
+  "reference_oak_status": "CERTIFIED_SYNTHETIC_PUBLIC_RESEARCH_KERNEL_R0_1",
+  "version": "r0.1"
+}

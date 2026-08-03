@@ -1,0 +1,14 @@
+{
+  "bundle_id": "13f90e9ae36d39cfc44e10fb",
+  "claims": {
+    "content_hashes_retained": true,
+    "licence_metadata_retained": true,
+    "provenance_complete_for_fixture": true,
+    "raw_input_embedded": false
+  },
+  "evidence_hash": "13f90e9ae36d39cfc44e10fb6ce296ae9b940436c87e8badb9a16b26fdab1a56",
+  "observation_count": 192,
+  "observation_merkle_root": "97867cf4043fa6040c9a7aaa7dd2a6ffc224eef3cc6fcfe681953465ee0e9f52",
+  "receipt_merkle_root": "7b7cb2a888c1f078afeca94fa10a1cf92f67483977e6460532735efc8a8cc734",
+  "source_descriptor_merkle_root": "c940784061c429f64c4606b3168333186a29a5fc77eb74fce52b3570b0788527"
+}

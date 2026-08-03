@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-hqt/hyperedge-v1.schema.json",
+  "title": "Omega HQT Hyperedge v1",
+  "type": "object",
+  "required": ["edge_id", "relation", "sources", "targets", "confidence", "status"],
+  "properties": {
+    "edge_id": {"type": "string"},
+    "relation": {"type": "string"},
+    "sources": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "targets": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "status": {"type": "string"}
+  },
+  "additionalProperties": true
+}

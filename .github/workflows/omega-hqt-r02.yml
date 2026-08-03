@@ -1,0 +1,75 @@
+name: Omega HQT R0.2 Public Evidence OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_hqt_t/r02/**"
+      - "tests/test_omega_hqt_r02.py"
+      - "schemas/omega_hqt_r02_schemas_v2.json"
+      - "docs/omega-hqt-t/r02/**"
+      - "examples/omega_hqt_r02_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-hqt-r02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-evidence-oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.2
+        run: python -m compileall -q omega_hqt_t/r02 tests/test_omega_hqt_r02.py examples/omega_hqt_r02_demo.py
+      - name: Run R0.2 tests
+        run: python -m pytest -q tests/test_omega_hqt_r02.py
+      - name: Deterministic benchmark twice
+        run: |
+          python -m omega_hqt_t.r02 benchmark --hours 24 --output /tmp/r02-a.json
+          python -m omega_hqt_t.r02 benchmark --hours 24 --output /tmp/r02-b.json
+          cmp /tmp/r02-a.json /tmp/r02-b.json
+      - name: Validate R0.2 schemas and claim boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          from omega_hqt_t.r02.campaign import all_fixtures, compile_public_evidence_campaign
+
+          catalog=json.loads(Path('schemas/omega_hqt_r02_schemas_v2.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(catalog)
+          defs=catalog['$defs']
+
+          campaign=compile_public_evidence_campaign(all_fixtures()).to_dict()
+          jsonschema.validate(campaign['snapshot'], defs['omega_hqt_snapshot_v2.schema'])
+          for claim in campaign['claims']:
+              jsonschema.validate(claim, defs['omega_hqt_claim_v2.schema'])
+
+          payload=json.loads(Path('/tmp/r02-a.json').read_text())
+          jsonschema.validate(payload, defs['omega_hqt_r02_benchmark_v2.schema'])
+          assert payload['status']=='CERTIFIED_OFFLINE_PUBLIC_EVIDENCE_FIXTURES_R0_2'
+          assert payload['passed'] is True
+          assert payload['claims']['real_grid_validated'] is False
+          assert payload['claims']['operational_use_authorized'] is False
+          assert all(payload['checks'].values())
+          print(payload['status'])
+          PY
+      - name: Generate public evidence artifact
+        run: python -m omega_hqt_t.r02 campaign --output-dir /tmp/omega-hqt-r02
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-hqt-r02-${{ matrix.python-version }}
+          path: /tmp/omega-hqt-r02
+          if-no-files-found: error
+          retention-days: 14

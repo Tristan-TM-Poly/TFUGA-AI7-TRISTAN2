@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-hqt/node-v1.schema.json",
+  "title": "Omega HQT Node v1",
+  "type": "object",
+  "required": ["node_id", "kind", "label", "level", "sensitivity"],
+  "properties": {
+    "node_id": {"type": "string", "minLength": 1},
+    "kind": {"type": "string"},
+    "label": {"type": "string"},
+    "level": {"type": "string"},
+    "attributes": {"type": "object"},
+    "evidence_ids": {"type": "array", "items": {"type": "string"}},
+    "sensitivity": {"enum": ["public", "aggregated", "restricted", "critical"]}
+  },
+  "additionalProperties": true
+}
