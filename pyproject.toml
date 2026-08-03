@@ -1,6 +1,6 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "3.4.0"
+version = "3.5.0"
 description = "Omega absorb, convergence and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
@@ -48,11 +48,14 @@ omega-mail-github-atlas = "omega_mail_github_loop_t.atlas:main"
 omega-legal-production = "omega_legal_production_os_t.cli:main"
 omega-legal-atlas = "omega_legal_production_os_t.atlas:main"
 omega-legal-real = "omega_legal_production_os_t.real_cli:main"
+omega-company-outreach = "omega_company_outreach_t.cli:main"
+omega-outreach-foundation = "omega_company_outreach_t.foundation_cli:main"
 omega-re-r03 = "omega_re_t.r03_cli:main"
 omega-re-re1024 = "omega_re_t.r03_frontier:main"
 omega-re-r04 = "omega_re_t.r04_cli:main"
 omega-re-r05 = "omega_re_t.r05_cli:main"
 omega-re-r06 = "omega_re_t.r06_cli:main"
+omega-github-revenue = "omega_github_revenue_t.cli:main"
 omega-millennium = "omega_millennium_t.cli:main"
 
 omega-millennium-r02 = "omega_millennium_t.r02.cli:main"

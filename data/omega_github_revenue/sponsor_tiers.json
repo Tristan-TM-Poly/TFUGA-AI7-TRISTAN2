@@ -1,0 +1,36 @@
+{
+  "status": "draft_only_not_published_to_github_sponsors",
+  "currency": "USD",
+  "tiers": [
+    {
+      "name": "Supporter",
+      "monthly_minor": 500,
+      "monthly_delivery_minutes": 0,
+      "benefits": ["general support acknowledgment when consented"]
+    },
+    {
+      "name": "Research Follower",
+      "monthly_minor": 1500,
+      "monthly_delivery_minutes": 5,
+      "benefits": ["collective public progress note", "collective roadmap digest"]
+    },
+    {
+      "name": "Prototype Backer",
+      "monthly_minor": 5000,
+      "monthly_delivery_minutes": 15,
+      "benefits": ["selected public experimental release notes", "collective prototype briefing"]
+    },
+    {
+      "name": "Research Patron",
+      "monthly_minor": 15000,
+      "monthly_delivery_minutes": 45,
+      "benefits": ["periodic collective technical briefing", "public demonstration when available"]
+    }
+  ],
+  "global_exclusions": [
+    "no unlimited custom work",
+    "no guaranteed delivery schedule unless separately contracted",
+    "no private banking, tax, client, safety-restricted, or patent-sensitive disclosure",
+    "no guaranteed scientific, business, legal, or financial result"
+  ]
+}

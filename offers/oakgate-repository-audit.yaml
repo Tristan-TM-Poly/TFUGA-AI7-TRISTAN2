@@ -1,0 +1,53 @@
+offer_id: OAKGATE-AUDIT-R01
+status: experimental_not_yet_validated_by_paid_customer
+artifact_id: OAKGATE-REPO-AUDIT-001
+name: OAKGate Repository Audit
+revenue_path: fixed_scope_service
+
+eligibility:
+  repository_access: explicitly_authorized
+  scope_agreed: true
+  confidentiality_classified: true
+  inaccessible_systems: prohibited
+
+inputs:
+  - repository snapshot or authorized GitHub access
+  - stated goals and constraints
+  - declared confidentiality and IP boundaries
+
+outputs:
+  - machine-readable repository assessment
+  - human-readable OAK report
+  - test and reproducibility inventory
+  - documentation and architecture gap map
+  - prioritized issue candidates
+  - limitations, uncertainty, and residual-risk section
+
+exclusions:
+  - no penetration testing
+  - no credential discovery
+  - no inaccessible-system reconstruction
+  - no legal, tax, security, or scientific certification
+  - no guaranteed defect discovery
+  - no unlimited remediation work
+  - no public disclosure without approval
+
+success_metrics:
+  - actionable_findings
+  - false_positive_rate
+  - delivery_minutes
+  - user_rated_usefulness
+  - willingness_to_repeat
+  - willingness_to_pay
+  - privacy_incidents
+
+promotion_gate:
+  current: pilot
+  require_before_productization:
+    - at least_one_consented_external_pilot
+    - measured_delivery_cost
+    - observed_external_utility
+    - privacy_and_ip_review
+    - reproducible_report_generation
+
+next_action: run one consented pilot on a separate owned or external authorized repository

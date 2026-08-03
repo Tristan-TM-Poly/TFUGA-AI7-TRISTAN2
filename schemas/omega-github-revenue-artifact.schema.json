@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-github-revenue-artifact.schema.json",
+  "title": "Omega GitHub Revenue-Capable Artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_id",
+    "title",
+    "problem",
+    "actor",
+    "oak_status",
+    "disclosure",
+    "revenue_paths",
+    "evidence"
+  ],
+  "properties": {
+    "artifact_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "problem": {"type": "string", "minLength": 1},
+    "actor": {"type": "string", "minLength": 1},
+    "oak_status": {"enum": ["S", "E", "X", "D", "C", "A"]},
+    "disclosure": {
+      "enum": [
+        "OPEN_PUBLIC",
+        "PUBLIC_AFTER_REVIEW",
+        "PATENT_CANDIDATE",
+        "TRADE_SECRET",
+        "PRIVATE_CLIENT",
+        "RESTRICTED_SAFETY",
+        "ARCHIVE_ONLY"
+      ]
+    },
+    "revenue_paths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "sponsorship",
+          "fixed_scope_service",
+          "recurring_service",
+          "software_product",
+          "github_app",
+          "api",
+          "license",
+          "training",
+          "research_contract"
+        ]
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tests", "reproducible_demo", "benchmark", "external_reproduction", "paying_user", "limitations_documented"],
+      "properties": {
+        "tests": {"type": "integer", "minimum": 0},
+        "reproducible_demo": {"type": "boolean"},
+        "benchmark": {"type": "boolean"},
+        "external_reproduction": {"type": "boolean"},
+        "paying_user": {"type": "boolean"},
+        "limitations_documented": {"type": "boolean"}
+      }
+    },
+    "utility": {"type": "number", "minimum": 0, "maximum": 1},
+    "reuse": {"type": "number", "minimum": 0, "maximum": 1},
+    "discoverability": {"type": "number", "minimum": 0, "maximum": 1},
+    "trust": {"type": "number", "minimum": 0, "maximum": 1},
+    "conversion_clarity": {"type": "number", "minimum": 0, "maximum": 1},
+    "noise": {"type": "number", "minimum": 0, "maximum": 1},
+    "maintenance_burden": {"type": "number", "minimum": 0, "maximum": 1},
+    "ip_legal_risk": {"type": "number", "minimum": 0, "maximum": 1},
+    "safety_privacy_risk": {"type": "number", "minimum": 0, "maximum": 1},
+    "risks": {"type": "array", "items": {"type": "string"}},
+    "next_action": {"type": "string"}
+  }
+}
