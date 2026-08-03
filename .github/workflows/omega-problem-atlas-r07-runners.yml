@@ -1,0 +1,163 @@
+name: Omega Problem Atlas R0.7 Certified Runners
+
+on:
+  push:
+    branches: [feat/omega-problem-atlas-r0-7-certified-runners]
+    paths:
+      - "omega_millennium_t/r07/**"
+      - "tests/test_omega_problem_atlas_r07*.py"
+      - "schemas/omega_problem_job_report_v7.schema.json"
+      - "docs/omega_millennium_t/r07/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r07-runners.yml"
+  pull_request:
+    paths:
+      - "omega_millennium_t/r07/**"
+      - "tests/test_omega_problem_atlas_r07*.py"
+      - "schemas/omega_problem_job_report_v7.schema.json"
+      - "docs/omega_millennium_t/r07/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r07-runners.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: omega-problem-atlas-r07-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  certified-runners:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.7
+        run: python -m compileall -q omega_millennium_t/r07 tests/test_omega_problem_atlas_r07_jobs.py
+      - name: Run runner, resume and audit tests
+        run: pytest -q tests/test_omega_problem_atlas_r07*.py
+      - name: Generate deterministic campaign fixture
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          limits = {
+              "max_operations": 10000,
+              "max_output_bytes": 100000,
+              "max_input_bytes": 100000
+          }
+
+          def job(job_id, runner_kind, payload, error_kind):
+              return {
+                  "job_id": job_id,
+                  "canonical_problem_id": "problem::ci-fixture",
+                  "claim_id": f"claim::{job_id}",
+                  "runner_kind": runner_kind,
+                  "method": f"CI fixture {runner_kind}",
+                  "scope": "restricted CI fixture",
+                  "stopping_rule": "stop after built-in verifier returns",
+                  "deterministic_seed": 17,
+                  "resource_limits": limits,
+                  "error_contract": {"kind": error_kind},
+                  "input": payload,
+                  "license_note": "Synthetic CI fixture authored for this repository.",
+                  "network_access": False,
+                  "external_execution": False,
+                  "proof_claimed": False,
+                  "solution_claimed": False
+              }
+
+          bundle = {
+              "schema": "omega-problem-job-bundle/7",
+              "campaign_id": "campaign-ci-r07",
+              "environment_lock": {
+                  "contract_version": "omega-problem-runners/7",
+                  "network_access": False,
+                  "arbitrary_subprocess": False,
+                  "runner_implementation": "python-standard-library-builtins"
+              },
+              "jobs": [
+                  job("job.exact", "exact_expression", {"expression": "(2**20 - 1) % 31"}, "exact"),
+                  job(
+                      "job.interval",
+                      "interval_polynomial",
+                      {"coefficients": ["1", "0", "-1"], "interval": ["-1", "2"]},
+                      "outward_interval"
+                  ),
+                  job(
+                      "job.lean",
+                      "lean_skeleton",
+                      {"source": "theorem add_zero_ci (n : Nat) : n + 0 = n := by simp"},
+                      "structural_only"
+                  ),
+                  job(
+                      "job.sat",
+                      "sat_certificate",
+                      {
+                          "clauses": [[1, -2], [2, 3], [-3, 1]],
+                          "assignment": {"1": True, "2": True, "3": False}
+                      },
+                      "boolean_certificate"
+                  )
+              ]
+          }
+          Path('/tmp/jobs-r07.json').write_text(
+              json.dumps(bundle, indent=2, sort_keys=True), encoding='utf-8'
+          )
+          PY
+      - name: Compare uninterrupted and resumed campaigns
+        run: |
+          python -m omega_millennium_t.r07.cli compile --bundle-json /tmp/jobs-r07.json --output-dir /tmp/jobs-full
+          python -m omega_millennium_t.r07.cli compile --bundle-json /tmp/jobs-r07.json --output-dir /tmp/jobs-resumed --max-jobs 2
+          python -m omega_millennium_t.r07.cli compile --bundle-json /tmp/jobs-r07.json --output-dir /tmp/jobs-resumed --resume
+          diff -ru /tmp/jobs-full /tmp/jobs-resumed
+          python -m omega_millennium_t.r07.cli audit /tmp/jobs-full
+          python -m omega_millennium_t.r07.cli replay --campaign-dir /tmp/jobs-full --job-id job.exact > /tmp/replay.json
+      - name: Validate schema and OAK invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/omega_problem_job_report_v7.schema.json').read_text())
+          report = json.loads(Path('/tmp/jobs-full/report.json').read_text())
+          replay = json.loads(Path('/tmp/replay.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(report, schema)
+
+          assert report['status'] == 'CERTIFIED_OFFLINE_JOB_RUNNER_FIXTURE_R0_7'
+          assert report['job_count'] == 4
+          assert report['completed_job_count'] == 4
+          assert report['remaining_job_count'] == 0
+          assert report['status_counts'] == {
+              'success': 4,
+              'failure': 0,
+              'invalid_certificate': 0,
+              'blocked': 0
+          }
+          assert report['mminus_record_count'] == 0
+          assert report['complete'] is True
+          assert report['network_access_used'] is False
+          assert report['external_execution_used'] is False
+          assert report['theorem_promotion_count'] == 0
+          assert report['proof_claimed'] is False
+          assert report['solution_claimed'] is False
+          assert report['scientific_validation_claimed'] is False
+          assert report['permanent_total_cap'] is None
+          assert replay['matches_stored_receipt'] is True
+          assert replay['network_access_used'] is False
+          assert replay['external_execution_used'] is False
+          print('CERTIFIED_OFFLINE_JOB_RUNNER_FIXTURE_R0_7')
+          PY
