@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.example/schemas/propulsion_evidence_ladder_r05.schema.json",
+  "title": "Omega Propulsion R0.5 Evidence Ladder Report",
+  "type": "object",
+  "required": [
+    "assessments",
+    "accepted_receipt_ids",
+    "highest_supported_tier",
+    "contiguous_tier",
+    "missing_lower_tiers",
+    "certification_claim",
+    "physics_certified",
+    "evidence_hash",
+    "notice"
+  ],
+  "properties": {
+    "assessments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["receipt_id", "tier", "accepted", "blockers", "warnings"],
+        "properties": {
+          "receipt_id": {"type": "string", "minLength": 1},
+          "tier": {
+            "enum": [
+              "F0_ANALYTIC",
+              "F1_SYSTEM",
+              "F2_STRESS",
+              "F3_VORTEX_PROXY",
+              "F4_HIGH_FIDELITY_NUMERICAL",
+              "F5_EXPERIMENT",
+              "F6_ENGINEERING_REVIEW"
+            ]
+          },
+          "accepted": {"type": "boolean"},
+          "blockers": {"type": "array", "items": {"type": "string"}},
+          "warnings": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "accepted_receipt_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "highest_supported_tier": {
+      "type": ["string", "null"]
+    },
+    "contiguous_tier": {
+      "type": ["string", "null"]
+    },
+    "missing_lower_tiers": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "certification_claim": {"const": false},
+    "physics_certified": {"const": false},
+    "evidence_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "notice": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
