@@ -1,0 +1,115 @@
+name: Omega VLA R0.3 OMEGA OAKBench
+
+on:
+  push:
+    branches: [feat/omega-vla-t-r0-3-omega-ir]
+    paths:
+      - "omega_vla_t/r03/**"
+      - "tests/test_omega_vla_r03_*.py"
+      - "examples/omega_vla_r03_omega_demo.py"
+      - "docs/omega_vla_t/r03/**"
+      - "schemas/omega_vla_ir_v1.schema.json"
+      - "schemas/omega_vla_operator_expr_v1.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla-r03-omega.yml"
+  pull_request:
+    paths:
+      - "omega_vla_t/r03/**"
+      - "tests/test_omega_vla_r03_*.py"
+      - "examples/omega_vla_r03_omega_demo.py"
+      - "docs/omega_vla_t/r03/**"
+      - "schemas/omega_vla_ir_v1.schema.json"
+      - "schemas/omega_vla_operator_expr_v1.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla-r03-omega.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install runtime and validators
+        run: python -m pip install --disable-pip-version-check numpy pytest jsonschema
+      - name: Compile R0.3 wave 1
+        run: >-
+          python -m compileall -q
+          omega_vla_t/r03
+          tests/test_omega_vla_r03_ir_types.py
+          tests/test_omega_vla_r03_operators.py
+          examples/omega_vla_r03_omega_demo.py
+      - name: Run focused tests
+        run: >-
+          pytest -q
+          tests/test_omega_vla_r03_ir_types.py
+          tests/test_omega_vla_r03_operators.py
+      - name: Verify deterministic CLI artifacts
+        run: |
+          python -m omega_vla_t.r03.cli manifest --output /tmp/manifest-a.json
+          python -m omega_vla_t.r03.cli manifest --output /tmp/manifest-b.json
+          cmp /tmp/manifest-a.json /tmp/manifest-b.json
+          python -m omega_vla_t.r03.cli ir-demo --format json --output /tmp/program-a.json
+          python -m omega_vla_t.r03.cli ir-demo --format json --output /tmp/program-b.json
+          cmp /tmp/program-a.json /tmp/program-b.json
+          python -m omega_vla_t.r03.cli audit-ir /tmp/program-a.json --output /tmp/ir-oak.json
+          python -m omega_vla_t.r03.cli operator-demo --output /tmp/operator-a.json
+          python -m omega_vla_t.r03.cli operator-demo --output /tmp/operator-b.json
+          cmp /tmp/operator-a.json /tmp/operator-b.json
+          python -m omega_vla_t.r03.cli identity-suite --trials 16 --seed 2026 --output /tmp/identity-a.json
+          python -m omega_vla_t.r03.cli identity-suite --trials 16 --seed 2026 --output /tmp/identity-b.json
+          cmp /tmp/identity-a.json /tmp/identity-b.json
+      - name: Execute demonstration
+        run: python examples/omega_vla_r03_omega_demo.py > /tmp/demo.json
+      - name: Validate schemas and claim boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          ir_schema = json.loads(Path('schemas/omega_vla_ir_v1.schema.json').read_text())
+          operator_schema = json.loads(Path('schemas/omega_vla_operator_expr_v1.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(ir_schema)
+          jsonschema.Draft202012Validator.check_schema(operator_schema)
+
+          program = json.loads(Path('/tmp/program-a.json').read_text())
+          jsonschema.validate(program, ir_schema)
+          assert program['claim_boundaries'] == {
+              'theorem_claimed': False,
+              'formal_proof_claimed': False,
+              'scientific_validation_claimed': False,
+          }
+
+          operator_report = json.loads(Path('/tmp/operator-a.json').read_text())
+          jsonschema.validate(operator_report['expression'], operator_schema)
+          jsonschema.validate(operator_report['simplified'], operator_schema)
+          assert operator_report['oak']['passed'] is True
+          assert operator_report['oak']['theorem_claimed'] is False
+          assert operator_report['oak']['formal_proof_claimed'] is False
+          assert operator_report['oak']['scientific_validation_claimed'] is False
+
+          identity = json.loads(Path('/tmp/identity-a.json').read_text())
+          assert identity['passed'] is True
+          assert identity['theorem_claimed'] is False
+          assert identity['formal_proof_claimed'] is False
+
+          demo = json.loads(Path('/tmp/demo.json').read_text())
+          assert demo['program_oak']['passed'] is True
+          assert demo['operator_oak']['passed'] is True
+          assert demo['identity_fixture']['passed'] is True
+          assert demo['theorem_claimed'] is False
+          assert demo['formal_proof_claimed'] is False
+          assert demo['scientific_validation_claimed'] is False
+          print('OAK_PASS_VLA_R0_3_OMEGA_WAVE_1')
+          PY
