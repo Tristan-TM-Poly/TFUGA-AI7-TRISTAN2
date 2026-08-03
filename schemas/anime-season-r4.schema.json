@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/anime-season-r4.schema.json",
+  "title": "Omega Anime Season R4",
+  "type": "object",
+  "required": [
+    "season_id",
+    "title",
+    "version",
+    "publication_state",
+    "episode_count",
+    "total_duration_s",
+    "total_scenes",
+    "total_shots",
+    "episodes",
+    "disclaimers"
+  ],
+  "properties": {
+    "season_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "version": {"const": "omega-anime-season/r4"},
+    "publication_state": {"const": "private-draft"},
+    "episode_count": {"const": 12},
+    "total_duration_s": {"const": 14400.0},
+    "total_scenes": {"const": 144},
+    "total_shots": {"const": 1368},
+    "episodes": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": [
+          "number",
+          "title",
+          "phase",
+          "location",
+          "logline",
+          "primary_question",
+          "entry_condition",
+          "irreversible_change",
+          "debt_opened",
+          "debt_closed",
+          "hook",
+          "motifs",
+          "duration_s",
+          "scene_count",
+          "shot_count",
+          "project_id"
+        ],
+        "properties": {
+          "number": {"type": "integer", "minimum": 1, "maximum": 12},
+          "title": {"type": "string", "minLength": 1},
+          "phase": {"enum": ["Éveil", "Expansion", "Fracture", "Confrontation"]},
+          "location": {"type": "string", "minLength": 1},
+          "logline": {"type": "string", "minLength": 1},
+          "primary_question": {"type": "string", "minLength": 1},
+          "entry_condition": {"type": "string", "minLength": 1},
+          "irreversible_change": {"type": "string", "minLength": 1},
+          "debt_opened": {"type": "string", "minLength": 1},
+          "debt_closed": {"type": "string"},
+          "hook": {"type": "string", "minLength": 1},
+          "motifs": {
+            "type": "array",
+            "minItems": 6,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "duration_s": {"const": 1200.0},
+          "scene_count": {"const": 12},
+          "shot_count": {"const": 114},
+          "project_id": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "disclaimers": {
+      "type": "array",
+      "minItems": 4,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "additionalProperties": false
+}
