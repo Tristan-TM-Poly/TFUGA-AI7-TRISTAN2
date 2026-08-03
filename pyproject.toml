@@ -28,7 +28,7 @@ omega-generator-catalog = "omega_generator_discovery_t.catalog_cli:main"
 omega-generator-ultra = "omega_generator_discovery_t.ultra_cli:main"
 omega-generator-campaign = "omega_generator_discovery_t.campaign_cli:main"
 omega-generator-scale = "omega_generator_discovery_t.campaign_scale_cli:main"
-omega-generator-frontier = "omega_generator_discovery_t.frontier_cli:main"
+omega-generator-frontier = "omega_generator_discovery_t.frontier:main"
 omega-organic-family = "omega_org_fam_t.cli:main"
 omega-organic-family-ultra = "omega_org_fam_t.ultra_cli:main"
 omega-organic-evidence = "omega_org_fam_t.r03_cli:main"
@@ -64,6 +64,7 @@ omega-millennium = "omega_millennium_t.cli:main"
 omega-millennium-r02 = "omega_millennium_t.r02.cli:main"
 omega-problem-atlas = "omega_millennium_t.r03.cli:main"
 omega-problem-sources = "omega_millennium_t.r04.cli:main"
+omega-problem-identities = "omega_millennium_t.r05.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
