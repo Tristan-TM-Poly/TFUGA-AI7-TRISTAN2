@@ -5,10 +5,35 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .audit import audit_job_campaign
+from .audit import audit_job_campaign as _audit_job_campaign
 from .compiler import compile_job_campaign as _compile_job_campaign
 from .model import BUNDLE_SCHEMA, RUNNER_KINDS, JobSpec, read_jsonl, stable_digest
 from .runners import execute_job
+
+EXPECTED_ERROR_CONTRACT = {
+    "exact_expression": "exact",
+    "interval_polynomial": "outward_interval",
+    "sat_certificate": "boolean_certificate",
+    "lean_skeleton": "structural_only",
+}
+
+
+def _validate_runner_contracts(bundle_path: Path) -> None:
+    payload = json.loads(bundle_path.read_text(encoding="utf-8"))
+    if payload.get("schema") != BUNDLE_SCHEMA:
+        raise ValueError(f"{bundle_path}: unsupported bundle schema")
+    for raw in payload.get("jobs", []):
+        if not isinstance(raw, dict):
+            raise ValueError(f"{bundle_path}: every job must be an object")
+        runner_kind = str(raw.get("runner_kind", ""))
+        error_contract = raw.get("error_contract")
+        expected = EXPECTED_ERROR_CONTRACT.get(runner_kind)
+        actual = error_contract.get("kind") if isinstance(error_contract, dict) else None
+        if expected is not None and actual != expected:
+            raise ValueError(
+                f"{raw.get('job_id', 'unknown')}: runner {runner_kind} requires "
+                f"error_contract.kind={expected!r}, got {actual!r}"
+            )
 
 
 def _normalize_report(output: Path) -> dict[str, Any]:
@@ -32,9 +57,50 @@ def compile_job_campaign(
     max_jobs: int | None = None,
     resume: bool = False,
 ) -> dict[str, Any]:
+    bundle = Path(bundle_path)
+    _validate_runner_contracts(bundle)
     output = Path(output_dir)
-    _compile_job_campaign(bundle_path, output, max_jobs=max_jobs, resume=resume)
+    _compile_job_campaign(bundle, output, max_jobs=max_jobs, resume=resume)
     return _normalize_report(output)
+
+
+def audit_job_campaign(output_dir: str | Path) -> dict[str, Any]:
+    output = Path(output_dir)
+    result = _audit_job_campaign(output)
+    errors = list(result.get("errors", []))
+    manifest_path = output / "manifest.json"
+    report_path = output / "report.json"
+    specs_path = output / "job_specs.jsonl"
+    if manifest_path.exists() and report_path.exists() and specs_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        specs = read_jsonl(specs_path)
+        normalized_jobs = [
+            {key: value for key, value in row.items() if key != "job_digest"}
+            for row in sorted(specs, key=lambda row: str(row.get("job_id", "")))
+        ]
+        bundle_base = {
+            "schema": BUNDLE_SCHEMA,
+            "campaign_id": manifest.get("campaign_id"),
+            "environment_lock": manifest.get("environment_lock", {}),
+            "jobs": normalized_jobs,
+        }
+        recomputed_bundle_digest = stable_digest(bundle_base)
+        if manifest.get("bundle_digest") != recomputed_bundle_digest:
+            errors.append("bundle digest does not match materialized job specs")
+        if report.get("bundle_digest") != recomputed_bundle_digest:
+            errors.append("report bundle digest mismatch")
+        for row in specs:
+            runner_kind = str(row.get("runner_kind", ""))
+            actual = row.get("error_contract", {}).get("kind") if isinstance(row.get("error_contract"), dict) else None
+            expected = EXPECTED_ERROR_CONTRACT.get(runner_kind)
+            if expected is None or actual != expected:
+                errors.append(
+                    f"{row.get('job_id')}: materialized runner/error contract mismatch"
+                )
+    result["errors"] = errors
+    result["valid"] = not errors
+    return result
 
 
 def replay_job(campaign_dir: str | Path, job_id: str) -> dict[str, Any]:
