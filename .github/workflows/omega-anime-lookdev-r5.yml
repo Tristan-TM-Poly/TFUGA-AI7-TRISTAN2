@@ -95,14 +95,22 @@ jobs:
               assert path.read_bytes() == (second / rel).read_bytes(), rel
           for rel, record in manifest['files'].items():
               assert hashlib.sha256((first / rel).read_bytes()).hexdigest() == record['sha256']
-          visual_files = list(first.rglob('*.svg')) + [first / 'lookdev-dashboard.html']
-          assert len(visual_files) == 41
-          for path in visual_files:
+          svg_files = list(first.rglob('*.svg'))
+          assert len(svg_files) == 40
+          for path in svg_files:
               content = path.read_text()
-              assert 'fetch(' not in content
-              assert 'http://' not in content
-              assert 'https://' not in content
               assert '<image' not in content
+              assert 'href=' not in content
+              assert '<script' not in content
+              assert 'fetch(' not in content
+              assert 'https://' not in content
+              assert content.count('http://') <= 1
+              if 'http://' in content:
+                  assert 'xmlns="http://www.w3.org/2000/svg"' in content
+          dashboard = (first / 'lookdev-dashboard.html').read_text()
+          assert 'fetch(' not in dashboard
+          assert 'http://' not in dashboard
+          assert 'https://' not in dashboard
           print(json.dumps({
               'manifest': manifest['manifest_sha256'],
               'artifacts': 64,

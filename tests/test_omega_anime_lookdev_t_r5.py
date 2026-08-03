@@ -125,8 +125,13 @@ def test_all_svg_files_are_self_contained(tmp_path: Path):
         content = path.read_text(encoding="utf-8")
         assert content.startswith("<svg")
         assert "<image" not in content
-        assert "http://" not in content
+        assert "href=" not in content
+        assert "<script" not in content
+        assert "fetch(" not in content
         assert "https://" not in content
+        assert content.count("http://") <= 1
+        if "http://" in content:
+            assert 'xmlns="http://www.w3.org/2000/svg"' in content
 
 
 def test_turnarounds_have_four_views(tmp_path: Path):

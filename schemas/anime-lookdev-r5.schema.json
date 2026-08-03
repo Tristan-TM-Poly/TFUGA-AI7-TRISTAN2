@@ -44,7 +44,7 @@
         "properties": {
           "episode_number": {"type": "integer", "minimum": 1, "maximum": 12},
           "title": {"type": "string", "minLength": 1},
-          "phase": {"enum": ["ÉVEIL", "EXPANSION", "FRACTURE", "CONFRONTATION"]},
+          "phase": {"enum": ["Éveil", "Expansion", "Fracture", "Confrontation"]},
           "palette": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}},
           "light_key": {"type": "string", "minLength": 1},
           "composition_rule": {"type": "string", "minLength": 1},
