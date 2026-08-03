@@ -90,9 +90,10 @@ def _evaluate(
 ) -> Array:
     kind = expression.kind
     inferred = expression.infer_type()
-    shape = tuple(int(value) for value in inferred.shape.to_dict())
-    if any(not isinstance(value, int) for value in inferred.shape.to_dict()):
+    raw_shape = inferred.shape.to_dict()
+    if any(not isinstance(value, int) for value in raw_shape):
         raise OperatorError("numerical evaluation requires concrete dimensions")
+    shape = tuple(int(value) for value in raw_shape)
 
     if kind == OperatorKind.SYMBOL:
         if expression.name not in environment:
