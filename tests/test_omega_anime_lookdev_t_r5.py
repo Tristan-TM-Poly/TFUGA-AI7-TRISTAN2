@@ -49,7 +49,10 @@ def test_every_character_has_six_expressions():
 
 
 def test_voice_boundaries_are_explicit():
-    assert all("imitation" in item.voice_boundary.lower() or "synthétique" in item.voice_boundary.lower() for item in bible().characters)
+    boundaries = [item.voice_boundary.lower() for item in bible().characters]
+    assert all(len(value) >= 35 for value in boundaries)
+    protected_terms = ("imitation", "cloner", "synthétique", "banque de voix")
+    assert all(any(term in value for term in protected_terms) for value in boundaries)
 
 
 def test_twelve_episode_looks_exist():
