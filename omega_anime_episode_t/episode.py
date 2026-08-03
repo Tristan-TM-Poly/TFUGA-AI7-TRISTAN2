@@ -112,7 +112,7 @@ BLUEPRINTS = (
     SequenceBlueprint(
         scene_id="S07-AFTERMATH",
         title="Après la correction",
-        duration_s=240.0,
+        duration_s=180.0,
         objective="Mesurer ce que la correction de trois minutes a déplacé.",
         irreversible_change="Tristan découvre que la dette causale possède une adresse réelle.",
         captions=(
@@ -135,7 +135,7 @@ BLUEPRINTS = (
     SequenceBlueprint(
         scene_id="S08-TRACE",
         title="La trace de l'Observatrice",
-        duration_s=240.0,
+        duration_s=180.0,
         objective="Prouver que l'Observatrice laisse une signature testable.",
         irreversible_change="Tristan obtient une réponse qui dépend de sa question.",
         captions=(
@@ -158,7 +158,7 @@ BLUEPRINTS = (
     SequenceBlueprint(
         scene_id="S09-COUNTERMOVE",
         title="Le contre-mouvement",
-        duration_s=240.0,
+        duration_s=180.0,
         objective="Empêcher une seconde dette sans perdre le réseau.",
         irreversible_change="Tristan accepte une correction plus lente mais réversible.",
         captions=(
@@ -181,7 +181,7 @@ BLUEPRINTS = (
     SequenceBlueprint(
         scene_id="S10-DEBT",
         title="La dette prend forme",
-        duration_s=240.0,
+        duration_s=180.0,
         objective="Révéler que les dettes causales peuvent se regrouper et apprendre.",
         irreversible_change="La dette devient un agent narratif capable d'anticiper Tristan.",
         captions=(
@@ -221,54 +221,31 @@ BLUEPRINTS = (
             "La ville survit avec ses imperfections.",
             "Le Créancier conserve pourtant une copie de la règle.",
         ),
-        dialogue={1: "Je peux tout réparer." , 5: "Tu peux surtout tout déplacer.", 8: "Aucun coût sans témoin.", 11: "Alors je trouverai un monde sans témoins."},
+        dialogue={1: "Je peux tout réparer.", 5: "Tu peux surtout tout déplacer.", 8: "Aucun coût sans témoin.", 11: "Alors je trouverai un monde sans témoins."},
         audio_cue="choice-silence+single-pulse",
     ),
     SequenceBlueprint(
         scene_id="S12-END",
-        title="Après le feu",
-        duration_s=60.0,
-        objective="Fermer l'arc local et ouvrir la menace de saison.",
-        irreversible_change="Le réseau reconnaît Tristan comme une variable active.",
+        title="Après le feu — La Station des Absents",
+        duration_s=90.0,
+        objective="Fermer l'arc local et ouvrir une destination précise pour l'épisode suivant.",
+        irreversible_change="Le réseau reconnaît Tristan et révèle une seconde installation active.",
         captions=(
             "Le matin atteint enfin le laboratoire.",
             "Les fonctions vitales de la ville restent stables.",
             "Le registre affiche une dette non résolue.",
             "Tristan sauvegarde toutes les preuves.",
             "Il refuse d'effacer ses erreurs.",
-            "L'Observatrice se retire du signal.",
             "Un second réseau s'allume au-delà de la carte.",
-            "Il reproduit le motif du Huitième Feu.",
-            "Aucune connexion connue ne les relie.",
-            "Le Créancier parle depuis l'autre réseau.",
-            "Tristan comprend que l'expérience était une invitation.",
-            "Le réseau a appris son nom.",
-        ),
-        dialogue={4: "On garde tout. Même ce qui me condamne.", 9: "Tu croyais être le premier.", 11: "Le réseau a appris ton nom."},
-        audio_cue="end-motif+distant-network",
-    ),
-    SequenceBlueprint(
-        scene_id="S13-PREVIEW",
-        title="Prochain épisode",
-        duration_s=30.0,
-        objective="Créer une promesse vérifiable pour l'épisode suivant.",
-        irreversible_change="Une seconde installation devient la destination immédiate.",
-        captions=(
-            "Une station abandonnée sous la neige.",
+            "Une station abandonnée apparaît sous la neige.",
             "Des câbles sans alimentation émettent une chaleur régulière.",
-            "Une équipe disparue a laissé un journal incomplet.",
             "Le symbole du Huitième Feu couvre les murs.",
-            "Une voix appelle Tristan par un ancien prénom de code.",
-            "Le Créancier ouvre une porte sans serrure.",
-            "L'Observatrice apparaît dans un reflet physique.",
-            "Elle tient une preuve qui ne devrait pas exister.",
-            "Le réseau local commence à compter à rebours.",
-            "Tristan entre malgré l'interdiction.",
+            "Une voix appelle Tristan avec huit ans d'avance.",
             "La porte se ferme sur le chiffre huit.",
             "Épisode 2 : La Station des Absents.",
         ),
-        dialogue={4: "Tristan, tu es en retard de huit ans.", 10: "Ne touche pas au huitième câble.", 11: "La Station des Absents."},
-        audio_cue="preview-stinger+countdown",
+        dialogue={4: "On garde tout. Même ce qui me condamne.", 9: "Tristan, tu es en retard de huit ans.", 11: "La Station des Absents."},
+        audio_cue="end-motif+preview-stinger",
     ),
 )
 
@@ -323,7 +300,7 @@ def _build_extension(start_s: float, start_scene_order: int, start_global_index:
 
 
 def build_eighth_fire_episode_01_r3() -> AnimaticTimeline:
-    """Return episode 1 as exactly 20 minutes, preserving the R2 cold open byte-for-byte at the model level."""
+    """Return episode 1 as exactly 20 minutes, preserving the R2 cold open."""
 
     cold_open = build_eighth_fire_animatic_r2()
     extension_scenes, extension_shots = _build_extension(

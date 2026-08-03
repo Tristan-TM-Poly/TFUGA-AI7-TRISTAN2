@@ -13,12 +13,12 @@ La règle n'est pas d'étirer mécaniquement le pilote. Les 180 secondes déjà 
 ```text
 00:00–03:00  Ouverture froide R2 conservée
 03:00–04:00  Titre et promesse de série
-04:00–08:00  Après la correction
-08:00–12:00  La trace de l'Observatrice
-12:00–16:00  Le contre-mouvement
-16:00–18:30  La dette prend forme
-18:30–19:30  Choisir une limite
-19:30–20:00  Épilogue et prochain épisode
+04:00–07:00  Après la correction
+07:00–10:00  La trace de l'Observatrice
+10:00–13:00  Le contre-mouvement
+13:00–16:00  La dette prend forme
+16:00–18:30  Choisir une limite
+18:30–20:00  Épilogue + La Station des Absents
 ```
 
 Le modèle concret contient **12 scènes** et **114 plans**. Les sept nouvelles scènes contiennent douze plans chacune; les trente plans initiaux restent identiques au modèle R2.

@@ -55,10 +55,10 @@ def test_new_scenes_have_twelve_shots_each():
         assert [shot.order for shot in shots] == list(range(1, 13))
 
 
-def test_episode_final_hook_names_the_network():
+def test_episode_final_hook_names_episode_two():
     episode = build_eighth_fire_episode_01_r3()
     assert episode.shots[-1].dialogue == "La Station des Absents."
-    assert episode.shots[-13].dialogue == "Le réseau a appris ton nom."
+    assert episode.shots[-3].dialogue == "Tristan, tu es en retard de huit ans."
 
 
 def test_episode_remains_private_draft():
