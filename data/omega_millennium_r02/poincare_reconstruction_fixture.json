@@ -1,0 +1,1033 @@
+{
+  "accepted_proof_reconstructed": false,
+  "benchmark_only": true,
+  "claims": [
+    {
+      "claim_id": "poincare.r02.claim.000",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 000."
+    },
+    {
+      "claim_id": "poincare.r02.claim.001",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 001."
+    },
+    {
+      "claim_id": "poincare.r02.claim.002",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 002."
+    },
+    {
+      "claim_id": "poincare.r02.claim.003",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 003."
+    },
+    {
+      "claim_id": "poincare.r02.claim.004",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 004."
+    },
+    {
+      "claim_id": "poincare.r02.claim.005",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 005."
+    },
+    {
+      "claim_id": "poincare.r02.claim.006",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 006."
+    },
+    {
+      "claim_id": "poincare.r02.claim.007",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 007."
+    },
+    {
+      "claim_id": "poincare.r02.claim.008",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 008."
+    },
+    {
+      "claim_id": "poincare.r02.claim.009",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 009."
+    },
+    {
+      "claim_id": "poincare.r02.claim.010",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 010."
+    },
+    {
+      "claim_id": "poincare.r02.claim.011",
+      "kind": "known_theorem",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 011."
+    },
+    {
+      "claim_id": "poincare.r02.claim.012",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 012."
+    },
+    {
+      "claim_id": "poincare.r02.claim.013",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 013."
+    },
+    {
+      "claim_id": "poincare.r02.claim.014",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 014."
+    },
+    {
+      "claim_id": "poincare.r02.claim.015",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 015."
+    },
+    {
+      "claim_id": "poincare.r02.claim.016",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 016."
+    },
+    {
+      "claim_id": "poincare.r02.claim.017",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 017."
+    },
+    {
+      "claim_id": "poincare.r02.claim.018",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 018."
+    },
+    {
+      "claim_id": "poincare.r02.claim.019",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 019."
+    },
+    {
+      "claim_id": "poincare.r02.claim.020",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 020."
+    },
+    {
+      "claim_id": "poincare.r02.claim.021",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 021."
+    },
+    {
+      "claim_id": "poincare.r02.claim.022",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 022."
+    },
+    {
+      "claim_id": "poincare.r02.claim.023",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 023."
+    },
+    {
+      "claim_id": "poincare.r02.claim.024",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 024."
+    },
+    {
+      "claim_id": "poincare.r02.claim.025",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 025."
+    },
+    {
+      "claim_id": "poincare.r02.claim.026",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 026."
+    },
+    {
+      "claim_id": "poincare.r02.claim.027",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 027."
+    },
+    {
+      "claim_id": "poincare.r02.claim.028",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 028."
+    },
+    {
+      "claim_id": "poincare.r02.claim.029",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 029."
+    },
+    {
+      "claim_id": "poincare.r02.claim.030",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 030."
+    },
+    {
+      "claim_id": "poincare.r02.claim.031",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 031."
+    },
+    {
+      "claim_id": "poincare.r02.claim.032",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 032."
+    },
+    {
+      "claim_id": "poincare.r02.claim.033",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 033."
+    },
+    {
+      "claim_id": "poincare.r02.claim.034",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 034."
+    },
+    {
+      "claim_id": "poincare.r02.claim.035",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 035."
+    },
+    {
+      "claim_id": "poincare.r02.claim.036",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 036."
+    },
+    {
+      "claim_id": "poincare.r02.claim.037",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 037."
+    },
+    {
+      "claim_id": "poincare.r02.claim.038",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 038."
+    },
+    {
+      "claim_id": "poincare.r02.claim.039",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 039."
+    },
+    {
+      "claim_id": "poincare.r02.claim.040",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 040."
+    },
+    {
+      "claim_id": "poincare.r02.claim.041",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 041."
+    },
+    {
+      "claim_id": "poincare.r02.claim.042",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 042."
+    },
+    {
+      "claim_id": "poincare.r02.claim.043",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 043."
+    },
+    {
+      "claim_id": "poincare.r02.claim.044",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 044."
+    },
+    {
+      "claim_id": "poincare.r02.claim.045",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 045."
+    },
+    {
+      "claim_id": "poincare.r02.claim.046",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 046."
+    },
+    {
+      "claim_id": "poincare.r02.claim.047",
+      "kind": "lemma_candidate",
+      "solution_claimed": false,
+      "statement": "Positive-control dependency statement 047."
+    }
+  ],
+  "edges": [
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.012",
+      "edge_id": "poincare.r02.edge.000",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.011",
+        "poincare.r02.claim.000"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.013",
+      "edge_id": "poincare.r02.edge.001",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.012",
+        "poincare.r02.claim.007"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.014",
+      "edge_id": "poincare.r02.edge.002",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.013",
+        "poincare.r02.claim.002"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.015",
+      "edge_id": "poincare.r02.edge.003",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.014",
+        "poincare.r02.claim.009"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.016",
+      "edge_id": "poincare.r02.edge.004",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.015",
+        "poincare.r02.claim.004"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.017",
+      "edge_id": "poincare.r02.edge.005",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.016",
+        "poincare.r02.claim.011"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.018",
+      "edge_id": "poincare.r02.edge.006",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.017",
+        "poincare.r02.claim.006"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.019",
+      "edge_id": "poincare.r02.edge.007",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.018",
+        "poincare.r02.claim.001"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.020",
+      "edge_id": "poincare.r02.edge.008",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.019",
+        "poincare.r02.claim.008"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.021",
+      "edge_id": "poincare.r02.edge.009",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.020",
+        "poincare.r02.claim.003"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.022",
+      "edge_id": "poincare.r02.edge.010",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.021",
+        "poincare.r02.claim.010"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.023",
+      "edge_id": "poincare.r02.edge.011",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.022",
+        "poincare.r02.claim.005"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.024",
+      "edge_id": "poincare.r02.edge.012",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.023",
+        "poincare.r02.claim.000"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.025",
+      "edge_id": "poincare.r02.edge.013",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.024",
+        "poincare.r02.claim.007"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.026",
+      "edge_id": "poincare.r02.edge.014",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.025",
+        "poincare.r02.claim.002"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.027",
+      "edge_id": "poincare.r02.edge.015",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.026",
+        "poincare.r02.claim.009"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.028",
+      "edge_id": "poincare.r02.edge.016",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.027",
+        "poincare.r02.claim.004"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.029",
+      "edge_id": "poincare.r02.edge.017",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.028",
+        "poincare.r02.claim.011"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.030",
+      "edge_id": "poincare.r02.edge.018",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.029",
+        "poincare.r02.claim.006"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.031",
+      "edge_id": "poincare.r02.edge.019",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.030",
+        "poincare.r02.claim.001"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.032",
+      "edge_id": "poincare.r02.edge.020",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.031",
+        "poincare.r02.claim.008"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.033",
+      "edge_id": "poincare.r02.edge.021",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.032",
+        "poincare.r02.claim.003"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.034",
+      "edge_id": "poincare.r02.edge.022",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.033",
+        "poincare.r02.claim.010"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.035",
+      "edge_id": "poincare.r02.edge.023",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.034",
+        "poincare.r02.claim.005"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.036",
+      "edge_id": "poincare.r02.edge.024",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.035",
+        "poincare.r02.claim.000"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.037",
+      "edge_id": "poincare.r02.edge.025",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.036",
+        "poincare.r02.claim.007"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.038",
+      "edge_id": "poincare.r02.edge.026",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.037",
+        "poincare.r02.claim.002"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.039",
+      "edge_id": "poincare.r02.edge.027",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.038",
+        "poincare.r02.claim.009"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.040",
+      "edge_id": "poincare.r02.edge.028",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.039",
+        "poincare.r02.claim.004"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.041",
+      "edge_id": "poincare.r02.edge.029",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.040",
+        "poincare.r02.claim.011"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.042",
+      "edge_id": "poincare.r02.edge.030",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.041",
+        "poincare.r02.claim.006"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.043",
+      "edge_id": "poincare.r02.edge.031",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.042",
+        "poincare.r02.claim.001"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.044",
+      "edge_id": "poincare.r02.edge.032",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.043",
+        "poincare.r02.claim.008"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.045",
+      "edge_id": "poincare.r02.edge.033",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.044",
+        "poincare.r02.claim.003"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.046",
+      "edge_id": "poincare.r02.edge.034",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.045",
+        "poincare.r02.claim.010"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.047",
+      "edge_id": "poincare.r02.edge.035",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.046",
+        "poincare.r02.claim.005"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.012",
+      "edge_id": "poincare.r02.edge.036",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.000",
+        "poincare.r02.claim.010"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.017",
+      "edge_id": "poincare.r02.edge.037",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.003",
+        "poincare.r02.claim.015"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.022",
+      "edge_id": "poincare.r02.edge.038",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.006",
+        "poincare.r02.claim.020"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.027",
+      "edge_id": "poincare.r02.edge.039",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.009",
+        "poincare.r02.claim.025"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.032",
+      "edge_id": "poincare.r02.edge.040",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.000",
+        "poincare.r02.claim.030"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.037",
+      "edge_id": "poincare.r02.edge.041",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.003",
+        "poincare.r02.claim.035"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.042",
+      "edge_id": "poincare.r02.edge.042",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.006",
+        "poincare.r02.claim.040"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.047",
+      "edge_id": "poincare.r02.edge.043",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.009",
+        "poincare.r02.claim.045"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.016",
+      "edge_id": "poincare.r02.edge.044",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.000",
+        "poincare.r02.claim.014"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.021",
+      "edge_id": "poincare.r02.edge.045",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.003",
+        "poincare.r02.claim.019"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.026",
+      "edge_id": "poincare.r02.edge.046",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.006",
+        "poincare.r02.claim.024"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.031",
+      "edge_id": "poincare.r02.edge.047",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.009",
+        "poincare.r02.claim.029"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.036",
+      "edge_id": "poincare.r02.edge.048",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.000",
+        "poincare.r02.claim.034"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.041",
+      "edge_id": "poincare.r02.edge.049",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.003",
+        "poincare.r02.claim.039"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.046",
+      "edge_id": "poincare.r02.edge.050",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.006",
+        "poincare.r02.claim.044"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.015",
+      "edge_id": "poincare.r02.edge.051",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.009",
+        "poincare.r02.claim.013"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.020",
+      "edge_id": "poincare.r02.edge.052",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.000",
+        "poincare.r02.claim.018"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.025",
+      "edge_id": "poincare.r02.edge.053",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.003",
+        "poincare.r02.claim.023"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.030",
+      "edge_id": "poincare.r02.edge.054",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.006",
+        "poincare.r02.claim.028"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.035",
+      "edge_id": "poincare.r02.edge.055",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.009",
+        "poincare.r02.claim.033"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.040",
+      "edge_id": "poincare.r02.edge.056",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.000",
+        "poincare.r02.claim.038"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.045",
+      "edge_id": "poincare.r02.edge.057",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.003",
+        "poincare.r02.claim.043"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.014",
+      "edge_id": "poincare.r02.edge.058",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.006",
+        "poincare.r02.claim.012"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.019",
+      "edge_id": "poincare.r02.edge.059",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.009",
+        "poincare.r02.claim.017"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.024",
+      "edge_id": "poincare.r02.edge.060",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.000",
+        "poincare.r02.claim.022"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.029",
+      "edge_id": "poincare.r02.edge.061",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.003",
+        "poincare.r02.claim.027"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.034",
+      "edge_id": "poincare.r02.edge.062",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.006",
+        "poincare.r02.claim.032"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.039",
+      "edge_id": "poincare.r02.edge.063",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.009",
+        "poincare.r02.claim.037"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.044",
+      "edge_id": "poincare.r02.edge.064",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.000",
+        "poincare.r02.claim.042"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.013",
+      "edge_id": "poincare.r02.edge.065",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.003",
+        "poincare.r02.claim.011"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.018",
+      "edge_id": "poincare.r02.edge.066",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.006",
+        "poincare.r02.claim.016"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.023",
+      "edge_id": "poincare.r02.edge.067",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.009",
+        "poincare.r02.claim.021"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.028",
+      "edge_id": "poincare.r02.edge.068",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.000",
+        "poincare.r02.claim.026"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.033",
+      "edge_id": "poincare.r02.edge.069",
+      "oak_level": 2,
+      "premises": [
+        "poincare.r02.claim.003",
+        "poincare.r02.claim.031"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.038",
+      "edge_id": "poincare.r02.edge.070",
+      "oak_level": 3,
+      "premises": [
+        "poincare.r02.claim.006",
+        "poincare.r02.claim.036"
+      ]
+    },
+    {
+      "benchmark_only": true,
+      "conclusion": "poincare.r02.claim.043",
+      "edge_id": "poincare.r02.edge.071",
+      "oak_level": 4,
+      "premises": [
+        "poincare.r02.claim.009",
+        "poincare.r02.claim.041"
+      ]
+    }
+  ],
+  "schema": "omega-millennium-poincare-reconstruction/2",
+  "seed_claims": [
+    "poincare.r02.claim.000",
+    "poincare.r02.claim.001",
+    "poincare.r02.claim.002",
+    "poincare.r02.claim.003",
+    "poincare.r02.claim.004",
+    "poincare.r02.claim.005",
+    "poincare.r02.claim.006",
+    "poincare.r02.claim.007",
+    "poincare.r02.claim.008",
+    "poincare.r02.claim.009",
+    "poincare.r02.claim.010",
+    "poincare.r02.claim.011"
+  ],
+  "solution_claimed": false,
+  "target_claim": "poincare.r02.claim.047"
+}

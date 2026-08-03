@@ -1,0 +1,365 @@
+{
+  "accepted_outcomes": [
+    "construct_theory_and_gap"
+  ],
+  "barrier_roots": [
+    "yang_mills_barrier_00",
+    "yang_mills_barrier_01",
+    "yang_mills_barrier_02",
+    "yang_mills_barrier_03",
+    "yang_mills_barrier_04",
+    "yang_mills_barrier_05",
+    "yang_mills_barrier_06",
+    "yang_mills_barrier_07"
+  ],
+  "canonical_objects": [
+    "gauge_invariance",
+    "continuum_limit",
+    "reflection_positivity",
+    "spectral_gap"
+  ],
+  "domains": [
+    "gauge_theory",
+    "constructive_qft"
+  ],
+  "forbidden_promotions": [
+    "finite_to_infinite",
+    "restricted_to_general",
+    "numeric_to_exact",
+    "skeleton_to_proof"
+  ],
+  "formal_contract": {
+    "domains_explicit": true,
+    "quantifiers_explicit": true,
+    "solution_claimed": false
+  },
+  "negative_memory": [
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "boundary_case",
+      "rule_id": "yang_mills.mminus.00"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "degenerate_object",
+      "rule_id": "yang_mills.mminus.01"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "quantifier_flip",
+      "rule_id": "yang_mills.mminus.02"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "hidden_assumption",
+      "rule_id": "yang_mills.mminus.03"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "limit_exchange",
+      "rule_id": "yang_mills.mminus.04"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "compactness_gap",
+      "rule_id": "yang_mills.mminus.05"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "regularity_leak",
+      "rule_id": "yang_mills.mminus.06"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "circular_dependency",
+      "rule_id": "yang_mills.mminus.07"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "numerical_to_exact",
+      "rule_id": "yang_mills.mminus.08"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "finite_to_infinite",
+      "rule_id": "yang_mills.mminus.09"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "restricted_to_general",
+      "rule_id": "yang_mills.mminus.10"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "missing_equivalence_direction",
+      "rule_id": "yang_mills.mminus.11"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "formal_placeholder",
+      "rule_id": "yang_mills.mminus.12"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "source_provenance",
+      "rule_id": "yang_mills.mminus.13"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "definition_drift",
+      "rule_id": "yang_mills.mminus.14"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "notation_collision",
+      "rule_id": "yang_mills.mminus.15"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "scaling_mismatch",
+      "rule_id": "yang_mills.mminus.16"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "dimension_mismatch",
+      "rule_id": "yang_mills.mminus.17"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "sign_error",
+      "rule_id": "yang_mills.mminus.18"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "constant_nonuniformity",
+      "rule_id": "yang_mills.mminus.19"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "branch_cut",
+      "rule_id": "yang_mills.mminus.20"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "domain_error",
+      "rule_id": "yang_mills.mminus.21"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "counterexample_mutation",
+      "rule_id": "yang_mills.mminus.22"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "proof_step_deletion",
+      "rule_id": "yang_mills.mminus.23"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "independent_reconstruction",
+      "rule_id": "yang_mills.mminus.24"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "random_small_model",
+      "rule_id": "yang_mills.mminus.25"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "adversarial_large_parameter",
+      "rule_id": "yang_mills.mminus.26"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "singular_limit",
+      "rule_id": "yang_mills.mminus.27"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "local_global_mismatch",
+      "rule_id": "yang_mills.mminus.28"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "discrete_continuum_mismatch",
+      "rule_id": "yang_mills.mminus.29"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "generic_universal_mismatch",
+      "rule_id": "yang_mills.mminus.30"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "weak_strong_mismatch",
+      "rule_id": "yang_mills.mminus.31"
+    }
+  ],
+  "problem_id": "yang_mills",
+  "research_axes": [
+    {
+      "axis_id": "yang_mills.axis.00",
+      "human_review_required": true,
+      "strategy": "harmonic_analysis"
+    },
+    {
+      "axis_id": "yang_mills.axis.01",
+      "human_review_required": true,
+      "strategy": "selmer_control"
+    },
+    {
+      "axis_id": "yang_mills.axis.02",
+      "human_review_required": true,
+      "strategy": "lattice_regularization"
+    },
+    {
+      "axis_id": "yang_mills.axis.03",
+      "human_review_required": true,
+      "strategy": "surgery_control"
+    },
+    {
+      "axis_id": "yang_mills.axis.04",
+      "human_review_required": true,
+      "strategy": "cohomological_descent"
+    },
+    {
+      "axis_id": "yang_mills.axis.05",
+      "human_review_required": true,
+      "strategy": "integrable_model"
+    },
+    {
+      "axis_id": "yang_mills.axis.06",
+      "human_review_required": true,
+      "strategy": "spectral_reformulation"
+    },
+    {
+      "axis_id": "yang_mills.axis.07",
+      "human_review_required": true,
+      "strategy": "microlocal_analysis"
+    },
+    {
+      "axis_id": "yang_mills.axis.08",
+      "human_review_required": true,
+      "strategy": "descent_method"
+    },
+    {
+      "axis_id": "yang_mills.axis.09",
+      "human_review_required": true,
+      "strategy": "representation_stability"
+    },
+    {
+      "axis_id": "yang_mills.axis.10",
+      "human_review_required": true,
+      "strategy": "ricci_flow"
+    },
+    {
+      "axis_id": "yang_mills.axis.11",
+      "human_review_required": true,
+      "strategy": "homological_algebra"
+    },
+    {
+      "axis_id": "yang_mills.axis.12",
+      "human_review_required": true,
+      "strategy": "statistical_mechanics_bridge"
+    },
+    {
+      "axis_id": "yang_mills.axis.13",
+      "human_review_required": true,
+      "strategy": "compression_invariant"
+    },
+    {
+      "axis_id": "yang_mills.axis.14",
+      "human_review_required": true,
+      "strategy": "energy_entropy_method"
+    },
+    {
+      "axis_id": "yang_mills.axis.15",
+      "human_review_required": true,
+      "strategy": "euler_system"
+    },
+    {
+      "axis_id": "yang_mills.axis.16",
+      "human_review_required": true,
+      "strategy": "geometric_complexity"
+    },
+    {
+      "axis_id": "yang_mills.axis.17",
+      "human_review_required": true,
+      "strategy": "gauge_invariant_observable"
+    },
+    {
+      "axis_id": "yang_mills.axis.18",
+      "human_review_required": true,
+      "strategy": "category_theoretic_bridge"
+    },
+    {
+      "axis_id": "yang_mills.axis.19",
+      "human_review_required": true,
+      "strategy": "random_matrix_analogy"
+    },
+    {
+      "axis_id": "yang_mills.axis.20",
+      "human_review_required": true,
+      "strategy": "information_theoretic_bound"
+    },
+    {
+      "axis_id": "yang_mills.axis.21",
+      "human_review_required": true,
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "axis_id": "yang_mills.axis.22",
+      "human_review_required": true,
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "axis_id": "yang_mills.axis.23",
+      "human_review_required": true,
+      "strategy": "derandomization"
+    },
+    {
+      "axis_id": "yang_mills.axis.24",
+      "human_review_required": true,
+      "strategy": "spectral_gap_bound"
+    },
+    {
+      "axis_id": "yang_mills.axis.25",
+      "human_review_required": true,
+      "strategy": "derived_category"
+    },
+    {
+      "axis_id": "yang_mills.axis.26",
+      "human_review_required": true,
+      "strategy": "counterexample_guided_refinement"
+    },
+    {
+      "axis_id": "yang_mills.axis.27",
+      "human_review_required": true,
+      "strategy": "duality_transform"
+    },
+    {
+      "axis_id": "yang_mills.axis.28",
+      "human_review_required": true,
+      "strategy": "blowup_contradiction"
+    },
+    {
+      "axis_id": "yang_mills.axis.29",
+      "human_review_required": true,
+      "strategy": "motivic_transfer"
+    },
+    {
+      "axis_id": "yang_mills.axis.30",
+      "human_review_required": true,
+      "strategy": "pseudorandomness"
+    },
+    {
+      "axis_id": "yang_mills.axis.31",
+      "human_review_required": true,
+      "strategy": "hamiltonian_reconstruction"
+    }
+  ],
+  "schema": "omega-millennium-problem-spec/2",
+  "statement": "Construct four-dimensional quantum Yang–Mills theory and prove a positive mass gap.",
+  "status": "open",
+  "title": "Yang–Mills Existence and Mass Gap"
+}

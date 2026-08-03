@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "formal_proof_claimed": {
+      "const": false
+    },
+    "logical_frontier_cells": {
+      "const": 14680064
+    },
+    "scientific_validation_claimed": {
+      "const": false
+    },
+    "solution_claimed": {
+      "const": false
+    },
+    "status": {
+      "const": "CERTIFIED_SOFTWARE_RESEARCH_FIXTURES_R0_2"
+    }
+  },
+  "required": [
+    "status",
+    "logical_frontier_cells",
+    "solution_claimed",
+    "formal_proof_claimed",
+    "scientific_validation_claimed"
+  ],
+  "type": "object"
+}

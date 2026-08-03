@@ -1,0 +1,1030 @@
+{
+  "count": 128,
+  "items": [
+    {
+      "class": "quantifier",
+      "expected_detection": "boundary_case",
+      "mutation_id": "mutation.000",
+      "name": "proof_mutation_000",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "circular_dependency",
+      "mutation_id": "mutation.001",
+      "name": "proof_mutation_001",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "definition_drift",
+      "mutation_id": "mutation.002",
+      "name": "proof_mutation_002",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "domain_error",
+      "mutation_id": "mutation.003",
+      "name": "proof_mutation_003",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "local_global_mismatch",
+      "mutation_id": "mutation.004",
+      "name": "proof_mutation_004",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "hidden_assumption",
+      "mutation_id": "mutation.005",
+      "name": "proof_mutation_005",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "restricted_to_general",
+      "mutation_id": "mutation.006",
+      "name": "proof_mutation_006",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "dimension_mismatch",
+      "mutation_id": "mutation.007",
+      "name": "proof_mutation_007",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "independent_reconstruction",
+      "mutation_id": "mutation.008",
+      "name": "proof_mutation_008",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "weak_strong_mismatch",
+      "mutation_id": "mutation.009",
+      "name": "proof_mutation_009",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "regularity_leak",
+      "mutation_id": "mutation.010",
+      "name": "proof_mutation_010",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "source_provenance",
+      "mutation_id": "mutation.011",
+      "name": "proof_mutation_011",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "branch_cut",
+      "mutation_id": "mutation.012",
+      "name": "proof_mutation_012",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "singular_limit",
+      "mutation_id": "mutation.013",
+      "name": "proof_mutation_013",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "quantifier_flip",
+      "mutation_id": "mutation.014",
+      "name": "proof_mutation_014",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "finite_to_infinite",
+      "mutation_id": "mutation.015",
+      "name": "proof_mutation_015",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "scaling_mismatch",
+      "mutation_id": "mutation.016",
+      "name": "proof_mutation_016",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "proof_step_deletion",
+      "mutation_id": "mutation.017",
+      "name": "proof_mutation_017",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "generic_universal_mismatch",
+      "mutation_id": "mutation.018",
+      "name": "proof_mutation_018",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "compactness_gap",
+      "mutation_id": "mutation.019",
+      "name": "proof_mutation_019",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "formal_placeholder",
+      "mutation_id": "mutation.020",
+      "name": "proof_mutation_020",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "constant_nonuniformity",
+      "mutation_id": "mutation.021",
+      "name": "proof_mutation_021",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "adversarial_large_parameter",
+      "mutation_id": "mutation.022",
+      "name": "proof_mutation_022",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "degenerate_object",
+      "mutation_id": "mutation.023",
+      "name": "proof_mutation_023",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "numerical_to_exact",
+      "mutation_id": "mutation.024",
+      "name": "proof_mutation_024",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "notation_collision",
+      "mutation_id": "mutation.025",
+      "name": "proof_mutation_025",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "counterexample_mutation",
+      "mutation_id": "mutation.026",
+      "name": "proof_mutation_026",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "discrete_continuum_mismatch",
+      "mutation_id": "mutation.027",
+      "name": "proof_mutation_027",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "limit_exchange",
+      "mutation_id": "mutation.028",
+      "name": "proof_mutation_028",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "missing_equivalence_direction",
+      "mutation_id": "mutation.029",
+      "name": "proof_mutation_029",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "sign_error",
+      "mutation_id": "mutation.030",
+      "name": "proof_mutation_030",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "random_small_model",
+      "mutation_id": "mutation.031",
+      "name": "proof_mutation_031",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "boundary_case",
+      "mutation_id": "mutation.032",
+      "name": "proof_mutation_032",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "circular_dependency",
+      "mutation_id": "mutation.033",
+      "name": "proof_mutation_033",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "definition_drift",
+      "mutation_id": "mutation.034",
+      "name": "proof_mutation_034",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "domain_error",
+      "mutation_id": "mutation.035",
+      "name": "proof_mutation_035",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "local_global_mismatch",
+      "mutation_id": "mutation.036",
+      "name": "proof_mutation_036",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "hidden_assumption",
+      "mutation_id": "mutation.037",
+      "name": "proof_mutation_037",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "restricted_to_general",
+      "mutation_id": "mutation.038",
+      "name": "proof_mutation_038",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "dimension_mismatch",
+      "mutation_id": "mutation.039",
+      "name": "proof_mutation_039",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "independent_reconstruction",
+      "mutation_id": "mutation.040",
+      "name": "proof_mutation_040",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "weak_strong_mismatch",
+      "mutation_id": "mutation.041",
+      "name": "proof_mutation_041",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "regularity_leak",
+      "mutation_id": "mutation.042",
+      "name": "proof_mutation_042",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "source_provenance",
+      "mutation_id": "mutation.043",
+      "name": "proof_mutation_043",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "branch_cut",
+      "mutation_id": "mutation.044",
+      "name": "proof_mutation_044",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "singular_limit",
+      "mutation_id": "mutation.045",
+      "name": "proof_mutation_045",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "quantifier_flip",
+      "mutation_id": "mutation.046",
+      "name": "proof_mutation_046",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "finite_to_infinite",
+      "mutation_id": "mutation.047",
+      "name": "proof_mutation_047",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "scaling_mismatch",
+      "mutation_id": "mutation.048",
+      "name": "proof_mutation_048",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "proof_step_deletion",
+      "mutation_id": "mutation.049",
+      "name": "proof_mutation_049",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "generic_universal_mismatch",
+      "mutation_id": "mutation.050",
+      "name": "proof_mutation_050",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "compactness_gap",
+      "mutation_id": "mutation.051",
+      "name": "proof_mutation_051",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "formal_placeholder",
+      "mutation_id": "mutation.052",
+      "name": "proof_mutation_052",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "constant_nonuniformity",
+      "mutation_id": "mutation.053",
+      "name": "proof_mutation_053",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "adversarial_large_parameter",
+      "mutation_id": "mutation.054",
+      "name": "proof_mutation_054",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "degenerate_object",
+      "mutation_id": "mutation.055",
+      "name": "proof_mutation_055",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "numerical_to_exact",
+      "mutation_id": "mutation.056",
+      "name": "proof_mutation_056",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "notation_collision",
+      "mutation_id": "mutation.057",
+      "name": "proof_mutation_057",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "counterexample_mutation",
+      "mutation_id": "mutation.058",
+      "name": "proof_mutation_058",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "discrete_continuum_mismatch",
+      "mutation_id": "mutation.059",
+      "name": "proof_mutation_059",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "limit_exchange",
+      "mutation_id": "mutation.060",
+      "name": "proof_mutation_060",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "missing_equivalence_direction",
+      "mutation_id": "mutation.061",
+      "name": "proof_mutation_061",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "sign_error",
+      "mutation_id": "mutation.062",
+      "name": "proof_mutation_062",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "random_small_model",
+      "mutation_id": "mutation.063",
+      "name": "proof_mutation_063",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "boundary_case",
+      "mutation_id": "mutation.064",
+      "name": "proof_mutation_064",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "circular_dependency",
+      "mutation_id": "mutation.065",
+      "name": "proof_mutation_065",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "definition_drift",
+      "mutation_id": "mutation.066",
+      "name": "proof_mutation_066",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "domain_error",
+      "mutation_id": "mutation.067",
+      "name": "proof_mutation_067",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "local_global_mismatch",
+      "mutation_id": "mutation.068",
+      "name": "proof_mutation_068",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "hidden_assumption",
+      "mutation_id": "mutation.069",
+      "name": "proof_mutation_069",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "restricted_to_general",
+      "mutation_id": "mutation.070",
+      "name": "proof_mutation_070",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "dimension_mismatch",
+      "mutation_id": "mutation.071",
+      "name": "proof_mutation_071",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "independent_reconstruction",
+      "mutation_id": "mutation.072",
+      "name": "proof_mutation_072",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "weak_strong_mismatch",
+      "mutation_id": "mutation.073",
+      "name": "proof_mutation_073",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "regularity_leak",
+      "mutation_id": "mutation.074",
+      "name": "proof_mutation_074",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "source_provenance",
+      "mutation_id": "mutation.075",
+      "name": "proof_mutation_075",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "branch_cut",
+      "mutation_id": "mutation.076",
+      "name": "proof_mutation_076",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "singular_limit",
+      "mutation_id": "mutation.077",
+      "name": "proof_mutation_077",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "quantifier_flip",
+      "mutation_id": "mutation.078",
+      "name": "proof_mutation_078",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "finite_to_infinite",
+      "mutation_id": "mutation.079",
+      "name": "proof_mutation_079",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "scaling_mismatch",
+      "mutation_id": "mutation.080",
+      "name": "proof_mutation_080",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "proof_step_deletion",
+      "mutation_id": "mutation.081",
+      "name": "proof_mutation_081",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "generic_universal_mismatch",
+      "mutation_id": "mutation.082",
+      "name": "proof_mutation_082",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "compactness_gap",
+      "mutation_id": "mutation.083",
+      "name": "proof_mutation_083",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "formal_placeholder",
+      "mutation_id": "mutation.084",
+      "name": "proof_mutation_084",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "constant_nonuniformity",
+      "mutation_id": "mutation.085",
+      "name": "proof_mutation_085",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "adversarial_large_parameter",
+      "mutation_id": "mutation.086",
+      "name": "proof_mutation_086",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "degenerate_object",
+      "mutation_id": "mutation.087",
+      "name": "proof_mutation_087",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "numerical_to_exact",
+      "mutation_id": "mutation.088",
+      "name": "proof_mutation_088",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "notation_collision",
+      "mutation_id": "mutation.089",
+      "name": "proof_mutation_089",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "counterexample_mutation",
+      "mutation_id": "mutation.090",
+      "name": "proof_mutation_090",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "discrete_continuum_mismatch",
+      "mutation_id": "mutation.091",
+      "name": "proof_mutation_091",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "limit_exchange",
+      "mutation_id": "mutation.092",
+      "name": "proof_mutation_092",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "missing_equivalence_direction",
+      "mutation_id": "mutation.093",
+      "name": "proof_mutation_093",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "sign_error",
+      "mutation_id": "mutation.094",
+      "name": "proof_mutation_094",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "random_small_model",
+      "mutation_id": "mutation.095",
+      "name": "proof_mutation_095",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "boundary_case",
+      "mutation_id": "mutation.096",
+      "name": "proof_mutation_096",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "circular_dependency",
+      "mutation_id": "mutation.097",
+      "name": "proof_mutation_097",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "definition_drift",
+      "mutation_id": "mutation.098",
+      "name": "proof_mutation_098",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "domain_error",
+      "mutation_id": "mutation.099",
+      "name": "proof_mutation_099",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "local_global_mismatch",
+      "mutation_id": "mutation.100",
+      "name": "proof_mutation_100",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "hidden_assumption",
+      "mutation_id": "mutation.101",
+      "name": "proof_mutation_101",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "restricted_to_general",
+      "mutation_id": "mutation.102",
+      "name": "proof_mutation_102",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "dimension_mismatch",
+      "mutation_id": "mutation.103",
+      "name": "proof_mutation_103",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "independent_reconstruction",
+      "mutation_id": "mutation.104",
+      "name": "proof_mutation_104",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "weak_strong_mismatch",
+      "mutation_id": "mutation.105",
+      "name": "proof_mutation_105",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "regularity_leak",
+      "mutation_id": "mutation.106",
+      "name": "proof_mutation_106",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "source_provenance",
+      "mutation_id": "mutation.107",
+      "name": "proof_mutation_107",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "branch_cut",
+      "mutation_id": "mutation.108",
+      "name": "proof_mutation_108",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "singular_limit",
+      "mutation_id": "mutation.109",
+      "name": "proof_mutation_109",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "quantifier_flip",
+      "mutation_id": "mutation.110",
+      "name": "proof_mutation_110",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "finite_to_infinite",
+      "mutation_id": "mutation.111",
+      "name": "proof_mutation_111",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "scaling_mismatch",
+      "mutation_id": "mutation.112",
+      "name": "proof_mutation_112",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "proof_step_deletion",
+      "mutation_id": "mutation.113",
+      "name": "proof_mutation_113",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "generic_universal_mismatch",
+      "mutation_id": "mutation.114",
+      "name": "proof_mutation_114",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "compactness_gap",
+      "mutation_id": "mutation.115",
+      "name": "proof_mutation_115",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "formal_placeholder",
+      "mutation_id": "mutation.116",
+      "name": "proof_mutation_116",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "constant_nonuniformity",
+      "mutation_id": "mutation.117",
+      "name": "proof_mutation_117",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "adversarial_large_parameter",
+      "mutation_id": "mutation.118",
+      "name": "proof_mutation_118",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "degenerate_object",
+      "mutation_id": "mutation.119",
+      "name": "proof_mutation_119",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "quantifier",
+      "expected_detection": "numerical_to_exact",
+      "mutation_id": "mutation.120",
+      "name": "proof_mutation_120",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "scope",
+      "expected_detection": "notation_collision",
+      "mutation_id": "mutation.121",
+      "name": "proof_mutation_121",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "dependency",
+      "expected_detection": "counterexample_mutation",
+      "mutation_id": "mutation.122",
+      "name": "proof_mutation_122",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "numeric",
+      "expected_detection": "discrete_continuum_mismatch",
+      "mutation_id": "mutation.123",
+      "name": "proof_mutation_123",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "formal",
+      "expected_detection": "limit_exchange",
+      "mutation_id": "mutation.124",
+      "name": "proof_mutation_124",
+      "severity": "low",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "definition",
+      "expected_detection": "missing_equivalence_direction",
+      "mutation_id": "mutation.125",
+      "name": "proof_mutation_125",
+      "severity": "medium",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "limit",
+      "expected_detection": "sign_error",
+      "mutation_id": "mutation.126",
+      "name": "proof_mutation_126",
+      "severity": "high",
+      "valid_proof_should_reject": true
+    },
+    {
+      "class": "algebraic",
+      "expected_detection": "random_small_model",
+      "mutation_id": "mutation.127",
+      "name": "proof_mutation_127",
+      "severity": "critical",
+      "valid_proof_should_reject": true
+    }
+  ],
+  "schema": "omega-millennium-proof-mutations/2"
+}

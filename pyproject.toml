@@ -55,5 +55,7 @@ omega-re-r05 = "omega_re_t.r05_cli:main"
 omega-re-r06 = "omega_re_t.r06_cli:main"
 omega-millennium = "omega_millennium_t.cli:main"
 
+omega-millennium-r02 = "omega_millennium_t.r02.cli:main"
+
 [tool.pytest.ini_options]
 pythonpath = ["."]

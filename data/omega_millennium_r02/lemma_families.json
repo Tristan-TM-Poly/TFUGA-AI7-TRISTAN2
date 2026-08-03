@@ -1,0 +1,1478 @@
+{
+  "count": 64,
+  "items": [
+    {
+      "falsifiers": [
+        "boundary_case",
+        "missing_equivalence_direction",
+        "proof_step_deletion"
+      ],
+      "inputs": [
+        "assumption_000",
+        "assumption_001"
+      ],
+      "lemma_family_id": "lemma.00.existence",
+      "name": "existence",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "lean4",
+        "agda"
+      ]
+    },
+    {
+      "falsifiers": [
+        "degenerate_object",
+        "formal_placeholder",
+        "independent_reconstruction"
+      ],
+      "inputs": [
+        "assumption_002",
+        "assumption_003"
+      ],
+      "lemma_family_id": "lemma.01.uniqueness",
+      "name": "uniqueness",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "coq",
+        "smtlib"
+      ]
+    },
+    {
+      "falsifiers": [
+        "quantifier_flip",
+        "source_provenance",
+        "random_small_model"
+      ],
+      "inputs": [
+        "assumption_004",
+        "assumption_005"
+      ],
+      "lemma_family_id": "lemma.02.regularity",
+      "name": "regularity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "isabelle_hol",
+        "sage"
+      ]
+    },
+    {
+      "falsifiers": [
+        "hidden_assumption",
+        "definition_drift",
+        "adversarial_large_parameter"
+      ],
+      "inputs": [
+        "assumption_006",
+        "assumption_007"
+      ],
+      "lemma_family_id": "lemma.03.compactness",
+      "name": "compactness",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "hol_light",
+        "sympy"
+      ]
+    },
+    {
+      "falsifiers": [
+        "limit_exchange",
+        "notation_collision",
+        "singular_limit"
+      ],
+      "inputs": [
+        "assumption_008",
+        "assumption_009"
+      ],
+      "lemma_family_id": "lemma.04.coercivity",
+      "name": "coercivity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "metamath",
+        "interval_arithmetic"
+      ]
+    },
+    {
+      "falsifiers": [
+        "compactness_gap",
+        "scaling_mismatch",
+        "local_global_mismatch"
+      ],
+      "inputs": [
+        "assumption_010",
+        "assumption_011"
+      ],
+      "lemma_family_id": "lemma.05.positivity",
+      "name": "positivity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "agda",
+        "sat_certificate"
+      ]
+    },
+    {
+      "falsifiers": [
+        "regularity_leak",
+        "dimension_mismatch",
+        "discrete_continuum_mismatch"
+      ],
+      "inputs": [
+        "assumption_012",
+        "assumption_013"
+      ],
+      "lemma_family_id": "lemma.06.monotonicity",
+      "name": "monotonicity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "smtlib",
+        "drat"
+      ]
+    },
+    {
+      "falsifiers": [
+        "circular_dependency",
+        "sign_error",
+        "generic_universal_mismatch"
+      ],
+      "inputs": [
+        "assumption_014",
+        "assumption_015"
+      ],
+      "lemma_family_id": "lemma.07.rigidity",
+      "name": "rigidity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sage",
+        "lfsc"
+      ]
+    },
+    {
+      "falsifiers": [
+        "numerical_to_exact",
+        "constant_nonuniformity",
+        "weak_strong_mismatch"
+      ],
+      "inputs": [
+        "assumption_016",
+        "assumption_017"
+      ],
+      "lemma_family_id": "lemma.08.stability",
+      "name": "stability",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sympy",
+        "mizar"
+      ]
+    },
+    {
+      "falsifiers": [
+        "finite_to_infinite",
+        "branch_cut",
+        "boundary_case"
+      ],
+      "inputs": [
+        "assumption_018",
+        "assumption_019"
+      ],
+      "lemma_family_id": "lemma.09.continuity",
+      "name": "continuity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "interval_arithmetic",
+        "acl2"
+      ]
+    },
+    {
+      "falsifiers": [
+        "restricted_to_general",
+        "domain_error",
+        "degenerate_object"
+      ],
+      "inputs": [
+        "assumption_020",
+        "assumption_021"
+      ],
+      "lemma_family_id": "lemma.10.analyticity",
+      "name": "analyticity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sat_certificate",
+        "human_latex"
+      ]
+    },
+    {
+      "falsifiers": [
+        "missing_equivalence_direction",
+        "counterexample_mutation",
+        "quantifier_flip"
+      ],
+      "inputs": [
+        "assumption_022",
+        "assumption_023"
+      ],
+      "lemma_family_id": "lemma.11.decay",
+      "name": "decay",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "drat",
+        "lean4"
+      ]
+    },
+    {
+      "falsifiers": [
+        "formal_placeholder",
+        "proof_step_deletion",
+        "hidden_assumption"
+      ],
+      "inputs": [
+        "assumption_024",
+        "assumption_025"
+      ],
+      "lemma_family_id": "lemma.12.growth",
+      "name": "growth",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "lfsc",
+        "coq"
+      ]
+    },
+    {
+      "falsifiers": [
+        "source_provenance",
+        "independent_reconstruction",
+        "limit_exchange"
+      ],
+      "inputs": [
+        "assumption_026",
+        "assumption_027"
+      ],
+      "lemma_family_id": "lemma.13.integrability",
+      "name": "integrability",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "mizar",
+        "isabelle_hol"
+      ]
+    },
+    {
+      "falsifiers": [
+        "definition_drift",
+        "random_small_model",
+        "compactness_gap"
+      ],
+      "inputs": [
+        "assumption_028",
+        "assumption_029"
+      ],
+      "lemma_family_id": "lemma.14.boundedness",
+      "name": "boundedness",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "acl2",
+        "hol_light"
+      ]
+    },
+    {
+      "falsifiers": [
+        "notation_collision",
+        "adversarial_large_parameter",
+        "regularity_leak"
+      ],
+      "inputs": [
+        "assumption_030",
+        "assumption_031"
+      ],
+      "lemma_family_id": "lemma.15.concentration",
+      "name": "concentration",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "human_latex",
+        "metamath"
+      ]
+    },
+    {
+      "falsifiers": [
+        "scaling_mismatch",
+        "singular_limit",
+        "circular_dependency"
+      ],
+      "inputs": [
+        "assumption_032",
+        "assumption_033"
+      ],
+      "lemma_family_id": "lemma.16.nonconcentration",
+      "name": "nonconcentration",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "lean4",
+        "agda"
+      ]
+    },
+    {
+      "falsifiers": [
+        "dimension_mismatch",
+        "local_global_mismatch",
+        "numerical_to_exact"
+      ],
+      "inputs": [
+        "assumption_034",
+        "assumption_035"
+      ],
+      "lemma_family_id": "lemma.17.localization",
+      "name": "localization",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "coq",
+        "smtlib"
+      ]
+    },
+    {
+      "falsifiers": [
+        "sign_error",
+        "discrete_continuum_mismatch",
+        "finite_to_infinite"
+      ],
+      "inputs": [
+        "assumption_036",
+        "assumption_037"
+      ],
+      "lemma_family_id": "lemma.18.delocalization",
+      "name": "delocalization",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "isabelle_hol",
+        "sage"
+      ]
+    },
+    {
+      "falsifiers": [
+        "constant_nonuniformity",
+        "generic_universal_mismatch",
+        "restricted_to_general"
+      ],
+      "inputs": [
+        "assumption_038",
+        "assumption_039"
+      ],
+      "lemma_family_id": "lemma.19.orthogonality",
+      "name": "orthogonality",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "hol_light",
+        "sympy"
+      ]
+    },
+    {
+      "falsifiers": [
+        "branch_cut",
+        "weak_strong_mismatch",
+        "missing_equivalence_direction"
+      ],
+      "inputs": [
+        "assumption_040",
+        "assumption_041"
+      ],
+      "lemma_family_id": "lemma.20.duality",
+      "name": "duality",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "metamath",
+        "interval_arithmetic"
+      ]
+    },
+    {
+      "falsifiers": [
+        "domain_error",
+        "boundary_case",
+        "formal_placeholder"
+      ],
+      "inputs": [
+        "assumption_042",
+        "assumption_043"
+      ],
+      "lemma_family_id": "lemma.21.interpolation",
+      "name": "interpolation",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "agda",
+        "sat_certificate"
+      ]
+    },
+    {
+      "falsifiers": [
+        "counterexample_mutation",
+        "degenerate_object",
+        "source_provenance"
+      ],
+      "inputs": [
+        "assumption_044",
+        "assumption_045"
+      ],
+      "lemma_family_id": "lemma.22.embedding",
+      "name": "embedding",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "smtlib",
+        "drat"
+      ]
+    },
+    {
+      "falsifiers": [
+        "proof_step_deletion",
+        "quantifier_flip",
+        "definition_drift"
+      ],
+      "inputs": [
+        "assumption_046",
+        "assumption_047"
+      ],
+      "lemma_family_id": "lemma.23.trace",
+      "name": "trace",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sage",
+        "lfsc"
+      ]
+    },
+    {
+      "falsifiers": [
+        "independent_reconstruction",
+        "hidden_assumption",
+        "notation_collision"
+      ],
+      "inputs": [
+        "assumption_048",
+        "assumption_049"
+      ],
+      "lemma_family_id": "lemma.24.extension",
+      "name": "extension",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sympy",
+        "mizar"
+      ]
+    },
+    {
+      "falsifiers": [
+        "random_small_model",
+        "limit_exchange",
+        "scaling_mismatch"
+      ],
+      "inputs": [
+        "assumption_050",
+        "assumption_051"
+      ],
+      "lemma_family_id": "lemma.25.restriction",
+      "name": "restriction",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "interval_arithmetic",
+        "acl2"
+      ]
+    },
+    {
+      "falsifiers": [
+        "adversarial_large_parameter",
+        "compactness_gap",
+        "dimension_mismatch"
+      ],
+      "inputs": [
+        "assumption_052",
+        "assumption_053"
+      ],
+      "lemma_family_id": "lemma.26.approximation",
+      "name": "approximation",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sat_certificate",
+        "human_latex"
+      ]
+    },
+    {
+      "falsifiers": [
+        "singular_limit",
+        "regularity_leak",
+        "sign_error"
+      ],
+      "inputs": [
+        "assumption_054",
+        "assumption_055"
+      ],
+      "lemma_family_id": "lemma.27.density",
+      "name": "density",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "drat",
+        "lean4"
+      ]
+    },
+    {
+      "falsifiers": [
+        "local_global_mismatch",
+        "circular_dependency",
+        "constant_nonuniformity"
+      ],
+      "inputs": [
+        "assumption_056",
+        "assumption_057"
+      ],
+      "lemma_family_id": "lemma.28.spectral_correspondence",
+      "name": "spectral_correspondence",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "lfsc",
+        "coq"
+      ]
+    },
+    {
+      "falsifiers": [
+        "discrete_continuum_mismatch",
+        "numerical_to_exact",
+        "branch_cut"
+      ],
+      "inputs": [
+        "assumption_058",
+        "assumption_059"
+      ],
+      "lemma_family_id": "lemma.29.gap_lower_bound",
+      "name": "gap_lower_bound",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "mizar",
+        "isabelle_hol"
+      ]
+    },
+    {
+      "falsifiers": [
+        "generic_universal_mismatch",
+        "finite_to_infinite",
+        "domain_error"
+      ],
+      "inputs": [
+        "assumption_060",
+        "assumption_061"
+      ],
+      "lemma_family_id": "lemma.30.resolvent_bound",
+      "name": "resolvent_bound",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "acl2",
+        "hol_light"
+      ]
+    },
+    {
+      "falsifiers": [
+        "weak_strong_mismatch",
+        "restricted_to_general",
+        "counterexample_mutation"
+      ],
+      "inputs": [
+        "assumption_062",
+        "assumption_063"
+      ],
+      "lemma_family_id": "lemma.31.functional_calculus",
+      "name": "functional_calculus",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "human_latex",
+        "metamath"
+      ]
+    },
+    {
+      "falsifiers": [
+        "boundary_case",
+        "missing_equivalence_direction",
+        "proof_step_deletion"
+      ],
+      "inputs": [
+        "assumption_064",
+        "assumption_065"
+      ],
+      "lemma_family_id": "lemma.32.normal_form",
+      "name": "normal_form",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "lean4",
+        "agda"
+      ]
+    },
+    {
+      "falsifiers": [
+        "degenerate_object",
+        "formal_placeholder",
+        "independent_reconstruction"
+      ],
+      "inputs": [
+        "assumption_066",
+        "assumption_067"
+      ],
+      "lemma_family_id": "lemma.33.renormalization",
+      "name": "renormalization",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "coq",
+        "smtlib"
+      ]
+    },
+    {
+      "falsifiers": [
+        "quantifier_flip",
+        "source_provenance",
+        "random_small_model"
+      ],
+      "inputs": [
+        "assumption_068",
+        "assumption_069"
+      ],
+      "lemma_family_id": "lemma.34.scaling",
+      "name": "scaling",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "isabelle_hol",
+        "sage"
+      ]
+    },
+    {
+      "falsifiers": [
+        "hidden_assumption",
+        "definition_drift",
+        "adversarial_large_parameter"
+      ],
+      "inputs": [
+        "assumption_070",
+        "assumption_071"
+      ],
+      "lemma_family_id": "lemma.35.blowup_exclusion",
+      "name": "blowup_exclusion",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "hol_light",
+        "sympy"
+      ]
+    },
+    {
+      "falsifiers": [
+        "limit_exchange",
+        "notation_collision",
+        "singular_limit"
+      ],
+      "inputs": [
+        "assumption_072",
+        "assumption_073"
+      ],
+      "lemma_family_id": "lemma.36.profile_decomposition",
+      "name": "profile_decomposition",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "metamath",
+        "interval_arithmetic"
+      ]
+    },
+    {
+      "falsifiers": [
+        "compactness_gap",
+        "scaling_mismatch",
+        "local_global_mismatch"
+      ],
+      "inputs": [
+        "assumption_074",
+        "assumption_075"
+      ],
+      "lemma_family_id": "lemma.37.energy_identity",
+      "name": "energy_identity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "agda",
+        "sat_certificate"
+      ]
+    },
+    {
+      "falsifiers": [
+        "regularity_leak",
+        "dimension_mismatch",
+        "discrete_continuum_mismatch"
+      ],
+      "inputs": [
+        "assumption_076",
+        "assumption_077"
+      ],
+      "lemma_family_id": "lemma.38.entropy_identity",
+      "name": "entropy_identity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "smtlib",
+        "drat"
+      ]
+    },
+    {
+      "falsifiers": [
+        "circular_dependency",
+        "sign_error",
+        "generic_universal_mismatch"
+      ],
+      "inputs": [
+        "assumption_078",
+        "assumption_079"
+      ],
+      "lemma_family_id": "lemma.39.virial_identity",
+      "name": "virial_identity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sage",
+        "lfsc"
+      ]
+    },
+    {
+      "falsifiers": [
+        "numerical_to_exact",
+        "constant_nonuniformity",
+        "weak_strong_mismatch"
+      ],
+      "inputs": [
+        "assumption_080",
+        "assumption_081"
+      ],
+      "lemma_family_id": "lemma.40.index_formula",
+      "name": "index_formula",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sympy",
+        "mizar"
+      ]
+    },
+    {
+      "falsifiers": [
+        "finite_to_infinite",
+        "branch_cut",
+        "boundary_case"
+      ],
+      "inputs": [
+        "assumption_082",
+        "assumption_083"
+      ],
+      "lemma_family_id": "lemma.41.cycle_realization",
+      "name": "cycle_realization",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "interval_arithmetic",
+        "acl2"
+      ]
+    },
+    {
+      "falsifiers": [
+        "restricted_to_general",
+        "domain_error",
+        "degenerate_object"
+      ],
+      "inputs": [
+        "assumption_084",
+        "assumption_085"
+      ],
+      "lemma_family_id": "lemma.42.descent",
+      "name": "descent",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sat_certificate",
+        "human_latex"
+      ]
+    },
+    {
+      "falsifiers": [
+        "missing_equivalence_direction",
+        "counterexample_mutation",
+        "quantifier_flip"
+      ],
+      "inputs": [
+        "assumption_086",
+        "assumption_087"
+      ],
+      "lemma_family_id": "lemma.43.specialization",
+      "name": "specialization",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "drat",
+        "lean4"
+      ]
+    },
+    {
+      "falsifiers": [
+        "formal_placeholder",
+        "proof_step_deletion",
+        "hidden_assumption"
+      ],
+      "inputs": [
+        "assumption_088",
+        "assumption_089"
+      ],
+      "lemma_family_id": "lemma.44.deformation",
+      "name": "deformation",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "lfsc",
+        "coq"
+      ]
+    },
+    {
+      "falsifiers": [
+        "source_provenance",
+        "independent_reconstruction",
+        "limit_exchange"
+      ],
+      "inputs": [
+        "assumption_090",
+        "assumption_091"
+      ],
+      "lemma_family_id": "lemma.45.local_global",
+      "name": "local_global",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "mizar",
+        "isabelle_hol"
+      ]
+    },
+    {
+      "falsifiers": [
+        "definition_drift",
+        "random_small_model",
+        "compactness_gap"
+      ],
+      "inputs": [
+        "assumption_092",
+        "assumption_093"
+      ],
+      "lemma_family_id": "lemma.46.rank_bound",
+      "name": "rank_bound",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "acl2",
+        "hol_light"
+      ]
+    },
+    {
+      "falsifiers": [
+        "notation_collision",
+        "adversarial_large_parameter",
+        "regularity_leak"
+      ],
+      "inputs": [
+        "assumption_094",
+        "assumption_095"
+      ],
+      "lemma_family_id": "lemma.47.leading_term",
+      "name": "leading_term",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "human_latex",
+        "metamath"
+      ]
+    },
+    {
+      "falsifiers": [
+        "scaling_mismatch",
+        "singular_limit",
+        "circular_dependency"
+      ],
+      "inputs": [
+        "assumption_096",
+        "assumption_097"
+      ],
+      "lemma_family_id": "lemma.48.circuit_lower_bound",
+      "name": "circuit_lower_bound",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "lean4",
+        "agda"
+      ]
+    },
+    {
+      "falsifiers": [
+        "dimension_mismatch",
+        "local_global_mismatch",
+        "numerical_to_exact"
+      ],
+      "inputs": [
+        "assumption_098",
+        "assumption_099"
+      ],
+      "lemma_family_id": "lemma.49.proof_length_lower_bound",
+      "name": "proof_length_lower_bound",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "coq",
+        "smtlib"
+      ]
+    },
+    {
+      "falsifiers": [
+        "sign_error",
+        "discrete_continuum_mismatch",
+        "finite_to_infinite"
+      ],
+      "inputs": [
+        "assumption_100",
+        "assumption_101"
+      ],
+      "lemma_family_id": "lemma.50.simulation",
+      "name": "simulation",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "isabelle_hol",
+        "sage"
+      ]
+    },
+    {
+      "falsifiers": [
+        "constant_nonuniformity",
+        "generic_universal_mismatch",
+        "restricted_to_general"
+      ],
+      "inputs": [
+        "assumption_102",
+        "assumption_103"
+      ],
+      "lemma_family_id": "lemma.51.reduction",
+      "name": "reduction",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "hol_light",
+        "sympy"
+      ]
+    },
+    {
+      "falsifiers": [
+        "branch_cut",
+        "weak_strong_mismatch",
+        "missing_equivalence_direction"
+      ],
+      "inputs": [
+        "assumption_104",
+        "assumption_105"
+      ],
+      "lemma_family_id": "lemma.52.hardness_amplification",
+      "name": "hardness_amplification",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "metamath",
+        "interval_arithmetic"
+      ]
+    },
+    {
+      "falsifiers": [
+        "domain_error",
+        "boundary_case",
+        "formal_placeholder"
+      ],
+      "inputs": [
+        "assumption_106",
+        "assumption_107"
+      ],
+      "lemma_family_id": "lemma.53.pseudorandom_generator",
+      "name": "pseudorandom_generator",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "agda",
+        "sat_certificate"
+      ]
+    },
+    {
+      "falsifiers": [
+        "counterexample_mutation",
+        "degenerate_object",
+        "source_provenance"
+      ],
+      "inputs": [
+        "assumption_108",
+        "assumption_109"
+      ],
+      "lemma_family_id": "lemma.54.derandomization",
+      "name": "derandomization",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "smtlib",
+        "drat"
+      ]
+    },
+    {
+      "falsifiers": [
+        "proof_step_deletion",
+        "quantifier_flip",
+        "definition_drift"
+      ],
+      "inputs": [
+        "assumption_110",
+        "assumption_111"
+      ],
+      "lemma_family_id": "lemma.55.barrier_escape",
+      "name": "barrier_escape",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sage",
+        "lfsc"
+      ]
+    },
+    {
+      "falsifiers": [
+        "independent_reconstruction",
+        "hidden_assumption",
+        "notation_collision"
+      ],
+      "inputs": [
+        "assumption_112",
+        "assumption_113"
+      ],
+      "lemma_family_id": "lemma.56.gauge_fixing",
+      "name": "gauge_fixing",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sympy",
+        "mizar"
+      ]
+    },
+    {
+      "falsifiers": [
+        "random_small_model",
+        "limit_exchange",
+        "scaling_mismatch"
+      ],
+      "inputs": [
+        "assumption_114",
+        "assumption_115"
+      ],
+      "lemma_family_id": "lemma.57.reflection_positivity",
+      "name": "reflection_positivity",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "interval_arithmetic",
+        "acl2"
+      ]
+    },
+    {
+      "falsifiers": [
+        "adversarial_large_parameter",
+        "compactness_gap",
+        "dimension_mismatch"
+      ],
+      "inputs": [
+        "assumption_116",
+        "assumption_117"
+      ],
+      "lemma_family_id": "lemma.58.continuum_limit",
+      "name": "continuum_limit",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "sat_certificate",
+        "human_latex"
+      ]
+    },
+    {
+      "falsifiers": [
+        "singular_limit",
+        "regularity_leak",
+        "sign_error"
+      ],
+      "inputs": [
+        "assumption_118",
+        "assumption_119"
+      ],
+      "lemma_family_id": "lemma.59.constructive_measure",
+      "name": "constructive_measure",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "drat",
+        "lean4"
+      ]
+    },
+    {
+      "falsifiers": [
+        "local_global_mismatch",
+        "circular_dependency",
+        "constant_nonuniformity"
+      ],
+      "inputs": [
+        "assumption_120",
+        "assumption_121"
+      ],
+      "lemma_family_id": "lemma.60.surgery_finiteness",
+      "name": "surgery_finiteness",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "lfsc",
+        "coq"
+      ]
+    },
+    {
+      "falsifiers": [
+        "discrete_continuum_mismatch",
+        "numerical_to_exact",
+        "branch_cut"
+      ],
+      "inputs": [
+        "assumption_122",
+        "assumption_123"
+      ],
+      "lemma_family_id": "lemma.61.noncollapsing",
+      "name": "noncollapsing",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "mizar",
+        "isabelle_hol"
+      ]
+    },
+    {
+      "falsifiers": [
+        "generic_universal_mismatch",
+        "finite_to_infinite",
+        "domain_error"
+      ],
+      "inputs": [
+        "assumption_124",
+        "assumption_125"
+      ],
+      "lemma_family_id": "lemma.62.canonical_neighborhood",
+      "name": "canonical_neighborhood",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "acl2",
+        "hol_light"
+      ]
+    },
+    {
+      "falsifiers": [
+        "weak_strong_mismatch",
+        "restricted_to_general",
+        "counterexample_mutation"
+      ],
+      "inputs": [
+        "assumption_126",
+        "assumption_127"
+      ],
+      "lemma_family_id": "lemma.63.topology_recovery",
+      "name": "topology_recovery",
+      "promotion_requires": [
+        "typed_statement",
+        "explicit_assumptions",
+        "evidence_receipt",
+        "independent_audit"
+      ],
+      "targets": [
+        "human_latex",
+        "metamath"
+      ]
+    }
+  ],
+  "schema": "omega-millennium-lemma-families/2"
+}

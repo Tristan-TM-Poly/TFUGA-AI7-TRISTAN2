@@ -1,8 +1,4 @@
-"""Generate Ω-MILLENNIUM-T∞ R0.2 source package."""
-from __future__ import annotations
-from omega_millennium_r02_gen_common import write
-
-CORE=r'''"""Typed R0.2 research kernel. Software fixtures only; no theorem solution."""
+"""Typed R0.2 research kernel. Software fixtures only; no theorem solution."""
 from __future__ import annotations
 from dataclasses import dataclass,asdict,replace
 from enum import Enum
@@ -153,33 +149,3 @@ def benchmark():
 def formal_skeleton(claim,target):
     marker={"lean4":"sorry","coq":"Admitted","isabelle_hol":"sorry"}.get(target,"PLACEHOLDER")
     return {"claim_id":claim.claim_id,"target":target,"text":f"{target}:{claim.claim_id}:{marker}","placeholders":[marker],"proof_complete":False,"source_digest":claim.digest}
-'''
-
-CLI=r'''"""CLI for Ω-MILLENNIUM-T∞ R0.2."""
-import argparse,json
-from pathlib import Path
-from .core import atlas,benchmark,campaign,poincare_benchmark,problem_specs
-def main(argv=None):
-    p=argparse.ArgumentParser(prog="omega-millennium-r02"); s=p.add_subparsers(dest="cmd",required=True)
-    for n in ("atlas","benchmark","specs","poincare-bench"):
-        q=s.add_parser(n); q.add_argument("--output")
-    q=s.add_parser("campaign"); q.add_argument("--budget",type=int,default=1024); q.add_argument("--output")
-    a=p.parse_args(argv)
-    result={"atlas":atlas,"benchmark":benchmark,"specs":problem_specs,"poincare-bench":poincare_benchmark}.get(a.cmd,lambda:campaign(a.budget))()
-    text=json.dumps(result,sort_keys=True,indent=2)+"\n"
-    if a.output: Path(a.output).write_text(text)
-    else: print(text,end="")
-    return 0
-if __name__=="__main__": raise SystemExit(main())
-'''
-
-INIT=r'''"""Ω-MILLENNIUM-T∞ R0.2 software research kernel."""
-from .core import *
-from .core import atlas,benchmark,campaign,poincare_benchmark,problem_specs,formal_skeleton
-__version__="0.2.0"
-'''
-
-def generate():
-    write("omega_millennium_t/r02/core.py",CORE)
-    write("omega_millennium_t/r02/cli.py",CLI)
-    write("omega_millennium_t/r02/__init__.py",INIT)

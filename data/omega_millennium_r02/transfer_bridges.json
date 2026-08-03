@@ -1,0 +1,454 @@
+{
+  "count": 64,
+  "items": [
+    {
+      "bridge_id": "bridge.00",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_00",
+      "target_domain": "domain_00"
+    },
+    {
+      "bridge_id": "bridge.01",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_01",
+      "target_domain": "domain_07"
+    },
+    {
+      "bridge_id": "bridge.02",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_02",
+      "target_domain": "domain_14"
+    },
+    {
+      "bridge_id": "bridge.03",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_03",
+      "target_domain": "domain_21"
+    },
+    {
+      "bridge_id": "bridge.04",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_04",
+      "target_domain": "domain_28"
+    },
+    {
+      "bridge_id": "bridge.05",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_05",
+      "target_domain": "domain_35"
+    },
+    {
+      "bridge_id": "bridge.06",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_06",
+      "target_domain": "domain_42"
+    },
+    {
+      "bridge_id": "bridge.07",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_07",
+      "target_domain": "domain_49"
+    },
+    {
+      "bridge_id": "bridge.08",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_08",
+      "target_domain": "domain_56"
+    },
+    {
+      "bridge_id": "bridge.09",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_09",
+      "target_domain": "domain_63"
+    },
+    {
+      "bridge_id": "bridge.10",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_10",
+      "target_domain": "domain_06"
+    },
+    {
+      "bridge_id": "bridge.11",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_11",
+      "target_domain": "domain_13"
+    },
+    {
+      "bridge_id": "bridge.12",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_12",
+      "target_domain": "domain_20"
+    },
+    {
+      "bridge_id": "bridge.13",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_13",
+      "target_domain": "domain_27"
+    },
+    {
+      "bridge_id": "bridge.14",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_14",
+      "target_domain": "domain_34"
+    },
+    {
+      "bridge_id": "bridge.15",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_15",
+      "target_domain": "domain_41"
+    },
+    {
+      "bridge_id": "bridge.16",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_16",
+      "target_domain": "domain_48"
+    },
+    {
+      "bridge_id": "bridge.17",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_17",
+      "target_domain": "domain_55"
+    },
+    {
+      "bridge_id": "bridge.18",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_18",
+      "target_domain": "domain_62"
+    },
+    {
+      "bridge_id": "bridge.19",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_19",
+      "target_domain": "domain_05"
+    },
+    {
+      "bridge_id": "bridge.20",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_20",
+      "target_domain": "domain_12"
+    },
+    {
+      "bridge_id": "bridge.21",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_21",
+      "target_domain": "domain_19"
+    },
+    {
+      "bridge_id": "bridge.22",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_22",
+      "target_domain": "domain_26"
+    },
+    {
+      "bridge_id": "bridge.23",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_23",
+      "target_domain": "domain_33"
+    },
+    {
+      "bridge_id": "bridge.24",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_24",
+      "target_domain": "domain_40"
+    },
+    {
+      "bridge_id": "bridge.25",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_25",
+      "target_domain": "domain_47"
+    },
+    {
+      "bridge_id": "bridge.26",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_26",
+      "target_domain": "domain_54"
+    },
+    {
+      "bridge_id": "bridge.27",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_27",
+      "target_domain": "domain_61"
+    },
+    {
+      "bridge_id": "bridge.28",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_28",
+      "target_domain": "domain_04"
+    },
+    {
+      "bridge_id": "bridge.29",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_29",
+      "target_domain": "domain_11"
+    },
+    {
+      "bridge_id": "bridge.30",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_30",
+      "target_domain": "domain_18"
+    },
+    {
+      "bridge_id": "bridge.31",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_31",
+      "target_domain": "domain_25"
+    },
+    {
+      "bridge_id": "bridge.32",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_32",
+      "target_domain": "domain_32"
+    },
+    {
+      "bridge_id": "bridge.33",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_33",
+      "target_domain": "domain_39"
+    },
+    {
+      "bridge_id": "bridge.34",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_34",
+      "target_domain": "domain_46"
+    },
+    {
+      "bridge_id": "bridge.35",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_35",
+      "target_domain": "domain_53"
+    },
+    {
+      "bridge_id": "bridge.36",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_36",
+      "target_domain": "domain_60"
+    },
+    {
+      "bridge_id": "bridge.37",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_37",
+      "target_domain": "domain_03"
+    },
+    {
+      "bridge_id": "bridge.38",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_38",
+      "target_domain": "domain_10"
+    },
+    {
+      "bridge_id": "bridge.39",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_39",
+      "target_domain": "domain_17"
+    },
+    {
+      "bridge_id": "bridge.40",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_40",
+      "target_domain": "domain_24"
+    },
+    {
+      "bridge_id": "bridge.41",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_41",
+      "target_domain": "domain_31"
+    },
+    {
+      "bridge_id": "bridge.42",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_42",
+      "target_domain": "domain_38"
+    },
+    {
+      "bridge_id": "bridge.43",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_43",
+      "target_domain": "domain_45"
+    },
+    {
+      "bridge_id": "bridge.44",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_44",
+      "target_domain": "domain_52"
+    },
+    {
+      "bridge_id": "bridge.45",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_45",
+      "target_domain": "domain_59"
+    },
+    {
+      "bridge_id": "bridge.46",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_46",
+      "target_domain": "domain_02"
+    },
+    {
+      "bridge_id": "bridge.47",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_47",
+      "target_domain": "domain_09"
+    },
+    {
+      "bridge_id": "bridge.48",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_48",
+      "target_domain": "domain_16"
+    },
+    {
+      "bridge_id": "bridge.49",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_49",
+      "target_domain": "domain_23"
+    },
+    {
+      "bridge_id": "bridge.50",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_50",
+      "target_domain": "domain_30"
+    },
+    {
+      "bridge_id": "bridge.51",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_51",
+      "target_domain": "domain_37"
+    },
+    {
+      "bridge_id": "bridge.52",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_52",
+      "target_domain": "domain_44"
+    },
+    {
+      "bridge_id": "bridge.53",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_53",
+      "target_domain": "domain_51"
+    },
+    {
+      "bridge_id": "bridge.54",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_54",
+      "target_domain": "domain_58"
+    },
+    {
+      "bridge_id": "bridge.55",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_55",
+      "target_domain": "domain_01"
+    },
+    {
+      "bridge_id": "bridge.56",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_56",
+      "target_domain": "domain_08"
+    },
+    {
+      "bridge_id": "bridge.57",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_57",
+      "target_domain": "domain_15"
+    },
+    {
+      "bridge_id": "bridge.58",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_58",
+      "target_domain": "domain_22"
+    },
+    {
+      "bridge_id": "bridge.59",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_59",
+      "target_domain": "domain_29"
+    },
+    {
+      "bridge_id": "bridge.60",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_60",
+      "target_domain": "domain_36"
+    },
+    {
+      "bridge_id": "bridge.61",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_61",
+      "target_domain": "domain_43"
+    },
+    {
+      "bridge_id": "bridge.62",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_62",
+      "target_domain": "domain_50"
+    },
+    {
+      "bridge_id": "bridge.63",
+      "forbidden_inference": "domain_analogy_does_not_imply_theorem_transfer",
+      "requires_round_trip": true,
+      "source_domain": "domain_63",
+      "target_domain": "domain_57"
+    }
+  ],
+  "schema": "omega-millennium-transfer-bridges/2"
+}
