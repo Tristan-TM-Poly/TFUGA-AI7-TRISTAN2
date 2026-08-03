@@ -1,0 +1,45 @@
+{
+  "schema": "omega-problem-source-snapshot/4",
+  "snapshot_id": "clay-fixture-2026-08-03",
+  "source_id": "clay",
+  "source_url": "https://www.claymath.org/millennium-problems/",
+  "retrieved_at": "2026-08-03T16:00:00Z",
+  "revision": null,
+  "retrieval_mode": "offline_fixture",
+  "license_note": "Metadata-only fixture. Recheck the official Clay pages before any current-status claim.",
+  "records": [
+    {
+      "problem_id": "riemann_hypothesis",
+      "title": "Riemann hypothesis",
+      "front": "analytic_number_theory",
+      "observed_status": "requires_refresh",
+      "source_locator": "millennium-problems/riemann-hypothesis",
+      "statement": "Canonical statement must be refreshed from the official source before activation.",
+      "verification_basis": "fixture_only",
+      "current_open_status_claimed": false,
+      "solution_claimed": false
+    },
+    {
+      "problem_id": "p_vs_np",
+      "title": "P versus NP",
+      "front": "computational_complexity",
+      "observed_status": "requires_refresh",
+      "source_locator": "millennium-problems/p-vs-np-problem",
+      "statement": "Canonical statement must be refreshed from the official source before activation.",
+      "verification_basis": "fixture_only",
+      "current_open_status_claimed": false,
+      "solution_claimed": false
+    },
+    {
+      "problem_id": "poincare_benchmark",
+      "title": "Poincaré conjecture accepted-proof reconstruction benchmark",
+      "front": "topology_differential_geometry",
+      "observed_status": "solved",
+      "source_locator": "millennium-problems/poincare-conjecture",
+      "statement": "Used only as a solved benchmark; this fixture does not reconstruct or certify the accepted proof.",
+      "verification_basis": "fixture_only",
+      "current_open_status_claimed": false,
+      "solution_claimed": false
+    }
+  ]
+}
