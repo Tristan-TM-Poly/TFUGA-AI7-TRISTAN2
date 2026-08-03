@@ -5,6 +5,7 @@ on:
     paths:
       - "omega_web_hg_t/r05/**"
       - "tests/test_omega_web_hg_r05_policy.py"
+      - "tests/test_omega_web_hg_r05_integration.py"
       - "examples/omega_web_hg_r05_policy_demo.py"
       - "docs/omega_web_hg_t/R05_POLICY_COMPILER.md"
       - "docs/omega_web_hg_t/R10_PROBATIVE_WEB_OS.md"
@@ -16,6 +17,7 @@ on:
     paths:
       - "omega_web_hg_t/r05/**"
       - "tests/test_omega_web_hg_r05_policy.py"
+      - "tests/test_omega_web_hg_r05_integration.py"
       - "examples/omega_web_hg_r05_policy_demo.py"
       - "docs/omega_web_hg_t/R05_POLICY_COMPILER.md"
       - "docs/omega_web_hg_t/R10_PROBATIVE_WEB_OS.md"
@@ -51,23 +53,37 @@ jobs:
           python -m compileall -q
           omega_web_hg_t/r05
           tests/test_omega_web_hg_r05_policy.py
+          tests/test_omega_web_hg_r05_integration.py
           examples/omega_web_hg_r05_policy_demo.py
-      - name: Run adversarial policy tests
-        run: pytest -q tests/test_omega_web_hg_r05_policy.py
-      - name: Run compiler audit
+      - name: Run adversarial policy and integration tests
+        run: >-
+          pytest -q
+          tests/test_omega_web_hg_r05_policy.py
+          tests/test_omega_web_hg_r05_integration.py
+      - name: Run compiler and adapter-binding audit
         run: |
           python -m omega_web_hg_t.r05 audit \
             --as-of 2026-08-03 \
             --output /tmp/r05-audit.json
+          python -m omega_web_hg_t.r05 audit-bindings \
+            --as-of 2026-08-03 \
+            --output /tmp/r05-bindings.json
           python - <<'PY'
           import json
           data = json.load(open('/tmp/r05-audit.json'))
+          bindings = json.load(open('/tmp/r05-bindings.json'))
           assert data['status'] == 'PASS'
           assert data['source_count'] == 12
           assert data['pass_count'] == 11
           assert data['human_review_count'] == 1
+          assert data['r04_binding_status'] == 'PASS'
+          assert data['r04_adapter_count'] == 11
+          assert data['r04_bound_count'] == 11
           assert data['legal_advice_claimed'] is False
           assert data['permission_beyond_profile_claimed'] is False
+          assert bindings['status'] == 'PASS'
+          assert bindings['bound_count'] == 11
+          assert bindings['binding_audit_is_network_execution'] is False
           print('OMEGA_WEB_HG_R05_AUDIT_PASS')
           PY
       - name: Validate profile and compiled schemas
@@ -98,6 +114,7 @@ jobs:
           diff -ru /tmp/r05-a/profiles /tmp/r05-b/profiles
           diff -ru /tmp/r05-a/compiled /tmp/r05-b/compiled
           cmp /tmp/r05-a/materialization-manifest.json /tmp/r05-b/materialization-manifest.json
+          cmp /tmp/r05-a/r04-binding-audit.json /tmp/r05-b/r04-binding-audit.json
       - name: Exercise decisive forbidden-field gate
         run: |
           cat > /tmp/unsafe-record.json <<'JSON'
