@@ -7,7 +7,7 @@ from .streaming import (
     materialize_synthetic_campaign,
     query_portfolio,
 )
-from .compatibility import ingest_r03_max, verify_r03_max_source
+from .compatibility_strict import ingest_r03_max, verify_r03_max_source
 
 __all__ = [
     "CELL_SCHEMA",
@@ -19,4 +19,4 @@ __all__ = [
     "verify_r03_max_source",
 ]
 
-__version__ = "0.10.0"
+__version__ = "0.10.1"
