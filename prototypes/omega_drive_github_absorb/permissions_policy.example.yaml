@@ -1,0 +1,51 @@
+# Ω-DRIVE-GITHUB-ABSORB-T — policy OAK-safe exemple
+
+mode: dry-run
+max_level: L1
+
+# Actions dangereuses verrouillées par défaut
+allow_download: false
+allow_publication: false
+allow_delete: false
+allow_permission_change: false
+allow_push_to_default_branch: false
+
+# Vérifications obligatoires
+require_oak_report: true
+require_ip_review: true
+require_security_scan: true
+require_human_approval_for_public_release: true
+
+# GitHub
+github:
+  target_repo: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+  branch_prefix: omega-drive-github-absorb
+  draft_pr_only: true
+  auto_merge: false
+  protected_paths:
+    - .github/
+    - secrets/
+    - private/
+
+# Google Drive
+google_drive:
+  oauth_scope: readonly
+  allowed_link_types:
+    - drive_file
+    - drive_folder
+    - google_doc
+    - google_sheet
+    - google_slides
+  export_formats:
+    google_doc: markdown
+    google_sheet: csv
+    google_slides: pdf
+
+# OAK verdict routing
+verdicts:
+  ALLOW_PRIVATE_SYNC: branch_only
+  ALLOW_BRANCH_ONLY: draft_pr_only
+  REQUIRES_REDACTION: block_publication
+  REQUIRES_IP_REVIEW: block_publication
+  BLOCK_PUBLICATION: stop
+  BLOCK_DOWNLOAD: inventory_only
