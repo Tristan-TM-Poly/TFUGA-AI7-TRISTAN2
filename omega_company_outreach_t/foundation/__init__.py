@@ -119,5 +119,12 @@ from .schemas import (
     schema_definitions,
     write_schema_catalog,
 )
+from .runtime_contracts import apply_runtime_contracts
+
+apply_runtime_contracts(
+    opportunity_class=Opportunity,
+    event_store_class=EventStore,
+    canonicalization_error=CanonicalizationError,
+)
 
 __all__ = [name for name in globals() if not name.startswith("_")]
