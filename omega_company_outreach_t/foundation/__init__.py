@@ -62,6 +62,7 @@ from .identity import (
     require_distinct_approvers,
     resolve_authority,
 )
+from . import migration as _migration_module
 from .migration import MigratedCase, MigrationIds, audit_migrations, migrate_outreach_case
 from .migration_runtime import audit_migration_bundle, migrate_case_file, migration_to_mapping
 from .opportunities import (
@@ -125,6 +126,8 @@ apply_runtime_contracts(
     opportunity_class=Opportunity,
     event_store_class=EventStore,
     canonicalization_error=CanonicalizationError,
+    migration_module=_migration_module,
+    company_unit_class=CompanyUnit,
 )
 
 __all__ = [name for name in globals() if not name.startswith("_")]
