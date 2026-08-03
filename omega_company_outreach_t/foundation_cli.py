@@ -11,16 +11,16 @@ from typing import Any, Mapping
 from .foundation.canonical import CanonicalizationError, canonical_hash
 from .foundation.contacts import RoleCategory
 from .foundation.consent import ConsentBasis, ConsentScope
-from .foundation.events import EventStore, build_outreach_projection
+from .foundation.event_store import CanonicalEventStore
+from .foundation.events import build_outreach_projection
 from .foundation.identity import CompanyIdentity, DomainClaim, IdentityState
-from .foundation.migration import MigrationIds, migrate_case_file
+from .foundation.migration import MigrationIds
+from .foundation.migration_runtime import migrate_case_file
 from .foundation.opportunities import OpportunityType, StrategicSignals
 from .foundation.organizations import OrganizationType
-from .foundation.scenario_atlas import (
-    audit_atlas_directory,
-    theoretical_cardinality,
-    write_atlas,
-)
+from .foundation.scenario_runtime import audit_atlas_directory, write_atlas
+from .foundation.scenario_atlas import theoretical_cardinality
+from .foundation.schemas import audit_schema_catalog, write_schema_catalog
 
 
 def _jsonable(value: Any) -> Any:
@@ -50,12 +50,19 @@ def _load_object(path: Path) -> dict[str, Any]:
 
 def _load_signals(path: Path) -> StrategicSignals:
     payload = _load_object(path)
+    expected = set(StrategicSignals.__dataclass_fields__)
+    missing = expected - set(payload)
+    unknown = set(payload) - expected
+    if missing:
+        raise CanonicalizationError(f"strategic signals missing fields: {sorted(missing)}")
+    if unknown:
+        raise CanonicalizationError(f"strategic signals contain unknown fields: {sorted(unknown)}")
     return StrategicSignals(**{key: float(value) for key, value in payload.items()})
 
 
 def _migration_ids(prefix: int) -> MigrationIds:
-    if prefix < 1 or prefix > 9999:
-        raise CanonicalizationError("migration prefix must be between 1 and 9999")
+    if prefix < 1 or prefix > 4999:
+        raise CanonicalizationError("migration prefix must be between 1 and 4999")
     return MigrationIds(
         organization_id=f"ORG-2026-{prefix:04d}",
         contact_id=f"CNT-2026-{prefix:04d}",
@@ -130,6 +137,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("atlas-cardinality", help="Print theoretical scenario cardinality")
 
+    schemas_generate = sub.add_parser("schemas-generate", help="Generate JSON Schema catalog")
+    schemas_generate.add_argument("directory", type=Path)
+
+    schemas_audit = sub.add_parser("schemas-audit", help="Audit JSON Schema catalog")
+    schemas_audit.add_argument("directory", type=Path)
+
     hash_command = sub.add_parser("canonical-hash", help="Hash a JSON object canonically")
     hash_command.add_argument("path", type=Path)
     return parser
@@ -174,11 +187,11 @@ def main(argv: list[str] | None = None) -> int:
             _print(_identity_example(args))
             return 0
         if args.command == "event-audit":
-            audit = EventStore(args.event_store).audit()
+            audit = CanonicalEventStore(args.event_store).audit()
             _print(audit)
             return 0 if audit.valid else 2
         if args.command == "event-project":
-            store = EventStore(args.event_store)
+            store = CanonicalEventStore(args.event_store)
             audit = store.audit()
             if not audit.valid:
                 _print(audit)
@@ -238,6 +251,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "atlas-cardinality":
             _print({"theoretical_cardinality": theoretical_cardinality()})
             return 0
+        if args.command == "schemas-generate":
+            catalog = write_schema_catalog(args.directory)
+            _print(catalog)
+            return 0
+        if args.command == "schemas-audit":
+            errors = audit_schema_catalog(args.directory)
+            _print({"valid": not errors, "errors": errors})
+            return 0 if not errors else 2
         if args.command == "canonical-hash":
             payload = json.loads(args.path.read_text(encoding="utf-8"))
             _print({"canonical_hash": canonical_hash(payload)})
