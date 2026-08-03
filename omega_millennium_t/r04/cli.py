@@ -6,7 +6,8 @@ import json
 from pathlib import Path
 from typing import Sequence
 
-from .source_adapters import audit_source_bundle, compile_source_bundle
+from .source_adapters import compile_source_bundle
+from .strict_audit import audit_source_bundle_strict
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -28,7 +29,7 @@ def _parser() -> argparse.ArgumentParser:
 
     audit_parser = sub.add_parser(
         "audit",
-        help="audit receipts, counts, claims and artifact integrity",
+        help="strictly audit receipts, counts, claims and artifact integrity",
     )
     audit_parser.add_argument("output_dir")
     return parser
@@ -42,7 +43,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             Path(args.output_dir),
         )
     else:
-        result = audit_source_bundle(Path(args.output_dir))
+        result = audit_source_bundle_strict(Path(args.output_dir))
     print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
     return 0 if result.get("valid", True) else 1
 
