@@ -16,6 +16,7 @@ from omega_millennium_t.r03.max_engine import (
     select_balanced_portfolio,
     unicode_canonical_key,
 )
+from omega_millennium_t.r03.strict_audit import audit_max_output_strict
 
 
 def test_max_constellation_scale_and_referential_counts() -> None:
@@ -45,8 +46,6 @@ def test_scores_are_profile_based_not_hash_noise() -> None:
     ]
     assert len(same_shape) == 72
     assert {cell.scoring_basis for cell in same_shape} == {"transparent_profile_v1"}
-    # Unverified records with the same target/mode profile receive the same
-    # transparent prior; ordering is then supplied by diversity constraints.
     unverified = [cell for cell in same_shape if cell.problem_id != "poincare_benchmark"]
     assert len({cell.priority_score for cell in unverified}) <= 3
 
@@ -117,6 +116,15 @@ def test_compile_and_audit_max_are_deterministic(tmp_path: Path) -> None:
     assert report_a["cells_claiming_proof_or_solution"] == 0
     assert report_a["permanent_total_cap"] is None
     assert audit_max_output(first)["valid"] is True
+    strict = audit_max_output_strict(first)
+    assert strict["valid"] is True
+    assert strict["counts"] == {
+        "problems": 72,
+        "targets": 864,
+        "cells": 6_912,
+        "methods": 32,
+        "hyperedges": 8_568,
+    }
     assert (first / "manifest.json").read_bytes() == (second / "manifest.json").read_bytes()
     assert (first / "research_cells.jsonl").read_bytes() == (second / "research_cells.jsonl").read_bytes()
 
@@ -130,6 +138,19 @@ def test_audit_detects_artifact_tampering(tmp_path: Path) -> None:
     payload["title"] = payload["title"] + " tampered"
     rows[0] = json.dumps(payload, sort_keys=True, ensure_ascii=False)
     problem_file.write_text("\n".join(rows) + "\n", encoding="utf-8")
-    audit = audit_max_output(output)
+    audit = audit_max_output_strict(output)
     assert audit["valid"] is False
     assert any("problems.jsonl: sha256 mismatch" in error for error in audit["errors"])
+
+
+def test_strict_audit_detects_report_tampering(tmp_path: Path) -> None:
+    output = tmp_path / "atlas"
+    compile_max_atlas(output)
+    report_path = output / "report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report["research_cell_count"] += 1
+    report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    audit = audit_max_output_strict(output)
+    assert audit["valid"] is False
+    assert "report digest mismatch" in audit["errors"]
+    assert any(error.startswith("research_cell_count:") for error in audit["errors"])
