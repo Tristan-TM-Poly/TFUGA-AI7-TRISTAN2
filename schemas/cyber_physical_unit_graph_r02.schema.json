@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/cyber_physical_unit_graph_r02.schema.json",
+  "title": "Omega Cyber Physical UnitGraph R0.2",
+  "type": "object",
+  "required": [
+    "system_id",
+    "port_assessments",
+    "connection_assessments",
+    "error_count",
+    "warning_count",
+    "known_unit_count",
+    "unknown_unit_count",
+    "dimensionally_valid",
+    "causal_connections_valid",
+    "evidence_hash",
+    "physics_certified",
+    "standards_compliance_claim"
+  ],
+  "properties": {
+    "system_id": {"type": "string", "minLength": 1},
+    "port_assessments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "component_id", "port_id", "domain", "effort_unit", "flow_unit",
+          "effort_known", "flow_known", "semantic_mode", "power_conjugate",
+          "direct_power_flow", "findings", "severity"
+        ],
+        "properties": {
+          "component_id": {"type": "string", "minLength": 1},
+          "port_id": {"type": "string", "minLength": 1},
+          "domain": {"type": "string", "minLength": 1},
+          "effort_unit": {"type": "string", "minLength": 1},
+          "flow_unit": {"type": "string", "minLength": 1},
+          "effort_known": {"type": "boolean"},
+          "flow_known": {"type": "boolean"},
+          "effort_dimension": {"type": "object", "additionalProperties": {"type": "integer"}},
+          "flow_dimension": {"type": "object", "additionalProperties": {"type": "integer"}},
+          "product_dimension": {"type": "object", "additionalProperties": {"type": "integer"}},
+          "semantic_mode": {"enum": ["power_conjugate", "direct_power_flow", "nonenergetic"]},
+          "power_conjugate": {"type": "boolean"},
+          "direct_power_flow": {"type": "boolean"},
+          "findings": {"type": "array", "items": {"type": "string"}},
+          "severity": {"enum": ["info", "warning", "error"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "connection_assessments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "connection_id", "source", "target", "domain",
+          "effort_dimension_compatible", "flow_dimension_compatible",
+          "causal_direction_valid", "findings", "severity"
+        ],
+        "properties": {
+          "connection_id": {"type": "string", "minLength": 1},
+          "source": {"type": "string", "minLength": 1},
+          "target": {"type": "string", "minLength": 1},
+          "domain": {"type": "string", "minLength": 1},
+          "effort_dimension_compatible": {"type": "boolean"},
+          "flow_dimension_compatible": {"type": "boolean"},
+          "effort_scale_ratio": {"type": ["number", "null"]},
+          "flow_scale_ratio": {"type": ["number", "null"]},
+          "causal_direction_valid": {"type": "boolean"},
+          "findings": {"type": "array", "items": {"type": "string"}},
+          "severity": {"enum": ["info", "warning", "error"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "error_count": {"type": "integer", "minimum": 0},
+    "warning_count": {"type": "integer", "minimum": 0},
+    "informational_count": {"type": "integer", "minimum": 0},
+    "known_unit_count": {"type": "integer", "minimum": 0},
+    "unknown_unit_count": {"type": "integer", "minimum": 0},
+    "power_conjugate_port_count": {"type": "integer", "minimum": 0},
+    "direct_power_port_count": {"type": "integer", "minimum": 0},
+    "nonenergetic_port_count": {"type": "integer", "minimum": 0},
+    "dimensionally_valid": {"type": "boolean"},
+    "causal_connections_valid": {"type": "boolean"},
+    "evidence_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "physics_certified": {"const": false},
+    "standards_compliance_claim": {"const": false},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
