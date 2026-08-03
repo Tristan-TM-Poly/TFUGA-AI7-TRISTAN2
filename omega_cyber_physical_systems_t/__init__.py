@@ -65,6 +65,23 @@ from .hybrid import (
     demo_zeno_automaton,
     simulate_hybrid_automaton,
 )
+from .integration import (
+    ADAPTER_TYPES,
+    EXTERNAL_ADAPTER_TYPES,
+    ActivationAssessment,
+    AdapterDescriptor,
+    ArtifactReceipt,
+    CapabilityProbe,
+    ExecutionReceipt,
+    ExecutionSpec,
+    IntegrationLedger,
+    NormalizedExchange,
+    assess_activation,
+    default_adapter_registry,
+    execute_connector,
+    normalize_exchange,
+    probe_capabilities,
+)
 from .inventory import (
     DOMAIN_KEYWORDS,
     InventoryConfig,
@@ -95,6 +112,7 @@ from .r03_fixtures import (
     r03_unsafe_condition,
 )
 from .r03_oak import CPSR03OAKGate, CPSR03OAKReport, run_cps_r03_benchmarks
+from .r04_oak import CPSR04OAKGate, CPSR04OAKReport, run_cps_r04_benchmarks
 from .reachability import (
     Interval,
     ReachBox,
@@ -130,7 +148,12 @@ from .unit_graph import (
 )
 
 __all__ = [
+    "ADAPTER_TYPES",
+    "EXTERNAL_ADAPTER_TYPES",
+    "ActivationAssessment",
+    "AdapterDescriptor",
     "AffineFlow",
+    "ArtifactReceipt",
     "AxisPlantConfig",
     "COMPARATORS",
     "CPSOAKGate",
@@ -139,6 +162,9 @@ __all__ = [
     "CPSR02OAKReport",
     "CPSR03OAKGate",
     "CPSR03OAKReport",
+    "CPSR04OAKGate",
+    "CPSR04OAKReport",
+    "CapabilityProbe",
     "ClosedLoopReport",
     "ClosedLoopSample",
     "ClosedLoopScenario",
@@ -154,6 +180,8 @@ __all__ = [
     "ElectronicsConfig",
     "EnergyGraphReport",
     "EnergyTerm",
+    "ExecutionReceipt",
+    "ExecutionSpec",
     "FaultEvent",
     "FaultMode",
     "FaultPropagationRecord",
@@ -165,9 +193,11 @@ __all__ = [
     "HybridSample",
     "HybridSimulationReport",
     "HybridTransition",
+    "IntegrationLedger",
     "Interval",
     "InventoryConfig",
     "MOTION_TYPES",
+    "NormalizedExchange",
     "PIDConfig",
     "PIDState",
     "PIDStep",
@@ -205,6 +235,7 @@ __all__ = [
     "UnitGraphReport",
     "UnitRegistry",
     "analyze_fault_propagation",
+    "assess_activation",
     "assess_evidence_ledger",
     "assess_receipt",
     "audit_blueprint_units",
@@ -213,6 +244,7 @@ __all__ = [
     "compile_prototype",
     "computational_demo_receipts",
     "dc_motor_model",
+    "default_adapter_registry",
     "default_domain_semantics",
     "default_prototype_architectures",
     "default_unit_registry",
@@ -229,8 +261,11 @@ __all__ = [
     "discover_repository_systems",
     "electromechanical_axis_model",
     "evaluate_temporal_property",
+    "execute_connector",
     "mass_spring_damper_model",
+    "normalize_exchange",
     "pid_step",
+    "probe_capabilities",
     "r03_adversarial_initial_box",
     "r03_axis_automaton",
     "r03_initial_box",
@@ -241,10 +276,11 @@ __all__ = [
     "run_cps_benchmarks",
     "run_cps_r02_benchmarks",
     "run_cps_r03_benchmarks",
+    "run_cps_r04_benchmarks",
     "simulate_hybrid_automaton",
     "simulate_state_space",
     "summarize_inventory",
     "verify_temporal_properties",
 ]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
