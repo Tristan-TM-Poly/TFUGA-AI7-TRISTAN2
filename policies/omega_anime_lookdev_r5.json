@@ -1,0 +1,42 @@
+{
+  "schema_version": "omega-anime-lookdev-policy/r5",
+  "project": "Le Huitième Feu — Saison 1",
+  "publication_state": "private-draft",
+  "original_style_system": "Noir mycélien causal",
+  "allowed_automation": [
+    "procedural SVG design sheets",
+    "palette and contrast analysis",
+    "shot grammar generation",
+    "synthetic voice descriptors",
+    "original placeholder music descriptors",
+    "deterministic lookdev dashboards",
+    "GitHub Actions validation"
+  ],
+  "human_approval_required": [
+    "final character design",
+    "final art direction",
+    "casting and voice recording",
+    "music composition and licensing",
+    "public release",
+    "commercial production",
+    "merge to main"
+  ],
+  "forbidden": [
+    "named living-artist style imitation",
+    "named studio style imitation",
+    "real-person face generation without authorization",
+    "real-person voice cloning without authorization",
+    "unlicensed music or visual assets",
+    "presenting procedural sheets as final production art",
+    "automatic publication or licensing"
+  ],
+  "proof_boundaries": {
+    "deterministic_generation": "testable",
+    "palette_contrast": "testable",
+    "silhouette_distinction": "structurally testable",
+    "artistic_quality": "human review required",
+    "audience_response": "not proven",
+    "legal_clearance": "not proven",
+    "production_readiness": "not proven"
+  }
+}

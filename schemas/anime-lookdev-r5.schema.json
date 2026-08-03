@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/anime-lookdev-r5.schema.json",
+  "title": "Omega Anime Lookdev R5",
+  "type": "object",
+  "required": ["project_id", "style_id", "style_name", "version", "publication_state", "originality_statement", "global_invariants", "forbidden_defaults", "characters", "episodes"],
+  "properties": {
+    "project_id": {"type": "string", "minLength": 1},
+    "style_id": {"const": "STYLE-NOIR-MYCELIEN-CAUSAL-R5"},
+    "style_name": {"const": "Noir mycélien causal"},
+    "version": {"const": "omega-anime-lookdev/r5"},
+    "publication_state": {"const": "private-draft"},
+    "originality_statement": {"type": "string", "minLength": 80},
+    "global_invariants": {"type": "array", "minItems": 8, "items": {"type": "string", "minLength": 1}},
+    "forbidden_defaults": {"type": "array", "minItems": 6, "items": {"type": "string", "minLength": 1}},
+    "characters": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["character_id", "name", "role", "silhouette_signature", "shape_language", "body_ratio", "palette", "accent_color", "motion_rules", "expressions", "voice_register", "voice_tempo", "voice_boundary"],
+        "properties": {
+          "character_id": {"type": "string", "minLength": 1},
+          "name": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "silhouette_signature": {"type": "string", "minLength": 1},
+          "shape_language": {"type": "string", "minLength": 1},
+          "body_ratio": {"type": "string", "minLength": 1},
+          "palette": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}},
+          "accent_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+          "motion_rules": {"type": "array", "minItems": 3, "items": {"type": "string"}},
+          "expressions": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "string"}},
+          "voice_register": {"type": "string"},
+          "voice_tempo": {"type": "string"},
+          "voice_boundary": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "episodes": {
+      "type": "array", "minItems": 12, "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["episode_number", "title", "phase", "palette", "light_key", "composition_rule", "forbidden_composition", "visual_motif", "emotional_curve", "target_contrast_ratio", "camera_entropy_target"],
+        "properties": {
+          "episode_number": {"type": "integer", "minimum": 1, "maximum": 12},
+          "title": {"type": "string", "minLength": 1},
+          "phase": {"enum": ["ÉVEIL", "EXPANSION", "FRACTURE", "CONFRONTATION"]},
+          "palette": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}},
+          "light_key": {"type": "string", "minLength": 1},
+          "composition_rule": {"type": "string", "minLength": 1},
+          "forbidden_composition": {"type": "string", "minLength": 1},
+          "visual_motif": {"type": "string", "minLength": 1},
+          "emotional_curve": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "number", "minimum": 0, "maximum": 1}},
+          "target_contrast_ratio": {"type": "number", "minimum": 4.5},
+          "camera_entropy_target": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

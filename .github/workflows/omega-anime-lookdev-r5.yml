@@ -1,0 +1,126 @@
+name: Omega Anime Lookdev R5
+
+on:
+  pull_request:
+    paths:
+      - "omega_anime_lookdev_t/**"
+      - "omega_anime_season_t/**"
+      - "tests/test_omega_anime_lookdev_t_r5.py"
+      - "examples/omega_anime_lookdev_r5_demo.py"
+      - "docs/omega_anime_lookdev_t_r5.md"
+      - "schemas/anime-lookdev-r5.schema.json"
+      - "policies/omega_anime_lookdev_r5.json"
+      - "generated/omega_anime_lookdev_t/**"
+      - ".github/workflows/omega-anime-lookdev-r5.yml"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-anime-lookdev-r5-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lookdev-oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pip pytest jsonschema
+      - name: Compile source
+        run: |
+          python -m compileall omega_anime_lookdev_t tests/test_omega_anime_lookdev_t_r5.py examples/omega_anime_lookdev_r5_demo.py
+      - name: Run R5 proof tests
+        run: |
+          pytest -q tests/test_omega_anime_lookdev_t_r5.py --durations=25 2>&1 | tee /tmp/omega-anime-lookdev-r5-tests.log
+      - name: Validate lookdev schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_anime_lookdev_t import build_eighth_fire_lookdev_r5
+          schema = json.loads(Path('schemas/anime-lookdev-r5.schema.json').read_text())
+          payload = build_eighth_fire_lookdev_r5().to_dict()
+          Draft202012Validator(schema).validate(payload)
+          assert len(payload['characters']) == 4
+          assert len(payload['episodes']) == 12
+          print(json.dumps({'characters': 4, 'episodes': 12, 'style': payload['style_name']}, indent=2))
+          PY
+      - name: Compile bundle twice
+        run: |
+          rm -rf /tmp/eighth-fire-lookdev-r5-a /tmp/eighth-fire-lookdev-r5-b
+          python -m omega_anime_lookdev_t validate-lookdev-r5
+          python -m omega_anime_lookdev_t compile-lookdev-r5 --output-dir /tmp/eighth-fire-lookdev-r5-a | tee /tmp/omega-anime-lookdev-r5-manifest.json
+          python -m omega_anime_lookdev_t compile-lookdev-r5 --output-dir /tmp/eighth-fire-lookdev-r5-b >/tmp/omega-anime-lookdev-r5-second.json
+      - name: Enforce lookdev, originality and network gates
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          first = Path('/tmp/eighth-fire-lookdev-r5-a')
+          second = Path('/tmp/eighth-fire-lookdev-r5-b')
+          manifest = json.loads((first / 'manifest.json').read_text())
+          quality = json.loads((first / 'quality-report.json').read_text())
+          provenance = json.loads((first / 'asset-provenance.json').read_text())
+          files = [path for path in first.rglob('*') if path.is_file()]
+          assert len(files) == 64
+          assert manifest['artifact_count'] == 64
+          assert manifest['svg_count'] == 40
+          assert manifest['html_count'] == 1
+          assert manifest['external_network_dependencies'] == 0
+          assert all(quality['gates'].values())
+          assert quality['named_style_imitation'] is False
+          assert provenance['external_assets'] == []
+          assert provenance['named_style_references'] == []
+          assert provenance['public_release_authorized'] is False
+          first_manifest = json.loads((first / 'manifest.json').read_text())
+          second_manifest = json.loads((second / 'manifest.json').read_text())
+          assert first_manifest['manifest_sha256'] == second_manifest['manifest_sha256']
+          for path in files:
+              rel = path.relative_to(first)
+              assert path.read_bytes() == (second / rel).read_bytes(), rel
+          for rel, record in manifest['files'].items():
+              assert hashlib.sha256((first / rel).read_bytes()).hexdigest() == record['sha256']
+          visual_files = list(first.rglob('*.svg')) + [first / 'lookdev-dashboard.html']
+          assert len(visual_files) == 41
+          for path in visual_files:
+              content = path.read_text()
+              assert 'fetch(' not in content
+              assert 'http://' not in content
+              assert 'https://' not in content
+              assert '<image' not in content
+          print(json.dumps({
+              'manifest': manifest['manifest_sha256'],
+              'artifacts': 64,
+              'svg': 40,
+              'characters': 4,
+              'episodes': 12,
+              'minimum_contrast': quality['minimum_contrast_ratio'],
+              'human_review_required': True,
+              'network_dependencies': 0,
+          }, indent=2))
+          PY
+      - name: Upload complete R5 lookdev bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eighth-fire-lookdev-r5-py${{ matrix.python-version }}
+          path: |
+            /tmp/eighth-fire-lookdev-r5-a
+            /tmp/omega-anime-lookdev-r5-tests.log
+            /tmp/omega-anime-lookdev-r5-manifest.json
+          retention-days: 14
