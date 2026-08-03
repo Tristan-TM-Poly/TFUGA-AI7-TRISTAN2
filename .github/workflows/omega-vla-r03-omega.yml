@@ -48,12 +48,14 @@ jobs:
           omega_vla_t/r03
           tests/test_omega_vla_r03_ir_types.py
           tests/test_omega_vla_r03_operators.py
+          tests/test_omega_vla_r03_regressions.py
           examples/omega_vla_r03_omega_demo.py
       - name: Run focused tests
         run: >-
           pytest -q
           tests/test_omega_vla_r03_ir_types.py
           tests/test_omega_vla_r03_operators.py
+          tests/test_omega_vla_r03_regressions.py
       - name: Verify deterministic CLI artifacts
         run: |
           python -m omega_vla_t.r03.cli manifest --output /tmp/manifest-a.json
