@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/anime-episode-r3.schema.json",
+  "title": "Omega Anime Episode R3 — 20 minutes",
+  "type": "object",
+  "required": ["project_id", "title", "version", "duration_s", "fps_reference", "publication_state", "scenes", "shots", "disclaimers"],
+  "properties": {
+    "project_id": {"const": "omega-anime-episode/eighth-fire/episode-01-r3"},
+    "title": {"type": "string", "minLength": 1},
+    "version": {"const": "omega-anime-episode/r3"},
+    "duration_s": {"const": 1200.0},
+    "fps_reference": {"const": 24},
+    "publication_state": {"const": "private-draft"},
+    "scenes": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["scene_id", "title", "order", "start_s", "end_s", "duration_s", "objective", "irreversible_change"],
+        "properties": {
+          "scene_id": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "order": {"type": "integer", "minimum": 1, "maximum": 12},
+          "start_s": {"type": "number", "minimum": 0},
+          "end_s": {"type": "number", "exclusiveMinimum": 0, "maximum": 1200},
+          "duration_s": {"type": "number", "exclusiveMinimum": 0},
+          "objective": {"type": "string", "minLength": 1},
+          "irreversible_change": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "shots": {
+      "type": "array",
+      "minItems": 114,
+      "maxItems": 114,
+      "items": {
+        "type": "object",
+        "required": ["shot_id", "scene_id", "order", "start_s", "end_s", "duration_s", "purpose", "framing", "camera_motion", "subjects", "caption", "dialogue", "audio_cue", "intensity"],
+        "properties": {
+          "shot_id": {"type": "string", "minLength": 1},
+          "scene_id": {"type": "string", "minLength": 1},
+          "order": {"type": "integer", "minimum": 1},
+          "start_s": {"type": "number", "minimum": 0},
+          "end_s": {"type": "number", "exclusiveMinimum": 0, "maximum": 1200},
+          "duration_s": {"type": "number", "exclusiveMinimum": 0},
+          "purpose": {"type": "string", "minLength": 1},
+          "framing": {"type": "string", "minLength": 1},
+          "camera_motion": {"type": "string", "minLength": 1},
+          "subjects": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "caption": {"type": "string", "minLength": 1},
+          "dialogue": {"type": "string"},
+          "audio_cue": {"type": "string", "minLength": 1},
+          "intensity": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "disclaimers": {"type": "array", "minItems": 4, "items": {"type": "string", "minLength": 1}}
+  },
+  "additionalProperties": false
+}

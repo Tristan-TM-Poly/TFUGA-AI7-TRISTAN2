@@ -1,0 +1,42 @@
+{
+  "schema_version": "omega-anime-episode-policy/r3",
+  "format": {
+    "episode_duration_s": 1200,
+    "episode_duration_minutes": 20,
+    "cold_open_duration_s": 180,
+    "commercial_breaks": 0,
+    "publication_state": "private-draft"
+  },
+  "allowed_automation": [
+    "episode timeline generation",
+    "procedural low-fidelity storyboard",
+    "self-contained browser animatic",
+    "guide-only synthesized tones",
+    "subtitles, EDL, manifests and test reports",
+    "GitHub Actions proof artifacts"
+  ],
+  "human_approval_required": [
+    "canon promotion",
+    "merge to main",
+    "public release",
+    "voice casting",
+    "music and asset licensing",
+    "production budget commitment",
+    "commercial distribution"
+  ],
+  "proof_boundaries": {
+    "exact_twenty_minute_duration": "testable",
+    "timeline_continuity": "testable",
+    "deterministic_compilation": "testable",
+    "artistic_quality": "not proven",
+    "audience_demand": "not proven",
+    "legal_clearance": "not proven",
+    "professional_production_feasibility": "not proven"
+  },
+  "negative_memory": [
+    "M-EP-R3-01: longer duration must add causal progression, not filler",
+    "M-EP-R3-02: 20 minutes of generated frames is not 20 minutes of finished animation",
+    "M-EP-R3-03: preserve the validated cold open instead of rewriting it without evidence",
+    "M-EP-R3-04: every episode must close one local arc and open one testable next promise"
+  ]
+}
