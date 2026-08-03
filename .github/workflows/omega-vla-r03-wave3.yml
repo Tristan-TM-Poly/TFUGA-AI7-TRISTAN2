@@ -1,0 +1,176 @@
+name: Omega VLA R0.3 Wave 3 Identity Factory
+
+on:
+  push:
+    branches: [feat/omega-vla-r03-wave3-identity-factory]
+    paths:
+      - "omega_vla_t/r03/wave3/**"
+      - "tests/test_omega_vla_r03_wave3_*.py"
+      - "examples/omega_vla_r03_wave3_identity_factory_demo.py"
+      - "docs/omega_vla_t/r03/WAVE3_IDENTITY_FACTORY.md"
+      - "schemas/omega_vla_identity_*.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla-r03-wave3.yml"
+  pull_request:
+    paths:
+      - "omega_vla_t/r03/wave3/**"
+      - "tests/test_omega_vla_r03_wave3_*.py"
+      - "examples/omega_vla_r03_wave3_identity_factory_demo.py"
+      - "docs/omega_vla_t/r03/WAVE3_IDENTITY_FACTORY.md"
+      - "schemas/omega_vla_identity_*.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla-r03-wave3.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install runtime and validators
+        run: >-
+          python -m pip install --disable-pip-version-check
+          numpy pytest jsonschema
+
+      - name: Compile Wave 3
+        run: >-
+          python -m compileall -q
+          omega_vla_t/r03/wave3
+          tests/test_omega_vla_r03_wave3_core.py
+          tests/test_omega_vla_r03_wave3_campaign_compilers.py
+          examples/omega_vla_r03_wave3_identity_factory_demo.py
+
+      - name: Run focused tests
+        run: |
+          pytest -q \
+            tests/test_omega_vla_r03_wave3_core.py \
+            tests/test_omega_vla_r03_wave3_campaign_compilers.py
+
+      - name: Generate deterministic manifests and campaigns
+        run: |
+          python -m omega_vla_t.r03.wave3.cli manifest --output /tmp/manifest-a.json
+          python -m omega_vla_t.r03.wave3.cli manifest --output /tmp/manifest-b.json
+          cmp /tmp/manifest-a.json /tmp/manifest-b.json
+
+          python -m omega_vla_t.r03.wave3.cli campaign \
+            --count 64 \
+            --seed 2026 \
+            --trials 2 \
+            --output /tmp/campaign-a.json
+          python -m omega_vla_t.r03.wave3.cli campaign \
+            --count 64 \
+            --seed 2026 \
+            --trials 2 \
+            --output /tmp/campaign-b.json
+          cmp /tmp/campaign-a.json /tmp/campaign-b.json
+
+      - name: Generate falsification and formal targets
+        run: |
+          python -m omega_vla_t.r03.wave3.cli test \
+            projection.idempotence \
+            --dimension 3 \
+            --scalar real \
+            --family dense \
+            --mutation drop_all \
+            --trials 8 \
+            --output /tmp/counterexample.json
+
+          python -m omega_vla_t.r03.wave3.cli smt \
+            commutator.identity_zero \
+            --dimension 2 \
+            --scalar real \
+            --output /tmp/identity-smt.json
+
+          python -m omega_vla_t.r03.wave3.cli property-test \
+            adjoint.product \
+            --dimension 4 \
+            --scalar complex \
+            --trials 8 \
+            --output /tmp/property-test.json
+
+          python -m omega_vla_t.r03.wave3.cli oak --output /tmp/oak.json
+          python examples/omega_vla_r03_wave3_identity_factory_demo.py > /tmp/demo.json
+
+      - name: Validate schemas, evidence and claim boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          instance_schema = json.loads(
+              Path('schemas/omega_vla_identity_instance_v1.schema.json').read_text()
+          )
+          campaign_schema = json.loads(
+              Path('schemas/omega_vla_identity_campaign_v1.schema.json').read_text()
+          )
+          jsonschema.Draft202012Validator.check_schema(instance_schema)
+          jsonschema.Draft202012Validator.check_schema(campaign_schema)
+
+          manifest = json.loads(Path('/tmp/manifest-a.json').read_text())
+          assert manifest['catalog']['schemas'] >= 20
+          assert manifest['frontier']['logical_candidates'] > 10_000
+          assert manifest['frontier']['permanent_total_cap'] is None
+          assert manifest['catalog']['theorem_claimed'] is False
+          assert manifest['catalog']['formal_proof_claimed'] is False
+
+          campaign = json.loads(Path('/tmp/campaign-a.json').read_text())
+          jsonschema.validate(campaign, campaign_schema)
+          assert campaign['passed'] is True
+          assert campaign['generated'] == 64
+          assert campaign['unique_instances'] == 64
+          assert campaign['permanent_total_cap'] is None
+          assert campaign['theorem_claimed'] is False
+          assert campaign['formal_proof_claimed'] is False
+          assert campaign['scientific_validation_claimed'] is False
+          jsonschema.validate(campaign['records'][0]['instance'], instance_schema)
+
+          weakened = json.loads(Path('/tmp/counterexample.json').read_text())
+          assert weakened['passed'] is False
+          assert weakened['counterexample'] is not None
+          assert weakened['state'] == 'FALSIFIED'
+          assert weakened['theorem_claimed'] is False
+          assert weakened['formal_proof_claimed'] is False
+
+          smt = json.loads(Path('/tmp/identity-smt.json').read_text())
+          assert smt['status'] == 'FORMAL_TARGET_UNCHECKED'
+          assert '(check-sat)' in smt['source']
+          assert smt['formal_proof_claimed'] is False
+          assert smt['formally_verified'] is False
+
+          property_test = json.loads(Path('/tmp/property-test.json').read_text())
+          assert property_test['status'] == 'GENERATED_UNEXECUTED'
+          assert property_test['formal_proof_claimed'] is False
+          assert property_test['formally_verified'] is False
+
+          oak = json.loads(Path('/tmp/oak.json').read_text())
+          assert oak['passed'] is True
+          assert oak['status'] == 'OAK_PASS_SOFTWARE_RESEARCH_FIXTURES_R0_3_WAVE_3'
+          assert oak['theorem_claimed'] is False
+          assert oak['formal_proof_claimed'] is False
+          assert oak['scientific_validation_claimed'] is False
+
+          demo = json.loads(Path('/tmp/demo.json').read_text())
+          assert demo['supported_identity']['passed'] is True
+          assert demo['weakened_identity']['counterexample'] is not None
+          assert demo['oak']['passed'] is True
+          assert demo['theorem_claimed'] is False
+          assert demo['formal_proof_claimed'] is False
+          assert demo['scientific_validation_claimed'] is False
+
+          print('OAK_PASS_VLA_R0_3_WAVE_3_IDENTITY_FACTORY')
+          PY
