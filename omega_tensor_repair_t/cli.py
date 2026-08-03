@@ -1,4 +1,4 @@
-"""Command-line interface for Ω-TENSOR-REPAIR-T R0.1."""
+"""Command-line interface for Ω-TENSOR-REPAIR-T R0.1–R0.2."""
 
 from __future__ import annotations
 
@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any, Sequence
 
 from .benchmark import run_benchmark
+from .benchmark_r02 import run_benchmark_r02
+from .clebsch_gordan import su2_clebsch_gordan
 from .compiler import compile_spec
 from .oak import audit_bundle
 from .projectors import analyze_2d, dimension_identity
@@ -35,12 +37,20 @@ def build_parser() -> argparse.ArgumentParser:
     dimensions.add_argument("size", type=int)
     dimensions.add_argument("--output")
 
+    su2 = subparsers.add_parser("su2", help="show SU(2) Clebsch-Gordan dimension branching")
+    su2.add_argument("left_dimension", type=int)
+    su2.add_argument("right_dimension", type=int)
+    su2.add_argument("--output")
+
     compile_command = subparsers.add_parser("compile", help="compile a JSON TensorProdLift-T specification")
     compile_command.add_argument("spec")
     compile_command.add_argument("--output")
 
-    benchmark = subparsers.add_parser("benchmark", help="run deterministic finite OAK fixtures")
+    benchmark = subparsers.add_parser("benchmark", help="run deterministic R0.1 finite OAK fixtures")
     benchmark.add_argument("--output")
+
+    benchmark_r02 = subparsers.add_parser("benchmark-r02", help="run higher-order R0.2 fixtures")
+    benchmark_r02.add_argument("--output")
     return parser
 
 
@@ -52,11 +62,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _json_dump(payload, args.output)
     if args.command == "dimensions":
         return _json_dump(dimension_identity(args.size), args.output)
+    if args.command == "su2":
+        return _json_dump(
+            su2_clebsch_gordan(args.left_dimension, args.right_dimension).to_dict(),
+            args.output,
+        )
     if args.command == "compile":
         spec = json.loads(Path(args.spec).read_text(encoding="utf-8"))
         return _json_dump(compile_spec(spec).to_dict(), args.output)
     if args.command == "benchmark":
         return _json_dump(run_benchmark(), args.output)
+    if args.command == "benchmark-r02":
+        return _json_dump(run_benchmark_r02(), args.output)
     raise AssertionError(args.command)
 
 
