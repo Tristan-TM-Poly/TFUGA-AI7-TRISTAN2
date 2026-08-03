@@ -66,6 +66,7 @@ omega-code-dojo = "omega_code_dojo_t.cli:main"
 omega-code-dojo-r02 = "omega_code_dojo_t.r02.cli:main"
 omega-code-dojo-r03 = "omega_code_dojo_t.r03.cli:main"
 omega-code-dojo-r04 = "omega_code_dojo_t.r04.cli:main"
+omega-code-dojo-r05 = "omega_code_dojo_t.r05:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
