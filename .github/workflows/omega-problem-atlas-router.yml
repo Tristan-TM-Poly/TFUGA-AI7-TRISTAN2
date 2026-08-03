@@ -1,0 +1,174 @@
+name: Omega Problem Atlas Admission Router
+
+on:
+  pull_request:
+    paths:
+      - "omega_millennium_t/r0*/**"
+      - "omega_millennium_t/r1*/**"
+      - "tests/test_omega_problem_atlas_r0*.py"
+      - "tests/test_omega_problem_atlas_r1*.py"
+      - "schemas/omega_problem_*"
+      - "schemas/omega_competition_ledger_*"
+      - "docs/omega_millennium_t/r0*/**"
+      - "docs/omega_millennium_t/r1*/**"
+      - "pyproject.toml"
+      - "omega_ci_admission_t/**"
+      - "config/omega_ci_admission/**"
+      - "tools/ci/validate_pyproject_entrypoints.py"
+      - "tools/ci/run_problem_atlas_route.py"
+      - "tests/test_omega_ci_admission*.py"
+      - ".github/workflows/omega-problem-atlas-router.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: omega-problem-atlas-router-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      routes: ${{ steps.route.outputs.routes }}
+      validators: ${{ steps.route.outputs.validators }}
+      report_digest: ${{ steps.route.outputs.report_digest }}
+      legacy_jobs: ${{ steps.route.outputs.legacy_jobs }}
+      replacement_jobs: ${{ steps.route.outputs.replacement_jobs }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install router dependencies
+        run: python -m pip install --disable-pip-version-check pytest pyyaml tomli
+
+      - name: Compile and test router
+        run: |
+          python -m compileall -q omega_ci_admission_t tools/ci/run_problem_atlas_route.py tools/ci/validate_pyproject_entrypoints.py
+          pytest -q tests/test_omega_ci_admission*.py
+
+      - name: Collect changed files
+        id: changed
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > /tmp/changed-files.txt
+          else
+            git show --pretty=format: --name-only HEAD | sed '/^$/d' > /tmp/changed-files.txt
+          fi
+          sort -u /tmp/changed-files.txt -o /tmp/changed-files.txt
+          cat /tmp/changed-files.txt
+
+      - name: Build dry-run admission plan
+        id: route
+        run: |
+          python -m omega_ci_admission_t.cli route \
+            --repository-root . \
+            --config config/omega_ci_admission/problem_atlas_routes.json \
+            --changed-files-path /tmp/changed-files.txt \
+            --output generated/omega_ci_admission/report.json \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Assert observation-only boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("generated/omega_ci_admission/report.json").read_text())
+          assert report["dry_run"] is True
+          assert report["safe_to_change_legacy_triggers"] is False
+          assert report["workflow_mutation_performed"] is False
+          assert report["workflow_cancellation_performed"] is False
+          assert report["workflow_dispatch_performed"] is False
+          assert report["replacement_green_receipt_present"] is False
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-ci-admission-report
+          path: generated/omega_ci_admission/report.json
+          retention-days: 14
+
+  routed-suite:
+    if: needs.plan.outputs.routes != '[]'
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        route: ${{ fromJSON(needs.plan.outputs.routes) }}
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install routed-suite dependencies
+        run: python -m pip install --disable-pip-version-check pytest jsonschema pyyaml tzdata tomli
+
+      - name: Run allowlisted suite
+        run: >-
+          python tools/ci/run_problem_atlas_route.py
+          --kind route
+          --id "${{ matrix.route }}"
+          --receipt-output "generated/receipts/${{ matrix.route }}-${{ matrix.python-version }}.json"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: route-${{ matrix.route }}-py${{ matrix.python-version }}
+          path: generated/receipts/*.json
+          retention-days: 14
+
+  shared-validator:
+    if: needs.plan.outputs.validators != '[]'
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        validator: ${{ fromJSON(needs.plan.outputs.validators) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validator dependencies
+        run: python -m pip install --disable-pip-version-check tomli
+
+      - name: Run allowlisted shared validator
+        run: >-
+          python tools/ci/run_problem_atlas_route.py
+          --kind validator
+          --id "${{ matrix.validator }}"
+          --receipt-output "generated/receipts/${{ matrix.validator }}.json"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: validator-${{ matrix.validator }}
+          path: generated/receipts/*.json
+          retention-days: 14
+
+  observation-summary:
+    if: always()
+    needs: [plan, routed-suite, shared-validator]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Summarize estimated fanout
+        run: |
+          echo "Admission report digest: ${{ needs.plan.outputs.report_digest }}"
+          echo "Estimated legacy jobs: ${{ needs.plan.outputs.legacy_jobs }}"
+          echo "Estimated replacement jobs: ${{ needs.plan.outputs.replacement_jobs }}"
+          echo "Legacy workflow triggers remain unchanged in this PR."
