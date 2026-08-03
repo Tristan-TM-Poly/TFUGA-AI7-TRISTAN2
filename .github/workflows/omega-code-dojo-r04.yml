@@ -1,0 +1,78 @@
+name: Omega Code Dojo R0.4 Problem Resolution
+
+on:
+  push:
+    branches: [feat/omega-code-dojo-t-r0-1]
+    paths:
+      - "omega_code_dojo_t/r04/**"
+      - "tests/test_omega_code_dojo_r04.py"
+      - "schemas/omega_code_dojo_resolution_*_v4.schema.json"
+      - "docs/omega-code-dojo-t/r04/**"
+      - "examples/omega_code_dojo_r04_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-code-dojo-r04.yml"
+  pull_request:
+    paths:
+      - "omega_code_dojo_t/r04/**"
+      - "tests/test_omega_code_dojo_r04.py"
+      - "schemas/omega_code_dojo_resolution_*_v4.schema.json"
+      - "docs/omega-code-dojo-t/r04/**"
+      - "examples/omega_code_dojo_r04_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-code-dojo-r04.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.4
+        run: python -m compileall -q omega_code_dojo_t/r04 tests/test_omega_code_dojo_r04.py examples/omega_code_dojo_r04_demo.py
+      - name: Run R0.4 tests
+        run: pytest -q tests/test_omega_code_dojo_r04.py
+      - name: Generate deterministic 4096-problem receipts
+        run: |
+          python -m omega_code_dojo_t.r04.cli benchmark --problems 4096 --output /tmp/r04-a.json
+          python -m omega_code_dojo_t.r04.cli benchmark --problems 4096 --output /tmp/r04-b.json
+          cmp /tmp/r04-a.json /tmp/r04-b.json
+      - name: Validate R0.4 schemas and invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          receipt_schema = json.loads(Path('schemas/omega_code_dojo_resolution_receipt_v4.schema.json').read_text())
+          analysis_schema = json.loads(Path('schemas/omega_code_dojo_resolution_analysis_v4.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(receipt_schema)
+          jsonschema.Draft202012Validator.check_schema(analysis_schema)
+          payload = json.loads(Path('/tmp/r04-a.json').read_text())
+          assert payload['status'] == 'CERTIFIED_SYNTHETIC_PROBLEM_RESOLUTION_FIXTURES_R0_4'
+          assert payload['materialized_problems'] == 4096
+          assert payload['solved_problems'] == 4096
+          assert payload['unresolved_problems'] == 0
+          assert payload['solve_rate'] == 1.0
+          assert payload['fallback_solutions'] > 0
+          assert payload['counterexamples'] > 0
+          assert payload['restricted_unresolved'] > 0
+          assert payload['permanent_total_cap'] is None
+          assert payload['claims']['open_problem_solution_claimed'] is False
+          assert payload['claims']['general_algorithm_correctness_claimed'] is False
+          jsonschema.validate(payload['receipt_summary'], receipt_schema)
+          jsonschema.validate(payload['best_learning_analysis'], analysis_schema)
+          print('CERTIFIED_SYNTHETIC_PROBLEM_RESOLUTION_FIXTURES_R0_4')
+          PY

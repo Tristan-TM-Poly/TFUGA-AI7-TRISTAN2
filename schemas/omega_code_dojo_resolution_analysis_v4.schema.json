@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega_code_dojo_resolution_analysis_v4.schema.json",
+  "title": "Omega Code Dojo R0.4 Resolution Analysis",
+  "type": "object",
+  "required": [
+    "system", "version", "campaign_id", "materialized_problems", "solved_problems",
+    "unresolved_problems", "solve_rate", "fallback_solutions", "unique_counterexamples",
+    "insights", "claims", "report_sha256"
+  ],
+  "properties": {
+    "system": {"const": "omega-code-dojo-t-infinity"},
+    "version": {"const": "R0.4"},
+    "campaign_id": {"type": "string"},
+    "materialized_problems": {"type": "integer", "minimum": 0},
+    "solved_problems": {"type": "integer", "minimum": 0},
+    "unresolved_problems": {"type": "integer", "minimum": 0},
+    "solve_rate": {"type": "number", "minimum": 0, "maximum": 1},
+    "fallback_solutions": {"type": "integer", "minimum": 0},
+    "unique_counterexamples": {"type": "integer", "minimum": 0},
+    "insights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["insight_id", "rank", "kind", "subject", "score", "evidence", "conclusion", "next_experiment", "falsifier"]
+      }
+    },
+    "claims": {"type": "object"},
+    "report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}
