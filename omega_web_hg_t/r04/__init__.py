@@ -1,16 +1,23 @@
-"""Ω-WEB-HG-T∞ R0.4 — authoritative-source campaign planning."""
+"""Ω-WEB-HG-T∞ R0.4 — authoritative-source planning and MAX metadata absorption."""
 
 from .catalog import BEST_SITES_V1, by_id
+from .max_adapters import MAX_ADAPTERS, Adapter, adapter_by_id
+from .max_campaign import HttpResponse, run_max_campaign
 from .models import CampaignPlan, SourceProfile, audit_profiles
 from .planner import PlannerOptions, build_plan, materialize_plan
 
 __all__ = [
+    "Adapter",
     "BEST_SITES_V1",
     "CampaignPlan",
+    "HttpResponse",
+    "MAX_ADAPTERS",
     "PlannerOptions",
     "SourceProfile",
+    "adapter_by_id",
     "audit_profiles",
     "build_plan",
     "by_id",
     "materialize_plan",
+    "run_max_campaign",
 ]
