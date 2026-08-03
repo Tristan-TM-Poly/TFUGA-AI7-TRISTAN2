@@ -49,10 +49,11 @@ def build_parser() -> argparse.ArgumentParser:
     sample = subparsers.add_parser("sample", help="generate finite problem cells")
     sample.add_argument("--count", type=int, default=16)
     sample.add_argument("--seed", type=int, default=0)
+    sample.add_argument("--start-offset", type=int, default=0)
     sample.add_argument("--output")
 
     campaign = subparsers.add_parser(
-        "campaign", help="run a finite checkpointable frontier campaign"
+        "campaign", help="run or resume a finite checkpointable campaign"
     )
     campaign.add_argument("--work-items", type=int, required=True)
     campaign.add_argument("--seed", type=int, default=0)
@@ -62,7 +63,18 @@ def build_parser() -> argparse.ArgumentParser:
     campaign.add_argument("--records-per-shard", type=int, default=1024)
     campaign.add_argument("--min-utility", type=float, default=0.0)
     campaign.add_argument("--max-risk", type=float, default=1.0)
+    campaign.add_argument("--checkpoint-every-batches", type=int, default=1)
     campaign.add_argument("--output-dir")
+    campaign.add_argument(
+        "--resume",
+        action="store_true",
+        help="resume from output-dir/checkpoint.json and dedup.sqlite3",
+    )
+    campaign.add_argument(
+        "--no-reset-output",
+        action="store_true",
+        help="refuse to erase existing output instead of starting clean",
+    )
     campaign.add_argument("--report")
 
     benchmark = subparsers.add_parser("benchmark", help="run deterministic OAK")
@@ -120,13 +132,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         factory = TheoremFactory()
         cells = [
             factory.generate(address).to_dict()
-            for address in codec.iter_sample(args.count, seed=args.seed)
+            for address in codec.iter_sample(
+                args.count,
+                seed=args.seed,
+                start_offset=args.start_offset,
+            )
         ]
         _write_or_print(
             {
                 "system": "Ω-VLA-T∞²",
                 "version": "R0.2-MAX",
                 "count": len(cells),
+                "start_offset": args.start_offset,
                 "cells": cells,
                 "theorem_claimed": False,
             },
@@ -145,6 +162,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             min_utility=args.min_utility,
             max_risk=args.max_risk,
             output_dir=args.output_dir,
+            resume=args.resume,
+            reset_output=not args.no_reset_output,
+            checkpoint_every_batches=args.checkpoint_every_batches,
         )
         report = run_campaign(config)
         _write_or_print(report.to_dict(), args.report)
