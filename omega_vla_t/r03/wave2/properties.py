@@ -92,11 +92,19 @@ def infer_properties(
 ) -> tuple[PropertyEvidence, ...]:
     """Infer a conservative property atlas for one finite matrix."""
 
+    if tolerance <= 0:
+        raise PropertyInferenceError("tolerance must be positive")
     a = _matrix(value)
     rows, columns = a.shape
     results: list[PropertyEvidence] = []
-    zero_reference = np.zeros_like(a)
-    results.append(_evidence("zero", _relative(a, np.eye(rows, columns)), tolerance, "frobenius_norm"))
+    results.append(
+        _evidence(
+            "zero",
+            _relative(a, np.eye(rows, columns, dtype=np.complex128)),
+            tolerance,
+            "frobenius_norm",
+        )
+    )
 
     if rows != columns:
         results.extend(
@@ -120,7 +128,7 @@ def infer_properties(
                 "positive_definite",
             )
         )
-        return tuple(results)
+        return tuple(sorted(results, key=lambda item: item.property_name))
 
     identity = np.eye(rows, dtype=np.complex128)
     adjoint = a.conj().T
@@ -139,11 +147,10 @@ def infer_properties(
     numerical_rank = int(np.sum(singular_values > rank_tolerance))
     determinant = complex(np.linalg.det(a))
     condition = float(np.linalg.cond(a))
-    invertible_residual = 0.0 if numerical_rank == rows else 1.0
     results.append(
         _evidence(
             "invertible",
-            invertible_residual,
+            0.0 if numerical_rank == rows else 1.0,
             0.5,
             "svd_rank",
             witnesses=(
@@ -154,17 +161,14 @@ def infer_properties(
         )
     )
 
-    hermitian_part = 0.5 * (a + adjoint)
     antihermitian_residual = _relative(a - adjoint, a)
     if antihermitian_residual <= tolerance:
-        eigenvalues = np.linalg.eigvalsh(hermitian_part)
-        minimum = float(np.min(eigenvalues, initial=0.0))
-        psd_residual = max(0.0, -minimum)
-        pd_residual = max(0.0, tolerance - minimum)
+        eigenvalues = np.linalg.eigvalsh(0.5 * (a + adjoint))
+        minimum = float(eigenvalues.min()) if eigenvalues.size else 0.0
         results.append(
             _evidence(
                 "positive_semidefinite",
-                psd_residual,
+                max(0.0, -minimum),
                 tolerance,
                 "eigvalsh",
                 assumptions=("self_adjoint within threshold",),
@@ -174,11 +178,14 @@ def infer_properties(
         results.append(
             _evidence(
                 "positive_definite",
-                pd_residual,
-                tolerance,
-                "eigvalsh",
+                max(0.0, tolerance - minimum),
+                0.0,
+                "eigvalsh_strict_margin",
                 assumptions=("self_adjoint within threshold",),
-                witnesses=(f"minimum_eigenvalue={minimum}",),
+                witnesses=(
+                    f"minimum_eigenvalue={minimum}",
+                    f"required_margin={tolerance}",
+                ),
             )
         )
     else:
@@ -196,7 +203,8 @@ def infer_properties(
             )
 
     trace = complex(np.trace(a))
-    spectral_radius = float(np.max(np.abs(np.linalg.eigvals(a)), initial=0.0))
+    eigenvalues = np.linalg.eigvals(a)
+    spectral_radius = float(np.max(np.abs(eigenvalues))) if eigenvalues.size else 0.0
     results.extend(
         (
             PropertyEvidence(
