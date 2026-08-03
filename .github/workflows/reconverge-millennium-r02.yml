@@ -1,0 +1,86 @@
+name: Reconverge Omega Millennium R0.2
+
+on:
+  push:
+    branches:
+      - merge/omega-millennium-r02-current-main
+    paths:
+      - .github/workflows/reconverge-millennium-r02.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reconverge-omega-millennium-r02
+  cancel-in-progress: false
+
+jobs:
+  reconverge:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: merge/omega-millennium-r02-current-main
+          fetch-depth: 0
+
+      - name: Copy exact validated R0.2 paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='b026b2935733ede82bd95aa6c54eb165d3f1a313'
+          git fetch --no-tags origin feat/omega-millennium-t-r0-2
+          source_sha="$(git rev-parse FETCH_HEAD)"
+          test "$source_sha" = "$expected"
+
+          git checkout "$source_sha" -- \
+            .github/workflows/omega-millennium-r02.yml \
+            data/omega_millennium_r02 \
+            docs/omega_millennium_t/r02 \
+            examples/omega_millennium_r02_demo.py \
+            omega_millennium_t/r02 \
+            schemas/omega_millennium_benchmark_v2.schema.json \
+            schemas/omega_millennium_campaign_v2.schema.json \
+            schemas/omega_millennium_problem_spec_v2.schema.json \
+            specs/omega_millennium_r02 \
+            tests/test_omega_millennium_r02.py
+
+      - name: Preserve current registry and add R0.2 CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('pyproject.toml')
+          text = path.read_text(encoding='utf-8')
+          r01 = 'omega-millennium = "omega_millennium_t.cli:main"'
+          r02 = 'omega-millennium-r02 = "omega_millennium_t.r02.cli:main"'
+          if r01 not in text:
+              raise SystemExit('R0.1 CLI entry missing from current main')
+          if r02 not in text:
+              text = text.replace(r01, r01 + '\n' + r02, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Verify scope and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/reconverge-millennium-r02.yml
+          test -f omega_millennium_t/r02/core.py
+          test -f data/omega_millennium_r02/research_cells_seed.json
+          test -f specs/omega_millennium_r02/riemann.json
+          test -f .github/workflows/omega-millennium-r02.yml
+          python -m compileall -q omega_millennium_t/r02 tests/test_omega_millennium_r02.py
+
+      - name: Commit reconverged tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --stat
+          git commit -m 'feat: reconverge Omega Millennium R0.2 on current main'
+          git push origin HEAD:merge/omega-millennium-r02-current-main
