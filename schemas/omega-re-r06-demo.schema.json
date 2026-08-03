@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-re-r06-demo.schema.json",
+  "title": "Omega RE R0.6 deterministic demo",
+  "type": "object",
+  "required": [
+    "schema",
+    "open_world_smc",
+    "nonlinear_design",
+    "sqlite_leases",
+    "byzantine_simulation",
+    "calibration_chain",
+    "experiment_registry",
+    "adaptive_campaign",
+    "transparency_log",
+    "optional_ed25519_backend_available",
+    "boundaries"
+  ],
+  "properties": {
+    "schema": {"const": "omega-re-r06-demo/1"},
+    "open_world_smc": {
+      "type": "object",
+      "required": ["particles", "rounds", "posterior_by_class", "novelty_mass", "expansion_recommended", "claim"]
+    },
+    "nonlinear_design": {
+      "type": "object",
+      "required": ["selected_experiment_id", "scores", "budget", "max_risk", "claim"]
+    },
+    "sqlite_leases": {
+      "type": "object",
+      "required": ["inserted", "first", "committed", "summary", "event_chain"]
+    },
+    "byzantine_simulation": {
+      "type": "object",
+      "required": ["baseline", "equivocation"]
+    },
+    "calibration_chain": {
+      "type": "object",
+      "required": ["valid", "errors", "receipts"],
+      "properties": {"valid": {"const": true}}
+    },
+    "experiment_registry": {
+      "type": "object",
+      "required": ["spec_digests", "snapshot", "audit"],
+      "properties": {
+        "audit": {
+          "type": "object",
+          "required": ["valid", "errors", "snapshot_digest"],
+          "properties": {"valid": {"const": true}}
+        }
+      }
+    },
+    "adaptive_campaign": {
+      "type": "object",
+      "required": ["steps", "checkpoint"]
+    },
+    "transparency_log": {
+      "type": "object",
+      "required": ["entries", "first_checkpoint", "second_checkpoint", "proof", "proof_valid", "audit"],
+      "properties": {
+        "proof_valid": {"const": true},
+        "audit": {
+          "type": "object",
+          "required": ["valid", "errors"],
+          "properties": {"valid": {"const": true}}
+        }
+      }
+    },
+    "optional_ed25519_backend_available": {"type": "boolean"},
+    "boundaries": {
+      "type": "object",
+      "required": [
+        "external_execution",
+        "scientific_validation",
+        "physical_experiment",
+        "internal_identity_claimed",
+        "byzantine_tolerance_certified",
+        "permanent_total_cap"
+      ],
+      "properties": {
+        "external_execution": {"const": false},
+        "scientific_validation": {"const": false},
+        "physical_experiment": {"const": false},
+        "internal_identity_claimed": {"const": false},
+        "byzantine_tolerance_certified": {"const": false},
+        "permanent_total_cap": {"type": "null"}
+      }
+    }
+  },
+  "additionalProperties": false
+}
