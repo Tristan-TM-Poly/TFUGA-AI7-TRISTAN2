@@ -1,0 +1,143 @@
+{
+  "$id": "https://example.invalid/omega-code-dojo-learning-report-v3.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claims": {
+      "required": [
+        "neural_training_claimed",
+        "causal_transfer_claimed",
+        "pedagogical_optimality_claimed",
+        "learning_analysis_is_empirical"
+      ],
+      "type": "object"
+    },
+    "coverage_ratio": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    },
+    "failure_clusters": {
+      "items": {
+        "required": [
+          "signature",
+          "occurrences",
+          "repair_value"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "information_efficiency": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "insights": {
+      "items": {
+        "required": [
+          "insight_id",
+          "kind",
+          "claim",
+          "score",
+          "uncertainty",
+          "falsifier",
+          "next_experiment"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "logical_frontier_cells": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "mean_mutation_score": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    },
+    "observation_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "plateau": {
+      "required": [
+        "kind",
+        "detected",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "receipt_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "report_id": {
+      "pattern": "^learning-report\\.[0-9a-f]{24}$",
+      "type": "string"
+    },
+    "report_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "skills": {
+      "items": {
+        "required": [
+          "skill_id",
+          "mastery",
+          "uncertainty",
+          "observations"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "success_rate": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": "number"
+    },
+    "system_version": {
+      "const": "R0.3"
+    },
+    "total_cost_units": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "total_information_gain": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "transfer_edges": {
+      "items": {
+        "required": [
+          "source_skill",
+          "target_skill",
+          "confidence"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "unique_addresses": {
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "report_id",
+    "system_version",
+    "receipt_count",
+    "observation_count",
+    "logical_frontier_cells",
+    "skills",
+    "failure_clusters",
+    "transfer_edges",
+    "insights",
+    "plateau",
+    "claims",
+    "report_sha256"
+  ],
+  "title": "Omega Code Dojo Learning Report R0.3",
+  "type": "object"
+}
