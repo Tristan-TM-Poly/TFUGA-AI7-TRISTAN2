@@ -52,6 +52,14 @@ def benchmark_scaling(
 
     peak_values = [row["peak_python_bytes"] for row in rows]
     observed_peak_ratio = max(peak_values) / min(peak_values) if len(peak_values) > 1 else 1.0
+    structural_view = {
+        "sizes": list(sizes),
+        "manifest_digests": [row["manifest_digest"] for row in rows],
+        "complete": [row["complete"] for row in rows],
+        "batch_size": runtime.batch_size,
+        "shard_target_bytes": runtime.shard_target_bytes,
+        "permanent_total_cell_cap": None,
+    }
     result = {
         "schema": "omega-problem-stream-benchmark/10",
         "sizes": list(sizes),
@@ -59,18 +67,12 @@ def benchmark_scaling(
         "observed_peak_ratio": observed_peak_ratio,
         "batch_size": runtime.batch_size,
         "shard_target_bytes": runtime.shard_target_bytes,
+        "structural_digest": stable_digest(structural_view),
+        "measurement_values_are_environment_dependent": True,
         "finite_benchmark_only": True,
         "bounded_memory_proven": False,
         "unlimited_capacity_claimed": False,
         "permanent_total_cell_cap": None,
     }
-    deterministic_view = {
-        **result,
-        "runs": [
-            {key: value for key, value in row.items() if key != "elapsed_seconds"}
-            for row in rows
-        ],
-    }
-    result["deterministic_measurement_digest"] = stable_digest(deterministic_view)
     write_json(root / "benchmark.json", result)
     return result
