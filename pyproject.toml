@@ -81,6 +81,7 @@ omega-space-hg = "omega_space_hg_t.cli:main"
 omega-space-hg-r02 = "omega_space_hg_t.r02_cli:main"
 omega-space-hg-r03 = "omega_space_hg_t.r03_cli:main"
 omega-space-hg-r04 = "omega_space_hg_t.r04_cli:main"
+omega-space-hg-r05 = "omega_space_hg_t.r05_cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
