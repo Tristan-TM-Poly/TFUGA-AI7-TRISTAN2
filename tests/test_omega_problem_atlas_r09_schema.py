@@ -9,7 +9,7 @@ import jsonschema
 from omega_millennium_t.r09 import compile_promotion_gate
 
 
-def test_bundle_and_report_validate_against_closed_schemas(tmp_path: Path) -> None:
+def test_bundle_receipt_and_report_validate_against_closed_schemas(tmp_path: Path) -> None:
     fixtures = runpy.run_path("tests/test_omega_problem_atlas_r09_promotion_gate.py")
     bundle = fixtures["_build_bundle"]()
     bundle_path = tmp_path / "bundle.json"
@@ -18,6 +18,9 @@ def test_bundle_and_report_validate_against_closed_schemas(tmp_path: Path) -> No
     bundle_schema = json.loads(
         Path("schemas/omega_problem_promotion_bundle_v9.schema.json").read_text(encoding="utf-8")
     )
+    receipt_schema = json.loads(
+        Path("schemas/omega_problem_promotion_receipt_v9.schema.json").read_text(encoding="utf-8")
+    )
     report_schema = json.loads(
         Path("schemas/omega_problem_promotion_report_v9.schema.json").read_text(encoding="utf-8")
     )
@@ -25,5 +28,7 @@ def test_bundle_and_report_validate_against_closed_schemas(tmp_path: Path) -> No
 
     output = tmp_path / "output"
     compile_promotion_gate(bundle_path, output)
+    receipt = json.loads((output / "promotion_receipt.json").read_text(encoding="utf-8"))
     report = json.loads((output / "report.json").read_text(encoding="utf-8"))
+    jsonschema.validate(receipt, receipt_schema)
     jsonschema.validate(report, report_schema)
