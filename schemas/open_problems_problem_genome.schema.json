@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/open_problems_problem_genome.schema.json",
+  "title": "Omega Open Problems ProblemGenome",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "problem_id",
+    "title",
+    "statement",
+    "source_locator",
+    "kind",
+    "domains",
+    "open_status",
+    "epistemic_status",
+    "human_review_required",
+    "finite_computation_is_not_proof",
+    "solution_claimed"
+  ],
+  "properties": {
+    "problem_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "statement": {"type": "string", "minLength": 1},
+    "source_locator": {"type": "string", "minLength": 1},
+    "kind": {
+      "enum": [
+        "RESEARCH_PROBLEM",
+        "CONJECTURE",
+        "CLASSIFICATION",
+        "BOUND_IMPROVEMENT",
+        "COUNTEREXAMPLE_SEARCH",
+        "FORMALIZATION_TARGET",
+        "COMPETITION_PROBLEM",
+        "COMPUTATIONAL_CHALLENGE",
+        "RESEARCH_CELL"
+      ]
+    },
+    "domains": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "open_status": {
+      "enum": [
+        "DISCOVERED_UNVERIFIED",
+        "SOURCE_REPORTED_OPEN",
+        "INDEPENDENTLY_CHECKED_OPEN",
+        "PARTIALLY_RESOLVED",
+        "RESOLVED",
+        "STATUS_DISPUTED",
+        "STALE_SOURCE"
+      ]
+    },
+    "epistemic_status": {
+      "enum": [
+        "DISCOVERED",
+        "SOURCE_VERIFIED",
+        "OPEN_STATUS_CHECKED",
+        "NORMALIZED",
+        "LITERATURE_BASELINED",
+        "DECOMPOSED",
+        "COMPUTATIONALLY_PROBED",
+        "PARTIAL_PROGRESS",
+        "INDEPENDENTLY_REPRODUCED",
+        "FORMALIZED_OR_PEER_REVIEWED",
+        "CANON_CANDIDATE"
+      ]
+    },
+    "human_review_required": {"const": true},
+    "finite_computation_is_not_proof": {"const": true},
+    "solution_claimed": {"type": "boolean"}
+  }
+}
