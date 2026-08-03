@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.example/schemas/omega_space_r03_oak_report_v1.schema.json",
+  "title": "Omega Space HG R0.3 OAK report",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "suite",
+    "passed",
+    "checks",
+    "theorem_claimed",
+    "scientific_validation_claimed",
+    "flight_qualified_claimed",
+    "operational_network_claimed",
+    "regulatory_approval_claimed",
+    "limitations"
+  ],
+  "properties": {
+    "suite": {"const": "OMEGA-SPACE-HG-T-R0.3-OAKBench"},
+    "passed": {"type": "boolean"},
+    "checks": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "passed", "observed", "criterion"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "passed": {"type": "boolean"},
+          "observed": {},
+          "criterion": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "theorem_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false},
+    "flight_qualified_claimed": {"const": false},
+    "operational_network_claimed": {"const": false},
+    "regulatory_approval_claimed": {"const": false},
+    "limitations": {
+      "type": "array",
+      "minItems": 5,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}
