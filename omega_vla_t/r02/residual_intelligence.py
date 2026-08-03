@@ -62,9 +62,17 @@ def _outlier_fraction(values: np.ndarray) -> float:
     if values.size == 0:
         return 0.0
     median = float(np.median(values))
-    mad = float(np.median(np.abs(values - median)))
+    deviations = np.abs(values - median)
+    mad = float(np.median(deviations))
     if mad <= np.finfo(float).eps:
-        return 0.0
+        # A sparse/event-like residual commonly has an exactly zero median and
+        # MAD because most entries are identical. Returning zero here hides
+        # every nonzero event. Use a scale-aware numerical threshold instead;
+        # a constant vector still returns zero while isolated deviations are
+        # retained as candidate outliers.
+        magnitude = max(float(np.max(np.abs(values), initial=0.0)), 1.0)
+        threshold = 32.0 * np.finfo(float).eps * magnitude
+        return float(np.mean(deviations > threshold))
     robust_z = 0.6744897501960817 * (values - median) / mad
     return float(np.mean(np.abs(robust_z) > 3.5))
 
