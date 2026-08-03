@@ -1,0 +1,183 @@
+name: Omega Cyber Physical Systems R0.3 Hybrid
+
+on:
+  push:
+    branches:
+      - feat/omega-cps-r03-hybrid-max
+    paths:
+      - "omega_cyber_physical_systems_t/**"
+      - "tests/test_omega_cyber_physical_systems*.py"
+      - "schemas/cyber_physical_*.json"
+      - "docs/omega-cyber-physical-systems-t/**"
+      - "examples/omega_cyber_physical_systems_*.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-cyber-physical-systems-r03.yml"
+  pull_request:
+    paths:
+      - "omega_cyber_physical_systems_t/**"
+      - "tests/test_omega_cyber_physical_systems*.py"
+      - "schemas/cyber_physical_*.json"
+      - "docs/omega-cyber-physical-systems-t/**"
+      - "examples/omega_cyber_physical_systems_*.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-cyber-physical-systems-r03.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cps-r03-oak:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile cumulative CPS package
+        run: python -m compileall omega_cyber_physical_systems_t
+      - name: Run cumulative R0.1-R0.3 regressions
+        run: >-
+          python -m pytest -q
+          tests/test_omega_cyber_physical_systems_r01.py
+          tests/test_omega_cyber_physical_systems_r01_evidence.py
+          tests/test_omega_cyber_physical_systems_r02.py
+          tests/test_omega_cyber_physical_systems_r03.py
+      - name: Run cumulative OAKBench
+        run: |
+          python -m omega_cyber_physical_systems_t benchmark > /tmp/cps-r01-oak.json
+          python -m omega_cyber_physical_systems_t.r02_cli benchmark > /tmp/cps-r02-oak.json
+          python -m omega_cyber_physical_systems_t.r03_cli benchmark > /tmp/cps-r03-oak.json
+      - name: Materialize R0.3 positive evidence
+        run: |
+          python -m omega_cyber_physical_systems_t.r03_cli automaton-demo > /tmp/cps-r03-automaton.json
+          python -m omega_cyber_physical_systems_t.r03_cli hybrid-demo > /tmp/cps-r03-trace.json
+          python -m omega_cyber_physical_systems_t.r03_cli temporal-demo > /tmp/cps-r03-temporal.json
+          python -m omega_cyber_physical_systems_t.r03_cli reachability-demo > /tmp/cps-r03-reachability.json
+          python -m omega_cyber_physical_systems_t.r03_cli zeno-demo > /tmp/cps-r03-zeno.json
+          python examples/omega_cyber_physical_systems_r03_hybrid_demo.py > /tmp/cps-r03-example.json
+      - name: Materialize R0.3 negative evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          python -m omega_cyber_physical_systems_t.r03_cli reachability-demo \
+            --adversarial --steps 2 --dt-s 0.01 > /tmp/cps-r03-reachability-adversarial.json
+          adversarial_status=$?
+          set -e
+          test "$adversarial_status" -eq 2
+      - name: Validate R0.3 JSON contracts and OAK boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          def load(path):
+              return json.loads(Path(path).read_text())
+
+          automaton = load('/tmp/cps-r03-automaton.json')
+          trace = load('/tmp/cps-r03-trace.json')
+          temporal = load('/tmp/cps-r03-temporal.json')
+          reachability = load('/tmp/cps-r03-reachability.json')
+          adversarial = load('/tmp/cps-r03-reachability-adversarial.json')
+          zeno = load('/tmp/cps-r03-zeno.json')
+          example = load('/tmp/cps-r03-example.json')
+          r01 = load('/tmp/cps-r01-oak.json')
+          r02 = load('/tmp/cps-r02-oak.json')
+          r03 = load('/tmp/cps-r03-oak.json')
+
+          jsonschema.validate(automaton, load('schemas/cyber_physical_hybrid_automaton_r03.schema.json'))
+          jsonschema.validate(trace, load('schemas/cyber_physical_hybrid_trace_r03.schema.json'))
+          jsonschema.validate(temporal, load('schemas/cyber_physical_temporal_report_r03.schema.json'))
+          jsonschema.validate(reachability, load('schemas/cyber_physical_reachability_r03.schema.json'))
+          jsonschema.validate(adversarial, load('schemas/cyber_physical_reachability_r03.schema.json'))
+          jsonschema.validate(zeno, load('schemas/cyber_physical_hybrid_trace_r03.schema.json'))
+
+          assert r01['passed'] is True
+          assert r02['passed'] is True
+          assert r03['passed'] is True
+          assert r03['status'] == 'CERTIFIED_COMPUTATIONAL_HYBRID_TEMPORAL_REACHABILITY_R0_3'
+          assert len(r03['gates']) == 12
+          assert all(item['passed'] for item in r03['gates'])
+          assert r03['physics_certified'] is False
+          assert r03['safety_certified'] is False
+          assert r03['formal_verification_proven'] is False
+          assert r03['formal_reachability_proven'] is False
+          assert r03['standards_compliance_claim'] is False
+          assert r03['hardware_validated'] is False
+          assert r03['permanent_total_cap'] is None
+
+          assert len(automaton['modes']) == 4
+          assert len(automaton['transitions']) == 3
+          assert automaton['physics_certified'] is False
+          assert automaton['safety_certified'] is False
+          assert automaton['permanent_total_cap'] is None
+
+          assert trace['sample_count'] == 1301
+          assert trace['event_count'] == 3
+          assert [item['transition_id'] for item in trace['events']] == [
+              'startup-complete',
+              'thermal-derate',
+              'timed-safe-shutdown',
+          ]
+          assert trace['final_mode'] == 'safe_shutdown'
+          assert trace['invariant_violation_count'] == 0
+          assert trace['unsafe_sample_count'] == 0
+          assert trace['finite'] is True
+          assert trace['physics_certified'] is False
+          assert trace['safety_certified'] is False
+          assert trace['formal_reachability_proven'] is False
+
+          assert temporal['passed'] is True
+          assert temporal['property_count'] == 4
+          assert temporal['passed_count'] == 4
+          assert temporal['violation_count'] == 0
+          assert temporal['formal_proof'] is False
+          assert temporal['safety_certified'] is False
+
+          assert reachability['steps_completed'] == 24
+          assert reachability['unsafe_possible_count'] == 0
+          assert reachability['unsafe_definite_count'] == 0
+          assert reachability['truncated'] is False
+          assert reachability['permanent_total_cap'] is None
+          assert reachability['formal_reachability_proven'] is False
+          assert reachability['safety_certified'] is False
+
+          assert adversarial['unsafe_possible_count'] > 0
+          assert zeno['transition_limit_hit'] is True or zeno['zeno_suspected'] is True
+          assert example['negative_controls']['adversarial_unsafe_possible_count'] > 0
+          assert example['negative_controls']['zeno_detected'] is True
+          assert example['oak']['passed'] is True
+          assert example['oak']['formal_verification_proven'] is False
+
+          print(json.dumps({
+              'status': 'passed',
+              'automaton_hash': automaton['evidence_hash'],
+              'trace_hash': trace['evidence_hash'],
+              'temporal_hash': temporal['evidence_hash'],
+              'reachability_hash': reachability['evidence_hash'],
+              'trace_samples': trace['sample_count'],
+              'reachability_nodes': reachability['node_count'],
+              'transition_branches': reachability['transition_branch_count'],
+              'zeno_detected': zeno['transition_limit_hit'] or zeno['zeno_suspected'],
+          }, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-cyber-physical-systems-r03-evidence
+          path: |
+            /tmp/cps-r01-oak.json
+            /tmp/cps-r02-oak.json
+            /tmp/cps-r03-oak.json
+            /tmp/cps-r03-automaton.json
+            /tmp/cps-r03-trace.json
+            /tmp/cps-r03-temporal.json
+            /tmp/cps-r03-reachability.json
+            /tmp/cps-r03-reachability-adversarial.json
+            /tmp/cps-r03-zeno.json
+            /tmp/cps-r03-example.json
+          retention-days: 14
