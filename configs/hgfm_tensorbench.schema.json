@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/configs/hgfm_tensorbench.schema.json",
+  "title": "HGFM TensorBench result",
+  "type": "object",
+  "required": [
+    "benchmark_id",
+    "shape",
+    "cell_count",
+    "canonical_optimum",
+    "solvers",
+    "ablations",
+    "checks",
+    "status",
+    "result_sha256"
+  ],
+  "properties": {
+    "benchmark_id": {"const": "HGFM-TENSORBENCH-R0.1-16X16X16"},
+    "shape": {
+      "type": "array",
+      "prefixItems": [{"const": 16}, {"const": 16}, {"const": 16}],
+      "items": false
+    },
+    "cell_count": {"const": 4096},
+    "status": {"enum": ["PASS", "FAIL"]},
+    "result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "canonical_optimum": {"type": "object"},
+    "solvers": {"type": "object"},
+    "ablations": {"type": "object"},
+    "checks": {
+      "type": "object",
+      "additionalProperties": {"type": "boolean"}
+    }
+  },
+  "additionalProperties": true
+}
