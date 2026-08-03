@@ -5,7 +5,7 @@ on:
     branches: [feat/omega-problem-atlas-r0-5-alias-graph]
     paths:
       - "omega_millennium_t/r05/**"
-      - "tests/test_omega_problem_atlas_r05_identity.py"
+      - "tests/test_omega_problem_atlas_r05*.py"
       - "schemas/omega_problem_identity_report_v5.schema.json"
       - "docs/omega_millennium_t/r05/**"
       - "pyproject.toml"
@@ -13,7 +13,7 @@ on:
   pull_request:
     paths:
       - "omega_millennium_t/r05/**"
-      - "tests/test_omega_problem_atlas_r05_identity.py"
+      - "tests/test_omega_problem_atlas_r05*.py"
       - "schemas/omega_problem_identity_report_v5.schema.json"
       - "docs/omega_millennium_t/r05/**"
       - "pyproject.toml"
@@ -43,12 +43,9 @@ jobs:
       - name: Install validators
         run: python -m pip install --disable-pip-version-check pytest jsonschema
       - name: Compile R0.5
-        run: >-
-          python -m compileall -q
-          omega_millennium_t/r05
-          tests/test_omega_problem_atlas_r05_identity.py
+        run: python -m compileall -q omega_millennium_t/r05 tests/test_omega_problem_atlas_r05_identity.py tests/test_omega_problem_atlas_r05_hardening.py
       - name: Run adversarial identity tests
-        run: pytest -q tests/test_omega_problem_atlas_r05_identity.py
+        run: pytest -q tests/test_omega_problem_atlas_r05*.py
       - name: Generate deterministic multi-source fixture
         run: |
           python - <<'PY'
