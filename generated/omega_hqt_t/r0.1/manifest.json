@@ -1,0 +1,38 @@
+{
+  "advanced_modules": [
+    "Noether residuals",
+    "topology audit",
+    "uncertainty intervals",
+    "M-minus",
+    "trust scoring",
+    "MissionGraph",
+    "economics",
+    "source registry",
+    "OAKGridBench",
+    "maturity gates"
+  ],
+  "artifact": "omega-hqt-r0.1-source-manifest",
+  "artifacts": {
+    "campaign-summary-32-worlds.json": {"bytes": 2201, "lines": 68, "sha256": "e24ac1b6637ad72aa6f0da5c11c04d3049c61996c4d97f05adf132f578dee95d"},
+    "decision-package-32-worlds.json": {"bytes": 2214, "lines": 82, "sha256": "4a7aff2973d6a0461c2d1e8f1c16892a6eb214d3da2b2c4234656da436259d2f"},
+    "oakbench-16-worlds.json": {"bytes": 1750, "lines": 75, "sha256": "bc9e1c204e08f505e680ca72662f1ba14ca98e2bcd1e03bb62e9b4fdbdafd480"},
+    "oakgridbench-manifest.json": {"bytes": 1946, "lines": 61, "sha256": "cf4b67463ef97cc95830f42010672d24e5c76c002d4ba22d6b855ac4bb3a61d8"},
+    "report-32-worlds.md": {"bytes": 884, "lines": 23, "sha256": "e29930dbb8c77d3200afd11b30741e3e9d38f87001ae840fe1266765396cdf0b"}
+  },
+  "commands": [
+    "python -m omega_hqt_t benchmark --worlds 32",
+    "python -m omega_hqt_t campaign --worlds 64"
+  ],
+  "corridor_count": 20,
+  "generated_at": "2026-08-03T20:21:00Z",
+  "hydro_quebec_affiliation": false,
+  "operational_topology": false,
+  "public_or_synthetic_only": true,
+  "raw_outcome_policy": {
+    "checked_in": false,
+    "expected_outcomes_for_32_worlds": 192,
+    "reason": "generated on demand by deterministic campaign command"
+  },
+  "region_count": 17,
+  "status": "SOURCE_FIXTURE_DECLARATION"
+}

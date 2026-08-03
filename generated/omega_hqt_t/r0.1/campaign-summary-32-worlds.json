@@ -1,0 +1,20 @@
+{
+  "campaign_id": "campaign:compound-ice-storm:32:20260803",
+  "claims": {
+    "operational_recommendation_claimed": false,
+    "real_grid_validated": false,
+    "synthetic_comparison_claimed": true
+  },
+  "evidence_hash": "f7af2ee46baf273de72feb3dd47e9361c01317987888f4737a243de35b5ab8fc",
+  "intervention_ids": ["baseline", "demand-flex-5", "storage-regional", "corridor-hardening", "distributed-resilience", "combined-adaptive"],
+  "pareto_interventions": ["baseline", "corridor-hardening", "demand-flex-5"],
+  "summaries": {
+    "baseline": {"cost_index": 0.0, "mean_resilience_score": 48.78505219506289, "mean_restoration_hours": 29.217231244001187, "mean_unserved_energy_mwh": 27991.37640467234, "worst_unserved_energy_mwh": 31852.29119917287},
+    "combined-adaptive": {"cost_index": 8.8, "mean_resilience_score": 48.691708365116476, "mean_restoration_hours": 29.217231244001187, "mean_unserved_energy_mwh": 27217.039443188787, "worst_unserved_energy_mwh": 30915.07458705044},
+    "corridor-hardening": {"cost_index": 7.5, "mean_resilience_score": 49.25692081217552, "mean_restoration_hours": 29.068216256959374, "mean_unserved_energy_mwh": 27983.65994474625, "worst_unserved_energy_mwh": 31852.29119917287},
+    "demand-flex-5": {"cost_index": 1.2, "mean_resilience_score": 49.658160689110865, "mean_restoration_hours": 29.217231244001187, "mean_unserved_energy_mwh": 26998.44997643359, "worst_unserved_energy_mwh": 30848.511725426753},
+    "distributed-resilience": {"cost_index": 5.9, "mean_resilience_score": 49.57012662154309, "mean_restoration_hours": 29.217231244001187, "mean_unserved_energy_mwh": 27488.173993676195, "worst_unserved_energy_mwh": 31483.88718467226},
+    "storage-regional": {"cost_index": 4.8, "mean_resilience_score": 48.91966397567638, "mean_restoration_hours": 29.217231244001187, "mean_unserved_energy_mwh": 27471.538444021422, "worst_unserved_energy_mwh": 31325.999749886294}
+  },
+  "world_count": 32
+}

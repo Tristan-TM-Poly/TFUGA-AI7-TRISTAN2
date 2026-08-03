@@ -1,0 +1,66 @@
+name: Omega HQT R0.1 OAKBench
+on:
+  pull_request:
+    paths:
+      - "omega_hqt_t/**"
+      - "tests/test_omega_hqt_*.py"
+      - "schemas/omega_hqt_*.schema.json"
+      - "docs/omega-hqt-t/**"
+      - "policies/omega_hqt_sensitivity_policy.yaml"
+      - "examples/omega_hqt_demo.py"
+      - ".github/workflows/omega-hqt-r01.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - run: python -m compileall -q omega_hqt_t tests/test_omega_hqt_*.py examples/omega_hqt_demo.py
+      - run: python -m pytest -q tests/test_omega_hqt_*.py
+      - name: Determinism and schema validation
+        run: |
+          python -m omega_hqt_t benchmark --worlds 32 --output /tmp/hqt-a.json
+          python -m omega_hqt_t benchmark --worlds 32 --output /tmp/hqt-b.json
+          cmp /tmp/hqt-a.json /tmp/hqt-b.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          from omega_hqt_t.synthetic_quebec import build_synthetic_quebec
+          from omega_hqt_t.experiment import run_campaign
+          from omega_hqt_t.interventions import catalog
+          from omega_hqt_t.parliament import deliberate
+          from omega_hqt_t.scenarios import compound_ice_storm
+          for path in Path('schemas').glob('omega_hqt_*.schema.json'):
+              jsonschema.Draft202012Validator.check_schema(json.loads(path.read_text()))
+          graph=build_synthetic_quebec().to_dict()
+          node_schema=json.loads(Path('schemas/omega_hqt_node_v1.schema.json').read_text())
+          edge_schema=json.loads(Path('schemas/omega_hqt_hyperedge_v1.schema.json').read_text())
+          for node in graph['nodes']: jsonschema.validate(node,node_schema)
+          for edge in graph['hyperedges']: jsonschema.validate(edge,edge_schema)
+          decision=deliberate(run_campaign(compound_ice_storm(),catalog(),world_count=8)).to_dict()
+          jsonschema.validate(decision,json.loads(Path('schemas/omega_hqt_decision_package_v1.schema.json').read_text()))
+          payload=json.loads(Path('/tmp/hqt-a.json').read_text())
+          assert payload['status']=='CERTIFIED_SYNTHETIC_PUBLIC_RESEARCH_KERNEL_R0_1'
+          assert payload['passed'] is True
+          assert payload['claims']['operational_grid_replica_claimed'] is False
+          print(payload['status'])
+          PY
+      - name: Generate campaign artifact
+        run: python -m omega_hqt_t campaign --worlds 64 --output-dir /tmp/omega-hqt-campaign
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-hqt-r01-${{ matrix.python-version }}
+          path: /tmp/omega-hqt-campaign
+          retention-days: 14

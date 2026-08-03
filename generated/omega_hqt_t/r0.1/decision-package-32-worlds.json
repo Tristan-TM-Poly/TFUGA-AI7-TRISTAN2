@@ -1,0 +1,20 @@
+{
+  "claims": {"decision_support_only": true, "hydro_quebec_endorsement_claimed": false, "operational_authority_claimed": false},
+  "counter_scenarios": ["higher demand than sampled", "correlated multi-corridor failures", "longer logistics disruption", "model-form error"],
+  "evidence_hash": "ab1ea10f7b2467a0853ccbd99027fed6cd3f5559adea4f73a4f3d14dd0391227",
+  "mission": "improve synthetic winter resilience",
+  "package_id": "decision:ab1ea10f7b2467a0",
+  "recommended_interventions": ["demand-flex-5", "corridor-hardening"],
+  "rejected_interventions": ["combined-adaptive", "storage-regional", "distributed-resilience", "baseline"],
+  "rollback_conditions": ["stop if safety gate fails", "recompute if provenance changes", "reject if improvement is not robust", "require official validation before real use"],
+  "status": "SYNTHETIC_DECISION_SUPPORT_PASS",
+  "uncertainty": {"data_uncertainty": 1.0, "decision_uncertainty": 0.7, "model_uncertainty": 0.75},
+  "votes": [
+    {"blocking_reasons": [], "chamber": "reality", "passed": true, "rationale": "all inputs are declared deterministic synthetic fixtures", "score": 1.0},
+    {"blocking_reasons": [], "chamber": "physics", "passed": true, "rationale": "DC-flow and outage abstractions remain finite", "score": 0.5354725831943374},
+    {"blocking_reasons": [], "chamber": "futures", "passed": true, "rationale": "interventions evaluated on generated worlds", "score": 1.0},
+    {"blocking_reasons": [], "chamber": "territories", "passed": true, "rationale": "regional aggregation exists; consultation is not simulated", "score": 0.7},
+    {"blocking_reasons": [], "chamber": "oak", "passed": true, "rationale": "claims explicitly deny real-grid validation", "score": 1.0},
+    {"blocking_reasons": [], "chamber": "security", "passed": true, "rationale": "no operational topology, SCADA, protection or customer data", "score": 1.0}
+  ]
+}
