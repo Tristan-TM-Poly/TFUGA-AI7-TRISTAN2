@@ -1,0 +1,94 @@
+{
+  "benchmark_id": "omega-polyglot-r03-local-2026-08-03",
+  "provenance": {
+    "scope": "local container reference; not GitHub Actions certification",
+    "date": "2026-08-03",
+    "platform": "Linux-6.12.13-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "logical_cpus": 5,
+    "python": "3.13.5",
+    "c_compiler": "cc (Debian 14.2.0-19) 14.2.0",
+    "cpp_compiler": "c++ (Debian 14.2.0-19) 14.2.0",
+    "compiler_flags": ["-O3", "-shared", "-fPIC"],
+    "rust_measured": false
+  },
+  "protocol": {
+    "algorithm": "vector_affine_f64",
+    "equation": "output[i] = 1.75 * x[i] + y[i]",
+    "warmups": 3,
+    "repetitions": 15,
+    "seed": 1729,
+    "dtype": "float64",
+    "max_abs_error": 0.0
+  },
+  "results": [
+    {
+      "size": 4096,
+      "python_median_ns": 197223,
+      "c": {
+        "end_to_end_list_ns": 905625,
+        "zero_copy_buffer_ns": 3545,
+        "kernel_only_prepared_ns": 2043,
+        "best_speedup_vs_python": 96.5359765051395
+      },
+      "cpp": {
+        "end_to_end_list_ns": 887097,
+        "zero_copy_buffer_ns": 3586,
+        "kernel_only_prepared_ns": 1973,
+        "best_speedup_vs_python": 99.96097313735429
+      },
+      "best_backend": "cpp",
+      "best_mode": "kernel_only_prepared",
+      "best_speedup_vs_python": 99.96097313735429
+    },
+    {
+      "size": 100000,
+      "python_median_ns": 5488379,
+      "c": {
+        "end_to_end_list_ns": 23958351,
+        "zero_copy_buffer_ns": 31156,
+        "kernel_only_prepared_ns": 29093,
+        "best_speedup_vs_python": 188.64946894441962
+      },
+      "cpp": {
+        "end_to_end_list_ns": 23791342,
+        "zero_copy_buffer_ns": 31247,
+        "kernel_only_prepared_ns": 29154,
+        "best_speedup_vs_python": 188.2547506345613
+      },
+      "best_backend": "c",
+      "best_mode": "kernel_only_prepared",
+      "best_speedup_vs_python": 188.64946894441962
+    },
+    {
+      "size": 1000000,
+      "python_median_ns": 59722119,
+      "c": {
+        "end_to_end_list_ns": 253120841,
+        "zero_copy_buffer_ns": 477429,
+        "kernel_only_prepared_ns": 539571,
+        "best_speedup_vs_python": 125.09110045682185
+      },
+      "cpp": {
+        "end_to_end_list_ns": 250412795,
+        "zero_copy_buffer_ns": 462537,
+        "kernel_only_prepared_ns": 531770,
+        "best_speedup_vs_python": 129.11857645982917
+      },
+      "best_backend": "cpp",
+      "best_mode": "zero_copy_buffer",
+      "best_speedup_vs_python": 129.11857645982917
+    }
+  ],
+  "oak": {
+    "scientific_validation_claimed": false,
+    "universal_language_winner_claimed": false,
+    "energy_measured": false,
+    "effective_bandwidth_is_hardware_counter": false,
+    "notes": [
+      "The original list API remains slower because it copies both inputs and materializes a Python list output on every call.",
+      "The zero-copy and prepared results require persistent array('d') buffers.",
+      "Results are machine-, compiler-, size-, and boundary-specific."
+    ]
+  }
+}
