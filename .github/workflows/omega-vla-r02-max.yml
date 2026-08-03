@@ -5,7 +5,7 @@ on:
     branches: [feat/omega-vla-t-r0-2-max]
     paths:
       - "omega_vla_t/r02/**"
-      - "tests/test_omega_vla_r02_max.py"
+      - "tests/test_omega_vla_r02*.py"
       - "examples/omega_vla_r02_max_demo.py"
       - "docs/omega_vla_t/r02/**"
       - "schemas/omega_vla_*_v2.schema.json"
@@ -14,7 +14,7 @@ on:
   pull_request:
     paths:
       - "omega_vla_t/r02/**"
-      - "tests/test_omega_vla_r02_max.py"
+      - "tests/test_omega_vla_r02*.py"
       - "examples/omega_vla_r02_max_demo.py"
       - "docs/omega_vla_t/r02/**"
       - "schemas/omega_vla_*_v2.schema.json"
@@ -45,9 +45,10 @@ jobs:
           python -m compileall -q
           omega_vla_t/r02
           tests/test_omega_vla_r02_max.py
+          tests/test_omega_vla_r02_math_extensions.py
           examples/omega_vla_r02_max_demo.py
       - name: Run focused tests
-        run: pytest -q tests/test_omega_vla_r02_max.py
+        run: pytest -q tests/test_omega_vla_r02_max.py tests/test_omega_vla_r02_math_extensions.py
       - name: Generate deterministic benchmark twice
         run: |
           python -m omega_vla_t.r02.cli benchmark --seed 17 --campaign-items 257 --output /tmp/oak-a.json
@@ -91,10 +92,14 @@ jobs:
           jsonschema.validate(oak, oak_schema)
           assert campaign['logical_frontier_cells'] > 10**12
           assert campaign['proposed_cells'] == 513
+          assert campaign['accepted_cells'] == 513
           assert campaign['permanent_total_cap'] is None
           assert campaign['theorem_claimed'] is False
           assert campaign['formal_proof_claimed'] is False
           assert campaign['scientific_validation_claimed'] is False
+          assert campaign['store_manifest']['format'] == 'jsonl-sharded-stream-v2'
+          assert Path('/tmp/omega-vla-campaign/dedup.sqlite3').exists()
+          assert Path('/tmp/omega-vla-campaign/writer-state.json').exists()
           assert oak['passed'] is True
           assert oak['theorem_claimed'] is False
           assert oak['formal_proof_claimed'] is False
