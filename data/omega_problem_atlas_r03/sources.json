@@ -1,0 +1,197 @@
+{
+  "schema": "omega-problem-source-registry/3",
+  "notes": [
+    "Registry metadata is not a certification that every listed problem remains open.",
+    "Each imported status must carry a fresh primary-source verification timestamp.",
+    "License and robots/API constraints must be reviewed before automated ingestion."
+  ],
+  "sources": [
+    {
+      "source_id": "clay",
+      "name": "Clay Mathematics Institute Millennium Problems",
+      "kind": "open_problem_catalog",
+      "primary_url": "https://www.claymath.org/millennium-problems/",
+      "trust_tier": "primary",
+      "refresh_policy": "refresh before every public status claim",
+      "ingestion_mode": "manual_or_permitted_fetch",
+      "status_policy": "verify current status and exact statement from the primary page",
+      "license_note": "Store metadata, citations and concise paraphrases unless reuse permission is confirmed."
+    },
+    {
+      "source_id": "erdos_problems",
+      "name": "Erdős Problems",
+      "kind": "open_problem_catalog",
+      "primary_url": "https://www.erdosproblems.com/",
+      "trust_tier": "curated",
+      "refresh_policy": "refresh problem status before activation",
+      "ingestion_mode": "manual_or_permitted_fetch",
+      "status_policy": "verify open, solved, disproved and reward status against cited literature",
+      "license_note": "Respect site terms and preserve attribution to problem editors and references."
+    },
+    {
+      "source_id": "aim_problem_lists",
+      "name": "American Institute of Mathematics Problem Lists",
+      "kind": "specialist_problem_lists",
+      "primary_url": "https://aimath.org/problemlists/",
+      "trust_tier": "curated",
+      "refresh_policy": "refresh list and linked workshop pages before import",
+      "ingestion_mode": "manual_or_permitted_fetch",
+      "status_policy": "verify statement version and current status from list maintainers or literature",
+      "license_note": "Store provenance and links; do not republish full copyrighted lists without permission."
+    },
+    {
+      "source_id": "ben_green_100",
+      "name": "Ben Green's 100 Open Problems",
+      "kind": "curated_problem_list",
+      "primary_url": "https://people.maths.ox.ac.uk/greenbj/papers/open-problems.pdf",
+      "trust_tier": "curated",
+      "refresh_policy": "refresh against the latest author version and cited updates",
+      "ingestion_mode": "pdf_metadata_and_manual_review",
+      "status_policy": "verify each problem status independently because the PDF is a snapshot",
+      "license_note": "Keep concise metadata, page references and attribution; avoid reproducing the PDF."
+    },
+    {
+      "source_id": "formal_conjectures",
+      "name": "Formal Conjectures",
+      "kind": "formalization_catalog",
+      "primary_url": "https://github.com/google-deepmind/formal-conjectures",
+      "trust_tier": "curated",
+      "refresh_policy": "refresh repository revision before import",
+      "ingestion_mode": "git_revision_pinned",
+      "status_policy": "verify formal statement, source provenance and open status independently",
+      "license_note": "Follow repository license and retain commit SHA plus original source references."
+    },
+    {
+      "source_id": "open_quantum_problems",
+      "name": "Open Quantum Problems",
+      "kind": "open_problem_catalog",
+      "primary_url": "https://oqp.iqoqi.oeaw.ac.at/",
+      "trust_tier": "curated",
+      "refresh_policy": "refresh problem and solved-problem pages before status claims",
+      "ingestion_mode": "manual_or_permitted_fetch",
+      "status_policy": "verify status, version, date and references from the catalog and literature",
+      "license_note": "Preserve attribution and do not mirror full entries without permission."
+    },
+    {
+      "source_id": "oeis",
+      "name": "On-Line Encyclopedia of Integer Sequences",
+      "kind": "computational_conjecture_source",
+      "primary_url": "https://oeis.org/",
+      "trust_tier": "community",
+      "refresh_policy": "refresh sequence revision and comments before conjecture extraction",
+      "ingestion_mode": "api_or_manual_under_terms",
+      "status_policy": "verify conjecture wording and cited literature; comments are not proof",
+      "license_note": "Comply with OEIS contribution and data-use terms; retain sequence IDs and attribution."
+    },
+    {
+      "source_id": "imo",
+      "name": "International Mathematical Olympiad",
+      "kind": "competition_archive",
+      "primary_url": "https://www.imo-official.org/problems.aspx",
+      "trust_tier": "competition",
+      "refresh_policy": "refresh after each annual contest release",
+      "ingestion_mode": "manual_archive_index",
+      "status_policy": "verify year, problem number, official statement and solution availability",
+      "license_note": "Use as training/evaluation metadata; respect copyright on statements and solutions."
+    },
+    {
+      "source_id": "putnam",
+      "name": "William Lowell Putnam Mathematical Competition",
+      "kind": "competition_archive",
+      "primary_url": "https://maa.org/putnam/",
+      "trust_tier": "competition",
+      "refresh_policy": "refresh after each annual competition",
+      "ingestion_mode": "manual_archive_index",
+      "status_policy": "verify official year, session, problem and published solution source",
+      "license_note": "Use metadata and links unless redistribution rights are confirmed."
+    },
+    {
+      "source_id": "comap_mcm_icm",
+      "name": "COMAP MCM/ICM",
+      "kind": "modeling_competition",
+      "primary_url": "https://www.comap.com/contests/mcm-icm",
+      "trust_tier": "competition",
+      "refresh_policy": "refresh schedule, rules and problem releases each cycle",
+      "ingestion_mode": "manual_competition_registry",
+      "status_policy": "verify active cycle, deadlines, eligibility and statement publication",
+      "license_note": "Competition statements and data may have restricted reuse; store links and metadata."
+    },
+    {
+      "source_id": "icpc",
+      "name": "International Collegiate Programming Contest",
+      "kind": "algorithmic_competition",
+      "primary_url": "https://icpc.global/",
+      "trust_tier": "competition",
+      "refresh_policy": "refresh contest calendar and regional archives each cycle",
+      "ingestion_mode": "manual_or_official_api",
+      "status_policy": "verify event, eligibility, statement version and judge data availability",
+      "license_note": "Respect contest and archive licenses; do not redistribute judge data without permission."
+    },
+    {
+      "source_id": "kaggle",
+      "name": "Kaggle Competitions",
+      "kind": "data_science_competitions",
+      "primary_url": "https://www.kaggle.com/competitions",
+      "trust_tier": "competition",
+      "refresh_policy": "refresh before every active-competition recommendation",
+      "ingestion_mode": "official_api_or_manual",
+      "status_policy": "verify deadlines, rules, teams, data license and external-data policy",
+      "license_note": "Each competition has distinct rules and data licenses; never assume reuse rights."
+    },
+    {
+      "source_id": "arc_prize",
+      "name": "ARC Prize",
+      "kind": "ai_reasoning_competition",
+      "primary_url": "https://arcprize.org/",
+      "trust_tier": "competition",
+      "refresh_policy": "refresh rules, tracks and deadlines for the current cycle",
+      "ingestion_mode": "manual_or_permitted_fetch",
+      "status_policy": "verify current competition state, evaluation protocol and open-source obligations",
+      "license_note": "Retain rule-version provenance and comply with submission and code-release terms."
+    },
+    {
+      "source_id": "aimo_prize",
+      "name": "AI Mathematical Olympiad Prize",
+      "kind": "ai_mathematics_competition",
+      "primary_url": "https://aimoprize.com/",
+      "trust_tier": "competition",
+      "refresh_policy": "refresh current tracks, datasets and deadlines",
+      "ingestion_mode": "manual_or_permitted_fetch",
+      "status_policy": "verify current phase, eligibility, benchmark version and licensing",
+      "license_note": "Respect benchmark, model and submission licenses."
+    },
+    {
+      "source_id": "mathoverflow_open_problem",
+      "name": "MathOverflow open-problem discussions",
+      "kind": "community_discussion",
+      "primary_url": "https://mathoverflow.net/questions/tagged/open-problem",
+      "trust_tier": "community",
+      "refresh_policy": "refresh the question, edits and answers before use",
+      "ingestion_mode": "manual_review",
+      "status_policy": "verify any claimed open status against primary literature and expert sources",
+      "license_note": "Content is community-authored under site licensing; preserve attribution and links."
+    },
+    {
+      "source_id": "open_problem_garden",
+      "name": "Open Problem Garden",
+      "kind": "community_problem_catalog",
+      "primary_url": "https://www.openproblemgarden.org/",
+      "trust_tier": "community",
+      "refresh_policy": "refresh entry and cited references before activation",
+      "ingestion_mode": "manual_review",
+      "status_policy": "verify current status independently; community entries may be stale",
+      "license_note": "Respect site terms and contributor attribution."
+    },
+    {
+      "source_id": "tristan_internal",
+      "name": "Tristan internal theorem programs",
+      "kind": "internal_hypothesis_registry",
+      "primary_url": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "trust_tier": "curated",
+      "refresh_policy": "refresh from the exact repository commit before compilation",
+      "ingestion_mode": "git_revision_pinned",
+      "status_policy": "verify that every item is labeled hypothesis, prototype, benchmark or theorem",
+      "license_note": "Apply repository license, IPGate and OAK publication review before external release."
+    }
+  ]
+}
