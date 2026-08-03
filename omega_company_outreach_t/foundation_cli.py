@@ -103,6 +103,7 @@ def build_parser() -> argparse.ArgumentParser:
     migrate.add_argument("source", type=Path)
     migrate.add_argument("destination", type=Path)
     migrate.add_argument("--id-prefix", type=int, required=True)
+    migrate.add_argument("--organization-name")
     migrate.add_argument(
         "--organization-type",
         choices=[item.value for item in OrganizationType],
@@ -225,6 +226,7 @@ def main(argv: list[str] | None = None) -> int:
                 strategic_signals=_load_signals(args.signals),
                 proposed_asset_id=args.asset,
                 organization_domain=args.organization_domain,
+                organization_name=args.organization_name,
             )
             _print(
                 {
