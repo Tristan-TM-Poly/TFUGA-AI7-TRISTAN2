@@ -12,6 +12,16 @@ from .compiler import (
     write_profile,
 )
 from .gate import PolicyGate, PolicyViolation, RequestContext
+from .integration import (
+    AdapterPolicyBindingError,
+    AuthorizedRequest,
+    GatedParseBatch,
+    PolicyBoundAdapter,
+    ROUTE_BY_SOURCE,
+    audit_r04_bindings,
+    bind_adapter,
+    bind_all_r04_adapters,
+)
 from .models import (
     AttributionPolicy,
     CompiledPolicy,
@@ -27,22 +37,30 @@ from .models import (
 from .registry import PolicyRegistry
 
 __all__ = [
+    "AdapterPolicyBindingError",
     "AttributionPolicy",
+    "AuthorizedRequest",
     "BUILTIN_POLICIES",
     "CompiledPolicy",
     "GateDecision",
     "GateViolation",
+    "GatedParseBatch",
+    "PolicyBoundAdapter",
     "PolicyCompilationError",
     "PolicyGate",
     "PolicyProfile",
     "PolicyRegistry",
     "PolicyViolation",
+    "ROUTE_BY_SOURCE",
     "RequestContext",
     "RequestRatePolicy",
     "RequiredIdentityPolicy",
     "RetentionPolicy",
     "ReviewPolicy",
     "StorageDecisionRecord",
+    "audit_r04_bindings",
+    "bind_adapter",
+    "bind_all_r04_adapters",
     "compare_compiled_policies",
     "compile_mapping",
     "compile_policy",
