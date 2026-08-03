@@ -1,4 +1,4 @@
-name: Omega Space HG R0.1-R0.2 MAX
+name: Omega Space HG R0.1-R0.3 MAX
 
 on:
   push:
@@ -50,10 +50,16 @@ jobs:
           omega_space_hg_t
           tests/test_omega_space_hg_t.py
           tests/test_omega_space_hg_r02.py
+          tests/test_omega_space_hg_r03.py
           examples/omega_space_hg_demo.py
           examples/omega_space_hg_r02_demo.py
+          examples/omega_space_hg_r03_demo.py
       - name: Run focused regression suite
-        run: pytest -q tests/test_omega_space_hg_t.py tests/test_omega_space_hg_r02.py
+        run: >-
+          pytest -q
+          tests/test_omega_space_hg_t.py
+          tests/test_omega_space_hg_r02.py
+          tests/test_omega_space_hg_r03.py
       - name: Generate deterministic R0.1 artifacts
         run: |
           python -m omega_space_hg_t.cli atlas --output /tmp/atlas-a.json
@@ -80,6 +86,16 @@ jobs:
           cmp /tmp/r02-attitude-a.json /tmp/r02-attitude-b.json
           python -m omega_space_hg_t.r02_cli oak --output /tmp/oak-r02.json
           python examples/omega_space_hg_r02_demo.py > /tmp/demo-r02.json
+      - name: Generate deterministic R0.3 artifacts
+        run: |
+          python -m omega_space_hg_t.r03_cli manifest --output /tmp/r03-manifest-a.json
+          python -m omega_space_hg_t.r03_cli manifest --output /tmp/r03-manifest-b.json
+          cmp /tmp/r03-manifest-a.json /tmp/r03-manifest-b.json
+          python -m omega_space_hg_t.r03_cli simulate --duration-orbits 8 --step-s 20 --output /tmp/r03-simulation-a.json
+          python -m omega_space_hg_t.r03_cli simulate --duration-orbits 8 --step-s 20 --output /tmp/r03-simulation-b.json
+          cmp /tmp/r03-simulation-a.json /tmp/r03-simulation-b.json
+          python -m omega_space_hg_t.r03_cli oak --output /tmp/oak-r03.json
+          python examples/omega_space_hg_r03_demo.py > /tmp/demo-r03.json
       - name: Validate schemas and OAK boundaries
         run: |
           python - <<'PY'
@@ -90,9 +106,11 @@ jobs:
           mission_schema = json.loads(Path('schemas/omega_space_mission_v1.schema.json').read_text())
           oak_r01_schema = json.loads(Path('schemas/omega_space_oak_report_v1.schema.json').read_text())
           oak_r02_schema = json.loads(Path('schemas/omega_space_r02_oak_report_v1.schema.json').read_text())
+          oak_r03_schema = json.loads(Path('schemas/omega_space_r03_oak_report_v1.schema.json').read_text())
           mission = json.loads(Path('scenarios/omega_space_hg_t/leo_6u_observer.json').read_text())
           oak_r01 = json.loads(Path('/tmp/oak-r01.json').read_text())
           oak_r02 = json.loads(Path('/tmp/oak-r02.json').read_text())
+          oak_r03 = json.loads(Path('/tmp/oak-r03.json').read_text())
           atlas = json.loads(Path('/tmp/atlas-a.json').read_text())
           graph = json.loads(Path('/tmp/graph.json').read_text())
           simulation = json.loads(Path('/tmp/simulation.json').read_text())
@@ -100,18 +118,21 @@ jobs:
           optimization = json.loads(Path('/tmp/optimization.json').read_text())
           r02_orbit = json.loads(Path('/tmp/r02-orbit-a.json').read_text())
           r02_attitude = json.loads(Path('/tmp/r02-attitude-a.json').read_text())
+          r03_simulation = json.loads(Path('/tmp/r03-simulation-a.json').read_text())
           demo_r01 = json.loads(Path('/tmp/demo-r01.json').read_text())
           demo_r02 = json.loads(Path('/tmp/demo-r02.json').read_text())
+          demo_r03 = json.loads(Path('/tmp/demo-r03.json').read_text())
 
-          jsonschema.Draft202012Validator.check_schema(mission_schema)
-          jsonschema.Draft202012Validator.check_schema(oak_r01_schema)
-          jsonschema.Draft202012Validator.check_schema(oak_r02_schema)
+          for schema in (mission_schema, oak_r01_schema, oak_r02_schema, oak_r03_schema):
+              jsonschema.Draft202012Validator.check_schema(schema)
           jsonschema.validate(mission, mission_schema)
           jsonschema.validate(oak_r01, oak_r01_schema)
           jsonschema.validate(oak_r02, oak_r02_schema)
+          jsonschema.validate(oak_r03, oak_r03_schema)
 
           assert oak_r01['passed'] is True
           assert oak_r02['passed'] is True
+          assert oak_r03['passed'] is True
           assert oak_r01['theorem_claimed'] is False
           assert oak_r01['flight_qualified_claimed'] is False
           assert oak_r01['scientific_validation_claimed'] is False
@@ -120,6 +141,10 @@ jobs:
           assert oak_r02['operational_ephemeris_claimed'] is False
           assert oak_r02['conjunction_assessment_claimed'] is False
           assert oak_r02['stability_proof_claimed'] is False
+          assert oak_r03['theorem_claimed'] is False
+          assert oak_r03['flight_qualified_claimed'] is False
+          assert oak_r03['operational_network_claimed'] is False
+          assert oak_r03['regulatory_approval_claimed'] is False
           assert atlas['counts']['mission_classes'] >= 30
           assert atlas['counts']['vehicle_and_module_classes'] >= 40
           assert atlas['permanent_generated_architecture_cap'] is None
@@ -134,7 +159,16 @@ jobs:
           assert r02_attitude['metrics']['final_error_rad'] < 0.01
           assert r02_attitude['metrics']['wheel_saturation_count'] == 0
           assert r02_attitude['flight_software_claimed'] is False
+          assert r03_simulation['safe_fixture'] is True
+          assert r03_simulation['power']['minimum_soc'] > 0.15
+          assert r03_simulation['communications']['contact_window_count'] >= 1
+          assert r03_simulation['data']['delivered_gb'] > 0.0
+          assert r03_simulation['data']['dropped_gb'] == 0.0
+          assert r03_simulation['data']['maximum_stored_fraction'] < 0.95
+          assert r03_simulation['operational_network_claimed'] is False
+          assert r03_simulation['regulatory_approval_claimed'] is False
           assert demo_r01['oak']['passed'] is True
           assert demo_r02['oak']['passed'] is True
-          print('OAK_PASS_OMEGA_SPACE_HG_R0_1_R0_2_MAX')
+          assert demo_r03['oak']['passed'] is True
+          print('OAK_PASS_OMEGA_SPACE_HG_R0_1_R0_2_R0_3_MAX')
           PY
