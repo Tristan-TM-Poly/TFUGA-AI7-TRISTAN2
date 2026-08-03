@@ -4,6 +4,7 @@ import ipaddress
 import socket
 import time
 from typing import Callable, Iterable, Mapping
+from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.request import Request, build_opener
 from urllib.robotparser import RobotFileParser
@@ -36,6 +37,10 @@ class PolicyGate:
             with opener.open(request, timeout=self.config.timeout_seconds) as response:
                 payload = response.read(1_000_000)
                 return payload.decode("utf-8", errors="replace")
+        except HTTPError as exc:
+            if exc.code in {404, 410}:
+                return ""
+            return None
         except (OSError, ValueError):
             return None
 
@@ -67,10 +72,12 @@ class PolicyGate:
             return self._robots[origin]
         robots_url = origin + "/robots.txt"
         payload = self._robots_loader(robots_url)
-        if payload is None:
-            self._robots[origin] = None
-            return None
         parser = RobotFileParser()
+        if payload is None:
+            parser.set_url(robots_url)
+            parser.parse(["User-agent: *", "Disallow: /"])
+            self._robots[origin] = parser
+            return parser
         parser.set_url(robots_url)
         parser.parse(payload.splitlines())
         self._robots[origin] = parser
