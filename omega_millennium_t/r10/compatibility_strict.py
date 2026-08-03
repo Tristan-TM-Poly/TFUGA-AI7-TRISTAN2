@@ -1,13 +1,15 @@
 """Strict R0.3 MAX compatibility entry point for R0.10."""
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
 from omega_millennium_t.r03 import audit_max_output
 
 from . import compatibility as _base
-from .model import stable_digest
+from .model import RuntimePolicy, stable_digest, write_json
+from .store import AtlasStore
 
 _REQUIRED_ARTIFACTS = {
     "sources.jsonl",
@@ -19,6 +21,7 @@ _REQUIRED_ARTIFACTS = {
     "portfolio.json",
 }
 _BASE_VERIFY = _base.verify_r03_max_source
+_BASE_INGEST = _base.ingest_r03_max
 
 
 def verify_r03_max_source(source_dir: str | Path) -> dict[str, Any]:
@@ -53,6 +56,34 @@ def verify_r03_max_source(source_dir: str | Path) -> dict[str, Any]:
 
 # The existing streaming importer resolves this global at call time.
 _base.verify_r03_max_source = verify_r03_max_source
-ingest_r03_max = _base.ingest_r03_max
+
+
+def ingest_r03_max(
+    source_dir: str | Path,
+    output_dir: str | Path,
+    *,
+    policy: RuntimePolicy | None = None,
+    resume: bool = False,
+    max_items: int | None = None,
+    clean: bool = True,
+) -> dict[str, Any]:
+    runtime = policy or RuntimePolicy()
+    output = Path(output_dir)
+    report = _BASE_INGEST(
+        source_dir,
+        output,
+        policy=runtime,
+        resume=resume,
+        max_items=max_items,
+        clean=clean,
+    )
+    with AtlasStore(output / "atlas.sqlite3", runtime) as store:
+        report["database_bytes"] = store.database_bytes()
+    report["report_digest"] = stable_digest(
+        {key: value for key, value in report.items() if key != "report_digest"}
+    )
+    write_json(output / "report.json", report)
+    return report
+
 
 __all__ = ["ingest_r03_max", "verify_r03_max_source"]
