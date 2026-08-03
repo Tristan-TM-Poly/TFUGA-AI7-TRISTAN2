@@ -8,16 +8,8 @@
     "schema",
     "status",
     "complete",
-    "failure",
-    "rollback_receipt_digest",
     "manifest_digest",
     "cell_count",
-    "input_rows_seen",
-    "duplicate_count",
-    "quarantine_count",
-    "shard_count",
-    "database_bytes",
-    "batch_size",
     "peak_memory_independent_of_total_claimed",
     "unlimited_capacity_claimed",
     "permanent_total_cell_cap",
@@ -45,6 +37,27 @@
     "permanent_total_cell_cap": {"type": "null"},
     "report_digest": {"$ref": "#/$defs/sha256"}
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {"enum": ["complete", "checkpointed", "failed"]}
+        }
+      },
+      "then": {
+        "required": [
+          "failure",
+          "rollback_receipt_digest",
+          "input_rows_seen",
+          "duplicate_count",
+          "quarantine_count",
+          "shard_count",
+          "database_bytes",
+          "batch_size"
+        ]
+      }
+    }
+  ],
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
   }
