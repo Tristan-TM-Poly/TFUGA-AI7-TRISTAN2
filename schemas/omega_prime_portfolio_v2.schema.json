@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_prime_portfolio_v2.schema.json",
+  "title": "Omega Prime Portfolio V2",
+  "type": "object",
+  "required": ["policy", "exploration", "total_pulls", "arms", "recommended_weights", "claims"],
+  "properties": {
+    "policy": {"const": "deterministic_ucb1_evidence_allocator"},
+    "exploration": {"type": "number", "minimum": 0},
+    "total_pulls": {"type": "integer", "minimum": 0},
+    "arms": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["name", "purpose", "pulls", "reward_sum", "compute_units", "mean_reward", "efficiency"],
+        "properties": {
+          "name": {"enum": ["prestige", "research", "product"]},
+          "purpose": {"type": "string"},
+          "pulls": {"type": "integer", "minimum": 0},
+          "reward_sum": {"type": "number"},
+          "compute_units": {"type": "number", "minimum": 0},
+          "mean_reward": {"type": "number"},
+          "efficiency": {"type": "number"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "recommended_weights": {
+      "type": "object",
+      "required": ["prestige", "research", "product"],
+      "properties": {
+        "prestige": {"type": "number", "minimum": 0, "maximum": 1},
+        "research": {"type": "number", "minimum": 0, "maximum": 1},
+        "product": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "additionalProperties": false
+    },
+    "claims": {
+      "type": "object",
+      "required": ["financial_return_predicted", "record_probability_certified", "allocation_is_advisory"],
+      "properties": {
+        "financial_return_predicted": {"const": false},
+        "record_probability_certified": {"const": false},
+        "allocation_is_advisory": {"const": true}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
