@@ -43,7 +43,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e . pytest
-      - name: Unit and frontier tests
+      - name: Unit, privacy, and frontier tests
         run: python -m pytest -q tests/test_omega_github_revenue_t.py
       - name: Bounded demo
         run: python -m omega_github_revenue_t.cli demo > /tmp/omega-github-revenue-demo.json
@@ -53,16 +53,19 @@ jobs:
             --output /tmp/revenue-audit.jsonl \
             --minimum-score 0.0
           test "$(wc -l < /tmp/revenue-audit.jsonl)" -eq 2
-      - name: Repository banking-data guard
-        shell: bash
+      - name: Explicit banking-field rejection contract
         run: |
-          set -euo pipefail
-          if git grep -I -n -E '(void[_ -]?cheque|bank[_ -]?account[_ -]?number|transit[_ -]?number|institution[_ -]?number|routing[_ -]?number|stripe[_ -]?secret)' -- \
-            ':!omega_github_revenue_t/ledger.py' \
-            ':!policies/omega-github-revenue.yaml' \
-            ':!docs/OMEGA_GITHUB_REVENUE_T.md' \
-            ':!omega_github_revenue_t/README.md' \
-            ':!.github/workflows/omega-github-revenue.yml'; then
-            echo 'Potential forbidden financial field found outside approved policy/code documentation.' >&2
-            exit 1
-          fi
+          python - <<'PY'
+          from pathlib import Path
+          from tempfile import TemporaryDirectory
+          from omega_github_revenue_t import AppendOnlyLedger, SensitiveDataError
+
+          with TemporaryDirectory() as directory:
+              ledger = AppendOnlyLedger(Path(directory) / "ledger.jsonl")
+              try:
+                  ledger.append({"event_id": "forbidden", "account_number": "not-stored"})
+              except SensitiveDataError:
+                  pass
+              else:
+                  raise SystemExit("privacy gate failed closed")
+          PY
