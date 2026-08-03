@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "manifest_id": "PR-233",
+  "pr_id": 233,
+  "title": "Automate OAK PR cartography and evidence gates",
+  "class": "K",
+  "product": "oakgate",
+  "binding": {
+    "mode": "runtime",
+    "base_ref": "main"
+  },
+  "claims": [
+    {
+      "id": "CLM-OAK-233-001",
+      "statement": "OAKGate rejects manifest and claim objects that violate their canonical JSON Schema contracts.",
+      "type": "behavioral",
+      "criticality": "high",
+      "status": "tested_local",
+      "evidence_required": ["unit_test", "baseline", "reproduction"],
+      "falsification_criteria": ["A manifest containing an unknown top-level property is accepted."],
+      "depends_on": [],
+      "exclusions": []
+    },
+    {
+      "id": "CLM-OAK-233-002",
+      "statement": "ClaimGraph detects duplicate identifiers, missing dependencies, self-dependencies and dependency cycles.",
+      "type": "behavioral",
+      "criticality": "high",
+      "status": "tested_local",
+      "evidence_required": ["unit_test", "baseline", "reproduction"],
+      "falsification_criteria": ["A cyclic claim dependency graph receives a non-blocking verdict."],
+      "depends_on": ["CLM-OAK-233-001"],
+      "exclusions": []
+    },
+    {
+      "id": "CLM-OAK-233-003",
+      "statement": "The Evidence Ledger detects broken predecessor links, modified records and contradictory status versus exit code.",
+      "type": "security",
+      "criticality": "critical",
+      "status": "tested_local",
+      "evidence_required": ["unit_test", "baseline", "reproduction"],
+      "falsification_criteria": ["A modified ledger record with an unchanged declared hash is accepted."],
+      "depends_on": ["CLM-OAK-233-001"],
+      "exclusions": ["The chain does not attest the integrity of the GitHub runner itself."]
+    },
+    {
+      "id": "CLM-OAK-233-004",
+      "statement": "Evidence tied to another head, base, dependency lock, test definition or environment cannot support the current claim.",
+      "type": "behavioral",
+      "criticality": "critical",
+      "status": "tested_local",
+      "evidence_required": ["unit_test", "baseline", "reproduction"],
+      "falsification_criteria": ["Evidence generated for a different head SHA satisfies a required evidence kind."],
+      "depends_on": ["CLM-OAK-233-003"],
+      "exclusions": []
+    },
+    {
+      "id": "CLM-OAK-233-005",
+      "statement": "Policy-as-code raises deterministic blocking findings when protected paths use an insufficient PR class or forbidden capability.",
+      "type": "security",
+      "criticality": "critical",
+      "status": "tested_local",
+      "evidence_required": ["unit_test", "baseline", "reproduction"],
+      "falsification_criteria": ["A workflow change adding write_repository_contents passes policy evaluation."],
+      "depends_on": ["CLM-OAK-233-001", "CLM-OAK-233-004"],
+      "exclusions": []
+    }
+  ],
+  "risk_profile": {
+    "technical": 3,
+    "scientific": 1,
+    "security": 4,
+    "operational": 3,
+    "privacy": 1,
+    "legal": 1,
+    "financial": 1,
+    "reputational": 3,
+    "reversibility": 2,
+    "blast_radius": 4,
+    "dependency": 3,
+    "uncertainty": 3
+  },
+  "capabilities": {
+    "added": ["read_pull_requests", "read_checks", "read_actions"],
+    "removed": [],
+    "forbidden": ["merge_pull_request", "enable_auto_merge", "write_repository_contents", "write_pull_requests"]
+  },
+  "rollback": {
+    "supported": true,
+    "strategy": "git_revert",
+    "maximum_recovery_time_minutes": 15,
+    "data_migration_reversible": true,
+    "irreversible_effects": []
+  },
+  "self_review": {
+    "required": true,
+    "reason": "This PR changes OAK kernel, policy and GitHub workflow files."
+  },
+  "evidence": {
+    "static_ledgers": [".oak/active/pr_233/evidence.jsonl"],
+    "runtime_required": true
+  }
+}
