@@ -5,13 +5,25 @@ import numpy as np
 from omega_vla_t import (
     LinearOperator,
     VectorSpace,
+    audit_linearization,
     audit_operator,
+    audit_orthogonal_projector,
     basis_covariance_error,
+    commutator,
+    decompose_symmetric_skew,
     gradient,
+    gradient_fd,
     graph_divergence,
     graph_hodge_decomposition,
     graph_laplacian,
+    hessian,
+    jacobian,
     laplacian,
+    metric_projector,
+    orthogonal_projector,
+    principal_angles,
+    projection_residual,
+    propagate_covariance,
 )
 from omega_vla_t.cli import benchmark_payload, main
 
@@ -67,6 +79,69 @@ def test_svd_rank_and_low_rank_approximation() -> None:
     assert report.threshold_rank == 2
     assert report.effective_rank > 1.0
     assert np.linalg.norm(matrix - approximation.matrix) < 1e-10
+
+
+def test_symmetric_skew_decomposition_and_commutator() -> None:
+    matrix = np.array([[1.0, 3.0], [-2.0, 4.0]])
+    split = decompose_symmetric_skew(matrix)
+    assert split.reconstruction_error < 1e-15
+    assert split.orthogonality_error < 1e-15
+    assert np.allclose(split.symmetric, split.symmetric.T)
+    assert np.allclose(split.skew_symmetric, -split.skew_symmetric.T)
+    diagonal = np.diag([1.0, 2.0])
+    assert np.allclose(commutator(diagonal, diagonal), 0.0)
+
+
+def test_projectors_and_principal_angles() -> None:
+    vectors = np.array([[1.0, 0.0], [0.0, 1.0], [0.0, 0.0]])
+    projector = orthogonal_projector(vectors)
+    audit = audit_orthogonal_projector(projector)
+    projected, residual = projection_residual(projector, np.array([1.0, 2.0, 3.0]))
+    assert audit.passed
+    assert np.allclose(projected, [1.0, 2.0, 0.0])
+    assert np.allclose(residual, [0.0, 0.0, 3.0])
+    angles = principal_angles(vectors, np.array([[1.0], [0.0], [0.0]]))
+    assert np.allclose(angles, [0.0])
+
+
+def test_metric_projector_is_idempotent() -> None:
+    vectors = np.array([[1.0], [1.0]])
+    metric = np.diag([2.0, 1.0])
+    projector = metric_projector(vectors, metric)
+    assert np.allclose(projector @ projector, projector)
+    assert np.allclose(projector @ vectors, vectors)
+
+
+def test_jacobian_gradient_hessian() -> None:
+    def vector_function(x: np.ndarray) -> np.ndarray:
+        return np.array([x[0] ** 2 + x[1], np.sin(x[0]) - 3.0 * x[1]])
+
+    point = np.array([0.4, -0.2])
+    derivative = jacobian(vector_function, point)
+    expected = np.array([[0.8, 1.0], [np.cos(0.4), -3.0]])
+    assert np.allclose(derivative, expected, atol=1e-7)
+
+    def quadratic(x: np.ndarray) -> float:
+        return float(2.0 * x[0] ** 2 + 3.0 * x[0] * x[1] + 4.0 * x[1] ** 2)
+
+    assert np.allclose(gradient_fd(quadratic, point), [4.0 * point[0] + 3.0 * point[1], 3.0 * point[0] + 8.0 * point[1]], atol=1e-7)
+    assert np.allclose(hessian(quadratic, point), [[4.0, 3.0], [3.0, 8.0]], atol=1e-6)
+
+
+def test_covariance_propagation_and_linearization_residue() -> None:
+    derivative = np.array([[2.0, 1.0], [0.0, -1.0]])
+    covariance = np.array([[0.25, 0.05], [0.05, 0.16]])
+    propagated = propagate_covariance(derivative, covariance)
+    assert np.allclose(propagated, propagated.T)
+    assert np.min(np.linalg.eigvalsh(propagated)) > -1e-12
+
+    def nonlinear(x: np.ndarray) -> np.ndarray:
+        return np.array([x[0] ** 2 + x[1], np.exp(x[1])])
+
+    small = audit_linearization(nonlinear, [0.5, 0.0], [1e-4, -2e-4])
+    large = audit_linearization(nonlinear, [0.5, 0.0], [0.1, -0.2])
+    assert small.absolute_error < large.absolute_error
+    assert small.residual.shape == (2,)
 
 
 def test_grid_gradient_and_laplacian() -> None:
