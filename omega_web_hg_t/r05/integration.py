@@ -8,14 +8,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from hashlib import sha256
 from typing import Any, Mapping
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from omega_web_hg_t.r04.max_adapters import Adapter, MAX_ADAPTERS
 
 from .builtin_policies import policy_by_id
 from .compiler import compile_policy
 from .gate import PolicyGate, PolicyViolation, RequestContext
-from .models import CompiledPolicy, GateDecision, canonical_json, digest_object
+from .models import CompiledPolicy, GateDecision, digest_object
 
 ROUTE_BY_SOURCE: dict[str, str] = {
     "wikimedia": "mediawiki_api",
@@ -30,10 +30,23 @@ ROUTE_BY_SOURCE: dict[str, str] = {
     "canada_open": "ckan_api",
     "openalex": "rest_api",
 }
+SECRET_QUERY_MARKERS = ("api_key", "apikey", "key", "token", "secret", "password")
 
 
 class AdapterPolicyBindingError(ValueError):
     """Raised when an adapter and policy cannot be safely bound."""
+
+
+def _public_url(url: str) -> str:
+    parsed = urlparse(url)
+    redacted = []
+    for key, value in parse_qsl(parsed.query, keep_blank_values=True):
+        normalized = key.casefold().replace("-", "_")
+        if any(marker in normalized for marker in SECRET_QUERY_MARKERS):
+            redacted.append((key, "REDACTED"))
+        else:
+            redacted.append((key, value))
+    return urlunparse(parsed._replace(query=urlencode(redacted, doseq=True)))
 
 
 @dataclass(frozen=True)
@@ -50,7 +63,9 @@ class AuthorizedRequest:
         return {
             "source_id": self.source_id,
             "route": self.route,
-            "url": self.url,
+            "public_url": _public_url(self.url),
+            "url_sha256": sha256(self.url.encode("utf-8")).hexdigest(),
+            "secret_query_values_persisted": False,
             "page": self.page,
             "size": self.size,
             "binding_digest": self.binding_digest,
