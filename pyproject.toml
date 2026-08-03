@@ -74,6 +74,7 @@ omega-vla-wave2 = "omega_vla_t.r03.wave2.cli:main"
 omega-vla-wave2-campaign = "omega_vla_t.r03.wave2.campaign_cli:main"
 omega-vla-wave3 = "omega_vla_t.r03.wave3.cli:main"
 omega-vla-wave4 = "omega_vla_t.r03.wave4.cli:main"
+omega-histoscience = "omega_histosci_hg_t.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
