@@ -18,6 +18,62 @@ from .models import EvidenceReceipt, MethodCard, ProblemLead, ProofObligation, T
 
 
 SCHEMA_VERSION = 2
+EXPECTED_TABLE_COLUMNS: dict[str, tuple[str, ...]] = {
+    "metadata": ("key", "value"),
+    "leads": (
+        "lead_id",
+        "source_id",
+        "statement_hash",
+        "canonical_hash",
+        "status",
+        "independently_checked_open",
+        "solution_claimed",
+        "payload",
+    ),
+    "methods": ("method_id", "canonical_hash", "payload"),
+    "obligations": (
+        "obligation_id",
+        "problem_id",
+        "canonical_hash",
+        "status",
+        "finite_budget_units",
+        "universal_claim",
+        "payload",
+    ),
+    "transfer_edges": (
+        "edge_id",
+        "source_problem_id",
+        "target_problem_id",
+        "method_id",
+        "validated",
+        "canonical_hash",
+        "payload",
+    ),
+    "receipts": (
+        "receipt_id",
+        "subject_id",
+        "receipt_hash",
+        "parent_receipt_hash",
+        "payload",
+    ),
+    "m_minus": (
+        "entry_id",
+        "subject_id",
+        "failure_class",
+        "observation",
+        "created_at",
+    ),
+    "checkpoints": (
+        "checkpoint_id",
+        "created_at",
+        "lead_count",
+        "method_count",
+        "obligation_count",
+        "edge_count",
+        "receipt_count",
+        "merkle_root",
+    ),
+}
 
 
 class AtlasStore:
@@ -120,6 +176,7 @@ class AtlasStore:
             );
             """
         )
+        self.validate_schema_contract()
         self.connection.execute(
             "INSERT OR REPLACE INTO metadata(key,value) VALUES('schema_version',?)",
             (str(SCHEMA_VERSION),),
@@ -129,6 +186,26 @@ class AtlasStore:
     @staticmethod
     def _json(payload: dict[str, object]) -> str:
         return json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+    def table_columns(self, table: str) -> tuple[str, ...]:
+        if table not in EXPECTED_TABLE_COLUMNS:
+            raise ValueError(f"unsupported schema table: {table}")
+        rows = self.connection.execute(f"PRAGMA table_info({table})").fetchall()
+        return tuple(str(row["name"]) for row in rows)
+
+    def validate_schema_contract(self) -> dict[str, tuple[str, ...]]:
+        observed = {
+            table: self.table_columns(table)
+            for table in EXPECTED_TABLE_COLUMNS
+        }
+        mismatches = {
+            table: {"expected": EXPECTED_TABLE_COLUMNS[table], "observed": columns}
+            for table, columns in observed.items()
+            if columns != EXPECTED_TABLE_COLUMNS[table]
+        }
+        if mismatches:
+            raise RuntimeError(f"SQLite schema contract mismatch: {mismatches}")
+        return observed
 
     def upsert_lead(self, lead: ProblemLead) -> None:
         payload = asdict(lead)
