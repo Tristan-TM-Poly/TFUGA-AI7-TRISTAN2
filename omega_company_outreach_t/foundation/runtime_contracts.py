@@ -1,6 +1,37 @@
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
+
+
+class _LegacyCompanyUnitResolver:
+    """Callable compatibility adapter without function-descriptor binding.
+
+    Assigning a plain function into a class-like namespace can turn that
+    function into a bound method. A callable instance has no descriptor
+    behavior, so the legacy string is always received as the sole argument.
+    """
+
+    def __init__(
+        self,
+        *,
+        members_by_value: Mapping[str, Any],
+        aliases: Mapping[str, str],
+        canonicalization_error: type[Exception],
+    ) -> None:
+        self._members_by_value = dict(members_by_value)
+        self._aliases = dict(aliases)
+        self._canonicalization_error = canonicalization_error
+
+    def __call__(self, value: Any) -> Any:
+        normalized = " ".join(str(value).strip().split()).casefold()
+        normalized = self._aliases.get(normalized, normalized)
+        member = self._members_by_value.get(normalized)
+        if member is None:
+            raise self._canonicalization_error(
+                f"unknown legacy company_unit: {value!r}; "
+                f"expected one of {sorted(self._members_by_value)}"
+            )
+        return member
 
 
 def apply_runtime_contracts(
@@ -11,7 +42,7 @@ def apply_runtime_contracts(
     migration_module: Any | None = None,
     company_unit_class: type[Any] | None = None,
 ) -> None:
-    """Apply cross-module contracts after the foundation modules are loaded.
+    """Apply cross-module contracts after foundation modules are loaded.
 
     Contracts:
 
@@ -21,13 +52,8 @@ def apply_runtime_contracts(
     2. ``append_new`` audits the persistent store before parsing aggregate
        history. Any malformed or tampered row therefore produces one stable
        invalid-store error instead of leaking a parser-specific exception.
-    3. R0.2 company identifiers are mapped explicitly to R1.0 enum members.
-       The migration path never relies on whichever same-named enum happens to
-       be imported first in a stacked package graph.
-
-    Keeping these policies at the boundary makes the separation explicit while
-    the R1.0 package remains stacked above R0.2. A later refactor can move the
-    bodies into their owning classes without changing the public contract.
+    3. R0.2 company identifiers are mapped explicitly to R1.0 enum members by
+       a callable object that cannot be converted into a bound method.
     """
 
     if getattr(opportunity_class, "_omega_score_contract", False) is False:
@@ -60,16 +86,8 @@ def apply_runtime_contracts(
             "software": "tristan_software_labs",
             "research": "tristan_research_foundry",
         }
-
-        def resolve_legacy_company_unit(value: Any) -> Any:
-            normalized = " ".join(str(value).strip().split()).casefold()
-            normalized = aliases.get(normalized, normalized)
-            member = members_by_value.get(normalized)
-            if member is None:
-                raise canonicalization_error(
-                    f"unknown legacy company_unit: {value!r}; "
-                    f"expected one of {sorted(members_by_value)}"
-                )
-            return member
-
-        migration_module.CompanyUnit = resolve_legacy_company_unit
+        migration_module.CompanyUnit = _LegacyCompanyUnitResolver(
+            members_by_value=members_by_value,
+            aliases=aliases,
+            canonicalization_error=canonicalization_error,
+        )
