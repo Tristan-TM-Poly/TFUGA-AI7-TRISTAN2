@@ -1,0 +1,20 @@
+[
+  {
+    "source": "github_sponsors",
+    "event_id": "synthetic-demo-001",
+    "gross_minor": 500,
+    "fee_minor": 0,
+    "currency": "USD",
+    "occurred_at": "2026-08-03T00:00:00Z",
+    "status": "paid"
+  },
+  {
+    "source": "fixed_scope_service",
+    "event_id": "synthetic-demo-002",
+    "gross_minor": 15000,
+    "fee_minor": 450,
+    "currency": "CAD",
+    "occurred_at": "2026-08-03T00:00:00Z",
+    "status": "paid"
+  }
+]
