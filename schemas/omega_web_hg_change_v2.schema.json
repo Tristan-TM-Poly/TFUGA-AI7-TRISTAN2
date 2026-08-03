@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:omega:web-hg:change:0.2",
+  "title": "Omega Web HG R0.2 change record",
+  "type": "object",
+  "required": ["change_id", "run_id", "url", "change_type", "detected_at", "previous_version_id", "current_version_id", "previous_sha256", "current_sha256", "details"],
+  "properties": {
+    "change_id": {"type": "string", "pattern": "^change_[0-9a-f]{64}$"},
+    "run_id": {"type": "string"},
+    "url": {"type": "string", "format": "uri"},
+    "change_type": {"enum": ["ADDED", "MODIFIED", "UNCHANGED", "NOT_MODIFIED", "REMOVED", "MISSING"]},
+    "detected_at": {"type": "string"},
+    "previous_version_id": {"type": ["string", "null"]},
+    "current_version_id": {"type": ["string", "null"]},
+    "previous_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "current_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "details": {"type": "object"}
+  },
+  "additionalProperties": false
+}
