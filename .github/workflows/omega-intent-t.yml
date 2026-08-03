@@ -1,0 +1,91 @@
+name: Omega Intent To Everything
+
+on:
+  push:
+    branches: [feat/omega-intent-to-everything-r01]
+    paths:
+      - "omega_intent_t/**"
+      - "tests/test_omega_intent_t.py"
+      - "examples/omega_intent_t_demo.py"
+      - "docs/omega-intent-t/**"
+      - "schemas/omega_intent_v1.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-intent-t.yml"
+  pull_request:
+    paths:
+      - "omega_intent_t/**"
+      - "tests/test_omega_intent_t.py"
+      - "examples/omega_intent_t_demo.py"
+      - "docs/omega-intent-t/**"
+      - "schemas/omega_intent_v1.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-intent-t.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile package and fixtures
+        run: >-
+          python -m compileall -q
+          omega_intent_t
+          tests/test_omega_intent_t.py
+          examples/omega_intent_t_demo.py
+      - name: Run focused tests
+        run: pytest -q tests/test_omega_intent_t.py
+      - name: Validate intent schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          schema = json.loads(Path('schemas/omega_intent_v1.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          print('OMEGA_INTENT_SCHEMA_VALID')
+          PY
+      - name: Compile deterministic demonstration bundle
+        run: |
+          rm -rf /tmp/omega-intent-ci
+          python -m omega_intent_t compile \
+            "Develop a verified multi-language transform laboratory" \
+            --language python \
+            --language rust \
+            --language cpp \
+            --materialize-scaffolds \
+            --github-plan \
+            --output-dir /tmp/omega-intent-ci
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('/tmp/omega-intent-ci')
+          result = json.loads((root / 'compilation-result.json').read_text())
+          oak = json.loads((root / 'reports/oak.json').read_text())
+          frontier = json.loads((root / 'frontier-manifest.json').read_text())
+          assert result['oak_passed'] is True
+          assert result['automatic_merge'] is False
+          assert oak['remote_mutations'] == 0
+          assert oak['theorem_claimed'] is False
+          assert frontier['logical_frontier_size'] > 10**9
+          assert frontier['permanent_total_cap'] is None
+          assert (root / 'github-plan/manifest.json').is_file()
+          print('OAK_PASS_OMEGA_INTENT_T')
+          PY
+      - name: Exercise 100k streaming campaign
+        run: |
+          python -m omega_intent_t campaign --offset 1000000 --count 100000 --output /tmp/omega-intent-100k.jsonl
+          test "$(wc -l < /tmp/omega-intent-100k.jsonl)" -eq 100000
