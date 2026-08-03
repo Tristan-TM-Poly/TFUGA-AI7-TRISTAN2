@@ -63,6 +63,7 @@ jobs:
             company_outreach/cases/OUT-2026-0001.json \
             /tmp/outreach-migrations/OUT-2026-0001.migration.json \
             --id-prefix 1 \
+            --organization-name "Futurpreneur Canada" \
             --organization-type nonprofit \
             --opportunity-type entrepreneurship_program \
             --role-category program_manager \
@@ -77,6 +78,7 @@ jobs:
             company_outreach/cases/OUT-2026-0002.json \
             /tmp/outreach-migrations/OUT-2026-0002.migration.json \
             --id-prefix 2 \
+            --organization-name "Polytechnique Montréal" \
             --organization-type university \
             --opportunity-type research_pilot \
             --role-category research_director \
