@@ -65,9 +65,17 @@ def audit_streaming_atlas(output_dir: str | Path, *, chunk_size: int = 10_000) -
     result = _base_audit_streaming_atlas(output, chunk_size=chunk_size)
     errors = list(result.get("errors", []))
     manifest_path = output / "manifest.json"
+    report_path = output / "report.json"
     if manifest_path.exists():
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        report = (
+            json.loads(report_path.read_text(encoding="utf-8"))
+            if report_path.exists()
+            else {}
+        )
         compatibility = manifest.get("source_compatibility")
+        if manifest.get("source_kind") == "r03_max" and compatibility is None:
+            errors.append("r03_compatibility_receipt_required")
         if compatibility is not None:
             receipt_path = output / "r03_compatibility.json"
             if not receipt_path.exists():
@@ -85,6 +93,16 @@ def audit_streaming_atlas(output_dir: str | Path, *, chunk_size: int = 10_000) -
                     errors.append("r03_compatibility_receipt_not_valid")
                 if stored.get("finite_fixture_is_not_unlimited_capacity_proof") is not True:
                     errors.append("r03_finite_fixture_disclaimer_missing")
+                expected_report_fields = {
+                    "r03_compatibility_receipt_digest": stored.get("receipt_digest"),
+                    "r03_manifest_digest_reproduced": stored.get("r03_manifest_digest"),
+                    "r03_report_digest_reproduced": stored.get("r03_report_digest"),
+                }
+                for key, expected in expected_report_fields.items():
+                    if report.get(key) != expected:
+                        errors.append(f"r03_report_binding_mismatch:{key}")
+                if manifest.get("source_digest") != stored.get("r03_manifest_digest"):
+                    errors.append("r03_source_digest_binding_mismatch")
     result["errors"] = sorted(set(errors))
     result["valid"] = not result["errors"]
     result.pop("audit_digest", None)
