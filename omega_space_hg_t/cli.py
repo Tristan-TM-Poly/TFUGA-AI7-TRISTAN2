@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 from typing import Any
 
+from .atlas import atlas_manifest
 from .io import emit_json, load_mission
 from .mission import compile_mission_hypergraph, simulate_mission
 from .oak import canonical_6u_mission, run_oak_benchmarks
@@ -13,6 +14,9 @@ from .optimization import UnboundedDesignFrontier, optimize_designs
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="omega-space-hg")
     commands = parser.add_subparsers(dest="command", required=True)
+
+    atlas = commands.add_parser("atlas", help="emit the generative space-system taxonomy")
+    atlas.add_argument("--output")
 
     manifest = commands.add_parser("manifest", help="emit the canonical 6U mission manifest")
     manifest.add_argument("--output")
@@ -49,7 +53,9 @@ def _mission(path: str | None):
 def main(argv: list[str] | None = None) -> int:
     arguments = build_parser().parse_args(argv)
     payload: Any
-    if arguments.command == "manifest":
+    if arguments.command == "atlas":
+        payload = atlas_manifest()
+    elif arguments.command == "manifest":
         payload = canonical_6u_mission().to_dict()
     elif arguments.command == "graph":
         payload = compile_mission_hypergraph(_mission(arguments.mission))
@@ -69,7 +75,9 @@ def main(argv: list[str] | None = None) -> int:
         payload = run_oak_benchmarks()
     else:
         raise AssertionError("unreachable")
-    print(emit_json(payload, arguments.output), end="" if arguments.output is None else "")
+    text = emit_json(payload, arguments.output)
+    if arguments.output is None:
+        print(text, end="")
     return 0
 
 
