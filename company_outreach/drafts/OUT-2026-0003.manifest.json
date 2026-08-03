@@ -1,0 +1,41 @@
+{
+  "artifact_type": "individual_email_draft",
+  "case_id": "OUT-2026-0003",
+  "company_routing": {
+    "owner": "tristan_parent_opco",
+    "product_contributor": "tristan_software_labs",
+    "validation_contributor": "tristan_oak_systems"
+  },
+  "content": {
+    "attachments": [],
+    "body_hash": "sha256:30ad7d708b3374f797fb6f936e7ce94177ed9c0bffd4ed8a02920825b32634b0",
+    "language": "fr-CA",
+    "subject_hash": "sha256:538019d06d89491d54b4577053c0c26f285f430bd8a689f315fd7f54238b7d3e"
+  },
+  "execution": {
+    "allowed": false,
+    "approval_state": "not_requested",
+    "campaign": false,
+    "requires_private_recipient_resolution": true,
+    "requires_separate_explicit_authorization": true,
+    "transport": "none"
+  },
+  "forbidden_effects": [
+    "contract",
+    "payment",
+    "signature",
+    "government_filing",
+    "incorporation",
+    "production_deployment"
+  ],
+  "package_hash": "sha256:743b800f658f49c3720a15fec8a29d8d08b0679de81288f8097d87c65ce5d8d5",
+  "source_issue": 291,
+  "status": "PREPARED_NOT_SENT",
+  "target": {
+    "organization": "Laval économique",
+    "public_contact_name": "Marc Charest",
+    "public_role": "Commissaire transformation technologique",
+    "raw_address_stored": false,
+    "recipient_hash": "sha256:ac379d02d39cf68f6fb65977cfe240c602b95e12784a0179b1e93cd09e16979b"
+  }
+}
