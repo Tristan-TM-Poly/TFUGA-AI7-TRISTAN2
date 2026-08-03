@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/pr_gene.schema.json",
+  "title": "PRGene",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "title", "intention", "candidate_id", "paths", "capabilities_added",
+    "needs_resolved", "interfaces_provided", "interfaces_consumed", "tests",
+    "risks", "dependencies", "conflicts", "rollback", "option_value", "authority"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^PRG-[0-9a-f]{16}$"},
+    "title": {"type": "string"},
+    "intention": {"type": "string"},
+    "candidate_id": {"type": "string"},
+    "paths": {"type": "array", "items": {"type": "string"}},
+    "capabilities_added": {"type": "array", "items": {"type": "string"}},
+    "needs_resolved": {"type": "array", "items": {"type": "string"}},
+    "interfaces_provided": {"type": "array", "items": {"type": "string"}},
+    "interfaces_consumed": {"type": "array", "items": {"type": "string"}},
+    "tests": {"type": "array", "items": {"type": "string"}},
+    "risks": {
+      "type": "object",
+      "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}
+    },
+    "dependencies": {"type": "array", "items": {"type": "string"}},
+    "conflicts": {"type": "array", "items": {"type": "string"}},
+    "rollback": {"type": "array", "items": {"type": "string"}},
+    "option_value": {"type": "number", "minimum": 0, "maximum": 1},
+    "authority": {"const": "review_only_heuristic"}
+  }
+}

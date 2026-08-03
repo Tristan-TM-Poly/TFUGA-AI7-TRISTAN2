@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/interface_contract.schema.json",
+  "title": "InterfaceContract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "source_type", "target_type", "mappings", "preserved_invariants",
+    "declared_losses", "tests", "reversible", "confidence"
+  ],
+  "properties": {
+    "id": {"type": "string", "pattern": "^IFC-[0-9a-f]{16}$"},
+    "source_type": {"type": "string"},
+    "target_type": {"type": "string"},
+    "mappings": {"type": "object", "additionalProperties": {"type": "string"}},
+    "preserved_invariants": {"type": "array", "items": {"type": "string"}},
+    "declared_losses": {"type": "array", "items": {"type": "string"}},
+    "tests": {"type": "array", "items": {"type": "string"}},
+    "reversible": {"type": "boolean"},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+  }
+}
