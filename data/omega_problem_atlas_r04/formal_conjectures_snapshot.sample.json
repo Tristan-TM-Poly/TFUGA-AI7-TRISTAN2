@@ -1,0 +1,34 @@
+{
+  "schema": "omega-problem-source-snapshot/4",
+  "snapshot_id": "formal-conjectures-fixture-r04",
+  "source_id": "formal_conjectures",
+  "source_url": "https://github.com/google-deepmind/formal-conjectures",
+  "retrieved_at": "2026-08-03T16:00:00Z",
+  "revision": "fixture-commit-sha-not-a-current-status-certification",
+  "retrieval_mode": "offline_fixture",
+  "license_note": "Small metadata fixture. Preserve the upstream repository license and original mathematical source references.",
+  "records": [
+    {
+      "problem_id": "erdos_hajnal_conjecture",
+      "title": "Erdős-Hajnal conjecture",
+      "front": "graphs_hypergraphs",
+      "observed_status": "requires_refresh",
+      "source_locator": "fixture:formal-conjectures:erdos-hajnal",
+      "statement": "Formal and natural-language statements require independent source and status verification.",
+      "verification_basis": "fixture_only",
+      "current_open_status_claimed": false,
+      "solution_claimed": false
+    },
+    {
+      "problem_id": "sic_povm",
+      "title": "Existence of SIC-POVMs in all finite dimensions",
+      "front": "quantum_information",
+      "observed_status": "requires_refresh",
+      "source_locator": "fixture:formal-conjectures:sic-povm",
+      "statement": "Formal and natural-language statements require independent source and status verification.",
+      "verification_basis": "fixture_only",
+      "current_open_status_claimed": false,
+      "solution_claimed": false
+    }
+  ]
+}
