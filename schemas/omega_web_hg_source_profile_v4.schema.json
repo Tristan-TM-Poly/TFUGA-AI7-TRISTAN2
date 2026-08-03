@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/omega_web_hg_source_profile_v4.schema.json",
+  "title": "Omega Web HG authoritative source profile R0.4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source_id", "name", "tier", "authority_score", "domains", "modes",
+    "endpoints", "access_state", "full_text_policy", "license_note",
+    "policy_url", "refresh_days", "requests_per_second", "pilot_budget",
+    "topics", "notes", "required_env", "digest"
+  ],
+  "properties": {
+    "source_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]+$"},
+    "name": {"type": "string", "minLength": 1},
+    "tier": {"type": "integer", "minimum": 0, "maximum": 3},
+    "authority_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "domains": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "modes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["api", "dump", "oai", "web"]}},
+    "endpoints": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "format": "uri"}},
+    "access_state": {"enum": ["ready", "key_required", "review_required"]},
+    "full_text_policy": {"enum": ["metadata_only", "open_only", "licensed_only", "forbidden"]},
+    "license_note": {"type": "string", "minLength": 1},
+    "policy_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "refresh_days": {"type": "integer", "minimum": 1},
+    "requests_per_second": {"type": "number", "exclusiveMinimum": 0},
+    "pilot_budget": {"type": "integer", "minimum": 1},
+    "topics": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "notes": {"type": "string"},
+    "required_env": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"}},
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
