@@ -1,0 +1,100 @@
+name: Omega Space HG R0.5 Constellation OAKBench
+
+on:
+  push:
+    branches: [feat/omega-space-hg-t-r01-max]
+    paths:
+      - "omega_space_hg_t/constellation.py"
+      - "omega_space_hg_t/r05.py"
+      - "omega_space_hg_t/r05_cli.py"
+      - "tests/test_omega_space_hg_r05.py"
+      - "examples/omega_space_hg_r05_demo.py"
+      - "schemas/omega_space_r05_oak_report_v1.schema.json"
+      - "docs/omega_space_hg_t/R0_5_MAX.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-space-hg-r05.yml"
+  pull_request:
+    paths:
+      - "omega_space_hg_t/constellation.py"
+      - "omega_space_hg_t/r05.py"
+      - "omega_space_hg_t/r05_cli.py"
+      - "tests/test_omega_space_hg_r05.py"
+      - "examples/omega_space_hg_r05_demo.py"
+      - "schemas/omega_space_r05_oak_report_v1.schema.json"
+      - "docs/omega_space_hg_t/R0_5_MAX.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-space-hg-r05.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile constellation laboratory
+        run: >-
+          python -m compileall -q
+          omega_space_hg_t/constellation.py
+          omega_space_hg_t/r05.py
+          omega_space_hg_t/r05_cli.py
+          tests/test_omega_space_hg_r05.py
+          examples/omega_space_hg_r05_demo.py
+      - name: Run focused R0.5 tests
+        run: pytest -q tests/test_omega_space_hg_r05.py
+      - name: Generate deterministic artifacts
+        run: |
+          python -m omega_space_hg_t.r05_cli manifest --output /tmp/manifest-a.json
+          python -m omega_space_hg_t.r05_cli manifest --output /tmp/manifest-b.json
+          cmp /tmp/manifest-a.json /tmp/manifest-b.json
+          python -m omega_space_hg_t.r05_cli simulate --duration-hours 12 --step-s 120 --output /tmp/nominal-a.json
+          python -m omega_space_hg_t.r05_cli simulate --duration-hours 12 --step-s 120 --output /tmp/nominal-b.json
+          cmp /tmp/nominal-a.json /tmp/nominal-b.json
+          python -m omega_space_hg_t.r05_cli simulate --duration-hours 12 --step-s 120 --fail sat-p00-s00 --fail sat-p01-s00 --fail sat-p02-s00 --output /tmp/degraded.json
+          python -m omega_space_hg_t.r05_cli oak --output /tmp/oak.json
+          python examples/omega_space_hg_r05_demo.py > /tmp/demo.json
+      - name: Validate R0.5 schema and claim boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/omega_space_r05_oak_report_v1.schema.json').read_text())
+          oak = json.loads(Path('/tmp/oak.json').read_text())
+          nominal = json.loads(Path('/tmp/nominal-a.json').read_text())
+          degraded = json.loads(Path('/tmp/degraded.json').read_text())
+          demo = json.loads(Path('/tmp/demo.json').read_text())
+
+          jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(oak, schema)
+          assert oak['passed'] is True
+          assert oak['theorem_claimed'] is False
+          assert oak['scientific_validation_claimed'] is False
+          assert oak['flight_qualified_claimed'] is False
+          assert oak['operational_coverage_claimed'] is False
+          assert oak['collision_safety_claimed'] is False
+          assert oak['autonomous_servicing_claimed'] is False
+          assert nominal['nominal_satellite_count'] == 24
+          assert nominal['active_satellite_count'] == 24
+          assert nominal['coverage']['weighted_coverage_fraction'] > 0.0
+          assert nominal['network']['largest_component_size'] >= 18
+          assert degraded['active_satellite_count'] == 21
+          assert len(degraded['replenishment']) == 3
+          assert degraded['coverage']['weighted_coverage_fraction'] > 0.0
+          assert degraded['collision_safety_claimed'] is False
+          assert demo['oak']['passed'] is True
+          print('OAK_PASS_OMEGA_SPACE_HG_R0_5_MAX')
+          PY
