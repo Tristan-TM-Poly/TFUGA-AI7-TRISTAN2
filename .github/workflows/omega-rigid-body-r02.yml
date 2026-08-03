@@ -1,0 +1,79 @@
+name: Omega Rigid Body R0.2 MAX
+
+on:
+  push:
+    branches: [feat/omega-rigid-body-t-r0-1]
+    paths:
+      - "omega_rigid_body_t/r02/**"
+      - "tests/test_omega_rigid_body_r02.py"
+      - "docs/omega_rigid_body_t/R0_2_MAX.md"
+      - "examples/omega_rigid_body_r02_demo.py"
+      - "schemas/omega_rigid_body_r02_*.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-rigid-body-r02.yml"
+  pull_request:
+    paths:
+      - "omega_rigid_body_t/r02/**"
+      - "tests/test_omega_rigid_body_r02.py"
+      - "docs/omega_rigid_body_t/R0_2_MAX.md"
+      - "examples/omega_rigid_body_r02_demo.py"
+      - "schemas/omega_rigid_body_r02_*.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-rigid-body-r02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.2
+        run: python -m compileall -q omega_rigid_body_t/r02 tests/test_omega_rigid_body_r02.py examples/omega_rigid_body_r02_demo.py
+      - name: Run R0.1 and R0.2 targeted tests
+        run: pytest -q tests/test_omega_rigid_body_t.py tests/test_omega_rigid_body_r02.py
+      - name: Generate deterministic evidence twice
+        run: |
+          python -m omega_rigid_body_t.r02.cli benchmark --output /tmp/oak-a.json
+          python -m omega_rigid_body_t.r02.cli benchmark --output /tmp/oak-b.json
+          cmp /tmp/oak-a.json /tmp/oak-b.json
+          python -m omega_rigid_body_t.r02.cli atlas --inertia-count 3 --energy-count 8 --output /tmp/atlas-a.json
+          python -m omega_rigid_body_t.r02.cli atlas --inertia-count 3 --energy-count 8 --output /tmp/atlas-b.json
+          cmp /tmp/atlas-a.json /tmp/atlas-b.json
+      - name: Validate schemas and epistemic gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          oak_schema = json.loads(Path('schemas/omega_rigid_body_r02_oak.schema.json').read_text())
+          atlas_schema = json.loads(Path('schemas/omega_rigid_body_r02_atlas.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(oak_schema)
+          jsonschema.Draft202012Validator.check_schema(atlas_schema)
+          oak = json.loads(Path('/tmp/oak-a.json').read_text())
+          atlas = json.loads(Path('/tmp/atlas-a.json').read_text())
+          jsonschema.validate(oak, oak_schema)
+          jsonschema.validate(atlas, atlas_schema)
+          assert oak['status'] == 'CERTIFIED_ANALYTIC_COMPUTATIONAL_CORE_R0_2'
+          assert oak['passed'] is True
+          assert oak['certified_physics'] is False
+          assert oak['experimental_validation'] is False
+          assert oak['new_law_of_physics_claimed'] is False
+          assert atlas['claims']['physical_certification'] is False
+          assert atlas['claims']['experimental_validation'] is False
+          assert atlas['claims']['new_law_of_physics'] is False
+          print('CERTIFIED_ANALYTIC_COMPUTATIONAL_CORE_R0_2')
+          PY
