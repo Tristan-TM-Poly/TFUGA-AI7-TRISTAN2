@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_space_mission_v1.schema.json",
+  "title": "Omega Space HG Mission Manifest v1",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "objective",
+    "duration_s",
+    "step_s",
+    "central_body_mu_m3_s2",
+    "central_body_radius_m",
+    "orbit",
+    "spacecraft"
+  ],
+  "properties": {
+    "mission_id": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "duration_s": {"type": "number", "exclusiveMinimum": 0},
+    "step_s": {"type": "number", "exclusiveMinimum": 0},
+    "central_body_mu_m3_s2": {"type": "number", "exclusiveMinimum": 0},
+    "central_body_radius_m": {"type": "number", "exclusiveMinimum": 0},
+    "orbit": {
+      "type": "object",
+      "required": ["position_m", "velocity_m_s"],
+      "properties": {
+        "position_m": {"$ref": "#/$defs/vector3"},
+        "velocity_m_s": {"$ref": "#/$defs/vector3"},
+        "epoch_s": {"type": "number"}
+      },
+      "additionalProperties": false
+    },
+    "spacecraft": {
+      "type": "object",
+      "required": [
+        "name",
+        "dry_mass_kg",
+        "payload_mass_kg",
+        "panel_area_m2",
+        "panel_efficiency",
+        "battery_capacity_wh",
+        "initial_battery_fraction",
+        "base_load_w",
+        "payload_load_w",
+        "downlink_load_w",
+        "radiator_area_m2"
+      ],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "dry_mass_kg": {"type": "number", "exclusiveMinimum": 0},
+        "payload_mass_kg": {"type": "number", "exclusiveMinimum": 0},
+        "panel_area_m2": {"type": "number", "exclusiveMinimum": 0},
+        "panel_efficiency": {"$ref": "#/$defs/fraction"},
+        "battery_capacity_wh": {"type": "number", "exclusiveMinimum": 0},
+        "initial_battery_fraction": {"$ref": "#/$defs/fraction"},
+        "base_load_w": {"type": "number", "minimum": 0},
+        "payload_load_w": {"type": "number", "minimum": 0},
+        "downlink_load_w": {"type": "number", "minimum": 0},
+        "radiator_area_m2": {"type": "number", "exclusiveMinimum": 0},
+        "absorptivity": {"$ref": "#/$defs/fraction"},
+        "emissivity": {"$ref": "#/$defs/fraction"},
+        "thermal_capacity_j_k": {"type": "number", "exclusiveMinimum": 0},
+        "initial_temperature_k": {"type": "number", "exclusiveMinimum": 0},
+        "data_generation_mbps": {"type": "number", "minimum": 0},
+        "storage_capacity_gb": {"type": "number", "exclusiveMinimum": 0},
+        "downlink_rate_mbps": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "payload_duty_cycle": {"$ref": "#/$defs/fraction"},
+    "downlink_duty_cycle": {"$ref": "#/$defs/fraction"},
+    "eclipse_fraction": {"$ref": "#/$defs/fraction"},
+    "solar_flux_w_m2": {"type": "number", "minimum": 0},
+    "albedo_flux_w_m2": {"type": "number", "minimum": 0},
+    "deep_space_temperature_k": {"type": "number", "minimum": 0},
+    "theorem_claimed": {"const": false},
+    "flight_qualified_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false},
+    "metadata": {"type": "object"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "fraction": {"type": "number", "minimum": 0, "maximum": 1},
+    "vector3": {
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 3,
+      "maxItems": 3
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_space_oak_report_v1.schema.json",
+  "title": "Omega Space HG OAK Report v1",
+  "type": "object",
+  "required": [
+    "suite",
+    "passed",
+    "checks",
+    "theorem_claimed",
+    "flight_qualified_claimed",
+    "scientific_validation_claimed",
+    "limitations"
+  ],
+  "properties": {
+    "suite": {"type": "string", "minLength": 1},
+    "passed": {"type": "boolean"},
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "passed", "observed", "criterion"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "passed": {"type": "boolean"},
+          "observed": {},
+          "criterion": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "theorem_claimed": {"const": false},
+    "flight_qualified_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false},
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "additionalProperties": false
+}

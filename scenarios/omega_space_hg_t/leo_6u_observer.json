@@ -1,0 +1,48 @@
+{
+  "mission_id": "omega-space-6u-observer-r01",
+  "objective": "Demonstrate traceable LEO observation mission co-simulation",
+  "duration_s": 11477.985630029596,
+  "step_s": 20.0,
+  "central_body_mu_m3_s2": 398600441800000.0,
+  "central_body_radius_m": 6378137.0,
+  "orbit": {
+    "position_m": [6928137.0, 0.0, 0.0],
+    "velocity_m_s": [0.0, 7585.088535158763, 0.0],
+    "epoch_s": 0.0
+  },
+  "spacecraft": {
+    "name": "Omega-6U-Observer",
+    "dry_mass_kg": 8.0,
+    "payload_mass_kg": 2.0,
+    "panel_area_m2": 0.32,
+    "panel_efficiency": 0.29,
+    "battery_capacity_wh": 260.0,
+    "initial_battery_fraction": 0.82,
+    "base_load_w": 18.0,
+    "payload_load_w": 32.0,
+    "downlink_load_w": 38.0,
+    "radiator_area_m2": 0.12,
+    "absorptivity": 0.35,
+    "emissivity": 0.8,
+    "thermal_capacity_j_k": 40000.0,
+    "initial_temperature_k": 293.15,
+    "data_generation_mbps": 8.0,
+    "storage_capacity_gb": 128.0,
+    "downlink_rate_mbps": 80.0
+  },
+  "payload_duty_cycle": 0.24,
+  "downlink_duty_cycle": 0.14,
+  "eclipse_fraction": 0.36,
+  "solar_flux_w_m2": 1361.0,
+  "albedo_flux_w_m2": 110.0,
+  "deep_space_temperature_k": 3.0,
+  "theorem_claimed": false,
+  "flight_qualified_claimed": false,
+  "scientific_validation_claimed": false,
+  "metadata": {
+    "status": "research-software-fixture",
+    "baseline_targets": ["GMAT", "Orekit", "Basilisk"],
+    "units": "SI unless explicitly suffixed",
+    "safety": "simulation only; no flight or hardware qualification"
+  }
+}
