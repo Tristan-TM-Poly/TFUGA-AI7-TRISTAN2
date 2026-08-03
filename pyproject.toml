@@ -66,6 +66,7 @@ omega-vla = "omega_vla_t.cli:main"
 omega-polyglot = "omega_polyglot_bench_t.cli:main"
 omega-polyglot-r02 = "omega_polyglot_bench_t.r02.cli:main"
 omega-polyglot-r03 = "omega_polyglot_bench_t.r03.cli:main"
+omega-polyglot-r04 = "omega_polyglot_bench_t.r04.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
