@@ -1,0 +1,180 @@
+{
+  "source": "github_connector_observation",
+  "completeness": "all_owned_repositories_observed_but_pull_requests_are_representative_not_complete",
+  "generated_at": "2026-08-03T14:59:00-04:00",
+  "repositories": [
+    {
+      "full_name": "Tristan-TM-Poly/PEFA-FractalEnergySystem",
+      "visibility": "private",
+      "default_branch": "main",
+      "archived": false,
+      "size_kb": 821,
+      "permissions": ["admin", "maintain", "pull", "push", "triage"],
+      "packages": ["pefa", "omega-photon-time-t"],
+      "workflows": [],
+      "tests": [],
+      "docs": [],
+      "topics": ["energy", "photonics"]
+    },
+    {
+      "full_name": "Tristan-TM-Poly/TFACC",
+      "visibility": "private",
+      "default_branch": "main",
+      "archived": false,
+      "size_kb": 650,
+      "permissions": ["admin", "maintain", "pull", "push", "triage"],
+      "packages": ["omega-pdf-hypergraph-github-t"],
+      "workflows": [],
+      "tests": [],
+      "docs": [],
+      "topics": ["private", "theory", "pdf"]
+    },
+    {
+      "full_name": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "visibility": "public",
+      "default_branch": "main",
+      "archived": false,
+      "size_kb": 59252,
+      "permissions": ["admin", "maintain", "pull", "push", "triage"],
+      "packages": ["omega-depth-t", "omega-web-hg-t", "omega-unbounded-t"],
+      "workflows": ["oakbench"],
+      "tests": ["pytest"],
+      "docs": ["docs/creations"],
+      "topics": ["tfuga", "hgfm", "oak"]
+    },
+    {
+      "full_name": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+      "visibility": "public",
+      "default_branch": "main",
+      "archived": false,
+      "size_kb": 172119,
+      "permissions": ["admin", "maintain", "pull", "push", "triage"],
+      "packages": ["omega-chatgit-t", "tristan-creation-os"],
+      "workflows": ["chatgit-ci"],
+      "tests": ["pytest"],
+      "docs": ["canon"],
+      "topics": ["tfuga", "github", "orchestration"]
+    },
+    {
+      "full_name": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG",
+      "visibility": "public",
+      "default_branch": "main",
+      "archived": false,
+      "size_kb": 172,
+      "permissions": ["admin", "maintain", "pull", "push", "triage"],
+      "packages": ["tfuga-library"],
+      "workflows": [],
+      "tests": [],
+      "docs": ["airgap"],
+      "topics": ["tfuga", "airgap"]
+    },
+    {
+      "full_name": "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2",
+      "visibility": "public",
+      "default_branch": "main",
+      "archived": false,
+      "size_kb": 70207,
+      "permissions": ["admin", "maintain", "pull", "push", "triage"],
+      "packages": ["tfuga-mirror"],
+      "workflows": [],
+      "tests": [],
+      "docs": [],
+      "topics": ["mirror", "tfuga"]
+    }
+  ],
+  "pull_requests": [
+    {
+      "repo_full_name": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "number": 330,
+      "title": "feat/docs: publier l’atlas et le moteur récursif Ω-DEPTH-T∞",
+      "state": "open",
+      "draft": true,
+      "mergeable": true,
+      "base_branch": "main",
+      "head_branch": "docs/public-positioning-life-project",
+      "url": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/pull/330"
+    },
+    {
+      "repo_full_name": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "number": 334,
+      "title": "feat: add Ω-SPACE-HG-T∞ R0.1–R0.2 MAX mission and dynamics factory",
+      "state": "open",
+      "draft": true,
+      "mergeable": null,
+      "base_branch": "main",
+      "head_branch": "unknown",
+      "url": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/pull/334"
+    },
+    {
+      "repo_full_name": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "number": 338,
+      "title": "Ω-INTENT-TO-EVERYTHING-T∞ R0.1 — intention compiler and orchestration factory",
+      "state": "open",
+      "draft": true,
+      "mergeable": null,
+      "base_branch": "main",
+      "head_branch": "unknown",
+      "url": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/pull/338"
+    },
+    {
+      "repo_full_name": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "number": 329,
+      "title": "feat: add Ω-WEB-HG-T∞ R0.4 MAX sharded best-sites absorption fabric",
+      "state": "open",
+      "draft": true,
+      "mergeable": null,
+      "base_branch": "main",
+      "head_branch": "unknown",
+      "url": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/pull/329"
+    },
+    {
+      "repo_full_name": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+      "number": 372,
+      "title": "feat: Ω-GITHUB-DIALOGUE-T∞² R2.5 WorktreeMycelium + ChatGit NOW",
+      "state": "open",
+      "draft": true,
+      "mergeable": null,
+      "base_branch": "feat/omega-chatgit-r23-r24-causal-tournament",
+      "head_branch": "feat/omega-chatgit-r25-worktree-mycelium",
+      "url": "https://github.com/Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG/pull/372"
+    },
+    {
+      "repo_full_name": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+      "number": 369,
+      "title": "chore: refresh Ω-GITHUB-MEM-T after significant TFUGA delta",
+      "state": "open",
+      "draft": true,
+      "mergeable": null,
+      "base_branch": "main",
+      "head_branch": "automation/github-memory-state",
+      "url": "https://github.com/Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG/pull/369"
+    },
+    {
+      "repo_full_name": "Tristan-TM-Poly/PEFA-FractalEnergySystem",
+      "number": 95,
+      "title": "feat: add Ω-PHOTON-TIME-T R0.16 deep Maxwell–thermo-carrier vertical",
+      "state": "open",
+      "draft": true,
+      "mergeable": null,
+      "base_branch": "feat/omega-photon-time-t-r0.15",
+      "head_branch": "unknown",
+      "url": "https://github.com/Tristan-TM-Poly/PEFA-FractalEnergySystem/pull/95"
+    },
+    {
+      "repo_full_name": "Tristan-TM-Poly/TFACC",
+      "number": 8,
+      "title": "Ω-Frédéric Private OS — private ZIP/PDF manifest core",
+      "state": "open",
+      "draft": true,
+      "mergeable": null,
+      "base_branch": "main",
+      "head_branch": "unknown",
+      "url": "https://github.com/Tristan-TM-Poly/TFACC/pull/8"
+    }
+  ],
+  "metadata": {
+    "repository_coverage": "complete_for_owned_repositories_at_observation_time",
+    "pull_request_coverage": "representative_only_use_live_scan_for_complete_campaign_routing",
+    "remote_mutations_performed": false
+  }
+}

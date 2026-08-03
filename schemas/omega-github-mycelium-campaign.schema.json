@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/omega-github-mycelium-campaign.schema.json",
+  "title": "Omega GitHub Mycelium Campaign",
+  "type": "object",
+  "required": [
+    "campaign_id",
+    "intent_id",
+    "creation_id",
+    "objective",
+    "state",
+    "pull_requests",
+    "rollback_required",
+    "remote_mutations_authorized"
+  ],
+  "properties": {
+    "campaign_id": {"type": "string", "minLength": 1},
+    "intent_id": {"type": "string", "minLength": 1},
+    "creation_id": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "state": {
+      "enum": ["planned", "scaffolded", "code_generated", "locally_tested", "prs_open", "ci_running", "partially_blocked", "oak_review", "ready", "merged", "rolled_back", "canonized"]
+    },
+    "rollback_required": {"const": true},
+    "remote_mutations_authorized": {"const": false},
+    "permanent_pr_cap": {"type": ["integer", "null"], "minimum": 1},
+    "pull_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["plan_id", "repository", "base_branch", "head_branch", "artifact_ids", "draft", "human_gate_required", "remote_action_planned"],
+        "properties": {
+          "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+          "draft": {"const": true},
+          "human_gate_required": {"const": true},
+          "remote_action_planned": {"const": false},
+          "artifact_ids": {"type": "array", "items": {"type": "string"}},
+          "depends_on": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
