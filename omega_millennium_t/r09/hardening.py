@@ -17,6 +17,10 @@ def _is_sha256(value: Any) -> bool:
     return True
 
 
+def _base_reference(value: str) -> str:
+    return value.split("#", 1)[0]
+
+
 def _metadata_reference_ids(check_kind: str, metadata: dict[str, Any]) -> list[str]:
     keys_by_kind = {
         "novelty_review": ("comparison_reference_ids",),
@@ -29,9 +33,9 @@ def _metadata_reference_ids(check_kind: str, metadata: dict[str, Any]) -> list[s
     for key in keys_by_kind.get(check_kind, ()):
         value = metadata.get(key)
         if isinstance(value, list):
-            result.extend(str(item) for item in value)
+            result.extend(_base_reference(str(item)) for item in value)
         elif isinstance(value, str) and value:
-            result.append(value)
+            result.append(_base_reference(value))
     return result
 
 
