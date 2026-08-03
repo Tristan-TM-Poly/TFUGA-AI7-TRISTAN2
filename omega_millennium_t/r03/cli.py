@@ -7,7 +7,8 @@ from pathlib import Path
 from typing import Sequence
 
 from .atlas import audit_output, compile_atlas
-from .max_engine import audit_max_output, compile_max_atlas
+from .max_engine import compile_max_atlas
+from .strict_audit import audit_max_output_strict
 
 
 def _add_common_build_arguments(parser: argparse.ArgumentParser, *, max_mode: bool) -> None:
@@ -43,7 +44,10 @@ def _parser() -> argparse.ArgumentParser:
     audit = sub.add_parser("audit", help="audit a compact materialized atlas")
     audit.add_argument("output_dir")
 
-    audit_max = sub.add_parser("audit-max", help="audit a MAX atlas and all artifact receipts")
+    audit_max = sub.add_parser(
+        "audit-max",
+        help="strictly audit receipts, graph references, cardinalities and MAX claims",
+    )
     audit_max.add_argument("output_dir")
 
     return parser
@@ -63,7 +67,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         compiler = compile_max_atlas if args.command == "build-max" else compile_atlas
         result = compiler(Path(args.output_dir), **kwargs)
     elif args.command == "audit-max":
-        result = audit_max_output(Path(args.output_dir))
+        result = audit_max_output_strict(Path(args.output_dir))
     else:
         result = audit_output(Path(args.output_dir))
     print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
