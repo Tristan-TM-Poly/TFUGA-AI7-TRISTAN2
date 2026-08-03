@@ -1,0 +1,35 @@
+{
+  "campaign_hash": "5ec97b2625059fac15d7716e033eee935d8b65985a657ed09c684d82fbdacad0",
+  "checks": {
+    "accepted_fixture_rows": true,
+    "claims_traceable": true,
+    "deterministic_campaign": true,
+    "multi_model_evidence_present": true,
+    "no_false_affiliation": true,
+    "no_network_fetch": true,
+    "operational_mission_blocked": true,
+    "safe_mission_ready": true,
+    "security_not_blocked_for_fixture": true,
+    "snapshot_merkle_present": true,
+    "temporal_diff_detects_addition": true,
+    "zero_fixture_quarantine": true
+  },
+  "claims": {
+    "hydro_quebec_affiliation_claimed": false,
+    "offline_ingestion_claimed": true,
+    "operational_use_authorized": false,
+    "real_grid_validated": false,
+    "synthetic_fixture_reproducibility_claimed": true
+  },
+  "evidence_hash": "0e5b1b619e3255f5e9694829b957a3543de45820d16e4f2ca6f5f53e4617dca8",
+  "metrics": {
+    "accepted_observations": 192,
+    "claim_count": 8,
+    "composability_risk": 0.266071,
+    "contradiction_count": 0,
+    "hours": 24,
+    "model_disagreement_count": 8
+  },
+  "passed": true,
+  "status": "CERTIFIED_OFFLINE_PUBLIC_EVIDENCE_FIXTURES_R0_2"
+}

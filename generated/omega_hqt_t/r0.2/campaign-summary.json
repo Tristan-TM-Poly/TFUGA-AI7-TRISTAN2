@@ -1,0 +1,38 @@
+{
+  "accepted_observations": 192,
+  "campaign_id": "5ec97b2625059fac15d7716e",
+  "claim_count": 8,
+  "claims_boundary": {
+    "causal_effect_claimed": false,
+    "hydro_quebec_affiliation_claimed": false,
+    "network_fetch_performed": false,
+    "operational_grid_replica_claimed": false,
+    "public_source_truth_certified": false,
+    "synthetic_fixture_reproducibility_claimed": true
+  },
+  "contradiction_count": 0,
+  "evidence_hash": "5ec97b2625059fac15d7716e033eee935d8b65985a657ed09c684d82fbdacad0",
+  "model_disagreement_count": 8,
+  "quarantined_observations": 0,
+  "security": {
+    "assessment_id": "183abe1cbf11677f9e505274",
+    "composability_risk": 0.266071,
+    "controls": [
+      "human review before publication",
+      "retain offline-only ingestion",
+      "retain regional aggregation"
+    ],
+    "decision": "PUBLIC_AGGREGATED_RESEARCH_ONLY",
+    "infrastructure_specificity_score": 0.0,
+    "linkage_score": 0.5,
+    "precision_score": 0.45,
+    "reasons": [],
+    "source_ids": [
+      "fixture-demand-regional",
+      "fixture-production-regional"
+    ],
+    "temporal_density_score": 0.142857
+  },
+  "source_count": 2,
+  "status": "CERTIFIED_OFFLINE_PUBLIC_EVIDENCE_FIXTURES_R0_2"
+}

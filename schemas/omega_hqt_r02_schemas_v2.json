@@ -1,0 +1,126 @@
+{
+  "$defs": {
+    "omega_hqt_claim_v2.schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "assumptions": {"items": {"type": "string"}, "type": "array"},
+        "claim_id": {"type": "string"},
+        "confidence": {"maximum": 1, "minimum": 0, "type": "number"},
+        "counter_evidence_ids": {"items": {"type": "string"}, "type": "array"},
+        "evidence_ids": {"items": {"type": "string"}, "minItems": 1, "type": "array"},
+        "object_value": {"type": "string"},
+        "predicate": {"type": "string"},
+        "scope": {"type": "string"},
+        "statement": {"type": "string"},
+        "status": {"type": "string"},
+        "subject": {"type": "string"},
+        "valid_from": {"type": "string"},
+        "valid_to": {"type": ["string", "null"]}
+      },
+      "required": ["claim_id", "statement", "subject", "predicate", "object_value", "scope", "valid_from", "valid_to", "status", "confidence", "evidence_ids", "counter_evidence_ids", "assumptions"],
+      "title": "Omega HQT Claim v2",
+      "type": "object"
+    },
+    "omega_hqt_ingest_receipt_v2.schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "accepted_count": {"minimum": 0, "type": "integer"},
+        "claims": {"additionalProperties": {"type": "boolean"}, "type": "object"},
+        "deterministic": {"type": "boolean"},
+        "duplicate_count": {"minimum": 0, "type": "integer"},
+        "input_format": {"enum": ["json", "jsonl", "csv"], "type": "string"},
+        "input_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "observation_merkle_root": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "policy_hash": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "quarantine_merkle_root": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "quarantined_count": {"minimum": 0, "type": "integer"},
+        "receipt_id": {"type": "string"},
+        "source_id": {"type": "string"}
+      },
+      "required": ["receipt_id", "source_id", "input_format", "input_sha256", "accepted_count", "quarantined_count", "duplicate_count", "observation_merkle_root", "quarantine_merkle_root", "policy_hash", "deterministic", "claims"],
+      "title": "Omega HQT IngestReceipt v2",
+      "type": "object"
+    },
+    "omega_hqt_observation_v2.schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "metadata": {"type": "object"},
+        "method": {"type": "string"},
+        "observation_id": {"minLength": 1, "type": "string"},
+        "observed_at": {"type": "string"},
+        "quality_flag": {"type": "string"},
+        "region_id": {"type": "string"},
+        "sensitivity": {"type": "string"},
+        "source_id": {"type": "string"},
+        "source_row": {"minimum": 1, "type": "integer"},
+        "uncertainty": {"minimum": 0, "type": "number"},
+        "unit": {"type": "string"},
+        "value": {"type": "number"},
+        "variable": {"type": "string"}
+      },
+      "required": ["observation_id", "source_id", "variable", "value", "unit", "observed_at", "region_id", "quality_flag", "uncertainty", "method", "source_row", "sensitivity", "metadata"],
+      "title": "Omega HQT Observation v2",
+      "type": "object"
+    },
+    "omega_hqt_r02_benchmark_v2.schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "campaign_hash": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "checks": {"additionalProperties": {"type": "boolean"}, "type": "object"},
+        "claims": {"additionalProperties": {"type": "boolean"}, "type": "object"},
+        "evidence_hash": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "metrics": {"additionalProperties": {"type": ["number", "integer"]}, "type": "object"},
+        "passed": {"type": "boolean"},
+        "status": {"type": "string"}
+      },
+      "required": ["status", "passed", "checks", "metrics", "claims", "campaign_hash", "evidence_hash"],
+      "title": "Omega HQT R0.2 Benchmark",
+      "type": "object"
+    },
+    "omega_hqt_snapshot_v2.schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {"type": "string"},
+        "evidence_hash": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "observation_ids": {"items": {"type": "string"}, "type": "array"},
+        "observation_merkle_root": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "parent_snapshot_id": {"type": ["string", "null"]},
+        "snapshot_id": {"type": "string"},
+        "source_ids": {"items": {"type": "string"}, "type": "array"},
+        "status": {"type": "string"}
+      },
+      "required": ["snapshot_id", "created_at", "source_ids", "observation_ids", "observation_merkle_root", "parent_snapshot_id", "status", "evidence_hash"],
+      "title": "Omega HQT Snapshot v2",
+      "type": "object"
+    },
+    "omega_hqt_source_descriptor_v2.schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "allowed_uses": {"items": {"type": "string"}, "type": "array"},
+        "canonical_ref": {"type": "string"},
+        "geographic_resolution": {"type": "string"},
+        "licence_id": {"type": "string"},
+        "notes": {"type": "string"},
+        "prohibited_uses": {"items": {"type": "string"}, "type": "array"},
+        "publisher": {"type": "string"},
+        "sensitivity": {"type": "string"},
+        "source_id": {"minLength": 1, "type": "string"},
+        "source_kind": {"type": "string"},
+        "temporal_resolution": {"type": "string"},
+        "title": {"type": "string"},
+        "update_cadence": {"type": "string"}
+      },
+      "required": ["source_id", "title", "publisher", "source_kind", "canonical_ref", "licence_id", "update_cadence", "geographic_resolution", "temporal_resolution", "allowed_uses", "prohibited_uses", "sensitivity", "notes"],
+      "title": "Omega HQT SourceDescriptor v2",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega HQT R0.2 schema catalog"
+}
