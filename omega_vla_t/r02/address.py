@@ -120,24 +120,48 @@ class FrontierCodec:
                 step = 1
         return start, step
 
-    def iter_indices(self, count: int, seed: int = 0) -> Iterator[int]:
+    def iter_indices(
+        self,
+        count: int,
+        seed: int = 0,
+        *,
+        start_offset: int = 0,
+    ) -> Iterator[int]:
         """Stream deterministic unique indices with O(1) auxiliary memory."""
 
-        if count < 0:
-            raise ValueError("count cannot be negative")
-        if count > self.size:
-            raise ValueError("count cannot exceed logical frontier size")
+        if count < 0 or start_offset < 0:
+            raise ValueError("count and start_offset cannot be negative")
+        if start_offset + count > self.size:
+            raise ValueError("requested window exceeds logical frontier size")
         start, step = self._sampling_parameters(seed)
-        for offset in range(count):
+        for offset in range(start_offset, start_offset + count):
             yield (start + offset * step) % self.size
 
-    def sample_indices(self, count: int, seed: int = 0) -> tuple[int, ...]:
+    def sample_indices(
+        self,
+        count: int,
+        seed: int = 0,
+        *,
+        start_offset: int = 0,
+    ) -> tuple[int, ...]:
         """Materialize a bounded sample; use :meth:`iter_indices` at scale."""
 
-        return tuple(self.iter_indices(count=count, seed=seed))
+        return tuple(
+            self.iter_indices(count=count, seed=seed, start_offset=start_offset)
+        )
 
-    def iter_sample(self, count: int, seed: int = 0) -> Iterator[FrontierAddress]:
-        for index in self.iter_indices(count=count, seed=seed):
+    def iter_sample(
+        self,
+        count: int,
+        seed: int = 0,
+        *,
+        start_offset: int = 0,
+    ) -> Iterator[FrontierAddress]:
+        for index in self.iter_indices(
+            count=count,
+            seed=seed,
+            start_offset=start_offset,
+        ):
             yield self.decode(index)
 
     def address_from_mapping(
