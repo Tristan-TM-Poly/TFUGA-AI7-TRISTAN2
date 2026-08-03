@@ -1,0 +1,145 @@
+name: Omega Problem Atlas R0.8 Evidence Routing
+
+on:
+  push:
+    branches: [feat/omega-problem-atlas-r0-8-evidence-routing]
+    paths:
+      - "omega_millennium_t/r08/**"
+      - "tests/test_omega_problem_atlas_r08*.py"
+      - "schemas/omega_problem_routing_report_v8.schema.json"
+      - "docs/omega_millennium_t/r08/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r08-routing.yml"
+  pull_request:
+    paths:
+      - "omega_millennium_t/r08/**"
+      - "tests/test_omega_problem_atlas_r08*.py"
+      - "schemas/omega_problem_routing_report_v8.schema.json"
+      - "docs/omega_millennium_t/r08/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r08-routing.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: omega-problem-atlas-r08-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-routing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.8
+        run: python -m compileall -q omega_millennium_t/r08 tests/test_omega_problem_atlas_r08_routing.py
+      - name: Run ledger, diversity and counterfactual tests
+        run: pytest -q tests/test_omega_problem_atlas_r08*.py
+      - name: Generate deterministic routing fixtures
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          cells = []
+          for front, prefix in [('front_alpha', 'a'), ('front_beta', 'b'), ('front_gamma', 'c')]:
+              for index, score in [(1, 40), (2, 55)]:
+                  cell_id = f'cell.{prefix}{index}'
+                  cells.append({
+                      'cell_id': cell_id,
+                      'problem_id': f'problem.{prefix}{index}',
+                      'front': front,
+                      'title': f'CI cell {cell_id}',
+                      'initial_routing_score': score,
+                      'method_family': 'ci_fixture_method',
+                      'active': True,
+                      'provenance_refs': [f'fixture:{cell_id}']
+                  })
+          Path('/tmp/routing-cells.jsonl').write_text(
+              ''.join(json.dumps(row, sort_keys=True) + '\n' for row in cells),
+              encoding='utf-8'
+          )
+
+          events = []
+          event_data = [
+              ('cell.a1', 'formal_artifact_kernel_checked'),
+              ('cell.b1', 'known_case_reproduced'),
+              ('cell.c1', 'method_timeout'),
+              ('cell.c1', 'bound_improved')
+          ]
+          for sequence, (cell_id, event_type) in enumerate(event_data, 1):
+              events.append({
+                  'event_id': f'event.{sequence:03d}',
+                  'sequence': sequence,
+                  'occurred_at': f'2026-08-03T16:{sequence:02d}:00Z',
+                  'cell_id': cell_id,
+                  'event_type': event_type,
+                  'evidence_ref': f'fixture:evidence:{sequence}',
+                  'observation': f'Observed {event_type}',
+                  'source_digest': str(sequence) * 64
+              })
+          payload = {
+              'schema': 'omega-problem-routing-events/8',
+              'ledger_id': 'ledger-ci-r08',
+              'events': events
+          }
+          Path('/tmp/routing-events.json').write_text(
+              json.dumps(payload, indent=2, sort_keys=True), encoding='utf-8'
+          )
+          PY
+      - name: Materialize twice and replay-audit
+        run: |
+          python -m omega_millennium_t.r08.cli compile --cells-jsonl /tmp/routing-cells.jsonl --events-json /tmp/routing-events.json --output-dir /tmp/routing-a --budget 3 --max-per-problem 1
+          python -m omega_millennium_t.r08.cli compile --cells-jsonl /tmp/routing-cells.jsonl --events-json /tmp/routing-events.json --output-dir /tmp/routing-b --budget 3 --max-per-problem 1
+          diff -ru /tmp/routing-a /tmp/routing-b
+          python -m omega_millennium_t.r08.cli audit /tmp/routing-a
+      - name: Validate schema and OAK invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/omega_problem_routing_report_v8.schema.json').read_text())
+          report = json.loads(Path('/tmp/routing-a/report.json').read_text())
+          portfolio = json.loads(Path('/tmp/routing-a/portfolio.json').read_text())
+          ledger = [
+              json.loads(line)
+              for line in Path('/tmp/routing-a/event_ledger.jsonl').read_text().splitlines()
+              if line
+          ]
+          jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(report, schema)
+
+          assert report['cell_count'] == 6
+          assert report['event_count'] == 4
+          assert report['front_count'] == 3
+          assert report['problem_count'] == 6
+          assert report['selected_count'] == 3
+          assert report['front_coverage'] == 3
+          assert report['problem_coverage'] == 3
+          assert report['mminus_record_count'] == 1
+          assert report['counterfactual_count'] == 6
+          assert report['routing_score_is_truth_probability'] is False
+          assert report['mathematical_truth_probability_claimed'] is False
+          assert report['proof_claimed'] is False
+          assert report['solution_claimed'] is False
+          assert report['scientific_validation_claimed'] is False
+          assert report['permanent_total_cap'] is None
+          assert portfolio['selection_is_truth_probability_ranking'] is False
+          assert portfolio['front_coverage'] == 3
+          assert ledger[0]['previous_event_hash'] == '0' * 64
+          assert all(row['truth_probability_delta'] is None for row in ledger)
+          print('CERTIFIED_EVIDENCE_ROUTING_FIXTURE_R0_8')
+          PY
