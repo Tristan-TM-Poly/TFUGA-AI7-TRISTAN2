@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/cyber_physical_hybrid_trace_r03.schema.json",
+  "title": "Omega CPS R0.3 Hybrid Simulation Trace",
+  "type": "object",
+  "required": [
+    "automaton_id",
+    "horizon_s",
+    "integration_step_s",
+    "samples",
+    "events",
+    "sample_count",
+    "event_count",
+    "final_mode",
+    "final_state",
+    "invariant_violation_count",
+    "unsafe_sample_count",
+    "zeno_suspected",
+    "transition_limit_hit",
+    "finite",
+    "evidence_hash",
+    "physics_certified",
+    "safety_certified",
+    "formal_reachability_proven",
+    "limitations"
+  ],
+  "properties": {
+    "automaton_id": {"type": "string", "minLength": 1},
+    "horizon_s": {"type": "number", "exclusiveMinimum": 0},
+    "integration_step_s": {"type": "number", "exclusiveMinimum": 0},
+    "samples": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["time_s", "mode_id", "state", "invariant_holds", "safe_mode"],
+        "properties": {
+          "time_s": {"type": "number", "minimum": 0},
+          "mode_id": {"type": "string", "minLength": 1},
+          "state": {"type": "object", "additionalProperties": {"type": "number"}},
+          "invariant_holds": {"type": "boolean"},
+          "safe_mode": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "time_s",
+          "transition_id",
+          "source_mode",
+          "target_mode",
+          "state_before",
+          "state_after",
+          "dwell_s"
+        ],
+        "properties": {
+          "time_s": {"type": "number", "minimum": 0},
+          "transition_id": {"type": "string", "minLength": 1},
+          "source_mode": {"type": "string", "minLength": 1},
+          "target_mode": {"type": "string", "minLength": 1},
+          "state_before": {"type": "object", "additionalProperties": {"type": "number"}},
+          "state_after": {"type": "object", "additionalProperties": {"type": "number"}},
+          "dwell_s": {"type": "number", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    "sample_count": {"type": "integer", "minimum": 1},
+    "event_count": {"type": "integer", "minimum": 0},
+    "final_mode": {"type": "string", "minLength": 1},
+    "final_state": {"type": "object", "additionalProperties": {"type": "number"}},
+    "invariant_violation_count": {"type": "integer", "minimum": 0},
+    "unsafe_sample_count": {"type": "integer", "minimum": 0},
+    "zeno_suspected": {"type": "boolean"},
+    "transition_limit_hit": {"type": "boolean"},
+    "finite": {"type": "boolean"},
+    "evidence_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "physics_certified": {"const": false},
+    "safety_certified": {"const": false},
+    "formal_reachability_proven": {"const": false},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
