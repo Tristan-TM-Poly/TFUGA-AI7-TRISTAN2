@@ -1,0 +1,104 @@
+[
+  {
+    "path": ".github/workflows/omega-anime-studio-r1.yml",
+    "lines": 99,
+    "bytes": 4251,
+    "sha256": "9fc0e1320d486c46dd2a72a12b5b905d1b12049c2dab2d5edc3b6492e67b4c8b"
+  },
+  {
+    "path": "docs/omega_anime_studio_t_r1.md",
+    "lines": 183,
+    "bytes": 5274,
+    "sha256": "a62f9d3a7e388a34d56e605fad62177b000aa6bd48e73f20a557f99f50c1ca96"
+  },
+  {
+    "path": "examples/omega_anime_studio_r1_demo.py",
+    "lines": 11,
+    "bytes": 537,
+    "sha256": "bbe37d7d6f504c9999f87f3e04acac080fbcf67ad6e6a79f228ac94c3e1c9187"
+  },
+  {
+    "path": "omega_anime_studio_t/__init__.py",
+    "lines": 22,
+    "bytes": 785,
+    "sha256": "4f26c29a2da24b4a18241ae8b1115f6e37d17b35a038381ae1af92b1e9740890"
+  },
+  {
+    "path": "omega_anime_studio_t/__main__.py",
+    "lines": 68,
+    "bytes": 2664,
+    "sha256": "5934b8162adfe94743a8cca438832682384223d99494a5453ecddcc86a4ab463"
+  },
+  {
+    "path": "omega_anime_studio_t/compiler.py",
+    "lines": 110,
+    "bytes": 4308,
+    "sha256": "8335bac65d370639de1727ba952e01af9a6594f8d4a95008328ceaaf1499a6d3"
+  },
+  {
+    "path": "omega_anime_studio_t/eighth_fire.py",
+    "lines": 262,
+    "bytes": 16796,
+    "sha256": "74a565f4a4bec9cb03648afbabae919c7dfb10164c5c2db37989ee42bf5522f9"
+  },
+  {
+    "path": "omega_anime_studio_t/frontier.py",
+    "lines": 244,
+    "bytes": 8848,
+    "sha256": "de5b439186a2d4d8223e06792601375c9db8e58b4f07f6e7320be80e3ff5fa67"
+  },
+  {
+    "path": "omega_anime_studio_t/graph.py",
+    "lines": 89,
+    "bytes": 3450,
+    "sha256": "4fc5519a0f85158d4b72694287f857528674687371209c3483d2f22b86410034"
+  },
+  {
+    "path": "omega_anime_studio_t/matrix.py",
+    "lines": 175,
+    "bytes": 12247,
+    "sha256": "f1d1c42f755adda93cb1ee28f9c2910131f668a4b385bbc3da070a0b3274293e"
+  },
+  {
+    "path": "omega_anime_studio_t/models.py",
+    "lines": 377,
+    "bytes": 13043,
+    "sha256": "e4c5940fed0db48407900d6259b2e34c19241545a85a54b2ae4d4e49b2fad420"
+  },
+  {
+    "path": "policies/omega_anime_studio_r1.json",
+    "lines": 96,
+    "bytes": 2524,
+    "sha256": "f5e304d8303e852245b27f03a5f0a45ee949b1642db836d56989e6bcb27296d0"
+  },
+  {
+    "path": "schemas/anime-ir-r1.schema.json",
+    "lines": 409,
+    "bytes": 8252,
+    "sha256": "9ca05ebacf8ac7aa03a25cc58e10c5120859f69f5b4a10a35390c12921bfa233"
+  },
+  {
+    "path": "tests/test_omega_anime_studio_t_r1.py",
+    "lines": 218,
+    "bytes": 8586,
+    "sha256": "0ffd2e20830edd7f44b5df1781caa6731121165d75aa3e740f7fb4700412ea59"
+  },
+  {
+    "path": "generated/omega_anime_studio_t/matrix-8192.jsonl",
+    "lines": 8192,
+    "bytes": 3149664,
+    "sha256": "ecc60233bc132490d2174e6578020947918e1770f4f25d4301792e7b86bf159f"
+  },
+  {
+    "path": "generated/omega_anime_studio_t/eighth-fire-shot-frontier-2048.jsonl",
+    "lines": 2048,
+    "bytes": 682791,
+    "sha256": "31109392794e606a8900f4139883d50a1d604728ab1f9aaeede1348df0f026a7"
+  },
+  {
+    "path": "generated/omega_anime_studio_t/generated-manifest.json",
+    "lines": 452,
+    "bytes": 8712,
+    "sha256": "7ced00f9bf3da7e707b9bf10e10d564f54f70f9318e89b5c4d9edf6efefba35b"
+  }
+]

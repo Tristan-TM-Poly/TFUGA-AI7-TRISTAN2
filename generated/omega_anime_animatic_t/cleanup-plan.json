@@ -1,0 +1,16 @@
+{
+  "schema_version": "omega-anime-animatic/cleanup-r2",
+  "remove": [
+    "temporary materializer workflows",
+    "opaque transport fragments",
+    "obsolete failure diagnostic"
+  ],
+  "retain": [
+    "reviewable Python source",
+    "tests",
+    "schema",
+    "policy",
+    "documentation",
+    "permanent GitHub Actions workflow"
+  ]
+}

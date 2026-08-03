@@ -59,5 +59,11 @@ omega-github-revenue = "omega_github_revenue_t.cli:main"
 omega-github-revenue-r02 = "omega_github_revenue_t.r02_cli:main"
 omega-millennium = "omega_millennium_t.cli:main"
 
+omega-anime = "omega_anime_t.__main__:main"
+omega-anime-studio = "omega_anime_studio_t.__main__:main"
+omega-anime-animatic = "omega_anime_animatic_t.__main__:main"
+omega-anime-episode = "omega_anime_episode_t.__main__:main"
+omega-anime-season = "omega_anime_season_t.__main__:main"
+omega-anime-lookdev = "omega_anime_lookdev_t.__main__:main"
 [tool.pytest.ini_options]
 pythonpath = ["."]

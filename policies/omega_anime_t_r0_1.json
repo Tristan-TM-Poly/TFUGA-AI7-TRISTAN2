@@ -1,0 +1,90 @@
+{
+  "policy_id": "omega-anime-t/r0.1",
+  "status": "OAK_SAFE_DRAFT",
+  "principles": {
+    "one_primary_artifact_per_session": true,
+    "pilot_before_season": true,
+    "animatic_before_high_fidelity_animation": true,
+    "human_creative_authority": true,
+    "generated_output_requires_review": true,
+    "internal_coherence_is_not_artistic_quality": true,
+    "internal_coherence_is_not_scientific_truth": true
+  },
+  "promotion_gates": {
+    "FORMALIZED": [
+      "logline",
+      "theme_question",
+      "world_rules",
+      "character_desire_need_fear_contradiction",
+      "power_limit",
+      "ordered_beats",
+      "risk_ledger"
+    ],
+    "SIMULATED": [
+      "storyboard_or_animatic",
+      "continuity_pass",
+      "duration_measurement",
+      "visual_invariant_check"
+    ],
+    "DEMONSTRATED": [
+      "audience_test",
+      "baseline_or_previous_cut",
+      "measured_comprehension_or_engagement",
+      "documented_failure_conditions"
+    ],
+    "REPLICATED": [
+      "independent_review_or_second_audience_panel",
+      "reproducible_asset_manifest"
+    ],
+    "CANONICAL": [
+      "human_showrunner_approval",
+      "ip_clearance",
+      "production_feasibility",
+      "archived_sources_and_versions"
+    ]
+  },
+  "human_approval_required": [
+    "public_release",
+    "music_or_voice_contract",
+    "use_of_personal_likeness",
+    "publication_of_private_canon",
+    "trademark_or_copyright_filing",
+    "paid_advertising",
+    "commercial_license",
+    "irreversible_asset_deletion"
+  ],
+  "ip_gate": {
+    "style_imitation_of_living_artist": "BLOCK",
+    "unlicensed_music_or_font": "BLOCK",
+    "unclear_training_or_asset_license": "HOLD",
+    "similarity_to_existing_work": "REVIEW",
+    "provenance_manifest": "REQUIRED_BEFORE_PUBLICATION"
+  },
+  "memory_negative": [
+    {
+      "id": "M-ANIME-001",
+      "failure": "universe expansion without a finished scene",
+      "replacement": "produce one timed animatic before opening another series"
+    },
+    {
+      "id": "M-ANIME-002",
+      "failure": "power without cost or countermeasure",
+      "replacement": "encode limitation, observable cost and failure condition"
+    },
+    {
+      "id": "M-ANIME-003",
+      "failure": "mystery without designed answer class",
+      "replacement": "record payoff family in the promise ledger"
+    },
+    {
+      "id": "M-ANIME-004",
+      "failure": "generated visual inconsistency",
+      "replacement": "lock a visual bible and review every canonical shot"
+    },
+    {
+      "id": "M-ANIME-005",
+      "failure": "publication before IP review",
+      "replacement": "keep publication_state private-draft until IPGate passes"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "adaptive_controls": [
+    "backpressure",
+    "sharding",
+    "streaming",
+    "checkpointing",
+    "quality_floor",
+    "deduplication",
+    "rollback",
+    "human_stop"
+  ],
+  "finite_runs_remain_resource_bounded": true,
+  "forbidden_shortcuts": [
+    "synthetic audience as market proof",
+    "internal coherence as artistic quality",
+    "visual metaphor as physical proof",
+    "living artist style imitation",
+    "unlicensed voice music font or image",
+    "automatic canon promotion"
+  ],
+  "human_approval_required": [
+    "public_release",
+    "merge_to_protected_branch",
+    "commercial_license",
+    "voice_or_likeness_use",
+    "paid_distribution",
+    "trademark_or_copyright_filing",
+    "irreversible_deletion"
+  ],
+  "m_minus": [
+    {
+      "failure": "volume treated as finished work",
+      "id": "M-ANIME-R1-001",
+      "replacement": "every campaign must improve a watchable artifact"
+    },
+    {
+      "failure": "one file per micro-object",
+      "id": "M-ANIME-R1-002",
+      "replacement": "JSONL shards, indexed stores and compact manifests"
+    },
+    {
+      "failure": "generation before invariants",
+      "id": "M-ANIME-R1-003",
+      "replacement": "lock WorldRules, StyleDNA and CharacterDNA first"
+    },
+    {
+      "failure": "software tests mistaken for artistic validation",
+      "id": "M-ANIME-R1-004",
+      "replacement": "add human review and audience experiments"
+    },
+    {
+      "failure": "automatic publication",
+      "id": "M-ANIME-R1-005",
+      "replacement": "private-draft plus explicit IPGate and human approval"
+    },
+    {
+      "failure": "fixed arbitrary total cap",
+      "id": "M-ANIME-R1-006",
+      "replacement": "adaptive finite experiments with saturation memory and redesign"
+    }
+  ],
+  "no_permanent_total_object_cap": true,
+  "policy_id": "omega-anime-studio/r1",
+  "promotion_gates": {
+    "CANONICAL": [
+      "showrunner approval",
+      "IP clearance",
+      "production feasibility",
+      "archived sources"
+    ],
+    "DEMONSTRATED": [
+      "human audience test",
+      "baseline cut",
+      "failure conditions"
+    ],
+    "FORMALIZED": [
+      "valid Anime-IR",
+      "world rules",
+      "characters",
+      "scenes",
+      "shots",
+      "risk ledger"
+    ],
+    "REPLICATED": [
+      "independent review",
+      "second panel",
+      "reproducible asset manifest"
+    ],
+    "SIMULATED": [
+      "timed storyboard or animatic",
+      "measured duration",
+      "continuity pass"
+    ]
+  },
+  "status": "OAK_SAFE_PRIVATE_DRAFT"
+}
