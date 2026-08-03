@@ -1,0 +1,178 @@
+name: Omega Problem Atlas R0.6 Evidence Graph
+
+on:
+  push:
+    branches: [feat/omega-problem-atlas-r0-6-evidence-graph]
+    paths:
+      - "omega_millennium_t/r06/**"
+      - "tests/test_omega_problem_atlas_r06*.py"
+      - "schemas/omega_problem_evidence_report_v6.schema.json"
+      - "docs/omega_millennium_t/r06/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r06-evidence.yml"
+  pull_request:
+    paths:
+      - "omega_millennium_t/r06/**"
+      - "tests/test_omega_problem_atlas_r06*.py"
+      - "schemas/omega_problem_evidence_report_v6.schema.json"
+      - "docs/omega_millennium_t/r06/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r06-evidence.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: omega-problem-atlas-r06-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-graph:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.6
+        run: python -m compileall -q omega_millennium_t/r06 tests/test_omega_problem_atlas_r06_evidence.py tests/test_omega_problem_atlas_r06_hardening.py
+      - name: Run promotion and false-progress tests
+        run: pytest -q tests/test_omega_problem_atlas_r06*.py
+      - name: Generate canonical identity and evidence fixtures
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          canonical = {
+              "canonical_problem_id": "problem::fixture",
+              "canonical_record_id": "record::fixture",
+              "member_record_ids": ["record::fixture"],
+              "titles": ["Fixture problem"],
+              "alias_keys": [],
+              "fronts": ["graphs_hypergraphs"],
+              "statement_fingerprints": [],
+              "identity_status": "singleton",
+              "member_count": 1,
+              "proof_claimed": False,
+              "solution_claimed": False,
+              "canonical_digest": "fixture-canonical-digest"
+          }
+          Path('/tmp/canonical.jsonl').write_text(
+              json.dumps(canonical, sort_keys=True) + '\n', encoding='utf-8'
+          )
+
+          def node(node_id, node_type, metadata):
+              return {
+                  "node_id": node_id,
+                  "node_type": node_type,
+                  "canonical_problem_id": "problem::fixture",
+                  "title": node_id,
+                  "content": f"Content for {node_id}",
+                  "scope": "fixture scope",
+                  "source_refs": [f"fixture:{node_id}"],
+                  "observed_at": "2026-08-03T16:00:00Z",
+                  "metadata": metadata,
+                  "proof_claimed": False,
+                  "solution_claimed": False
+              }
+
+          def edge(edge_id, source, target, relation):
+              return {
+                  "edge_id": edge_id,
+                  "source_node_id": source,
+                  "target_node_id": target,
+                  "relation": relation,
+                  "scope": "fixture scope",
+                  "evidence_refs": [f"fixture:{edge_id}"],
+                  "metadata": {}
+              }
+
+          nodes = [
+              node("claim.restricted", "claim", {"requested_status": "formal_restricted"}),
+              node("assumption.scope", "assumption", {}),
+              node("formal.restricted", "formal_artifact", {
+                  "proof_scope": "restricted",
+                  "kernel_checked": True,
+                  "verifier": "fixture-kernel"
+              }),
+              node("claim.general", "claim", {"requested_status": "kernel_checked_general"}),
+              node("evidence.numeric", "evidence", {"evidence_kind": "numerical"}),
+              node("claim.refuted", "claim", {"requested_status": "experimental"}),
+              node("counterexample.one", "counterexample", {
+                  "counterexample_scope": "general",
+                  "independently_verified": True
+              })
+          ]
+          edges = [
+              edge("edge.depends", "claim.restricted", "assumption.scope", "depends_on"),
+              edge("edge.discharges", "formal.restricted", "assumption.scope", "discharges"),
+              edge("edge.proves", "formal.restricted", "claim.restricted", "proves_restricted_case"),
+              edge("edge.numeric", "evidence.numeric", "claim.general", "supports"),
+              edge("edge.contradicts", "counterexample.one", "claim.refuted", "contradicts")
+          ]
+          bundle = {
+              "schema": "omega-problem-evidence-bundle/6",
+              "bundle_id": "ci-fixture",
+              "nodes": nodes,
+              "edges": edges
+          }
+          Path('/tmp/evidence-bundle.json').write_text(
+              json.dumps(bundle, indent=2, sort_keys=True), encoding='utf-8'
+          )
+          PY
+      - name: Materialize twice and audit
+        run: |
+          python -m omega_millennium_t.r06.cli compile --canonical-problems /tmp/canonical.jsonl --bundle-json /tmp/evidence-bundle.json --output-dir /tmp/evidence-a
+          python -m omega_millennium_t.r06.cli compile --canonical-problems /tmp/canonical.jsonl --bundle-json /tmp/evidence-bundle.json --output-dir /tmp/evidence-b
+          diff -ru /tmp/evidence-a /tmp/evidence-b
+          python -m omega_millennium_t.r06.cli audit /tmp/evidence-a
+      - name: Validate report schema and OAK invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/omega_problem_evidence_report_v6.schema.json').read_text())
+          report = json.loads(Path('/tmp/evidence-a/report.json').read_text())
+          assessments = [
+              json.loads(line)
+              for line in Path('/tmp/evidence-a/claim_assessments.jsonl').read_text().splitlines()
+              if line
+          ]
+          jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(report, schema)
+
+          assert report['canonical_problem_count'] == 1
+          assert report['canonical_identity_ref_count'] == 1
+          assert report['bundle_count'] == 1
+          assert report['node_count'] == 7
+          assert report['edge_count'] == 5
+          assert report['claim_count'] == 3
+          assert report['assessment_count'] == 3
+          assert report['promotion_allowed_count'] == 1
+          assert report['blocked_claim_count'] == 2
+          assert report['mminus_record_count'] == 2
+          assert report['contradiction_edge_count'] == 1
+          assert report['general_proof_from_numerical_evidence_count'] == 0
+          assert report['mathematical_truth_probability_claimed'] is False
+          assert report['solution_claimed'] is False
+          assert report['scientific_validation_claimed'] is False
+          assert report['permanent_total_cap'] is None
+
+          by_claim = {row['claim_id']: row for row in assessments}
+          assert by_claim['claim.restricted']['promotion_allowed'] is True
+          assert by_claim['claim.general']['promotion_allowed'] is False
+          assert 'general_proof_from_numerical_evidence_forbidden' in by_claim['claim.general']['blockers']
+          assert by_claim['claim.refuted']['promotion_allowed'] is False
+          print('CERTIFIED_CLAIM_EVIDENCE_FIXTURE_R0_6')
+          PY
