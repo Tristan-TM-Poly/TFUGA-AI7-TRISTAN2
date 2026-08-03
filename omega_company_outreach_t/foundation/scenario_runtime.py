@@ -46,6 +46,27 @@ def _audit_for_size(
     ]
 
 
+def _review_order(scenarios: tuple[OakScenario, ...]) -> tuple[OakScenario, ...]:
+    """Order generated cases for deterministic human review.
+
+    High-evidence, high-strategic-score cases appear first, followed by stable
+    identifiers. Generation remains stratified and seed-driven; ordering is a
+    separate presentation concern and never changes a scenario's hash.
+    """
+
+    return tuple(
+        sorted(
+            scenarios,
+            key=lambda scenario: (
+                -scenario.dimensions.evidence_band,
+                -scenario.dimensions.strategic_score_band,
+                scenario.expectation.decision.value,
+                scenario.scenario_id,
+            ),
+        )
+    )
+
+
 def scenario_to_mapping(scenario: OakScenario) -> dict[str, Any]:
     dimensions = {
         key: value.value if isinstance(value, Enum) else value
@@ -78,7 +99,7 @@ def write_atlas(
     if count < 1 or shard_size < 1:
         raise CanonicalizationError("count and shard_size must be positive")
     full_coverage = count >= 1024 if require_full_coverage is None else require_full_coverage
-    scenarios = tuple(generate_scenarios(count=count, seed=seed))
+    scenarios = _review_order(tuple(generate_scenarios(count=count, seed=seed)))
     errors = _audit_for_size(scenarios, require_full_coverage=full_coverage)
     if errors:
         raise CanonicalizationError("scenario audit failed: " + "; ".join(errors))
@@ -111,6 +132,7 @@ def write_atlas(
             "shard_size": shard_size,
             "shard_count": (len(scenarios) + shard_size - 1) // shard_size,
             "runtime": "canonical-v2",
+            "ordering": "evidence-desc-score-desc-decision-id",
             "require_full_coverage": full_coverage,
         }
     )
@@ -203,6 +225,10 @@ def audit_atlas_directory(directory: Path) -> dict[str, Any]:
     shard_files = sorted(directory.glob("scenarios-*.jsonl"))
     if manifest.get("shard_count") != len(shard_files):
         errors.append("manifest shard_count mismatch")
+    if manifest.get("ordering") != "evidence-desc-score-desc-decision-id":
+        errors.append("manifest ordering policy mismatch")
+    if scenarios and tuple(scenarios) != _review_order(tuple(scenarios)):
+        errors.append("scenario ordering is not canonical")
     return {
         "valid": not errors,
         "errors": errors,
@@ -217,8 +243,8 @@ def audit_atlas_directory(directory: Path) -> dict[str, Any]:
 def verify_determinism(
     *, count: int = 8192, seed: int = 20260802
 ) -> dict[str, Any]:
-    first = tuple(generate_scenarios(count=count, seed=seed))
-    second = tuple(generate_scenarios(count=count, seed=seed))
+    first = _review_order(tuple(generate_scenarios(count=count, seed=seed)))
+    second = _review_order(tuple(generate_scenarios(count=count, seed=seed)))
     first_hash = canonical_hash([scenario.scenario_hash for scenario in first])
     second_hash = canonical_hash([scenario.scenario_hash for scenario in second])
     return {
@@ -226,4 +252,5 @@ def verify_determinism(
         "first_hash": first_hash,
         "second_hash": second_hash,
         "scenario_count": count,
+        "ordering": "evidence-desc-score-desc-decision-id",
     }
