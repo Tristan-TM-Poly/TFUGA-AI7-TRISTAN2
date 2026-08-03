@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/omega_histosci_report_v1.schema.json",
+  "title": "Ω-HISTOSCI-HG-T∞ audit report R0.1",
+  "type": "object",
+  "required": [
+    "system", "version", "status", "graph", "registry", "macro_branch_count",
+    "branch_count", "permanent_total_cap", "historical_truth_certified",
+    "software_validation_only", "digest"
+  ],
+  "properties": {
+    "system": {"const": "Ω-HISTOSCI-HG-T∞"},
+    "version": {"const": "0.1.0"},
+    "status": {"const": "CERTIFIED_SOFTWARE_HISTORY_GRAPH_FIXTURES_R0_1"},
+    "graph": {
+      "type": "object",
+      "required": ["valid", "node_count", "edge_count", "digest"],
+      "properties": {
+        "valid": {"type": "boolean"},
+        "node_count": {"type": "integer", "minimum": 1},
+        "edge_count": {"type": "integer", "minimum": 1},
+        "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "registry": {
+      "type": "object",
+      "required": ["valid", "branch_count", "source_count", "digest"],
+      "properties": {
+        "valid": {"type": "boolean"},
+        "branch_count": {"type": "integer", "minimum": 1},
+        "source_count": {"type": "integer", "minimum": 1},
+        "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "macro_branch_count": {"const": 10},
+    "branch_count": {"type": "integer", "minimum": 100},
+    "source_count": {"type": "integer", "minimum": 1},
+    "negative_memory_count": {"type": "integer", "minimum": 1},
+    "permanent_total_cap": {"type": "null"},
+    "historical_truth_certified": {"const": false},
+    "source_completeness_claimed": {"const": false},
+    "global_exhaustiveness_claimed": {"const": false},
+    "decolonial_completeness_claimed": {"const": false},
+    "software_validation_only": {"const": true},
+    "required_next_gate": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
