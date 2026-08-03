@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega_ci_evidence_validity_v2.schema.json",
+  "type": "object",
+  "required": ["schema", "validity_id", "bundle_id", "claim_ids", "observed_at", "evaluated_at", "expires_at", "status", "reasons", "invalidated_by", "refresh_requirements", "source_digest"],
+  "properties": {
+    "schema": {"const": "omega-ci-evidence-validity/v2"},
+    "validity_id": {"type": "string", "pattern": "^VALIDITY-[A-F0-9]{20}$"},
+    "bundle_id": {"type": "string", "minLength": 1},
+    "claim_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "observed_at": {"type": "string"},
+    "evaluated_at": {"type": "string"},
+    "expires_at": {"type": "string"},
+    "status": {"enum": ["CURRENT", "STALE", "EXPIRED", "SUPERSEDED", "INVALIDATED", "REVOKED"]},
+    "reasons": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "invalidated_by": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "refresh_requirements": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "source_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

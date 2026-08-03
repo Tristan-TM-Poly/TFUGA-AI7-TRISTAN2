@@ -1,0 +1,47 @@
+{
+  "schema": "omega-ci-claim-registry/v2",
+  "claims": [
+    {
+      "claim_id": "CLAIM-EVIDENCE-EXPIRY",
+      "statement": "Evidence becomes stale, expired, superseded, invalidated or revoked under explicit deterministic conditions.",
+      "subject_packages": ["omega_ci_proof_t.r02"],
+      "required_test_ids": ["TEST-EXPIRY-UNIT", "TEST-EXPIRY-ADVERSARIAL", "TEST-EXPIRY-PROPERTY", "TEST-EXPIRY-DIFFERENTIAL"],
+      "required_evidence": ["unit", "adversarial", "property", "differential"],
+      "assumptions": ["timestamps are ISO-8601", "impact packages are correctly identified"],
+      "domain_of_validity": ["finite software evidence bundles"],
+      "exclusions": ["legal evidentiary admissibility", "cryptographic identity signatures"],
+      "falsifiers": ["an invalidated bundle remains CURRENT", "an unexpired unchanged bundle becomes EXPIRED"],
+      "status": "PROTOTYPED",
+      "evidence_ttl_days": 30,
+      "criticality_weight": 1.5
+    },
+    {
+      "claim_id": "CLAIM-CONSTITUTION-A3-BOUND",
+      "statement": "The machine-readable constitution prevents self-escalation above A3 and rejects sensitive capabilities.",
+      "subject_packages": ["omega_ci_proof_t.r02"],
+      "required_test_ids": ["TEST-CONSTITUTION-UNIT", "TEST-CONSTITUTION-ADVERSARIAL", "TEST-CONSTITUTION-SCHEMA"],
+      "required_evidence": ["unit", "adversarial", "schema"],
+      "assumptions": ["constitution mapping is the policy source presented to the gate"],
+      "domain_of_validity": ["R0.2 local policy evaluation"],
+      "exclusions": ["external credential compromise"],
+      "falsifiers": ["A4 token is issued", "merge capability is issued at A3"],
+      "status": "PROTOTYPED",
+      "evidence_ttl_days": 14,
+      "criticality_weight": 2.0
+    },
+    {
+      "claim_id": "CLAIM-SUPPLY-CHAIN-PINNING",
+      "statement": "The dedicated CI workflow references external GitHub Actions by immutable reviewed commit SHA.",
+      "subject_packages": ["omega_ci_proof_t.r02"],
+      "required_test_ids": ["TEST-PINNING-UNIT", "TEST-PINNING-ADVERSARIAL", "TEST-PINNING-PROPERTY"],
+      "required_evidence": ["unit", "adversarial", "property"],
+      "assumptions": ["the reviewed SHA allowlist is versioned with the code"],
+      "domain_of_validity": ["GitHub Actions uses directives"],
+      "exclusions": ["upstream compromise before the pinned commit"],
+      "falsifiers": ["moving action tag is accepted", "unreviewed SHA is silently approved"],
+      "status": "PROTOTYPED",
+      "evidence_ttl_days": 7,
+      "criticality_weight": 2.0
+    }
+  ]
+}

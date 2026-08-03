@@ -1,0 +1,8 @@
+{
+  "bundle_id": "EVIDENCE-R02-SAMPLE",
+  "claims_tested": ["CLAIM-EVIDENCE-EXPIRY", "CLAIM-CONSTITUTION-A3-BOUND", "CLAIM-SUPPLY-CHAIN-PINNING"],
+  "subject": {
+    "affected_packages": ["omega_ci_proof_t.r02"],
+    "changed_paths": ["omega_ci_proof_t/r02/expiry.py", "omega_ci_proof_t/r02/coverage.py"]
+  }
+}
