@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.example/schemas/omega_tensor_repair_compile_plan_v1.schema.json",
+  "title": "Ω-TENSOR-REPAIR-T compile plan R0.1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operation",
+    "left_dimension",
+    "right_dimension",
+    "classical_tensor_dimension",
+    "carrier_dimension",
+    "channels",
+    "exact_reconstruction_required",
+    "oak_gates",
+    "claims"
+  ],
+  "properties": {
+    "schema_version": {"const": "omega.tensor.repair.compile-plan.v1"},
+    "operation": {"const": "TensorProdLift-T"},
+    "left_dimension": {"type": "integer", "minimum": 1},
+    "right_dimension": {"type": "integer", "minimum": 1},
+    "classical_tensor_dimension": {"type": "integer", "minimum": 1},
+    "carrier_dimension": {"type": "integer", "minimum": 2},
+    "square": {"type": "boolean"},
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "dimension", "exact"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "dimension": {"type": "integer", "minimum": 0},
+          "exact": {"type": "boolean"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "requested_channels": {"type": "array", "items": {"type": "string"}},
+    "exact_reconstruction_required": {"type": "boolean"},
+    "oak_gates": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "claims": {
+      "type": "object",
+      "required": [
+        "dimensions_created_for_free",
+        "all_views_independent",
+        "universal_compression_claimed",
+        "new_physical_law_claimed"
+      ],
+      "properties": {
+        "dimensions_created_for_free": {"const": false},
+        "all_views_independent": {"const": false},
+        "universal_compression_claimed": {"const": false},
+        "new_physical_law_claimed": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

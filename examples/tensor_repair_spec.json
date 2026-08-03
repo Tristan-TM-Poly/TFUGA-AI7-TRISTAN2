@@ -1,0 +1,16 @@
+{
+  "left_dimension": 3,
+  "right_dimension": 3,
+  "preserve_inputs": true,
+  "exact_reconstruction": true,
+  "channels": [
+    "full",
+    "carrier",
+    "symmetric",
+    "symmetric_traceless",
+    "trace",
+    "antisymmetric",
+    "blocks",
+    "residual"
+  ]
+}
