@@ -1,0 +1,111 @@
+service_id: "business_registration"
+service_name: "Services aux entreprises - démarrage et immatriculation"
+owner_organization: "Registraire des entreprises / Services Québec / Revenu Québec"
+public_need: "Permettre à un entrepreneur de créer, immatriculer et comprendre ses obligations sans multiplicité confuse de portails et formulaires"
+
+channels:
+  - online
+  - phone
+  - services_quebec_counter
+  - partner_organization
+
+citizen_segments:
+  - travailleur autonome
+  - petite entreprise
+  - immigrant entrepreneur
+  - entreprise étudiante
+  - organisme sans but lucratif
+  - personne à faible littératie fiscale ou juridique
+
+legal_rules:
+  - forme juridique
+  - nom d'entreprise
+  - immatriculation
+  - taxes applicables
+  - retenues à la source si employeur
+  - permis sectoriels
+  - obligations annuelles
+
+data_nodes:
+  - founder_identity
+  - business_name
+  - legal_form
+  - address
+  - tax_accounts
+  - permits
+  - annual_declaration_status
+
+process_steps:
+  - choisir forme juridique
+  - vérifier nom
+  - immatriculer
+  - obtenir comptes fiscaux si nécessaires
+  - identifier permis sectoriels
+  - comprendre obligations
+  - recevoir rappels
+  - corriger ou fermer si nécessaire
+
+friction_points:
+  - langage juridique et fiscal difficile
+  - multiplicité des organismes
+  - documents ou informations redemandées
+  - statut de demande non visible
+  - obligations futures peu claires
+  - risque d'oublier déclaration annuelle
+
+risks:
+  - mauvaise forme juridique choisie
+  - pénalités par oubli
+  - inscription fiscale incomplète
+  - exclusion numérique
+  - dépendance à consultants privés
+  - erreurs d'adresse ou de nom
+
+oak_tests:
+  - test travailleur autonome débutant
+  - test petite entreprise avec employés
+  - test immigrant entrepreneur
+  - test OSBL
+  - test rappel déclaration annuelle
+  - test permis sectoriels
+  - test explication en français clair
+  - test recours humain
+
+success_metrics:
+  - temps médian pour immatriculation complète
+  - taux d'obligations comprises
+  - nombre de portails nécessaires
+  - taux de documents redemandés
+  - taux de rappels utiles
+  - satisfaction entrepreneur
+
+human_recourses:
+  - agent Services Québec
+  - agent Registraire
+  - agent Revenu Québec
+  - partenaire accompagnateur
+  - plainte officielle
+
+m_minus_rules:
+  - ne pas fragmenter le démarrage entre portails opaques
+  - générer checklist d'obligations futures
+  - éviter redemande d'information déjà fournie
+  - signaler clairement limites : information générale, pas avis légal personnalisé
+
+metric_inputs:
+  resolution: 0.62
+  accessibility: 0.54
+  transparency: 0.45
+  security: 0.76
+  human_recourse: 0.60
+  interoperability: 0.40
+  cost_control: 0.57
+
+penalties:
+  outage_risk: 0.25
+  no_human_channel: 0.20
+  no_rollback: 0.30
+  no_accessibility_test: 0.50
+  opaque_status: 0.75
+  vendor_lock_in: 0.35
+  repeated_documents: 0.75

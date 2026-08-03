@@ -1,0 +1,32 @@
+name: ServiceGraph-QC
+
+on:
+  pull_request:
+    paths:
+      - 'servicegraph_qc/**'
+      - '.github/workflows/servicegraph-qc.yml'
+  push:
+    paths:
+      - 'servicegraph_qc/**'
+      - '.github/workflows/servicegraph-qc.yml'
+
+jobs:
+  servicegraph-qc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run unit tests
+        run: PYTHONPATH=servicegraph_qc python -m unittest discover -s servicegraph_qc/tests
+
+      - name: Run example reports
+        run: |
+          python servicegraph_qc/oak_service_meter.py servicegraph_qc/examples/saaq_renew_license.yaml
+          python servicegraph_qc/friction_map.py servicegraph_qc/examples/saaq_renew_license.yaml
+          python servicegraph_qc/batch_oak_report.py servicegraph_qc/examples
