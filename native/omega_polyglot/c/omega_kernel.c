@@ -1,10 +1,10 @@
 #include <stddef.h>
 
 int omega_vector_affine_f64(
-    const double *x,
-    const double *y,
+    const double *restrict x,
+    const double *restrict y,
     double scalar,
-    double *output,
+    double *restrict output,
     size_t length
 ) {
     if (length > 0 && (x == NULL || y == NULL || output == NULL)) {
