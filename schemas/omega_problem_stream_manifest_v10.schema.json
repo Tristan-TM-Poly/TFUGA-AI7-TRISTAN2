@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_problem_stream_manifest_v10.schema.json",
+  "title": "Omega Problem Streaming Manifest V10",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source_kind",
+    "source_digest",
+    "complete",
+    "input_rows_seen",
+    "inserted_count",
+    "duplicate_count",
+    "quarantine_count",
+    "cell_count",
+    "duplicate_ledger_count",
+    "quarantine_ledger_count",
+    "rollback_receipt_count",
+    "shard_count",
+    "global_merkle_root",
+    "global_merkle_leaf_count",
+    "shards",
+    "policy",
+    "permanent_total_cell_cap",
+    "unlimited_capacity_claimed",
+    "manifest_digest"
+  ],
+  "properties": {
+    "schema": {"const": "omega-problem-stream-manifest/10"},
+    "source_kind": {"enum": ["jsonl", "synthetic", "r03_max"]},
+    "source_digest": {"$ref": "#/$defs/sha256"},
+    "complete": {"type": "boolean"},
+    "input_rows_seen": {"type": "integer", "minimum": 0},
+    "inserted_count": {"type": "integer", "minimum": 0},
+    "duplicate_count": {"type": "integer", "minimum": 0},
+    "quarantine_count": {"type": "integer", "minimum": 0},
+    "cell_count": {"type": "integer", "minimum": 0},
+    "duplicate_ledger_count": {"type": "integer", "minimum": 0},
+    "quarantine_ledger_count": {"type": "integer", "minimum": 0},
+    "rollback_receipt_count": {"type": "integer", "minimum": 0},
+    "shard_count": {"type": "integer", "minimum": 0},
+    "global_merkle_root": {"$ref": "#/$defs/sha256"},
+    "global_merkle_leaf_count": {"type": "integer", "minimum": 0},
+    "shards": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/shard"}
+    },
+    "policy": {"$ref": "#/$defs/policy"},
+    "source_compatibility": {"$ref": "#/$defs/r03Compatibility"},
+    "permanent_total_cell_cap": {"type": "null"},
+    "unlimited_capacity_claimed": {"const": false},
+    "manifest_digest": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "shard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shard_id",
+        "first_sequence",
+        "last_sequence",
+        "row_count",
+        "byte_count",
+        "merkle_root",
+        "shard_digest"
+      ],
+      "properties": {
+        "shard_id": {"type": "integer", "minimum": 1},
+        "first_sequence": {"type": "integer", "minimum": 1},
+        "last_sequence": {"type": "integer", "minimum": 1},
+        "row_count": {"type": "integer", "minimum": 1},
+        "byte_count": {"type": "integer", "minimum": 1},
+        "merkle_root": {"$ref": "#/$defs/sha256"},
+        "shard_digest": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "batch_size",
+        "shard_target_bytes",
+        "max_disk_bytes",
+        "sqlite_busy_timeout_ms",
+        "permanent_total_cell_cap"
+      ],
+      "properties": {
+        "batch_size": {"type": "integer", "minimum": 1},
+        "shard_target_bytes": {"type": "integer", "minimum": 1024},
+        "max_disk_bytes": {"type": ["integer", "null"], "minimum": 1},
+        "sqlite_busy_timeout_ms": {"type": "integer", "minimum": 1},
+        "permanent_total_cell_cap": {"type": "null"}
+      }
+    },
+    "r03Compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "valid",
+        "blockers",
+        "r03_manifest_digest",
+        "r03_report_digest",
+        "r03_report_stored_digest",
+        "r03_problem_count",
+        "r03_target_count",
+        "r03_cell_count",
+        "artifacts",
+        "finite_fixture_is_not_unlimited_capacity_proof",
+        "proof_claimed",
+        "solution_claimed",
+        "receipt_digest"
+      ],
+      "properties": {
+        "schema": {"const": "omega-problem-r03-compatibility-receipt/10"},
+        "valid": {"const": true},
+        "blockers": {"type": "array", "maxItems": 0},
+        "r03_manifest_digest": {"$ref": "#/$defs/sha256"},
+        "r03_report_digest": {"$ref": "#/$defs/sha256"},
+        "r03_report_stored_digest": {"$ref": "#/$defs/sha256"},
+        "r03_problem_count": {"type": "integer", "minimum": 0},
+        "r03_target_count": {"type": "integer", "minimum": 0},
+        "r03_cell_count": {"type": "integer", "minimum": 0},
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256", "bytes", "rows"],
+            "properties": {
+              "path": {"type": "string", "minLength": 1},
+              "sha256": {"$ref": "#/$defs/sha256"},
+              "bytes": {"type": "integer", "minimum": 0},
+              "rows": {"type": ["integer", "null"], "minimum": 0}
+            }
+          }
+        },
+        "finite_fixture_is_not_unlimited_capacity_proof": {"const": true},
+        "proof_claimed": {"const": false},
+        "solution_claimed": {"const": false},
+        "receipt_digest": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
