@@ -1,0 +1,67 @@
+schema_version: 1
+branch: omega_biotox_pharma_guardian_t
+status: OAK-safe source trust ledger
+hard_boundary: >-
+  This ledger records official or high-trust source locations for safety wording.
+  It does not authorize autonomous medical advice or dose planning.
+
+sources:
+  - id: US_DAILYMED_VYVANSE_LABEL
+    type: official_drug_label
+    jurisdiction: United States
+    title: Vyvanse lisdexamfetamine dimesylate label
+    url: https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=a310fc51-2743-4755-8398-fed5402283f6
+    trust_level: official
+    useful_for:
+      - maximum recommended dose statements
+      - overdose symptom list
+      - pharmacology mechanism
+      - boxed warnings and cardiovascular warnings
+    constraints:
+      - use as official label, not individualized medical advice
+      - do not extrapolate personal safety from label data
+
+  - id: POISON_CONTROL_US
+    type: poison_control
+    jurisdiction: United States
+    title: Poison Control
+    url: https://www.poison.org/
+    trust_level: official_poison_control_portal
+    useful_for:
+      - poison control escalation language
+      - emergency red flag language
+      - online or phone help routing
+    constraints:
+      - adapt phone numbers to local jurisdiction when possible
+      - call emergency services for severe symptoms
+
+  - id: CANADA_POISON_CENTRES
+    type: poison_control
+    jurisdiction: Canada
+    title: Canada Poison Centres / Poison Centre Hotline
+    url: https://www.canada.ca/en/health-canada/services/poison-centres.html
+    trust_level: government
+    useful_for:
+      - Canadian poison centre routing
+      - hotline source for Canadian users
+    constraints:
+      - verify current regional number if possible
+
+  - id: GERMANY_BFR_POISONING
+    type: poison_control_information
+    jurisdiction: Germany
+    title: BfR poisoning information
+    url: https://www.bfr.bund.de/en/poisoning-110867.html
+    trust_level: government
+    useful_for:
+      - German poison information context
+      - emergency and poison centre routing
+    constraints:
+      - verify local poison centre by federal state when possible
+
+source_use_rules:
+  - prefer official labels, poison control, government health agencies, hospitals, or peer-reviewed clinical references
+  - cite sources in user-facing medical safety claims when fresh or specific
+  - do not cite forums or anecdotal dosing narratives as safety evidence
+  - do not turn source facts into individualized clearance or dosing recommendations
+  - if location is known, prefer local poison control / emergency routing

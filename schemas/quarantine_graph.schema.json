@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/quarantine_graph.schema.json",
+  "title": "QuarantineGraph",
+  "description": "Isolation graph for high-fertility/high-risk ideas. Analysis allowed, execution forbidden until OAK escape criteria are met.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["node_id", "title", "reason", "risk_domains", "allowed_actions", "forbidden_actions", "escape_criteria"],
+  "properties": {
+    "node_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "reason": {"type": "string", "minLength": 1},
+    "risk_domains": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "allowed_actions": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["analyze", "document", "simulate", "add_tests", "add_sources", "risk_map", "scrub_private_data"]},
+      "uniqueItems": true
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["execute", "publish", "merge", "deploy", "send", "delete", "dose", "extract", "mix", "bypass_review"]},
+      "uniqueItems": true
+    },
+    "escape_criteria": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["reality_anchor", "tests_pass", "rollback_proof", "privacy_clear", "source_trust_clear", "human_validation", "oak_review"]},
+      "uniqueItems": true
+    },
+    "status": {"type": "string", "enum": ["quarantined", "reviewing", "escaped_to_dry_run", "closed"]}
+  }
+}

@@ -1,0 +1,65 @@
+schema_version: 1
+branch: omega_ait_reality_forge_t
+status: OAK-safe Reality Forge policy
+
+core_rules:
+  - every_powerful_idea_must_pass_through_forge_before_real_world_action
+  - never_speak_R10_when_evidence_is_R2
+  - no_output_jumps_from_vision_to_proof
+  - simulation_before_belief
+  - artifact_before_claim_upgrade
+  - rollback_before_zero_touch
+
+reality_levels:
+  R0: intuition
+  R1: vision
+  R2: metaphor
+  R3: hypothesis
+  R4: formal_model
+  R5: prototype
+  R6: local_test
+  R7: measurement
+  R8: reproduction
+  R9: reinforced_canon
+  R10: proof_or_standard
+
+proof_levels:
+  P0: no_evidence
+  P1: internal_coherence
+  P2: example
+  P3: toy_test
+  P4: benchmark
+  P5: baseline_comparison
+  P6: reproduction
+  P7: stress_test
+  P8: external_review
+  P9: controlled_real_use
+  P10: robust_standard
+
+autonomy_policy:
+  low_risk_reversible_artifacts: ZERO_TOUCH_OR_DRAFT_PR
+  weak_evidence_strong_claim: SLOW_MAX
+  public_side_effect: ONE_TOUCH
+  privacy_or_ip_unclear: ONE_TOUCH_OR_NO_TOUCH
+  medical_legal_financial_security: QUALIFIED_REVIEW_REQUIRED
+  destructive_or_irreversible: NO_TOUCH
+
+required_artifacts_for_claim_upgrade:
+  from_R2_to_R3:
+    - reality_anchor
+    - falsifiable_test
+  from_R3_to_R5:
+    - prototype_plan
+    - counterworlds
+    - failure_oracle_report
+  from_R5_to_R6:
+    - local_tests
+  from_R6_to_R7:
+    - measurement_plan
+    - metrics
+  from_R7_to_R8:
+    - reproduction_plan
+  from_R8_to_R9:
+    - canon_review
+  from_R9_to_R10:
+    - external_review_or_standard_scope

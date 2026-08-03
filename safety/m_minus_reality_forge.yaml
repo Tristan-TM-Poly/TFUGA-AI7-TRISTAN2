@@ -1,0 +1,60 @@
+schema_version: 1
+branch: omega_ait_reality_forge_t
+status: OAK-safe negative memory registry
+
+patterns:
+  - id: M_RF_001
+    name: vision_to_proof_jump
+    severity: critical
+    pattern: Claiming proof or standard status while the idea is only vision/metaphor/hypothesis.
+    safe_response: Downgrade RealityLevel and require RealityAnchor, tests, and evidence.
+
+  - id: M_RF_002
+    name: miracle_claim
+    severity: high
+    pattern: Large claim plus weak evidence plus beautiful language plus no test.
+    safe_response: Classify as vision or quarantine until benchmark or prototype exists.
+
+  - id: M_RF_003
+    name: simulation_skipped
+    severity: high
+    pattern: Moving directly from plausible story to implementation or deployment.
+    safe_response: Generate counterworlds, failure modes, and toy tests first.
+
+  - id: M_RF_004
+    name: metaphor_mechanism_confusion
+    severity: high
+    pattern: Treating metaphor as physical/computational mechanism.
+    safe_response: Split metaphor, mechanism, test, and limitation.
+
+  - id: M_RF_005
+    name: baseline_absent
+    severity: medium
+    pattern: Claiming improvement without baseline comparison.
+    safe_response: Add baseline comparison before stronger performance claims.
+
+  - id: M_RF_006
+    name: rollback_absent
+    severity: high
+    pattern: External action planned without rollback or compensation path.
+    safe_response: Block ZERO-TOUCH and require RollbackProof.
+
+  - id: M_RF_007
+    name: artifact_missing
+    severity: medium
+    pattern: Theory remains pure text when it claims operational value.
+    safe_response: Compile into doc, schema, tool, tests, M-, and OAK report.
+
+  - id: M_RF_008
+    name: overheat_theory
+    severity: medium
+    pattern: Excessive novelty, chaos, or surconfidence without compression and tests.
+    safe_response: Cool through LOG/CVCD, RealityAnchor, and falsification.
+
+default_actions:
+  vision_to_proof_jump: downgrade_claim
+  miracle_claim: quarantine_or_add_tests
+  simulation_skipped: generate_counterworlds
+  rollback_absent: no_zero_touch
+  artifact_missing: artifact_compiler
+  overheat_theory: return_to_baseline

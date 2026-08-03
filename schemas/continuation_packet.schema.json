@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/continuation_packet.schema.json",
+  "title": "ContinuationPacket",
+  "description": "Safe continuation packet produced when a requested direct step is routed into a safer mode.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["intent", "route_reason", "level", "mode", "artifact", "next_safe_action"],
+  "properties": {
+    "intent": {"type": "string", "minLength": 1},
+    "route_reason": {"type": "string"},
+    "level": {"type": "integer", "minimum": 0, "maximum": 10},
+    "mode": {"type": "string", "enum": ["create", "simulate", "review", "hold"]},
+    "artifact": {"type": "string", "enum": ["doc", "schema", "tool", "test", "report", "draft_pr", "simulation", "note", "packet", "m_minus"]},
+    "missing_evidence": {"type": "array", "items": {"type": "string"}},
+    "tests_to_add": {"type": "array", "items": {"type": "string"}},
+    "gates": {"type": "array", "items": {"type": "string"}},
+    "next_safe_action": {"type": "string", "minLength": 1}
+  }
+}

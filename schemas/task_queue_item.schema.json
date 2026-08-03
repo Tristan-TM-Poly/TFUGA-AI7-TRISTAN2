@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TaskQueueItem",
+  "type": "object",
+  "required": ["queue_id", "item_id", "title", "state"],
+  "properties": {
+    "queue_id": {"type": "string"},
+    "item_id": {"type": "string"},
+    "title": {"type": "string"},
+    "state": {"type": "string"},
+    "score": {"type": "integer"},
+    "next_step": {"type": "string"}
+  }
+}

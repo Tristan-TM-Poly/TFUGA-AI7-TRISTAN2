@@ -1,0 +1,21 @@
+schema_version: 1
+source: PR220
+state: draft_map
+
+tests:
+  test_safe_next_action_kernel: safe_next_action_kernel
+  test_fallback_ladder: fallback_ladder
+  test_task_graph: task_graph
+  test_missing_input_synthesizer: missing_input_synthesizer
+  test_dead_end_converter: dead_end_converter
+  test_autonomous_priority_engine: autonomous_priority_engine
+  test_oak_motion_states: oak_motion_states
+  test_self_propelling_loop: self_propelling_loop
+  test_propulsion_score: propulsion_score
+  test_task_queue_mesh: task_queue_mesh
+  test_self_repair_loop: self_repair_loop
+  test_artifact_selector: artifact_swarm
+  test_oak_governor: oak_governor
+  test_autonomous_sprint_cell: autonomous_sprint_cell
+  test_progress_memory: progress_memory
+  test_useful_work_catalog: useful_work_catalog

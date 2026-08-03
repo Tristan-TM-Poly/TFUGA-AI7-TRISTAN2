@@ -1,0 +1,26 @@
+schema_version: 1
+source: PR220
+state: draft_map
+
+tools:
+  safe_next_action_kernel: continuation_engine
+  fallback_ladder: continuation_engine
+  task_graph: continuation_engine
+  missing_input_synthesizer: continuation_engine
+  dead_end_converter: continuation_engine
+  autonomous_priority_engine: continuation_engine
+  oak_motion_states: continuation_engine
+  self_propelling_loop: continuation_engine
+  propulsion_score: propulsion_mesh
+  task_queue_mesh: propulsion_mesh
+  self_repair_loop: propulsion_mesh
+  artifact_swarm: propulsion_mesh
+  option_selector: propulsion_mesh
+  oak_governor: propulsion_mesh
+  autonomous_sprint_cell: propulsion_mesh
+  progress_memory: propulsion_mesh
+  useful_work_catalog: propulsion_mesh
+  canon_rank: canon_os
+  proof_capital: canon_os
+  canon_graph: canon_os
+  canon_mutation_engine: canon_os
