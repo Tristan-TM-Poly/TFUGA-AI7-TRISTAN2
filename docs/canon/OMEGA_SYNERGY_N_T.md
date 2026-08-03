@@ -1,115 +1,110 @@
-# Ω-SYNERGY-N-T — Recherche, analyse et synergies d’ordre n
+# Ω-SYNERGY-N-T — moteur de recherche d’ordre n de la Synergy Foundry
 
-**Statut :** D-MVP borné, déterministe, review-only.  
-**Autorité :** aucune preuve scientifique, certification, publication, dépôt IP, fusion ou action externe automatique.
+**Statut :** sous-moteur exécutable de Ω-SYNERGY-T∞ R1.  
+**Autorité :** `review_only_heuristic`; aucune preuve, certification, publication, fusion, dépôt IP ou action externe automatique.
 
-## Phrase-mère
+## Position canonique
 
-Chaque système de Tristan devient un nœud documenté; chaque relation devient une arête mesurée; chaque combinaison d’ordre `n` devient une hypothèse de recherche priorisée, munie de baselines, ablations, résidus, incertitudes et mémoire M⁻.
+Ω-SYNERGY-N-T n’est plus une architecture isolée. Il constitue le moteur combinatoire borné de :
 
 ```text
-Dépôts + documents + code + tests + schémas
-  -> découverte des systèmes
-  -> normalisation canonique
-  -> graphe de cooccurrence / domaines / preuves / risques
-  -> synergies d’ordre 2
-  -> beam search borné vers les ordres 3..n
-  -> paquets de recherche falsifiables
-  -> OAKGate
-  -> prototype / expérience / publication / IP seulement après approbation
+Ω-SYNERGY-T∞ / Tristan Synergy Foundry
+  -> CreationDNA
+  -> CreationGraph
+  -> capability–need closure
+  -> SynergyTensor
+  -> Ω-SYNERGY-N-T beam search
+  -> causal experiments
+  -> ProofLedger
+  -> PR Genome / PR Orchestra
+  -> Meta-Synergy Reactor
+  -> product hypotheses
 ```
 
-## Pourquoi une recherche bornée
+La spécification canonique complète est `docs/canon/OMEGA_SYNERGY_T_INFINITY_R1.md`.
 
-Pour `m` systèmes, l’énumération complète exige `C(m,n)` combinaisons. Avec plusieurs centaines de systèmes, l’espace devient rapidement impraticable. Ω-SYNERGY-N-T utilise donc une recherche en faisceau :
+## Fonction
 
-1. présélection de paires par domaines, tokens, chemins partagés et co-mentions;
-2. score pairwise déterministe;
-3. conservation des meilleures frontières;
-4. extension contrôlée vers l’ordre suivant;
-5. pénalité croissante de complexité;
-6. sortie des meilleurs candidats et des résidus M⁻.
+Pour `m` systèmes, l’énumération exhaustive des combinaisons d’ordre `n` exige `C(m,n)` évaluations. Le moteur utilise donc une recherche bornée :
 
-Cette méthode peut manquer des combinaisons utiles. Ce manque est enregistré comme limite, pas caché.
+1. compilation des dépôts en `CreationDNA`;
+2. présélection par domaines, tokens, co-mentions et interfaces;
+3. calcul d’un tenseur multiobjectif explicite;
+4. conservation d’un faisceau fini;
+5. extension vers les ordres `3..n`;
+6. pénalisation de la dette, du risque, de l’incertitude et de l’ordre;
+7. compilation des meilleurs candidats en expériences falsifiables.
 
-## Score de synergie
+La recherche peut manquer des combinaisons utiles. Ce résidu est une limite déclarée et doit alimenter M⁻ ou une stratégie de recherche alternative.
 
-Pour une combinaison `C={S1,...,Sn}` :
+## Tenseur R1
 
-```text
-Score(C) =
-  0.48 * cohésion_pairwise
-+ 0.16 * paire_bottleneck
-+ 0.18 * couverture_domaines
-+ 0.22 * niveau_preuve
-- 0.18 * risque
-- pénalité_ordre
-```
+Le classement expose séparément :
 
-Les facteurs pairwise utilisent :
+- résonance sémantique;
+- complémentarité capacité–besoin;
+- compatibilité d’interface;
+- gain de fermeture;
+- preuve disponible;
+- préparation causale;
+- réutilisation;
+- valeur optionnelle;
+- hypothèse produit;
+- risque;
+- coût d’intégration;
+- incertitude;
+- dette.
 
-- chevauchement lexical;
-- chevauchement de domaines;
-- complémentarité inter-domaines;
-- co-mention dans les mêmes artefacts;
-- niveau de preuve approximatif;
-- pénalité de risque et de redondance.
+Le total scalaire sert uniquement à allouer un budget expérimental. Une proximité lexicale sans fermeture est marquée comme anti-synergie potentielle.
 
-Le score sert à **ordonner le travail**. Il ne mesure ni vérité, ni nouveauté brevetable, ni rendement industriel.
-
-## Sorties automatiques
+## Sorties
 
 ```text
-reports/github-autonomous-reactor/synergy-n/
-  system_inventory.json
+reports/github-autonomous-reactor/synergy-foundry/
+  creation_dna.json
+  creation_graph.json
+  creation_graph.dot
+  synergy_report.json
   synergy_n.json
-  research_queue.json
-  SYNERGY_N_REPORT.md
-  synergy_graph.dot
+  closure_bridges.json
+  portfolio.json
+  experiment_queue.json
+  counterfactual_twins.json
+  pr_orchestra.json
+  meta_synergies.json
+  product_hypotheses.json
+  SYNERGY_FOUNDRY_REPORT.md
 ```
 
-Chaque paquet de recherche contient les systèmes et l’ordre, une question de recherche, des requêtes proposées, des expériences, des ablations, les baselines requises et les portes OAK.
+Les anciens noms `system_inventory.json`, `research_queue.json`, `SYNERGY_N_REPORT.md` et `synergy_n.json` restent générés pour compatibilité.
 
 ## Commandes
 
-Analyse d’un dépôt :
+```bash
+omega-synergy \
+  --repo-root . \
+  --max-order 4 \
+  --beam-width 96 \
+  --top-k 25 \
+  --portfolio-budget 4.0
+```
+
+La façade historique reste disponible :
 
 ```bash
 python tools/github_reactor/synergy_n_engine.py \
   --repo-root . \
-  --max-order 4 \
-  --beam-width 96 \
-  --top-k 25
+  --out reports/github-autonomous-reactor/synergy-foundry
 ```
-
-Analyse multi-dépôts après plusieurs checkouts :
-
-```bash
-python tools/github_reactor/synergy_n_engine.py \
-  --repo-root workspace/root \
-  --repo-root workspace/deep-corpus \
-  --repo-root workspace/ait-generator \
-  --repo-root workspace/variant \
-  --max-order 5 \
-  --beam-width 128 \
-  --top-k 30
-```
-
-## Boucle automatisée
-
-```text
-SCAN -> INVENTORY -> GRAPH -> SYNERGY(k) -> RESEARCH PACKETS
-     -> OAK REVIEW -> TEST/ABLATION -> EVIDENCE UPDATE -> RESCORE
-```
-
-La prochaine version doit réinjecter les résultats expérimentaux dans le score afin qu’une synergie puisse monter, descendre ou être archivée selon les preuves réelles.
 
 ## OAK et M⁻
 
-- Une co-mention documentaire n’implique pas une causalité.
-- Une proximité lexicale n’implique pas une compatibilité mathématique ou physique.
-- Une synergie bien notée reste une hypothèse.
-- Une synergie scientifique exige unités, hypothèses, domaine de validité, baseline et incertitudes.
-- Une synergie produit exige utilisateur, douleur, valeur, coût, concurrence et preuve d’usage.
-- Une synergie IP exige provenance, antériorité et verrou de confidentialité.
-- Le workflow reste en lecture seule et dépose seulement des artefacts d’audit.
+- Co-mention n’est pas causalité.
+- Similarité n’est pas complémentarité.
+- Une interface doit déclarer ses pertes.
+- Toute composition complexe doit battre une baseline plus simple.
+- Toute expérience doit inclure ablation, contrôle, incertitude et rollback.
+- Un hash-chain garantit l’intégrité du registre, pas la vérité du claim.
+- La confiance possède une demi-vie et exige revalidation.
+- Le workflow GitHub conserve `contents: read` et produit seulement des artefacts d’audit.
+- Le PR Orchestra ne confère aucune autorité de fusion.
