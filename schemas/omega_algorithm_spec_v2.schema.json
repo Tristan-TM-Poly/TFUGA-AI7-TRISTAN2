@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega/algorithm-spec-v2.schema.json",
+  "title": "Omega AlgorithmSpec v2",
+  "type": "object",
+  "required": ["algorithm_id", "family", "operation", "arity", "rank", "dtype", "equation", "complexity", "properties", "admissible_transformations", "contract", "schema_version"],
+  "properties": {
+    "algorithm_id": {"type": "string", "minLength": 1, "pattern": "^[^\\s]+$"},
+    "family": {"type": "string", "minLength": 1},
+    "operation": {"type": "string", "minLength": 1},
+    "arity": {"type": "integer", "minimum": 0},
+    "rank": {"type": "integer", "minimum": 0},
+    "dtype": {"type": "string", "enum": ["float64", "float32", "int64", "complex128"]},
+    "equation": {"type": "string", "minLength": 1},
+    "complexity": {"type": "string", "minLength": 1},
+    "properties": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "admissible_transformations": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "forbidden_transformations": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "contract": {
+      "type": "object",
+      "required": ["absolute_tolerance", "relative_tolerance", "deterministic", "nan_policy", "infinity_policy", "signed_zero_sensitive"],
+      "properties": {
+        "absolute_tolerance": {"type": "number", "minimum": 0},
+        "relative_tolerance": {"type": "number", "minimum": 0},
+        "deterministic": {"type": "boolean"},
+        "nan_policy": {"type": "string", "enum": ["propagate", "reject", "canonicalize"]},
+        "infinity_policy": {"type": "string"},
+        "signed_zero_sensitive": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "schema_version": {"const": "omega.algorithm-spec.v2"}
+  },
+  "additionalProperties": false
+}
