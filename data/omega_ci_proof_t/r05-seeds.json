@@ -1,0 +1,7 @@
+{
+  "schema": "omega-ci-counterexample-seeds/v5",
+  "explicit": ["././a", "././.github", ".github", "./a", "../a"],
+  "prefixes": ["", "./", "././", ".", "../"],
+  "atoms": ["a", ".github", "workflows/ci.yml"],
+  "suffixes": ["", "/b", ".py"]
+}

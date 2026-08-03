@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"omega-ci-mutation-ecology/v5",
+  "type":"object",
+  "required":["schema","ecology_id","campaign_id","counterexample_report_id","metamorphic_report_id","differential_report_id","mminus_compilation_id","agents","unresolved_survivors","proof_debt_delta","maximum_authority","execution_authorized","automatic_patch_allowed","automatic_merge_allowed","human_review_required","remote_mutations"],
+  "properties":{
+    "schema":{"const":"omega-ci-mutation-ecology/v5"},"ecology_id":{"type":"string","pattern":"^MUTECO-"},"campaign_id":{"type":"string"},"counterexample_report_id":{"type":"string"},"metamorphic_report_id":{"type":"string"},"differential_report_id":{"type":"string"},"mminus_compilation_id":{"type":"string"},"agents":{"type":"array","minItems":5,"items":{"type":"object"}},"unresolved_survivors":{"type":"array","items":{"type":"string"}},"proof_debt_delta":{"type":"number"},"maximum_authority":{"const":"A3"},"execution_authorized":{"const":false},"automatic_patch_allowed":{"const":false},"automatic_merge_allowed":{"const":false},"human_review_required":{"const":true},"remote_mutations":{"const":0}
+  },
+  "additionalProperties":true
+}

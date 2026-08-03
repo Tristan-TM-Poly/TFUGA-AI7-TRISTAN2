@@ -1,0 +1,14 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"omega-ci-counterexample-report/v5",
+  "type":"object",
+  "required":["schema","report_id","searched_mutant_ids","counterexamples","candidates_evaluated","exhausted","execution_authorized","remote_mutations"],
+  "properties":{
+    "schema":{"const":"omega-ci-counterexample-report/v5"},
+    "report_id":{"type":"string","pattern":"^COUNTERREPORT-"},
+    "searched_mutant_ids":{"type":"array","items":{"type":"string"}},
+    "counterexamples":{"type":"array","items":{"type":"object","required":["counterexample_id","claim_id","mutant_id","property_id","original_input","minimized_input","expected_output","observed_output","reduction_steps","provenance"]}},
+    "candidates_evaluated":{"type":"integer","minimum":0},"exhausted":{"type":"boolean"},"execution_authorized":{"const":false},"remote_mutations":{"const":0}
+  },
+  "additionalProperties":true
+}

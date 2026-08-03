@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"omega-ci-differential-report/v5",
+  "type":"object",
+  "required":["schema","report_id","reference_behavior","candidate_behaviors","corpus_size","divergences","agreements","remote_mutations"],
+  "properties":{
+    "schema":{"const":"omega-ci-differential-report/v5"},"report_id":{"type":"string","pattern":"^DIFF-"},"reference_behavior":{"type":"string"},"candidate_behaviors":{"type":"array","items":{"type":"string"}},"corpus_size":{"type":"integer","minimum":0},"divergences":{"type":"array","items":{"type":"object"}},"agreements":{"type":"integer","minimum":0},"remote_mutations":{"const":0}
+  },
+  "additionalProperties":true
+}

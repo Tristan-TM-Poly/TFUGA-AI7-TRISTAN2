@@ -1,0 +1,9 @@
+{
+  "schema": "omega-ci-metamorphic-contracts/v5",
+  "contracts": [
+    {"property_id":"PROP-EXACT-ONE-PREFIX","claim_id":"CLAIM-PATH-NORMALIZATION-EXACT-PREFIX","kind":"exact_one_prefix_removal","description":"Remove exactly one leading ./ prefix.","seed_inputs":["./a","././a",".github","../a","plain.py"]},
+    {"property_id":"PROP-DOT-PRESERVE","claim_id":"CLAIM-PATH-NORMALIZATION-EXACT-PREFIX","kind":"leading_dot_preservation","description":"Preserve non-relative leading dots.","seed_inputs":[".github",".config","../a"]},
+    {"property_id":"PROP-PLAIN-STABLE","claim_id":"CLAIM-PATH-NORMALIZATION-EXACT-PREFIX","kind":"ordinary_path_stability","description":"Leave ordinary paths unchanged.","seed_inputs":["plain.py","omega/file.py","../a"]},
+    {"property_id":"PROP-SUFFIX","claim_id":"CLAIM-PATH-NORMALIZATION-EXACT-PREFIX","kind":"suffix_preservation","description":"Preserve the terminal path segment.","seed_inputs":["./omega/file.py",".github/workflows/ci.yml","../a"]}
+  ]
+}
