@@ -1,0 +1,110 @@
+name: Omega Company Outreach Foundation R1.0
+
+on:
+  pull_request:
+    paths:
+      - "omega_company_outreach_t/foundation/**"
+      - "omega_company_outreach_t/foundation_cli.py"
+      - "company_outreach/foundation/**"
+      - "company_outreach/cases/**"
+      - "tests/test_outreach_foundation_*.py"
+      - "docs/OMEGA_COMPANY_OUTREACH_FOUNDATION_R10.md"
+      - ".github/workflows/omega-company-outreach-foundation.yml"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - "omega_company_outreach_t/foundation/**"
+      - "omega_company_outreach_t/foundation_cli.py"
+      - "company_outreach/foundation/**"
+      - "tests/test_outreach_foundation_*.py"
+      - ".github/workflows/omega-company-outreach-foundation.yml"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+concurrency:
+  group: omega-outreach-foundation-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  foundation-oakbench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runtime
+        run: python -m pip install --upgrade pip pytest
+      - name: Compile foundation
+        run: |
+          python -m compileall -q omega_company_outreach_t/foundation
+          python -m compileall -q omega_company_outreach_t/foundation_cli.py
+          python -m compileall -q tests/test_outreach_foundation_*.py
+      - name: Run foundation tests
+        run: python -m pytest -q tests/test_outreach_foundation_*.py
+      - name: Generate and audit schema catalog
+        run: |
+          rm -rf /tmp/outreach-schemas
+          python -m omega_company_outreach_t.foundation_cli schemas-generate /tmp/outreach-schemas
+          python -m omega_company_outreach_t.foundation_cli schemas-audit /tmp/outreach-schemas
+      - name: Migrate Futurpreneur R0.2 case
+        run: |
+          mkdir -p /tmp/outreach-migrations
+          python -m omega_company_outreach_t.foundation_cli migrate-case \
+            company_outreach/cases/OUT-2026-0001.json \
+            /tmp/outreach-migrations/OUT-2026-0001.migration.json \
+            --id-prefix 1 \
+            --organization-type nonprofit \
+            --opportunity-type entrepreneurship_program \
+            --role-category program_manager \
+            --consent-basis existing_nonbusiness_relationship \
+            --consent-scope program_information \
+            --signals company_outreach/foundation/signals/OUT-2026-0001.signals.json \
+            --asset oakgate_company_validation \
+            --organization-domain futurpreneur.ca
+      - name: Migrate Polytechnique R0.2 case
+        run: |
+          python -m omega_company_outreach_t.foundation_cli migrate-case \
+            company_outreach/cases/OUT-2026-0002.json \
+            /tmp/outreach-migrations/OUT-2026-0002.migration.json \
+            --id-prefix 2 \
+            --organization-type university \
+            --opportunity-type research_pilot \
+            --role-category research_director \
+            --consent-basis existing_nonbusiness_relationship \
+            --consent-scope research_collaboration \
+            --signals company_outreach/foundation/signals/OUT-2026-0002.signals.json \
+            --asset omega_research_mapping_pilot \
+            --organization-domain polymtl.ca
+      - name: Generate and audit 8192-scenario atlas
+        run: |
+          rm -rf /tmp/outreach-atlas-a /tmp/outreach-atlas-b
+          python -m omega_company_outreach_t.foundation_cli atlas-generate /tmp/outreach-atlas-a --count 8192 --seed 20260802 --shard-size 512
+          python -m omega_company_outreach_t.foundation_cli atlas-audit /tmp/outreach-atlas-a
+          python -m omega_company_outreach_t.foundation_cli atlas-generate /tmp/outreach-atlas-b --count 8192 --seed 20260802 --shard-size 512
+          diff -ru /tmp/outreach-atlas-a /tmp/outreach-atlas-b
+      - name: Verify theoretical cardinality
+        run: python -m omega_company_outreach_t.foundation_cli atlas-cardinality
+      - name: Package evidence
+        if: matrix.python-version == '3.13'
+        run: |
+          mkdir -p /tmp/outreach-foundation-evidence
+          cp -R /tmp/outreach-schemas /tmp/outreach-foundation-evidence/schemas
+          cp -R /tmp/outreach-migrations /tmp/outreach-foundation-evidence/migrations
+          cp -R /tmp/outreach-atlas-a /tmp/outreach-foundation-evidence/atlas
+      - uses: actions/upload-artifact@v4
+        if: matrix.python-version == '3.13'
+        with:
+          name: omega-outreach-foundation-r10-evidence
+          path: /tmp/outreach-foundation-evidence
+          retention-days: 14
+          if-no-files-found: error
