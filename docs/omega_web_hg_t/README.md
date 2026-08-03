@@ -12,7 +12,8 @@ site → page → section → lien → preuve → version
 - domaines explicitement autorisés;
 - blocage des adresses privées, locales, réservées et non résolues;
 - aucune authentification, aucun cookie, aucun contournement de CAPTCHA, paywall ou contrôle d'accès;
-- respect de `robots.txt`;
+- respect de `robots.txt`, avec refus conservateur si la politique est indéterminable;
+- validation de chaque redirection avant qu'elle soit suivie;
 - délai minimal par domaine;
 - taille maximale par réponse;
 - corps bruts optionnels, séparés des graphes dérivés;
@@ -41,13 +42,14 @@ sections.jsonl
 edges.jsonl
 evidence.jsonl
 policy-decisions.jsonl
+url-candidates.jsonl
 hypergraph.json
 hypergraph.graphml
 oak-report.json
 raw/<préfixe>/<sha256>.html
 ```
 
-Chaque page possède un `evidence_id`, un hash SHA-256, les URL demandée/finale/canonique, l'horodatage UTC, le statut HTTP, le type MIME, la taille et certains en-têtes utiles. Les relations page→section et page→page transportent aussi l'identifiant de preuve.
+Chaque page possède un `evidence_id`, un hash SHA-256, les URL demandée/finale/canonique, l'horodatage UTC, le statut HTTP, le type MIME, la taille et certains en-têtes utiles. Les relations page→section et page→page transportent aussi l'identifiant de preuve. Les URL découvertes mais non encore visitées sont matérialisées comme nœuds candidats afin que toutes les arêtes GraphML aient des extrémités existantes.
 
 ## Statut épistémique
 
