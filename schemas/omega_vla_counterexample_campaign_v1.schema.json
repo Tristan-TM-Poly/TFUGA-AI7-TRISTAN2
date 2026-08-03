@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega_vla_counterexample_campaign_v1.schema.json",
+  "title": "Omega VLA Wave 4 Counterexample Campaign Plan",
+  "type": "object",
+  "required": [
+    "start_offset",
+    "requested",
+    "generated",
+    "next_offset",
+    "logical_frontier_size",
+    "aggregate_sha256",
+    "items",
+    "permanent_total_cap",
+    "theorem_claimed",
+    "formal_proof_claimed",
+    "scientific_validation_claimed"
+  ],
+  "properties": {
+    "start_offset": {"type": "integer", "minimum": 0},
+    "requested": {"type": "integer", "minimum": 0},
+    "generated": {"type": "integer", "minimum": 0},
+    "next_offset": {"type": "integer", "minimum": 0},
+    "logical_frontier_size": {"type": "integer", "minimum": 1000000000},
+    "aggregate_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "items": {"type": "array"},
+    "permanent_total_cap": {"const": null},
+    "theorem_claimed": {"const": false},
+    "formal_proof_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false}
+  },
+  "additionalProperties": false
+}
