@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_rigid_body_r02_atlas.schema.json",
+  "title": "Omega Rigid Body R0.2 deterministic atlas",
+  "type": "object",
+  "required": ["schema_version", "requested_logical_cells", "materialized_cells", "sha256", "angular_momentum", "cells", "claims"],
+  "properties": {
+    "schema_version": {"const": "omega-rigid-body-atlas-v1"},
+    "requested_logical_cells": {"type": "integer", "minimum": 1},
+    "materialized_cells": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "angular_momentum": {"type": "number", "exclusiveMinimum": 0},
+    "cells": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cell_id", "i1", "i2", "i3", "energy_fraction", "energy", "angular_momentum_squared", "regime", "elliptic_parameter_m", "period", "stable_axis_1_rate", "unstable_axis_2_rate", "stable_axis_3_rate"],
+        "properties": {
+          "cell_id": {"type": "string"},
+          "i1": {"type": "number", "exclusiveMinimum": 0},
+          "i2": {"type": "number", "exclusiveMinimum": 0},
+          "i3": {"type": "number", "exclusiveMinimum": 0},
+          "energy_fraction": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1},
+          "energy": {"type": "number", "exclusiveMinimum": 0},
+          "angular_momentum_squared": {"type": "number", "exclusiveMinimum": 0},
+          "regime": {"enum": ["stable_axis_1", "stable_axis_3"]},
+          "elliptic_parameter_m": {"type": "number", "minimum": 0, "maximum": 1},
+          "period": {"type": "number", "exclusiveMinimum": 0},
+          "stable_axis_1_rate": {"type": "number", "minimum": 0},
+          "unstable_axis_2_rate": {"type": "number", "minimum": 0},
+          "stable_axis_3_rate": {"type": "number", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    "claims": {
+      "type": "object",
+      "required": ["physical_certification", "experimental_validation", "new_law_of_physics"],
+      "properties": {
+        "physical_certification": {"const": false},
+        "experimental_validation": {"const": false},
+        "new_law_of_physics": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
