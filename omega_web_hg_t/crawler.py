@@ -147,6 +147,7 @@ class WebHypergraphCrawler:
                 except (ValueError, UnicodeError):
                     continue
                 target_id = stable_id("page", link)
+                result.discovered_urls[target_id] = link
                 result.edges.append(
                     EdgeRecord(
                         edge_id=stable_id("edge", page_id, target_id, "PAGE_LINKS_TO_PAGE"),
