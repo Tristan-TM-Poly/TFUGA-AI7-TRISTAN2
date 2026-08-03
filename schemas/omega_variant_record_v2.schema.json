@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega/variant-record-v2.schema.json",
+  "title": "Omega Variant Materialization Record v2",
+  "type": "object",
+  "required": ["global_index", "variant_id", "variant_uri", "variant", "status", "obligations", "accepted", "rejection_reason"],
+  "properties": {
+    "global_index": {"type": "integer", "minimum": 0},
+    "variant_id": {"type": "string", "pattern": "^var_[0-9a-f]{24}$"},
+    "variant_uri": {"type": "string", "pattern": "^variant://"},
+    "variant": {
+      "type": "object",
+      "required": ["algorithm_id", "language", "strategy", "precision", "layout", "parallelism", "hardware", "objective", "schema_version"],
+      "properties": {
+        "algorithm_id": {"type": "string"},
+        "language": {"type": "string"},
+        "strategy": {"type": "string"},
+        "precision": {"type": "string"},
+        "layout": {"type": "string"},
+        "parallelism": {"type": "string"},
+        "hardware": {"type": "string"},
+        "objective": {"type": "string"},
+        "schema_version": {"const": "omega.variant-address.v2"}
+      },
+      "additionalProperties": false
+    },
+    "status": {"enum": ["LOGICAL", "GENERATED", "COMPILED", "TESTED", "BENCHMARKED", "CERTIFIED", "SELECTED", "REJECTED", "ARCHIVED"]},
+    "obligations": {"type": "array", "items": {"type": "string"}},
+    "accepted": {"type": "boolean"},
+    "rejection_reason": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

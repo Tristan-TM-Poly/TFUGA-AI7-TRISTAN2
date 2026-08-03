@@ -1,0 +1,98 @@
+name: Omega Polyglot Multiverse R0.2
+
+on:
+  push:
+    branches: [feat/omega-polyglot-bench-r01]
+    paths:
+      - "omega_polyglot_bench_t/r02/**"
+      - "tests/test_omega_polyglot_multiverse_r02.py"
+      - "schemas/omega_*_v2.schema.json"
+      - "docs/omega-polyglot-multiverse-t/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-polyglot-r02.yml"
+  pull_request:
+    paths:
+      - "omega_polyglot_bench_t/r02/**"
+      - "tests/test_omega_polyglot_multiverse_r02.py"
+      - "schemas/omega_*_v2.schema.json"
+      - "docs/omega-polyglot-multiverse-t/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-polyglot-r02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oak-multiverse-r02:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.2
+        run: python -m compileall -q omega_polyglot_bench_t/r02 tests/test_omega_polyglot_multiverse_r02.py
+      - name: Run R0.2 tests
+        run: python -m pytest -q tests/test_omega_polyglot_multiverse_r02.py
+      - name: Inspect logical frontier
+        run: python -m omega_polyglot_bench_t.r02 frontier --algorithms 1024 > /tmp/frontier.json
+      - name: Materialize 10,000 cells with checkpoints
+        run: |
+          python -m omega_polyglot_bench_t.r02 materialize \
+            --algorithms 1024 \
+            --count 10000 \
+            --shard-size 1024 \
+            --output-dir /tmp/omega-polyglot-r02 \
+            > /tmp/campaign-output.json
+      - name: Materialize compact 16,384-cell seed atlas
+        run: python -m omega_polyglot_bench_t.r02 seed --output-dir /tmp/omega-polyglot-seed > /tmp/seed-output.json
+      - name: Validate schemas, seed atlas and OAK invariants
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          root = Path('.')
+          for schema_path in sorted(root.glob('schemas/omega_*_v2.schema.json')):
+              schema = json.loads(schema_path.read_text())
+              jsonschema.Draft202012Validator.check_schema(schema)
+
+          frontier = json.loads(Path('/tmp/frontier.json').read_text())
+          assert frontier['algorithms'] == 1024
+          assert frontier['variants_per_algorithm'] == 2_621_440
+          assert frontier['logical_frontier_size'] == 2_684_354_560
+          assert frontier['permanent_total_cap'] is None
+
+          manifest = json.loads(Path('/tmp/omega-polyglot-r02/manifest.json').read_text())
+          schema = json.loads(Path('schemas/omega_campaign_manifest_v2.schema.json').read_text())
+          jsonschema.validate(manifest, schema)
+          assert manifest['requested_count'] == 10_000
+          assert manifest['accepted'] + manifest['rejected'] == 10_000
+          assert manifest['duplicate_ids'] == 0
+          assert manifest['permanent_total_cap'] is None
+          assert manifest['scientific_validation_claimed'] is False
+          assert manifest['universal_language_winner_claimed'] is False
+
+          seed_manifest = json.loads(Path('/tmp/omega-polyglot-seed/seed_manifest.json').read_text())
+          assert seed_manifest['records'] == 16_384
+          observed = 0
+          for shard in seed_manifest['shards']:
+              path = Path('/tmp/omega-polyglot-seed') / shard['path']
+              content = path.read_bytes()
+              assert hashlib.sha256(content).hexdigest() == shard['sha256']
+              lines = [line for line in content.splitlines() if line]
+              assert len(lines) == shard['records']
+              observed += len(lines)
+          assert observed == 16_384
+          print('CERTIFIED_SOFTWARE_RESEARCH_FIXTURES_R0_2')
+          PY

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega/campaign-manifest-v2.schema.json",
+  "title": "Omega Polyglot Campaign Manifest v2",
+  "type": "object",
+  "required": ["campaign_id", "frontier_size", "start_index", "requested_count", "next_index", "accepted", "rejected", "duplicate_ids", "shards", "status", "permanent_total_cap", "scientific_validation_claimed", "universal_language_winner_claimed"],
+  "properties": {
+    "campaign_id": {"type": "string", "pattern": "^camp_[0-9a-f]{24}$"},
+    "frontier_size": {"type": "integer", "minimum": 1},
+    "start_index": {"type": "integer", "minimum": 0},
+    "requested_count": {"type": "integer", "minimum": 0},
+    "next_index": {"type": "integer", "minimum": 0},
+    "accepted": {"type": "integer", "minimum": 0},
+    "rejected": {"type": "integer", "minimum": 0},
+    "duplicate_ids": {"type": "integer", "minimum": 0},
+    "shards": {"type": "array", "items": {"type": "object"}},
+    "status": {"const": "OAK_LOGICAL_MATERIALIZATION_ONLY"},
+    "permanent_total_cap": {"type": "null"},
+    "scientific_validation_claimed": {"const": false},
+    "universal_language_winner_claimed": {"const": false}
+  },
+  "additionalProperties": false
+}
