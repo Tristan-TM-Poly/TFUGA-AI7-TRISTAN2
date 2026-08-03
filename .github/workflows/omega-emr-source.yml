@@ -1,0 +1,102 @@
+name: Omega EMR Source OAKBench
+
+on:
+  push:
+    branches: [feat/omega-emr-source-r0-1]
+    paths:
+      - "omega_emr_source_t/**"
+      - "tests/test_omega_emr_source_t.py"
+      - "examples/omega_emr_source_demo.py"
+      - "schemas/omega_emr_spectrum_target.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-emr-source.yml"
+  pull_request:
+    paths:
+      - "omega_emr_source_t/**"
+      - "tests/test_omega_emr_source_t.py"
+      - "examples/omega_emr_source_demo.py"
+      - "schemas/omega_emr_spectrum_target.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-emr-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test dependency
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile analysis kernel
+        run: |
+          python -m py_compile \
+            omega_emr_source_t/__init__.py \
+            omega_emr_source_t/models.py \
+            omega_emr_source_t/classifier.py \
+            omega_emr_source_t/atlas.py \
+            omega_emr_source_t/safety.py \
+            omega_emr_source_t/compiler.py \
+            omega_emr_source_t/oak.py \
+            omega_emr_source_t/reporting.py \
+            omega_emr_source_t/cli.py \
+            tests/test_omega_emr_source_t.py
+      - name: Run EMR OAKBench
+        run: pytest -q tests/test_omega_emr_source_t.py
+      - name: Verify deterministic visible-spectrum bundle
+        run: |
+          cat > /tmp/target.json <<'JSON'
+          {
+            "center_frequency_hz": 500000000000000.0,
+            "bandwidth_hz": 20000000000000.0,
+            "power_w": 0.001,
+            "coherence": "low",
+            "environment": "shielded_lab",
+            "max_prototype_tier": "low_power_benchtop"
+          }
+          JSON
+          python -m omega_emr_source_t.cli plan /tmp/target.json --output-dir /tmp/emr-plan
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('/tmp/emr-plan')
+          plan = json.loads((root / 'source-plan.json').read_text())
+          oak = json.loads((root / 'oak-report.json').read_text())
+          assert plan['spectral_region'] == 'visible'
+          assert plan['safety_status'] == 'pass'
+          assert oak['status'] == 'pass'
+          assert any(item['mechanism_id'] == 'semiconductor_recombination' for item in plan['recommended'])
+          PY
+      - name: Verify physical X-ray route is blocked
+        run: |
+          python - <<'PY'
+          from omega_emr_source_t import SpectrumTarget, audit_plan, compile_source
+
+          target = SpectrumTarget(
+              center_frequency_hz=1e18,
+              bandwidth_hz=1e17,
+              power_w=1e-6,
+              environment='shielded_lab',
+              max_prototype_tier='low_power_benchtop',
+          )
+          plan = compile_source(target)
+          assert plan.safety_status == 'blocked'
+          assert audit_plan(plan).status == 'blocked'
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-emr-source-${{ matrix.python-version }}
+          path: /tmp/emr-plan
+          if-no-files-found: error
+          retention-days: 14
