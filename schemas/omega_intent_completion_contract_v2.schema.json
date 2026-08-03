@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/omega_intent_completion_contract_v2.schema.json",
+  "title": "Omega Intent Completion Contract V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "requirements_total",
+    "requirements_verified",
+    "build_passed",
+    "tests_passed",
+    "documentation_synced",
+    "residuals_declared"
+  ],
+  "properties": {
+    "requirements_total": {"type": "integer", "minimum": 0},
+    "requirements_verified": {"type": "integer", "minimum": 0},
+    "requirements_blocked": {"type": "integer", "minimum": 0, "default": 0},
+    "requirements_rejected": {"type": "integer", "minimum": 0, "default": 0},
+    "claims_total": {"type": "integer", "minimum": 0, "default": 0},
+    "claims_evidence_backed": {"type": "integer", "minimum": 0, "default": 0},
+    "unresolved_claims": {"type": "integer", "minimum": 0, "default": 0},
+    "critical_risks_open": {"type": "integer", "minimum": 0, "default": 0},
+    "build_passed": {"type": "boolean"},
+    "tests_passed": {"type": "boolean"},
+    "documentation_synced": {"type": "boolean"},
+    "benchmarks_completed": {"type": "integer", "minimum": 0, "default": 0},
+    "benchmark_regressions": {"type": "integer", "minimum": 0, "default": 0},
+    "residuals_declared": {"type": "boolean"}
+  }
+}
