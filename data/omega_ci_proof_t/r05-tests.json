@@ -1,0 +1,9 @@
+{
+  "schema": "omega-ci-mutation-tests/v5",
+  "tests": [
+    {"test_id":"T-DOT-GITHUB","claim_ids":["CLAIM-PATH-NORMALIZATION-EXACT-PREFIX"],"input":".github/workflows/ci.yml","expected":".github/workflows/ci.yml","evidence_kind":"mminus_regression"},
+    {"test_id":"T-ONE-PREFIX","claim_ids":["CLAIM-PATH-NORMALIZATION-EXACT-PREFIX"],"input":"./omega/file.py","expected":"omega/file.py","evidence_kind":"unit"},
+    {"test_id":"T-PARENT","claim_ids":["CLAIM-PATH-NORMALIZATION-EXACT-PREFIX"],"input":"../omega/file.py","expected":"../omega/file.py","evidence_kind":"adversarial"},
+    {"test_id":"T-PLAIN","claim_ids":["CLAIM-PATH-NORMALIZATION-EXACT-PREFIX"],"input":"omega/file.py","expected":"omega/file.py","evidence_kind":"unit"}
+  ]
+}

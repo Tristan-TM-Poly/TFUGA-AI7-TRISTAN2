@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega_ci_claim_v1.schema.json",
+  "title": "Omega CI Claim Registry v1",
+  "type": "object",
+  "required": ["schema", "claims"],
+  "properties": {
+    "schema": {"const": "omega-ci-claim-registry/v1"},
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim_id", "statement", "subject_packages", "required_test_ids", "status"],
+        "properties": {
+          "claim_id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 1},
+          "subject_packages": {"type": "array", "items": {"type": "string"}},
+          "required_test_ids": {"type": "array", "items": {"type": "string"}},
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "domain_of_validity": {"type": "array", "items": {"type": "string"}},
+          "status": {"enum": ["FERTILE", "PROTOTYPED", "MEASURED", "REFUTED", "BLOCKED"]},
+          "evidence_ttl_days": {"type": "integer", "minimum": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

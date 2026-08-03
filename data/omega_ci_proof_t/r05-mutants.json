@@ -1,0 +1,14 @@
+{
+  "schema": "omega-ci-mutation-spec/v5",
+  "target": "path_normalizer",
+  "baseline_behavior": "exact_prefix",
+  "claim_id": "CLAIM-PATH-NORMALIZATION-EXACT-PREFIX",
+  "mutants": [
+    {"mutant_id":"M-LSTRIP","operator_id":"OP-CHARSET-TRIM","target":"path_normalizer","behavior":"lstrip_charset","description":"Use lstrip('./').","weight":2.0},
+    {"mutant_id":"M-STRIP","operator_id":"OP-BIDIRECTIONAL-TRIM","target":"path_normalizer","behavior":"strip_charset","description":"Trim both ends.","weight":1.5},
+    {"mutant_id":"M-DOT","operator_id":"OP-DROP-DOT","target":"path_normalizer","behavior":"remove_leading_dot","description":"Remove a leading dot.","weight":2.0},
+    {"mutant_id":"M-ALL-PREFIX","operator_id":"OP-LOOP-PREFIX","target":"path_normalizer","behavior":"all_relative_prefixes","description":"Remove every repeated ./ prefix.","weight":1.0},
+    {"mutant_id":"M-EQUIV","operator_id":"OP-REFORMULATE","target":"path_normalizer","behavior":"exact_prefix_clone","description":"Equivalent reformulation.","expected_equivalent":true},
+    {"mutant_id":"M-INVALID","operator_id":"OP-UNKNOWN","target":"path_normalizer","behavior":"unknown_behavior","description":"Invalid operator."}
+  ]
+}

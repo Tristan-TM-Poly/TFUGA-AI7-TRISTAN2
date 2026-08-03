@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/omega_ci_causal_dossier_v4.schema.json",
+  "title": "Omega CI causal dossier v4",
+  "type": "object",
+  "required": ["schema", "dossier_id", "failure_id", "diagnosis", "discrimination_plan", "reproduction", "bisect_plan", "counterfactual_worlds", "unresolved_questions", "limitations", "causality_proven", "execution_authorized", "automatic_patch_allowed", "automatic_merge_allowed", "human_review_required", "maximum_authority", "remote_mutations"],
+  "properties": {
+    "schema": {"const": "omega-ci-causal-dossier/v4"},
+    "dossier_id": {"type": "string", "pattern": "^DOSSIER-[A-F0-9]{20}$"},
+    "failure_id": {"type": "string"},
+    "diagnosis": {"type": "object"},
+    "discrimination_plan": {"type": "object"},
+    "reproduction": {"type": "object"},
+    "bisect_plan": {"type": "object"},
+    "counterfactual_worlds": {"type": "array"},
+    "unresolved_questions": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "causality_proven": {"const": false},
+    "execution_authorized": {"const": false},
+    "automatic_patch_allowed": {"const": false},
+    "automatic_merge_allowed": {"const": false},
+    "human_review_required": {"const": true},
+    "maximum_authority": {"const": "A3"},
+    "remote_mutations": {"const": 0}
+  },
+  "additionalProperties": false
+}

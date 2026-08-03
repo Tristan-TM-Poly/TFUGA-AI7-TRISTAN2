@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"omega-ci-mminus-compilation/v5",
+  "type":"object",
+  "required":["schema","compilation_id","rules","generated_tests","tests_applied","code_changes_applied","human_review_required","remote_mutations"],
+  "properties":{
+    "schema":{"const":"omega-ci-mminus-compilation/v5"},"compilation_id":{"type":"string","pattern":"^MMINUSCOMP-"},"rules":{"type":"array","items":{"type":"object","required":["rule_id","source_counterexample_id","claim_id","failure_pattern","correction_principle","regression_test_candidate","status"]}},"generated_tests":{"type":"array","items":{"type":"string"}},"tests_applied":{"const":false},"code_changes_applied":{"const":false},"human_review_required":{"const":true},"remote_mutations":{"const":0}
+  },
+  "additionalProperties":true
+}

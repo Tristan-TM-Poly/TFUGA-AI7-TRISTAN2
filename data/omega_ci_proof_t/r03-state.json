@@ -1,0 +1,15 @@
+{
+  "schema":"omega-ci-epistemic-state/v3",
+  "claims":{
+    "CLAIM-REPOTWIN-DETERMINISTIC":{"coverage_score":0.95,"coverage_threshold":0.80,"required_tests":1,"observed_tests":1,"evidence_statuses":["CURRENT"],"provenance_complete":true},
+    "CLAIM-ROUTER-CONSERVATIVE":{"coverage_score":0.92,"coverage_threshold":0.85,"required_tests":1,"observed_tests":1,"evidence_statuses":["CURRENT"],"provenance_complete":true},
+    "CLAIM-EVIDENCE-EXPIRY":{"coverage_score":1.0,"coverage_threshold":0.90,"required_tests":1,"observed_tests":1,"evidence_statuses":["CURRENT"],"provenance_complete":true},
+    "CLAIM-CLAIM-COVERAGE":{"coverage_score":1.0,"coverage_threshold":0.90,"required_tests":1,"observed_tests":1,"evidence_statuses":["CURRENT"],"provenance_complete":true}
+  },
+  "residuals":[
+    {"id":"RESIDUAL-DYNAMIC-IMPORTS","status":"ACCEPTED","severity":"medium","summary":"Static impact analysis does not exhaustively detect runtime reflection.","claim_ids":["CLAIM-ROUTER-CONSERVATIVE"]}
+  ],
+  "conflicts":[
+    {"claim_id":"CLAIM-ROUTER-CONSERVATIVE","status":"OPEN","severity":"medium"}
+  ]
+}

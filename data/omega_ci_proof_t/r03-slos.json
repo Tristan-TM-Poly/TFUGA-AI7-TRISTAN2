@@ -1,0 +1,11 @@
+{
+  "schema":"omega-ci-truth-slo-policy/v3",
+  "slos":[
+    {"slo_id":"SLO-CRITICAL-CURRENT","metric":"critical_claims_current_ratio","operator":">=","target":1.0,"severity":"critical","description":"All critical claims must have only current supporting evidence."},
+    {"slo_id":"SLO-WEIGHTED-COVERAGE","metric":"weighted_claim_coverage","operator":">=","target":0.90,"severity":"critical","description":"Weighted claim coverage must remain at least 0.90."},
+    {"slo_id":"SLO-TRACEABILITY","metric":"claim_traceability_ratio","operator":">=","target":1.0,"severity":"critical","description":"Every claim must preserve provenance."},
+    {"slo_id":"SLO-CRITICAL-RESIDUALS","metric":"open_critical_residuals","operator":"==","target":0.0,"severity":"critical","description":"No critical residual may remain open."},
+    {"slo_id":"SLO-CONFLICT-BUDGET","metric":"open_evidence_conflicts","operator":"<=","target":1.0,"severity":"high","description":"At most one explicit finite fixture conflict may remain open."},
+    {"slo_id":"SLO-PROOF-DEBT","metric":"proof_debt_score","operator":"<=","target":3.0,"severity":"high","description":"Proof debt must remain within the declared fixture budget."}
+  ]
+}

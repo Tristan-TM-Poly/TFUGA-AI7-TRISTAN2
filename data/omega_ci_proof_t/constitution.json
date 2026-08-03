@@ -1,0 +1,22 @@
+{
+  "schema": "omega-ci-constitution/v2",
+  "immutable_principles": [
+    "no_scientific_claim_without_evidence_class",
+    "no_sensitive_merge_without_human_approval",
+    "no_secret_exfiltration",
+    "no_irreversible_action_without_rollback_or_consent",
+    "all_autonomous_actions_are_audited",
+    "no_self_authority_escalation"
+  ],
+  "maximum_authorized_level": "A3",
+  "permissions": {
+    "A1": ["read_evidence", "verify_evidence"],
+    "A2": ["plan_tests", "expire_evidence", "compute_claim_coverage"],
+    "A3": ["generate_tests", "generate_diagnostics", "generate_promotion_proof"]
+  },
+  "automatic_merge_allowed": false,
+  "human_review_required": true,
+  "amendment_requires_separate_pr": true,
+  "amendment_requires_non_regression_evidence": true,
+  "amendment_requires_audit_log": true
+}

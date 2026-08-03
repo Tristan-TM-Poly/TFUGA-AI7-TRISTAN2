@@ -1,0 +1,17 @@
+{
+  "schema": "omega-ci-mminus/v1",
+  "rules": [
+    {
+      "rule_id": "MMINUS-R03-001",
+      "failure_summary": "Generic lstrip removed the leading dot from .github paths.",
+      "test_name": "test_dot_github_prefix_is_preserved_generated",
+      "import_line": "from omega_intent_t.r03.scanner import normalize_path",
+      "assertions": [
+        "assert normalize_path('.github/workflows/ci.yml') == '.github/workflows/ci.yml'",
+        "assert normalize_path('./omega_intent_t/r03/router.py') == 'omega_intent_t/r03/router.py'"
+      ],
+      "source_failure_id": "M_MINUS-R0.3-001",
+      "risk": "normal"
+    }
+  ]
+}

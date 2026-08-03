@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"omega-ci-mutation-campaign/v5",
+  "type":"object",
+  "required":["schema","campaign_id","target","baseline_behavior","results","generated","evaluated","killed","survived","equivalent","invalid","mutation_score","weighted_mutation_score","surviving_mutant_ids","execution_authorized","code_changes_applied","automatic_patch_allowed","remote_mutations"],
+  "properties":{
+    "schema":{"const":"omega-ci-mutation-campaign/v5"},
+    "campaign_id":{"type":"string","pattern":"^MUTCAMP-"},
+    "target":{"type":"string"},
+    "baseline_behavior":{"type":"string"},
+    "results":{"type":"array","items":{"type":"object","required":["mutant_id","operator_id","status","weight","killed_by","surviving_tests","observed_outputs","reason"]}},
+    "generated":{"type":"integer","minimum":0},"evaluated":{"type":"integer","minimum":0},"killed":{"type":"integer","minimum":0},"survived":{"type":"integer","minimum":0},"equivalent":{"type":"integer","minimum":0},"invalid":{"type":"integer","minimum":0},
+    "mutation_score":{"type":"number","minimum":0,"maximum":1},"weighted_mutation_score":{"type":"number","minimum":0,"maximum":1},
+    "surviving_mutant_ids":{"type":"array","items":{"type":"string"}},
+    "execution_authorized":{"const":false},"code_changes_applied":{"const":false},"automatic_patch_allowed":{"const":false},"remote_mutations":{"const":0}
+  },
+  "additionalProperties":true
+}

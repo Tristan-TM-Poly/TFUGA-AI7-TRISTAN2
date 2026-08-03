@@ -1,0 +1,47 @@
+{
+  "run_id": "CI-SAMPLE-001",
+  "test_results": [
+    {
+      "test_id": "TEST-REPOTWIN-DETERMINISM",
+      "status": "PASSED",
+      "environment": "python-3.12",
+      "command": "pytest -q tests/test_omega_intent_r03.py -k deterministic",
+      "duration_ms": 25,
+      "output_digest": "determinism-pass",
+      "notes": "finite software fixture"
+    },
+    {
+      "test_id": "TEST-ROUTER-REVERSE-CLOSURE",
+      "status": "PASSED",
+      "environment": "python-3.12",
+      "command": "pytest -q tests/test_omega_intent_r03.py -k reverse",
+      "duration_ms": 18,
+      "output_digest": "reverse-pass",
+      "notes": "static import graph only"
+    },
+    {
+      "test_id": "TEST-DOT-GITHUB-REGRESSION",
+      "status": "PASSED",
+      "environment": "python-3.12",
+      "command": "pytest -q tests/test_omega_intent_r03.py -k dot_github",
+      "duration_ms": 8,
+      "output_digest": "dot-github-pass",
+      "notes": "M-minus regression"
+    },
+    {
+      "test_id": "TEST-PROOF-TAMPER-DETECTION",
+      "status": "PASSED",
+      "environment": "python-3.12",
+      "command": "pytest -q tests/test_omega_intent_r03.py -k tamper",
+      "duration_ms": 12,
+      "output_digest": "tamper-pass",
+      "notes": "content integrity fixture"
+    }
+  ],
+  "properties": {
+    "deterministic_output": true,
+    "reverse_dependency_closure": true,
+    "artifact_integrity": true,
+    "automatic_merge_disabled": true
+  }
+}

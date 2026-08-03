@@ -1,0 +1,9 @@
+{
+  "schema":"omega-ci-experiment-candidates/v3",
+  "experiments":[
+    {"experiment_id":"EXP-ROUTER-DYNAMIC-FIXTURE","description":"Compare static routing against a controlled runtime plugin fixture.","expected_information_gain":0.82,"compute_cost":0.20,"human_cost":0.10,"safety_risk":0.02,"affected_claim_ids":["CLAIM-ROUTER-CONSERVATIVE"],"required_capability":"run_tests"},
+    {"experiment_id":"EXP-REPOTWIN-CROSS-ENV","description":"Reproduce the RepoTwin manifest across Linux Python environments.","expected_information_gain":0.55,"compute_cost":0.18,"human_cost":0.03,"safety_risk":0.01,"affected_claim_ids":["CLAIM-REPOTWIN-DETERMINISTIC"],"required_capability":"run_tests"},
+    {"experiment_id":"EXP-PUBLISH-RESULTS","description":"Publish experimental results automatically.","expected_information_gain":0.90,"compute_cost":0.05,"human_cost":0.00,"safety_risk":0.00,"affected_claim_ids":["CLAIM-ROUTER-CONSERVATIVE"],"required_capability":"publish"},
+    {"experiment_id":"EXP-HIGH-RISK","description":"Unbounded external mutation campaign.","expected_information_gain":1.00,"compute_cost":0.10,"human_cost":0.00,"safety_risk":0.80,"affected_claim_ids":["CLAIM-ROUTER-CONSERVATIVE"],"required_capability":"run_tests"}
+  ]
+}
