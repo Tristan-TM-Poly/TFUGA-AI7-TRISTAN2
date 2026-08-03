@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega_polyglot_autotune_report_v4.schema.json",
+  "title": "Omega Polyglot Autotune Report V4",
+  "type": "object",
+  "required": ["schema_version", "created_at_utc", "hardware", "protocol", "measurements", "champions", "status", "claims"],
+  "properties": {
+    "schema_version": {"const": "omega-polyglot-autotune-v4"},
+    "created_at_utc": {"type": "string"},
+    "hardware": {"type": "object"},
+    "protocol": {"type": "object"},
+    "status": {"const": "OAK_SOFTWARE_AUTOTUNE_ONLY"},
+    "claims": {
+      "type": "object",
+      "required": ["universal_language_winner", "scientific_validation", "energy_measured", "hardware_counter_bandwidth"],
+      "properties": {
+        "universal_language_winner": {"const": false},
+        "scientific_validation": {"const": false},
+        "energy_measured": {"const": false},
+        "hardware_counter_bandwidth": {"const": false}
+      }
+    },
+    "measurements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["algorithm", "backend", "profile", "variant", "candidate_id", "size", "correct", "features", "notes"],
+        "properties": {
+          "algorithm": {"enum": ["affine", "affine_chain", "sum", "dot"]},
+          "backend": {"type": "string"},
+          "profile": {"type": "string"},
+          "variant": {"type": "string"},
+          "candidate_id": {"type": "string"},
+          "size": {"type": "integer", "minimum": 0},
+          "correct": {"type": "boolean"},
+          "median_ns": {"type": ["integer", "null"], "minimum": 0},
+          "max_abs_error": {"type": ["number", "null"], "minimum": 0},
+          "features": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "champions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["algorithm", "size", "candidate_id", "median_ns", "max_abs_error"],
+        "properties": {
+          "size": {"type": "integer", "minimum": 0},
+          "median_ns": {"type": "integer", "minimum": 1},
+          "max_abs_error": {"type": "number", "minimum": 0}
+        }
+      }
+    }
+  }
+}
