@@ -5,9 +5,16 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .audit import audit_competition_ledger
-from .compiler import compile_competition_ledger
+from .hardening import install_hardening
+
+install_hardening()
+
+from . import audit as _audit_module
+from . import compiler as _compiler_module
 from .model import BUNDLE_SCHEMA, stable_digest
+
+audit_competition_ledger = _audit_module.audit_competition_ledger
+compile_competition_ledger = _compiler_module.compile_competition_ledger
 
 
 def recommend_active_cycles(output_dir: str | Path) -> dict[str, Any]:
