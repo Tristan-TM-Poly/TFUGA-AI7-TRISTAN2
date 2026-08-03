@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_vla_oak_report_v2.schema.json",
+  "title": "Omega VLA OAK Report R0.2-MAX",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "system",
+    "version",
+    "status",
+    "passed",
+    "logical_frontier_cells",
+    "checks",
+    "theorem_claimed",
+    "formal_proof_claimed",
+    "scientific_validation_claimed"
+  ],
+  "properties": {
+    "system": {"const": "Ω-VLA-T∞²"},
+    "version": {"const": "R0.2-MAX"},
+    "status": {
+      "enum": [
+        "OAK_PASS_SOFTWARE_RESEARCH_FIXTURES_R0_2_MAX",
+        "OAK_FAIL_SOFTWARE_RESEARCH_FIXTURES_R0_2_MAX"
+      ]
+    },
+    "passed": {"type": "boolean"},
+    "logical_frontier_cells": {"type": "integer", "minimum": 1000000000000},
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "passed", "measured", "expected", "notes"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "passed": {"type": "boolean"},
+          "measured": {"type": ["number", "integer", "string", "boolean"]},
+          "expected": {"type": "string", "minLength": 1},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "theorem_claimed": {"const": false},
+    "formal_proof_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false}
+  }
+}
