@@ -50,6 +50,12 @@
     - Failure: treating additions, commits or generated JSON volume as mathematical progress.
     - Rule: progress requires a verified source, useful result, reproducible artifact, counterexample, formalization or externally reviewed proof.
 
+13. **Implicit SQL arity drift**
+    - Failure observed in CI run `30827707917`: the `leads` table had eight columns, while a positional INSERT declared seven placeholders and supplied eight values.
+    - Consequence: all Python 3.10–3.13 jobs failed before benchmark execution; the 250k gate was correctly skipped.
+    - Rule: mutable tables use explicit column lists and matching placeholder counts; schema evolution must be exercised by integration tests before scale claims.
+    - Correction: `upsert_lead` now names all eight columns and uses eight placeholders.
+
 ## Required interpretation
 
 ```text
@@ -57,4 +63,6 @@
 250,000 stored obligations != 250,000 mathematical advances
 268,435,456 logical cells = address space
 268,435,456 logical cells != verified open problems
+CI failure = discovered engineering defect and M⁻ evidence
+CI failure != successful MAX validation
 ```
