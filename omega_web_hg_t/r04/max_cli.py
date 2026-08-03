@@ -44,6 +44,18 @@ def _write_shard_config(
 
 
 def _annotate_report(root: Path, config: dict[str, object]) -> None:
+    checkpoint_path = root / "checkpoint.json"
+    if not checkpoint_path.exists():
+        checkpoint_path.write_text(
+            json.dumps(
+                {"adapter_index": 0, "page": 1, "records": 0, "requests": 0},
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
     path = root / "campaign-report.json"
     report = json.loads(path.read_text(encoding="utf-8"))
     report["campaign_id"] = (
