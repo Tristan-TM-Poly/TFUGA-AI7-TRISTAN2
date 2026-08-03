@@ -1,0 +1,209 @@
+policy_id: omega-github-revenue-r02-max
+version: "0.2.0"
+status: executable-prototype
+
+principles:
+  - evidence_before_claim
+  - authorization_before_audit
+  - privacy_minimization
+  - ip_review_before_disclosure
+  - finite_runs_without_permanent_global_ceiling
+  - checkpoints_before_scale
+  - observed_transaction_before_revenue_claim
+  - provider_reconciliation_before_financial_decision
+  - human_control_for_public_or_irreversible_actions
+
+authorization:
+  default: deny
+  explicit_assertion_required: true
+  timezone_required: true
+  expiry_supported: true
+  repository_binding_required: true
+  permitted_operations:
+    - read_metadata
+    - read_text
+    - count_lines
+    - hash_files
+    - scan_risk_patterns
+    - generate_report
+  prohibited:
+    - inaccessible_system_inspection
+    - authentication_bypass
+    - credential_use
+    - destructive_repository_mutation
+    - third_party_private_repository_without_permission
+
+privacy:
+  forbidden_fields:
+    - account_number
+    - bank_account
+    - bank_account_number
+    - void_cheque
+    - transit
+    - transit_number
+    - institution_number
+    - routing_number
+    - swift
+    - iban
+    - sin
+    - social_insurance_number
+    - tax_id
+    - home_address
+    - stripe_secret
+    - api_key
+    - password
+    - credential
+  secret_value_patterns:
+    - github_token_like
+    - openai_secret_like
+    - aws_access_key_like
+    - private_key_header
+    - stripe_secret_like
+  finding_storage:
+    include_secret_value: false
+    include_one_way_fingerprint: true
+    include_category: true
+    include_path: true
+  real_financial_database:
+    commit_to_git: false
+    public_artifact: false
+    minimum_fields_only: true
+
+repository_audit:
+  network_calls: false
+  dependency_execution: false
+  repository_mutation: false
+  default_text_file_budget_bytes: 2000000
+  excluded_directories:
+    - .git
+    - .hg
+    - .svn
+    - .venv
+    - venv
+    - node_modules
+    - __pycache__
+  recognized_checks:
+    - readme
+    - license
+    - tests
+    - github_actions
+    - security_policy
+    - funding_configuration
+    - secret_pattern_fingerprints
+  score_semantics: routing_heuristic_only
+  certifications:
+    security: false
+    legal: false
+    scientific: false
+    accounting: false
+
+campaigns:
+  permanent_max_total_items: null
+  source_must_be_finite_per_run: true
+  explicit_stop_after_supported: true
+  lazy_generation: true
+  durable_store: sqlite
+  journal_mode: WAL
+  batch_upsert: true
+  adaptive_batching: true
+  checkpoints: true
+  resume: true
+  duplicate_detection: true
+  quarantine: true
+  content_root: sha256_merkle
+  synthetic_records:
+    count_as_market_evidence: false
+    count_as_customers: false
+    count_as_revenue: false
+    count_as_scientific_results: false
+
+conversion:
+  zero_denominator: null
+  small_samples_must_show_uncertainty: true
+  model: beta_binomial_decision_aid
+  causal_claims: false
+  stages:
+    - visitor_to_sponsor_page
+    - sponsor_page_to_click
+    - click_to_sponsorship
+    - inquiry_to_qualified
+    - qualified_to_paid
+    - paid_to_repeat
+
+reconciliation:
+  fields:
+    - source
+    - event_id
+    - gross_minor
+    - fee_minor
+    - currency
+    - status
+  detects:
+    - missing_internal
+    - missing_provider
+    - duplicates
+    - amount_mismatch
+    - fee_mismatch
+    - currency_mismatch
+    - status_mismatch
+  bank_statement_equivalent: false
+  tax_filing_equivalent: false
+  accounting_certification: false
+
+pricing:
+  dimensions:
+    - delivery_minutes
+    - review_minutes
+    - support_minutes
+    - compute_minor
+    - tooling_minor
+    - contingency_fraction
+    - hourly_cost_basis
+    - target_contribution_margin
+  market_price_claim: false
+  willingness_to_pay_requires_observation: true
+  contribution_margin_is_net_profit: false
+
+sponsor_profile:
+  generation: local_review_bundle
+  autonomous_publication: false
+  tier_gate:
+    unlimited_custom_work: forbidden
+    bounded_collective_benefits: required
+    estimated_delivery_cost_fraction_limit: 0.5
+  global_non_claims:
+    - no_investment_return
+    - no_guaranteed_scientific_result
+    - no_unlimited_consulting
+    - no_private_ip_access_without_agreement
+
+portfolio:
+  selection:
+    - pareto_front
+    - evidence_weighted_value
+    - dependency_order
+    - finite_budget
+  dependency_cycles: reject
+  valuation_claim: false
+  guaranteed_return: false
+
+human_sovereignty:
+  required_for:
+    - publishing_github_sponsors_profile
+    - changing_public_tiers
+    - sending_external_messages
+    - accepting_contract
+    - issuing_invoice
+    - charging_payment
+    - moving_money
+    - publishing_patent_sensitive_material
+    - disclosing_private_client_data
+
+promotion_to_r03:
+  require_any:
+    - consented_external_oakgate_pilot
+    - independent_authorized_reproduction
+    - reconciled_real_sponsor_transaction
+    - bounded_paid_service_with_measured_delivery_economics
+    - observed_failure_that_materially_improves_m_minus
+  generated_volume_alone_is_sufficient: false
