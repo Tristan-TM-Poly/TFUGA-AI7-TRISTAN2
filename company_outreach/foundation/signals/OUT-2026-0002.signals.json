@@ -1,0 +1,19 @@
+{
+  "relevance": 0.92,
+  "authority": 0.64,
+  "problem_fit": 0.86,
+  "asset_readiness": 0.68,
+  "evidence": 0.76,
+  "timing": 0.72,
+  "reciprocity": 0.88,
+  "expected_value": 0.78,
+  "probability_response": 0.46,
+  "probability_conversion": 0.36,
+  "optionality": 0.91,
+  "effort_cost": 0.24,
+  "legal_risk": 0.14,
+  "reputation_risk": 0.12,
+  "privacy_risk": 0.16,
+  "maintenance_cost": 0.28,
+  "opportunity_cost": 0.20
+}
