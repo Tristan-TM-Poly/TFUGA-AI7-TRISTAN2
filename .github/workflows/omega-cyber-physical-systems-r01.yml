@@ -69,12 +69,22 @@ jobs:
           set -euo pipefail
           python -m omega_cyber_physical_systems_t.r02_cli unit-demo > /tmp/cps-unit-graph.json
           python -m omega_cyber_physical_systems_t.r02_cli energy-demo > /tmp/cps-energy-graph.json
+
+          set +e
           python -m omega_cyber_physical_systems_t.r02_cli energy-demo --faulted > /tmp/cps-energy-faulted.json
+          faulted_status=$?
+          set -e
+          if [ "$faulted_status" -ne 0 ] && [ "$faulted_status" -ne 2 ]; then
+            echo "Unexpected faulted energy-demo status: $faulted_status"
+            exit 1
+          fi
+
           set +e
           python -m omega_cyber_physical_systems_t.r02_cli energy-demo --untracked-output-j 5 > /tmp/cps-energy-adversarial.json
           adversarial_status=$?
           set -e
           test "$adversarial_status" -eq 2
+
           python -m omega_cyber_physical_systems_t.r02_cli convert 60 rpm rad/s > /tmp/cps-unit-conversion.json
           python examples/omega_cyber_physical_systems_r02_energy_demo.py > /tmp/cps-r02-example.json
       - name: Validate JSON contracts and OAK boundaries
