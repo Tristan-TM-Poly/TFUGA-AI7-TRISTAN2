@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/cyber_physical_hybrid_automaton_r03.schema.json",
+  "title": "Omega CPS R0.3 Hybrid Automaton",
+  "type": "object",
+  "required": [
+    "automaton_id",
+    "variables",
+    "modes",
+    "transitions",
+    "initial_mode",
+    "initial_state",
+    "safe_modes",
+    "permanent_total_cap",
+    "physics_certified",
+    "safety_certified",
+    "evidence_hash"
+  ],
+  "properties": {
+    "automaton_id": {"type": "string", "minLength": 1},
+    "variables": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "modes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["mode_id", "flows", "invariants", "safe", "terminal", "description"],
+        "properties": {
+          "mode_id": {"type": "string", "minLength": 1},
+          "flows": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["intercept", "coefficients"],
+              "properties": {
+                "intercept": {"type": "number"},
+                "coefficients": {"type": "object", "additionalProperties": {"type": "number"}}
+              },
+              "additionalProperties": false
+            }
+          },
+          "invariants": {"type": "array", "items": {"$ref": "#/$defs/predicate"}},
+          "safe": {"type": "boolean"},
+          "terminal": {"type": "boolean"},
+          "description": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "transition_id",
+          "source_mode",
+          "target_mode",
+          "guards",
+          "resets",
+          "priority",
+          "minimum_dwell_s",
+          "controllable",
+          "description"
+        ],
+        "properties": {
+          "transition_id": {"type": "string", "minLength": 1},
+          "source_mode": {"type": "string", "minLength": 1},
+          "target_mode": {"type": "string", "minLength": 1},
+          "guards": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/predicate"}},
+          "resets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["target_variable", "source_variable", "scale", "offset"],
+              "properties": {
+                "target_variable": {"type": "string", "minLength": 1},
+                "source_variable": {"type": ["string", "null"]},
+                "scale": {"type": "number"},
+                "offset": {"type": "number"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "priority": {"type": "integer"},
+          "minimum_dwell_s": {"type": "number", "minimum": 0},
+          "controllable": {"type": "boolean"},
+          "description": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "initial_mode": {"type": "string", "minLength": 1},
+    "initial_state": {"type": "object", "additionalProperties": {"type": "number"}},
+    "safe_modes": {"type": "array", "items": {"type": "string"}},
+    "emergency_mode": {"type": ["string", "null"]},
+    "permanent_total_cap": {"type": "null"},
+    "physics_certified": {"const": false},
+    "safety_certified": {"const": false},
+    "evidence_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "predicate": {
+      "type": "object",
+      "required": ["variable", "comparator", "threshold", "tolerance", "label"],
+      "properties": {
+        "variable": {"type": "string", "minLength": 1},
+        "comparator": {"enum": ["<", "<=", ">", ">=", "==", "!="]},
+        "threshold": {"type": "number"},
+        "tolerance": {"type": "number", "minimum": 0},
+        "label": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
