@@ -1,0 +1,62 @@
+name: Omega VLA R0.1 OAKBench
+
+on:
+  push:
+    branches: [feat/omega-vla-t-r0-1]
+    paths:
+      - "omega_vla_t/**"
+      - "tests/test_omega_vla_t.py"
+      - "examples/omega_vla_t_demo.py"
+      - "docs/omega_vla_t/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla.yml"
+  pull_request:
+    paths:
+      - "omega_vla_t/**"
+      - "tests/test_omega_vla_t.py"
+      - "examples/omega_vla_t_demo.py"
+      - "docs/omega_vla_t/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-vla.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install runtime and tests
+        run: python -m pip install --disable-pip-version-check numpy pytest
+      - name: Compile package and fixtures
+        run: python -m compileall -q omega_vla_t tests/test_omega_vla_t.py examples/omega_vla_t_demo.py
+      - name: Run focused OAKBench
+        run: pytest -q tests/test_omega_vla_t.py
+      - name: Verify deterministic benchmark
+        run: |
+          python -m omega_vla_t.cli benchmark --seed 7 --output /tmp/vla-a.json
+          python -m omega_vla_t.cli benchmark --seed 7 --output /tmp/vla-b.json
+          cmp /tmp/vla-a.json /tmp/vla-b.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('/tmp/vla-a.json').read_text())
+          assert payload['system'] == 'Ω-VLA-T∞'
+          assert payload['version'] == 'R0.1'
+          assert payload['claims']['theorem_claimed'] is False
+          assert payload['claims']['scientific_validation_claimed'] is False
+          assert payload['operator']['oak']['scientific_validation_claimed'] is False
+          assert payload['graph']['hodge']['reconstruction_error'] < 1e-12
+          print('OAK_VLA_R0_1_SOFTWARE_FIXTURES_PASS')
+          PY
