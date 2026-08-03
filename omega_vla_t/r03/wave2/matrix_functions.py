@@ -8,7 +8,7 @@ identities, not advertised as replacements for LAPACK/SciPy production code.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 import numpy.typing as npt
@@ -45,7 +45,7 @@ class MatrixFunctionReport:
         return payload
 
 
-def _square_matrix(matrix: npt.ArrayLike, *, max_dimension: int = 2048) -> Array:
+def _square_matrix(matrix: npt.ArrayLike, *, max_dimension: int) -> Array:
     array = np.asarray(matrix, dtype=np.complex128)
     if array.ndim != 2 or array.shape[0] != array.shape[1]:
         raise MatrixFunctionError("matrix functions require a square matrix")
@@ -70,22 +70,17 @@ def _solve(left: Array, right: Array, *, condition_limit: float = 1e15) -> tuple
     return np.linalg.solve(left, right), condition
 
 
-def matrix_exponential(
-    matrix: npt.ArrayLike,
-    *,
-    tolerance: float = 1e-11,
-    max_dimension: int = 2048,
-) -> MatrixFunctionReport:
-    """Scaling-and-squaring with the [13/13] Padé approximant."""
+def _pade13_exponential(matrix: Array) -> tuple[Array, int, float]:
+    """Return exp(A), scaling count and solve condition without recursion."""
 
-    a = _square_matrix(matrix, max_dimension=max_dimension)
-    n = a.shape[0]
+    n = matrix.shape[0]
     identity = np.eye(n, dtype=np.complex128)
     theta13 = 5.371920351148152
-    norm1 = float(np.linalg.norm(a, 1))
-    scaling = 0 if norm1 == 0.0 else max(0, int(np.ceil(np.log2(norm1 / theta13))))
-    scaled = a / (2**scaling)
-
+    norm1 = float(np.linalg.norm(matrix, 1))
+    scaling = 0 if norm1 == 0.0 else max(
+        0, int(np.ceil(np.log2(norm1 / theta13)))
+    )
+    scaled = matrix / (2**scaling)
     b = (
         64764752532480000.0,
         32382376266240000.0,
@@ -122,13 +117,28 @@ def matrix_exponential(
     result, condition = _solve(v - u, v + u)
     for _ in range(scaling):
         result = result @ result
-    inverse_report = matrix_exponential(-a, tolerance=tolerance, max_dimension=max_dimension) if np.linalg.norm(a) > 0 and n <= 64 else None
-    if inverse_report is None:
-        residual = 0.0 if norm1 == 0.0 else float("nan")
-        warnings = ("inverse identity residual skipped for dimension envelope",) if norm1 else ()
+    return result, scaling, condition
+
+
+def matrix_exponential(
+    matrix: npt.ArrayLike,
+    *,
+    tolerance: float = 1e-11,
+    max_dimension: int = 2048,
+    audit_inverse_dimension: int = 128,
+) -> MatrixFunctionReport:
+    """Scaling-and-squaring with the [13/13] Padé approximant."""
+
+    a = _square_matrix(matrix, max_dimension=max_dimension)
+    result, scaling, condition = _pade13_exponential(a)
+    identity = np.eye(a.shape[0], dtype=np.complex128)
+    warnings: tuple[str, ...] = ()
+    if a.shape[0] <= audit_inverse_dimension:
+        inverse_result, _, _ = _pade13_exponential(-a)
+        residual = _relative_residual(result @ inverse_result - identity, identity)
     else:
-        residual = _relative_residual(result @ inverse_report.result - identity, identity)
-        warnings = ()
+        residual = float("nan")
+        warnings = ("inverse identity audit skipped above audit_inverse_dimension",)
     finite = bool(np.all(np.isfinite(result)))
     passed = finite and (np.isnan(residual) or residual <= tolerance * 100)
     return MatrixFunctionReport(
@@ -156,9 +166,10 @@ def _newton_sqrt(
     n = matrix.shape[0]
     y = matrix.copy()
     z = np.eye(n, dtype=np.complex128)
+    identity = np.eye(n, dtype=np.complex128)
     for iteration in range(1, max_iterations + 1):
-        inv_y, _ = _solve(y, np.eye(n, dtype=np.complex128))
-        inv_z, _ = _solve(z, np.eye(n, dtype=np.complex128))
+        inv_y, _ = _solve(y, identity)
+        inv_z, _ = _solve(z, identity)
         y_next = 0.5 * (y + inv_z)
         z_next = 0.5 * (z + inv_y)
         change = _relative_residual(y_next - y, y_next)
@@ -179,9 +190,7 @@ def matrix_square_root(
 
     a = _square_matrix(matrix, max_dimension=max_dimension)
     result, iterations, change = _newton_sqrt(
-        a,
-        tolerance=tolerance,
-        max_iterations=max_iterations,
+        a, tolerance=tolerance, max_iterations=max_iterations
     )
     residual = _relative_residual(result @ result - a, a)
     finite = bool(np.all(np.isfinite(result)))
@@ -209,11 +218,7 @@ def matrix_logarithm(
     max_terms: int = 256,
     max_dimension: int = 512,
 ) -> MatrixFunctionReport:
-    """Inverse scaling-and-squaring plus atanh series near identity.
-
-    The principal logarithm is rejected when a numerical eigenvalue lies on the
-    closed negative real axis or at zero.
-    """
+    """Inverse scaling-and-squaring plus atanh series near identity."""
 
     a = _square_matrix(matrix, max_dimension=max_dimension)
     eigenvalues = np.linalg.eigvals(a)
@@ -229,11 +234,12 @@ def matrix_logarithm(
     while np.linalg.norm(reduced - identity, 1) > 0.5:
         if roots >= max_square_roots:
             raise MatrixFunctionError("logarithm inverse scaling exceeded max_square_roots")
-        reduced, _, _ = _newton_sqrt(reduced, tolerance=tolerance, max_iterations=100)
+        reduced, _, _ = _newton_sqrt(
+            reduced, tolerance=tolerance, max_iterations=100
+        )
         roots += 1
 
-    denominator = reduced + identity
-    x, condition = _solve(denominator, reduced - identity)
+    x, condition = _solve(reduced + identity, reduced - identity)
     x2 = x @ x
     term = x.copy()
     series = x.copy()
@@ -251,8 +257,8 @@ def matrix_logarithm(
         raise MatrixFunctionError("logarithm series did not converge within max_terms")
 
     result = (2 ** (roots + 1)) * series
-    exponential = matrix_exponential(result, tolerance=tolerance, max_dimension=max_dimension)
-    residual = _relative_residual(exponential.result - a, a)
+    exponential, _, _ = _pade13_exponential(result)
+    residual = _relative_residual(exponential - a, a)
     finite = bool(np.all(np.isfinite(result)))
     return MatrixFunctionReport(
         function="logarithm",
@@ -283,9 +289,10 @@ def matrix_sign(
     if np.any(np.abs(eigenvalues.real) <= tolerance):
         raise MatrixFunctionError("matrix sign rejected eigenvalues near the imaginary axis")
     x = a.copy()
-    condition = None
+    identity = np.eye(x.shape[0], dtype=np.complex128)
+    condition: float | None = None
     for iteration in range(1, max_iterations + 1):
-        inverse, condition = _solve(x, np.eye(x.shape[0], dtype=np.complex128))
+        inverse, condition = _solve(x, identity)
         candidate = 0.5 * (x + inverse)
         change = _relative_residual(candidate - x, candidate)
         x = candidate
@@ -293,7 +300,6 @@ def matrix_sign(
             break
     else:
         raise MatrixFunctionError("matrix-sign iteration did not converge")
-    identity = np.eye(x.shape[0], dtype=np.complex128)
     residual = _relative_residual(x @ x - identity, identity)
     finite = bool(np.all(np.isfinite(x)))
     return MatrixFunctionReport(
