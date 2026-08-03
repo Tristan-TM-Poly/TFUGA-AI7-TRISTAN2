@@ -1,0 +1,66 @@
+{
+  "schema_version": "omega-anime-season-policy/r4",
+  "project": "Le Huitième Feu — Saison 1",
+  "publication_state": "private-draft",
+  "season_format": {
+    "episodes": 12,
+    "minutes_per_episode": 20,
+    "total_minutes": 240
+  },
+  "allowed_automation": [
+    "episode timeline generation",
+    "continuity and causal-debt ledgers",
+    "procedural low-fidelity players",
+    "guide subtitles and guide audio cues",
+    "deterministic manifests",
+    "GitHub Actions validation artifacts",
+    "internal narrative comparison"
+  ],
+  "human_approval_required": [
+    "canon promotion of any episode",
+    "public release",
+    "casting and voice selection",
+    "music and visual licensing",
+    "artist, animator or studio contracts",
+    "budget commitments",
+    "distribution agreements",
+    "merge to main"
+  ],
+  "forbidden_defaults": [
+    "imitating a living artist or studio style",
+    "voice cloning without explicit authorization",
+    "using unlicensed music, footage or character designs",
+    "presenting procedural episodes as final animation",
+    "claiming audience demand from synthetic evaluation",
+    "auto-publishing twelve episodes",
+    "hiding unresolved causal or production debt",
+    "external network calls from generated players"
+  ],
+  "quality_gates_before_deep_production": [
+    "human review of the season arc",
+    "human review of episode 1 watchability",
+    "IP and trademark review",
+    "character and world bible consistency review",
+    "budget and schedule estimate",
+    "accessibility and localization review",
+    "audience test using consenting participants"
+  ],
+  "proof_boundaries": {
+    "software_reproducibility": "testable",
+    "episode_duration": "testable",
+    "cross_episode_continuity": "testable",
+    "causal_debt_chain": "testable",
+    "artistic_quality": "not proven",
+    "audience_demand": "not proven",
+    "production_capacity": "not proven",
+    "legal_clearance": "not proven",
+    "commercial viability": "not proven"
+  },
+  "negative_memory": [
+    "M-ANIME-R4-01: twelve generated timelines are not twelve finished episodes",
+    "M-ANIME-R4-02: continuity can be formally valid while emotionally weak",
+    "M-ANIME-R4-03: more shots do not imply better pacing",
+    "M-ANIME-R4-04: production scale must follow a watchable reviewed episode",
+    "M-ANIME-R4-05: season-two hooks must not prevent season-one closure"
+  ]
+}
