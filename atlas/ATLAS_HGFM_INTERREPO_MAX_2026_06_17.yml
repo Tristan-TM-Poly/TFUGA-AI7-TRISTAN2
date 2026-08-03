@@ -1,0 +1,269 @@
+version: "2026-06-17"
+status: "X_to_D_canonization_packet"
+purpose: "Machine-readable inter-repository HGFM atlas for the Tristan-TM-Poly GitHub ecosystem."
+master_invariant: >-
+  Tout fichier devient noeud. Tout noeud devient DCT. Tout DCT devient testable.
+  Tout test devient OAK. Tout echec devient M_MINUS. Tout invariant stable devient canon.
+  Tout canon devient atlas. Tous les atlas se relient en HGFM.
+
+language_levels:
+  L0_machine_files:
+    description: "Raw files and bytes."
+    examples: ["py", "json", "yml", "toml", "ipynb", "tex", "md", "jsonl", "github_workflows"]
+  L1_agent_semantics:
+    description: "Schemas, manifests, registries, checksums, OAK reports, residues."
+  L2_developer_code:
+    description: "APIs, CLIs, tests, CI, scripts, modules, examples."
+  L3_research:
+    description: "Definitions, hypotheses, proofs, simulations, benchmarks, validation protocols."
+  L4_human:
+    description: "Readable maps, guided tours, summaries, roadmaps."
+  L5_public_pedagogy:
+    description: "Public gateway, web surfaces, educational quest, launch notes, product sheets."
+  L6_canon_oak:
+    description: "Status labels, claims, OAK gates, M_MINUS, audit, promotion decisions."
+  L7_interrepo_hgfm:
+    description: "Coupled mycelial hypergraph across repositories and artifacts."
+
+status_labels:
+  S: speculative
+  E: exploratory
+  X: crystallizable
+  D: locally_demonstrated
+  C: canonical
+  A: archived
+
+repositories:
+  Tristan_Tardif-Morency_TFUG:
+    full_name: "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG"
+    hgfm_role: "archive_mere_alexandrie"
+    maturity: "E/X/D_mixed"
+    main_layers:
+      - archive
+      - global_theory
+      - U0_primitives
+      - TTM_Pipeline
+      - Raman_Optech
+      - institutional_hyperatlas
+      - runtime_web_surfaces
+      - publications
+    atlas_to_create:
+      - docs/ATLAS_ARCHIVE_MERE.md
+      - docs/ATLAS_U0_PRIMITIVES.md
+      - docs/ATLAS_INSTITUTIONAL_HYPERATLAS.md
+      - docs/ATLAS_RAMAN_OPTECH_PIPELINE.md
+      - docs/ATLAS_PUBLIC_WEB_SURFACES.md
+      - docs/ATLAS_EXTRACTION_QUEUE.md
+    next_action: "Inventory, deduplicate, and extract canonical packets into downstream repos."
+
+  TFUGA-AI7-TRISTAN2:
+    full_name: "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2"
+    hgfm_role: "public_executable_trunk"
+    maturity: "X/D"
+    main_layers:
+      - DCT_plus_plus
+      - HGFM
+      - PowerScore
+      - Omega6
+      - AI7
+      - schemas
+      - sage_tristan
+      - omega_ffwt_core
+      - hgfm_autopilot_ci
+      - canon_docs
+      - open_pr_canonization_queue
+    atlas_added:
+      - docs/ATLAS_HGFM_INTERREPO_MAX_2026_06_17.md
+      - atlas/ATLAS_HGFM_INTERREPO_MAX_2026_06_17.yml
+    atlas_to_create:
+      - docs/ATLAS_PUBLIC_CANON.md
+      - docs/ATLAS_FFWT_HAC_CVCD.md
+      - docs/ATLAS_AI7_SAGE.md
+      - docs/ATLAS_DCT_SCHEMAS.md
+      - docs/ATLAS_OPEN_PRS_CANONIZATION.md
+    next_action: "OAK-triage open PRs and release a compact v0.3 public canon."
+
+  TTM-TFUGA-AI7-TRISTAN2:
+    full_name: "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2"
+    hgfm_role: "zero_touch_oak_safe_kernel"
+    maturity: "D"
+    main_layers:
+      - tristan_omni_core
+      - publish_ops
+      - dry_run_package_generation
+      - checksums
+      - audit_jsonl
+      - negative_memory
+      - M_MINUS
+      - dual_ai_oak_council
+      - company_publication_prep
+      - hgfm_svd_factorizer
+      - ffwt_multiscale_tensor
+      - omega_ffwt_hac_cvcd
+      - analytic_relations_engine
+      - REL64
+    atlas_to_create:
+      - docs/ATLAS_ZERO_TOUCH_SAFE_KERNEL.md
+      - docs/ATLAS_PUBLICATION_PIPELINE.md
+      - docs/ATLAS_M_MINUS_RESIDUES.md
+      - docs/ATLAS_SIGNAL_PHYSICS_STACK.md
+      - docs/ATLAS_ANALYTIC_RELATIONS.md
+      - docs/ATLAS_REL64.md
+    next_action: "Keep external actions dry-run gated; benchmark relation extraction and signal physics."
+
+  Tristan_Tardif-Morency_TFUGAG:
+    full_name: "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG"
+    hgfm_role: "clean_gateway_ait2_generator"
+    maturity: "X/D"
+    main_layers:
+      - public_gateway
+      - DCT_OMEGA_CARD
+      - omega_ait2_generator
+      - hgfm_mapper
+      - cvcd_scorer
+      - oak_validator
+      - generated_ait_packets
+      - airgap_governance
+      - lightweight_pointers
+    atlas_to_create:
+      - docs/ATLAS_GATEWAY.md
+      - docs/ATLAS_AIT2_GENERATOR.md
+      - docs/ATLAS_AIRGAP_GOVERNANCE.md
+      - docs/ATLAS_MODULES_D_TO_M.md
+      - docs/ATLAS_LIGHTWEIGHT_POINTERS.md
+    next_action: "Keep as clean public entrypoint and avoid heavy duplication."
+
+  TFACC:
+    full_name: "Tristan-TM-Poly/TFACC"
+    hgfm_role: "mathematical_physics_categorical_fields"
+    maturity: "X/D_mixed"
+    main_layers:
+      - theorem_hygiene
+      - definitions_axioms_proofs
+      - RF_optics_CI
+      - Raman_fit
+      - EMI_quasi_peak
+      - FFT_cli
+      - AI7_auto
+      - ai_bots
+    atlas_to_create:
+      - docs/ATLAS_THEOREM_CORE.md
+      - docs/ATLAS_FORMAL_DEFINITIONS.md
+      - docs/ATLAS_COUNTEREXAMPLES.md
+      - docs/ATLAS_RF_OPTICS_RAMAN.md
+      - docs/ATLAS_CI_METRICS.md
+    next_action: "Separate formal theorem core from RF/Raman validation corridor."
+
+  PEFA-FractalEnergySystem:
+    full_name: "Tristan-TM-Poly/PEFA-FractalEnergySystem"
+    hgfm_role: "energy_water_climate_thermodynamic_branch"
+    maturity: "X"
+    main_layers:
+      - thermodynamic_energy_architecture
+      - geometry_driven_optimization
+      - fractal_control
+      - DCT_OMEGA_scaffold
+      - reproducibility_contract
+      - future_simulation_tests
+      - energy_water_climate_subtensor
+    atlas_to_create:
+      - docs/ATLAS_PEFA_ENERGY_SYSTEMS.md
+      - docs/ATLAS_ENERGY_WATER_CLIMATE_TENSOR.md
+      - docs/ATLAS_THERMODYNAMIC_INVARIANTS.md
+      - docs/ATLAS_FIRST_SIMULATION.md
+      - docs/ATLAS_RISK_AND_LIMITS.md
+    next_action: "Add first minimal simulation with units, conservation, stability, and tests."
+
+node_classes:
+  - Repo
+  - Artifact
+  - Theory
+  - Prototype
+  - Schema
+  - Dataset
+  - Benchmark
+  - Claim
+  - Test
+  - Residue
+  - Publication
+  - PublicSurface
+  - Agent
+  - Institution
+  - Opportunity
+
+hyperedge_classes:
+  contains: "repo -> artifact"
+  defines: "artifact -> theory"
+  implements: "artifact -> prototype"
+  validates: "test -> claim"
+  falsifies: "test -> claim"
+  logs: "residue -> failure"
+  promotes: "oak_report -> artifact -> status"
+  projects: "theory -> domain"
+  extracts: "signal_pipeline -> relation"
+  packages: "publication_kernel -> manuscript -> target"
+  indexes: "atlas -> artifact"
+  bridges: "repo_a -> repo_b -> invariant"
+
+major_hyperedges:
+  H1_canonization:
+    path: ["intuition_archive", "DCT_Omega_packet", "code_or_proof", "test_simulation_benchmark", "OAK", "M_MINUS", "minimal_canon"]
+    repos: ["Tristan_Tardif-Morency_TFUG", "TFUGA-AI7-TRISTAN2", "TTM-TFUGA-AI7-TRISTAN2", "Tristan_Tardif-Morency_TFUGAG", "TFACC", "PEFA-FractalEnergySystem"]
+  H2_signal_physics:
+    path: ["Raman_Optech_signals", "preprocessing", "FFWT_HAC_CVCD", "SVD", "analytic_relations", "REL64", "OAK_validation", "paper_or_prototype"]
+    repos: ["Tristan_Tardif-Morency_TFUG", "TFACC", "TFUGA-AI7-TRISTAN2", "TTM-TFUGA-AI7-TRISTAN2"]
+  H3_mathematical_theory:
+    path: ["U0_primitives", "relations_transformations_memory", "HGFM", "TFACC", "theorems_counterexamples", "proofs_or_models"]
+    repos: ["Tristan_Tardif-Morency_TFUG", "TFACC", "Tristan_Tardif-Morency_TFUGAG", "TFUGA-AI7-TRISTAN2"]
+  H4_zero_touch_publication:
+    path: ["manuscript_theory_prototype", "package", "checksum", "draft_or_portal_checklist", "audit_log", "negative_memory", "publication_roadmap"]
+    repos: ["TTM-TFUGA-AI7-TRISTAN2", "TFUGA-AI7-TRISTAN2", "Tristan_Tardif-Morency_TFUG", "Tristan_Tardif-Morency_TFUGAG"]
+  H5_institutional_hyperatlas:
+    path: ["institutions", "challenges", "AI7_TFUGA_capabilities", "actions", "DCT_proof_prototype_maturity", "top_k_opportunities"]
+    repos: ["Tristan_Tardif-Morency_TFUG", "PEFA-FractalEnergySystem", "Tristan_Tardif-Morency_TFUGAG", "TFUGA-AI7-TRISTAN2"]
+  H6_energy_water_climate:
+    path: ["Institutional_HyperAtlas", "energy_water_climate_subtensor", "PEFA_model", "conservation_simulation", "OAK", "prototype_report"]
+    repos: ["Tristan_Tardif-Morency_TFUG", "PEFA-FractalEnergySystem", "TFUGA-AI7-TRISTAN2"]
+
+best_of:
+  S_tier:
+    - DCT_Omega_DCT_plus_plus
+    - OAK_M_MINUS
+    - TFUGA_AI7_public_executable_trunk
+    - TTM_zero_touch_safe_kernel
+    - FFWT_HAC_CVCD_HGFM_SVD_analytic_relations
+    - U0_primitives
+  A_tier:
+    - Institutional_HyperAtlas
+    - TFACC_RF_Raman_optics_corridor
+    - AIT2_generator
+    - REL64_matrix
+    - zero_touch_publication_packaging
+  B_tier:
+    - PEFA_energy_fractal_control
+    - public_web_educational_quest_mode
+    - revenue_productization_maps
+    - large_theory_expansions_pending_DCT_compression
+
+first_16_enrichments:
+  - add_interrepo_hgfm_yaml_map
+  - add_per_repo_atlas_template
+  - generate_repo_inventory_script
+  - generate_DCT_packet_template
+  - generate_OAK_claim_registry_template
+  - generate_M_MINUS_jsonl_schema
+  - add_U0_primitive_atlas
+  - add_FFWT_HAC_CVCD_atlas
+  - add_REL64_benchmark_roadmap
+  - add_PEFA_first_simulation_card
+  - add_TFACC_theorem_index_skeleton
+  - add_TFUG_archive_extraction_queue
+  - add_TFUGAG_gateway_pointer_map
+  - add_TTM_zero_touch_safe_kernel_atlas
+  - add_GitHub_PR_canonization_triage_board
+  - add_public_human_reading_path
+
+oak_boundary: >-
+  This atlas is an organization and canonization layer, not proof that all theories are validated.
+  No theorem, energy claim, physical relation, revenue claim, or publication claim should be promoted
+  without proof, benchmark, simulation, reproducible test, or explicit validation protocol.
