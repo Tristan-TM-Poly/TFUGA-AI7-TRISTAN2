@@ -1,0 +1,74 @@
+name: Omega Web HG R0.4 Best Sites OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_web_hg_t/r04/**"
+      - "tests/test_omega_web_hg_r04.py"
+      - "tests/test_omega_web_hg_r04_max.py"
+      - "docs/omega_web_hg_t/R04_BEST_SITES.md"
+      - "docs/omega_web_hg_t/R04_MAX_ABSORPTION.md"
+      - "schemas/omega_web_hg_source_profile_v4.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-web-hg-best-sites.yml"
+  push:
+    paths:
+      - "omega_web_hg_t/r04/**"
+      - "tests/test_omega_web_hg_r04.py"
+      - "tests/test_omega_web_hg_r04_max.py"
+      - "docs/omega_web_hg_t/R04_BEST_SITES.md"
+      - "docs/omega_web_hg_t/R04_MAX_ABSORPTION.md"
+      - "schemas/omega_web_hg_source_profile_v4.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-web-hg-best-sites.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-web-hg-r04-oakbench-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - run: python -m compileall -q omega_web_hg_t/r04 tests/test_omega_web_hg_r04.py tests/test_omega_web_hg_r04_max.py
+      - run: pytest -q tests/test_omega_web_hg_r04.py tests/test_omega_web_hg_r04_max.py
+      - name: Validate deterministic plans, schema and shard matrix
+        run: |
+          python -m omega_web_hg_t.r04.cli audit
+          python -m omega_web_hg_t.r04.cli plan --output-dir /tmp/plan-a
+          python -m omega_web_hg_t.r04.cli plan --output-dir /tmp/plan-b
+          cmp /tmp/plan-a/campaign-plan.json /tmp/plan-b/campaign-plan.json
+          python -m omega_web_hg_t.r04.max_cli catalog --pretty > /tmp/max-catalog.json
+          python -m omega_web_hg_t.r04.max_cli matrix --shard-count 4 > /tmp/max-matrix.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          from omega_web_hg_t.r04 import BEST_SITES_V1
+
+          schema = json.loads(Path('schemas/omega_web_hg_source_profile_v4.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          validator = jsonschema.Draft202012Validator(schema)
+          for source in BEST_SITES_V1:
+              validator.validate(source.to_dict())
+          catalog = json.load(open('/tmp/max-catalog.json'))
+          matrix = json.load(open('/tmp/max-matrix.json'))
+          assert len(catalog) == 11
+          assert all(item['metadata_only'] is True for item in catalog)
+          assert [item['shard_index'] for item in matrix['include']] == [0, 1, 2, 3]
+          print('OMEGA_WEB_HG_R04_OAKBENCH_VALID')
+          PY
