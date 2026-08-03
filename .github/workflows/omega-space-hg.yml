@@ -1,0 +1,104 @@
+name: Omega Space HG R0.1 MAX
+
+on:
+  push:
+    branches: [feat/omega-space-hg-t-r01-max]
+    paths:
+      - "omega_space_hg_t/**"
+      - "tests/test_omega_space_hg_t.py"
+      - "examples/omega_space_hg_demo.py"
+      - "scenarios/omega_space_hg_t/**"
+      - "schemas/omega_space_*.schema.json"
+      - "docs/OMEGA_SPACE_HG_T.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-space-hg.yml"
+  pull_request:
+    paths:
+      - "omega_space_hg_t/**"
+      - "tests/test_omega_space_hg_t.py"
+      - "examples/omega_space_hg_demo.py"
+      - "scenarios/omega_space_hg_t/**"
+      - "schemas/omega_space_*.schema.json"
+      - "docs/OMEGA_SPACE_HG_T.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-space-hg.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test and schema validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile research kernel
+        run: >-
+          python -m compileall -q
+          omega_space_hg_t
+          tests/test_omega_space_hg_t.py
+          examples/omega_space_hg_demo.py
+      - name: Run focused regression suite
+        run: pytest -q tests/test_omega_space_hg_t.py
+      - name: Generate deterministic artifacts
+        run: |
+          python -m omega_space_hg_t.cli atlas --output /tmp/atlas-a.json
+          python -m omega_space_hg_t.cli atlas --output /tmp/atlas-b.json
+          cmp /tmp/atlas-a.json /tmp/atlas-b.json
+          python -m omega_space_hg_t.cli graph scenarios/omega_space_hg_t/leo_6u_observer.json --output /tmp/graph.json
+          python -m omega_space_hg_t.cli simulate scenarios/omega_space_hg_t/leo_6u_observer.json --summary-only --output /tmp/simulation.json
+          python -m omega_space_hg_t.cli plan --start-offset 1000000000 --count 64 --output /tmp/plan-a.json
+          python -m omega_space_hg_t.cli plan --start-offset 1000000000 --count 64 --output /tmp/plan-b.json
+          cmp /tmp/plan-a.json /tmp/plan-b.json
+          python -m omega_space_hg_t.cli optimize scenarios/omega_space_hg_t/leo_6u_observer.json --start-offset 0 --count 16 --output /tmp/optimization.json
+          python -m omega_space_hg_t.cli oak --output /tmp/oak.json
+          python examples/omega_space_hg_demo.py > /tmp/demo.json
+      - name: Validate schemas and OAK boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          mission_schema = json.loads(Path('schemas/omega_space_mission_v1.schema.json').read_text())
+          oak_schema = json.loads(Path('schemas/omega_space_oak_report_v1.schema.json').read_text())
+          mission = json.loads(Path('scenarios/omega_space_hg_t/leo_6u_observer.json').read_text())
+          oak = json.loads(Path('/tmp/oak.json').read_text())
+          atlas = json.loads(Path('/tmp/atlas-a.json').read_text())
+          graph = json.loads(Path('/tmp/graph.json').read_text())
+          simulation = json.loads(Path('/tmp/simulation.json').read_text())
+          plan = json.loads(Path('/tmp/plan-a.json').read_text())
+          optimization = json.loads(Path('/tmp/optimization.json').read_text())
+          demo = json.loads(Path('/tmp/demo.json').read_text())
+
+          jsonschema.Draft202012Validator.check_schema(mission_schema)
+          jsonschema.Draft202012Validator.check_schema(oak_schema)
+          jsonschema.validate(mission, mission_schema)
+          jsonschema.validate(oak, oak_schema)
+
+          assert oak['passed'] is True
+          assert oak['theorem_claimed'] is False
+          assert oak['flight_qualified_claimed'] is False
+          assert oak['scientific_validation_claimed'] is False
+          assert atlas['counts']['mission_classes'] >= 30
+          assert atlas['counts']['vehicle_and_module_classes'] >= 40
+          assert atlas['permanent_generated_architecture_cap'] is None
+          assert graph['validation']['valid'] is True
+          assert simulation['metrics']['energy_drift_fraction'] < 2e-4
+          assert plan['permanent_total_cap'] is None
+          assert plan['next_offset'] == 1000000064
+          assert optimization['frontier']['evaluated_count'] == 16
+          assert optimization['pareto_count'] >= 1
+          assert demo['oak']['passed'] is True
+          print('OAK_PASS_OMEGA_SPACE_HG_R0_1_MAX')
+          PY
