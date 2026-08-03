@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Sequence
 
 from .benchmark import benchmark_scaling
-from .compatibility import ingest_r03_max, verify_r03_max_source
+from .compatibility_strict import ingest_r03_max, verify_r03_max_source
 from .model import RuntimePolicy
 from .streaming import (
     audit_streaming_atlas,
