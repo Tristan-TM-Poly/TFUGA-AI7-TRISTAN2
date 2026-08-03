@@ -1,0 +1,365 @@
+{
+  "accepted_outcomes": [
+    "reconstruct_dependency_program"
+  ],
+  "barrier_roots": [
+    "poincare_barrier_00",
+    "poincare_barrier_01",
+    "poincare_barrier_02",
+    "poincare_barrier_03",
+    "poincare_barrier_04",
+    "poincare_barrier_05",
+    "poincare_barrier_06",
+    "poincare_barrier_07"
+  ],
+  "canonical_objects": [
+    "ricci_flow",
+    "surgery",
+    "noncollapsing",
+    "geometrization"
+  ],
+  "domains": [
+    "geometric_topology",
+    "geometric_analysis"
+  ],
+  "forbidden_promotions": [
+    "finite_to_infinite",
+    "restricted_to_general",
+    "numeric_to_exact",
+    "skeleton_to_proof"
+  ],
+  "formal_contract": {
+    "domains_explicit": true,
+    "quantifiers_explicit": true,
+    "solution_claimed": false
+  },
+  "negative_memory": [
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "boundary_case",
+      "rule_id": "poincare.mminus.00"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "degenerate_object",
+      "rule_id": "poincare.mminus.01"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "quantifier_flip",
+      "rule_id": "poincare.mminus.02"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "hidden_assumption",
+      "rule_id": "poincare.mminus.03"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "limit_exchange",
+      "rule_id": "poincare.mminus.04"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "compactness_gap",
+      "rule_id": "poincare.mminus.05"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "regularity_leak",
+      "rule_id": "poincare.mminus.06"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "circular_dependency",
+      "rule_id": "poincare.mminus.07"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "numerical_to_exact",
+      "rule_id": "poincare.mminus.08"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "finite_to_infinite",
+      "rule_id": "poincare.mminus.09"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "restricted_to_general",
+      "rule_id": "poincare.mminus.10"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "missing_equivalence_direction",
+      "rule_id": "poincare.mminus.11"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "formal_placeholder",
+      "rule_id": "poincare.mminus.12"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "source_provenance",
+      "rule_id": "poincare.mminus.13"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "definition_drift",
+      "rule_id": "poincare.mminus.14"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "notation_collision",
+      "rule_id": "poincare.mminus.15"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "scaling_mismatch",
+      "rule_id": "poincare.mminus.16"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "dimension_mismatch",
+      "rule_id": "poincare.mminus.17"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "sign_error",
+      "rule_id": "poincare.mminus.18"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "constant_nonuniformity",
+      "rule_id": "poincare.mminus.19"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "branch_cut",
+      "rule_id": "poincare.mminus.20"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "domain_error",
+      "rule_id": "poincare.mminus.21"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "counterexample_mutation",
+      "rule_id": "poincare.mminus.22"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "proof_step_deletion",
+      "rule_id": "poincare.mminus.23"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "independent_reconstruction",
+      "rule_id": "poincare.mminus.24"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "random_small_model",
+      "rule_id": "poincare.mminus.25"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "adversarial_large_parameter",
+      "rule_id": "poincare.mminus.26"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "singular_limit",
+      "rule_id": "poincare.mminus.27"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "local_global_mismatch",
+      "rule_id": "poincare.mminus.28"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "discrete_continuum_mismatch",
+      "rule_id": "poincare.mminus.29"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "generic_universal_mismatch",
+      "rule_id": "poincare.mminus.30"
+    },
+    {
+      "action": "reduce_scope_or_refute",
+      "falsifier": "weak_strong_mismatch",
+      "rule_id": "poincare.mminus.31"
+    }
+  ],
+  "problem_id": "poincare",
+  "research_axes": [
+    {
+      "axis_id": "poincare.axis.00",
+      "human_review_required": true,
+      "strategy": "energy_entropy_method"
+    },
+    {
+      "axis_id": "poincare.axis.01",
+      "human_review_required": true,
+      "strategy": "euler_system"
+    },
+    {
+      "axis_id": "poincare.axis.02",
+      "human_review_required": true,
+      "strategy": "geometric_complexity"
+    },
+    {
+      "axis_id": "poincare.axis.03",
+      "human_review_required": true,
+      "strategy": "gauge_invariant_observable"
+    },
+    {
+      "axis_id": "poincare.axis.04",
+      "human_review_required": true,
+      "strategy": "category_theoretic_bridge"
+    },
+    {
+      "axis_id": "poincare.axis.05",
+      "human_review_required": true,
+      "strategy": "random_matrix_analogy"
+    },
+    {
+      "axis_id": "poincare.axis.06",
+      "human_review_required": true,
+      "strategy": "information_theoretic_bound"
+    },
+    {
+      "axis_id": "poincare.axis.07",
+      "human_review_required": true,
+      "strategy": "monotonicity_formula"
+    },
+    {
+      "axis_id": "poincare.axis.08",
+      "human_review_required": true,
+      "strategy": "p_adic_deformation"
+    },
+    {
+      "axis_id": "poincare.axis.09",
+      "human_review_required": true,
+      "strategy": "derandomization"
+    },
+    {
+      "axis_id": "poincare.axis.10",
+      "human_review_required": true,
+      "strategy": "spectral_gap_bound"
+    },
+    {
+      "axis_id": "poincare.axis.11",
+      "human_review_required": true,
+      "strategy": "derived_category"
+    },
+    {
+      "axis_id": "poincare.axis.12",
+      "human_review_required": true,
+      "strategy": "counterexample_guided_refinement"
+    },
+    {
+      "axis_id": "poincare.axis.13",
+      "human_review_required": true,
+      "strategy": "duality_transform"
+    },
+    {
+      "axis_id": "poincare.axis.14",
+      "human_review_required": true,
+      "strategy": "blowup_contradiction"
+    },
+    {
+      "axis_id": "poincare.axis.15",
+      "human_review_required": true,
+      "strategy": "motivic_transfer"
+    },
+    {
+      "axis_id": "poincare.axis.16",
+      "human_review_required": true,
+      "strategy": "pseudorandomness"
+    },
+    {
+      "axis_id": "poincare.axis.17",
+      "human_review_required": true,
+      "strategy": "hamiltonian_reconstruction"
+    },
+    {
+      "axis_id": "poincare.axis.18",
+      "human_review_required": true,
+      "strategy": "cycle_class_map"
+    },
+    {
+      "axis_id": "poincare.axis.19",
+      "human_review_required": true,
+      "strategy": "automated_lemma_synthesis"
+    },
+    {
+      "axis_id": "poincare.axis.20",
+      "human_review_required": true,
+      "strategy": "convexity_method"
+    },
+    {
+      "axis_id": "poincare.axis.21",
+      "human_review_required": true,
+      "strategy": "compactness_rigidity"
+    },
+    {
+      "axis_id": "poincare.axis.22",
+      "human_review_required": true,
+      "strategy": "arithmetic_geometry"
+    },
+    {
+      "axis_id": "poincare.axis.23",
+      "human_review_required": true,
+      "strategy": "communication_complexity"
+    },
+    {
+      "axis_id": "poincare.axis.24",
+      "human_review_required": true,
+      "strategy": "functional_integral"
+    },
+    {
+      "axis_id": "poincare.axis.25",
+      "human_review_required": true,
+      "strategy": "deformation_specialization"
+    },
+    {
+      "axis_id": "poincare.axis.26",
+      "human_review_required": true,
+      "strategy": "formal_proof_search"
+    },
+    {
+      "axis_id": "poincare.axis.27",
+      "human_review_required": true,
+      "strategy": "variational_method"
+    },
+    {
+      "axis_id": "poincare.axis.28",
+      "human_review_required": true,
+      "strategy": "critical_space_estimate"
+    },
+    {
+      "axis_id": "poincare.axis.29",
+      "human_review_required": true,
+      "strategy": "algebraic_geometry"
+    },
+    {
+      "axis_id": "poincare.axis.30",
+      "human_review_required": true,
+      "strategy": "meta_complexity"
+    },
+    {
+      "axis_id": "poincare.axis.31",
+      "human_review_required": true,
+      "strategy": "cluster_expansion"
+    }
+  ],
+  "schema": "omega-millennium-problem-spec/2",
+  "statement": "Every closed simply connected 3-manifold is homeomorphic to the 3-sphere.",
+  "status": "solved_benchmark",
+  "title": "Poincaré Conjecture"
+}

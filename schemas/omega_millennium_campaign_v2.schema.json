@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "allocated_units": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "finite_budget_units": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "permanent_total_cap": {
+      "type": "null"
+    },
+    "solution_claimed": {
+      "const": false
+    }
+  },
+  "required": [
+    "finite_budget_units",
+    "allocated_units",
+    "permanent_total_cap",
+    "solution_claimed"
+  ],
+  "type": "object"
+}
