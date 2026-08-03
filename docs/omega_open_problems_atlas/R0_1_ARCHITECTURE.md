@@ -168,26 +168,30 @@ python -m omega_open_problems_atlas.cli validate-clay \
 pytest -q tests/test_omega_open_problems_atlas.py
 ```
 
-## 10. Gates R0.2
+## 10. Successeur R0.2 MAX
 
-R0.2 devra produire de vrais enregistrements sourcés au-delà de Clay, avec :
+R0.2 est matérialisé dans [`R0_2_MAX_ARCHITECTURE.md`](R0_2_MAX_ARCHITECTURE.md). Il ajoute :
 
-1. adaptateurs de collecte en lecture seule;
-2. snapshots de provenance et licences;
-3. vérification bibliographique datée;
-4. déduplication identifiant + énoncé + sémantique;
-5. graphes problème–méthode–lemme–obstacle;
-6. registres de concours séparés des problèmes ouverts;
-7. première campagne de 1 024 ProblemGenome réellement sourcés;
-8. mémoire M− des sources périmées, problèmes déjà résolus et énoncés ambigus;
-9. exports JSONL, SQLite, GraphML et éventuellement Lean;
-10. revue humaine avant toute revendication publique de progrès.
+1. ingestion de snapshots multi-sources en lecture locale;
+2. provenance et décisions de licence;
+3. déduplication exacte et lexicale;
+4. registre SQLite WAL transactionnel;
+5. 64 opérateurs d'obligations de preuve;
+6. 128 cartes de méthodes;
+7. graphes de transfert avec round-trip obligatoire;
+8. preuves Merkle et reçus d'évidence;
+9. registres de concours séparés des problèmes ouverts;
+10. audits Lean, Coq et Isabelle;
+11. frontière logique de 268 435 456 cellules;
+12. campagne logicielle durable de 250 000 obligations.
+
+Ces volumes sont des preuves de capacité logicielle, pas des découvertes mathématiques.
 
 ## 11. Non-revendications permanentes
 
-R0.1 ne démontre pas :
+R0.1 et R0.2 ne démontrent pas :
 
-- que 1 024 problèmes ouverts ont été vérifiés;
+- que les cellules générées sont des problèmes ouverts vérifiés;
 - qu'un problème Clay a été résolu;
 - qu'un problème reste ouvert uniquement parce qu'une page le dit;
 - qu'une simulation numérique constitue une preuve;
