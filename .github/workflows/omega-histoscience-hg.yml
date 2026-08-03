@@ -1,0 +1,77 @@
+name: Omega Histoscience HG R0.1 OAKBench
+
+on:
+  push:
+    branches: [reconverge/omega-histoscience-r03-current-main-v2]
+    paths:
+      - "omega_histosci_hg_t/**"
+      - "tests/test_omega_histosci_hg_t.py"
+      - "schemas/omega_histosci_*.schema.json"
+      - "data/omega_histosci_hg/**"
+      - "docs/omega-histoscience-hg-t/**"
+      - "examples/omega_histosci_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-histoscience-hg.yml"
+  pull_request:
+    paths:
+      - "omega_histosci_hg_t/**"
+      - "tests/test_omega_histosci_hg_t.py"
+      - "schemas/omega_histosci_*.schema.json"
+      - "data/omega_histosci_hg/**"
+      - "docs/omega-histoscience-hg-t/**"
+      - "examples/omega_histosci_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-histoscience-hg.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile
+        run: python -m compileall -q omega_histosci_hg_t tests/test_omega_histosci_hg_t.py examples/omega_histosci_demo.py
+      - name: Test
+        run: pytest -q tests/test_omega_histosci_hg_t.py
+      - name: Deterministic audit and schema gate
+        run: |
+          python -m omega_histosci_hg_t.cli audit --output /tmp/audit-a.json
+          python -m omega_histosci_hg_t.cli audit --output /tmp/audit-b.json
+          cmp /tmp/audit-a.json /tmp/audit-b.json
+          python -m omega_histosci_hg_t.cli export-graphml --output /tmp/seed.graphml
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          branch_schema = json.loads(Path('schemas/omega_histosci_branch_v1.schema.json').read_text())
+          report_schema = json.loads(Path('schemas/omega_histosci_report_v1.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(branch_schema)
+          jsonschema.Draft202012Validator.check_schema(report_schema)
+          report = json.loads(Path('/tmp/audit-a.json').read_text())
+          manifest = json.loads(Path('data/omega_histosci_hg/seed_manifest.json').read_text())
+          jsonschema.validate(report, report_schema)
+          assert report['graph']['valid'] is True
+          assert report['registry']['valid'] is True
+          assert report['branch_count'] == manifest['expected_branch_count']
+          assert report['graph']['node_count'] == manifest['expected_node_count']
+          assert report['graph']['edge_count'] == manifest['expected_hyperedge_count']
+          assert report['permanent_total_cap'] is None
+          assert report['historical_truth_certified'] is False
+          assert report['global_exhaustiveness_claimed'] is False
+          assert report['software_validation_only'] is True
+          print(report['status'])
+          PY
