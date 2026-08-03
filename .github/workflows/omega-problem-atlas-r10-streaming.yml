@@ -1,0 +1,187 @@
+name: Omega Problem Atlas R0.10 Streaming SQLite
+
+on:
+  push:
+    branches: [feat/omega-problem-atlas-r0-10-streaming-sqlite]
+    paths:
+      - "omega_millennium_t/r10/**"
+      - "tests/test_omega_problem_atlas_r10*.py"
+      - "schemas/omega_problem_stream_*_v10.schema.json"
+      - "docs/omega_millennium_t/r10/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r10-streaming.yml"
+  pull_request:
+    paths:
+      - "omega_millennium_t/r10/**"
+      - "tests/test_omega_problem_atlas_r10*.py"
+      - "schemas/omega_problem_stream_*_v10.schema.json"
+      - "docs/omega_millennium_t/r10/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r10-streaming.yml"
+  workflow_dispatch:
+    inputs:
+      scale_cells:
+        description: Finite synthetic scale campaign size
+        required: false
+        default: "100000"
+        type: string
+
+concurrency:
+  group: omega-problem-atlas-r10-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  streaming-core:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+
+      - name: Compile R0.10 modules and tests
+        run: >-
+          python -m compileall -q
+          omega_millennium_t/r10
+          tests/test_omega_problem_atlas_r10_streaming.py
+          tests/test_omega_problem_atlas_r10_r03_compatibility.py
+          tests/test_omega_problem_atlas_r10_schema.py
+
+      - name: Run R0.10 tests
+        run: pytest -q tests/test_omega_problem_atlas_r10*.py
+
+      - name: Verify CLI surface
+        run: |
+          python -m omega_millennium_t.r10.cli --help | tee /tmp/r10-help.txt
+          grep -q "ingest" /tmp/r10-help.txt
+          grep -q "r03-max" /tmp/r10-help.txt
+          grep -q "synthetic" /tmp/r10-help.txt
+          grep -q "query" /tmp/r10-help.txt
+          grep -q "audit" /tmp/r10-help.txt
+          grep -q "benchmark" /tmp/r10-help.txt
+
+      - name: Verify deterministic interruption and resume
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from omega_millennium_t.r10 import audit_streaming_atlas, materialize_synthetic_campaign
+          from omega_millennium_t.r10.model import RuntimePolicy
+
+          root = Path("generated/omega_problem_stream_r10")
+          policy = RuntimePolicy(batch_size=333, shard_target_bytes=65536)
+          full = root / "full"
+          resumed = root / "resumed"
+          materialize_synthetic_campaign(full, cell_count=20000, policy=policy)
+          first = materialize_synthetic_campaign(
+              resumed,
+              cell_count=20000,
+              policy=policy,
+              max_items=4321,
+          )
+          assert first["status"] == "checkpointed"
+          materialize_synthetic_campaign(
+              resumed,
+              cell_count=20000,
+              policy=policy,
+              resume=True,
+              clean=False,
+          )
+          manifest_full = json.loads((full / "manifest.json").read_text(encoding="utf-8"))
+          manifest_resumed = json.loads((resumed / "manifest.json").read_text(encoding="utf-8"))
+          assert manifest_full == manifest_resumed
+          assert audit_streaming_atlas(full)["valid"] is True
+          assert audit_streaming_atlas(resumed)["valid"] is True
+          PY
+
+      - name: Assert finite-resource disclaimers
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path(
+              "generated/omega_problem_stream_r10/full/manifest.json"
+          ).read_text(encoding="utf-8"))
+          report = json.loads(Path(
+              "generated/omega_problem_stream_r10/full/report.json"
+          ).read_text(encoding="utf-8"))
+          assert manifest["permanent_total_cell_cap"] is None
+          assert manifest["policy"]["permanent_total_cell_cap"] is None
+          assert manifest["unlimited_capacity_claimed"] is False
+          assert report["peak_memory_independent_of_total_claimed"] is False
+          assert report["unlimited_capacity_claimed"] is False
+          PY
+
+  finite-scale:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    needs: streaming-core
+    env:
+      SCALE_CELLS: ${{ github.event_name == 'workflow_dispatch' && inputs.scale_cells || '100000' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Materialize finite scale campaign
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from omega_millennium_t.r10 import (
+              audit_streaming_atlas,
+              materialize_synthetic_campaign,
+              query_portfolio,
+          )
+          from omega_millennium_t.r10.model import RuntimePolicy
+
+          cell_count = int(os.environ["SCALE_CELLS"])
+          assert 1 <= cell_count <= 1000000, "workflow scale is bounded to a finite 1M run"
+          output = Path("generated/omega_problem_stream_r10_scale")
+          policy = RuntimePolicy(batch_size=2000, shard_target_bytes=8 * 1024 * 1024)
+          report = materialize_synthetic_campaign(
+              output,
+              cell_count=cell_count,
+              policy=policy,
+          )
+          assert report["complete"] is True, report
+          assert report["cell_count"] == cell_count
+          audit = audit_streaming_atlas(output, chunk_size=20000)
+          assert audit["valid"] is True, audit
+          portfolio = query_portfolio(output, limit=48, max_per_front=4)
+          assert portfolio["full_atlas_loaded"] is False
+          assert portfolio["total_cell_count"] == cell_count
+          scale_report = {
+              "cell_count": cell_count,
+              "manifest_digest": report["manifest_digest"],
+              "database_bytes": report["database_bytes"],
+              "portfolio_selected_count": portfolio["selected_count"],
+              "finite_benchmark_only": True,
+              "bounded_memory_proven": False,
+              "unlimited_capacity_claimed": False,
+              "permanent_total_cell_cap": None,
+          }
+          Path("generated/r10_scale_report.json").write_text(
+              json.dumps(scale_report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Report finite scale only
+        run: cat generated/r10_scale_report.json
