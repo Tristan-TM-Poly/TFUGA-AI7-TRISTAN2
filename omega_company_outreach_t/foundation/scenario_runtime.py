@@ -4,7 +4,7 @@ from dataclasses import asdict
 from enum import Enum
 import json
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from .canonical import CanonicalizationError, canonical_hash, canonical_mapping
 from .scenario_atlas import (
@@ -15,7 +15,6 @@ from .scenario_atlas import (
     ScenarioDimensions,
     ScenarioExpectation,
     audit_scenarios,
-    decide,
     generate_scenarios,
     scenario_manifest,
     theoretical_cardinality,
@@ -25,6 +24,26 @@ from .contacts import ContactState, RoleCategory
 from .identity import IdentityState
 from .opportunities import CompanyUnit, OpportunityState, OpportunityType
 from .organizations import OrganizationType, RelationshipState
+
+_COVERAGE_ERROR_PREFIXES = (
+    "scenario atlas missing decisions:",
+    "scenario atlas missing companies:",
+    "scenario atlas missing opportunity types:",
+    "scenario atlas missing risks:",
+)
+
+
+def _audit_for_size(
+    scenarios: tuple[OakScenario, ...], *, require_full_coverage: bool
+) -> list[str]:
+    errors = audit_scenarios(scenarios)
+    if require_full_coverage:
+        return errors
+    return [
+        error
+        for error in errors
+        if not any(error.startswith(prefix) for prefix in _COVERAGE_ERROR_PREFIXES)
+    ]
 
 
 def scenario_to_mapping(scenario: OakScenario) -> dict[str, Any]:
@@ -54,11 +73,13 @@ def write_atlas(
     count: int = 8192,
     seed: int = 20260802,
     shard_size: int = 512,
+    require_full_coverage: bool | None = None,
 ) -> dict[str, Any]:
     if count < 1 or shard_size < 1:
         raise CanonicalizationError("count and shard_size must be positive")
+    full_coverage = count >= 1024 if require_full_coverage is None else require_full_coverage
     scenarios = tuple(generate_scenarios(count=count, seed=seed))
-    errors = audit_scenarios(scenarios)
+    errors = _audit_for_size(scenarios, require_full_coverage=full_coverage)
     if errors:
         raise CanonicalizationError("scenario audit failed: " + "; ".join(errors))
     directory.mkdir(parents=True, exist_ok=True)
@@ -90,6 +111,7 @@ def write_atlas(
             "shard_size": shard_size,
             "shard_count": (len(scenarios) + shard_size - 1) // shard_size,
             "runtime": "canonical-v2",
+            "require_full_coverage": full_coverage,
         }
     )
     (directory / "manifest.json").write_text(
@@ -157,13 +179,15 @@ def read_atlas(directory: Path) -> tuple[OakScenario, ...]:
 
 def audit_atlas_directory(directory: Path) -> dict[str, Any]:
     scenarios = read_atlas(directory)
-    errors = audit_scenarios(scenarios)
     manifest_path = directory / "manifest.json"
     if not manifest_path.exists():
-        errors.append("manifest.json is missing")
         manifest: dict[str, Any] = {}
+        errors = ["manifest.json is missing"]
     else:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        errors = []
+    full_coverage = bool(manifest.get("require_full_coverage", len(scenarios) >= 1024))
+    errors.extend(_audit_for_size(scenarios, require_full_coverage=full_coverage))
     seed = int(manifest.get("seed", 20260802))
     regenerated = scenario_manifest(scenarios, seed=seed)
     for key in (
@@ -184,6 +208,7 @@ def audit_atlas_directory(directory: Path) -> dict[str, Any]:
         "errors": errors,
         "scenario_count": len(scenarios),
         "shard_count": len(shard_files),
+        "require_full_coverage": full_coverage,
         "theoretical_cardinality": theoretical_cardinality(),
         "manifest_hash": canonical_hash(manifest),
     }
