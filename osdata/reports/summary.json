@@ -1,0 +1,11 @@
+{
+  "name": "AIT-OpenSourceDataAutomationManager v0.1",
+  "local_validation": "ALL TESTS PASSED",
+  "files": 49,
+  "oak_status": "needs_review",
+  "sources": 8,
+  "candidates": 8,
+  "task_nodes": 18,
+  "external_actions": "disabled_by_default",
+  "reason_for_review": "dataset-specific licenses and provider terms must be checked per dataset before downstream use"
+}
