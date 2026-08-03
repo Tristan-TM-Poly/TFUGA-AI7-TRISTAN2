@@ -92,10 +92,9 @@ def evaluate_request_hardened(
         signed_at = parse_zoned_datetime(signature.signed_at, "signed_at")
         if signed_at < requested_at:
             blockers.append(f"signature_before_request:{signature.signature_id}")
-        if signature.method == "pgp" and not signature.signature_ref.startswith("pgp:"):
-            blockers.append(f"pgp_signature_reference_invalid:{signature.signature_id}")
-        if signature.method == "sigstore" and not signature.signature_ref.startswith("sigstore:"):
-            blockers.append(f"sigstore_signature_reference_invalid:{signature.signature_id}")
+        if signature.method in {"pgp", "sigstore"}:
+            if ":" not in signature.signature_ref or signature.signature_ref.startswith("sha256:"):
+                blockers.append(f"external_signature_reference_invalid:{signature.signature_id}")
 
     blockers = sorted(set(blockers))
     receipt["blockers"] = blockers
