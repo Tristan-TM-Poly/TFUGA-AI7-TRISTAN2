@@ -1,6 +1,6 @@
 [project]
 name = "tfuga-ai7-tristan2"
-version = "3.6.0"
+version = "3.7.0"
 description = "Omega absorb, convergence and OAK-safe public research tooling"
 requires-python = ">=3.10"
 
@@ -33,6 +33,7 @@ omega-organic-family = "omega_org_fam_t.cli:main"
 omega-organic-family-ultra = "omega_org_fam_t.ultra_cli:main"
 omega-organic-evidence = "omega_org_fam_t.r03_cli:main"
 omega-plasma = "omega_plasma_t.cli:main"
+omega-emr-source = "omega_emr_source_t.cli:main"
 omega-convergence = "omega_convergence_os.cli:main"
 omega-re = "omega_re_t.cli:main"
 omega-re-r02 = "omega_re_t.r02_cli:main"
