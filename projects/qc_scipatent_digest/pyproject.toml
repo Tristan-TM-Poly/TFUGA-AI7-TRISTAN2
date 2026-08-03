@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qc-scipatent-digest"
+version = "0.4.0"
+description = "OAK-safe Quebec science and patent digest kernel for Tristan's TFUGA/SAGE ecosystem"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "Tristan Tardif-Morency"}]
+dependencies = []
+
+[project.scripts]
+qc-scipatent-digest = "qc_scipatent_digest.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
