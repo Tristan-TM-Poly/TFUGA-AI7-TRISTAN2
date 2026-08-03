@@ -1,0 +1,5 @@
+[project]
+name = "tristan-omni-core-max-parallel-hgfm"
+version = "0.1.0"
+description = "Shared OAK core with parallel probes, tensorization, and mycelial hypergraph integration."
+requires-python = ">=3.10"
