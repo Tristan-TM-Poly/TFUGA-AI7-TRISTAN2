@@ -65,6 +65,8 @@ omega-millennium-r02 = "omega_millennium_t.r02.cli:main"
 omega-vla = "omega_vla_t.cli:main"
 omega-vla-r02 = "omega_vla_t.r02.cli:main"
 omega-vla-r03 = "omega_vla_t.r03.cli:main"
+omega-vla-wave2 = "omega_vla_t.r03.wave2.cli:main"
+omega-vla-wave2-campaign = "omega_vla_t.r03.wave2.campaign_cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_vla_wave2_campaign_plan_v1.schema.json",
+  "title": "Omega VLA Wave 2 Campaign Plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "requested",
+    "generated",
+    "seed",
+    "start_offset",
+    "logical_frontier_size",
+    "addresses",
+    "aggregate_digest",
+    "permanent_total_cap",
+    "theorem_claimed",
+    "formal_proof_claimed",
+    "scientific_validation_claimed"
+  ],
+  "properties": {
+    "requested": {"type": "integer", "minimum": 0},
+    "generated": {"type": "integer", "minimum": 0},
+    "seed": {"type": "integer"},
+    "start_offset": {"type": "integer", "minimum": 0},
+    "logical_frontier_size": {"type": "integer", "minimum": 1000000000000},
+    "addresses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "family_id",
+          "dimension",
+          "representation",
+          "scalar_system",
+          "property_question",
+          "backend",
+          "condition_regime",
+          "sparsity_regime",
+          "tolerance",
+          "application",
+          "method"
+        ],
+        "properties": {
+          "family_id": {"type": "string", "minLength": 1},
+          "dimension": {"type": ["integer", "string"]},
+          "representation": {
+            "enum": ["symbolic", "dense", "csr", "matrix_free", "hybrid"]
+          },
+          "scalar_system": {"enum": ["Q", "R", "C", "IR", "GF", "H"]},
+          "property_question": {"type": "string", "minLength": 1},
+          "backend": {"type": "string", "minLength": 1},
+          "condition_regime": {"type": "string", "minLength": 1},
+          "sparsity_regime": {"type": "string", "minLength": 1},
+          "tolerance": {"type": "string", "minLength": 1},
+          "application": {"type": "string", "minLength": 1},
+          "method": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "aggregate_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "permanent_total_cap": {"type": "null"},
+    "theorem_claimed": {"const": false},
+    "formal_proof_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false}
+  }
+}
