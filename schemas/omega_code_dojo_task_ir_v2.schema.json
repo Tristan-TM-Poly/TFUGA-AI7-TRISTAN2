@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_code_dojo_task_ir_v2.schema.json",
+  "title": "Omega Code Dojo TaskIR v2",
+  "type": "object",
+  "required": [
+    "task_id", "version", "title", "domain", "archetype", "statement",
+    "function_name", "input_schema", "output_schema", "constraints",
+    "invariants", "forbidden_assumptions", "metamorphic_relations",
+    "mutation_families", "skill_dependencies", "difficulty_vector",
+    "provenance", "evidence_status", "tags"
+  ],
+  "properties": {
+    "task_id": {"type": "string", "pattern": "^omega-task-"},
+    "version": {"type": "integer", "minimum": 1},
+    "title": {"type": "string", "minLength": 1},
+    "domain": {"type": "string", "minLength": 1},
+    "archetype": {"type": "string", "minLength": 1},
+    "statement": {"type": "string", "minLength": 1},
+    "function_name": {"type": "string", "minLength": 1},
+    "input_schema": {"type": "object"},
+    "output_schema": {"type": "object"},
+    "constraints": {"type": "array", "minItems": 1},
+    "invariants": {"type": "array", "minItems": 1},
+    "forbidden_assumptions": {"type": "array"},
+    "metamorphic_relations": {"type": "array"},
+    "mutation_families": {"type": "array", "minItems": 1},
+    "skill_dependencies": {"type": "array"},
+    "difficulty_vector": {"type": "object"},
+    "provenance": {"type": "object"},
+    "evidence_status": {"type": "string"},
+    "tags": {"type": "array"}
+  },
+  "additionalProperties": false
+}
