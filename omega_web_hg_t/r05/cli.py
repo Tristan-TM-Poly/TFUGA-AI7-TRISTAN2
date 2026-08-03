@@ -9,6 +9,7 @@ from typing import Any
 from .builtin_policies import BUILTIN_POLICIES, policy_by_id
 from .compiler import compare_compiled_policies, compile_policy, load_profile, write_compiled, write_profile
 from .gate import PolicyGate, RequestContext
+from .integration import audit_r04_bindings
 from .registry import PolicyRegistry
 
 
@@ -79,6 +80,10 @@ def build_parser() -> argparse.ArgumentParser:
     drift.add_argument("--as-of", default="2026-08-03")
     drift.add_argument("--output")
 
+    audit_bindings = commands.add_parser("audit-bindings")
+    audit_bindings.add_argument("--as-of", default="2026-08-03")
+    audit_bindings.add_argument("--output")
+
     audit = commands.add_parser("audit")
     audit.add_argument("--as-of", default="2026-08-03")
     audit.add_argument("--output")
@@ -142,6 +147,7 @@ def main(argv: list[str] | None = None) -> int:
         compiled_dir = root / "compiled"
         registry_path = root / "policy-registry.sqlite3"
         root.mkdir(parents=True, exist_ok=True)
+        binding_audit = audit_r04_bindings(as_of=args.as_of)
         with PolicyRegistry(registry_path) as registry:
             for profile in BUILTIN_POLICIES:
                 compiled = compile_policy(profile, as_of=args.as_of)
@@ -159,12 +165,17 @@ def main(argv: list[str] | None = None) -> int:
                 "fail_count": sum(compile_policy(item, as_of=args.as_of).review_status == "fail" for item in BUILTIN_POLICIES),
                 "registry_counts": registry.counts(),
                 "exports": [str(path.relative_to(root)) for path in exported],
+                "r04_binding_status": binding_audit["status"],
+                "r04_adapter_count": binding_audit["adapter_count"],
+                "r04_bound_count": binding_audit["bound_count"],
+                "r04_binding_audit_digest": binding_audit["audit_digest"],
                 "policy_document_is_executable_permission": False,
                 "compiled_policy_is_legal_advice": False,
             }
+        _emit(binding_audit, str(root / "r04-binding-audit.json"))
         _emit(manifest, str(root / "materialization-manifest.json"))
         print(root / "materialization-manifest.json")
-        return 0
+        return 0 if binding_audit["status"] == "PASS" else 2
 
     if args.command == "drift":
         old = compile_policy(load_profile(args.old_profile), as_of=args.as_of)
@@ -172,6 +183,11 @@ def main(argv: list[str] | None = None) -> int:
         report = compare_compiled_policies(old, new)
         _emit(report, args.output)
         return 2 if report["requires_human_review"] else 0
+
+    if args.command == "audit-bindings":
+        report = audit_r04_bindings(as_of=args.as_of)
+        _emit(report, args.output)
+        return 0 if report["status"] == "PASS" else 2
 
     rows = [compile_policy(profile, as_of=args.as_of) for profile in BUILTIN_POLICIES]
     failures: list[str] = []
@@ -184,6 +200,12 @@ def main(argv: list[str] | None = None) -> int:
             failures.append(f"{policy.source_id}:raw_response_not_forbidden")
         if not {"abstract", "body", "full_text"}.issubset(set(policy.forbidden_fields)):
             failures.append(f"{policy.source_id}:critical_forbidden_fields_missing")
+    binding_audit = audit_r04_bindings(as_of=args.as_of)
+    if binding_audit["status"] != "PASS":
+        failures.extend(
+            f"binding:{item['source_id']}:{item['error']}"
+            for item in binding_audit["failures"]
+        )
     payload = {
         "status": "PASS" if not failures else "FAIL",
         "failures": failures,
@@ -192,6 +214,10 @@ def main(argv: list[str] | None = None) -> int:
         "pass_count": sum(item.review_status == "pass" for item in rows),
         "human_review_count": sum(item.review_status == "human_review" for item in rows),
         "policy_digests": {item.source_id: item.policy_digest for item in rows},
+        "r04_binding_status": binding_audit["status"],
+        "r04_adapter_count": binding_audit["adapter_count"],
+        "r04_bound_count": binding_audit["bound_count"],
+        "r04_binding_audit_digest": binding_audit["audit_digest"],
         "legal_advice_claimed": False,
         "permission_beyond_profile_claimed": False,
     }
