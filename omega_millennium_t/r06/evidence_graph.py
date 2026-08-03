@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 from .audit import audit_evidence_graph as _audit_evidence_graph
 from .compiler import compile_evidence_graph as _compile_evidence_graph
@@ -17,12 +17,82 @@ from .model import (
     write_jsonl,
 )
 
+EVIDENTIAL_SOURCES = {
+    "evidence",
+    "counterexample",
+    "computation_receipt",
+    "formal_artifact",
+    "independent_review",
+}
+
+
+def _validate_bundle_semantics(bundle_paths: Sequence[str | Path]) -> None:
+    for path_like in bundle_paths:
+        path = Path(path_like)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if payload.get("schema") != BUNDLE_SCHEMA:
+            raise ValueError(f"{path}: unsupported bundle schema")
+        raw_nodes = payload.get("nodes", [])
+        raw_edges = payload.get("edges", [])
+        if not isinstance(raw_nodes, list) or not isinstance(raw_edges, list):
+            raise ValueError(f"{path}: nodes and edges must be lists")
+        node_types: dict[str, str] = {}
+        for raw in raw_nodes:
+            if not isinstance(raw, Mapping):
+                raise ValueError(f"{path}: node must be an object")
+            node_id = str(raw.get("node_id", ""))
+            node_type = str(raw.get("node_type", ""))
+            metadata = raw.get("metadata", {})
+            node_types[node_id] = node_type
+            if not isinstance(metadata, Mapping):
+                raise ValueError(f"{path}: {node_id} metadata must be an object")
+            if node_type == "computation_receipt":
+                if metadata.get("outcome") not in {
+                    "success", "failure", "timeout", "invalid_certificate", "diverged"
+                }:
+                    raise ValueError(f"{path}: {node_id} requires a valid computation outcome")
+                if not str(metadata.get("run_digest", "")).strip():
+                    raise ValueError(f"{path}: {node_id} requires run_digest")
+                if "certificate_verified" in metadata and not isinstance(metadata["certificate_verified"], bool):
+                    raise ValueError(f"{path}: {node_id} certificate_verified must be boolean")
+            elif node_type == "formal_artifact":
+                if metadata.get("kernel_checked") is True and not str(metadata.get("verifier", "")).strip():
+                    raise ValueError(f"{path}: {node_id} kernel-checked artifact requires verifier")
+            elif node_type == "independent_review":
+                if not str(metadata.get("reviewer", "")).strip():
+                    raise ValueError(f"{path}: {node_id} requires reviewer")
+                if not str(metadata.get("review_scope", "")).strip():
+                    raise ValueError(f"{path}: {node_id} requires review_scope")
+            elif node_type == "counterexample":
+                if metadata.get("counterexample_scope") not in {"restricted", "general"}:
+                    raise ValueError(f"{path}: {node_id} requires counterexample_scope")
+                if "independently_verified" in metadata and not isinstance(metadata["independently_verified"], bool):
+                    raise ValueError(f"{path}: {node_id} independently_verified must be boolean")
+        for raw in raw_edges:
+            if not isinstance(raw, Mapping):
+                raise ValueError(f"{path}: edge must be an object")
+            edge_id = str(raw.get("edge_id", ""))
+            source_type = node_types.get(str(raw.get("source_node_id", "")))
+            target_type = node_types.get(str(raw.get("target_node_id", "")))
+            relation = str(raw.get("relation", ""))
+            if relation in {"supports", "improves_bound"} and source_type not in EVIDENTIAL_SOURCES:
+                raise ValueError(f"{path}: {edge_id} has non-evidential source")
+            if relation == "proves_restricted_case" and source_type not in {"evidence", "formal_artifact"}:
+                raise ValueError(f"{path}: {edge_id} has invalid restricted-proof source")
+            if relation == "contradicts" and source_type not in EVIDENTIAL_SOURCES:
+                raise ValueError(f"{path}: {edge_id} has invalid contradiction source")
+            if relation in {"discharges", "violates"} and source_type not in EVIDENTIAL_SOURCES:
+                raise ValueError(f"{path}: {edge_id} has invalid discharge/violation source")
+            if relation == "scopes" and target_type != "claim":
+                raise ValueError(f"{path}: {edge_id} scopes must target a claim")
+
 
 def compile_evidence_graph(
     canonical_problems_jsonl: str | Path,
     bundle_paths: Sequence[str | Path],
     output_dir: str | Path,
 ) -> dict[str, Any]:
+    _validate_bundle_semantics(bundle_paths)
     canonical_path = Path(canonical_problems_jsonl)
     output = Path(output_dir)
     report = _compile_evidence_graph(canonical_path, bundle_paths, output)
@@ -44,8 +114,7 @@ def compile_evidence_graph(
     manifest_path = output / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["artifacts"] = [
-        item for item in manifest["artifacts"]
-        if item.get("path") != refs_path.name
+        item for item in manifest["artifacts"] if item.get("path") != refs_path.name
     ] + [file_receipt(refs_path)]
     manifest["artifacts"].sort(key=lambda item: item["path"])
     manifest["canonical_identity_input_digest"] = stable_digest(refs)
@@ -101,12 +170,15 @@ def audit_evidence_graph(output_dir: str | Path) -> dict[str, Any]:
             for field in ("sha256", "bytes", "rows"):
                 if actual[field] != expected_receipt.get(field):
                     errors.append(f"canonical_identity_refs.jsonl: {field} mismatch")
-        if manifest.get("canonical_identity_input_digest") != stable_digest(refs):
+        identity_digest = stable_digest(refs)
+        if manifest.get("canonical_identity_input_digest") != identity_digest:
             errors.append("canonical identity input digest mismatch")
         report = json.loads((output / "report.json").read_text(encoding="utf-8"))
         if report.get("canonical_identity_ref_count") != len(refs):
             errors.append("report canonical_identity_ref_count mismatch")
-        if report.get("canonical_identity_input_digest") != stable_digest(refs):
+        if report.get("canonical_problem_count") != len(refs):
+            errors.append("report canonical_problem_count mismatch")
+        if report.get("canonical_identity_input_digest") != identity_digest:
             errors.append("report canonical_identity_input_digest mismatch")
         if report.get("manifest_digest") != manifest.get("digest"):
             errors.append("report manifest digest mismatch")
