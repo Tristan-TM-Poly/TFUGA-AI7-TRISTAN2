@@ -1,0 +1,72 @@
+name: Omega Prototype Portfolio R0.1 OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_prototype_portfolio_t/**"
+      - "tests/test_omega_prototype_portfolio_t.py"
+      - "docs/omega_prototype_portfolio_t/**"
+      - "schemas/omega_prototype_snapshot.schema.json"
+      - "examples/omega_prototype_portfolio_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-prototype-portfolio.yml"
+  push:
+    paths:
+      - "omega_prototype_portfolio_t/**"
+      - "tests/test_omega_prototype_portfolio_t.py"
+      - "docs/omega_prototype_portfolio_t/**"
+      - "schemas/omega_prototype_snapshot.schema.json"
+      - "examples/omega_prototype_portfolio_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-prototype-portfolio.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-prototype-portfolio-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - run: python -m compileall -q omega_prototype_portfolio_t tests/test_omega_prototype_portfolio_t.py examples/omega_prototype_portfolio_demo.py
+      - run: pytest -q tests/test_omega_prototype_portfolio_t.py
+      - name: Validate schema and deterministic OAK bundle
+        run: |
+          python -m omega_prototype_portfolio_t seed --output /tmp/seed.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          schema = json.loads(Path('schemas/omega_prototype_snapshot.schema.json').read_text())
+          seed = json.loads(Path('/tmp/seed.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.Draft202012Validator(schema).validate(seed)
+          assert len(seed['prototypes']) == 23
+          assert seed['external_action_performed'] is False
+          assert seed['truth_probability_claimed'] is False
+          PY
+          python -m omega_prototype_portfolio_t oak --output /tmp/oak.json
+          python - <<'PY'
+          import json
+          report = json.load(open('/tmp/oak.json'))
+          assert report['status'] == 'PASS'
+          assert report['bundle_deterministic'] is True
+          assert report['external_action_performed'] is False
+          assert report['truth_probability_claimed'] is False
+          PY
