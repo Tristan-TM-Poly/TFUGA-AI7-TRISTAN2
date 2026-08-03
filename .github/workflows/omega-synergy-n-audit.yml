@@ -1,153 +1,187 @@
-name: Omega Synergy Foundry Audit
+name: Omega Synergy Foundry and OS Audit
 
 on:
   workflow_dispatch:
     inputs:
       max_order:
-        description: Maximum synergy order, from 2 to 8
+        description: Maximum R1 synergy order, 2 to 8
         required: false
         default: '4'
   schedule:
     - cron: '27 6 * * 3'
   push:
-    branches:
-      - agent/omega-synergy-n-research-engine
+    branches: [agent/omega-synergy-n-research-engine]
     paths:
       - 'omega_synergy_t/**'
       - 'tools/github_reactor/synergy_n_engine.py'
-      - 'tests/test_synergy_n_engine.py'
-      - 'tests/test_synergy_foundry.py'
-      - 'tests/test_synergy_foundry_cli.py'
-      - 'docs/canon/OMEGA_SYNERGY_N_T.md'
-      - 'docs/canon/OMEGA_SYNERGY_T_INFINITY_R1.md'
-      - 'docs/architecture/OMEGA_SYNERGY_ARCHITECTURE.md'
-      - 'docs/security/OMEGA_SYNERGY_THREAT_MODEL.md'
-      - 'schemas/omega_synergy_n_report.schema.json'
-      - 'schemas/creation_dna.schema.json'
-      - 'schemas/interface_contract.schema.json'
-      - 'schemas/synergy_experiment.schema.json'
-      - 'schemas/pr_gene.schema.json'
-      - 'pyproject.toml'
+      - 'tests/test_synergy_*'
+      - 'docs/canon/OMEGA_SYNERGY*'
+      - 'docs/architecture/OMEGA_*SYNERGY*'
+      - 'docs/architecture/OMEGA_TRANSFORMATION_IR_R0_2.md'
+      - 'docs/security/OMEGA_SYNERGY*'
+      - 'schemas/*synergy*'
+      - 'schemas/transformation_ir.schema.json'
+      - 'policies/omega_synergy_os_r02_policy.json'
+      - 'examples/omega_synergy_os_r02_demo.py'
       - '.github/workflows/omega-synergy-n-audit.yml'
   pull_request:
     paths:
       - 'omega_synergy_t/**'
       - 'tools/github_reactor/synergy_n_engine.py'
-      - 'tests/test_synergy_n_engine.py'
-      - 'tests/test_synergy_foundry.py'
-      - 'tests/test_synergy_foundry_cli.py'
-      - 'docs/canon/OMEGA_SYNERGY_N_T.md'
-      - 'docs/canon/OMEGA_SYNERGY_T_INFINITY_R1.md'
-      - 'docs/architecture/OMEGA_SYNERGY_ARCHITECTURE.md'
-      - 'docs/security/OMEGA_SYNERGY_THREAT_MODEL.md'
-      - 'schemas/omega_synergy_n_report.schema.json'
-      - 'schemas/creation_dna.schema.json'
-      - 'schemas/interface_contract.schema.json'
-      - 'schemas/synergy_experiment.schema.json'
-      - 'schemas/pr_gene.schema.json'
-      - 'pyproject.toml'
+      - 'tests/test_synergy_*'
+      - 'docs/canon/OMEGA_SYNERGY*'
+      - 'docs/architecture/OMEGA_*SYNERGY*'
+      - 'docs/architecture/OMEGA_TRANSFORMATION_IR_R0_2.md'
+      - 'docs/security/OMEGA_SYNERGY*'
+      - 'schemas/*synergy*'
+      - 'schemas/transformation_ir.schema.json'
+      - 'policies/omega_synergy_os_r02_policy.json'
+      - 'examples/omega_synergy_os_r02_demo.py'
       - '.github/workflows/omega-synergy-n-audit.yml'
 
 permissions:
   contents: read
 
 concurrency:
-  group: omega-synergy-foundry-${{ github.ref }}
+  group: omega-synergy-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  validate:
+  synergy-os-r02:
+    name: Synergy OS R0.2 / Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install focused validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.2
+        run: python -m compileall -q omega_synergy_t/r02 examples/omega_synergy_os_r02_demo.py tests/test_synergy_os_r02.py
+      - name: Run 39-test contract court
+        run: python -m pytest -q tests/test_synergy_os_r02.py
+      - name: Build deterministic bundles twice
+        env:
+          SOURCE_DATE_EPOCH: '1785785117'
+        run: |
+          rm -rf /tmp/synergy-a /tmp/synergy-b
+          python -m omega_synergy_t.r02 demo --output-dir /tmp/synergy-a >/tmp/demo-a.json
+          python -m omega_synergy_t.r02 demo --output-dir /tmp/synergy-b >/tmp/demo-b.json
+          python -m omega_synergy_t.r02 audit --bundle-dir /tmp/synergy-a >/tmp/audit.json
+          python -m omega_synergy_t.r02 compare /tmp/synergy-a /tmp/synergy-b >/tmp/compare.json
+      - name: Validate schemas and A3 constitution
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator, RefResolver
+          schemas=Path('schemas')
+          ir_schema=json.loads((schemas/'transformation_ir.schema.json').read_text())
+          gate_schema=json.loads((schemas/'synergy_gate_decision.schema.json').read_text())
+          bundle_schema=json.loads((schemas/'synergy_os_bundle.schema.json').read_text())
+          root=Path('/tmp/synergy-a')
+          ir=json.loads((root/'transformation_ir.json').read_text())
+          gates=json.loads((root/'gate_decisions.json').read_text())
+          bundle=json.loads((root/'synergy_os_bundle.json').read_text())
+          audit=json.loads(Path('/tmp/audit.json').read_text())
+          compare=json.loads(Path('/tmp/compare.json').read_text())
+          Draft202012Validator(ir_schema).validate(ir)
+          for item in gates: Draft202012Validator(gate_schema).validate(item)
+          store={ir_schema['$id']:ir_schema,gate_schema['$id']:gate_schema,'transformation_ir.schema.json':ir_schema,'synergy_gate_decision.schema.json':gate_schema}
+          Draft202012Validator(bundle_schema,resolver=RefResolver.from_schema(bundle_schema,store=store)).validate(bundle)
+          assert audit['valid'] is True
+          assert compare['same_ir'] is True and compare['same_merkle_root'] is True and compare['changed']==[]
+          assert bundle['authority']=='A3' and bundle['human_review_required'] is True
+          assert bundle['automatic_merge_allowed'] is False and bundle['automatic_publication_allowed'] is False
+          assert all(item['automatic_merge_allowed'] is False for item in gates)
+          PY
+      - name: Audit immutable action refs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          refs=re.findall(r'uses:\s*([^\s#]+)',Path('.github/workflows/omega-synergy-n-audit.yml').read_text())
+          moving=[ref for ref in refs if not re.search(r'@[0-9a-f]{40}$',ref)]
+          assert not moving,moving
+          PY
+      - name: Stage R0.2 evidence
+        if: matrix.python-version == '3.13'
+        run: |
+          mkdir -p reports/omega-synergy-os-r02-ci
+          cp -R /tmp/synergy-a/. reports/omega-synergy-os-r02-ci/
+          cp /tmp/audit.json /tmp/compare.json reports/omega-synergy-os-r02-ci/
+      - name: Upload R0.2 evidence
+        if: matrix.python-version == '3.13'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: omega-synergy-os-r02-${{ github.run_id }}
+          path: reports/omega-synergy-os-r02-ci
+          if-no-files-found: error
+          retention-days: 30
+
+  foundry-r1:
+    name: Synergy Foundry R1 integration
+    needs: synergy-os-r02
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
     steps:
-      - name: Checkout root reactor
-        uses: actions/checkout@v4
+      - name: Checkout root
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           path: workspace/root
           persist-credentials: false
-
       - name: Checkout public deep corpus
         continue-on-error: true
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
           path: workspace/deep-corpus
           persist-credentials: false
-
-      - name: Checkout public AIT generator
-        continue-on-error: true
-        uses: actions/checkout@v4
-        with:
-          repository: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG
-          path: workspace/ait-generator
-          persist-credentials: false
-
-      - name: Checkout public variant
-        continue-on-error: true
-        uses: actions/checkout@v4
-        with:
-          repository: Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2
-          path: workspace/variant
-          persist-credentials: false
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Python 3.11
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.11'
-
-      - name: Run Synergy Foundry tests
+      - name: Run R1 focused court
         working-directory: workspace/root
         run: |
-          python -m pip install --upgrade pip pytest
-          pytest -q \
-            tests/test_synergy_n_engine.py \
-            tests/test_synergy_foundry.py \
-            tests/test_synergy_foundry_cli.py
-
-      - name: Compile Python modules
+          python -m pip install --disable-pip-version-check pytest
+          python -m pytest -q tests/test_synergy_n_engine.py tests/test_synergy_foundry.py tests/test_synergy_foundry_cli.py
+      - name: Compile all Synergy modules
         working-directory: workspace/root
-        run: |
-          python -m compileall -q omega_synergy_t tools/github_reactor/synergy_n_engine.py
-
-      - name: Generate bounded multi-repository Foundry analysis
+        run: python -m compileall -q omega_synergy_t tools/github_reactor/synergy_n_engine.py
+      - name: Generate bounded R1 analysis
         env:
           MAX_ORDER: ${{ inputs.max_order || '4' }}
         run: |
           roots=(--repo-root workspace/root)
           [ -d workspace/deep-corpus/.git ] && roots+=(--repo-root workspace/deep-corpus)
-          [ -d workspace/ait-generator/.git ] && roots+=(--repo-root workspace/ait-generator)
-          [ -d workspace/variant/.git ] && roots+=(--repo-root workspace/variant)
-          python workspace/root/tools/github_reactor/synergy_n_engine.py \
-            "${roots[@]}" \
-            --out reports/github-autonomous-reactor/synergy-foundry \
-            --max-order "$MAX_ORDER" \
-            --beam-width 96 \
-            --top-k 25 \
-            --max-nodes 800 \
-            --portfolio-budget 4.0
-
-      - name: Validate generated JSON and authority boundary
+          python workspace/root/tools/github_reactor/synergy_n_engine.py "${roots[@]}" --out reports/github-autonomous-reactor/synergy-foundry --max-order "$MAX_ORDER" --beam-width 96 --top-k 25 --max-nodes 800 --portfolio-budget 4.0
+      - name: Enforce R1 review-only boundary
         run: |
-          python -m json.tool workspace/root/reports/github-autonomous-reactor/synergy-foundry/creation_dna.json >/dev/null
-          python -m json.tool workspace/root/reports/github-autonomous-reactor/synergy-foundry/synergy_report.json >/dev/null
-          python -m json.tool workspace/root/reports/github-autonomous-reactor/synergy-foundry/experiment_queue.json >/dev/null
-          python -m json.tool workspace/root/reports/github-autonomous-reactor/synergy-foundry/pr_orchestra.json >/dev/null
           python - <<'PY'
           import json
           from pathlib import Path
-          root = Path('workspace/root/reports/github-autonomous-reactor/synergy-foundry')
-          report = json.loads((root / 'synergy_report.json').read_text())
-          orchestra = json.loads((root / 'pr_orchestra.json').read_text())
-          assert report['authority'] == 'review_only_heuristic'
-          assert orchestra['authority'] == 'review_only_plan'
+          root=Path('workspace/root/reports/github-autonomous-reactor/synergy-foundry')
+          report=json.loads((root/'synergy_report.json').read_text())
+          orchestra=json.loads((root/'pr_orchestra.json').read_text())
+          assert report['authority']=='review_only_heuristic'
+          assert orchestra['authority']=='review_only_plan'
           assert 'No merge is authorized by this manifest.' in orchestra['rules']
           PY
-
-      - name: Upload review-only evidence bundle
-        uses: actions/upload-artifact@v4
+      - name: Upload R1 evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: omega-synergy-foundry-${{ github.run_id }}
+          name: omega-synergy-foundry-r1-${{ github.run_id }}
           path: workspace/root/reports/github-autonomous-reactor/synergy-foundry
           if-no-files-found: error
           retention-days: 30
