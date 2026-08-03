@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  shard-oakbench:
+  shard_oakbench:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
@@ -39,15 +39,15 @@ jobs:
           print('OMEGA_WEB_HG_R04_FOUR_SHARDS_VALID')
           PY
 
-  max-metadata-shard:
-    needs: shard-oakbench
+  max_metadata_shard:
+    needs: shard_oakbench
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     strategy:
       fail-fast: false
       max-parallel: 4
       matrix:
-        shard-index: [0, 1, 2, 3]
+        shard_index: [0, 1, 2, 3]
     env:
       CROSSREF_MAILTO: ${{ secrets.CROSSREF_MAILTO }}
       NCBI_EMAIL: ${{ secrets.NCBI_EMAIL }}
@@ -59,7 +59,7 @@ jobs:
           python-version: "3.12"
       - name: Run one source-disjoint metadata shard
         run: |
-          root="generated/omega_web_hg_r04_max/shard-${{ matrix.shard-index }}"
+          root="generated/omega_web_hg_r04_max/shard-${{ matrix.shard_index }}"
           python -m omega_web_hg_t.r04.max_cli run \
             --output-dir "$root" \
             --query "hypergraph fractal mycelial science engineering" \
@@ -68,7 +68,7 @@ jobs:
             --max-pages-per-source 8 \
             --retries 4 \
             --max-bytes 2097152 \
-            --shard-index "${{ matrix.shard-index }}" \
+            --shard-index "${{ matrix.shard_index }}" \
             --shard-count 4
           python -m omega_web_hg_t.r04.max_cli audit "$root"
       - name: Enforce metadata-only shard boundaries
@@ -76,7 +76,7 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          index = ${{ matrix.shard-index }}
+          index = ${{ matrix.shard_index }}
           root = Path(f'generated/omega_web_hg_r04_max/shard-{index}')
           report = json.loads((root / 'campaign-report.json').read_text())
           assert report['shard']['index'] == index
@@ -99,14 +99,14 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: omega-web-hg-r04-max-shard-${{ matrix.shard-index }}
-          path: generated/omega_web_hg_r04_max/shard-${{ matrix.shard-index }}
+          name: omega-web-hg-r04-max-shard-${{ matrix.shard_index }}
+          path: generated/omega_web_hg_r04_max/shard-${{ matrix.shard_index }}
           if-no-files-found: error
           retention-days: 30
 
-  aggregate-max-evidence:
-    if: ${{ always() && needs.max-metadata-shard.result != 'skipped' }}
-    needs: max-metadata-shard
+  aggregate_max_evidence:
+    if: ${{ always() && needs.max_metadata_shard.result != 'skipped' }}
+    needs: max_metadata_shard
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
