@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.local/schemas/omega_prime_external_verifier_receipt_v4.schema.json",
+  "title": "Omega Prime external verifier receipt R0.4",
+  "type": "object",
+  "required": ["artifact", "executable", "executable_sha256", "arguments", "returncode", "stdout_sha256", "stderr_sha256", "output_marker", "marker_matched", "verified_by_declared_tool", "oak"],
+  "properties": {
+    "artifact": {
+      "type": "object",
+      "required": ["format", "source_label", "size_bytes", "sha256", "status", "oak"]
+    },
+    "executable": {"type": "string", "minLength": 1},
+    "executable_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "arguments": {"type": "array", "items": {"type": "string"}},
+    "returncode": {"type": "integer"},
+    "stdout_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stderr_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "output_marker": {"type": "string"},
+    "marker_matched": {"type": "boolean"},
+    "verified_by_declared_tool": {"type": "boolean"},
+    "oak": {
+      "type": "object",
+      "required": ["shell_invocation_used", "global_novelty_claimed"],
+      "properties": {
+        "shell_invocation_used": {"const": false},
+        "global_novelty_claimed": {"const": false}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
