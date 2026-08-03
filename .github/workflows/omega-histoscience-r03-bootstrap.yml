@@ -1,6 +1,12 @@
 name: Omega Histoscience R0.3 MAX Bootstrap
 
 on:
+  push:
+    branches: [feat/omega-histoscience-hg-r0-1]
+    paths:
+      - "tools/omega_histosci_r03_payload/**"
+      - "tools/materialize_omega_histosci_r03.py"
+      - ".github/workflows/omega-histoscience-r03-bootstrap.yml"
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
@@ -20,7 +26,7 @@ jobs:
   materialize:
     if: >-
       github.actor != 'github-actions[bot]' &&
-      (github.event_name == 'workflow_dispatch' ||
+      (github.event_name != 'pull_request' ||
        github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-24.04
     timeout-minutes: 30
