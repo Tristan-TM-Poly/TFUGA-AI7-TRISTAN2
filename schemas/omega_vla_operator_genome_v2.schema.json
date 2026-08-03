@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_vla_operator_genome_v2.schema.json",
+  "title": "Omega VLA Operator Genome v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "genome_id",
+    "family_id",
+    "name",
+    "math_type",
+    "representation",
+    "parameters",
+    "assumptions",
+    "invariants",
+    "algorithms",
+    "backends",
+    "property_evidence",
+    "residuals",
+    "provenance",
+    "status",
+    "theorem_claimed",
+    "formal_proof_claimed",
+    "scientific_validation_claimed"
+  ],
+  "properties": {
+    "genome_id": {"type": "string", "minLength": 1},
+    "family_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "math_type": {"type": "object"},
+    "representation": {
+      "enum": [
+        "symbolic",
+        "dense",
+        "csr",
+        "matrix_free",
+        "tensor",
+        "graph",
+        "formal_target",
+        "hybrid"
+      ]
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "invariants": {"type": "array", "items": {"type": "string"}},
+    "algorithms": {"type": "array", "items": {"type": "string"}},
+    "backends": {"type": "array", "items": {"type": "string"}},
+    "property_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "property_name",
+          "supported",
+          "evidence_level",
+          "residual",
+          "threshold",
+          "method",
+          "assumptions",
+          "witnesses",
+          "theorem_claimed",
+          "formal_proof_claimed"
+        ],
+        "properties": {
+          "property_name": {"type": "string", "minLength": 1},
+          "supported": {"type": ["boolean", "null"]},
+          "evidence_level": {
+            "enum": [
+              "unknown",
+              "declared",
+              "numerically_tested",
+              "numerically_refuted",
+              "symbolically_derived",
+              "formally_verified"
+            ]
+          },
+          "residual": {"type": ["number", "null"]},
+          "threshold": {"type": ["number", "null"]},
+          "method": {"type": "string"},
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "witnesses": {"type": "array", "items": {"type": "string"}},
+          "theorem_claimed": {"const": false},
+          "formal_proof_claimed": {"const": false}
+        },
+        "additionalProperties": false
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": {"type": "number"}
+    },
+    "provenance": {"type": "array", "items": {"type": "string"}},
+    "status": {
+      "enum": [
+        "idea",
+        "defined",
+        "implemented",
+        "tested",
+        "refuted",
+        "formalized_incomplete",
+        "formally_verified",
+        "canonical"
+      ]
+    },
+    "theorem_claimed": {"const": false},
+    "formal_proof_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false}
+  }
+}
