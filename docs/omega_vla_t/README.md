@@ -14,6 +14,10 @@ R0.1 implémente uniquement des objets établis de mathématiques numériques :
 - applications linéaires et adjoints métriques;
 - résidus, noyaux numériques, SVD, rang exact estimé et rang effectif;
 - changements de base et test de covariance;
+- décomposition symétrique/antisymétrique, commutateurs et anticommutateurs;
+- bases orthonormales, projecteurs euclidiens et métriques, angles principaux;
+- dérivées directionnelles, gradients numériques, Jacobiens et Hessiens;
+- propagation de covariance du premier ordre et audit du résidu de linéarisation;
 - gradient, divergence, Laplacien et rotationnel 2D par différences finies;
 - gradient, divergence et Laplacien sur graphe via matrice d’incidence;
 - décomposition de Hodge de premier ordre d’un flot d’arêtes;
@@ -40,7 +44,14 @@ Une approximation n’est acceptable que si son résidu est conservé et mesuré
 
 ```python
 import numpy as np
-from omega_vla_t import LinearOperator, VectorSpace, audit_operator
+from omega_vla_t import (
+    LinearOperator,
+    VectorSpace,
+    audit_linearization,
+    audit_operator,
+    hessian,
+    jacobian,
+)
 
 space = VectorSpace(2, metric=np.array([[2.0, 0.0], [0.0, 1.0]]))
 operator = LinearOperator(
@@ -52,6 +63,10 @@ operator = LinearOperator(
 
 print(operator.svd_report().to_dict())
 print(audit_operator(operator).to_markdown())
+
+f = lambda x: np.array([x[0] ** 2 + x[1], np.sin(x[0])])
+print(jacobian(f, np.array([0.5, 0.0])))
+print(audit_linearization(f, [0.5, 0.0], [1e-3, -2e-3]).to_dict())
 ```
 
 ## CLI
@@ -69,9 +84,12 @@ R0.1 vérifie notamment :
 2. la covariance sous changement de base pour les endomorphismes;
 3. la finitude et le seuil du conditionnement;
 4. la cohérence du rang numérique;
-5. la symétrie et la semi-définie positivité du Laplacien de graphe;
-6. la reconstruction et l’orthogonalité de la décomposition de Hodge;
-7. l’absence explicite de revendication de théorème ou de validation physique.
+5. la reconstruction et l’orthogonalité des décompositions structurées;
+6. l’idempotence et la symétrie des projecteurs orthogonaux;
+7. la précision de fixtures analytiques pour Jacobien, gradient et Hessien;
+8. la symétrie et la semi-définie positivité du Laplacien de graphe;
+9. la reconstruction et l’orthogonalité de la décomposition de Hodge;
+10. l’absence explicite de revendication de théorème ou de validation physique.
 
 Un passage OAK signifie seulement que les fixtures logicielles déclarées ont
 réussi. Il ne constitue ni preuve mathématique nouvelle, ni certification
@@ -82,8 +100,9 @@ physique, ni validation expérimentale.
 - formes différentielles et complexes de chaînes d’ordres supérieurs;
 - calcul extérieur discret sur complexes simpliciaux;
 - Hodge pondéré et multi-échelle HGFM;
-- Jacobien, Hessien et propagation d’incertitude;
-- atlas de linéarisations locales Ω-LIN-T;
+- différentiation automatique et symbolique avec comparaison croisée;
+- atlas de linéarisations locales Ω-LIN-T avec détecteur de domaine de validité;
+- propagation d’incertitude non linéaire, Monte-Carlo et intervalles certifiés;
 - projections fertiles CVCD comparées à PCA/SVD/wavelets;
 - tenseurs CP, Tucker et Tensor Train;
 - unités physiques et covariance dimensionnelle;
