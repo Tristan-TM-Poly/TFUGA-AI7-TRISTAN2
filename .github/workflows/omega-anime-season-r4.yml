@@ -1,0 +1,170 @@
+name: Omega Anime Season R4
+
+on:
+  pull_request:
+    paths:
+      - "omega_anime_season_t/**"
+      - "omega_anime_episode_t/**"
+      - "tests/test_omega_anime_season_t_r4.py"
+      - "examples/omega_anime_season_r4_demo.py"
+      - "docs/omega_anime_season_t_r4.md"
+      - "schemas/anime-season-r4.schema.json"
+      - "policies/omega_anime_season_r4.json"
+      - "generated/omega_anime_season_t/**"
+      - ".github/workflows/omega-anime-season-r4.yml"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-anime-season-r4-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  season-oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pip pytest jsonschema
+
+      - name: Compile source
+        run: |
+          python -m compileall \
+            omega_anime_season_t \
+            tests/test_omega_anime_season_t_r4.py \
+            examples/omega_anime_season_r4_demo.py
+
+      - name: Run R4 season proof tests
+        run: |
+          pytest -q tests/test_omega_anime_season_t_r4.py --durations=25 \
+            2>&1 | tee /tmp/omega-anime-season-r4-tests.log
+
+      - name: Validate exact season schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_anime_season_t import build_eighth_fire_season_01_r4
+
+          schema = json.loads(Path('schemas/anime-season-r4.schema.json').read_text())
+          season = build_eighth_fire_season_01_r4()
+          payload = season.to_dict()
+          Draft202012Validator(schema).validate(payload)
+          assert payload['episode_count'] == 12
+          assert payload['total_duration_s'] == 14400.0
+          assert payload['total_scenes'] == 144
+          assert payload['total_shots'] == 1368
+          print(json.dumps({
+              'episodes': 12,
+              'minutes': 240,
+              'scenes': 144,
+              'shots': 1368,
+          }, indent=2))
+          PY
+
+      - name: Compile season twice
+        run: |
+          rm -rf /tmp/eighth-fire-season-r4-a /tmp/eighth-fire-season-r4-b
+          python -m omega_anime_season_t validate-season-01
+          python -m omega_anime_season_t compile-season-01 \
+            --output-dir /tmp/eighth-fire-season-r4-a \
+            | tee /tmp/omega-anime-season-r4-manifest.json
+          python -m omega_anime_season_t compile-season-01 \
+            --output-dir /tmp/eighth-fire-season-r4-b \
+            >/tmp/omega-anime-season-r4-second.json
+
+      - name: Enforce season, continuity and network gates
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          first = Path('/tmp/eighth-fire-season-r4-a')
+          second = Path('/tmp/eighth-fire-season-r4-b')
+          manifest = json.loads((first / 'manifest.json').read_text())
+          season = json.loads((first / 'season.json').read_text())
+          files = [path for path in first.rglob('*') if path.is_file()]
+          episode_dirs = sorted(path for path in (first / 'episodes').iterdir() if path.is_dir())
+          continuity = [json.loads(line) for line in (first / 'continuity-ledger.jsonl').read_text().splitlines()]
+          debts = [json.loads(line) for line in (first / 'causal-debt-ledger.jsonl').read_text().splitlines()]
+
+          assert len(files) == 91
+          assert len(episode_dirs) == 12
+          assert manifest['artifact_count'] == 91
+          assert manifest['episode_artifact_count'] == 84
+          assert manifest['episode_count'] == 12
+          assert manifest['total_duration_s'] == 14400.0
+          assert manifest['total_scenes'] == 144
+          assert manifest['total_shots'] == 1368
+          assert manifest['external_network_dependencies'] == 0
+          assert season['publication_state'] == 'private-draft'
+          assert len(continuity) == 11 and all(edge['matched'] for edge in continuity)
+          assert len(debts) == 12
+          assert debts[-1]['active_after'] == ['DEBT-SEASON2-001']
+
+          first_manifest = json.loads((first / 'manifest.json').read_text())
+          second_manifest = json.loads((second / 'manifest.json').read_text())
+          assert first_manifest['manifest_sha256'] == second_manifest['manifest_sha256']
+          for path in files:
+              rel = path.relative_to(first)
+              assert path.read_bytes() == (second / rel).read_bytes(), rel
+          for rel, record in manifest['files'].items():
+              assert hashlib.sha256((first / rel).read_bytes()).hexdigest() == record['sha256']
+
+          html_files = [first / 'season-dashboard.html'] + sorted(
+              (first / 'episodes').glob('episode-*/player.html')
+          )
+          assert len(html_files) == 13
+          for path in html_files:
+              content = path.read_text()
+              assert 'fetch(' not in content
+              assert 'http://' not in content
+              assert 'https://' not in content
+          for path in sorted((first / 'episodes').glob('episode-*/timeline.json')):
+              timeline = json.loads(path.read_text())
+              assert timeline['duration_s'] == 1200.0
+              assert len(timeline['scenes']) == 12
+              assert len(timeline['shots']) == 114
+              assert timeline['shots'][0]['start_s'] == 0.0
+              assert timeline['shots'][-1]['end_s'] == 1200.0
+
+          print(json.dumps({
+              'manifest': manifest['manifest_sha256'],
+              'artifacts': 91,
+              'episodes': 12,
+              'minutes': 240,
+              'scenes': 144,
+              'shots': 1368,
+              'continuity_edges': 11,
+              'open_debts_after_finale': ['DEBT-SEASON2-001'],
+              'network_dependencies': 0,
+          }, indent=2))
+          PY
+
+      - name: Upload complete season bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eighth-fire-season-01-r4-py${{ matrix.python-version }}
+          path: |
+            /tmp/eighth-fire-season-r4-a
+            /tmp/omega-anime-season-r4-tests.log
+            /tmp/omega-anime-season-r4-manifest.json
+          retention-days: 14
