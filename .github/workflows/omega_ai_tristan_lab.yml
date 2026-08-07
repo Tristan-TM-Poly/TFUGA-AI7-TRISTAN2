@@ -1,0 +1,255 @@
+name: Ω-AI-Tristan Lab
+
+on:
+  pull_request:
+    paths:
+      - "omega_ai_tristan_lab/**"
+      - ".github/workflows/omega_ai_tristan_lab.yml"
+  push:
+    branches:
+      - omega-ai-tristan-lab
+    paths:
+      - "omega_ai_tristan_lab/**"
+      - ".github/workflows/omega_ai_tristan_lab.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package
+        working-directory: omega_ai_tristan_lab
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run full tests
+        working-directory: omega_ai_tristan_lab
+        run: python -m pytest -q
+      - name: OAK-strict discovery and schema gates
+        working-directory: omega_ai_tristan_lab
+        run: |
+          omega-tristan-runtime discovery-report --mode oak-strict --expect omega-ai-tristan-lab > /tmp/discovery.json
+          omega-tristan-runtime schemas --json > /tmp/schemas.json
+          omega-tristan-runtime compile-pipeline tristan.idea.analyze --initial-schema tristan.idea.v1 > /tmp/plan.json
+          python - <<'PY'
+          import json
+          discovery = json.load(open('/tmp/discovery.json', encoding='utf-8'))
+          schemas = json.load(open('/tmp/schemas.json', encoding='utf-8'))
+          plan = json.load(open('/tmp/plan.json', encoding='utf-8'))
+          assert discovery['ok'] is True
+          assert discovery['failed'] == []
+          assert 'tristan.idea.v1' in schemas['schemas']
+          assert plan['final_schema'] == 'tristan.analysis-report.v1'
+          print('TRISTAN_V10_SCHEMA_DISCOVERY_PASS')
+          PY
+      - name: Structural peer contract tests
+        working-directory: omega_ai_tristan_lab
+        run: python -m pytest -q tests/test_v10_typed_multi_repo_contracts.py
+      - name: Sandbox smoke
+        working-directory: omega_ai_tristan_lab
+        run: |
+          omega-tristan-runtime run-sandboxed tristan.idea.analyze \
+            --timeout 15 --memory-mb 512 \
+            --payload-json '{"idea":"v1.0 bounded subprocess smoke"}' > /tmp/sandbox.json
+          python - <<'PY'
+          import json
+          payload = json.load(open('/tmp/sandbox.json', encoding='utf-8'))
+          assert payload['returncode'] == 0
+          assert payload['isolation_strength'] == 'USER_SPACE_BOUNDED'
+          assert payload['output']['oak_report']
+          print('TRISTAN_V10_SANDBOX_PASS')
+          PY
+      - name: Validate historical lock and privacy-safe bundle plan
+        working-directory: omega_ai_tristan_lab
+        run: |
+          omega-tristan-runtime integration-lock --version r08 > /tmp/r08.json
+          omega-tristan-runtime bundle-plan --output-dir /tmp/tristan-bundle > /tmp/bundle.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          lock = json.load(open('/tmp/r08.json', encoding='utf-8'))['lock']
+          assert lock['status'] == 'CI_VERIFIED_FOUR_REPO_R02'
+          assert lock['evidence']['marker'] == 'FOUR_REPO_RUNTIME_PINNED_PASS'
+          manifest = Path('/tmp/tristan-bundle/bundle-manifest.json').read_text(encoding='utf-8')
+          public = Path('/tmp/tristan-bundle/requirements-public.lock').read_text(encoding='utf-8')
+          assert 'PEFA-FractalEnergySystem' not in manifest
+          assert 'PEFA-FractalEnergySystem' not in public
+          print('TRISTAN_R08_HISTORY_PRESERVED_PASS')
+          PY
+      - name: Supply-chain inventory
+        working-directory: omega_ai_tristan_lab
+        run: |
+          omega-tristan-runtime supply-chain > /tmp/supply.json
+          python -m pip check
+          python - <<'PY'
+          import json
+          payload = json.load(open('/tmp/supply.json', encoding='utf-8'))
+          assert payload['ok'] is True
+          assert payload['vulnerability_status'] == 'NOT_SCANNED_NO_VULNERABILITY_DB'
+          print('TRISTAN_V10_SUPPLY_CHAIN_INVENTORY_PASS')
+          PY
+      - name: Build wheel and sdist
+        working-directory: omega_ai_tristan_lab
+        run: python -m build
+      - name: Clean-wheel install test
+        working-directory: omega_ai_tristan_lab
+        run: |
+          python -m venv /tmp/tristan-wheel-test
+          /tmp/tristan-wheel-test/bin/python -m pip install dist/*.whl
+          /tmp/tristan-wheel-test/bin/python - <<'PY'
+          from importlib import metadata
+          assert metadata.version('omega-ai-tristan-lab') == '1.0.0'
+          PY
+          /tmp/tristan-wheel-test/bin/omega-tristan-runtime discovery-report --mode oak-strict --expect omega-ai-tristan-lab
+          /tmp/tristan-wheel-test/bin/omega-tristan-runtime schemas --json
+          /tmp/tristan-wheel-test/bin/omega-tristan-runtime environment
+          /tmp/tristan-wheel-test/bin/omega-tristan-runtime supply-chain
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-ai-tristan-lab-v1.0
+          path: |
+            omega_ai_tristan_lab/dist/*.whl
+            omega_ai_tristan_lab/dist/*.tar.gz
+          if-no-files-found: error
+          retention-days: 30
+
+  compatibility-matrix:
+    name: compat-${{ matrix.os }}-py${{ matrix.python }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.10"
+          - os: ubuntu-latest
+            python: "3.11"
+          - os: ubuntu-latest
+            python: "3.12"
+          - os: windows-latest
+            python: "3.11"
+          - os: macos-latest
+            python: "3.11"
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install v1.0
+        working-directory: omega_ai_tristan_lab
+        run: python -m pip install -e ".[dev]"
+      - name: Run contract/trust and typed-contract tests except subprocess sandbox
+        working-directory: omega_ai_tristan_lab
+        run: |
+          python -m pytest -q tests/test_v09_contract_trust_fabric.py -k "not sandbox"
+          python -m pytest -q tests/test_v10_typed_multi_repo_contracts.py
+      - name: Environment identity
+        working-directory: omega_ai_tristan_lab
+        run: omega-tristan-runtime environment
+
+  public-wheelhouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build runtime wheel
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+          python -m build omega_ai_tristan_lab
+          mkdir -p public_wheelhouse public_bundle
+          cp omega_ai_tristan_lab/dist/*.whl public_wheelhouse/
+      - name: Build exact typed public peer wheelhouse
+        run: |
+          python -m pip wheel --wheel-dir public_wheelhouse \
+            "git+https://github.com/Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2.git@c21b3657e3216af85fc774eac2c4300de1d10328" \
+            "git+https://github.com/Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG.git@c6a87d0145c45f20e1e9074b4c81cb17e9f28251"
+      - name: Materialize public bundle without private topology
+        run: |
+          python -m venv /tmp/bundle-plan
+          /tmp/bundle-plan/bin/python -m pip install omega_ai_tristan_lab/dist/*.whl
+          /tmp/bundle-plan/bin/omega-tristan-runtime bundle-plan --output-dir public_bundle
+          test ! -f public_bundle/requirements-private-extension.lock
+          ! grep -R "PEFA-FractalEnergySystem" public_bundle
+      - name: Generate wheelhouse hashes
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          rows = []
+          for path in sorted(Path('public_wheelhouse').glob('*')):
+              if path.is_file():
+                  rows.append({
+                      'file': path.name,
+                      'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+                      'size': path.stat().st_size,
+                  })
+          Path('public_bundle/wheelhouse-sha256.json').write_text(json.dumps(rows, indent=2) + '\n', encoding='utf-8')
+          assert rows
+          PY
+      - name: Prove offline public wheelhouse install and typed peers
+        run: |
+          python -m venv /tmp/offline-tristan
+          /tmp/offline-tristan/bin/python -m pip install \
+            --no-index --find-links public_wheelhouse \
+            omega-ai-tristan-lab==1.0.0 \
+            tristan-omni-core==0.2.2 \
+            protein-fold-tristan==0.2.2
+          /tmp/offline-tristan/bin/python -m pip check
+          /tmp/offline-tristan/bin/omega-tristan-runtime supply-chain \
+            --wheelhouse public_wheelhouse \
+            --hash-manifest public_bundle/wheelhouse-sha256.json > /tmp/supply.json
+          /tmp/offline-tristan/bin/python - <<'PY'
+          import json
+          from importlib import metadata
+          from omega_ai_tristan_lab import TristanRuntime
+          assert metadata.version('omega-ai-tristan-lab') == '1.0.0'
+          assert metadata.version('tristan-omni-core') == '0.2.2'
+          assert metadata.version('protein-fold-tristan') == '0.2.2'
+          supply = json.load(open('/tmp/supply.json', encoding='utf-8'))
+          assert supply['wheel_hashes_verified'] is True
+          runtime = TristanRuntime(discovery_mode='oak-strict', expected_plugins=('omega-ai-tristan-lab','tristan-omni-core','protein-fold-tristan'))
+          graph = runtime.capability_graph()
+          required = {
+              'tristan.idea.analyze',
+              'tristan-omni-core.evidence-to-idea',
+              'protein-fold-tristan.sequence-validate',
+          }
+          assert not (required - set(graph.capability_ids()))
+          omni = graph.resolve('tristan-omni-core.evidence-to-idea').capability
+          protein_spec = graph.resolve('protein-fold-tristan.sequence-validate').capability
+          assert (omni.input_schema, omni.output_schema) == ('tristan.evidence.cvcd-invariant.v1', 'tristan.idea.v1')
+          assert 'tristan.any' not in {omni.input_schema, omni.output_schema, protein_spec.input_schema, protein_spec.output_schema}
+          protein = runtime.execute_capability(
+              'protein-fold-tristan.sequence-validate',
+              {'sequence': 'ACDEFGHIKLMNPQRSTVWY'},
+          )
+          assert protein.output['is_valid'] is True
+          print('TRISTAN_PUBLIC_WHEELHOUSE_V10_TYPED_OFFLINE_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tristan-runtime-public-wheelhouse-v1.0
+          path: |
+            public_wheelhouse/*
+            public_bundle/*
+          if-no-files-found: error
+          retention-days: 30

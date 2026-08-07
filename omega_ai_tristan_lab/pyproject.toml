@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omega-ai-tristan-lab"
+version = "1.0.0"
+description = "OAK-safe typed multi-repository capability runtime with schema compilation, provenance, sandboxing and supply-chain evidence."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary research scaffold / choose license before public reuse" }
+authors = [{ name = "Tristan Tardif-Morency" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "build>=1.2"]
+pdf = ["pypdf>=4"]
+
+[project.scripts]
+omega-ai-tristan-lab = "omega_ai_tristan_lab.cli:main"
+omega-tristan-runtime = "omega_ai_tristan_lab.repo_cli:main"
+
+[project.entry-points."tristan.plugins"]
+omega-ai-tristan-lab = "omega_ai_tristan_lab.plugin:plugin"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
