@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_summary_graph_export.schema.json",
+  "title": "Omega Summary Graph Export Manifest",
+  "type": "object",
+  "required": ["schema_version", "root", "fingerprint", "node_count", "edge_count", "artifacts", "boundary"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "root": {"type": "string"},
+    "fingerprint": {"type": "string"},
+    "node_count": {"type": "integer", "minimum": 0},
+    "edge_count": {"type": "integer", "minimum": 0},
+    "artifacts": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 2
+    },
+    "boundary": {"type": "string"}
+  },
+  "additionalProperties": false
+}
