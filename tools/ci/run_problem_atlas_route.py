@@ -4,12 +4,20 @@ import argparse
 import glob
 import json
 import subprocess
+import sys
 from pathlib import Path
 from typing import Iterable
 
+# This file is executed directly by routed-suite jobs. Python otherwise places
+# tools/ci (not the repository root) on sys.path, which makes the in-repo
+# omega_ci_admission_t package unreachable in a clean checkout.
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
 from omega_ci_admission_t.core import load_config
 
-CONFIG = Path("config/omega_ci_admission/problem_atlas_routes.json")
+CONFIG = REPOSITORY_ROOT / "config/omega_ci_admission/problem_atlas_routes.json"
 
 
 def _expand_args(args: Iterable[str]) -> list[str]:
@@ -59,7 +67,7 @@ def main() -> int:
 
     command, policy = _lookup(parsed.kind, parsed.id)
     _validate_command(command)
-    completed = subprocess.run(command, check=False, shell=False)
+    completed = subprocess.run(command, check=False, shell=False, cwd=REPOSITORY_ROOT)
     receipt = {
         "schema": "omega-ci-suite-execution-receipt/1",
         "kind": parsed.kind,
@@ -75,6 +83,8 @@ def main() -> int:
     text = json.dumps(receipt, indent=2, sort_keys=True) + "\n"
     if parsed.receipt_output:
         output = Path(parsed.receipt_output)
+        if not output.is_absolute():
+            output = REPOSITORY_ROOT / output
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(text, encoding="utf-8")
     print(text, end="")
