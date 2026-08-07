@@ -1,0 +1,161 @@
+name: Omega ASM-T R2 P5 Foundation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - feat/omega-asm-t-r1-max
+    paths:
+      - 'omega_asm_t/**'
+      - 'tests/test_omega_asm_t*.py'
+      - 'examples/native/omega_dot_u64_*'
+      - 'schemas/omega_asm_*.schema.json'
+      - 'policies/omega_asm_t*.json'
+      - 'docs/architecture/OMEGA_ASM_T_*.md'
+      - '.github/workflows/omega-asm-t-r2.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-asm-r2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-court:
+    name: R2 Python court / ${{ matrix.python-version }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install focused validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile all ASM-T courts
+        run: python -m compileall -q omega_asm_t tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py tests/test_omega_asm_t_r2_p5.py
+      - name: Run R1 plus R2 courts
+        run: python -m pytest -q tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py tests/test_omega_asm_t_r2_p5.py
+      - name: Generate microarchitecture manifest
+        run: python -m omega_asm_t microarch --toolchains --output /tmp/omega-asm-microarch.json
+      - name: Validate R2 schemas, manifest and policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          microarch=json.loads(Path('/tmp/omega-asm-microarch.json').read_text())
+          microarch_schema=json.loads(Path('schemas/omega_asm_microarch.schema.json').read_text())
+          p5_schema=json.loads(Path('schemas/omega_asm_p5_report.schema.json').read_text())
+          policy=json.loads(Path('policies/omega_asm_t_r2_policy.json').read_text())
+
+          Draft202012Validator.check_schema(microarch_schema)
+          Draft202012Validator.check_schema(p5_schema)
+          Draft202012Validator(microarch_schema).validate(microarch)
+          assert microarch['claim_scope']=='observational_hardware_context_only'
+          assert policy['authority']=='review_only'
+          assert policy['execute_arbitrary_user_assembly'] is False
+          assert policy['execute_arbitrary_user_commands'] is False
+          assert policy['package_executes_perf'] is False
+          assert policy['performance_thresholds_gate_ci'] is False
+          PY
+      - name: Audit immutable action refs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('.github/workflows/omega-asm-t-r2.yml').read_text()
+          refs=re.findall(r'(?m)^\s*uses:\s*([^\s#]+)', text)
+          moving=[ref for ref in refs if not re.search(r'@[0-9a-f]{40}$', ref)]
+          assert refs, 'expected at least one uses directive'
+          assert not moving, moving
+          PY
+
+  p5-counter-court:
+    name: R2 P5 optional hardware-counter court
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install schema validator
+        run: python -m pip install --disable-pip-version-check jsonschema
+      - name: Compile trusted native measurement target
+        run: |
+          cc -std=c11 -O3 -Wall -Wextra -Werror \
+            examples/native/omega_dot_u64_benchmark.c \
+            examples/native/omega_dot_u64_x86_64.S \
+            -o /tmp/omega-asm-r2-p5-target
+          sha256sum /tmp/omega-asm-r2-p5-target
+      - name: Attempt read-only perf collection on trusted target
+        run: |
+          set +e
+          if command -v perf >/dev/null 2>&1; then
+            LC_ALL=C perf stat --no-big-num -x ';' \
+              -e cycles,instructions,branches,branch-misses,cache-references,cache-misses,task-clock,context-switches,page-faults \
+              /tmp/omega-asm-r2-p5-target \
+              >/tmp/omega-asm-r2-target-output.json \
+              2>/tmp/omega-asm-r2-perf-stat.txt
+            status=$?
+          else
+            status=127
+            printf '%s\n' 'perf executable unavailable on this runner' >/tmp/omega-asm-r2-perf-stat.txt
+          fi
+          set -e
+          printf '%s\n' "$status" >/tmp/omega-asm-r2-perf-exit-code.txt
+      - name: Build P5 report without inventing missing counters
+        run: |
+          status="$(cat /tmp/omega-asm-r2-perf-exit-code.txt)"
+          python -m omega_asm_t p5-report \
+            /tmp/omega-asm-r2-perf-stat.txt \
+            --binary /tmp/omega-asm-r2-p5-target \
+            --exit-code "$status" \
+            --output /tmp/omega-asm-r2-p5-report.json
+      - name: Validate P5 evidence contract
+        run: |
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          report=json.loads(Path('/tmp/omega-asm-r2-p5-report.json').read_text())
+          schema=json.loads(Path('schemas/omega_asm_p5_report.schema.json').read_text())
+          microarch_schema=json.loads(Path('schemas/omega_asm_microarch.schema.json').read_text())
+          policy=json.loads(Path('policies/omega_asm_t_r2_policy.json').read_text())
+
+          Draft202012Validator(schema).validate(report)
+          Draft202012Validator(microarch_schema).validate(report['machine'])
+          assert report['authority']=='review_only'
+          assert report['claim_scope']=='single_execution_context_only'
+          assert report['binary']['exists'] is True
+          assert len(report['binary']['sha256'])==64
+          assert report['collection_contract']['arbitrary_command_execution_by_package'] is False
+          assert policy['perf_collection_failure_semantics']=='unavailable_not_zero'
+
+          for counter in report['counters'].values():
+              assert math.isfinite(counter['value']) and counter['value'] >= 0
+
+          if report['availability']=='available':
+              assert report['hardware_event_count'] > 0
+          elif report['availability']=='unavailable':
+              assert report['reason']
+          PY
+      - name: Print P5 evidence
+        run: cat /tmp/omega-asm-r2-p5-report.json
