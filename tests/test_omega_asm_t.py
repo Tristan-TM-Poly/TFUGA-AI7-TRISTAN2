@@ -16,6 +16,7 @@ from omega_asm_t.analysis import (
 from omega_asm_t.backends import emit_dot_u64, static_instruction_count, supported_variants
 from omega_asm_t.benchmark import machine_manifest, relative_ratio, summarize_samples
 from omega_asm_t.cli import main
+from omega_asm_t.cost_model import get_static_cost_profile
 from omega_asm_t.ir import dot_u64_block_program, program_from_dict, validate_program
 from omega_asm_t.models import Candidate, Instruction, Program
 from omega_asm_t.oak import oak_report
@@ -42,8 +43,16 @@ def test_dot_block_memory_accounting():
 
 def test_dot_block_records_distinct_load_offsets():
     program = dot_u64_block_program(4)
-    a_loads = [instruction for instruction in program.instructions if instruction.output in {"a0", "a1", "a2", "a3"}]
-    b_loads = [instruction for instruction in program.instructions if instruction.output in {"b0", "b1", "b2", "b3"}]
+    a_loads = [
+        instruction
+        for instruction in program.instructions
+        if instruction.output in {"a0", "a1", "a2", "a3"}
+    ]
+    b_loads = [
+        instruction
+        for instruction in program.instructions
+        if instruction.output in {"b0", "b1", "b2", "b3"}
+    ]
     assert [instruction.metadata["offset_bytes"] for instruction in a_loads] == [0, 8, 16, 24]
     assert [instruction.metadata["offset_bytes"] for instruction in b_loads] == [0, 8, 16, 24]
 
@@ -178,6 +187,24 @@ def test_static_instruction_count_ignores_directives_and_labels():
 def test_builtin_tournament_produces_two_x86_candidates():
     candidates = estimate_builtin_candidates("x86_64")
     assert {candidate.variant for candidate in candidates} == {"indexed", "ptr"}
+    assert all(candidate.cost_model_id == "omega-asm-r1-p2-static-v1" for candidate in candidates)
+    assert all(candidate.cost_model_calibrated is False for candidate in candidates)
+
+
+def test_static_cost_profile_is_explicitly_uncalibrated():
+    profile = get_static_cost_profile("amd64", "indexed")
+    assert profile.architecture == "x86_64"
+    assert profile.calibrated is False
+    assert profile.loop_cost_units == 8.0
+    assert "not calibrated" in profile.basis
+
+
+def test_candidate_serialization_labels_heuristic_as_cost_units_not_cycles():
+    candidate = estimate_builtin_candidates("x86_64")[0]
+    payload = candidate.to_dict()
+    assert payload["estimated_cost_units"] == candidate.estimated_cycles
+    assert "estimated_cycles" not in payload
+    assert payload["cost_model_calibrated"] is False
 
 
 def test_dominance_is_strict_pareto():

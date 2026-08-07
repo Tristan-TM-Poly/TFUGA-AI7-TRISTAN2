@@ -61,13 +61,21 @@ class Candidate:
     name: str
     architecture: str
     variant: str
-    estimated_cycles: float
+    estimated_cost_units: float
     code_size_score: float
     memory_score: float
+    cost_model_id: str = "unversioned"
+    cost_model_calibrated: bool = False
     correctness_level: str = "E0/E1 intended; native CI required"
 
+    @property
+    def estimated_cycles(self) -> float:
+        """Compatibility alias only; the value is not calibrated hardware cycles."""
+
+        return self.estimated_cost_units
+
     def objective_vector(self) -> tuple[float, float, float]:
-        return (self.estimated_cycles, self.code_size_score, self.memory_score)
+        return (self.estimated_cost_units, self.code_size_score, self.memory_score)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
