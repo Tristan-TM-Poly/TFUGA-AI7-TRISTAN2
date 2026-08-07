@@ -38,8 +38,9 @@ def fingerprint_distribution(distribution: str | None) -> DistributionFingerprin
     if direct:
         install_source = str(direct.get("url", ""))
         vcs = direct.get("vcs_info") or {}
-        commit = str(vcs.get("commit_id", ""))
-        repository = install_source.removeprefix("git+")
+        if vcs:
+            commit = str(vcs.get("commit_id", ""))
+            repository = install_source.removeprefix("git+")
     return DistributionFingerprint(
         distribution=dist.metadata.get("Name", distribution),
         version=dist.version,
