@@ -14,7 +14,9 @@
       "distribution": "pefa-fractal-energy-system",
       "commit": "04914785353d3db59af36e57f5c19b3a75b74f1f",
       "branch_provenance": "feat/tristan-runtime-adapter-r01",
-      "capabilities": ["pefa-omega-em2.cvcd-extract", "pefa-omega-em2.cvcd-expand"]
+      "capabilities": ["pefa-omega-em2.cvcd-extract", "pefa-omega-em2.cvcd-expand"],
+      "subdirectory": null,
+      "pip_target": "git+https://github.com/Tristan-TM-Poly/PEFA-FractalEnergySystem.git@04914785353d3db59af36e57f5c19b3a75b74f1f"
     },
     {
       "key": "omni-core",
@@ -23,7 +25,9 @@
       "distribution": "tristan-omni-core",
       "commit": "29e77ad2e1214eb536043b31670071f5079285a5",
       "branch_provenance": "feat/tristan-runtime-adapter-r01",
-      "capabilities": ["tristan-omni-core.evidence-to-idea", "tristan-omni-core.valuation-assess"]
+      "capabilities": ["tristan-omni-core.evidence-to-idea", "tristan-omni-core.valuation-assess"],
+      "subdirectory": null,
+      "pip_target": "git+https://github.com/Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2.git@29e77ad2e1214eb536043b31670071f5079285a5"
     }
   ],
   "profiles": [
