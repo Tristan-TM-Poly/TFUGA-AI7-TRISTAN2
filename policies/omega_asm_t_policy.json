@@ -1,0 +1,25 @@
+{
+  "system": "omega-asm-t-r1",
+  "authority": "review_only",
+  "human_review_required": true,
+  "automatic_merge_allowed": false,
+  "automatic_publication_allowed": false,
+  "execute_arbitrary_user_assembly": false,
+  "native_ci_scope": [
+    "examples/native/omega_dot_u64_x86_64.S",
+    "examples/native/omega_dot_u64_harness.c"
+  ],
+  "performance_claim_requires": [
+    "target_cpu_identity",
+    "benchmark_method",
+    "repetitions_or_distribution",
+    "compiler_and_flags",
+    "correctness_gate"
+  ],
+  "forbidden_claims_without_evidence": [
+    "universally_fastest",
+    "portable_speedup",
+    "energy_optimal",
+    "formally_proven_equivalence"
+  ]
+}
