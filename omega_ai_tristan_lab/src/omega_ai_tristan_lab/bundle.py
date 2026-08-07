@@ -1,9 +1,8 @@
 """Generate reproducible Tristan Runtime bundle plans from immutable evidence locks.
 
-The R0.8 bundle contains the *current* runtime wheel built from the checked-out
-source plus public peer wheels built from immutable commits. The R0.8 integration
-lock remains an evidence receipt for the older runtime commit actually exercised
-by the four-repository matrix. Those roles are intentionally distinct.
+Public bundle materialization is privacy-preserving by default: private peer names,
+repository paths and install targets are omitted unless the caller explicitly asks
+for a private extension file.
 """
 
 from __future__ import annotations
@@ -45,7 +44,8 @@ class BundlePlan:
     def public_peer_targets(self) -> tuple[str, ...]:
         return tuple(peer.pip_target for peer in self.lock.peers if peer.visibility == "public")
 
-    def manifest(self) -> dict[str, Any]:
+    def manifest(self, *, include_private_extension: bool = False) -> dict[str, Any]:
+        private_targets = list(self.lock.private_extension_targets()) if include_private_extension else []
         return {
             "bundle_schema": "tristan-runtime-bundle-plan-0.1",
             "current_runtime": {
@@ -55,12 +55,13 @@ class BundlePlan:
             },
             "verified_environment_evidence": self.lock.to_dict(),
             "public_peer_build_targets": list(self.public_peer_targets()),
-            "private_extension_targets": list(self.lock.private_extension_targets()),
+            "private_extension_included": include_private_extension,
+            "private_extension_targets": private_targets,
             "build_policy": {
                 "network_on_import": False,
                 "automatic_install": False,
                 "automatic_publish": False,
-                "private_targets_in_public_lock": False,
+                "private_targets_in_public_bundle": False,
                 "wheelhouse_expected": True,
                 "peer_source_refs_immutable": True,
                 "verified_runtime_is_not_silently_substituted_for_current_runtime": True,
@@ -82,7 +83,7 @@ class BundlePlan:
     def private_extension_requirements_text(self) -> str:
         lines = [
             "# Private extension targets; explicit authenticated installation required.",
-            "# Keep this file out of public distribution when it reveals private repository topology.",
+            "# Keep this file and private bundle manifest out of public distribution.",
         ]
         lines.extend(self.lock.private_extension_targets())
         return "\n".join(lines) + "\n"
@@ -93,7 +94,15 @@ class BundlePlan:
         manifest_path = root / "bundle-manifest.json"
         public_path = root / "requirements-public.lock"
         private_path = root / "requirements-private-extension.lock" if include_private_extension else None
-        manifest_path.write_text(json.dumps(self.manifest(), ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        manifest_path.write_text(
+            json.dumps(
+                self.manifest(include_private_extension=include_private_extension),
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            ) + "\n",
+            encoding="utf-8",
+        )
         public_path.write_text(self.public_requirements_text(), encoding="utf-8")
         if private_path is not None:
             private_path.write_text(self.private_extension_requirements_text(), encoding="utf-8")

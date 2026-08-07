@@ -32,7 +32,7 @@ jobs:
       - name: Run tests
         working-directory: omega_ai_tristan_lab
         run: python -m pytest -q
-      - name: Validate v0.8 lock and bundle plan
+      - name: Validate v0.8 lock and public-safe bundle plan
         working-directory: omega_ai_tristan_lab
         run: |
           omega-tristan-runtime integration-lock --version r08 > /tmp/r08.json
@@ -45,12 +45,13 @@ jobs:
           assert lock['evidence']['marker'] == 'FOUR_REPO_RUNTIME_PINNED_PASS'
           assert len(lock['peers']) == 3
           assert len(lock['probes']) == 2
-          assert Path('/tmp/tristan-bundle/bundle-manifest.json').exists()
+          manifest = Path('/tmp/tristan-bundle/bundle-manifest.json').read_text(encoding='utf-8')
           public = Path('/tmp/tristan-bundle/requirements-public.lock').read_text(encoding='utf-8')
+          assert 'PEFA-FractalEnergySystem' not in manifest
           assert 'PEFA-FractalEnergySystem' not in public
           assert 'TTM-TFUGA-AI7-TRISTAN2' in public
           assert 'Tristan_Tardif-Morency_TFUG' in public
-          print('TRISTAN_R08_LOCK_BUNDLE_PASS')
+          print('TRISTAN_R08_LOCK_BUNDLE_PRIVACY_PASS')
           PY
       - name: Smoke test capability fabric
         working-directory: omega_ai_tristan_lab
@@ -103,12 +104,13 @@ jobs:
           python -m pip wheel --wheel-dir public_wheelhouse \
             "git+https://github.com/Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2.git@29e77ad2e1214eb536043b31670071f5079285a5" \
             "git+https://github.com/Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG.git@42c3467b2675c7d83beae6b274586dc2cdf77d42"
-      - name: Materialize public bundle manifest
+      - name: Materialize public bundle manifest without private topology
         run: |
           python -m venv /tmp/bundle-plan
           /tmp/bundle-plan/bin/python -m pip install omega_ai_tristan_lab/dist/*.whl
           /tmp/bundle-plan/bin/omega-tristan-runtime bundle-plan --output-dir public_bundle
           test ! -f public_bundle/requirements-private-extension.lock
+          ! grep -R "PEFA-FractalEnergySystem" public_bundle
       - name: Prove offline public wheelhouse install
         run: |
           python -m venv /tmp/offline-tristan
@@ -149,8 +151,7 @@ jobs:
           for path in sorted(Path('public_wheelhouse').glob('*')):
               if not path.is_file():
                   continue
-              digest = hashlib.sha256(path.read_bytes()).hexdigest()
-              rows.append({'file': path.name, 'sha256': digest, 'size': path.stat().st_size})
+              rows.append({'file': path.name, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'size': path.stat().st_size})
           Path('public_bundle/wheelhouse-sha256.json').write_text(json.dumps(rows, indent=2) + '\n', encoding='utf-8')
           assert rows
           PY

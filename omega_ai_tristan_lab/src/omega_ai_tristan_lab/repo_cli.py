@@ -100,17 +100,15 @@ def main(argv: list[str] | None = None) -> int:
             payload = {
                 "lock": DEFAULT_R08_LOCK.to_dict(),
                 "public_install_targets": list(DEFAULT_R08_LOCK.public_install_targets()),
-                "private_extension_targets": (
-                    list(DEFAULT_R08_LOCK.private_extension_targets())
-                    if args.include_private_targets
-                    else []
-                ),
+                "private_extension_targets": list(DEFAULT_R08_LOCK.private_extension_targets()) if args.include_private_targets else [],
             }
         print(_json(payload))
         return 0
     if args.command == "bundle-plan":
         plan = BundlePlan()
-        payload: dict[str, Any] = {"manifest": plan.manifest()}
+        payload: dict[str, Any] = {
+            "manifest": plan.manifest(include_private_extension=args.include_private_extension)
+        }
         if args.output_dir:
             payload["files"] = plan.materialize(
                 args.output_dir,

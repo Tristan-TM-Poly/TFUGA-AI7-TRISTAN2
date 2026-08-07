@@ -64,23 +64,34 @@ def test_r08_registry_tracks_three_adapter_candidates_and_eight_capabilities():
     assert RepoRegistry().get("pefa").adapter_commit == "1e72e4619c3fb2b2c175f23ae8053d752a709621"
 
 
-def test_bundle_plan_is_network_free_and_private_safe(tmp_path: Path):
+def test_bundle_plan_is_network_free_private_safe_and_manifest_redacted_by_default(tmp_path: Path):
     plan = BundlePlan()
-    manifest = plan.manifest()
-    assert manifest["build_policy"]["automatic_install"] is False
-    assert manifest["build_policy"]["network_on_import"] is False
+    public_manifest = plan.manifest()
+    private_manifest = plan.manifest(include_private_extension=True)
+    public_manifest_text = json.dumps(public_manifest, sort_keys=True)
+    private_manifest_text = json.dumps(private_manifest, sort_keys=True)
+
+    assert public_manifest["build_policy"]["automatic_install"] is False
+    assert public_manifest["build_policy"]["network_on_import"] is False
+    assert public_manifest["private_extension_included"] is False
+    assert public_manifest["private_extension_targets"] == []
     assert "PEFA-FractalEnergySystem" not in plan.public_requirements_text()
+    assert "PEFA-FractalEnergySystem" not in public_manifest_text
+    assert private_manifest["private_extension_included"] is True
+    assert "PEFA-FractalEnergySystem" in private_manifest_text
     assert "PEFA-FractalEnergySystem" in plan.private_extension_requirements_text()
 
     files = plan.materialize(tmp_path / "bundle")
     assert files.manifest.exists()
     assert files.public_requirements.exists()
     assert files.private_extension_requirements is None
+    assert "PEFA-FractalEnergySystem" not in files.manifest.read_text(encoding="utf-8")
     assert not (tmp_path / "bundle" / "requirements-private-extension.lock").exists()
 
     files_private = plan.materialize(tmp_path / "bundle-private", include_private_extension=True)
     assert files_private.private_extension_requirements is not None
     assert files_private.private_extension_requirements.exists()
+    assert "PEFA-FractalEnergySystem" in files_private.manifest.read_text(encoding="utf-8")
 
 
 def test_r08_rejects_malformed_runtime_pin():
