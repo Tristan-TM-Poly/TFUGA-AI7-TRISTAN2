@@ -1,0 +1,72 @@
+name: Omega Summary Fractal Reusable
+
+on:
+  workflow_call:
+    inputs:
+      depth:
+        type: number
+        default: 9
+      audience:
+        type: string
+        default: oak
+      max_files:
+        type: number
+        default: 20000
+  workflow_dispatch:
+    inputs:
+      depth:
+        description: Summary depth D0-D9
+        required: false
+        default: '9'
+      audience:
+        description: Audience projection
+        required: false
+        default: oak
+      max_files:
+        description: Maximum scanned files
+        required: false
+        default: '20000'
+
+permissions:
+  contents: read
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout caller repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: target
+          persist-credentials: false
+      - name: Checkout summary engine
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+          ref: main
+          path: .omega-summary-engine
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Generate D0-D9 summary family
+        env:
+          PYTHONPATH: ${{ github.workspace }}/.omega-summary-engine
+          SOURCE_DATE_EPOCH: ${{ github.event.repository.updated_at && github.run_id || github.run_id }}
+        run: |
+          export SOURCE_DATE_EPOCH=$(date +%s)
+          python -m omega_summary_fractal_t all-depths target \
+            --audience "${{ inputs.audience || github.event.inputs.audience || 'oak' }}" \
+            --output-dir reports/omega-summary \
+            --max-files "${{ inputs.max_files || github.event.inputs.max_files || 20000 }}"
+      - name: Write job summary
+        run: cat reports/omega-summary/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload summary artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: omega-summary-${{ github.repository_id }}-${{ github.run_id }}
+          path: reports/omega-summary
+          if-no-files-found: error
+          retention-days: 30
