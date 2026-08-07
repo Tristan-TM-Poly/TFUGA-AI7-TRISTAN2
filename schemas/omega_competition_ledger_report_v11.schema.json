@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_competition_ledger_report_v11.schema.json",
+  "title": "Omega Competition Ledger Report V11",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "as_of",
+    "cycle_count",
+    "active_cycle_count",
+    "recommended_cycle_count",
+    "archived_cycle_count",
+    "archive_benchmark_count",
+    "invalid_plan_count",
+    "invalid_submission_receipt_count",
+    "global_blockers",
+    "manifest_digest",
+    "registration_performed",
+    "submission_performed",
+    "payment_performed",
+    "winner_or_prize_guaranteed",
+    "open_problem_status_inherited",
+    "proof_claimed",
+    "solution_claimed",
+    "report_digest"
+  ],
+  "properties": {
+    "schema": {"const": "omega-competition-ledger-report/11"},
+    "as_of": {"type": "string", "format": "date-time"},
+    "cycle_count": {"type": "integer", "minimum": 0},
+    "active_cycle_count": {"type": "integer", "minimum": 0},
+    "recommended_cycle_count": {"type": "integer", "minimum": 0},
+    "archived_cycle_count": {"type": "integer", "minimum": 0},
+    "archive_benchmark_count": {"type": "integer", "minimum": 0},
+    "invalid_plan_count": {"type": "integer", "minimum": 0},
+    "invalid_submission_receipt_count": {"type": "integer", "minimum": 0},
+    "global_blockers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "manifest_digest": {"$ref": "#/$defs/sha256"},
+    "registration_performed": {"const": false},
+    "submission_performed": {"const": false},
+    "payment_performed": {"const": false},
+    "winner_or_prize_guaranteed": {"const": false},
+    "open_problem_status_inherited": {"const": false},
+    "proof_claimed": {"const": false},
+    "solution_claimed": {"const": false},
+    "report_digest": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

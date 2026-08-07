@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_problem_promotion_bundle_v9.schema.json",
+  "title": "Omega Problem Promotion Bundle V9",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "request_id",
+    "canonical_problem_id",
+    "artifact_id",
+    "title",
+    "exact_statement",
+    "assumptions",
+    "status",
+    "destination",
+    "author_ids",
+    "ip_decision",
+    "requested_at",
+    "evidence",
+    "checks",
+    "signatures",
+    "m_minus_records",
+    "metadata"
+  ],
+  "properties": {
+    "schema": {"const": "omega-problem-promotion-bundle/9"},
+    "request_id": {"type": "string", "minLength": 1},
+    "canonical_problem_id": {"type": "string", "minLength": 1},
+    "artifact_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "exact_statement": {"type": "string", "minLength": 1},
+    "assumptions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "status": {
+      "enum": [
+        "experiment",
+        "restricted_theorem",
+        "manuscript",
+        "formal_artifact",
+        "independently_reviewed_result"
+      ]
+    },
+    "destination": {
+      "enum": [
+        "internal_archive",
+        "public_preprint",
+        "journal_submission",
+        "competition_submission",
+        "prize_claim",
+        "patent_filing",
+        "open_source_release",
+        "public_talk"
+      ]
+    },
+    "author_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "ip_decision": {"enum": ["publish", "patent", "secret", "open_source", "abandon"]},
+    "requested_at": {"type": "string", "format": "date-time"},
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidenceReference"}
+    },
+    "checks": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/checkAttestation"}
+    },
+    "signatures": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/signatureAttestation"}
+    },
+    "m_minus_records": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "metadata": {"type": "object"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "evidenceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_id",
+        "source_uri",
+        "source_digest",
+        "observed_at",
+        "location",
+        "license_note",
+        "metadata"
+      ],
+      "properties": {
+        "reference_id": {"type": "string", "minLength": 1},
+        "source_uri": {"type": "string", "minLength": 1},
+        "source_digest": {"$ref": "#/$defs/sha256"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "location": {"type": "string", "minLength": 1},
+        "license_note": {"type": "string", "minLength": 1},
+        "metadata": {"type": "object"}
+      }
+    },
+    "checkAttestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "check_kind",
+        "outcome",
+        "scope",
+        "reviewer_id",
+        "reviewer_role",
+        "reviewed_at",
+        "evidence_reference_ids",
+        "limitations",
+        "metadata"
+      ],
+      "properties": {
+        "check_id": {"type": "string", "minLength": 1},
+        "check_kind": {
+          "enum": [
+            "statement_scope",
+            "literature_search",
+            "prior_art_search",
+            "novelty_review",
+            "independent_reconstruction",
+            "reproducibility_snapshot",
+            "dependency_audit",
+            "hidden_assumption_audit",
+            "formal_verification",
+            "negative_results",
+            "authorship",
+            "license_copyright",
+            "dataset_terms",
+            "competition_rules",
+            "prize_recognition",
+            "ip_decision",
+            "limitations",
+            "citations"
+          ]
+        },
+        "outcome": {"enum": ["pass", "fail", "not_applicable"]},
+        "scope": {"type": "string", "minLength": 1},
+        "reviewer_id": {"type": "string", "minLength": 1},
+        "reviewer_role": {"type": "string", "minLength": 1},
+        "reviewed_at": {"type": "string", "format": "date-time"},
+        "evidence_reference_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "limitations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "metadata": {"type": "object"}
+      }
+    },
+    "signatureAttestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signature_id",
+        "signer_id",
+        "signer_role",
+        "signed_at",
+        "method",
+        "signature_ref",
+        "payload_digest"
+      ],
+      "properties": {
+        "signature_id": {"type": "string", "minLength": 1},
+        "signer_id": {"type": "string", "minLength": 1},
+        "signer_role": {"type": "string", "minLength": 1},
+        "signed_at": {"type": "string", "format": "date-time"},
+        "method": {"enum": ["sha256_detached", "pgp", "sigstore"]},
+        "signature_ref": {"type": "string", "minLength": 1},
+        "payload_digest": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

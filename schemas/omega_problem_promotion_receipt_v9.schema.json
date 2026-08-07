@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_problem_promotion_receipt_v9.schema.json",
+  "title": "Omega Problem Promotion Receipt V9",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "request_id",
+    "canonical_problem_id",
+    "artifact_id",
+    "status",
+    "destination",
+    "ip_decision",
+    "gate_ready",
+    "blockers",
+    "required_check_kinds",
+    "checklist_digest",
+    "signature_payload_digest",
+    "signature_count",
+    "evidence_reference_count",
+    "m_minus_record_count",
+    "dry_run",
+    "external_action_performed",
+    "submission_performed",
+    "publication_performed",
+    "patent_filing_performed",
+    "public_disclosure_performed",
+    "prize_claim_submitted",
+    "prize_or_clay_recognition_inferred",
+    "novelty_or_correctness_self_approved",
+    "mathematical_truth_probability_claimed",
+    "proof_claimed_by_gate",
+    "solution_claimed_by_gate",
+    "receipt_digest"
+  ],
+  "properties": {
+    "schema": {"const": "omega-problem-promotion-report/9"},
+    "request_id": {"type": "string", "minLength": 1},
+    "canonical_problem_id": {"type": "string", "minLength": 1},
+    "artifact_id": {"type": "string", "minLength": 1},
+    "status": {
+      "enum": [
+        "experiment",
+        "restricted_theorem",
+        "manuscript",
+        "formal_artifact",
+        "independently_reviewed_result"
+      ]
+    },
+    "destination": {
+      "enum": [
+        "internal_archive",
+        "public_preprint",
+        "journal_submission",
+        "competition_submission",
+        "prize_claim",
+        "patent_filing",
+        "open_source_release",
+        "public_talk"
+      ]
+    },
+    "ip_decision": {"enum": ["publish", "patent", "secret", "open_source", "abandon"]},
+    "gate_ready": {"type": "boolean"},
+    "blockers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "required_check_kinds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "checklist_digest": {"$ref": "#/$defs/sha256"},
+    "signature_payload_digest": {"$ref": "#/$defs/sha256"},
+    "signature_count": {"type": "integer", "minimum": 0},
+    "evidence_reference_count": {"type": "integer", "minimum": 0},
+    "m_minus_record_count": {"type": "integer", "minimum": 0},
+    "dry_run": {"const": true},
+    "external_action_performed": {"const": false},
+    "submission_performed": {"const": false},
+    "publication_performed": {"const": false},
+    "patent_filing_performed": {"const": false},
+    "public_disclosure_performed": {"const": false},
+    "prize_claim_submitted": {"const": false},
+    "prize_or_clay_recognition_inferred": {"const": false},
+    "novelty_or_correctness_self_approved": {"const": false},
+    "mathematical_truth_probability_claimed": {"const": false},
+    "proof_claimed_by_gate": {"const": false},
+    "solution_claimed_by_gate": {"const": false},
+    "receipt_digest": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

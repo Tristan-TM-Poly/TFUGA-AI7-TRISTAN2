@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_competition_ledger_manifest_v11.schema.json",
+  "title": "Omega Competition Ledger Manifest V11",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "as_of",
+    "freshness_seconds",
+    "recommendation_timezone",
+    "source_count",
+    "cycle_count",
+    "plan_count",
+    "submission_receipt_count",
+    "recommendation_count",
+    "archive_benchmark_count",
+    "artifacts",
+    "registration_performed",
+    "submission_performed",
+    "open_problem_status_inherited",
+    "manifest_digest"
+  ],
+  "properties": {
+    "schema": {"const": "omega-competition-ledger-manifest/11"},
+    "as_of": {"type": "string", "format": "date-time"},
+    "freshness_seconds": {"type": "integer", "minimum": 1},
+    "recommendation_timezone": {"type": "string", "minLength": 1},
+    "source_count": {"type": "integer", "minimum": 0},
+    "cycle_count": {"type": "integer", "minimum": 0},
+    "plan_count": {"type": "integer", "minimum": 0},
+    "submission_receipt_count": {"type": "integer", "minimum": 0},
+    "recommendation_count": {"type": "integer", "minimum": 0},
+    "archive_benchmark_count": {"type": "integer", "minimum": 0},
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sources.jsonl",
+        "cycles.jsonl",
+        "plans.jsonl",
+        "submission_receipts.jsonl",
+        "recommendations.json",
+        "archive_benchmarks.jsonl"
+      ],
+      "properties": {
+        "sources.jsonl": {"$ref": "#/$defs/sha256"},
+        "cycles.jsonl": {"$ref": "#/$defs/sha256"},
+        "plans.jsonl": {"$ref": "#/$defs/sha256"},
+        "submission_receipts.jsonl": {"$ref": "#/$defs/sha256"},
+        "recommendations.json": {"$ref": "#/$defs/sha256"},
+        "archive_benchmarks.jsonl": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "registration_performed": {"const": false},
+    "submission_performed": {"const": false},
+    "open_problem_status_inherited": {"const": false},
+    "manifest_digest": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

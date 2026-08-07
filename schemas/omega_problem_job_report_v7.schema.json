@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega_problem_job_report_v7.schema.json",
+  "title": "Omega Problem Job Report V7",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "status",
+    "campaign_id",
+    "bundle_digest",
+    "job_count",
+    "completed_job_count",
+    "remaining_job_count",
+    "event_count",
+    "mminus_record_count",
+    "status_counts",
+    "runner_kinds",
+    "complete",
+    "runtime_batch_limit",
+    "network_access_used",
+    "external_execution_used",
+    "theorem_promotion_count",
+    "proof_claimed",
+    "solution_claimed",
+    "scientific_validation_claimed",
+    "permanent_total_cap",
+    "checkpoint_digest",
+    "manifest_digest",
+    "digest"
+  ],
+  "properties": {
+    "schema": {"const": "omega-problem-job-report/7"},
+    "status": {
+      "enum": [
+        "CERTIFIED_OFFLINE_JOB_RUNNER_FIXTURE_R0_7",
+        "PARTIAL_CHECKPOINT_R0_7"
+      ]
+    },
+    "campaign_id": {"type": "string", "minLength": 1},
+    "bundle_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "job_count": {"type": "integer", "minimum": 0},
+    "completed_job_count": {"type": "integer", "minimum": 0},
+    "remaining_job_count": {"type": "integer", "minimum": 0},
+    "event_count": {"type": "integer", "minimum": 2},
+    "mminus_record_count": {"type": "integer", "minimum": 0},
+    "status_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["success", "failure", "invalid_certificate", "blocked"],
+      "properties": {
+        "success": {"type": "integer", "minimum": 0},
+        "failure": {"type": "integer", "minimum": 0},
+        "invalid_certificate": {"type": "integer", "minimum": 0},
+        "blocked": {"type": "integer", "minimum": 0}
+      }
+    },
+    "runner_kinds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "exact_expression",
+          "interval_polynomial",
+          "sat_certificate",
+          "lean_skeleton"
+        ]
+      }
+    },
+    "complete": {"type": "boolean"},
+    "runtime_batch_limit": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "integer", "minimum": 0}
+      ]
+    },
+    "network_access_used": {"const": false},
+    "external_execution_used": {"const": false},
+    "theorem_promotion_count": {"const": 0},
+    "proof_claimed": {"const": false},
+    "solution_claimed": {"const": false},
+    "scientific_validation_claimed": {"const": false},
+    "permanent_total_cap": {"type": "null"},
+    "checkpoint_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "manifest_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

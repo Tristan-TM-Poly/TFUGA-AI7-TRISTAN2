@@ -1,0 +1,89 @@
+name: Omega Problem Atlas R0.4 Source Adapters
+
+on:
+  push:
+    branches: [feat/omega-problem-atlas-r0-4-sources]
+    paths:
+      - "omega_millennium_t/r04/**"
+      - "data/omega_problem_atlas_r04/**"
+      - "tests/test_omega_problem_atlas_r04_sources.py"
+      - "schemas/omega_problem_source_adapter_report_v4.schema.json"
+      - "docs/omega_millennium_t/r04/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r04-sources.yml"
+  pull_request:
+    paths:
+      - "omega_millennium_t/r04/**"
+      - "data/omega_problem_atlas_r04/**"
+      - "tests/test_omega_problem_atlas_r04_sources.py"
+      - "schemas/omega_problem_source_adapter_report_v4.schema.json"
+      - "docs/omega_millennium_t/r04/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r04-sources.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-problem-atlas-r04-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-adapters:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.4
+        run: python -m compileall -q omega_millennium_t/r04 tests/test_omega_problem_atlas_r04_sources.py
+      - name: Run R0.4 tests
+        run: pytest -q tests/test_omega_problem_atlas_r04_sources.py
+      - name: Compile source fixtures twice
+        run: |
+          python -m omega_millennium_t.r04.cli compile \
+            --snapshot data/omega_problem_atlas_r04/clay_snapshot.sample.json \
+            --snapshot data/omega_problem_atlas_r04/formal_conjectures_snapshot.sample.json \
+            --output-dir /tmp/sources-a
+          python -m omega_millennium_t.r04.cli compile \
+            --snapshot data/omega_problem_atlas_r04/formal_conjectures_snapshot.sample.json \
+            --snapshot data/omega_problem_atlas_r04/clay_snapshot.sample.json \
+            --output-dir /tmp/sources-b
+          diff -ru /tmp/sources-a /tmp/sources-b
+          python -m omega_millennium_t.r04.cli audit /tmp/sources-a
+      - name: Validate report schema and OAK invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/omega_problem_source_adapter_report_v4.schema.json').read_text())
+          report = json.loads(Path('/tmp/sources-a/report.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(report, schema)
+          assert report['snapshot_count'] == 2
+          assert report['source_count'] == 2
+          assert report['input_record_count'] == 5
+          assert report['accepted_import_count'] == 5
+          assert report['status_receipt_count'] == 5
+          assert report['quarantine_count'] == 0
+          assert report['current_open_claim_count'] == 0
+          assert report['solution_claim_count'] == 0
+          assert report['source_retrieval_certified'] is False
+          assert report['current_status_certification_claimed'] is False
+          assert report['scientific_validation_claimed'] is False
+          assert report['solution_claimed'] is False
+          assert report['formal_proof_claimed'] is False
+          assert report['permanent_total_cap'] is None
+          print('CERTIFIED_OFFLINE_SOURCE_ADAPTER_FIXTURE_R0_4')
+          PY
