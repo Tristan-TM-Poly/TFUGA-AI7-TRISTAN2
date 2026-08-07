@@ -14,6 +14,16 @@ from .counters import (
     parse_perf_stat_csv,
     requested_perf_events,
 )
+from .formal import (
+    build_equivalence_obligation,
+    build_p7_certificate,
+    evaluate_expr,
+    exhaustive_verify,
+    normalize_equivalence_spec,
+    normalize_expr,
+    obligation_id,
+    parse_solver_status,
+)
 from .ir import dot_u64_block_program, program_from_dict, validate_program
 from .microarch import (
     CacheDescriptor,
@@ -45,7 +55,9 @@ __all__ = [
     "StaticCostProfile",
     "aggregate_p5_reports",
     "analyze",
+    "build_equivalence_obligation",
     "build_p5_report",
+    "build_p7_certificate",
     "cache_descriptors",
     "canonical_machine_identity",
     "cvcd_signature",
@@ -54,16 +66,22 @@ __all__ = [
     "dot_u64_block_program",
     "emit_dot_u64",
     "estimate_builtin_candidates",
+    "evaluate_expr",
+    "exhaustive_verify",
     "file_sha256",
     "get_static_cost_profile",
     "machine_fingerprint",
     "machine_manifest",
     "microarchitecture_manifest",
     "normalize_architecture",
+    "normalize_equivalence_spec",
+    "normalize_expr",
     "oak_report",
+    "obligation_id",
     "pareto_front",
     "parse_perf_stat_csv",
     "parse_size_bytes",
+    "parse_solver_status",
     "program_from_dict",
     "relative_ratio",
     "requested_perf_events",
@@ -75,4 +93,4 @@ __all__ = [
     "validate_program",
 ]
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
