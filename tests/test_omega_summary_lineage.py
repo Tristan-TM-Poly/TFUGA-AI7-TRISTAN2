@@ -10,6 +10,7 @@ from omega_summary_fractal_t.lineage import (
     render_convergence_candidates,
     render_evolution,
     render_proof_debt,
+    superkernel_candidates,
 )
 from omega_summary_fractal_t.render import write_operational_views
 from omega_summary_fractal_t.summarizer import SummaryEngine
@@ -68,7 +69,20 @@ def test_convergence_is_review_only(tmp_path):
     assert candidates
     assert all(item["status"] == "review_required" for item in candidates)
     assert all(item["automatic_merge"] is False for item in candidates)
+    assert all(item["evidence_channels"] >= 1 for item in candidates)
     assert "Aucune fusion automatique" in render_convergence_candidates(bundle)
+
+
+def test_superkernel_requires_multiple_evidence_channels(tmp_path):
+    bundle = SummaryEngine(_repo(tmp_path)).generate(depth=9, audience="oak")
+    clusters = superkernel_candidates(bundle, pair_threshold=0.1, minimum_evidence_channels=2)
+    assert clusters
+    cluster = clusters[0]
+    assert {"omega_alpha_core_t", "omega_alpha_lab_t"} <= set(cluster["members"])
+    assert cluster["classification"] == "multi-evidence-superkernel-candidate"
+    assert cluster["status"] == "review_required"
+    assert cluster["automatic_merge"] is False
+    assert "direct_dependency" in cluster["evidence_types"]
 
 
 def test_operational_views_emit_lineage_family(tmp_path):
