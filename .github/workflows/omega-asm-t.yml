@@ -98,7 +98,7 @@ jobs:
             examples/native/omega_dot_u64_x86_64.S \
             -o /tmp/omega-asm-native
           /tmp/omega-asm-native
-      - name: Run observational timing harness
+      - name: Run observational timing harness protocol v2
         run: |
           cc -std=c11 -O3 -Wall -Wextra -Werror \
             examples/native/omega_dot_u64_benchmark.c \
@@ -108,7 +108,7 @@ jobs:
           python3 -m omega_asm_t benchmark-report \
             /tmp/omega-asm-native-benchmark.json \
             --output /tmp/omega-asm-p4-report.json
-      - name: Validate P4 evidence structure without performance threshold
+      - name: Validate P4 protocol v2 evidence without performance threshold
         run: |
           python3 - <<'PY'
           import json, math
@@ -117,10 +117,16 @@ jobs:
           report=json.loads(Path('/tmp/omega-asm-p4-report.json').read_text())
           assert raw['evidence_level']=='P4-observational'
           assert raw['claim_scope']=='single_execution_context_only'
+          assert raw['benchmark_protocol_version']==2
+          assert raw['anti_hoist_memory_barrier'] is True
+          assert raw['checksum_scheme']=='rotate-xor-index-v2'
           assert raw['rounds']==31
           assert raw['inner_iterations']==127
           assert report['evidence_level']=='P4-observational'
           assert report['machine']['architecture']=='x86_64'
+          assert report['native_metadata']['benchmark_protocol_version']==2
+          assert report['native_metadata']['anti_hoist_memory_barrier'] is True
+          assert report['native_metadata']['checksum_scheme']=='rotate-xor-index-v2'
           stats=report['statistics_ns_per_call']
           assert set(stats)=={'reference_c','x86_64_indexed','x86_64_ptr'}
           for item in stats.values():

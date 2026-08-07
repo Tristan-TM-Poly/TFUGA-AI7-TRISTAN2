@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#if !defined(__GNUC__) && !defined(__clang__)
+#include <stdatomic.h>
+#endif
 
 uint64_t omega_dot_u64_indexed(const uint64_t *a, const uint64_t *b, uint64_t n);
 uint64_t omega_dot_u64_ptr(const uint64_t *a, const uint64_t *b, uint64_t n);
@@ -12,8 +15,17 @@ typedef uint64_t (*kernel_fn)(const uint64_t *, const uint64_t *, uint64_t);
 
 #if defined(__GNUC__) || defined(__clang__)
 #define OMEGA_NOINLINE __attribute__((noinline))
+/*
+ * The memory clobber is essential benchmark semantics, not decoration.
+ * It prevents interprocedural optimization from treating a pure C reference
+ * call with unchanged pointer arguments as loop-invariant and hoisting one
+ * call out of the INNER repetition loop while external assembly remains
+ * repeatedly invoked.
+ */
+#define OMEGA_MEMORY_BARRIER() __asm__ __volatile__("" ::: "memory")
 #else
 #define OMEGA_NOINLINE
+#define OMEGA_MEMORY_BARRIER() atomic_signal_fence(memory_order_seq_cst)
 #endif
 
 static OMEGA_NOINLINE uint64_t reference_dot(const uint64_t *a, const uint64_t *b, uint64_t n) {
@@ -40,12 +52,27 @@ static uint64_t nanoseconds(void) {
     return (uint64_t)ts.tv_sec * UINT64_C(1000000000) + (uint64_t)ts.tv_nsec;
 }
 
+static uint64_t mix_checksum(uint64_t state, uint64_t result, unsigned iteration) {
+    state = (state << 7) | (state >> 57);
+    state ^= result + UINT64_C(0x9e3779b97f4a7c15) + (uint64_t)iteration;
+    return state;
+}
+
 static OMEGA_NOINLINE double measure(kernel_fn fn, const uint64_t *a, const uint64_t *b,
                                      uint64_t n, unsigned inner, volatile uint64_t *sink) {
     uint64_t start = nanoseconds();
-    uint64_t local = 0;
+    uint64_t local = UINT64_C(0x243f6a8885a308d3);
     for (unsigned i = 0; i < inner; ++i) {
-        local ^= fn(a, b, n);
+        /*
+         * Equalize the compiler-observability contract for the C reference and
+         * repository-controlled external assembly functions. Without this
+         * barrier, an optimizer may hoist a side-effect-free reference call out
+         * of the loop because a/b/n are invariant, invalidating the comparison.
+         */
+        OMEGA_MEMORY_BARRIER();
+        uint64_t result = fn(a, b, n);
+        OMEGA_MEMORY_BARRIER();
+        local = mix_checksum(local, result, i);
     }
     uint64_t stop = nanoseconds();
     *sink ^= local;
@@ -88,11 +115,14 @@ int main(void) {
         return 4;
     }
 
-    volatile uint64_t sink = expected;
+    volatile uint64_t sink = expected ^ UINT64_C(0x13198a2e03707344);
     for (unsigned i = 0; i < WARMUP; ++i) {
-        sink ^= reference_dot(a, b, N);
-        sink ^= omega_dot_u64_indexed(a, b, N);
-        sink ^= omega_dot_u64_ptr(a, b, N);
+        OMEGA_MEMORY_BARRIER();
+        sink = mix_checksum((uint64_t)sink, reference_dot(a, b, N), i);
+        OMEGA_MEMORY_BARRIER();
+        sink = mix_checksum((uint64_t)sink, omega_dot_u64_indexed(a, b, N), i + WARMUP);
+        OMEGA_MEMORY_BARRIER();
+        sink = mix_checksum((uint64_t)sink, omega_dot_u64_ptr(a, b, N), i + 2U * WARMUP);
     }
 
     double reference_samples[ROUNDS];
@@ -119,8 +149,11 @@ int main(void) {
         }
     }
 
-    printf("{\"schema_version\":1,\"evidence_level\":\"P4-observational\","
+    printf("{\"schema_version\":1,\"benchmark_protocol_version\":2,"
+           "\"evidence_level\":\"P4-observational\","
            "\"claim_scope\":\"single_execution_context_only\","
+           "\"anti_hoist_memory_barrier\":true,"
+           "\"checksum_scheme\":\"rotate-xor-index-v2\","
            "\"elements\":%u,\"rounds\":%u,\"inner_iterations\":%u,\"checksum\":\"%016" PRIx64 "\",\"samples_ns_per_call\":{",
            (unsigned)N, (unsigned)ROUNDS, (unsigned)INNER, (uint64_t)sink);
     print_samples("reference_c", reference_samples, ROUNDS);
