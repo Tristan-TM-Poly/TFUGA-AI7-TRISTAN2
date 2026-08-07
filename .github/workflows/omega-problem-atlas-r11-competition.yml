@@ -37,6 +37,8 @@ jobs:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-python@v5
         with:
@@ -60,10 +62,19 @@ jobs:
       - name: Verify read-only CLI surface
         run: |
           python -m omega_millennium_t.r11.cli --help | tee /tmp/r11-help.txt
-          grep -q "compile" /tmp/r11-help.txt
-          grep -q "audit" /tmp/r11-help.txt
-          grep -q "recommend" /tmp/r11-help.txt
-          ! grep -Eq "(^|[[:space:]])(register|submit|pay|claim|accept-prize)([[:space:]]|$)" /tmp/r11-help.txt
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          text = Path("/tmp/r11-help.txt").read_text(encoding="utf-8")
+          match = re.search(r"usage:.*\{([^}]+)\}", text)
+          assert match is not None, text
+          commands = {item.strip() for item in match.group(1).split(",")}
+          expected = {"compile", "audit", "recommend"}
+          forbidden = {"register", "submit", "pay", "claim", "accept-prize"}
+          assert commands == expected, commands
+          assert commands.isdisjoint(forbidden), commands
+          PY
 
       - name: Materialize deterministic lifecycle fixture
         run: |
