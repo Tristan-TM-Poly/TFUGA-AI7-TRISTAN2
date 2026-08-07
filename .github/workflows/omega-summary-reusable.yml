@@ -12,6 +12,10 @@ on:
       max_files:
         type: number
         default: 20000
+      engine_ref:
+        type: string
+        required: false
+        default: ''
   workflow_dispatch:
     inputs:
       depth:
@@ -26,6 +30,10 @@ on:
         description: Maximum scanned files
         required: false
         default: '20000'
+      engine_ref:
+        description: Optional summary-engine ref; blank uses current ref for self-test and main for satellite callers
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -41,11 +49,28 @@ jobs:
           path: target
           persist-credentials: false
           fetch-depth: 0
+      - name: Resolve summary engine ref
+        id: engine
+        shell: bash
+        env:
+          REQUESTED_REF: ${{ inputs.engine_ref || github.event.inputs.engine_ref || '' }}
+          CALLER_REPOSITORY: ${{ github.repository }}
+          CALLER_REF: ${{ github.ref_name }}
+        run: |
+          if [ -n "$REQUESTED_REF" ]; then
+            ref="$REQUESTED_REF"
+          elif [ "$CALLER_REPOSITORY" = "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2" ]; then
+            ref="$CALLER_REF"
+          else
+            ref="main"
+          fi
+          test -n "$ref"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
       - name: Checkout summary engine
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
-          ref: main
+          ref: ${{ steps.engine.outputs.ref }}
           path: .omega-summary-engine
           persist-credentials: false
       - name: Set up Python
