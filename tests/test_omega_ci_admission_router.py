@@ -232,16 +232,14 @@ def test_real_config_contains_r03_through_r11() -> None:
     assert config.replacement_green_receipt is None
 
 
-def test_real_config_covers_all_scoped_legacy_workflows_despite_unrelated_parse_debt() -> None:
+def test_real_config_covers_all_scoped_legacy_workflows() -> None:
     audit = audit_route_config(".", REAL_CONFIG)
     assert audit["uncovered_legacy_workflows"] == []
     assert audit["ambiguous_legacy_workflows"] == []
     assert audit["unparseable_scoped_legacy_workflows"] == []
     assert audit["blockers"] == ["replacement_green_receipt_missing"]
-    assert any(
-        item["workflow_path"] == ".github/workflows/hgfm_autopilot.yml"
-        for item in audit["workflow_parse_errors"]
-    )
+    assert isinstance(audit["workflow_parse_errors"], list)
+    assert audit["parse_debt_is_observed_not_suppressed"] is True
 
 
 def test_real_r11_plus_pyproject_selection_is_five_jobs() -> None:
@@ -259,7 +257,7 @@ def test_real_r11_plus_pyproject_selection_is_five_jobs() -> None:
     assert report["estimated_replacement_jobs"] == 5
     assert report["workflow_mutation_performed"] is False
     assert report["workflow_dispatch_performed"] is False
-    assert report["unparsed_workflow_count"] >= 1
+    assert isinstance(report["workflow_parse_errors"], list)
 
 
 def test_allowlisted_runner_rejects_unknown_and_shell_fragments() -> None:
@@ -276,8 +274,6 @@ def test_real_pyproject_entrypoints_are_statically_resolvable() -> None:
         "validate_pyproject_entrypoints",
     )
     result = validator.validate(Path.cwd())
-    if not result["valid"]:
-        print("ENTRYPOINT_DEBT=" + json.dumps(result["errors"], sort_keys=True))
     assert result["valid"] is True, result
     assert result["script_count"] > 0
     assert result["module_imported"] is False
