@@ -11,6 +11,7 @@ from omega_summary_fractal_t.aliases import (
     resolve_alias,
     verify_alias_registry,
 )
+from omega_summary_fractal_t.cli import main as summary_cli
 from omega_summary_fractal_t.fleet import (
     append_fleet_history,
     build_fleet_manifest,
@@ -238,3 +239,23 @@ def test_query_plan_composes_boolean_filters_groups_and_aggregates():
     assert groups["tested"]["mean_c"] == 1.0
     assert groups["implemented"]["mean_c"] == 0.4
     assert "authority" in report["boundary"]
+
+
+def test_all_depths_index_is_relocatable_and_output_path_independent(tmp_path: Path, monkeypatch):
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1786111200")
+    root = tmp_path / "repo"
+    system = root / "omega_alpha_t"
+    system.mkdir(parents=True)
+    (system / "README.md").write_text("# Alpha\n\nDeterministic fixture.\n", encoding="utf-8")
+    (system / "core.py").write_text("def alpha():\n    return 1\n", encoding="utf-8")
+
+    out_a = tmp_path / "summary-a"
+    out_b = tmp_path / "summary-b"
+    assert summary_cli(["all-depths", str(root), "--audience", "oak", "--output-dir", str(out_a)]) == 0
+    assert summary_cli(["all-depths", str(root), "--audience", "oak", "--output-dir", str(out_b)]) == 0
+
+    index_a = json.loads((out_a / "depth_index.json").read_text(encoding="utf-8"))
+    index_b = json.loads((out_b / "depth_index.json").read_text(encoding="utf-8"))
+    assert index_a == index_b
+    assert all(not Path(item["markdown"]).is_absolute() for item in index_a)
+    assert all(not Path(item["json"]).is_absolute() for item in index_a)
