@@ -22,10 +22,8 @@ from omega_sequence_forms_t.rinf.benchmark_matrix import (
     shell_parameters,
 )
 from omega_sequence_forms_t.rinf.distributed import (
-    BackendManifest if False else WorkLedger,
-)
-from omega_sequence_forms_t.rinf.distributed import (
     ShardSpec,
+    WorkLedger,
     WorkResult,
     WorkStatus,
     WorkerManifest,

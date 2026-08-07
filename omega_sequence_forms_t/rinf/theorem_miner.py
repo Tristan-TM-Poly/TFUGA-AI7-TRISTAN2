@@ -442,6 +442,64 @@ def monomial_value(values: Sequence[Fraction], exponents: Sequence[int]) -> Frac
     return result
 
 
+def _rational_nullspace_basis(matrix: Sequence[Sequence[Fraction]]) -> tuple[tuple[Fraction, ...], ...]:
+    """Return a deterministic exact-rational basis for ``matrix * v = 0``.
+
+    Polynomial feature columns may have several simultaneous dependencies.  A
+    pivot-by-pivot unique-system solve loses all of them whenever the remaining
+    columns are themselves dependent.  Exact RREF exposes the full finite-data
+    nullspace without numerical tolerances.  Candidates still require the
+    normal training/holdout evidence gates below and remain conjectures.
+    """
+
+    if not matrix:
+        return ()
+    width = len(matrix[0])
+    if width == 0 or any(len(row) != width for row in matrix):
+        raise ValueError("matrix must be non-empty and rectangular")
+
+    rref = [list(row) for row in matrix]
+    pivot_columns: list[int] = []
+    row_index = 0
+    for column in range(width):
+        pivot = next(
+            (candidate for candidate in range(row_index, len(rref)) if rref[candidate][column]),
+            None,
+        )
+        if pivot is None:
+            continue
+        rref[row_index], rref[pivot] = rref[pivot], rref[row_index]
+        divisor = rref[row_index][column]
+        rref[row_index] = [value / divisor for value in rref[row_index]]
+        for other in range(len(rref)):
+            if other == row_index:
+                continue
+            factor = rref[other][column]
+            if factor:
+                rref[other] = [
+                    value - factor * pivot_value
+                    for value, pivot_value in zip(rref[other], rref[row_index])
+                ]
+        pivot_columns.append(column)
+        row_index += 1
+        if row_index == len(rref):
+            break
+
+    pivot_set = set(pivot_columns)
+    free_columns = [column for column in range(width) if column not in pivot_set]
+    basis: list[tuple[Fraction, ...]] = []
+    for free_column in free_columns:
+        vector = [Fraction(0) for _ in range(width)]
+        vector[free_column] = Fraction(1)
+        for pivot_row, pivot_column in enumerate(pivot_columns):
+            vector[pivot_column] = -rref[pivot_row][free_column]
+        first = next((value for value in vector if value), None)
+        if first is None:
+            continue
+        basis.append(tuple(value / first for value in vector))
+    return tuple(basis)
+
+
 def mine_polynomial_relation(
     records: Sequence[SequenceRecord],
     *,
@@ -454,31 +512,27 @@ def mine_polynomial_relation(
     length = min(len(record.terms) for record in records)
     training_count, _ = _split_count(length, holdout)
     exponents = exponent_vectors(len(records), maximum_degree, maximum_monomials)
-    if training_count <= len(exponents) - 1:
+    # Do not mine a polynomial relation from a basis wider than the training
+    # set: such a nullspace would exist merely because the system is
+    # underdetermined, rather than because the observed monomial columns are
+    # dependent on adequately many exact samples.
+    if training_count < len(exponents):
         return ()
     rows = [
         [monomial_value([record.terms[index] for record in records], vector) for vector in exponents]
         for index in range(training_count)
     ]
     relations = []
-    for pivot in range(len(exponents)):
-        matrix = [[row[column] for column in range(len(exponents)) if column != pivot] for row in rows]
-        rhs = [-row[pivot] for row in rows]
-        solution = solve_unique_linear_system(matrix, rhs)
-        if solution is None:
-            continue
-        coefficients = list(solution)
-        coefficients.insert(pivot, Fraction(1))
-        first = next((value for value in coefficients if value), None)
-        if first is None:
-            continue
-        coefficients = [value / first for value in coefficients]
+    for coefficients_tuple in _rational_nullspace_basis(rows):
+        coefficients = list(coefficients_tuple)
+
         def residual(index: int) -> Fraction:
             values = [record.terms[index] for record in records]
             return sum(
                 (coefficient * monomial_value(values, vector) for coefficient, vector in zip(coefficients, exponents)),
                 Fraction(0),
             )
+
         evidence = _evidence(lambda index: residual(index) == 0, training_count=training_count, total_count=length)
         if not evidence.exact_on_tested:
             continue
