@@ -47,9 +47,10 @@ def build_fleet_manifest(
 ) -> dict[str, Any]:
     """Build a publishable organization/fleet projection without raw repository names.
 
-    The salt is supplied at runtime and is never serialized. Repository tokens are
-    stable only for the same salt. System names and paths are intentionally omitted
-    from the public projection; only aggregate structural metrics are retained.
+    The salt is supplied at runtime and is never serialized. Repository tokens and
+    the fleet identifier are stable only for the same salt. System names and paths
+    are intentionally omitted from the public projection; only aggregate structural
+    metrics are retained.
     """
 
     report = query_payload(source, kind="system", limit=1_000_000)
@@ -99,8 +100,10 @@ def build_fleet_manifest(
         total_debt += sum(debts)
         attention.update(repo_attention)
 
-    fleet_seed = "|".join(item["repository_token"] for item in repositories)
-    fleet_id = "fleet_" + hashlib.sha256(fleet_seed.encode("utf-8")).hexdigest()[:20]
+    # Fleet identity is tied to the private runtime salt, not to the current
+    # repository membership. Adding/removing a repository therefore changes the
+    # snapshot fingerprint without destroying longitudinal fleet continuity.
+    fleet_id = _token(salt, "omega-summary-fleet-v1", prefix="fleet")
     totals = {
         "repositories": len(repositories),
         "systems": total_systems,
@@ -179,7 +182,7 @@ def append_fleet_history(path: str | Path, report: Mapping[str, Any]) -> dict[st
         raise ValueError("fleet history hash chain is invalid")
     fleet_id = str(report.get("fleet_id", ""))
     if history.get("fleet_id") and history.get("fleet_id") != fleet_id:
-        raise ValueError("fleet_id changed; salt rotation or repository-token universe changed, start a new fleet history")
+        raise ValueError("fleet_id changed; the HMAC salt/scope changed, start a new fleet history")
     if any(item.get("report", {}).get("fingerprint") == report.get("fingerprint") for item in history.get("runs", [])):
         return history
     previous_hash = str(history["runs"][-1]["entry_hash"]) if history["runs"] else ""
