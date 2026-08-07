@@ -16,6 +16,7 @@ omega_dot_u64_indexed:
     ret
 .size omega_dot_u64_indexed, .-omega_dot_u64_indexed
 
+.text
 .globl omega_dot_u64_ptr
 .type omega_dot_u64_ptr,@function
 omega_dot_u64_ptr:
