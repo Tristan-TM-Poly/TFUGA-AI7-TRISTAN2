@@ -134,15 +134,41 @@ def proof_debt(bundle: SummaryBundle) -> list[dict[str, Any]]:
     )
 
 
+def _dependency_map(bundle: SummaryBundle) -> dict[str, set[str]]:
+    dependencies: dict[str, set[str]] = defaultdict(set)
+    for edge in bundle.edges:
+        if edge.relation == "DEPENDS_ON":
+            dependencies[edge.source].add(edge.target)
+    return dependencies
+
+
+def _validation_signature(node: SummaryNode) -> set[str]:
+    metrics = node.metrics
+    signature = set()
+    if metrics.get("implemented"):
+        signature.add("code")
+    if metrics.get("tested"):
+        signature.add("tests")
+    if metrics.get("workflows"):
+        signature.add("ci")
+    if metrics.get("schema_backed"):
+        signature.add("schema")
+    if metrics.get("documented"):
+        signature.add("docs")
+    return signature
+
+
 def convergence_candidates(bundle: SummaryBundle, threshold: float = 0.45) -> list[dict[str, Any]]:
     """Find review-only structural convergence candidates.
 
-    This is deliberately weaker than identity/deduplication. It is a routing aid
-    for possible shared kernels, not an automatic merge proposal.
+    Multiple weak evidence channels are retained separately. The score is only a
+    routing heuristic for possible shared kernels, never identity or an automatic
+    merge decision.
     """
 
     systems = sorted((node for node in bundle.nodes if node.kind == "system"), key=lambda n: n.path)
-    dependency_pairs = {
+    dependencies = _dependency_map(bundle)
+    direct_pairs = {
         tuple(sorted((edge.source, edge.target)))
         for edge in bundle.edges
         if edge.relation == "DEPENDS_ON"
@@ -150,6 +176,7 @@ def convergence_candidates(bundle: SummaryBundle, threshold: float = 0.45) -> li
     out = []
     for index, left in enumerate(systems):
         left_tokens = _tokens(left)
+        left_validation = _validation_signature(left)
         for right in systems[index + 1 :]:
             right_tokens = _tokens(right)
             union = left_tokens | right_tokens
@@ -157,27 +184,122 @@ def convergence_candidates(bundle: SummaryBundle, threshold: float = 0.45) -> li
                 continue
             lexical = len(left_tokens & right_tokens) / len(union)
             pair = tuple(sorted((left.id, right.id)))
-            dependency_bonus = 0.15 if pair in dependency_pairs else 0.0
-            score = min(1.0, lexical + dependency_bonus)
-            if score < threshold:
-                continue
+            direct_dependency = pair in direct_pairs
+            shared_dependencies = dependencies.get(left.id, set()) & dependencies.get(right.id, set())
+            validation_union = left_validation | _validation_signature(right)
+            validation_overlap = (
+                len(left_validation & _validation_signature(right)) / len(validation_union)
+                if validation_union
+                else 0.0
+            )
+
+            score = lexical
             evidence = []
             if lexical:
                 evidence.append(f"lexical_jaccard={lexical:.4f}")
-            if dependency_bonus:
+            if direct_dependency:
+                score += 0.15
                 evidence.append("direct_dependency")
+            if shared_dependencies:
+                score += min(0.15, 0.05 * len(shared_dependencies))
+                evidence.append(f"shared_dependencies={len(shared_dependencies)}")
+            if validation_overlap >= 0.8 and left_validation and _validation_signature(right):
+                score += 0.05
+                evidence.append(f"validation_profile_overlap={validation_overlap:.4f}")
+            score = min(1.0, score)
+            if score < threshold:
+                continue
             out.append(
                 {
                     "left": left.path,
                     "right": right.path,
+                    "left_id": left.id,
+                    "right_id": right.id,
                     "score": round(score, 4),
                     "evidence": evidence,
+                    "evidence_channels": len(evidence),
                     "classification": "shared-kernel-candidate",
                     "status": "review_required",
                     "automatic_merge": False,
                 }
             )
     return sorted(out, key=lambda item: (-float(item["score"]), item["left"], item["right"]))
+
+
+def superkernel_candidates(
+    bundle: SummaryBundle,
+    *,
+    pair_threshold: float = 0.45,
+    minimum_evidence_channels: int = 2,
+) -> list[dict[str, Any]]:
+    """Cluster multi-evidence convergence pairs into review-only components."""
+
+    pairs = [
+        item
+        for item in convergence_candidates(bundle, threshold=pair_threshold)
+        if int(item.get("evidence_channels", 0)) >= minimum_evidence_channels
+    ]
+    adjacency: dict[str, set[str]] = defaultdict(set)
+    pair_lookup: dict[tuple[str, str], dict[str, Any]] = {}
+    for item in pairs:
+        left = str(item["left"])
+        right = str(item["right"])
+        adjacency[left].add(right)
+        adjacency[right].add(left)
+        pair_lookup[tuple(sorted((left, right)))] = item
+
+    visited: set[str] = set()
+    clusters = []
+    for seed in sorted(adjacency):
+        if seed in visited:
+            continue
+        stack = [seed]
+        members: set[str] = set()
+        while stack:
+            current = stack.pop()
+            if current in visited:
+                continue
+            visited.add(current)
+            members.add(current)
+            stack.extend(sorted(adjacency.get(current, set()) - visited))
+        if len(members) < 2:
+            continue
+        member_list = sorted(members)
+        supporting_pairs = []
+        evidence_types: set[str] = set()
+        for i, left in enumerate(member_list):
+            for right in member_list[i + 1 :]:
+                item = pair_lookup.get(tuple(sorted((left, right))))
+                if not item:
+                    continue
+                supporting_pairs.append(
+                    {
+                        "left": left,
+                        "right": right,
+                        "score": item["score"],
+                        "evidence": item["evidence"],
+                    }
+                )
+                for evidence in item["evidence"]:
+                    evidence_types.add(str(evidence).split("=", 1)[0])
+        clusters.append(
+            {
+                "cluster_id": "kernel-candidate-pending",
+                "members": member_list,
+                "member_count": len(member_list),
+                "supporting_pairs": supporting_pairs,
+                "evidence_types": sorted(evidence_types),
+                "classification": "multi-evidence-superkernel-candidate",
+                "status": "review_required",
+                "automatic_merge": False,
+                "boundary": "structural clustering only; no identity, redundancy, novelty or deletion inference",
+            }
+        )
+
+    clusters.sort(key=lambda item: (-int(item["member_count"]), item["members"]))
+    for ordinal, cluster in enumerate(clusters, start=1):
+        cluster["cluster_id"] = f"kernel-candidate-{ordinal:03d}"
+    return clusters
 
 
 def render_evolution(bundle: SummaryBundle) -> str:
@@ -228,22 +350,45 @@ def render_proof_debt(bundle: SummaryBundle) -> str:
 
 def render_convergence_candidates(bundle: SummaryBundle) -> str:
     candidates = convergence_candidates(bundle)
+    clusters = superkernel_candidates(bundle)
     lines = [
         "# CONVERGENCE CANDIDATES",
         "",
         "Candidats `review_required` pour factoriser des primitives ou super-kernels. **Aucune fusion automatique.** Similarité et dépendance ne prouvent ni identité ni redondance.",
         "",
+        "## Paires",
+        "",
     ]
     if not candidates:
         lines += ["_Aucun candidat au seuil actuel._", ""]
-        return "\n".join(lines)
+    else:
+        lines += [
+            "| Gauche | Droite | Score | Canaux | Preuves structurelles |",
+            "|---|---|---:|---:|---|",
+        ]
+        for item in candidates[:200]:
+            lines.append(
+                f"| `{item['left']}` | `{item['right']}` | {item['score']:.3f} | {item['evidence_channels']} | {', '.join(item['evidence'])} |"
+            )
+        lines.append("")
+
+    lines += ["## Super-kernels multi-preuves", ""]
+    if not clusters:
+        lines += ["_Aucun cluster ne satisfait encore le minimum multi-preuves._", ""]
+    else:
+        for cluster in clusters[:100]:
+            lines.append(
+                f"### {cluster['cluster_id']} — {cluster['member_count']} systèmes — review_required"
+            )
+            lines.append("")
+            lines.append("- membres : " + ", ".join(f"`{member}`" for member in cluster["members"]))
+            lines.append("- types de preuve : " + ", ".join(cluster["evidence_types"]))
+            lines.append("- `automatic_merge=false`")
+            lines.append("")
     lines += [
-        "| Gauche | Droite | Score | Preuves structurelles |",
-        "|---|---|---:|---|",
+        "## OAK boundary",
+        "",
+        "Un cluster est un candidat de factorisation architecturale. Il ne prouve ni identité sémantique, ni redondance, ni priorité, ni nouveauté, et n'autorise aucune suppression ou fusion automatique.",
+        "",
     ]
-    for item in candidates[:200]:
-        lines.append(
-            f"| `{item['left']}` | `{item['right']}` | {item['score']:.3f} | {', '.join(item['evidence'])} |"
-        )
-    lines.append("")
     return "\n".join(lines)
