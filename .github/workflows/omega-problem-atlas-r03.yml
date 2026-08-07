@@ -1,0 +1,168 @@
+name: Omega Problem Atlas R0.3-R0.4 OAKBench
+
+on:
+  push:
+    branches:
+      - feat/omega-problem-atlas-r0-3
+      - feat/omega-problem-atlas-r0-4-sources
+    paths:
+      - "omega_millennium_t/r03/**"
+      - "omega_millennium_t/r04/**"
+      - "data/omega_problem_atlas_r03/**"
+      - "data/omega_problem_atlas_r04/**"
+      - "tests/test_omega_problem_atlas_r03*.py"
+      - "tests/test_omega_problem_atlas_r04*.py"
+      - "schemas/omega_problem_atlas*_v3.schema.json"
+      - "schemas/omega_problem_source_adapter_report_v4.schema.json"
+      - "docs/omega_millennium_t/r03/**"
+      - "docs/omega_millennium_t/r04/**"
+      - "examples/omega_problem_atlas_r03*.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r03.yml"
+  pull_request:
+    paths:
+      - "omega_millennium_t/r03/**"
+      - "omega_millennium_t/r04/**"
+      - "data/omega_problem_atlas_r03/**"
+      - "data/omega_problem_atlas_r04/**"
+      - "tests/test_omega_problem_atlas_r03*.py"
+      - "tests/test_omega_problem_atlas_r04*.py"
+      - "schemas/omega_problem_atlas*_v3.schema.json"
+      - "schemas/omega_problem_source_adapter_report_v4.schema.json"
+      - "docs/omega_millennium_t/r03/**"
+      - "docs/omega_millennium_t/r04/**"
+      - "examples/omega_problem_atlas_r03*.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-problem-atlas-r03.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-problem-atlas-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.3 compact and MAX
+        run: >-
+          python -m compileall -q
+          omega_millennium_t/r03
+          tests/test_omega_problem_atlas_r03.py
+          tests/test_omega_problem_atlas_r03_max.py
+          examples/omega_problem_atlas_r03_demo.py
+          examples/omega_problem_atlas_r03_max_demo.py
+      - name: Run R0.3 tests
+        run: pytest -q tests/test_omega_problem_atlas_r03.py tests/test_omega_problem_atlas_r03_max.py
+      - name: Materialize compact twice and compare
+        run: |
+          python -m omega_millennium_t.r03.cli build --output-dir /tmp/atlas-a --primary-budget 12 --secondary-budget 36 --experiment-budget 128
+          python -m omega_millennium_t.r03.cli build --output-dir /tmp/atlas-b --primary-budget 12 --secondary-budget 36 --experiment-budget 128
+          diff -ru /tmp/atlas-a /tmp/atlas-b
+          python -m omega_millennium_t.r03.cli audit /tmp/atlas-a
+      - name: Materialize MAX twice, compare and audit receipts
+        run: |
+          python -m omega_millennium_t.r03.cli build-max --output-dir /tmp/atlas-max-a --primary-budget 24 --secondary-budget 72 --experiment-budget 256
+          python -m omega_millennium_t.r03.cli build-max --output-dir /tmp/atlas-max-b --primary-budget 24 --secondary-budget 72 --experiment-budget 256
+          diff -ru /tmp/atlas-max-a /tmp/atlas-max-b
+          python -m omega_millennium_t.r03.cli audit-max /tmp/atlas-max-a
+      - name: Validate R0.3 schemas and OAK invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          compact_schema = json.loads(Path('schemas/omega_problem_atlas_report_v3.schema.json').read_text())
+          max_schema = json.loads(Path('schemas/omega_problem_atlas_max_report_v3.schema.json').read_text())
+          compact = json.loads(Path('/tmp/atlas-a/report.json').read_text())
+          maximum = json.loads(Path('/tmp/atlas-max-a/report.json').read_text())
+          for schema in (compact_schema, max_schema):
+              jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(compact, compact_schema)
+          jsonschema.validate(maximum, max_schema)
+
+          assert compact['seed_problem_count'] == 72
+          assert compact['front_count'] == 24
+          assert compact['materialized_research_cell_count'] == 576
+          assert compact['materialized_hyperedge_count'] == 576
+
+          assert maximum['seed_problem_count'] == 72
+          assert maximum['front_count'] == 24
+          assert maximum['target_kind_count'] == 12
+          assert maximum['research_target_count'] == 864
+          assert maximum['attack_mode_count'] == 8
+          assert maximum['research_cell_count'] == 6912
+          assert maximum['method_family_count'] == 32
+          assert maximum['hyperedge_count'] == 8568
+          assert maximum['portfolio_coverage']['fronts'] == 24
+          assert maximum['scoring_basis'] == 'transparent_profile_v1'
+
+          for report in (compact, maximum):
+              assert report['permanent_total_cap'] is None
+              assert report['records_claiming_current_open_status'] == 0
+              assert report['records_claiming_solution'] == 0
+              assert report['solution_claimed'] is False
+              assert report['formal_proof_claimed'] is False
+              assert report['scientific_validation_claimed'] is False
+          assert maximum['targets_claiming_proof_or_solution'] == 0
+          assert maximum['cells_claiming_proof_or_solution'] == 0
+          print('CERTIFIED_SOFTWARE_RESEARCH_FIXTURE_R0_3_MAX')
+          PY
+      - name: Compile and test R0.4 source adapters when present
+        if: ${{ hashFiles('omega_millennium_t/r04/**/*.py') != '' }}
+        run: |
+          python -m compileall -q omega_millennium_t/r04 tests/test_omega_problem_atlas_r04_sources.py
+          pytest -q tests/test_omega_problem_atlas_r04_sources.py
+          python -m omega_millennium_t.r04.cli compile \
+            --snapshot data/omega_problem_atlas_r04/clay_snapshot.sample.json \
+            --snapshot data/omega_problem_atlas_r04/formal_conjectures_snapshot.sample.json \
+            --output-dir /tmp/sources-a
+          python -m omega_millennium_t.r04.cli compile \
+            --snapshot data/omega_problem_atlas_r04/formal_conjectures_snapshot.sample.json \
+            --snapshot data/omega_problem_atlas_r04/clay_snapshot.sample.json \
+            --output-dir /tmp/sources-b
+          diff -ru /tmp/sources-a /tmp/sources-b
+          python -m omega_millennium_t.r04.cli audit /tmp/sources-a
+      - name: Validate R0.4 schema and OAK invariants when present
+        if: ${{ hashFiles('omega_millennium_t/r04/**/*.py') != '' }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/omega_problem_source_adapter_report_v4.schema.json').read_text())
+          report = json.loads(Path('/tmp/sources-a/report.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(report, schema)
+          assert report['snapshot_count'] == 2
+          assert report['source_count'] == 2
+          assert report['input_record_count'] == 5
+          assert report['accepted_import_count'] == 5
+          assert report['status_receipt_count'] == 5
+          assert report['quarantine_count'] == 0
+          assert report['current_open_claim_count'] == 0
+          assert report['solution_claim_count'] == 0
+          assert report['source_retrieval_certified'] is False
+          assert report['current_status_certification_claimed'] is False
+          assert report['scientific_validation_claimed'] is False
+          assert report['solution_claimed'] is False
+          assert report['formal_proof_claimed'] is False
+          assert report['permanent_total_cap'] is None
+          print('CERTIFIED_OFFLINE_SOURCE_ADAPTER_FIXTURE_R0_4')
+          PY
