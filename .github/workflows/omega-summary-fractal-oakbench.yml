@@ -1,0 +1,70 @@
+name: Omega Summary Fractal OAKBench
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/omega-summary-fractal-t-max]
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_fractal_t.py','schemas/omega_summary_bundle.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_FRACTAL_ARCHITECTURE.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml']
+  pull_request:
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_fractal_t.py','schemas/omega_summary_bundle.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_FRACTAL_ARCHITECTURE.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml']
+permissions:
+  contents: read
+concurrency:
+  group: omega-summary-fractal-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  oakbench:
+    name: D0-D9 deterministic court / Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10','3.11','3.12','3.13']
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with: {persist-credentials: false}
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with: {python-version: '${{ matrix.python-version }}'}
+      - name: Install focused validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile implementation
+        run: python -m compileall -q omega_summary_fractal_t examples/omega_summary_fractal_demo.py
+      - name: Run focused tests
+        run: python -m pytest -q tests/test_omega_summary_fractal_t.py
+      - name: Generate all depths twice
+        env: {SOURCE_DATE_EPOCH: '1786111200'}
+        run: |
+          rm -rf /tmp/summary-a /tmp/summary-b
+          python -m omega_summary_fractal_t all-depths . --audience oak --output-dir /tmp/summary-a --max-files 12000
+          python -m omega_summary_fractal_t all-depths . --audience oak --output-dir /tmp/summary-b --max-files 12000
+          diff -ru /tmp/summary-a /tmp/summary-b
+      - name: Validate D9 JSON schema and OAK boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          schema=json.loads(Path('schemas/omega_summary_bundle.schema.json').read_text())
+          payload=json.loads(Path('/tmp/summary-a/summary_d9_oak.json').read_text())
+          Draft202012Validator(schema).validate(payload)
+          assert payload['depth']==9 and payload['audience']=='oak' and payload['cache_fingerprint'] and 'oak' in payload['health']
+          summary=Path('/tmp/summary-a/SUMMARY.md').read_text();assert 'Limite épistémique' in summary and 'validation scientifique' in summary
+          PY
+      - name: Audit immutable action refs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          refs=re.findall(r'uses:\s*([^\s#]+)',Path('.github/workflows/omega-summary-fractal-oakbench.yml').read_text())
+          moving=[r for r in refs if not re.search(r'@[0-9a-f]{40}$',r)];assert not moving,moving
+          PY
+      - name: Stage summary evidence
+        if: matrix.python-version == '3.13'
+        run: mkdir -p reports/omega-summary-fractal-ci && cp -R /tmp/summary-a/. reports/omega-summary-fractal-ci/
+      - name: Upload summary evidence
+        if: matrix.python-version == '3.13'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with: {name: 'omega-summary-fractal-${{ github.run_id }}', path: reports/omega-summary-fractal-ci, if-no-files-found: error, retention-days: 30}
