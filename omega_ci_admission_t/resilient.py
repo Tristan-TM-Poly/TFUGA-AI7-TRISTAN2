@@ -43,6 +43,20 @@ def _validate_trigger_shape(spec: WorkflowSpec) -> None:
             raise ValueError("pull_request paths entries must be scalar strings")
 
 
+def _normalize_repo_path(value: object) -> str:
+    """Normalize a Git-style repository-relative path without destroying dotfiles.
+
+    ``str.lstrip('./')`` is intentionally forbidden here because it turns
+    ``.github/workflows/x.yml`` into ``github/workflows/x.yml``.  We remove only
+    explicit ``./`` path prefixes and preserve leading dots that are part of a name.
+    """
+
+    text = str(value).strip().replace("\\", "/")
+    while text.startswith("./"):
+        text = text[2:]
+    return text
+
+
 def scan_workflows(repository_root: str | Path) -> list[WorkflowSpec]:
     """Scan all workflows without allowing one malformed file to abort observation.
 
@@ -167,7 +181,7 @@ def build_admission_report(
     changed = tuple(
         sorted(
             {
-                str(path).replace("\\", "/").lstrip("./")
+                _normalize_repo_path(path)
                 for path in changed_files
                 if str(path).strip()
             }
