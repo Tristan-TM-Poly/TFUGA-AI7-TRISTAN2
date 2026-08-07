@@ -2,24 +2,10 @@ name: Omega ASM-T R1 OAKBench
 
 on:
   workflow_dispatch:
-  push:
-    branches: [feat/omega-asm-t-r1-max]
-    paths:
-      - 'omega_asm_t/**'
-      - 'tests/test_omega_asm_t.py'
-      - 'examples/native/omega_dot_u64_*'
-      - 'docs/canon/OMEGA_ASM_T_INFINITY_R1.md'
-      - 'docs/architecture/OMEGA_ASM_T_R1_ARCHITECTURE.md'
-      - 'docs/architecture/OMEGA_ASM_T_P4_BENCHMARK_PROTOCOL.md'
-      - 'schemas/omega_asm_report.schema.json'
-      - 'schemas/omega_asm_benchmark_report.schema.json'
-      - 'policies/omega_asm_t_policy.json'
-      - 'pyproject.toml'
-      - '.github/workflows/omega-asm-t.yml'
   pull_request:
     paths:
       - 'omega_asm_t/**'
-      - 'tests/test_omega_asm_t.py'
+      - 'tests/test_omega_asm_t*.py'
       - 'examples/native/omega_dot_u64_*'
       - 'docs/canon/OMEGA_ASM_T_INFINITY_R1.md'
       - 'docs/architecture/OMEGA_ASM_T_R1_ARCHITECTURE.md'
@@ -34,7 +20,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: omega-asm-r1-${{ github.ref }}
+  group: omega-asm-r1-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -57,10 +43,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install focused validators
         run: python -m pip install --disable-pip-version-check pytest jsonschema
-      - name: Compile package
-        run: python -m compileall -q omega_asm_t tests/test_omega_asm_t.py
-      - name: Run focused OAKBench
-        run: python -m pytest -q tests/test_omega_asm_t.py
+      - name: Compile package and courts
+        run: python -m compileall -q omega_asm_t tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py
+      - name: Run focused and adversarial OAKBench
+        run: python -m pytest -q tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py
       - name: Generate deterministic report
         run: python -m omega_asm_t report --width 8 --output /tmp/omega-asm-report.json
       - name: Validate report schemas and authority
