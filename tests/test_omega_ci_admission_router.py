@@ -9,10 +9,13 @@ import pytest
 from omega_ci_admission_t.core import (
     CONFIG_SCHEMA,
     RouteConfig,
-    audit_route_config,
-    build_admission_report,
     ordered_paths_match,
     parse_workflow,
+)
+from omega_ci_admission_t.resilient import (
+    audit_route_config,
+    build_admission_report,
+    scan_workflows,
 )
 
 REAL_CONFIG = "config/omega_ci_admission/problem_atlas_routes.json"
@@ -125,13 +128,45 @@ def test_ordered_paths_support_negation() -> None:
     assert ordered_paths_match("omega_millennium_t/r02/model.py", patterns) is False
 
 
-def test_matrix_estimation_and_unfiltered_detection(tmp_path: Path) -> None:
+def test_matrix_estimation_excludes_replacement_and_detects_unfiltered(tmp_path: Path) -> None:
     root, config = _synthetic_repo(tmp_path)
     spec = parse_workflow(root / ".github/workflows/omega-problem-atlas-r011.yml", root)
     assert spec.estimated_jobs == 4
     report = build_admission_report(root, config, ["omega_millennium_t/r11/model.py"])
     assert report["estimated_legacy_jobs"] == 5
+    assert report["replacement_workflow_excluded_from_legacy"] is True
+    assert all(
+        item["workflow_path"] != ".github/workflows/router.yml"
+        for item in report["legacy_triggered_workflows"]
+    )
     assert any(item["unfiltered"] for item in report["legacy_triggered_workflows"])
+
+
+def test_malformed_unrelated_workflow_is_observed_without_aborting(tmp_path: Path) -> None:
+    root, config = _synthetic_repo(tmp_path)
+    _write(
+        root / ".github/workflows/broken.yml",
+        "name: Broken\non:\n  workflow_dispatch:\n    inputs:\n      mode:\n        description: broken: colon\n",
+    )
+    specs = scan_workflows(root)
+    broken = next(item for item in specs if item.path.endswith("broken.yml"))
+    assert broken.estimated_jobs == 0
+    assert any(item.startswith("parse_error:") for item in broken.warnings)
+    report = build_admission_report(root, config, ["omega_millennium_t/r11/model.py"])
+    assert report["unparsed_workflow_count"] == 1
+    assert report["legacy_estimate_excludes_unparsed_workflows"] is True
+    assert report["estimated_legacy_jobs"] == 5
+
+
+def test_malformed_scoped_legacy_workflow_blocks_migration(tmp_path: Path) -> None:
+    root, config = _synthetic_repo(tmp_path, "fixture://green-run/001")
+    _write(
+        root / ".github/workflows/omega-problem-atlas-r099.yml",
+        "name: Broken scoped\non:\n  pull_request:\n    paths:\n      - bad: value\n",
+    )
+    audit = audit_route_config(root, config)
+    assert any(item.startswith("legacy_workflow_unparseable:") for item in audit["blockers"])
+    assert audit["valid"] is False
 
 
 def test_module_change_selects_only_owned_route(tmp_path: Path) -> None:
@@ -197,11 +232,16 @@ def test_real_config_contains_r03_through_r11() -> None:
     assert config.replacement_green_receipt is None
 
 
-def test_real_config_covers_all_scoped_legacy_workflows() -> None:
+def test_real_config_covers_all_scoped_legacy_workflows_despite_unrelated_parse_debt() -> None:
     audit = audit_route_config(".", REAL_CONFIG)
     assert audit["uncovered_legacy_workflows"] == []
     assert audit["ambiguous_legacy_workflows"] == []
+    assert audit["unparseable_scoped_legacy_workflows"] == []
     assert audit["blockers"] == ["replacement_green_receipt_missing"]
+    assert any(
+        item["workflow_path"] == ".github/workflows/hgfm_autopilot.yml"
+        for item in audit["workflow_parse_errors"]
+    )
 
 
 def test_real_r11_plus_pyproject_selection_is_five_jobs() -> None:
@@ -219,6 +259,7 @@ def test_real_r11_plus_pyproject_selection_is_five_jobs() -> None:
     assert report["estimated_replacement_jobs"] == 5
     assert report["workflow_mutation_performed"] is False
     assert report["workflow_dispatch_performed"] is False
+    assert report["unparsed_workflow_count"] >= 1
 
 
 def test_allowlisted_runner_rejects_unknown_and_shell_fragments() -> None:
@@ -235,6 +276,8 @@ def test_real_pyproject_entrypoints_are_statically_resolvable() -> None:
         "validate_pyproject_entrypoints",
     )
     result = validator.validate(Path.cwd())
+    if not result["valid"]:
+        print("ENTRYPOINT_DEBT=" + json.dumps(result["errors"], sort_keys=True))
     assert result["valid"] is True, result
     assert result["script_count"] > 0
     assert result["module_imported"] is False
