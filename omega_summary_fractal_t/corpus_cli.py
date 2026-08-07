@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from .corpus import CorpusSummaryEngine, RepositorySpec, discover_local_repositories, load_manifest
+from .dashboard import write_dashboard
 from .summarizer import AUDIENCES
 
 
@@ -37,8 +38,30 @@ def main(argv: list[str] | None = None) -> int:
     specs = resolve_specs(args)
     if not specs:
         raise SystemExit("no repositories resolved; use --workspace, --manifest or --repo")
-    bundle = CorpusSummaryEngine(specs, max_files=args.max_files).write(args.output_dir, depth=args.depth, audience=args.audience, emit_repository_views=not args.no_repository_views)
-    print(json.dumps({"repositories": bundle.totals["repositories"], "systems": bundle.totals["systems"], "fingerprint": bundle.fingerprint, "output_dir": str(Path(args.output_dir))}, sort_keys=True))
+    output = Path(args.output_dir)
+    bundle = CorpusSummaryEngine(specs, max_files=args.max_files).write(
+        output,
+        depth=args.depth,
+        audience=args.audience,
+        emit_repository_views=not args.no_repository_views,
+    )
+    dashboard = write_dashboard(
+        output / "CORPUS_SUMMARY.json",
+        output / "dashboard",
+        index=output / "CORPUS_INDEX.json",
+    )
+    print(
+        json.dumps(
+            {
+                "repositories": bundle.totals["repositories"],
+                "systems": bundle.totals["systems"],
+                "fingerprint": bundle.fingerprint,
+                "output_dir": str(output),
+                "dashboard": {key: str(value) for key, value in dashboard.items()},
+            },
+            sort_keys=True,
+        )
+    )
     return 0
 
 
