@@ -2,11 +2,11 @@
 
 ## Statut
 
-Logiciel de recherche, documentation et audit structurel. Il ne transforme pas la présence d'un README, de code, de tests, de CI, de schémas, d'objets générés, d'un grand espace logique, d'un cluster de systèmes ou d'une hausse de métriques Git en preuve scientifique, nouveauté, sécurité, brevetabilité, traction commerciale ou vérité causale.
+Logiciel de recherche, documentation et audit structurel. Il ne transforme pas la présence d'un README, de code, de tests, de CI, de schémas, d'objets générés, d'un grand espace logique, d'un cluster de systèmes, d'une hausse de métriques Git, d'un candidat de renommage ou d'un dashboard en preuve scientifique, nouveauté, sécurité, brevetabilité, traction commerciale ou vérité causale.
 
 ## Phrase-mère
 
-> Tout artefact doit pouvoir être compressé vers un résumé parent, tout résumé important doit pouvoir être audité en redescendant vers les artefacts qui l'ont produit, et toute évolution importante doit pouvoir être comparée à un état antérieur sans inventer de progrès non observé.
+> Tout artefact doit pouvoir être compressé vers un résumé parent, tout résumé important doit pouvoir être audité en redescendant vers les artefacts qui l'ont produit, toute évolution importante doit pouvoir être comparée à un état antérieur sans inventer de progrès non observé, et toute requête doit préserver la frontière entre observation et revendication.
 
 ## Objet
 
@@ -33,6 +33,14 @@ et une projection de cristallisation structurelle :
 `C_struct = (docs + code + tests + CI + schema) / 5`
 
 ainsi qu'une dette structurelle `D_struct` comptant les éléments manquants observables. Ces métriques sont des instruments de pilotage logiciel, jamais des métriques de vérité scientifique.
+
+R0.4 ajoute trois opérateurs d'observabilité :
+
+`Identity(S_t0, S_t1)` — candidats de continuité content-addressed;
+
+`Query(S, filters)` — requêtes transversales sur dépôt, corpus ou index;
+
+`Dashboard(S, I)` — projection compacte de maturité structurelle, dette et tendances.
 
 ## Profondeurs
 
@@ -61,9 +69,12 @@ Le graphe peut porter notamment :
 - `VALIDATES` — workflow CI rattaché à un système;
 - `CONFORMS_TO` — contrat/schéma rattaché à un système;
 - `SUPPORTS` — document de support rattaché à un système;
-- `DEPENDS_ON` — dépendance Python inter-systèmes observée.
+- `DEPENDS_ON` — dépendance Python inter-systèmes observée;
+- `BENCHMARKS` — lorsqu'un artefact explicitement nommé benchmark/OAKBench est déjà relié au système.
 
-Les extensions `IMPLEMENTS`, `BENCHMARKS`, `CONTRADICTS`, `SUPERSEDES` et `GENERATED_FROM` restent réservées aux couches où une provenance explicite suffisante est disponible; elles ne doivent pas être inventées par simple similarité lexicale.
+Les relations fortes `IMPLEMENTS`, `BENCHMARKS`, `CONTRADICTS`, `SUPERSEDES`, `GENERATED_FROM` et `DEPENDS_ON` peuvent aussi être chargées depuis un manifeste explicite `.omega/relations.json`, `omega_relations.json` ou `relations/omega_relations.json`.
+
+Aucune relation forte ne doit être inventée par simple similarité lexicale.
 
 ## Chronologie
 
@@ -71,7 +82,7 @@ Les extensions `IMPLEMENTS`, `BENCHMARKS`, `CONTRADICTS`, `SUPERSEDES` et `GENER
 
 La chronologie Git n'est pas une preuve de date d'invention, de priorité scientifique ou de priorité IP.
 
-## R0.3 — CorpusIndex persistant
+## CorpusIndex persistant
 
 Chaque snapshot peut être ajouté à un index logiquement append-only :
 
@@ -100,7 +111,7 @@ La vitesse est volontairement exprimée par **run observé**, pas comme une vite
 
 ## Convergence multi-preuves
 
-R0.3 distingue :
+Le système distingue :
 
 1. paires `shared-kernel-candidate`;
 2. clusters `multi-evidence-superkernel-candidate`.
@@ -119,9 +130,83 @@ Un super-kernel exige plusieurs canaux structurels. Dans tous les cas :
 - aucune suppression automatique;
 - aucune conclusion d'identité, redondance, nouveauté ou propriété.
 
+## R0.4 — Continuité d'identité
+
+Un renommage ou déplacement peut faire apparaître artificiellement un système comme supprimé puis recréé. R0.4 compare les hashes SHA-256 des preuves observées des systèmes retirés et ajoutés.
+
+La signature content-addressed est :
+
+`H_X = SHA256(sorted(unique(evidence.sha256)))`
+
+Deux systèmes peuvent devenir candidats si :
+
+- leurs signatures sont identiques; ou
+- le Jaccard de leurs ensembles de hashes dépasse le seuil demandé.
+
+Sorties :
+
+- `IDENTITY_CONTINUITY.json`;
+- `IDENTITY_CONTINUITY.md`.
+
+Invariant :
+
+- `classification=rename-or-move-candidate`;
+- `status=review_required`;
+- `automatic_rewrite=false`.
+
+Même une correspondance content-addressed exacte ne prouve pas l'identité : un arbre peut avoir été copié, forké ou vendored.
+
+## R0.4 — Query Engine
+
+`omega-summary query` accepte :
+
+- un résumé de dépôt;
+- un `CORPUS_SUMMARY.json`;
+- un `SUMMARY_HISTORY.json` ou `CORPUS_INDEX.json`.
+
+Filtres :
+
+- texte;
+- type;
+- statut;
+- relation;
+- dépôt;
+- `C_struct` minimum/maximum;
+- limite de résultats.
+
+Sorties optionnelles :
+
+- `QUERY_RESULTS.json`;
+- `QUERY_RESULTS.md`.
+
+Un tri par `C_struct` reste un tri de cristallisation structurelle, jamais un classement scientifique, entrepreneurial ou IP.
+
+## R0.4 — Corpus Dashboard
+
+Le dashboard synthétise :
+
+- systèmes/dépôts observés;
+- distributions de statuts;
+- relations;
+- cristallisation moyenne;
+- dette structurelle moyenne;
+- implémentations sans tests;
+- implémentations sans CI;
+- implémentations sans contrat machine;
+- top systèmes par cristallisation structurelle;
+- top dette structurelle;
+- évolution longitudinale lorsqu'un index existe.
+
+Sorties :
+
+- `dashboard/CORPUS_DASHBOARD.json`;
+- `dashboard/CORPUS_DASHBOARD.md`.
+
+Ces fichiers sont produits automatiquement par `all-depths` à D9 et par `omega-summary-corpus`.
+
 ## Exports graphe
 
-R0.3 produit :
+Le système produit :
 
 - `SUMMARY_GRAPH.jsonl` — nœuds et arêtes streamables;
 - `SUMMARY_GRAPH.graphml` — projection GraphML sans dépendance externe;
@@ -144,6 +229,9 @@ Ces exports permettent de brancher graph DB, notebooks, visualisation, INFO², O
 11. History is integrity-bound — l'index longitudinal est hash-chaîné et dédupliqué par fingerprint.
 12. Crystallization is structural — `C_struct` mesure docs/code/tests/CI/schémas, pas la vérité du contenu.
 13. Clustering is advisory — aucun cluster n'autorise une fusion ou suppression automatique.
+14. Identity is review-only — aucune correspondance de hashes n'autorise un renommage automatique.
+15. Query is observational — une requête ne transforme pas un signal structurel en conclusion sémantique.
+16. Dashboard is not authority — les agrégats servent au pilotage, pas à promouvoir une revendication.
 
 ## Sorties D9
 
@@ -163,33 +251,51 @@ Ces exports permettent de brancher graph DB, notebooks, visualisation, INFO², O
 - `summary_d0..d9_<audience>.{md,json}`;
 - `longitudinal/LONGITUDINAL_CRYSTALLIZATION.{json,md}`;
 - `graph/SUMMARY_GRAPH.{jsonl,graphml}`;
-- `graph/SUMMARY_GRAPH_EXPORT.json`.
+- `graph/SUMMARY_GRAPH_EXPORT.json`;
+- `dashboard/CORPUS_DASHBOARD.{json,md}`.
 
-L'opérateur :
+Opérateurs supplémentaires :
 
 `omega-summary delta previous.json current.json`
 
-produit :
+`omega-summary identity previous.json current.json`
 
-- `DELTA_SUMMARY.json`;
-- `DELTA_SUMMARY.md`.
+`omega-summary query source.json ...`
+
+`omega-summary dashboard summary.json --index-file history.json`
 
 Le mode corpus produit aussi :
 
 - `CORPUS_SUMMARY.{json,md}`;
 - `CORPUS_INDEX.json`;
 - `longitudinal/`;
+- `dashboard/`;
 - les vues par dépôt si elles ne sont pas désactivées.
 
-## CLI R0.3
+## CLI R0.4
 
 ```bash
 omega-summary all-depths . --audience oak --output-dir .omega/summary
 omega-summary delta previous.json current.json --output-dir .omega/delta
+omega-summary identity previous.json current.json --output-dir .omega/identity
+omega-summary query summary_d9_oak.json --kind system --status tested --output-dir .omega/query
+omega-summary dashboard summary_d9_oak.json --index-file SUMMARY_HISTORY.json --output-dir .omega/dashboard
 omega-summary index summary_d9_oak.json --index-file .omega/corpus-index.json --report-dir .omega/longitudinal
 omega-summary export summary_d9_oak.json --output-dir .omega/graph
 omega-summary-corpus --workspace /path/to/repos --depth 9 --audience oak --output-dir .omega/corpus-summary
 ```
+
+## Contrats machine-readable
+
+Le tribunal maintient notamment :
+
+- `omega_summary_bundle.schema.json`;
+- `omega_summary_index.schema.json`;
+- `omega_summary_graph_export.schema.json`;
+- `omega_summary_relations.schema.json`;
+- `omega_summary_identity.schema.json`;
+- `omega_summary_query.schema.json`;
+- `omega_summary_dashboard.schema.json`.
 
 ## Dette de preuve
 
@@ -197,8 +303,12 @@ omega-summary-corpus --workspace /path/to/repos --depth 9 --audience oak --outpu
 
 ## Intégrations prévues
 
-Ω-GITHUB-BRAIN-T, INFO², OAKGate, Rosette, Asset Factory, M⁻, Ω-BIAS-OAK-T, graph DB et tableaux de bord longitudinaux.
+Ω-GITHUB-BRAIN-T, INFO², OAKGate, Rosette, Asset Factory, M⁻, Ω-BIAS-OAK-T, graph DB, tableaux de bord longitudinaux et moteurs de requêtes de portefeuille.
 
 ## Non-claims
 
-R0.3 ne prétend pas comprendre sémantiquement tout le corpus, résoudre tous les synonymes entre dépôts, certifier des revendications scientifiques, déterminer automatiquement la nouveauté IP, mesurer la valeur commerciale, reconstruire toute l'histoire scientifique d'une idée, ni remplacer un reviewer humain. Elle fournit un substrat déterministe, chronologique, différentiel, longitudinal, exportable et testable sur lequel ces couches peuvent être ajoutées.
+R0.4 ne prétend pas comprendre sémantiquement tout le corpus, résoudre automatiquement tous les synonymes entre dépôts, certifier des revendications scientifiques, déterminer la nouveauté IP, mesurer la valeur commerciale, reconstruire toute l'histoire scientifique d'une idée, conclure automatiquement qu'un renommage est certain, ni remplacer un reviewer humain.
+
+Son invariant directeur reste :
+
+`OBSERVE MORE != CLAIM MORE`
