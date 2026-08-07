@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "module": "omega-asm-t-r2-p5-foundation",
+  "authority": "review_only",
+  "human_review_required": true,
+  "automatic_merge_allowed": false,
+  "automatic_publication_allowed": false,
+  "execute_arbitrary_user_assembly": false,
+  "execute_arbitrary_user_commands": false,
+  "package_executes_perf": false,
+  "perf_collection_target": "repository_controlled_binaries_only",
+  "perf_collection_failure_semantics": "unavailable_not_zero",
+  "unsupported_counter_semantics": "unavailable_not_zero",
+  "performance_thresholds_gate_ci": false,
+  "p5_claim_scope": "single_execution_context_only",
+  "required_evidence_promotion": {
+    "P4_to_P5": "hardware counter evidence plus machine and binary provenance",
+    "P5_to_P6": "replication on identified target hardware with controlled conditions",
+    "P6_to_P7": "separate formal equivalence obligation or certificate where applicable"
+  },
+  "forbidden_claims": [
+    "single-run universal speedup",
+    "unsupported events treated as zero",
+    "perf permission failure treated as successful counter collection",
+    "heuristic cost units presented as hardware cycles",
+    "benchmark score granting merge or publication authority"
+  ]
+}

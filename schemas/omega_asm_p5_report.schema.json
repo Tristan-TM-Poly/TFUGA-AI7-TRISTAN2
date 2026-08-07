@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_asm_p5_report.schema.json",
+  "title": "Omega ASM-T P5 hardware counter report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_level",
+    "availability",
+    "claim_scope",
+    "authority",
+    "warning",
+    "reason",
+    "source_exit_code",
+    "machine",
+    "binary",
+    "requested_events",
+    "hardware_event_count",
+    "counters",
+    "skipped_events",
+    "diagnostics",
+    "derived",
+    "collection_contract"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_level": {"const": "P5-hardware-counters"},
+    "availability": {"enum": ["available", "partial", "unavailable"]},
+    "claim_scope": {"const": "single_execution_context_only"},
+    "authority": {"const": "review_only"},
+    "warning": {"type": "string", "minLength": 1},
+    "reason": {"type": ["string", "null"]},
+    "source_exit_code": {"type": ["integer", "null"]},
+    "machine": {"type": "object"},
+    "binary": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "exists", "size_bytes", "sha256"],
+          "properties": {
+            "path": {"type": "string"},
+            "exists": {"type": "boolean"},
+            "size_bytes": {"type": ["integer", "null"], "minimum": 0},
+            "sha256": {
+              "oneOf": [
+                {"type": "null"},
+                {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "requested_events": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "hardware_event_count": {"type": "integer", "minimum": 0},
+    "counters": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["event", "value", "unit", "running_percentage"],
+        "properties": {
+          "event": {"type": "string", "minLength": 1},
+          "value": {"type": "number", "minimum": 0},
+          "unit": {"type": ["string", "null"]},
+          "running_percentage": {
+            "type": ["number", "null"],
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      }
+    },
+    "skipped_events": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "derived": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ipc", "cycles_per_instruction", "branch_miss_rate", "cache_miss_rate"],
+      "properties": {
+        "ipc": {"type": ["number", "null"], "minimum": 0},
+        "cycles_per_instruction": {"type": ["number", "null"], "minimum": 0},
+        "branch_miss_rate": {"type": ["number", "null"], "minimum": 0},
+        "cache_miss_rate": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "collection_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collector",
+        "parser",
+        "delimiter",
+        "big_number_formatting",
+        "arbitrary_command_execution_by_package",
+        "unsupported_event_semantics"
+      ],
+      "properties": {
+        "collector": {"const": "perf-stat-external-controlled-step"},
+        "parser": {"const": "omega-asm-perf-stat-csv-v1"},
+        "delimiter": {"const": ";"},
+        "big_number_formatting": {"const": "disabled_expected"},
+        "arbitrary_command_execution_by_package": {"const": false},
+        "unsupported_event_semantics": {"const": "unavailable_not_zero"}
+      }
+    }
+  }
+}
