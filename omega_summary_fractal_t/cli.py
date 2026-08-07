@@ -6,6 +6,8 @@ import sys
 from pathlib import Path
 
 from .delta import write_delta
+from .export import write_graph_exports
+from .index import append_snapshot, verify_index, write_longitudinal_reports
 from .render import render_markdown, write_bundle, write_operational_views
 from .summarizer import AUDIENCES, SummaryEngine
 
@@ -42,6 +44,15 @@ def _parser() -> argparse.ArgumentParser:
     delta.add_argument("previous", help="previous summary_dN_<audience>.json")
     delta.add_argument("current", help="current summary_dN_<audience>.json")
     delta.add_argument("--output-dir", default=".omega/summary-delta")
+
+    index = subparsers.add_parser("index")
+    index.add_argument("summary", help="repository or corpus summary JSON snapshot")
+    index.add_argument("--index-file", default=".omega/corpus-index.json")
+    index.add_argument("--report-dir", default=".omega/longitudinal")
+
+    export = subparsers.add_parser("export")
+    export.add_argument("summary", help="repository summary JSON snapshot")
+    export.add_argument("--output-dir", default=".omega/graph-export")
 
     return parser
 
@@ -109,6 +120,29 @@ def cmd_delta(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_index(args: argparse.Namespace) -> int:
+    index = append_snapshot(args.index_file, args.summary)
+    paths = write_longitudinal_reports(args.index_file, args.report_dir)
+    print(
+        json.dumps(
+            {
+                "index_file": str(args.index_file),
+                "run_count": len(index.get("runs", [])),
+                "valid_hash_chain": verify_index(index),
+                **{key: str(value) for key, value in paths.items()},
+            },
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+def cmd_export(args: argparse.Namespace) -> int:
+    paths = write_graph_exports(args.summary, args.output_dir)
+    print(json.dumps({key: str(value) for key, value in paths.items()}, sort_keys=True))
+    return 0
+
+
 def main(argv=None) -> int:
     args = _parser().parse_args(argv)
     if args.command == "generate":
@@ -119,6 +153,10 @@ def main(argv=None) -> int:
         return cmd_audit(args)
     if args.command == "delta":
         return cmd_delta(args)
+    if args.command == "index":
+        return cmd_index(args)
+    if args.command == "export":
+        return cmd_export(args)
     return 1
 
 
