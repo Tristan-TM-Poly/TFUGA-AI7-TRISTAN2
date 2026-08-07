@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega_summary_query.schema.json",
+  "title": "Omega Summary Query Results",
+  "type": "object",
+  "required": ["schema_version", "source_kind", "query", "total_matches", "returned", "results", "boundary"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "source_kind": {"enum": ["repository", "corpus", "index"]},
+    "query": {"type": "object"},
+    "total_matches": {"type": "integer", "minimum": 0},
+    "returned": {"type": "integer", "minimum": 0},
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repository", "path", "kind", "status", "metrics"],
+        "properties": {
+          "repository": {"type": "string"},
+          "path": {"type": "string"},
+          "kind": {"type": "string"},
+          "status": {"type": "string"},
+          "metrics": {"type": "object"},
+          "structural_crystallization": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+        },
+        "additionalProperties": true
+      }
+    },
+    "boundary": {"type": "string"}
+  },
+  "additionalProperties": true
+}
