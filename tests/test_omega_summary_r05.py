@@ -11,7 +11,12 @@ from omega_summary_fractal_t.aliases import (
     resolve_alias,
     verify_alias_registry,
 )
-from omega_summary_fractal_t.fleet import build_fleet_manifest, render_fleet_html
+from omega_summary_fractal_t.fleet import (
+    append_fleet_history,
+    build_fleet_manifest,
+    render_fleet_html,
+    verify_fleet_history,
+)
 from omega_summary_fractal_t.query_plan import execute_query_plan
 
 
@@ -72,6 +77,28 @@ def test_fleet_projection_is_stable_and_does_not_serialize_raw_names():
         assert forbidden not in rendered
     assert first["privacy"]["raw_repository_names_serialized"] is False
     assert first["privacy"]["salt_serialized"] is False
+    assert len(first["fingerprint"]) == 64
+
+
+def test_fleet_history_is_hash_chained_idempotent_and_private(tmp_path: Path):
+    first = build_fleet_manifest(
+        _summary([_node("omega_secret_alpha_t", "implemented")], fingerprint="fp1"),
+        salt="stable-runtime-salt",
+    )
+    second = build_fleet_manifest(
+        _summary([_node("omega_secret_alpha_t", "tested", tests=1, workflows=1, schemas=1)], fingerprint="fp2"),
+        salt="stable-runtime-salt",
+    )
+    history_path = tmp_path / "FLEET_HISTORY.json"
+    history = append_fleet_history(history_path, first)
+    history = append_fleet_history(history_path, second)
+    history = append_fleet_history(history_path, second)
+    assert verify_fleet_history(history)
+    assert len(history["runs"]) == 2
+    serialized = history_path.read_text(encoding="utf-8")
+    assert "private-repository-name" not in serialized
+    assert "omega_secret_alpha_t" not in serialized
+    assert "stable-runtime-salt" not in serialized
 
 
 def test_alias_registry_requires_explicit_approval_and_is_hash_chained(tmp_path: Path, monkeypatch):
