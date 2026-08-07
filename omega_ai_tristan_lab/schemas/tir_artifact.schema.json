@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/tir-artifact-0.1.json",
+  "title": "TristanArtifact",
+  "type": "object",
+  "required": ["id", "kind", "payload", "provenance", "oak_status", "schema_version", "digest"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^tir:"},
+    "kind": {"type": "string", "minLength": 1},
+    "payload": {},
+    "provenance": {
+      "type": "object",
+      "required": ["source"],
+      "properties": {
+        "source": {"type": "string"},
+        "version": {"type": "string"},
+        "operation": {"type": "string"},
+        "parents": {"type": "array", "items": {"type": "string"}},
+        "commit": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "uncertainty": {
+      "type": "object",
+      "properties": {
+        "numerical": {"type": ["number", "null"], "minimum": 0},
+        "model": {"type": ["number", "null"], "minimum": 0},
+        "data": {"type": ["number", "null"], "minimum": 0},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "oak_status": {"type": "string"},
+    "schema_version": {"const": "tir-0.1"},
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

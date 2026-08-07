@@ -1,0 +1,26 @@
+{
+  "schema": "tristan-capability-manifest/0.1",
+  "system": {
+    "id": "omega-ai-tristan-lab",
+    "version": "0.6.0",
+    "distribution": "omega-ai-tristan-lab",
+    "entrypoint_group": "tristan.plugins"
+  },
+  "capabilities": [
+    {
+      "id": "tristan.idea.analyze",
+      "task": "idea-report",
+      "input_kind": "idea",
+      "output_kind": "analysis-report",
+      "permissions": ["PURE"],
+      "deterministic": true,
+      "oak_status": "TESTED"
+    }
+  ],
+  "runtime": {"python": ">=3.10", "network_default": false},
+  "oak": {
+    "generated_adapters_execute_by_default": false,
+    "scientific_proof_implied_by_execution": false,
+    "negative_memory_required": true
+  }
+}

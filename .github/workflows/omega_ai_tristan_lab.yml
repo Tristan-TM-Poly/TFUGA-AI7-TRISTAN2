@@ -13,7 +13,7 @@ on:
       - ".github/workflows/omega_ai_tristan_lab.yml"
 
 jobs:
-  test:
+  test-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,10 +26,16 @@ jobs:
       - name: Run tests
         working-directory: omega_ai_tristan_lab
         run: python -m pytest -q
-      - name: Smoke test CLI JSON
+      - name: Smoke test idea pipeline
         working-directory: omega_ai_tristan_lab
         run: python -m omega_ai_tristan_lab.cli --idea "Agent IA OAK-safe pour transformer une idée en prototype" --pretty
-      - name: Smoke test CLI workspace
+      - name: Smoke test capability fabric
+        working-directory: omega_ai_tristan_lab
+        run: |
+          omega-tristan-runtime capabilities --json
+          omega-tristan-runtime run-capability tristan.idea.analyze \
+            --payload-json '{"idea":"Runtime Tristan testable avec TIR, provenance et OAK"}'
+      - name: Smoke test workspace
         working-directory: omega_ai_tristan_lab
         run: |
           python -m omega_ai_tristan_lab.cli \
@@ -39,3 +45,20 @@ jobs:
             --output-dir omega_runs
           test -n "$(find omega_runs -name report.json -print -quit)"
           test -n "$(find omega_runs -name report.md -print -quit)"
+      - name: Build wheel and sdist
+        working-directory: omega_ai_tristan_lab
+        run: python -m build
+      - name: Clean-wheel install test
+        working-directory: omega_ai_tristan_lab
+        run: |
+          python -m venv /tmp/tristan-wheel-test
+          /tmp/tristan-wheel-test/bin/python -m pip install dist/*.whl
+          /tmp/tristan-wheel-test/bin/omega-tristan-runtime capabilities --json
+      - name: Upload reproducible package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-ai-tristan-lab-v0.6
+          path: |
+            omega_ai_tristan_lab/dist/*.whl
+            omega_ai_tristan_lab/dist/*.tar.gz
+          if-no-files-found: error
