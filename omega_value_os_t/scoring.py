@@ -111,6 +111,9 @@ def opportunity_costs(values: Mapping[str, float]) -> dict[str, float]:
     second = ordered[1][0] if len(ordered) > 1 else best_value
     result = {}
     for key, value in values.items():
-        alternative = second if key == best_id else best_value
-        result[key] = max(0.0, alternative - float(value))
+        numeric = float(value)
+        if key == best_id:
+            result[key] = max(0.0, best_value - second)
+        else:
+            result[key] = max(0.0, best_value - numeric)
     return result
