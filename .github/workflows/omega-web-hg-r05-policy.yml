@@ -1,0 +1,179 @@
+name: Omega Web HG R0.5 Policy Compiler OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_web_hg_t/r05/**"
+      - "tests/test_omega_web_hg_r05_policy.py"
+      - "tests/test_omega_web_hg_r05_integration.py"
+      - "examples/omega_web_hg_r05_policy_demo.py"
+      - "docs/omega_web_hg_t/R05_POLICY_COMPILER.md"
+      - "docs/omega_web_hg_t/R10_PROBATIVE_WEB_OS.md"
+      - "schemas/omega_web_hg_*policy_v1.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-web-hg-r05-policy.yml"
+  push:
+    branches: [feat/omega-web-hg-r05-policy-compiler-max]
+    paths:
+      - "omega_web_hg_t/r05/**"
+      - "tests/test_omega_web_hg_r05_policy.py"
+      - "tests/test_omega_web_hg_r05_integration.py"
+      - "examples/omega_web_hg_r05_policy_demo.py"
+      - "docs/omega_web_hg_t/R05_POLICY_COMPILER.md"
+      - "docs/omega_web_hg_t/R10_PROBATIVE_WEB_OS.md"
+      - "schemas/omega_web_hg_*policy_v1.schema.json"
+      - "pyproject.toml"
+      - ".github/workflows/omega-web-hg-r05-policy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-web-hg-r05-policy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  policy_oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install focused validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.5
+        run: >-
+          python -m compileall -q
+          omega_web_hg_t/r05
+          tests/test_omega_web_hg_r05_policy.py
+          tests/test_omega_web_hg_r05_integration.py
+          examples/omega_web_hg_r05_policy_demo.py
+      - name: Run adversarial policy and integration tests
+        run: >-
+          pytest -q
+          tests/test_omega_web_hg_r05_policy.py
+          tests/test_omega_web_hg_r05_integration.py
+      - name: Run compiler and adapter-binding audit
+        run: |
+          python -m omega_web_hg_t.r05 audit \
+            --as-of 2026-08-03 \
+            --output /tmp/r05-audit.json
+          python -m omega_web_hg_t.r05 audit-bindings \
+            --as-of 2026-08-03 \
+            --output /tmp/r05-bindings.json
+          python - <<'PY'
+          import json
+          data = json.load(open('/tmp/r05-audit.json'))
+          bindings = json.load(open('/tmp/r05-bindings.json'))
+          assert data['status'] == 'PASS'
+          assert data['source_count'] == 12
+          assert data['pass_count'] == 11
+          assert data['human_review_count'] == 1
+          assert data['r04_binding_status'] == 'PASS'
+          assert data['r04_adapter_count'] == 11
+          assert data['r04_bound_count'] == 11
+          assert data['legal_advice_claimed'] is False
+          assert data['permission_beyond_profile_claimed'] is False
+          assert bindings['status'] == 'PASS'
+          assert bindings['bound_count'] == 11
+          assert bindings['binding_audit_is_network_execution'] is False
+          print('OMEGA_WEB_HG_R05_AUDIT_PASS')
+          PY
+      - name: Validate profile and compiled schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          from omega_web_hg_t.r05 import BUILTIN_POLICIES, compile_policy
+
+          profile_schema = json.loads(Path('schemas/omega_web_hg_policy_profile_v1.schema.json').read_text())
+          compiled_schema = json.loads(Path('schemas/omega_web_hg_compiled_policy_v1.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(profile_schema)
+          jsonschema.Draft202012Validator.check_schema(compiled_schema)
+          profile_validator = jsonschema.Draft202012Validator(profile_schema, format_checker=jsonschema.FormatChecker())
+          compiled_validator = jsonschema.Draft202012Validator(compiled_schema, format_checker=jsonschema.FormatChecker())
+          for profile in BUILTIN_POLICIES:
+              profile_instance = json.loads(json.dumps(profile.to_dict()))
+              compiled_instance = json.loads(json.dumps(compile_policy(profile, as_of='2026-08-03').to_dict()))
+              profile_validator.validate(profile_instance)
+              compiled_validator.validate(compiled_instance)
+          print('OMEGA_WEB_HG_R05_SCHEMAS_VALID')
+          PY
+      - name: Prove deterministic materialization
+        run: |
+          python -m omega_web_hg_t.r05 materialize --as-of 2026-08-03 --output-dir /tmp/r05-a
+          python -m omega_web_hg_t.r05 materialize --as-of 2026-08-03 --output-dir /tmp/r05-b
+          diff -ru /tmp/r05-a/profiles /tmp/r05-b/profiles
+          diff -ru /tmp/r05-a/compiled /tmp/r05-b/compiled
+          cmp /tmp/r05-a/materialization-manifest.json /tmp/r05-b/materialization-manifest.json
+          cmp /tmp/r05-a/r04-binding-audit.json /tmp/r05-b/r04-binding-audit.json
+      - name: Exercise decisive forbidden-field gate
+        run: |
+          cat > /tmp/unsafe-record.json <<'JSON'
+          {
+            "source_id": "crossref",
+            "record_id": "fixture",
+            "canonical_url": "https://example.invalid/fixture",
+            "title": "Fixture",
+            "abstract": "must be denied",
+            "nested": {"fullText": "must also be denied"}
+          }
+          set +e
+          python -m omega_web_hg_t.r05 gate-record crossref /tmp/unsafe-record.json \
+            --as-of 2026-08-03 --output /tmp/gate.json
+          status=$?
+          set -e
+          test "$status" -eq 2
+          python - <<'PY'
+          import json
+          decision = json.load(open('/tmp/gate.json'))
+          assert decision['allowed'] is False
+          assert {item['code'] for item in decision['violations']} >= {'FORBIDDEN_FIELD'}
+          assert any(item['path'] == '$.abstract' for item in decision['violations'])
+          assert any(item['path'] == '$.nested.fullText' for item in decision['violations'])
+          print('OMEGA_WEB_HG_R05_FORBIDDEN_FIELD_GATE_PASS')
+          PY
+      - name: Run demonstration and assert OAK boundaries
+        run: |
+          python examples/omega_web_hg_r05_policy_demo.py > /tmp/demo.json
+          python - <<'PY'
+          import json
+          demo = json.load(open('/tmp/demo.json'))
+          assert demo['request']['allowed'] is True
+          assert demo['safe_record']['allowed'] is True
+          assert demo['unsafe_record']['allowed'] is False
+          assert demo['redacted_record']['allowed'] is True
+          assert demo['raw_storage']['allowed'] is False
+          assert demo['legal_advice_claimed'] is False
+          assert demo['permission_beyond_profile_claimed'] is False
+          print('OMEGA_WEB_HG_R05_DEMO_PASS')
+          PY
+
+  policy_evidence_artifact:
+    needs: policy_oakbench
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Materialize policy evidence
+        run: |
+          python -m omega_web_hg_t.r05 materialize \
+            --as-of 2026-08-03 \
+            --output-dir generated/omega_web_hg_r05
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omega-web-hg-r05-policy-evidence
+          path: generated/omega_web_hg_r05
+          if-no-files-found: error
+          retention-days: 30
