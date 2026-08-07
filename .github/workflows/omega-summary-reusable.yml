@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       depth:
-        description: Summary depth D0-D9
+        description: Compatibility input; reusable workflow currently emits the full D0-D9 family
         required: false
         default: '9'
       audience:
@@ -35,11 +35,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout caller repository
+      - name: Checkout caller repository with full chronology
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           path: target
           persist-credentials: false
+          fetch-depth: 0
       - name: Checkout summary engine
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -51,16 +52,29 @@ jobs:
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12'
+      - name: Derive deterministic source epoch
+        id: epoch
+        shell: bash
+        run: |
+          epoch=$(git -C target show -s --format=%ct HEAD)
+          test -n "$epoch"
+          echo "value=$epoch" >> "$GITHUB_OUTPUT"
       - name: Generate D0-D9 summary family
         env:
           PYTHONPATH: ${{ github.workspace }}/.omega-summary-engine
-          SOURCE_DATE_EPOCH: ${{ github.event.repository.updated_at && github.run_id || github.run_id }}
+          SOURCE_DATE_EPOCH: ${{ steps.epoch.outputs.value }}
         run: |
-          export SOURCE_DATE_EPOCH=$(date +%s)
           python -m omega_summary_fractal_t all-depths target \
             --audience "${{ inputs.audience || github.event.inputs.audience || 'oak' }}" \
             --output-dir reports/omega-summary \
             --max-files "${{ inputs.max_files || github.event.inputs.max_files || 20000 }}"
+      - name: Validate R0.3 zero-touch outputs
+        run: |
+          test -s reports/omega-summary/SUMMARY.md
+          test -s reports/omega-summary/SUMMARY_HISTORY.json
+          test -s reports/omega-summary/longitudinal/LONGITUDINAL_CRYSTALLIZATION.json
+          test -s reports/omega-summary/graph/SUMMARY_GRAPH.jsonl
+          test -s reports/omega-summary/graph/SUMMARY_GRAPH.graphml
       - name: Write job summary
         run: cat reports/omega-summary/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload summary artifact
