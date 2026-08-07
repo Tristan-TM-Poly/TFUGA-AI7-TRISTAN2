@@ -5,9 +5,12 @@ import json
 import sys
 from pathlib import Path
 
+from .dashboard import write_dashboard
 from .delta import write_delta
 from .export import write_graph_exports
+from .identity import write_identity_report
 from .index import append_snapshot, verify_index, write_longitudinal_reports
+from .query import query_payload, write_query
 from .render import render_markdown, write_bundle, write_operational_views
 from .summarizer import AUDIENCES, SummaryEngine
 
@@ -45,6 +48,12 @@ def _parser() -> argparse.ArgumentParser:
     delta.add_argument("current", help="current summary_dN_<audience>.json")
     delta.add_argument("--output-dir", default=".omega/summary-delta")
 
+    identity = subparsers.add_parser("identity")
+    identity.add_argument("previous", help="previous D9 summary JSON")
+    identity.add_argument("current", help="current D9 summary JSON")
+    identity.add_argument("--min-overlap", type=float, default=0.80)
+    identity.add_argument("--output-dir", default=".omega/identity-continuity")
+
     index = subparsers.add_parser("index")
     index.add_argument("summary", help="repository or corpus summary JSON snapshot")
     index.add_argument("--index-file", default=".omega/corpus-index.json")
@@ -54,10 +63,28 @@ def _parser() -> argparse.ArgumentParser:
     export.add_argument("summary", help="repository summary JSON snapshot")
     export.add_argument("--output-dir", default=".omega/graph-export")
 
+    query = subparsers.add_parser("query")
+    query.add_argument("source", help="repository summary, corpus summary, or longitudinal index JSON")
+    query.add_argument("--text")
+    query.add_argument("--kind")
+    query.add_argument("--status")
+    query.add_argument("--relation")
+    query.add_argument("--repository")
+    query.add_argument("--min-crystallization", type=float)
+    query.add_argument("--max-crystallization", type=float)
+    query.add_argument("--limit", type=int, default=100)
+    query.add_argument("--output-dir")
+
+    dashboard = subparsers.add_parser("dashboard")
+    dashboard.add_argument("summary", help="repository or corpus summary JSON")
+    dashboard.add_argument("--index-file")
+    dashboard.add_argument("--top-n", type=int, default=20)
+    dashboard.add_argument("--output-dir", default=".omega/dashboard")
+
     return parser
 
 
-def _write_r03_views(bundle, output_dir: str | Path) -> dict[str, Path]:
+def _write_r04_views(bundle, output_dir: str | Path) -> dict[str, Path]:
     out = Path(output_dir)
     history = out / "SUMMARY_HISTORY.json"
     index = append_snapshot(history, bundle.to_dict())
@@ -66,6 +93,7 @@ def _write_r03_views(bundle, output_dir: str | Path) -> dict[str, Path]:
     generated = {"history": history}
     generated.update(write_longitudinal_reports(history, out / "longitudinal"))
     generated.update({f"graph_{key}": value for key, value in write_graph_exports(bundle.to_dict(), out / "graph").items()})
+    generated.update({f"dashboard_{key}": value for key, value in write_dashboard(bundle.to_dict(), out / "dashboard", index=history).items()})
     return generated
 
 
@@ -80,7 +108,7 @@ def cmd_generate(args: argparse.Namespace) -> int:
         if args.depth >= 3:
             paths.update(write_operational_views(bundle, args.output_dir))
         if args.depth == 9:
-            paths.update(_write_r03_views(bundle, args.output_dir))
+            paths.update(_write_r04_views(bundle, args.output_dir))
         print(json.dumps({key: str(value) for key, value in paths.items()}, sort_keys=True))
     elif args.json_stdout:
         print(json.dumps(bundle.to_dict(), indent=2, sort_keys=True, ensure_ascii=False))
@@ -94,7 +122,7 @@ def cmd_all_depths(args: argparse.Namespace) -> int:
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     index = []
-    r03_artifacts: dict[str, str] = {}
+    r04_artifacts: dict[str, str] = {}
     for depth in range(10):
         bundle = engine.generate(depth=depth, audience=args.audience, focus=args.focus)
         paths = write_bundle(bundle, out)
@@ -108,14 +136,14 @@ def cmd_all_depths(args: argparse.Namespace) -> int:
         )
         if depth == 9:
             write_operational_views(bundle, out)
-            r03_artifacts = {key: str(value) for key, value in _write_r03_views(bundle, out).items()}
+            r04_artifacts = {key: str(value) for key, value in _write_r04_views(bundle, out).items()}
     (out / "depth_index.json").write_text(
         json.dumps(index, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     print(
         json.dumps(
-            {"generated_depths": 10, "output_dir": str(out), "r03_artifacts": r03_artifacts},
+            {"generated_depths": 10, "output_dir": str(out), "r04_artifacts": r04_artifacts},
             sort_keys=True,
         )
     )
@@ -137,6 +165,17 @@ def cmd_audit(args: argparse.Namespace) -> int:
 
 def cmd_delta(args: argparse.Namespace) -> int:
     paths = write_delta(args.previous, args.current, args.output_dir)
+    print(json.dumps({key: str(value) for key, value in paths.items()}, sort_keys=True))
+    return 0
+
+
+def cmd_identity(args: argparse.Namespace) -> int:
+    paths = write_identity_report(
+        args.previous,
+        args.current,
+        args.output_dir,
+        min_overlap=args.min_overlap,
+    )
     print(json.dumps({key: str(value) for key, value in paths.items()}, sort_keys=True))
     return 0
 
@@ -164,6 +203,32 @@ def cmd_export(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_query(args: argparse.Namespace) -> int:
+    report = query_payload(
+        args.source,
+        text=args.text,
+        kind=args.kind,
+        status=args.status,
+        relation=args.relation,
+        repository=args.repository,
+        min_crystallization=args.min_crystallization,
+        max_crystallization=args.max_crystallization,
+        limit=args.limit,
+    )
+    if args.output_dir:
+        paths = write_query(report, args.output_dir)
+        print(json.dumps({"total_matches": report["total_matches"], **{key: str(value) for key, value in paths.items()}}, sort_keys=True))
+    else:
+        print(json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False))
+    return 0
+
+
+def cmd_dashboard(args: argparse.Namespace) -> int:
+    paths = write_dashboard(args.summary, args.output_dir, index=args.index_file, top_n=args.top_n)
+    print(json.dumps({key: str(value) for key, value in paths.items()}, sort_keys=True))
+    return 0
+
+
 def main(argv=None) -> int:
     args = _parser().parse_args(argv)
     if args.command == "generate":
@@ -174,10 +239,16 @@ def main(argv=None) -> int:
         return cmd_audit(args)
     if args.command == "delta":
         return cmd_delta(args)
+    if args.command == "identity":
+        return cmd_identity(args)
     if args.command == "index":
         return cmd_index(args)
     if args.command == "export":
         return cmd_export(args)
+    if args.command == "query":
+        return cmd_query(args)
+    if args.command == "dashboard":
+        return cmd_dashboard(args)
     return 1
 
 
