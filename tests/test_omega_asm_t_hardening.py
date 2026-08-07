@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from pathlib import Path
 
 import pytest
 
@@ -82,3 +83,18 @@ def test_json_parser_rejects_non_finite_latency():
                 "outputs": ["x"],
             }
         )
+
+
+def test_native_benchmark_protocol_blocks_loop_invariant_reference_hoisting():
+    source = Path("examples/native/omega_dot_u64_benchmark.c").read_text(encoding="utf-8")
+    assert "#define OMEGA_MEMORY_BARRIER()" in source
+    assert source.count("OMEGA_MEMORY_BARRIER();") >= 5
+    assert "uint64_t result = fn(a, b, n);" in source
+    assert "local = mix_checksum(local, result, i);" in source
+
+
+def test_native_benchmark_protocol_version_records_anti_hoist_control():
+    source = Path("examples/native/omega_dot_u64_benchmark.c").read_text(encoding="utf-8")
+    assert "benchmark_protocol_version\\\":2" in source
+    assert "anti_hoist_memory_barrier\\\":true" in source
+    assert "rotate-xor-index-v2" in source
