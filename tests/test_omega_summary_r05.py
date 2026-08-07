@@ -60,6 +60,42 @@ def _summary(nodes, *, root="private-repository-name", fingerprint="fp"):
     }
 
 
+def _corpus(repository_names: list[str]):
+    repositories = []
+    for index, name in enumerate(repository_names):
+        system = _node(f"omega_private_{index}_t", "implemented")
+        repositories.append(
+            {
+                "name": name,
+                "available": True,
+                "fingerprint": f"fp-{index}",
+                "health": {},
+                "systems": [
+                    {
+                        "path": system["path"],
+                        "title": system["title"],
+                        "one_line": system["one_line"],
+                        "status": system["status"],
+                        "metrics": system["metrics"],
+                    }
+                ],
+                "gap_count": 0,
+            }
+        )
+    return {
+        "schema_version": "1.0.0",
+        "generated_at": "2026-08-07T12:00:00Z",
+        "depth": 9,
+        "audience": "oak",
+        "repositories": repositories,
+        "totals": {"repositories": len(repositories), "systems": len(repositories)},
+        "gaps": [],
+        "duplicate_candidates": [],
+        "cross_repo_links": [],
+        "fingerprint": "corpus-fp",
+    }
+
+
 def test_fleet_projection_is_stable_and_does_not_serialize_raw_names():
     payload = _summary([
         _node("omega_secret_alpha_t", "tested", tests=1, workflows=1, schemas=1),
@@ -70,6 +106,7 @@ def test_fleet_projection_is_stable_and_does_not_serialize_raw_names():
     other_salt = build_fleet_manifest(payload, salt="runtime-secret-b")
     assert first == second
     assert first["repositories"][0]["repository_token"] != other_salt["repositories"][0]["repository_token"]
+    assert first["fleet_id"] != other_salt["fleet_id"]
     serialized = json.dumps(first, sort_keys=True)
     rendered = render_fleet_html(first)
     for forbidden in ("private-repository-name", "omega_secret_alpha_t", "omega_secret_beta_t", "runtime-secret-a"):
@@ -78,6 +115,15 @@ def test_fleet_projection_is_stable_and_does_not_serialize_raw_names():
     assert first["privacy"]["raw_repository_names_serialized"] is False
     assert first["privacy"]["salt_serialized"] is False
     assert len(first["fingerprint"]) == 64
+
+
+def test_fleet_id_is_stable_when_repository_membership_changes():
+    one_repo = build_fleet_manifest(_corpus(["private-a"]), salt="stable-scope-salt")
+    two_repos = build_fleet_manifest(_corpus(["private-a", "private-b"]), salt="stable-scope-salt")
+    assert one_repo["fleet_id"] == two_repos["fleet_id"]
+    assert one_repo["fingerprint"] != two_repos["fingerprint"]
+    assert one_repo["totals"]["repositories"] == 1
+    assert two_repos["totals"]["repositories"] == 2
 
 
 def test_fleet_history_is_hash_chained_idempotent_and_private(tmp_path: Path):
