@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 from .corpus import CorpusSummaryEngine, RepositorySpec, discover_local_repositories, load_manifest
 from .dashboard import write_dashboard
+from .fleet import write_fleet_manifest
 from .summarizer import AUDIENCES
 
 
@@ -19,6 +21,8 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--output-dir", default=".omega/corpus-summary")
     p.add_argument("--max-files", type=int, default=20000)
     p.add_argument("--no-repository-views", action="store_true")
+    p.add_argument("--fleet-salt-env", default="OMEGA_FLEET_SALT", help="Runtime env var containing the private HMAC salt")
+    p.add_argument("--require-fleet", action="store_true", help="Fail if the fleet salt is unavailable instead of omitting public fleet output")
     return p
 
 
@@ -50,6 +54,14 @@ def main(argv: list[str] | None = None) -> int:
         output / "dashboard",
         index=output / "CORPUS_INDEX.json",
     )
+
+    salt = os.getenv(args.fleet_salt_env, "").strip()
+    fleet: dict[str, Path] = {}
+    if salt:
+        fleet = write_fleet_manifest(output / "CORPUS_SUMMARY.json", output / "fleet", salt=salt)
+    elif args.require_fleet:
+        raise SystemExit(f"required fleet salt environment variable is missing: {args.fleet_salt_env}")
+
     print(
         json.dumps(
             {
@@ -58,6 +70,8 @@ def main(argv: list[str] | None = None) -> int:
                 "fingerprint": bundle.fingerprint,
                 "output_dir": str(output),
                 "dashboard": {key: str(value) for key, value in dashboard.items()},
+                "fleet_emitted": bool(fleet),
+                "fleet": {key: str(value) for key, value in fleet.items()},
             },
             sort_keys=True,
         )
