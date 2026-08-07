@@ -151,12 +151,26 @@ def test_different_binary_hashes_are_never_combined():
     assert campaign["status"] == "mixed_or_insufficient_targets"
 
 
-def test_different_machine_fingerprints_are_never_combined():
+def test_different_machine_fingerprints_are_never_combined_and_do_not_fake_replication():
     reports = [_p5(machine=_machine(model="143")), _p5(machine=_machine(model="151"))]
     campaign = aggregate_p5_reports(reports, min_replicates=2)
     assert len(campaign["groups"]) == 2
     assert len({group["machine_fingerprint"] for group in campaign["groups"]}) == 2
+    assert campaign["status"] == "mixed_or_insufficient_targets"
+    assert not any(group["qualifies_for_identified_target_replication"] for group in campaign["groups"])
+
+
+def test_two_distinct_machine_groups_each_replicated_get_multiple_replicated_targets():
+    reports = [
+        _p5(machine=_machine(model="143"), ipc=1.9),
+        _p5(machine=_machine(model="143"), ipc=2.0),
+        _p5(machine=_machine(model="151"), ipc=2.1),
+        _p5(machine=_machine(model="151"), ipc=2.2),
+    ]
+    campaign = aggregate_p5_reports(reports, min_replicates=2)
+    assert len(campaign["groups"]) == 2
     assert campaign["status"] == "multiple_replicated_targets"
+    assert all(group["qualifies_for_identified_target_replication"] for group in campaign["groups"])
 
 
 def test_one_replicated_group_plus_extra_insufficient_group_has_precise_status():
