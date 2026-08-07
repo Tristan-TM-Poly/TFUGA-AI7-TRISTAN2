@@ -10,7 +10,13 @@ uint64_t omega_dot_u64_ptr(const uint64_t *a, const uint64_t *b, uint64_t n);
 
 typedef uint64_t (*kernel_fn)(const uint64_t *, const uint64_t *, uint64_t);
 
-static uint64_t reference_dot(const uint64_t *a, const uint64_t *b, uint64_t n) {
+#if defined(__GNUC__) || defined(__clang__)
+#define OMEGA_NOINLINE __attribute__((noinline))
+#else
+#define OMEGA_NOINLINE
+#endif
+
+static OMEGA_NOINLINE uint64_t reference_dot(const uint64_t *a, const uint64_t *b, uint64_t n) {
     uint64_t acc = 0;
     for (uint64_t i = 0; i < n; ++i) {
         acc += a[i] * b[i];
@@ -34,8 +40,8 @@ static uint64_t nanoseconds(void) {
     return (uint64_t)ts.tv_sec * UINT64_C(1000000000) + (uint64_t)ts.tv_nsec;
 }
 
-static double measure(kernel_fn fn, const uint64_t *a, const uint64_t *b,
-                      uint64_t n, unsigned inner, volatile uint64_t *sink) {
+static OMEGA_NOINLINE double measure(kernel_fn fn, const uint64_t *a, const uint64_t *b,
+                                     uint64_t n, unsigned inner, volatile uint64_t *sink) {
     uint64_t start = nanoseconds();
     uint64_t local = 0;
     for (unsigned i = 0; i < inner; ++i) {
@@ -58,7 +64,7 @@ static void print_samples(const char *name, const double *samples, unsigned coun
 }
 
 int main(void) {
-    enum { N = 4096, ROUNDS = 31, INNER = 128, WARMUP = 64 };
+    enum { N = 4096, ROUNDS = 31, INNER = 127, WARMUP = 64 };
     uint64_t *a = malloc((size_t)N * sizeof(*a));
     uint64_t *b = malloc((size_t)N * sizeof(*b));
     if (!a || !b) {
