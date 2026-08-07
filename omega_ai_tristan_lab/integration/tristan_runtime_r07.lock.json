@@ -12,7 +12,7 @@
       "full_name": "Tristan-TM-Poly/PEFA-FractalEnergySystem",
       "visibility": "private",
       "distribution": "pefa-fractal-energy-system",
-      "commit": "32b82d5d9818bfdd514eabf9e6ffefc520cc9260",
+      "commit": "04914785353d3db59af36e57f5c19b3a75b74f1f",
       "branch_provenance": "feat/tristan-runtime-adapter-r01",
       "capabilities": ["pefa-omega-em2.cvcd-extract", "pefa-omega-em2.cvcd-expand"]
     },
@@ -35,8 +35,18 @@
         "tristan.idea.analyze"
       ],
       "description": "PEFA CVCD extraction -> Omni evidence bridge -> TristanLab OAK analysis.",
-      "status": "CANDIDATE_PENDING_EXACT_HEAD_CI"
+      "status": "CI_VERIFIED_CROSS_REPO_R01",
+      "evidence": {
+        "repository": "Tristan-TM-Poly/PEFA-FractalEnergySystem",
+        "run_id": 31192063344,
+        "workflow": "Tristan Runtime Adapter R0.1",
+        "verified_runtime_commit": "6f0c46401be32823e4370ed6bdae699955d81ca3",
+        "verified_driver_commit": "04914785353d3db59af36e57f5c19b3a75b74f1f",
+        "artifact_id": 8999236642,
+        "artifact_sha256": "83f07f9293b908d1f628c10ef9139f9f65c9ecb02a5a4b4c1220294416856341",
+        "marker": "CROSS_REPO_PIPELINE_PINNED_PASS"
+      }
     }
   ],
-  "oak_rule": "Pinned integration proves reproducible software composition only after exact-head CI; it does not establish scientific truth, independent reproduction, product value, or merge readiness."
+  "oak_rule": "CI_VERIFIED means exact-pinned software composition was executed successfully. It does not establish scientific truth, independent reproduction, product value, patentability, security certification, or permission to merge peer branches."
 }

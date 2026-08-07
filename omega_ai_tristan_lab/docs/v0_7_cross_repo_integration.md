@@ -1,6 +1,6 @@
-# Ω-TRISTAN-RUNTIME v0.7 — Pinned Cross-Repository Integration
+# Ω-TRISTAN-RUNTIME v0.7 — Exact-Pinned Cross-Repository Integration
 
-v0.7 moves from a generic capability fabric to a **bounded real integration profile** across three repositories.
+v0.7 now contains a **CI-verified integration profile** across three real repositories.
 
 ```text
 PEFA-FractalEnergySystem
@@ -15,16 +15,50 @@ TFUGA-AI7-TRISTAN2 / Ω-AI-TRISTAN-LAB
 TIR + ExecutionCapsules + OAK analysis
 ```
 
-## Exact peer pins
+## Exact source pins used by the verified run
 
-The runtime does not use `main`, `master`, or another floating Git ref for the integration profile.
+| Component | Exact commit | Version in run |
+|---|---|---|
+| PEFA driver/adapter | `04914785353d3db59af36e57f5c19b3a75b74f1f` | `pefa-fractal-energy-system==0.1.1` |
+| Omni-Core adapter | `29e77ad2e1214eb536043b31670071f5079285a5` | `tristan-omni-core==0.2.1` |
+| Tristan Runtime | `6f0c46401be32823e4370ed6bdae699955d81ca3` | `omega-ai-tristan-lab==0.7.0` |
 
-| Peer | Adapter provenance | Exact commit | Visibility |
-|---|---|---|---|
-| PEFA | `feat/tristan-runtime-adapter-r01` | `32b82d5d9818bfdd514eabf9e6ffefc520cc9260` | private |
-| Omni-Core | `feat/tristan-runtime-adapter-r01` | `29e77ad2e1214eb536043b31670071f5079285a5` | public |
+No `main`, `master`, or moving feature-branch reference was used to install the two public peers during the verification run.
 
-The branch names are provenance only. Installation targets emitted by `IntegrationLock` use the immutable commits.
+## CI evidence receipt
+
+The exact-pinned pipeline completed successfully in GitHub Actions:
+
+- repository: `Tristan-TM-Poly/PEFA-FractalEnergySystem`
+- workflow: `Tristan Runtime Adapter R0.1`
+- run: `31192063344`
+- artifact: `8999236642`
+- artifact SHA-256: `83f07f9293b908d1f628c10ef9139f9f65c9ecb02a5a4b4c1220294416856341`
+- machine marker: `CROSS_REPO_PIPELINE_PINNED_PASS`
+
+The uploaded artifact contains the PEFA distribution artifacts plus `out/cross_repo_pipeline.json`.
+
+`IntegrationEvidence` now validates the evidence IDs, 40-hex source commits and 64-hex artifact digest before a profile is allowed to carry a `CI_VERIFIED*` status.
+
+## What the verified workflow actually exercised
+
+1. checked out exact PEFA head;
+2. installed PEFA including explicit `numpy>=1.26` runtime dependency;
+3. ran the focused PEFA adapter tests;
+4. built PEFA wheel + sdist;
+5. installed exact runtime commit `6f0c464...`;
+6. installed exact Omni-Core commit `29e77ad...`;
+7. asserted package versions `0.1.1`, `0.2.1`, `0.7.0`;
+8. discovered the three capabilities through `tristan.plugins`;
+9. executed the capability pipeline in order;
+10. required the final output to contain an OAK report;
+11. persisted the pipeline report and uploaded it as an Actions artifact.
+
+## M-minus caught during migration
+
+The first PEFA adapter CI attempt exposed an undeclared dependency: importing the historical PEFA package initializer reaches `mft_simulator`, which imports NumPy. Rather than bypassing that path or weakening the test, PEFA packaging was corrected to declare `numpy>=1.26`, then the workflow was rerun successfully.
+
+This failure remains useful negative memory: packaging must describe the transitive import behavior actually exercised by a clean environment.
 
 ## CLI
 
@@ -32,42 +66,28 @@ The branch names are provenance only. Installation targets emitted by `Integrati
 omega-tristan-runtime integration-lock
 ```
 
-By default this command emits only public install targets. A private PEFA target is shown only when explicitly requested:
+The command is read-only. By default it emits only public peer installation targets. The private PEFA target is included only when explicitly requested:
 
 ```bash
 omega-tristan-runtime integration-lock --include-private-targets
 ```
 
-This does not authenticate, clone, or install anything; it only renders the validated contract.
-
-## Adapter maturity
-
-`RepoRegistry` adds an `adapter-candidate` state. It is deliberately below `package` maturity. A candidate adapter must still pass exact-head CI and human review before promotion to a default branch.
-
-The first PEFA CI attempt produced a useful M-minus result: editable package installation succeeded, but importing `pefa_omega_em2` revealed an undeclared NumPy runtime dependency through the historical eager package initializer. The packaging metadata was corrected to declare `numpy>=1.26`; the test was not weakened.
+Neither command authenticates, clones, installs, pushes, merges, or publishes anything.
 
 ## OAK boundary
 
-This profile is intended to prove software composition, not scientific correctness.
+`CI_VERIFIED_CROSS_REPO_R01` means the exact-pinned software composition ran successfully. It proves a much stronger software fact than a design document, but it still does **not** prove:
 
-A green pipeline would establish only that:
-
-1. three Python distributions can be installed together;
-2. their entry points are discoverable through `tristan.plugins`;
-3. the named capabilities execute in the declared order;
-4. structured output crosses repository boundaries;
-5. TIR/provenance/capsules are emitted by the host runtime;
-6. the final OAK analysis exists.
-
-It would **not** establish:
-
-- independent reproduction of PEFA models;
-- physical validity of a CVCD invariant;
+- physical validity of PEFA/CVCD models;
+- independent scientific reproduction;
 - truth of an OAK-generated claim;
-- product-market fit or monetary value;
+- product-market fit or economic value;
 - patentability;
-- permission to merge or publish the peer branches.
+- security certification;
+- permission to merge any adapter branch to a default branch.
 
-## Promotion gate
+PEFA and Omni-Core therefore remain `adapter-candidate` in `RepoRegistry`, even though their exact commits have been exercised successfully by the integration pipeline.
 
-The profile remains `CANDIDATE_PENDING_EXACT_HEAD_CI` until the exact pinned PEFA/Omni adapter heads and the real cross-repository workflow pass. Promotion must update the lock rather than silently following a moving branch.
+## Next crystallization gate
+
+The next high-value step is to repeat this pattern for a fourth real system, preferably one with a different dependency shape, then build a bundle/wheelhouse from immutable locks rather than from source branches.

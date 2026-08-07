@@ -10,7 +10,7 @@ from .bayes_tristan import BayesTristanEngine
 from .capabilities import CapabilityGraph, CapabilityProvider, CapabilitySpec
 from .capsule import ExecutionCapsule
 from .ingest import ChunkRecord, DocumentIngestor, IngestedDocument
-from .integration import DEFAULT_R07_LOCK, IntegrationLock, PipelineProfile, RepositoryPin
+from .integration import DEFAULT_R07_LOCK, IntegrationEvidence, IntegrationLock, PipelineProfile, RepositoryPin
 from .ip_classifier import IPClassifier
 from .models import AgentStep, BayesAxisScore, IPClassification, OAKReport, OAKStatus, RevenuePath, TheoryCard
 from .oak_eval import OAKEvaluator
@@ -29,11 +29,11 @@ __all__ = [
     "AdapterForge", "AdapterPlan", "AgentHarness", "AgentStep", "BayesAxisScore",
     "BayesTristanEngine", "CapabilityExecution", "CapabilityGraph", "CapabilityProvider",
     "CapabilitySpec", "ChunkRecord", "DEFAULT_R07_LOCK", "DocumentIngestor", "ExecutionCapsule",
-    "IngestedDocument", "IntegrationLock", "IPClassification", "IPClassifier", "LexicalSearchBackend",
-    "MiniRAG", "NullVectorBackend", "OAKReport", "OAKStatus", "OAKEvaluator", "Permission",
-    "PipelineProfile", "PipelineStep", "PluginInfo", "PolicyContext", "PolicyDecision", "PolicyKernel",
-    "Provenance", "RepoRegistry", "ReportRenderer", "RepositoryHealth", "RepositoryInspection",
-    "RepositoryPin", "RepositorySpec", "RevenueMapper", "RevenuePath", "SearchBackend", "SearchResult",
-    "TheoryCard", "TheoryPrototypeFactory", "TristanArtifact", "TristanPlugin", "TristanRuntime",
-    "Uncertainty", "Workspace", "WorkspaceRun", "stable_digest",
+    "IngestedDocument", "IntegrationEvidence", "IntegrationLock", "IPClassification", "IPClassifier",
+    "LexicalSearchBackend", "MiniRAG", "NullVectorBackend", "OAKReport", "OAKStatus", "OAKEvaluator",
+    "Permission", "PipelineProfile", "PipelineStep", "PluginInfo", "PolicyContext", "PolicyDecision",
+    "PolicyKernel", "Provenance", "RepoRegistry", "ReportRenderer", "RepositoryHealth",
+    "RepositoryInspection", "RepositoryPin", "RepositorySpec", "RevenueMapper", "RevenuePath",
+    "SearchBackend", "SearchResult", "TheoryCard", "TheoryPrototypeFactory", "TristanArtifact",
+    "TristanPlugin", "TristanRuntime", "Uncertainty", "Workspace", "WorkspaceRun", "stable_digest",
 ]
