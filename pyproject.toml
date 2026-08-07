@@ -86,7 +86,6 @@ omega-synergy = "omega_synergy_t.cli:main"
 omega-synergy-n = "omega_synergy_n_t.cli:main"
 omega-summary = "omega_summary_fractal_t.cli:main"
 omega-summary-corpus = "omega_summary_fractal_t.corpus_cli:main"
-omega-problem-atlas = "omega_millennium_t.r03.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
