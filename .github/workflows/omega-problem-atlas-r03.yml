@@ -1,24 +1,36 @@
-name: Omega Problem Atlas R0.3 OAKBench
+name: Omega Problem Atlas R0.3-R0.4 OAKBench
 
 on:
   push:
-    branches: [feat/omega-problem-atlas-r0-3]
+    branches:
+      - feat/omega-problem-atlas-r0-3
+      - feat/omega-problem-atlas-r0-4-sources
     paths:
       - "omega_millennium_t/r03/**"
+      - "omega_millennium_t/r04/**"
       - "data/omega_problem_atlas_r03/**"
+      - "data/omega_problem_atlas_r04/**"
       - "tests/test_omega_problem_atlas_r03*.py"
+      - "tests/test_omega_problem_atlas_r04*.py"
       - "schemas/omega_problem_atlas*_v3.schema.json"
+      - "schemas/omega_problem_source_adapter_report_v4.schema.json"
       - "docs/omega_millennium_t/r03/**"
+      - "docs/omega_millennium_t/r04/**"
       - "examples/omega_problem_atlas_r03*.py"
       - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r03.yml"
   pull_request:
     paths:
       - "omega_millennium_t/r03/**"
+      - "omega_millennium_t/r04/**"
       - "data/omega_problem_atlas_r03/**"
+      - "data/omega_problem_atlas_r04/**"
       - "tests/test_omega_problem_atlas_r03*.py"
+      - "tests/test_omega_problem_atlas_r04*.py"
       - "schemas/omega_problem_atlas*_v3.schema.json"
+      - "schemas/omega_problem_source_adapter_report_v4.schema.json"
       - "docs/omega_millennium_t/r03/**"
+      - "docs/omega_millennium_t/r04/**"
       - "examples/omega_problem_atlas_r03*.py"
       - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r03.yml"
@@ -27,10 +39,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: omega-problem-atlas-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   oakbench:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -64,7 +80,7 @@ jobs:
           python -m omega_millennium_t.r03.cli build-max --output-dir /tmp/atlas-max-b --primary-budget 24 --secondary-budget 72 --experiment-budget 256
           diff -ru /tmp/atlas-max-a /tmp/atlas-max-b
           python -m omega_millennium_t.r03.cli audit-max /tmp/atlas-max-a
-      - name: Validate schemas and OAK invariants
+      - name: Validate R0.3 schemas and OAK invariants
         run: |
           python - <<'PY'
           import json
@@ -106,4 +122,47 @@ jobs:
           assert maximum['targets_claiming_proof_or_solution'] == 0
           assert maximum['cells_claiming_proof_or_solution'] == 0
           print('CERTIFIED_SOFTWARE_RESEARCH_FIXTURE_R0_3_MAX')
+          PY
+      - name: Compile and test R0.4 source adapters when present
+        if: ${{ hashFiles('omega_millennium_t/r04/**/*.py') != '' }}
+        run: |
+          python -m compileall -q omega_millennium_t/r04 tests/test_omega_problem_atlas_r04_sources.py
+          pytest -q tests/test_omega_problem_atlas_r04_sources.py
+          python -m omega_millennium_t.r04.cli compile \
+            --snapshot data/omega_problem_atlas_r04/clay_snapshot.sample.json \
+            --snapshot data/omega_problem_atlas_r04/formal_conjectures_snapshot.sample.json \
+            --output-dir /tmp/sources-a
+          python -m omega_millennium_t.r04.cli compile \
+            --snapshot data/omega_problem_atlas_r04/formal_conjectures_snapshot.sample.json \
+            --snapshot data/omega_problem_atlas_r04/clay_snapshot.sample.json \
+            --output-dir /tmp/sources-b
+          diff -ru /tmp/sources-a /tmp/sources-b
+          python -m omega_millennium_t.r04.cli audit /tmp/sources-a
+      - name: Validate R0.4 schema and OAK invariants when present
+        if: ${{ hashFiles('omega_millennium_t/r04/**/*.py') != '' }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          schema = json.loads(Path('schemas/omega_problem_source_adapter_report_v4.schema.json').read_text())
+          report = json.loads(Path('/tmp/sources-a/report.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          jsonschema.validate(report, schema)
+          assert report['snapshot_count'] == 2
+          assert report['source_count'] == 2
+          assert report['input_record_count'] == 5
+          assert report['accepted_import_count'] == 5
+          assert report['status_receipt_count'] == 5
+          assert report['quarantine_count'] == 0
+          assert report['current_open_claim_count'] == 0
+          assert report['solution_claim_count'] == 0
+          assert report['source_retrieval_certified'] is False
+          assert report['current_status_certification_claimed'] is False
+          assert report['scientific_validation_claimed'] is False
+          assert report['solution_claimed'] is False
+          assert report['formal_proof_claimed'] is False
+          assert report['permanent_total_cap'] is None
+          print('CERTIFIED_OFFLINE_SOURCE_ADAPTER_FIXTURE_R0_4')
           PY
