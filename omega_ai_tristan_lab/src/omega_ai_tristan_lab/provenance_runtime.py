@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from importlib import metadata
 import json
-import os
 from typing import Any
 
 
@@ -41,8 +40,6 @@ def fingerprint_distribution(distribution: str | None) -> DistributionFingerprin
         vcs = direct.get("vcs_info") or {}
         commit = str(vcs.get("commit_id", ""))
         repository = install_source.removeprefix("git+")
-    if not commit:
-        commit = os.environ.get("GITHUB_SHA", "")
     return DistributionFingerprint(
         distribution=dist.metadata.get("Name", distribution),
         version=dist.version,
