@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import fnmatch
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -8,7 +9,6 @@ from .core import (
     WorkflowSpec,
     load_config,
     parse_workflow,
-    path_matches,
     stable_digest,
 )
 
@@ -44,17 +44,46 @@ def _validate_trigger_shape(spec: WorkflowSpec) -> None:
 
 
 def _normalize_repo_path(value: object) -> str:
-    """Normalize a Git-style repository-relative path without destroying dotfiles.
-
-    ``str.lstrip('./')`` is intentionally forbidden here because it turns
-    ``.github/workflows/x.yml`` into ``github/workflows/x.yml``.  We remove only
-    explicit ``./`` path prefixes and preserve leading dots that are part of a name.
-    """
+    """Normalize repository-relative syntax while preserving names such as `.github`."""
 
     text = str(value).strip().replace("\\", "/")
     while text.startswith("./"):
         text = text[2:]
     return text
+
+
+def _path_matches(path: str, pattern: str) -> bool:
+    """Dotfile-aware path matching used by the R0.2 observer.
+
+    R0.1 historically used ``lstrip('./')`` and therefore collapsed
+    ``.github/x`` and ``github/x``.  R0.2 deliberately preserves that identity.
+    """
+
+    return fnmatch.fnmatchcase(_normalize_repo_path(path), _normalize_repo_path(pattern))
+
+
+def _ordered_paths_match(path: str, patterns: Iterable[str]) -> bool:
+    matched = False
+    positive = False
+    for raw in patterns:
+        negated = raw.startswith("!")
+        pattern = raw[1:] if negated else raw
+        if not negated:
+            positive = True
+        if _path_matches(path, pattern):
+            matched = not negated
+    return matched if positive else False
+
+
+def _workflow_pr_match(spec: WorkflowSpec, changed_files: Iterable[str]) -> tuple[bool, tuple[str, ...]]:
+    if "pull_request" not in spec.events:
+        return False, ()
+    if not spec.pull_request_paths:
+        return True, ("unfiltered_pull_request_trigger",)
+    matches = tuple(
+        path for path in changed_files if _ordered_paths_match(path, spec.pull_request_paths)
+    )
+    return bool(matches), matches
 
 
 def scan_workflows(repository_root: str | Path) -> list[WorkflowSpec]:
@@ -90,7 +119,7 @@ def _is_unparsed(spec: WorkflowSpec) -> bool:
 
 
 def _scope_match(path: str, patterns: tuple[str, ...]) -> bool:
-    return any(path_matches(path, pattern) for pattern in patterns)
+    return any(_path_matches(path, pattern) for pattern in patterns)
 
 
 def audit_route_config(repository_root: str | Path, config_path: str | Path) -> dict[str, Any]:
@@ -108,7 +137,7 @@ def audit_route_config(repository_root: str | Path, config_path: str | Path) -> 
         matches = [
             route.route_id
             for route in config.routes
-            if any(path_matches(workflow.path, pattern) for pattern in route.legacy_workflow_patterns)
+            if any(_path_matches(workflow.path, pattern) for pattern in route.legacy_workflow_patterns)
         ]
         if not matches:
             uncovered.append(workflow.path)
@@ -141,6 +170,7 @@ def audit_route_config(repository_root: str | Path, config_path: str | Path) -> 
         "workflow_mutation_performed": False,
         "workflow_cancellation_performed": False,
         "parse_debt_is_observed_not_suppressed": True,
+        "dotfile_identity_preserved": True,
     }
     result["audit_digest"] = stable_digest(result)
     return result
@@ -192,7 +222,7 @@ def build_admission_report(
     for spec in specs:
         if spec.path == config.replacement_workflow or _is_unparsed(spec):
             continue
-        eligible, matches = spec.pr_match(changed)
+        eligible, matches = _workflow_pr_match(spec, changed)
         if eligible:
             legacy.append(
                 {
@@ -206,7 +236,11 @@ def build_admission_report(
 
     routes: list[dict[str, Any]] = []
     for route in config.routes:
-        matches = sorted(path for path in changed if route.matches(path))
+        matches = sorted(
+            path
+            for path in changed
+            if any(_path_matches(path, pattern) for pattern in route.owned_paths)
+        )
         if matches:
             routes.append(
                 {
@@ -219,7 +253,11 @@ def build_admission_report(
 
     validators: list[dict[str, Any]] = []
     for validator in config.validators:
-        matches = sorted(path for path in changed if validator.matches(path))
+        matches = sorted(
+            path
+            for path in changed
+            if any(_path_matches(path, pattern) for pattern in validator.paths)
+        )
         if matches:
             validators.append(
                 {
@@ -262,6 +300,7 @@ def build_admission_report(
         "workflow_dispatch_performed": False,
         "path_matching_is_approximate": True,
         "estimate_is_not_github_scheduler_truth": True,
+        "dotfile_identity_preserved": True,
     }
     report["report_digest"] = stable_digest(report)
     return report
