@@ -10,7 +10,9 @@ on:
       - 'examples/native/omega_dot_u64_*'
       - 'docs/canon/OMEGA_ASM_T_INFINITY_R1.md'
       - 'docs/architecture/OMEGA_ASM_T_R1_ARCHITECTURE.md'
+      - 'docs/architecture/OMEGA_ASM_T_P4_BENCHMARK_PROTOCOL.md'
       - 'schemas/omega_asm_report.schema.json'
+      - 'schemas/omega_asm_benchmark_report.schema.json'
       - 'policies/omega_asm_t_policy.json'
       - 'pyproject.toml'
       - '.github/workflows/omega-asm-t.yml'
@@ -21,7 +23,9 @@ on:
       - 'examples/native/omega_dot_u64_*'
       - 'docs/canon/OMEGA_ASM_T_INFINITY_R1.md'
       - 'docs/architecture/OMEGA_ASM_T_R1_ARCHITECTURE.md'
+      - 'docs/architecture/OMEGA_ASM_T_P4_BENCHMARK_PROTOCOL.md'
       - 'schemas/omega_asm_report.schema.json'
+      - 'schemas/omega_asm_benchmark_report.schema.json'
       - 'policies/omega_asm_t_policy.json'
       - 'pyproject.toml'
       - '.github/workflows/omega-asm-t.yml'
@@ -59,7 +63,7 @@ jobs:
         run: python -m pytest -q tests/test_omega_asm_t.py
       - name: Generate deterministic report
         run: python -m omega_asm_t report --width 8 --output /tmp/omega-asm-report.json
-      - name: Validate report schema and authority
+      - name: Validate report schemas and authority
         run: |
           python - <<'PY'
           import json
@@ -67,7 +71,10 @@ jobs:
           from jsonschema import Draft202012Validator
           report=json.loads(Path('/tmp/omega-asm-report.json').read_text())
           schema=json.loads(Path('schemas/omega_asm_report.schema.json').read_text())
+          benchmark_schema=json.loads(Path('schemas/omega_asm_benchmark_report.schema.json').read_text())
           policy=json.loads(Path('policies/omega_asm_t_policy.json').read_text())
+          Draft202012Validator.check_schema(schema)
+          Draft202012Validator.check_schema(benchmark_schema)
           Draft202012Validator(schema).validate(report)
           assert report['authority']=='review_only'
           assert report['human_review_required'] is True
