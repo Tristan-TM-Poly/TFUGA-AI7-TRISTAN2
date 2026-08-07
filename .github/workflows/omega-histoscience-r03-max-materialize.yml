@@ -1,0 +1,215 @@
+name: Omega Histoscience R0.2-R0.3 MAX Materialization
+
+on:
+  push:
+    branches: [feat/omega-histoscience-r03-max-materialized]
+    paths:
+      - ".github/workflows/omega-histoscience-r03-max-materialize.yml"
+      - "artifacts/omega-histoscience-r02-r03-max-materialized*"
+      - "docs/omega-histoscience-hg-t/LOCAL_VALIDATION_R02_R03_MAX.md"
+      - "tools/install_omega_histosci_max_artifact.py"
+      - "tools/materialize_omega_histosci_r0*.py"
+      - "tools/omega_histosci_r0*_payload/**"
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - ".github/workflows/omega-histoscience-r03-max-materialize.yml"
+      - "artifacts/omega-histoscience-r02-r03-max-materialized*"
+      - "docs/omega-histoscience-hg-t/LOCAL_VALIDATION_R02_R03_MAX.md"
+      - "tools/install_omega_histosci_max_artifact.py"
+      - "tools/materialize_omega_histosci_r0*.py"
+      - "tools/omega_histosci_r0*_payload/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: omega-histoscience-r03-max-materialization
+  cancel-in-progress: true
+
+jobs:
+  materialize-validate-commit:
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Verify attached deterministic artifact
+        run: |
+          python tools/install_omega_histosci_max_artifact.py --check-only
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          receipt = json.loads(
+              Path('artifacts/omega-histoscience-r02-r03-max-materialized.receipt.json')
+              .read_text(encoding='utf-8')
+          )
+          assert receipt['artifact_sha256'] == '4d1a9ae79d33b27a7c24ef429dd302f68899fc711609163edb1d36fac849dae9'
+          assert receipt['artifact_bytes'] == 404679
+          assert receipt['artifact_file_count'] == 85
+          assert receipt['represented_text_lines'] == 80002
+          assert receipt['r02_r03_tests_passed'] == 90
+          assert receipt['historical_truth_certified'] is False
+          assert receipt['global_exhaustiveness_claimed'] is False
+          assert receipt['permanent_total_cap'] is None
+          print(receipt['r02_status'])
+          print(receipt['r03_status'])
+          PY
+
+      - name: Install focused validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+
+      - name: Validate merged R0.1 baseline
+        run: |
+          python -m compileall -q \
+            omega_histosci_hg_t \
+            tests/test_omega_histosci_hg_t.py \
+            examples/omega_histosci_demo.py
+          pytest -q tests/test_omega_histosci_hg_t.py
+
+      - name: Materialize and validate R0.2 massive frontier
+        run: python tools/materialize_omega_histosci_r02.py
+
+      - name: Materialize and validate R0.3 MAX streaming frontier
+        run: python tools/materialize_omega_histosci_r03.py
+
+      - name: Run cumulative regression and OAKBench
+        run: |
+          pytest -q \
+            tests/test_omega_histosci_hg_t.py \
+            tests/test_omega_histosci_r02.py \
+            tests/test_omega_histosci_r03.py
+          python -m omega_histosci_hg_t.r02.cli oakbench --output /tmp/r02-oak.json
+          python -m omega_histosci_hg_t.r03.cli oakbench \
+            --records 100000 \
+            --output /tmp/r03-oak.json
+
+      - name: Verify counts, claims and schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+
+          r02 = json.loads(Path('/tmp/r02-oak.json').read_text(encoding='utf-8'))
+          r03 = json.loads(Path('/tmp/r03-oak.json').read_text(encoding='utf-8'))
+          manifest = json.loads(
+              Path('data/omega_histosci_hg/r02/materialization_manifest.json')
+              .read_text(encoding='utf-8')
+          )
+
+          assert r02['status'] == 'CERTIFIED_SOFTWARE_HISTORIOGRAPHIC_FRONTIER_R0_2'
+          assert r03['status'] == 'CERTIFIED_SOFTWARE_HISTORIOGRAPHIC_STREAMING_FRONTIER_R0_3'
+          assert manifest['counts']['branch_cells'] == 8192
+          assert manifest['counts']['research_cells'] == 65536
+          assert manifest['logical_frontiers']['expanded_cells'] == 274877906944
+          assert r03['counts']['streamed_records'] == 100000
+          assert r03['counts']['canonical_frontier'] == 524288
+          assert r03['counts']['extended_frontier'] == 274877906944
+          assert r03['counts']['mminus_modes'] == 32
+
+          for report in (r02, r03):
+              assert report['historical_truth_certified'] is False
+              assert report['global_exhaustiveness_claimed'] is False
+              assert report['permanent_total_cap'] is None
+          assert r03['decolonial_completeness_claimed'] is False
+
+          for path in sorted(Path('schemas').glob('omega_histosci_*_v[23].schema.json')):
+              jsonschema.Draft202012Validator.check_schema(
+                  json.loads(path.read_text(encoding='utf-8'))
+              )
+          print('materialized cells:', 8192 + 65536)
+          print(r02['status'])
+          print(r03['status'])
+          PY
+
+      - name: Enforce bounded Git scope
+        run: |
+          python - <<'PY'
+          import subprocess
+
+          allowed = (
+              '.github/workflows/omega-histoscience-',
+              'artifacts/omega-histoscience-',
+              'data/omega_histosci_hg/',
+              'docs/omega-histoscience-hg-t/',
+              'examples/omega_histosci_',
+              'omega_histosci_hg_t/',
+              'schemas/omega_histosci_',
+              'tests/test_omega_histosci_',
+              'tools/install_omega_histosci_',
+              'tools/materialize_omega_histosci_',
+              'tools/omega_histosci_',
+              'pyproject.toml',
+          )
+          output = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)
+          paths = []
+          for line in output.splitlines():
+              path = line[3:].split(' -> ', 1)[-1]
+              paths.append(path)
+          unexpected = [path for path in paths if not path.startswith(allowed)]
+          if unexpected:
+              raise SystemExit(f'unexpected paths: {unexpected}')
+          print('bounded paths:', len(paths))
+          PY
+
+      - name: Remove one-shot reactor and stage exact outputs
+        run: |
+          rm .github/workflows/omega-histoscience-r03-max-materialize.yml
+          git add -- \
+            .github/workflows/omega-histoscience-r03-max-materialize.yml \
+            .github/workflows/omega-histoscience-r02.yml \
+            .github/workflows/omega-histoscience-r03.yml \
+            artifacts/omega-histoscience-r02-r03-max-materialized.tar.gz \
+            artifacts/omega-histoscience-r02-r03-max-materialized.receipt.json \
+            data/omega_histosci_hg/r02 \
+            data/omega_histosci_hg/r03 \
+            docs/omega-histoscience-hg-t/R_INFINITY.md \
+            docs/omega-histoscience-hg-t/R02_IMPLEMENTATION.md \
+            docs/omega-histoscience-hg-t/R03_MAX.md \
+            docs/omega-histoscience-hg-t/LOCAL_VALIDATION_R02_R03_MAX.md \
+            examples/omega_histosci_r02_demo.py \
+            examples/omega_histosci_r03_demo.py \
+            omega_histosci_hg_t/r02 \
+            omega_histosci_hg_t/r03 \
+            schemas/omega_histosci_claim_v2.schema.json \
+            schemas/omega_histosci_mminus_v2.schema.json \
+            schemas/omega_histosci_research_cell_v2.schema.json \
+            schemas/omega_histosci_oak_report_v2.schema.json \
+            schemas/omega_histosci_materialization_manifest_v2.schema.json \
+            schemas/omega_histosci_claim_v3.schema.json \
+            schemas/omega_histosci_frontier_v3.schema.json \
+            schemas/omega_histosci_oak_report_v3.schema.json \
+            schemas/omega_histosci_checkpoint_v3.schema.json \
+            schemas/omega_histosci_community_rights_v3.schema.json \
+            tests/test_omega_histosci_r02.py \
+            tests/test_omega_histosci_r03.py \
+            tools/install_omega_histosci_max_artifact.py \
+            tools/materialize_omega_histosci_r02.py \
+            tools/materialize_omega_histosci_r03.py \
+            tools/omega_histosci_r02_payload \
+            tools/omega_histosci_r03_payload \
+            pyproject.toml
+          git diff --cached --check
+          git diff --cached --stat
+
+      - name: Commit and push materialized MAX tree
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "feat(histoscience): materialize R0.2-R0.3 MAX frontiers"
+          git push origin "HEAD:${TARGET_BRANCH}"
