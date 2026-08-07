@@ -88,7 +88,7 @@ jobs:
           PY
 
   native-x86-64:
-    name: Native x86-64 differential court
+    name: Native x86-64 differential and P4 court
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -105,5 +105,40 @@ jobs:
             examples/native/omega_dot_u64_x86_64.S \
             -o /tmp/omega-asm-native
           /tmp/omega-asm-native
+      - name: Run observational timing harness
+        run: |
+          cc -std=c11 -O3 -Wall -Wextra -Werror \
+            examples/native/omega_dot_u64_benchmark.c \
+            examples/native/omega_dot_u64_x86_64.S \
+            -o /tmp/omega-asm-benchmark
+          /tmp/omega-asm-benchmark > /tmp/omega-asm-native-benchmark.json
+          python3 -m omega_asm_t benchmark-report \
+            /tmp/omega-asm-native-benchmark.json \
+            --output /tmp/omega-asm-p4-report.json
+      - name: Validate P4 evidence structure without performance threshold
+        run: |
+          python3 - <<'PY'
+          import json, math
+          from pathlib import Path
+          raw=json.loads(Path('/tmp/omega-asm-native-benchmark.json').read_text())
+          report=json.loads(Path('/tmp/omega-asm-p4-report.json').read_text())
+          assert raw['evidence_level']=='P4-observational'
+          assert raw['claim_scope']=='single_execution_context_only'
+          assert raw['rounds']==31
+          assert raw['inner_iterations']==127
+          assert report['evidence_level']=='P4-observational'
+          assert report['machine']['architecture']=='x86_64'
+          stats=report['statistics_ns_per_call']
+          assert set(stats)=={'reference_c','x86_64_indexed','x86_64_ptr'}
+          for item in stats.values():
+              assert item['count']==31
+              assert math.isfinite(item['median']) and item['median']>0
+              assert math.isfinite(item['mad']) and item['mad']>=0
+          ratios=report['median_ratio_to_reference_c']
+          assert ratios['reference_c']==1.0
+          assert all(value is None or (math.isfinite(value) and value>0) for value in ratios.values())
+          PY
+      - name: Print P4 observational report
+        run: cat /tmp/omega-asm-p4-report.json
       - name: Record compiler identity
         run: cc --version | head -n 1
