@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+"""Repository-local Ω-ASM-T launcher.
+
+Kept outside the monorepo's root pyproject entry-point table so an ASM-only
+pull request does not invalidate every subsystem workflow that watches the
+shared packaging manifest.
+"""
+
+from omega_asm_t.cli import main
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
