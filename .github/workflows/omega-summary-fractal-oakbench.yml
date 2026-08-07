@@ -22,9 +22,11 @@ jobs:
       matrix:
         python-version: ['3.10','3.11','3.12','3.13']
     steps:
-      - name: Checkout exact head
+      - name: Checkout exact head with chronology
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with: {persist-credentials: false}
+        with:
+          persist-credentials: false
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with: {python-version: '${{ matrix.python-version }}'}
@@ -41,7 +43,7 @@ jobs:
           python -m omega_summary_fractal_t all-depths . --audience oak --output-dir /tmp/summary-a --max-files 12000
           python -m omega_summary_fractal_t all-depths . --audience oak --output-dir /tmp/summary-b --max-files 12000
           diff -ru /tmp/summary-a /tmp/summary-b
-      - name: Validate D9 JSON schema and OAK boundary
+      - name: Validate chronology relation graph JSON schema and OAK boundary
         run: |
           python - <<'PY'
           import json
@@ -51,7 +53,15 @@ jobs:
           payload=json.loads(Path('/tmp/summary-a/summary_d9_oak.json').read_text())
           Draft202012Validator(schema).validate(payload)
           assert payload['depth']==9 and payload['audience']=='oak' and payload['cache_fingerprint'] and 'oak' in payload['health']
-          summary=Path('/tmp/summary-a/SUMMARY.md').read_text();assert 'Limite épistémique' in summary and 'validation scientifique' in summary
+          systems=[n for n in payload['nodes'] if n['kind']=='system']
+          assert systems and all('chronology_rank' in n['metrics'] for n in systems)
+          relations={e['relation'] for e in payload['edges']}
+          assert {'TESTS','VALIDATES'} & relations
+          summary=Path('/tmp/summary-a/SUMMARY.md').read_text()
+          assert 'Chronologie structurelle' in summary
+          assert 'Relations de preuve et dépendance' in summary
+          assert 'Limite épistémique' in summary and 'validation scientifique' in summary
+          assert 'objets générés' in summary
           PY
       - name: Exercise cross-repository compiler
         env: {SOURCE_DATE_EPOCH: '1786111200'}
