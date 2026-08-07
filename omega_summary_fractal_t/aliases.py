@@ -143,12 +143,17 @@ def identity_proposals(identity_report: str | Path | Mapping[str, Any]) -> dict[
     for item in payload.get("candidates", []):
         if item.get("status") != "review_required":
             continue
+        source = item.get("from")
+        target = item.get("to")
+        if not source or not target:
+            continue
         proposals.append(
             {
-                "source": item.get("previous"),
-                "target": item.get("current"),
-                "similarity": item.get("similarity"),
-                "matching": item.get("matching"),
+                "source": source,
+                "target": target,
+                "score": item.get("score"),
+                "evidence": item.get("evidence"),
+                "one_to_one": bool(item.get("one_to_one")),
                 "status": "proposal_only",
                 "automatic_approval": False,
             }
