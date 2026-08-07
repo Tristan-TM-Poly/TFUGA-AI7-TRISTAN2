@@ -16,6 +16,10 @@ on:
         type: string
         required: false
         default: ''
+    secrets:
+      fleet_salt:
+        description: Optional private HMAC salt for pseudonymized Fleet output
+        required: false
   workflow_dispatch:
     inputs:
       depth:
@@ -93,7 +97,19 @@ jobs:
             --audience "${{ inputs.audience || github.event.inputs.audience || 'oak' }}" \
             --output-dir reports/omega-summary \
             --max-files "${{ inputs.max_files || github.event.inputs.max_files || 20000 }}"
-      - name: Validate R0.4 zero-touch outputs
+      - name: Emit opt-in pseudonymized Fleet view
+        if: ${{ secrets.fleet_salt != '' }}
+        env:
+          PYTHONPATH: ${{ github.workspace }}/.omega-summary-engine
+          OMEGA_FLEET_SALT: ${{ secrets.fleet_salt }}
+          AUDIENCE: ${{ inputs.audience || github.event.inputs.audience || 'oak' }}
+        run: |
+          python -m omega_summary_fractal_t fleet "reports/omega-summary/summary_d9_${AUDIENCE}.json" \
+            --output-dir reports/omega-summary/fleet
+          test -s reports/omega-summary/fleet/FLEET_PUBLIC.json
+          test -s reports/omega-summary/fleet/FLEET_HISTORY.json
+          test -s reports/omega-summary/fleet/FLEET_DASHBOARD.html
+      - name: Validate R0.5 zero-touch outputs
         run: |
           test -s reports/omega-summary/SUMMARY.md
           test -s reports/omega-summary/SUMMARY_HISTORY.json
@@ -107,6 +123,10 @@ jobs:
           cat reports/omega-summary/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
           printf '\n---\n\n' >> "$GITHUB_STEP_SUMMARY"
           cat reports/omega-summary/dashboard/CORPUS_DASHBOARD.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -s reports/omega-summary/fleet/FLEET_PUBLIC.md ]; then
+            printf '\n---\n\n' >> "$GITHUB_STEP_SUMMARY"
+            cat reports/omega-summary/fleet/FLEET_PUBLIC.md >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Upload summary artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
