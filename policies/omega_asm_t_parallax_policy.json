@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "module": "omega-asm-t-compiler-parallax",
+  "authority": "review_only",
+  "human_review_required": true,
+  "automatic_merge_allowed": false,
+  "automatic_publication_allowed": false,
+  "package_executes_compilers": false,
+  "package_executes_arbitrary_commands": false,
+  "reference_court_requires_separate_translation_units": true,
+  "reference_court_allows_lto": false,
+  "native_differential_correctness_required_before_timing": true,
+  "benchmark_protocol_minimum": 2,
+  "performance_thresholds_gate_ci": false,
+  "artifact_hashes_required": ["source_sha256", "object_sha256", "disassembly_sha256"],
+  "universal_language_claim_allowed": false,
+  "compiler_parallax_grants_authority": false,
+  "forbidden_claims": [
+    "one build proves one language globally superior",
+    "different source/object/disassembly hashes imply different semantics",
+    "same semantic tests constitute formal equivalence",
+    "compiler output diversity alone is an optimization win",
+    "benchmark score grants merge or publication authority"
+  ]
+}

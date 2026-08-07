@@ -35,6 +35,7 @@ from .microarch import (
     toolchain_manifest,
 )
 from .oak import oak_report
+from .parallax import ParallaxArtifact, artifact_from_descriptor, build_parallax_report
 from .replication import (
     ReplicationGroup,
     aggregate_p5_reports,
@@ -49,15 +50,18 @@ __all__ = [
     "CacheDescriptor",
     "DEFAULT_PERF_EVENTS",
     "HARDWARE_PERF_EVENTS",
+    "ParallaxArtifact",
     "PerfCounter",
     "PerfParseResult",
     "ReplicationGroup",
     "StaticCostProfile",
     "aggregate_p5_reports",
     "analyze",
+    "artifact_from_descriptor",
     "build_equivalence_obligation",
     "build_p5_report",
     "build_p7_certificate",
+    "build_parallax_report",
     "cache_descriptors",
     "canonical_machine_identity",
     "cvcd_signature",
@@ -93,4 +97,4 @@ __all__ = [
     "validate_program",
 ]
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"

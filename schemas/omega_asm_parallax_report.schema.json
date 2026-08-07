@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_asm_parallax_report.schema.json",
+  "title": "Omega ASM-T compiler parallax artifact ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","evidence_level","semantic_contract","claim_scope","authority","warning","build_context","implementation_count","languages","artifacts","comparison_contract"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_level": {"const": "compiler-parallax-artifact-ledger"},
+    "semantic_contract": {"type": "string", "minLength": 1},
+    "claim_scope": {"const": "one_build_context_only"},
+    "authority": {"const": "review_only"},
+    "warning": {"type": "string", "minLength": 1},
+    "build_context": {"type": "object"},
+    "implementation_count": {"type": "integer", "minimum": 2},
+    "languages": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "artifacts": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["implementation_id","language","symbol","source_path","source_sha256","object_path","object_sha256","object_size_bytes","disassembly_path","disassembly_sha256","toolchain","flags"],
+        "properties": {
+          "implementation_id": {"type": "string", "minLength": 1},
+          "language": {"type": "string", "minLength": 1},
+          "symbol": {"type": "string", "minLength": 1},
+          "source_path": {"type": "string", "minLength": 1},
+          "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "object_path": {"type": "string", "minLength": 1},
+          "object_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "object_size_bytes": {"type": "integer", "minimum": 1},
+          "disassembly_path": {"type": "string", "minLength": 1},
+          "disassembly_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "toolchain": {"type": "string", "minLength": 1},
+          "flags": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "comparison_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["separate_translation_units_required","lto_forbidden_in_reference_court","native_differential_correctness_required","performance_threshold_required","source_object_disassembly_hashes_required","universal_language_claim_allowed","automatic_authority_promotion"],
+      "properties": {
+        "separate_translation_units_required": {"const": true},
+        "lto_forbidden_in_reference_court": {"const": true},
+        "native_differential_correctness_required": {"const": true},
+        "performance_threshold_required": {"const": false},
+        "source_object_disassembly_hashes_required": {"const": true},
+        "universal_language_claim_allowed": {"const": false},
+        "automatic_authority_promotion": {"const": false}
+      }
+    }
+  }
+}
