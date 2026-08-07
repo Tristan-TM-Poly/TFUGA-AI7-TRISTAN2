@@ -7,11 +7,17 @@ from typing import Any
 
 from omega_millennium_t.r03.atlas import stable_digest
 
-from .source_adapters import _file_receipt, _read_jsonl
+from .source_adapters import SNAPSHOT_SCHEMA, _file_receipt, _read_jsonl
 
 
 def _snapshot_digest(row: dict[str, Any]) -> str:
     payload = {key: value for key, value in row.items() if key != "snapshot_digest"}
+    # SourceSnapshot is serialized with dataclasses.asdict(), so the persisted
+    # JSONL row does not carry the source-file schema field used by
+    # load_source_snapshot() when the original digest is created. Reinject the
+    # canonical schema before replaying the digest; otherwise every intact
+    # snapshot is falsely reported as tampered.
+    payload.setdefault("schema", SNAPSHOT_SCHEMA)
     return stable_digest(payload)
 
 
