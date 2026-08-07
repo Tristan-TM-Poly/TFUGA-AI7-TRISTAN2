@@ -12,11 +12,17 @@ on:
       - "omega_ai_tristan_lab/**"
       - ".github/workflows/omega_ai_tristan_lab.yml"
 
+permissions:
+  contents: read
+
 jobs:
   test-build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -35,6 +41,26 @@ jobs:
           omega-tristan-runtime capabilities --json
           omega-tristan-runtime run-capability tristan.idea.analyze \
             --payload-json '{"idea":"Runtime Tristan testable avec TIR, provenance et OAK"}'
+      - name: Validate pinned integration lock
+        working-directory: omega_ai_tristan_lab
+        run: |
+          omega-tristan-runtime integration-lock > /tmp/integration-lock.json
+          python - <<'PY'
+          import json
+          payload = json.load(open('/tmp/integration-lock.json', encoding='utf-8'))
+          lock = payload['lock']
+          assert lock['runtime']['version'] == '0.7.0'
+          assert len(lock['peer_pins']) == 2
+          assert all(len(peer['commit']) == 40 for peer in lock['peer_pins'])
+          assert len(payload['install_targets']) == 1
+          assert 'PEFA-FractalEnergySystem' not in payload['install_targets'][0]
+          assert lock['profiles'][0]['capabilities'] == [
+              'pefa-omega-em2.cvcd-extract',
+              'tristan-omni-core.evidence-to-idea',
+              'tristan.idea.analyze',
+          ]
+          print('TRISTAN_INTEGRATION_LOCK_PASS')
+          PY
       - name: Smoke test workspace
         working-directory: omega_ai_tristan_lab
         run: |
@@ -54,11 +80,13 @@ jobs:
           python -m venv /tmp/tristan-wheel-test
           /tmp/tristan-wheel-test/bin/python -m pip install dist/*.whl
           /tmp/tristan-wheel-test/bin/omega-tristan-runtime capabilities --json
+          /tmp/tristan-wheel-test/bin/omega-tristan-runtime integration-lock
       - name: Upload reproducible package artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: omega-ai-tristan-lab-v0.6
+          name: omega-ai-tristan-lab-v0.7
           path: |
             omega_ai_tristan_lab/dist/*.whl
             omega_ai_tristan_lab/dist/*.tar.gz
           if-no-files-found: error
+          retention-days: 30

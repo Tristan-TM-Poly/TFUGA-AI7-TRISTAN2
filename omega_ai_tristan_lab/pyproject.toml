@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omega-ai-tristan-lab"
-version = "0.6.0"
-description = "OAK-safe agentic AI laboratory, capability graph, TIR and multi-repository execution fabric for Tristan."
+version = "0.7.0"
+description = "OAK-safe agentic AI laboratory, capability graph, TIR and pinned multi-repository execution fabric for Tristan."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Proprietary research scaffold / choose license before public reuse" }

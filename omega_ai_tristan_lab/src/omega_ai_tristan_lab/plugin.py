@@ -10,7 +10,7 @@ from .capabilities import CapabilitySpec
 
 class OmegaAITristanLabPlugin:
     name = "omega-ai-tristan-lab"
-    version = "0.6.0"
+    version = "0.7.0"
 
     def capabilities(self) -> Sequence[str]:
         return ("idea-report", "analyze")

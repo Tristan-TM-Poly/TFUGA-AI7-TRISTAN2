@@ -1,0 +1,42 @@
+{
+  "schema_version": "tristan-integration-lock-0.1",
+  "runtime": {
+    "distribution": "omega-ai-tristan-lab",
+    "version": "0.7.0",
+    "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+    "capabilities": ["tristan.idea.analyze"]
+  },
+  "peer_pins": [
+    {
+      "key": "pefa",
+      "full_name": "Tristan-TM-Poly/PEFA-FractalEnergySystem",
+      "visibility": "private",
+      "distribution": "pefa-fractal-energy-system",
+      "commit": "32b82d5d9818bfdd514eabf9e6ffefc520cc9260",
+      "branch_provenance": "feat/tristan-runtime-adapter-r01",
+      "capabilities": ["pefa-omega-em2.cvcd-extract", "pefa-omega-em2.cvcd-expand"]
+    },
+    {
+      "key": "omni-core",
+      "full_name": "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2",
+      "visibility": "public",
+      "distribution": "tristan-omni-core",
+      "commit": "29e77ad2e1214eb536043b31670071f5079285a5",
+      "branch_provenance": "feat/tristan-runtime-adapter-r01",
+      "capabilities": ["tristan-omni-core.evidence-to-idea", "tristan-omni-core.valuation-assess"]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "pefa-cvcd-omni-oak-r01",
+      "capabilities": [
+        "pefa-omega-em2.cvcd-extract",
+        "tristan-omni-core.evidence-to-idea",
+        "tristan.idea.analyze"
+      ],
+      "description": "PEFA CVCD extraction -> Omni evidence bridge -> TristanLab OAK analysis.",
+      "status": "CANDIDATE_PENDING_EXACT_HEAD_CI"
+    }
+  ],
+  "oak_rule": "Pinned integration proves reproducible software composition only after exact-head CI; it does not establish scientific truth, independent reproduction, product value, or merge readiness."
+}

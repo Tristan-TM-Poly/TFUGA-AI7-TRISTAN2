@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from .adapter_forge import AdapterForge
+from .integration import DEFAULT_R07_LOCK
 from .plugin import plugin as builtin_plugin
 from .repo_registry import RepoRegistry
 from .runtime import PipelineStep, TristanRuntime
@@ -38,6 +39,8 @@ def build_parser() -> argparse.ArgumentParser:
     repos.add_argument("--json", action="store_true")
     doctor = sub.add_parser("doctor", help="Check repository distributions and packaging maturity.")
     doctor.add_argument("--json", action="store_true")
+    lock = sub.add_parser("integration-lock", help="Inspect the pinned v0.7 cross-repository integration contract.")
+    lock.add_argument("--include-private-targets", action="store_true")
     plugins = sub.add_parser("plugins", help="List executable plugins discovered in this interpreter.")
     plugins.add_argument("--json", action="store_true")
     capabilities = sub.add_parser("capabilities", help="Print the capability graph.")
@@ -70,7 +73,7 @@ def main(argv: list[str] | None = None) -> int:
             print(_json(rows))
         else:
             for row in rows:
-                print(f"{row['key']:<12} {row['packaging_status']:<16} {row['full_name']}")
+                print(f"{row['key']:<12} {row['packaging_status']:<18} {row['full_name']}")
         return 0
     if args.command == "doctor":
         rows = [health.to_dict() for health in RepoRegistry().doctor()]
@@ -81,6 +84,20 @@ def main(argv: list[str] | None = None) -> int:
                 version = row["installed_version"] or "-"
                 print(f"{row['key']:<12} {row['status']:<16} {version:<10} {row['message']}")
             print(_json(RepoRegistry().doctor_summary()))
+        return 0
+    if args.command == "integration-lock":
+        print(
+            _json(
+                {
+                    "lock": DEFAULT_R07_LOCK.to_dict(),
+                    "install_targets": list(
+                        DEFAULT_R07_LOCK.install_targets(
+                            include_private=args.include_private_targets
+                        )
+                    ),
+                }
+            )
+        )
         return 0
     if args.command == "adapter-plan":
         print(_json(AdapterForge().plan(Path(args.path), plugin_name=args.plugin_name).to_dict()))
