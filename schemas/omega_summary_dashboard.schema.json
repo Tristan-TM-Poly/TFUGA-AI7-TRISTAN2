@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega_summary_dashboard.schema.json",
+  "title": "Omega Summary Corpus Dashboard",
+  "type": "object",
+  "required": ["schema_version", "systems", "repositories", "status_counts", "attention", "top_crystallized", "top_structural_debt", "boundary"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "systems": {"type": "integer", "minimum": 0},
+    "repositories": {"type": "integer", "minimum": 0},
+    "status_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "repository_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "relation_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "mean_structural_crystallization": {"type": "number", "minimum": 0, "maximum": 1},
+    "mean_structural_proof_debt": {"type": "number", "minimum": 0},
+    "attention": {
+      "type": "object",
+      "required": ["implemented_without_tests", "implemented_without_linked_ci", "implemented_without_machine_contract"],
+      "properties": {
+        "implemented_without_tests": {"type": "integer", "minimum": 0},
+        "implemented_without_linked_ci": {"type": "integer", "minimum": 0},
+        "implemented_without_machine_contract": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "top_crystallized": {"type": "array"},
+    "top_structural_debt": {"type": "array"},
+    "longitudinal": {"type": ["object", "null"]},
+    "boundary": {"type": "string"}
+  },
+  "additionalProperties": true
+}

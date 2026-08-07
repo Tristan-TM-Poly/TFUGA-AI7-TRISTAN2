@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_summary_bundle.schema.json",
+  "title": "Omega Summary Fractal Bundle",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "root", "depth", "audience", "nodes", "edges", "health", "gaps", "duplicate_candidates", "cache_fingerprint"],
+  "properties": {
+    "schema_version": {"type": "string"}, "generated_at": {"type": "string"}, "root": {"type": "string"},
+    "depth": {"type": "integer", "minimum": 0, "maximum": 9}, "audience": {"type": "string"}, "focus": {"type": ["string", "null"]},
+    "nodes": {"type": "array", "items": {"type": "object", "required": ["id", "kind", "path", "title", "one_line", "status", "tags", "metrics", "evidence", "children"]}},
+    "edges": {"type": "array", "items": {"type": "object", "required": ["source", "target", "relation"]}},
+    "health": {"type": "object"}, "gaps": {"type": "array"}, "duplicate_candidates": {"type": "array"}, "cache_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }, "additionalProperties": false
+}

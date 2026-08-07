@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_summary_index.schema.json",
+  "title": "Omega Summary Persistent Index",
+  "type": "object",
+  "required": ["schema_version", "runs", "boundary"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "boundary": {"type": "string"},
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ordinal", "previous_hash", "entry_hash", "snapshot"],
+        "properties": {
+          "ordinal": {"type": "integer", "minimum": 1},
+          "previous_hash": {"type": "string", "pattern": "^$|^[0-9a-f]{64}$"},
+          "entry_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "snapshot": {
+            "type": "object",
+            "required": ["source_kind", "root", "generated_at", "fingerprint", "entities", "relations", "boundary"],
+            "properties": {
+              "source_kind": {"enum": ["repository", "corpus"]},
+              "root": {"type": "string"},
+              "generated_at": {"type": "string"},
+              "fingerprint": {"type": "string"},
+              "entities": {"type": "object"},
+              "relations": {"type": "array"},
+              "boundary": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

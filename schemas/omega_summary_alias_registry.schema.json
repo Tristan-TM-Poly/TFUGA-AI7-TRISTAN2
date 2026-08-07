@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega_summary_alias_registry.schema.json",
+  "title": "Omega Summary Approved Alias Registry",
+  "type": "object",
+  "required": ["schema_version", "entries", "boundary"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ordinal", "previous_hash", "entry_hash", "source", "target", "evidence_ref", "approved_by", "approved_at", "note", "status"],
+        "properties": {
+          "ordinal": {"type": "integer", "minimum": 1},
+          "previous_hash": {"type": "string", "pattern": "^$|^[0-9a-f]{64}$"},
+          "entry_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "source": {"type": "string", "minLength": 1},
+          "target": {"type": "string", "minLength": 1},
+          "evidence_ref": {"type": "string", "minLength": 1},
+          "approved_by": {"type": "string", "minLength": 1},
+          "approved_at": {"type": "string", "minLength": 1},
+          "note": {"type": "string"},
+          "status": {"const": "approved"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "boundary": {"type": "string"}
+  },
+  "additionalProperties": false
+}

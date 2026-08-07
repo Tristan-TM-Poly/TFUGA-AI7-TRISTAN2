@@ -1,0 +1,221 @@
+name: Omega Summary Fractal OAKBench
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/omega-summary-fractal-t-max]
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_*.md','docs/architecture/OMEGA_SUMMARY_*.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
+  pull_request:
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_*.md','docs/architecture/OMEGA_SUMMARY_*.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
+permissions:
+  contents: read
+concurrency:
+  group: omega-summary-fractal-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  oakbench:
+    name: D0-D9 deterministic court / Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10','3.11','3.12','3.13']
+    steps:
+      - name: Checkout exact head with chronology
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with: {python-version: '${{ matrix.python-version }}'}
+      - name: Install focused validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Validate summary schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          schemas=sorted(Path('schemas').glob('omega_summary_*.schema.json'))
+          assert schemas
+          for path in schemas:
+              Draft202012Validator.check_schema(json.loads(path.read_text()))
+          print('validated',len(schemas),'summary schemas')
+          PY
+      - name: Compile implementation
+        run: python -m compileall -q omega_summary_fractal_t examples/omega_summary_fractal_demo.py
+      - name: Run focused tests R0.1-R0.5
+        run: python -m pytest -q tests/test_omega_summary_fractal_t.py tests/test_omega_summary_corpus.py tests/test_omega_summary_lineage.py tests/test_omega_summary_delta.py tests/test_omega_summary_index_export.py tests/test_omega_summary_relations.py tests/test_omega_summary_r04.py tests/test_omega_summary_r05.py
+      - name: Generate all depths twice
+        env: {SOURCE_DATE_EPOCH: '1786111200'}
+        run: |
+          rm -rf /tmp/summary-a /tmp/summary-b
+          python -m omega_summary_fractal_t all-depths . --audience oak --output-dir /tmp/summary-a --max-files 12000
+          python -m omega_summary_fractal_t all-depths . --audience oak --output-dir /tmp/summary-b --max-files 12000
+          diff -ru /tmp/summary-a /tmp/summary-b
+      - name: Validate D9 chronology graph and dashboard
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          payload=json.loads(Path('/tmp/summary-a/summary_d9_oak.json').read_text())
+          schema=json.loads(Path('schemas/omega_summary_bundle.schema.json').read_text())
+          Draft202012Validator(schema).validate(payload)
+          assert payload['depth']==9 and payload['audience']=='oak' and payload['cache_fingerprint']
+          systems=[n for n in payload['nodes'] if n['kind']=='system']
+          assert systems and all('chronology_rank' in n['metrics'] for n in systems)
+          relations={e['relation'] for e in payload['edges']}
+          assert {'TESTS','VALIDATES'} & relations
+          for artifact in ['EVOLUTION.md','PROOF_DEBT.md','CONVERGENCE_CANDIDATES.md','SYSTEM_LINEAGE.json','SUMMARY_HISTORY.json']:
+              assert Path('/tmp/summary-a',artifact).is_file(),artifact
+          dashboard=Path('/tmp/summary-a/dashboard/CORPUS_DASHBOARD.json')
+          assert dashboard.is_file()
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_dashboard.schema.json').read_text())).validate(json.loads(dashboard.read_text()))
+          assert Path('/tmp/summary-a/graph/SUMMARY_GRAPH.graphml').is_file()
+          assert Path('/tmp/summary-a/longitudinal/LONGITUDINAL_CRYSTALLIZATION.json').is_file()
+          PY
+      - name: Exercise DeltaSummary compiler
+        run: |
+          python -m omega_summary_fractal_t delta /tmp/summary-a/summary_d8_oak.json /tmp/summary-a/summary_d9_oak.json --output-dir /tmp/summary-delta
+          test -s /tmp/summary-delta/DELTA_SUMMARY.json
+          test -s /tmp/summary-delta/DELTA_SUMMARY.md
+      - name: Exercise identity continuity and explicit alias governance
+        env: {SOURCE_DATE_EPOCH: '1786111200'}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          before=json.loads(Path('/tmp/summary-a/summary_d9_oak.json').read_text())
+          after=json.loads(Path('/tmp/summary-a/summary_d9_oak.json').read_text())
+          system=next(n for n in after['nodes'] if n.get('kind')=='system' and n.get('evidence'))
+          old=system['path']
+          system['path']=old+'-renamed'
+          system['id']=system['id']+'-renamed'
+          Path('/tmp/identity-before.json').write_text(json.dumps(before))
+          Path('/tmp/identity-after.json').write_text(json.dumps(after))
+          PY
+          python -m omega_summary_fractal_t identity /tmp/identity-before.json /tmp/identity-after.json --output-dir /tmp/identity-out
+          python -m omega_summary_fractal_t alias-proposals /tmp/identity-out/IDENTITY_CONTINUITY.json --output /tmp/identity-out/ALIAS_PROPOSALS.json
+          source=$(python -c "import json; p=json.load(open('/tmp/identity-out/ALIAS_PROPOSALS.json')); print(p['proposals'][0]['source'])")
+          target=$(python -c "import json; p=json.load(open('/tmp/identity-out/ALIAS_PROPOSALS.json')); print(p['proposals'][0]['target'])")
+          python -m omega_summary_fractal_t alias-approve "$source" "$target" --registry /tmp/identity-out/ALIAS_REGISTRY.json --evidence-ref IDENTITY_CONTINUITY.json#candidate-1 --approved-by ci-reviewer
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_summary_fractal_t.aliases import verify_alias_registry
+          identity=json.loads(Path('/tmp/identity-out/IDENTITY_CONTINUITY.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_identity.schema.json').read_text())).validate(identity)
+          assert identity['candidates'] and identity['candidates'][0]['automatic_rewrite'] is False
+          proposals=json.loads(Path('/tmp/identity-out/ALIAS_PROPOSALS.json').read_text())
+          assert proposals['proposals'] and proposals['proposals'][0]['automatic_approval'] is False
+          registry=json.loads(Path('/tmp/identity-out/ALIAS_REGISTRY.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_alias_registry.schema.json').read_text())).validate(registry)
+          assert verify_alias_registry(registry)
+          PY
+      - name: Exercise query and composable query-plan engines
+        run: |
+          python -m omega_summary_fractal_t query /tmp/summary-a/summary_d9_oak.json --kind system --min-crystallization 0 --limit 25 --output-dir /tmp/query-out
+          cat >/tmp/query-plan.json <<'JSON'
+          {"seed":{"kind":"system"},"where":[{"field":"structural_crystallization","op":"gte","value":0}],"group_by":["status"],"aggregates":[{"name":"count","op":"count"},{"name":"mean_c","op":"mean","field":"structural_crystallization"}],"sort":[{"field":"count","direction":"desc"}],"limit":25}
+          JSON
+          python -m omega_summary_fractal_t query-plan /tmp/summary-a/summary_d9_oak.json /tmp/query-plan.json --output-dir /tmp/query-plan-out
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          payload=json.loads(Path('/tmp/query-out/QUERY_RESULTS.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_query.schema.json').read_text())).validate(payload)
+          assert payload['returned'] > 0
+          plan=json.loads(Path('/tmp/query-plan.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_query_plan.schema.json').read_text())).validate(plan)
+          result=json.loads(Path('/tmp/query-plan-out/QUERY_PLAN_RESULTS.json').read_text())
+          assert result['total_matches'] > 0 and result['groups']
+          PY
+      - name: Exercise persistent longitudinal index
+        run: |
+          rm -rf /tmp/summary-history
+          python -m omega_summary_fractal_t index /tmp/summary-a/summary_d8_oak.json --index-file /tmp/summary-history/corpus-index.json --report-dir /tmp/summary-history/reports
+          python -m omega_summary_fractal_t index /tmp/summary-a/summary_d9_oak.json --index-file /tmp/summary-history/corpus-index.json --report-dir /tmp/summary-history/reports
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_summary_fractal_t.index import verify_index
+          payload=json.loads(Path('/tmp/summary-history/corpus-index.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_index.schema.json').read_text())).validate(payload)
+          assert len(payload['runs'])==2 and verify_index(payload)
+          report=json.loads(Path('/tmp/summary-history/reports/LONGITUDINAL_CRYSTALLIZATION.json').read_text())
+          assert report['valid_hash_chain'] is True and 'not scientific progress' in report['boundary']
+          PY
+      - name: Exercise graph exports
+        run: |
+          python -m omega_summary_fractal_t export /tmp/summary-a/summary_d9_oak.json --output-dir /tmp/summary-graph
+          test -s /tmp/summary-graph/SUMMARY_GRAPH.jsonl
+          test -s /tmp/summary-graph/SUMMARY_GRAPH.graphml
+          test -s /tmp/summary-graph/SUMMARY_GRAPH_EXPORT.json
+          grep -q '<graphml' /tmp/summary-graph/SUMMARY_GRAPH.graphml
+      - name: Exercise cross-repository compiler and privacy-safe fleet history
+        env:
+          SOURCE_DATE_EPOCH: '1786111200'
+          OMEGA_FLEET_SALT: 'ci-fixture-salt-not-a-production-secret'
+        run: |
+          mkdir -p /tmp/corpus/demo-a/omega_alpha_t /tmp/corpus/demo-b/omega_beta_t
+          printf '# A\n' >/tmp/corpus/demo-a/README.md
+          printf '# Alpha\n' >/tmp/corpus/demo-a/omega_alpha_t/README.md
+          printf 'def alpha(): return 1\n' >/tmp/corpus/demo-a/omega_alpha_t/core.py
+          printf '# B\n' >/tmp/corpus/demo-b/README.md
+          printf '# Beta\n' >/tmp/corpus/demo-b/omega_beta_t/README.md
+          printf 'def beta(): return 2\n' >/tmp/corpus/demo-b/omega_beta_t/core.py
+          python -m omega_summary_fractal_t.corpus_cli --workspace /tmp/corpus --depth 4 --audience oak --output-dir /tmp/corpus-out --require-fleet
+          test -s /tmp/corpus-out/CORPUS_SUMMARY.json
+          test -s /tmp/corpus-out/CORPUS_INDEX.json
+          test -s /tmp/corpus-out/longitudinal/LONGITUDINAL_CRYSTALLIZATION.json
+          test -s /tmp/corpus-out/dashboard/CORPUS_DASHBOARD.json
+          test -s /tmp/corpus-out/fleet/FLEET_PUBLIC.json
+          test -s /tmp/corpus-out/fleet/FLEET_HISTORY.json
+          test -s /tmp/corpus-out/fleet/FLEET_DASHBOARD.html
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_summary_fractal_t.fleet import verify_fleet_history
+          public=json.loads(Path('/tmp/corpus-out/fleet/FLEET_PUBLIC.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_fleet.schema.json').read_text())).validate(public)
+          serialized=json.dumps(public)
+          assert 'demo-a' not in serialized and 'demo-b' not in serialized
+          assert 'omega_alpha_t' not in serialized and 'omega_beta_t' not in serialized
+          assert 'ci-fixture-salt' not in serialized
+          history=json.loads(Path('/tmp/corpus-out/fleet/FLEET_HISTORY.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_fleet_history.schema.json').read_text())).validate(history)
+          assert verify_fleet_history(history) and len(history['runs'])==1
+          PY
+      - name: Audit immutable action refs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          for filename in ['.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']:
+              refs=re.findall(r'uses:\s*([^\s#]+)',Path(filename).read_text())
+              moving=[r for r in refs if not re.search(r'@[0-9a-f]{40}$',r)]
+              assert not moving,(filename,moving)
+          PY
+      - name: Stage summary evidence
+        if: matrix.python-version == '3.13'
+        run: |
+          mkdir -p reports/omega-summary-fractal-ci
+          cp -R /tmp/summary-a/. reports/omega-summary-fractal-ci/
+          cp -R /tmp/summary-delta reports/omega-summary-fractal-ci/delta
+          cp -R /tmp/identity-out reports/omega-summary-fractal-ci/identity
+          cp -R /tmp/query-out reports/omega-summary-fractal-ci/query
+          cp -R /tmp/query-plan-out reports/omega-summary-fractal-ci/query-plan
+          cp -R /tmp/summary-history reports/omega-summary-fractal-ci/history
+          cp -R /tmp/summary-graph reports/omega-summary-fractal-ci/graph-explicit
+          cp -R /tmp/corpus-out reports/omega-summary-fractal-ci/corpus
+      - name: Upload summary evidence
+        if: matrix.python-version == '3.13'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with: {name: 'omega-summary-fractal-${{ github.run_id }}', path: reports/omega-summary-fractal-ci, if-no-files-found: error, retention-days: 30}

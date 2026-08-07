@@ -1,0 +1,136 @@
+name: Omega Summary Fractal Reusable
+
+on:
+  workflow_call:
+    inputs:
+      depth:
+        type: number
+        default: 9
+      audience:
+        type: string
+        default: oak
+      max_files:
+        type: number
+        default: 20000
+      engine_ref:
+        type: string
+        required: false
+        default: ''
+    secrets:
+      fleet_salt:
+        description: Optional private HMAC salt for pseudonymized Fleet output
+        required: false
+  workflow_dispatch:
+    inputs:
+      depth:
+        description: Compatibility input; reusable workflow currently emits the full D0-D9 family
+        required: false
+        default: '9'
+      audience:
+        description: Audience projection
+        required: false
+        default: oak
+      max_files:
+        description: Maximum scanned files
+        required: false
+        default: '20000'
+      engine_ref:
+        description: Optional summary-engine ref; blank uses current ref for self-test and main for satellite callers
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout caller repository with full chronology
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: target
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Resolve summary engine ref
+        id: engine
+        shell: bash
+        env:
+          REQUESTED_REF: ${{ inputs.engine_ref || github.event.inputs.engine_ref || '' }}
+          CALLER_REPOSITORY: ${{ github.repository }}
+          CALLER_REF: ${{ github.ref_name }}
+        run: |
+          if [ -n "$REQUESTED_REF" ]; then
+            ref="$REQUESTED_REF"
+          elif [ "$CALLER_REPOSITORY" = "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2" ]; then
+            ref="$CALLER_REF"
+          else
+            ref="main"
+          fi
+          test -n "$ref"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+      - name: Checkout summary engine
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: Tristan-TM-Poly/TFUGA-AI7-TRISTAN2
+          ref: ${{ steps.engine.outputs.ref }}
+          path: .omega-summary-engine
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Derive deterministic source epoch
+        id: epoch
+        shell: bash
+        run: |
+          epoch=$(git -C target show -s --format=%ct HEAD)
+          test -n "$epoch"
+          echo "value=$epoch" >> "$GITHUB_OUTPUT"
+      - name: Generate D0-D9 summary family
+        env:
+          PYTHONPATH: ${{ github.workspace }}/.omega-summary-engine
+          SOURCE_DATE_EPOCH: ${{ steps.epoch.outputs.value }}
+        run: |
+          python -m omega_summary_fractal_t all-depths target \
+            --audience "${{ inputs.audience || github.event.inputs.audience || 'oak' }}" \
+            --output-dir reports/omega-summary \
+            --max-files "${{ inputs.max_files || github.event.inputs.max_files || 20000 }}"
+      - name: Emit opt-in pseudonymized Fleet view
+        if: ${{ secrets.fleet_salt != '' }}
+        env:
+          PYTHONPATH: ${{ github.workspace }}/.omega-summary-engine
+          OMEGA_FLEET_SALT: ${{ secrets.fleet_salt }}
+          AUDIENCE: ${{ inputs.audience || github.event.inputs.audience || 'oak' }}
+        run: |
+          python -m omega_summary_fractal_t fleet "reports/omega-summary/summary_d9_${AUDIENCE}.json" \
+            --output-dir reports/omega-summary/fleet
+          test -s reports/omega-summary/fleet/FLEET_PUBLIC.json
+          test -s reports/omega-summary/fleet/FLEET_HISTORY.json
+          test -s reports/omega-summary/fleet/FLEET_DASHBOARD.html
+      - name: Validate R0.5 zero-touch outputs
+        run: |
+          test -s reports/omega-summary/SUMMARY.md
+          test -s reports/omega-summary/SUMMARY_HISTORY.json
+          test -s reports/omega-summary/longitudinal/LONGITUDINAL_CRYSTALLIZATION.json
+          test -s reports/omega-summary/graph/SUMMARY_GRAPH.jsonl
+          test -s reports/omega-summary/graph/SUMMARY_GRAPH.graphml
+          test -s reports/omega-summary/dashboard/CORPUS_DASHBOARD.json
+          test -s reports/omega-summary/dashboard/CORPUS_DASHBOARD.md
+      - name: Write job summary
+        run: |
+          cat reports/omega-summary/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          printf '\n---\n\n' >> "$GITHUB_STEP_SUMMARY"
+          cat reports/omega-summary/dashboard/CORPUS_DASHBOARD.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -s reports/omega-summary/fleet/FLEET_PUBLIC.md ]; then
+            printf '\n---\n\n' >> "$GITHUB_STEP_SUMMARY"
+            cat reports/omega-summary/fleet/FLEET_PUBLIC.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload summary artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: omega-summary-${{ github.repository_id }}-${{ github.run_id }}
+          path: reports/omega-summary
+          if-no-files-found: error
+          retention-days: 30
