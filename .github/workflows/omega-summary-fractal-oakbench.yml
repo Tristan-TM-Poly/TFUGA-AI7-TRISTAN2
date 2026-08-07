@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches: [feat/omega-summary-fractal-t-max]
-    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_FRACTAL_ARCHITECTURE.md','docs/architecture/OMEGA_SUMMARY_CROSS_REPO.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_*.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
   pull_request:
-    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_FRACTAL_ARCHITECTURE.md','docs/architecture/OMEGA_SUMMARY_CROSS_REPO.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_*.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
 permissions:
   contents: read
 concurrency:
@@ -62,11 +62,13 @@ jobs:
           assert 'Relations de preuve et dépendance' in summary
           assert 'Limite épistémique' in summary and 'validation scientifique' in summary
           assert 'objets générés' in summary
-          for artifact in ['EVOLUTION.md','PROOF_DEBT.md','CONVERGENCE_CANDIDATES.md','SYSTEM_LINEAGE.json']:
+          for artifact in ['EVOLUTION.md','PROOF_DEBT.md','CONVERGENCE_CANDIDATES.md','SYSTEM_LINEAGE.json','SUMMARY_HISTORY.json']:
               assert Path('/tmp/summary-a',artifact).is_file(),artifact
           lineage=json.loads(Path('/tmp/summary-a/SYSTEM_LINEAGE.json').read_text())
           assert lineage['fingerprint']==payload['cache_fingerprint']
           assert 'novelty' in lineage['boundary']
+          assert Path('/tmp/summary-a/graph/SUMMARY_GRAPH.graphml').is_file()
+          assert Path('/tmp/summary-a/longitudinal/LONGITUDINAL_CRYSTALLIZATION.json').is_file()
           PY
       - name: Exercise DeltaSummary compiler
         run: |
@@ -139,7 +141,7 @@ jobs:
           cp -R /tmp/summary-a/. reports/omega-summary-fractal-ci/
           cp -R /tmp/summary-delta reports/omega-summary-fractal-ci/delta
           cp -R /tmp/summary-history reports/omega-summary-fractal-ci/history
-          cp -R /tmp/summary-graph reports/omega-summary-fractal-ci/graph
+          cp -R /tmp/summary-graph reports/omega-summary-fractal-ci/graph-explicit
           cp -R /tmp/corpus-out reports/omega-summary-fractal-ci/corpus
       - name: Upload summary evidence
         if: matrix.python-version == '3.13'
