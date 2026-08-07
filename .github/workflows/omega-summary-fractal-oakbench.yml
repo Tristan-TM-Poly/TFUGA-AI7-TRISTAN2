@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches: [feat/omega-summary-fractal-t-max]
-    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_*.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_*.md','docs/architecture/OMEGA_SUMMARY_*.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
   pull_request:
-    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_*.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_*.md','docs/architecture/OMEGA_SUMMARY_*.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
 permissions:
   contents: read
 concurrency:
@@ -190,6 +190,7 @@ jobs:
           assert 'omega_alpha_t' not in serialized and 'omega_beta_t' not in serialized
           assert 'ci-fixture-salt' not in serialized
           history=json.loads(Path('/tmp/corpus-out/fleet/FLEET_HISTORY.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_fleet_history.schema.json').read_text())).validate(history)
           assert verify_fleet_history(history) and len(history['runs'])==1
           PY
       - name: Audit immutable action refs
