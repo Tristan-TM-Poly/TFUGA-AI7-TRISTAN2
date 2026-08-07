@@ -32,10 +32,22 @@ jobs:
         with: {python-version: '${{ matrix.python-version }}'}
       - name: Install focused validators
         run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Validate summary schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          schemas=sorted(Path('schemas').glob('omega_summary_*.schema.json'))
+          assert schemas
+          for path in schemas:
+              Draft202012Validator.check_schema(json.loads(path.read_text()))
+          print('validated',len(schemas),'summary schemas')
+          PY
       - name: Compile implementation
         run: python -m compileall -q omega_summary_fractal_t examples/omega_summary_fractal_demo.py
       - name: Run focused tests
-        run: python -m pytest -q tests/test_omega_summary_fractal_t.py tests/test_omega_summary_corpus.py tests/test_omega_summary_lineage.py tests/test_omega_summary_delta.py tests/test_omega_summary_index_export.py
+        run: python -m pytest -q tests/test_omega_summary_fractal_t.py tests/test_omega_summary_corpus.py tests/test_omega_summary_lineage.py tests/test_omega_summary_delta.py tests/test_omega_summary_index_export.py tests/test_omega_summary_relations.py
       - name: Generate all depths twice
         env: {SOURCE_DATE_EPOCH: '1786111200'}
         run: |
