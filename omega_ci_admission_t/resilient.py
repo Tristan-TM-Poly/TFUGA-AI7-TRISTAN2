@@ -7,7 +7,6 @@ from .core import (
     REPORT_SCHEMA,
     WorkflowSpec,
     load_config,
-    ordered_paths_match,
     parse_workflow,
     path_matches,
     stable_digest,
@@ -36,20 +35,29 @@ def _parse_error_spec(path: Path, root: Path, exc: Exception) -> WorkflowSpec:
     )
 
 
-def scan_workflows(repository_root: str | Path) -> list[WorkflowSpec]:
-    """Scan every workflow without allowing one malformed file to abort observation.
+def _validate_trigger_shape(spec: WorkflowSpec) -> None:
+    for pattern in spec.pull_request_paths:
+        candidate = pattern[1:] if pattern.startswith("!") else pattern
+        stripped = candidate.strip()
+        if stripped.startswith("{") or stripped.startswith("["):
+            raise ValueError("pull_request paths entries must be scalar strings")
 
-    An unparseable workflow is represented as an uncertainty-bearing WorkflowSpec with
-    zero estimated jobs and no inferred trigger semantics. This is deliberately conservative:
-    unknown scheduler behaviour is recorded, not invented.
+
+def scan_workflows(repository_root: str | Path) -> list[WorkflowSpec]:
+    """Scan all workflows without allowing one malformed file to abort observation.
+
+    Unparseable YAML and non-scalar path-filter shapes become explicit uncertainty records
+    with zero invented jobs. Unknown scheduler behaviour is observed, never guessed.
     """
 
     root = Path(repository_root)
     specs: list[WorkflowSpec] = []
     for path in _workflow_paths(root):
         try:
-            specs.append(parse_workflow(path, root))
-        except (OSError, RuntimeError, ValueError, Exception) as exc:  # noqa: B036 - observation boundary
+            spec = parse_workflow(path, root)
+            _validate_trigger_shape(spec)
+            specs.append(spec)
+        except Exception as exc:  # observation boundary; SystemExit/KeyboardInterrupt are not caught
             specs.append(_parse_error_spec(path, root, exc))
     return specs
 
