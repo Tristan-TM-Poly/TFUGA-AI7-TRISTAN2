@@ -30,6 +30,16 @@ def _proof_debt(metrics: Mapping[str, Any]) -> int:
     return missing
 
 
+def _fingerprint(repositories: list[dict[str, Any]], totals: Mapping[str, Any], source_kind: str) -> str:
+    raw = json.dumps(
+        {"repositories": repositories, "totals": totals, "source_kind": source_kind},
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
 def build_fleet_manifest(
     source: str | Path | Mapping[str, Any],
     *,
@@ -91,28 +101,102 @@ def build_fleet_manifest(
 
     fleet_seed = "|".join(item["repository_token"] for item in repositories)
     fleet_id = "fleet_" + hashlib.sha256(fleet_seed.encode("utf-8")).hexdigest()[:20]
+    totals = {
+        "repositories": len(repositories),
+        "systems": total_systems,
+        "status_counts": dict(sorted(global_status.items())),
+        "mean_structural_crystallization": round(total_crystallization / total_systems, 4) if total_systems else 0.0,
+        "mean_structural_proof_debt": round(total_debt / total_systems, 4) if total_systems else 0.0,
+        "attention": dict(sorted(attention.items())),
+    }
+    source_kind = str(report.get("source_kind", "unknown"))
     return {
         "schema_version": "1.0.0",
         "fleet_id": fleet_id,
-        "source_kind": report.get("source_kind", "unknown"),
+        "fingerprint": _fingerprint(repositories, totals, source_kind),
+        "source_kind": source_kind,
         "repositories": repositories,
-        "totals": {
-            "repositories": len(repositories),
-            "systems": total_systems,
-            "status_counts": dict(sorted(global_status.items())),
-            "mean_structural_crystallization": round(total_crystallization / total_systems, 4) if total_systems else 0.0,
-            "mean_structural_proof_debt": round(total_debt / total_systems, 4) if total_systems else 0.0,
-            "attention": dict(sorted(attention.items())),
-        },
+        "totals": totals,
         "privacy": {
             "raw_repository_names_serialized": False,
             "raw_system_names_serialized": False,
             "repository_token_algorithm": "HMAC-SHA256-truncated-20hex",
             "salt_serialized": False,
             "salt_required_at_runtime": True,
+            "salt_rotation_breaks_token_continuity": True,
         },
         "boundary": "fleet aggregates describe repository structure only; pseudonymized tokens are not identities, security boundaries, ownership claims, scientific rankings or commercial rankings",
     }
+
+
+def _history_hash(report: Mapping[str, Any], previous_hash: str) -> str:
+    raw = json.dumps(
+        {"previous_hash": previous_hash, "report": report},
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
+def load_fleet_history(path: str | Path) -> dict[str, Any]:
+    target = Path(path)
+    if not target.exists():
+        return {
+            "schema_version": "1.0.0",
+            "fleet_id": "",
+            "runs": [],
+            "privacy": {"contains_raw_repository_names": False, "contains_salt": False},
+            "boundary": "hash-chained pseudonymized fleet history; structural observations only",
+        }
+    payload = json.loads(target.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or not isinstance(payload.get("runs"), list):
+        raise ValueError("invalid fleet history")
+    return payload
+
+
+def verify_fleet_history(history: Mapping[str, Any]) -> bool:
+    previous_hash = ""
+    fleet_id = str(history.get("fleet_id", ""))
+    for ordinal, item in enumerate(history.get("runs", []), start=1):
+        if int(item.get("ordinal", 0)) != ordinal:
+            return False
+        if str(item.get("previous_hash", "")) != previous_hash:
+            return False
+        report = item.get("report", {})
+        if fleet_id and str(report.get("fleet_id", "")) != fleet_id:
+            return False
+        expected = _history_hash(report, previous_hash)
+        if str(item.get("entry_hash", "")) != expected:
+            return False
+        previous_hash = expected
+    return True
+
+
+def append_fleet_history(path: str | Path, report: Mapping[str, Any]) -> dict[str, Any]:
+    history = load_fleet_history(path)
+    if not verify_fleet_history(history):
+        raise ValueError("fleet history hash chain is invalid")
+    fleet_id = str(report.get("fleet_id", ""))
+    if history.get("fleet_id") and history.get("fleet_id") != fleet_id:
+        raise ValueError("fleet_id changed; salt rotation or repository-token universe changed, start a new fleet history")
+    if any(item.get("report", {}).get("fingerprint") == report.get("fingerprint") for item in history.get("runs", [])):
+        return history
+    previous_hash = str(history["runs"][-1]["entry_hash"]) if history["runs"] else ""
+    history["fleet_id"] = fleet_id
+    entry_hash = _history_hash(report, previous_hash)
+    history["runs"].append(
+        {
+            "ordinal": len(history["runs"]) + 1,
+            "previous_hash": previous_hash,
+            "entry_hash": entry_hash,
+            "report": dict(report),
+        }
+    )
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(history, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+    return history
 
 
 def render_fleet_markdown(report: Mapping[str, Any]) -> str:
@@ -121,6 +205,7 @@ def render_fleet_markdown(report: Mapping[str, Any]) -> str:
         "# Ω-SUMMARY FLEET OBSERVATORY",
         "",
         f"- fleet : `{report.get('fleet_id', '')}`",
+        f"- fingerprint : `{report.get('fingerprint', '')}`",
         f"- dépôts pseudonymisés : **{totals.get('repositories', 0)}**",
         f"- systèmes observés : **{totals.get('systems', 0)}**",
         f"- C_struct moyen : **{float(totals.get('mean_structural_crystallization', 0.0)):.3f}**",
@@ -142,7 +227,7 @@ def render_fleet_markdown(report: Mapping[str, Any]) -> str:
         "",
         "## Privacy invariant",
         "",
-        "Les noms bruts de dépôts et de systèmes ne sont pas sérialisés dans cette projection publique. Le sel HMAC reste hors artefact.",
+        "Les noms bruts de dépôts et de systèmes ne sont pas sérialisés dans cette projection publique. Le sel HMAC reste hors artefact. Une rotation de sel crée volontairement une nouvelle identité de flotte.",
         "",
         "## OAK boundary",
         "",
@@ -208,7 +293,16 @@ def write_fleet_manifest(
     json_path = out / "FLEET_PUBLIC.json"
     markdown_path = out / "FLEET_PUBLIC.md"
     html_path = out / "FLEET_DASHBOARD.html"
+    history_path = out / "FLEET_HISTORY.json"
     json_path.write_text(json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
     markdown_path.write_text(render_fleet_markdown(report), encoding="utf-8")
     html_path.write_text(render_fleet_html(report), encoding="utf-8")
-    return {"fleet_json": json_path, "fleet_markdown": markdown_path, "fleet_html": html_path}
+    history = append_fleet_history(history_path, report)
+    if not verify_fleet_history(history):
+        raise ValueError("fleet history hash chain is invalid after append")
+    return {
+        "fleet_json": json_path,
+        "fleet_markdown": markdown_path,
+        "fleet_html": html_path,
+        "fleet_history": history_path,
+    }
