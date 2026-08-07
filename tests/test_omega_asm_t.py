@@ -26,7 +26,7 @@ def test_dot_block_is_valid_and_nonempty():
     program = dot_u64_block_program(4)
     validate_program(program)
     assert program.name == "dot_u64_block_4"
-    assert len(program.instructions) == 16
+    assert len(program.instructions) == 15
 
 
 def test_dot_block_has_tree_reduction_critical_path():
@@ -36,8 +36,16 @@ def test_dot_block_has_tree_reduction_critical_path():
 def test_dot_block_memory_accounting():
     metrics = analyze(dot_u64_block_program(4))
     assert metrics.memory_bytes == 64
-    assert metrics.instruction_count == 16
+    assert metrics.instruction_count == 15
     assert metrics.useful_ops_per_memory_byte == pytest.approx(7 / 64)
+
+
+def test_dot_block_records_distinct_load_offsets():
+    program = dot_u64_block_program(4)
+    a_loads = [instruction for instruction in program.instructions if instruction.output in {"a0", "a1", "a2", "a3"}]
+    b_loads = [instruction for instruction in program.instructions if instruction.output in {"b0", "b1", "b2", "b3"}]
+    assert [instruction.metadata["offset_bytes"] for instruction in a_loads] == [0, 8, 16, 24]
+    assert [instruction.metadata["offset_bytes"] for instruction in b_loads] == [0, 8, 16, 24]
 
 
 def test_register_time_metrics_are_positive():
@@ -108,6 +116,19 @@ def test_invalid_branch_probability_is_rejected():
                 (Instruction("branch", None, (), branch_probability=1.2),),
                 (),
             )
+        )
+
+
+def test_invalid_vector_width_is_rejected_instead_of_repaired():
+    with pytest.raises(ValueError, match="vector width"):
+        program_from_dict(
+            {
+                "name": "bad-vector",
+                "instructions": [
+                    {"op": "const", "output": "x", "inputs": ["#1"], "vector_width": 0}
+                ],
+                "outputs": ["x"],
+            }
         )
 
 
