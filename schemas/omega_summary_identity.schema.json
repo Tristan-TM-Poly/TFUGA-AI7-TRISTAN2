@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/omega_summary_identity.schema.json",
+  "title": "Omega Summary Identity Continuity",
+  "type": "object",
+  "required": ["schema_version", "removed_systems", "added_systems", "candidates", "boundary"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "previous_fingerprint": {"type": "string"},
+    "current_fingerprint": {"type": "string"},
+    "removed_systems": {"type": "array", "items": {"type": "string"}},
+    "added_systems": {"type": "array", "items": {"type": "string"}},
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "score", "evidence", "classification", "status", "automatic_rewrite", "one_to_one"],
+        "properties": {
+          "from": {"type": "string"},
+          "to": {"type": "string"},
+          "score": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence": {"enum": ["exact_content_signature", "evidence_hash_jaccard"]},
+          "classification": {"const": "rename-or-move-candidate"},
+          "status": {"const": "review_required"},
+          "automatic_rewrite": {"const": false},
+          "one_to_one": {"type": "boolean"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "boundary": {"type": "string"}
+  },
+  "additionalProperties": true
+}
