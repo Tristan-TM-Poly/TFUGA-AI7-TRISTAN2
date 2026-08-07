@@ -57,6 +57,18 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _write_r03_views(bundle, output_dir: str | Path) -> dict[str, Path]:
+    out = Path(output_dir)
+    history = out / "SUMMARY_HISTORY.json"
+    index = append_snapshot(history, bundle.to_dict())
+    if not verify_index(index):
+        raise ValueError("summary history hash chain is invalid after append")
+    generated = {"history": history}
+    generated.update(write_longitudinal_reports(history, out / "longitudinal"))
+    generated.update({f"graph_{key}": value for key, value in write_graph_exports(bundle.to_dict(), out / "graph").items()})
+    return generated
+
+
 def cmd_generate(args: argparse.Namespace) -> int:
     bundle = SummaryEngine(args.root, max_files=args.max_files).generate(
         depth=args.depth,
@@ -67,6 +79,8 @@ def cmd_generate(args: argparse.Namespace) -> int:
         paths = write_bundle(bundle, args.output_dir)
         if args.depth >= 3:
             paths.update(write_operational_views(bundle, args.output_dir))
+        if args.depth == 9:
+            paths.update(_write_r03_views(bundle, args.output_dir))
         print(json.dumps({key: str(value) for key, value in paths.items()}, sort_keys=True))
     elif args.json_stdout:
         print(json.dumps(bundle.to_dict(), indent=2, sort_keys=True, ensure_ascii=False))
@@ -80,6 +94,7 @@ def cmd_all_depths(args: argparse.Namespace) -> int:
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     index = []
+    r03_artifacts: dict[str, str] = {}
     for depth in range(10):
         bundle = engine.generate(depth=depth, audience=args.audience, focus=args.focus)
         paths = write_bundle(bundle, out)
@@ -93,11 +108,17 @@ def cmd_all_depths(args: argparse.Namespace) -> int:
         )
         if depth == 9:
             write_operational_views(bundle, out)
+            r03_artifacts = {key: str(value) for key, value in _write_r03_views(bundle, out).items()}
     (out / "depth_index.json").write_text(
         json.dumps(index, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    print(json.dumps({"generated_depths": 10, "output_dir": str(out)}, sort_keys=True))
+    print(
+        json.dumps(
+            {"generated_depths": 10, "output_dir": str(out), "r03_artifacts": r03_artifacts},
+            sort_keys=True,
+        )
+    )
     return 0
 
 
