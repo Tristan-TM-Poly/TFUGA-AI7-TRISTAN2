@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Sequence
 
-from .core import audit_route_config, build_admission_report, scan_workflows
+from .resilient import audit_route_config, build_admission_report, scan_workflows
 
 
 def _changed_files(args: argparse.Namespace) -> list[str]:
@@ -57,9 +57,18 @@ def _parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     if args.command == "scan":
+        workflows = scan_workflows(args.repository_root)
         result = {
-            "schema": "omega-ci-workflow-scan/1",
-            "workflows": [item.to_dict() for item in scan_workflows(args.repository_root)],
+            "schema": "omega-ci-workflow-scan/1.1",
+            "workflows": [item.to_dict() for item in workflows],
+            "workflow_parse_errors": [
+                {
+                    "workflow_path": item.path,
+                    "warnings": [warning for warning in item.warnings if warning.startswith("parse_error:")],
+                }
+                for item in workflows
+                if any(warning.startswith("parse_error:") for warning in item.warnings)
+            ],
             "dry_run": True,
         }
     elif args.command == "audit-config":
