@@ -1,8 +1,4 @@
-"""Tristan Intermediate Representation (TIR).
-
-TIR gives every runtime result a stable envelope: payload, provenance,
-uncertainty, OAK state, schema version, and content digest.
-"""
+"""Tristan Intermediate Representation (TIR)."""
 
 from __future__ import annotations
 
@@ -25,7 +21,6 @@ def _jsonable(value: Any) -> Any:
 
 
 def stable_digest(value: Any) -> str:
-    """Return a deterministic SHA-256 digest for JSON-compatible semantics."""
     encoded = json.dumps(
         _jsonable(value),
         ensure_ascii=False,
@@ -42,6 +37,10 @@ class Provenance:
     operation: str = ""
     parents: tuple[str, ...] = ()
     commit: str = ""
+    distribution: str = ""
+    repository: str = ""
+    install_source: str = ""
+    wheel_sha256: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -66,7 +65,7 @@ class TristanArtifact:
     provenance: Provenance
     uncertainty: Uncertainty = field(default_factory=Uncertainty)
     oak_status: str = "UNVERIFIED"
-    schema_version: str = "tir-0.1"
+    schema_version: str = "tir-0.2"
     digest: str = ""
 
     @classmethod
@@ -78,14 +77,15 @@ class TristanArtifact:
         provenance: Provenance,
         uncertainty: Uncertainty | None = None,
         oak_status: str = "UNVERIFIED",
-        schema_version: str = "tir-0.1",
+        schema_version: str = "tir-0.2",
     ) -> "TristanArtifact":
+        uncertainty_value = uncertainty or Uncertainty()
         digest = stable_digest(
             {
                 "kind": kind,
                 "payload": payload,
                 "provenance": provenance,
-                "uncertainty": uncertainty or Uncertainty(),
+                "uncertainty": uncertainty_value,
                 "oak_status": oak_status,
                 "schema_version": schema_version,
             }
@@ -95,7 +95,7 @@ class TristanArtifact:
             kind=kind,
             payload=payload,
             provenance=provenance,
-            uncertainty=uncertainty or Uncertainty(),
+            uncertainty=uncertainty_value,
             oak_status=oak_status,
             schema_version=schema_version,
             digest=digest,

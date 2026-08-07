@@ -125,7 +125,6 @@ def test_v06_repo_doctor_exposes_quantified_maturity():
     summary = RepoRegistry().doctor_summary()
     assert summary["repositories"] == 6
     assert 0 <= summary["packaging_maturity"] <= 1
-    # v0.8 splits installable packaging from adapter-promotion maturity.
     assert summary["packaged"] + summary["adapter_candidates"] >= 4
 
 
@@ -146,4 +145,4 @@ def test_machine_manifest_and_tir_schema_follow_current_runtime():
     assert manifest["system"]["version"] == lab_plugin.version
     assert manifest["integration"]["latest_status"] == "CI_VERIFIED_FOUR_REPO_R02"
     assert manifest["capabilities"][0]["id"] == "tristan.idea.analyze"
-    assert schema["properties"]["schema_version"]["const"] == "tir-0.1"
+    assert schema["properties"]["schema_version"]["const"] == "tir-0.2"
