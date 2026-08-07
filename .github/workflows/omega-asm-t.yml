@@ -7,13 +7,14 @@ on:
       - 'omega_asm_t/**'
       - 'tests/test_omega_asm_t*.py'
       - 'examples/native/omega_dot_u64_*'
+      - 'scripts/omega-asm'
       - 'docs/canon/OMEGA_ASM_T_INFINITY_R1.md'
       - 'docs/architecture/OMEGA_ASM_T_R1_ARCHITECTURE.md'
       - 'docs/architecture/OMEGA_ASM_T_P4_BENCHMARK_PROTOCOL.md'
+      - 'docs/architecture/OMEGA_ASM_T_CLI_ISOLATION.md'
       - 'schemas/omega_asm_report.schema.json'
       - 'schemas/omega_asm_benchmark_report.schema.json'
       - 'policies/omega_asm_t_policy.json'
-      - 'pyproject.toml'
       - '.github/workflows/omega-asm-t.yml'
 
 permissions:
@@ -47,6 +48,23 @@ jobs:
         run: python -m compileall -q omega_asm_t tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py
       - name: Run focused and adversarial OAKBench
         run: python -m pytest -q tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py
+      - name: Verify repository-local CLI launcher
+        run: |
+          test -x scripts/omega-asm
+          ./scripts/omega-asm capabilities > /tmp/omega-asm-launcher-capabilities.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path('/tmp/omega-asm-launcher-capabilities.json').read_text())
+          assert 'x86_64' in payload
+          assert 'aarch64' in payload
+          PY
+      - name: Confirm root packaging manifest stays ASM-independent
+        run: |
+          if grep -Eq '^omega-asm[[:space:]]*=' pyproject.toml; then
+            echo 'omega-asm must remain repository-local until an explicit packaging/release change'
+            exit 1
+          fi
       - name: Generate deterministic report
         run: python -m omega_asm_t report --width 8 --output /tmp/omega-asm-report.json
       - name: Validate report schemas and authority
