@@ -34,14 +34,16 @@
     "latest_environment": "tristan-runtime-four-repo-r02",
     "latest_status": "CI_VERIFIED_FOUR_REPO_R02",
     "bundle_plan": "tristan-runtime-bundle-plan-1.0",
-    "v10_typed_receipt": {
+    "v10_typed_receipt_policy": {
       "schema": "tristan-private-wheelhouse-receipt-1.0",
-      "status": "CI_VERIFIED_V10_FULL_TYPED_FOUR_REPO_OFFLINE",
+      "status": "EXTERNAL_EXACT_RECEIPT_REQUIRED",
       "marker": "TRISTAN_V10_FULL_TYPED_FOUR_REPO_OFFLINE_PASS",
-      "runtime_source_commit": "72117c3e162533bae26c22be6fcac132fa917a94",
-      "artifact_sha256": "15caa0609fd560894ea2c7d5be1a8c55f6f4f4296843755fef77a7dd2cd2720b",
       "critical_path_wildcard_free": true,
-      "offline_install": true
+      "offline_install_required": true,
+      "receipt_must_pin_runtime_head": true,
+      "receipt_must_pin_peer_heads": true,
+      "receipt_must_verify_wheel_hashes": true,
+      "reason": "Exact runtime head and artifact digest live in the external CI receipt to avoid self-referential manifest invalidation."
     }
   },
   "runtime": {
@@ -60,6 +62,7 @@
     "sandbox_is_certified_security_boundary": false,
     "peer_mapping_specs_require_runtime_normalization": true,
     "legacy_wildcards_permitted_outside_v10_critical_path": true,
-    "public_bundle_redacts_private_peer_topology": true
+    "public_bundle_redacts_private_peer_topology": true,
+    "manifest_embeds_its_own_artifact_digest": false
   }
 }
