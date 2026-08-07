@@ -14,6 +14,7 @@ from omega_asm_t.analysis import (
     register_lifetime_metrics,
 )
 from omega_asm_t.backends import emit_dot_u64, static_instruction_count, supported_variants
+from omega_asm_t.benchmark import machine_manifest, relative_ratio, summarize_samples
 from omega_asm_t.cli import main
 from omega_asm_t.ir import dot_u64_block_program, program_from_dict, validate_program
 from omega_asm_t.models import Candidate, Instruction, Program
@@ -191,6 +192,39 @@ def test_native_fixture_contains_both_generated_x86_kernels():
     assert emit_dot_u64("x86_64", "ptr").strip() in fixture
 
 
+def test_benchmark_summary_keeps_robust_and_classical_statistics():
+    stats = summarize_samples([1.0, 2.0, 3.0, 100.0])
+    assert stats.count == 4
+    assert stats.minimum == 1.0
+    assert stats.median == pytest.approx(2.5)
+    assert stats.mean == pytest.approx(26.5)
+    assert stats.maximum == 100.0
+    assert stats.mad == pytest.approx(1.0)
+    assert stats.p05 < stats.median < stats.p95
+
+
+def test_benchmark_summary_rejects_invalid_samples():
+    with pytest.raises(ValueError, match="at least one"):
+        summarize_samples([])
+    with pytest.raises(ValueError, match="finite"):
+        summarize_samples([1.0, float("nan")])
+    with pytest.raises(ValueError, match="non-negative"):
+        summarize_samples([1.0, -1.0])
+
+
+def test_relative_ratio_uses_medians():
+    numerator = summarize_samples([4.0, 5.0, 6.0])
+    denominator = summarize_samples([2.0, 2.5, 3.0])
+    assert relative_ratio(numerator, denominator) == pytest.approx(2.0)
+
+
+def test_machine_manifest_declares_observational_scope():
+    manifest = machine_manifest()
+    assert manifest["architecture"]
+    assert manifest["operating_system"]
+    assert manifest["timing_claim_scope"] == "observational_on_this_execution_context_only"
+
+
 def test_cli_capabilities_is_json(capsys):
     assert main(["capabilities"]) == 0
     payload = json.loads(capsys.readouterr().out)
@@ -203,3 +237,30 @@ def test_cli_demo_emits_cvcd(capsys):
     payload = json.loads(capsys.readouterr().out)
     assert payload["program"]["name"] == "dot_u64_block_2"
     assert payload["cvcd"]["M_memory_bytes"] == 32
+
+
+def test_cli_machine_is_json(capsys):
+    assert main(["machine"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["timing_claim_scope"] == "observational_on_this_execution_context_only"
+
+
+def test_cli_benchmark_report_summarizes_native_samples(tmp_path, capsys):
+    raw = {
+        "schema_version": 1,
+        "evidence_level": "P4-observational",
+        "claim_scope": "single_execution_context_only",
+        "elements": 16,
+        "samples_ns_per_call": {
+            "reference_c": [10.0, 11.0, 12.0],
+            "x86_64_ptr": [8.0, 9.0, 10.0],
+        },
+    }
+    path = tmp_path / "bench.json"
+    path.write_text(json.dumps(raw), encoding="utf-8")
+    assert main(["benchmark-report", str(path)]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["evidence_level"] == "P4-observational"
+    assert payload["statistics_ns_per_call"]["reference_c"]["median"] == 11.0
+    assert payload["median_ratio_to_reference_c"]["reference_c"] == 1.0
+    assert payload["median_ratio_to_reference_c"]["x86_64_ptr"] == pytest.approx(9.0 / 11.0)
