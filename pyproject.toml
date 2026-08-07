@@ -84,6 +84,7 @@ omega-code-dojo-r04 = "omega_code_dojo_t.r04.cli:main"
 omega-code-dojo-r05 = "omega_code_dojo_t.r05:main"
 omega-synergy = "omega_synergy_t.cli:main"
 omega-synergy-n = "omega_synergy_n_t.cli:main"
+omega-asm = "omega_asm_t.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
