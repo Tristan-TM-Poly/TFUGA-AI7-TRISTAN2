@@ -1,0 +1,130 @@
+name: Omega ASM-T Bounded Superoptimizer
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - feat/omega-asm-t-r2-compiler-parallax
+    paths:
+      - 'omega_asm_t/**'
+      - 'tests/test_omega_asm_t*.py'
+      - 'schemas/omega_asm_*.schema.json'
+      - 'policies/omega_asm_t*.json'
+      - 'docs/architecture/OMEGA_ASM_T_*.md'
+      - '.github/workflows/omega-asm-t-superopt.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-asm-superopt-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof-first-court:
+    name: Bounded superoptimizer proof-first court
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile package and all focused ASM-T courts
+        run: python -m compileall -q omega_asm_t tests/test_omega_asm_t*.py
+      - name: Run full focused stack including superoptimizer
+        run: python -m pytest -q tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py tests/test_omega_asm_t_r2_p5.py tests/test_omega_asm_t_r2_p6.py tests/test_omega_asm_t_r2_p7.py tests/test_omega_asm_t_parallax.py tests/test_omega_asm_t_superopt.py
+      - name: Validate schema and policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          schema=json.loads(Path('schemas/omega_asm_superopt.schema.json').read_text())
+          policy=json.loads(Path('policies/omega_asm_t_superopt_policy.json').read_text())
+          Draft202012Validator.check_schema(schema)
+          assert policy['authority']=='review_only'
+          assert policy['equivalence_before_selection'] is True
+          assert policy['unverified_candidate_can_win'] is False
+          assert policy['cost_model_calibrated'] is False
+          assert policy['cost_units_are_hardware_cycles'] is False
+          assert policy['runtime_speed_claim_allowed'] is False
+          assert policy['package_executes_solver'] is False
+          assert policy['package_executes_generated_assembly'] is False
+          PY
+      - name: Run positive mul2 optimization through public CLI
+        run: |
+          cat >/tmp/mul2.json <<'JSON'
+          {
+            "name":"mul2-u8",
+            "width":8,
+            "expression":{"op":"mul","args":[{"op":"var","name":"x"},{"op":"const","value":2}]}
+          }
+          JSON
+          python -m omega_asm_t superopt /tmp/mul2.json \
+            --max-candidates 64 --max-states 1000000 \
+            --output /tmp/mul2-report.json
+      - name: Validate proof-before-cost selection
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          report=json.loads(Path('/tmp/mul2-report.json').read_text())
+          schema=json.loads(Path('schemas/omega_asm_superopt.schema.json').read_text())
+          Draft202012Validator(schema).validate(report)
+          assert report['authority']=='review_only'
+          assert report['original']['structural_cost_units']==3.0
+          assert report['best']['expression']=={'op':'shl','args':[{'op':'var','name':'x'},{'op':'const','value':1}]}
+          assert report['best']['structural_cost_units']==1.0
+          assert report['best']['proof']['accepted_equivalent'] is True
+          assert report['best']['proof']['states_checked']==256
+          assert report['improved_structural_cost'] is True
+          assert report['cost_model']['calibrated'] is False
+          assert report['cost_model']['runtime_cycles'] is False
+          assert report['selection_contract']['unverified_candidate_can_win'] is False
+          assert report['selection_contract']['runtime_speed_claim_allowed'] is False
+          PY
+      - name: Ensure insufficient proof budget cannot promote a cheaper candidate
+        run: |
+          cat >/tmp/large.json <<'JSON'
+          {
+            "name":"large-u16",
+            "width":16,
+            "expression":{"op":"add","args":[{"op":"add","args":[{"op":"var","name":"x"},{"op":"const","value":0}]},{"op":"var","name":"y"}]}
+          }
+          JSON
+          python -m omega_asm_t superopt /tmp/large.json \
+            --max-candidates 32 --max-states 1000 \
+            --output /tmp/large-report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('/tmp/large-report.json').read_text())
+          assert report['best']['expression']==report['original']['expression']
+          assert report['improved_structural_cost'] is False
+          assert all(
+              row['proof']['accepted_equivalent'] is False
+              for row in report['candidates']
+              if row['proof']['verification_status'] != 'reflexive_baseline'
+          )
+          PY
+      - name: Audit immutable action refs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('.github/workflows/omega-asm-t-superopt.yml').read_text()
+          refs=re.findall(r'(?m)^\s*uses:\s*([^\s#]+)', text)
+          assert refs
+          assert not [ref for ref in refs if not re.search(r'@[0-9a-f]{40}$', ref)]
+          PY
+      - name: Print bounded search evidence
+        run: cat /tmp/mul2-report.json

@@ -1,0 +1,26 @@
+{
+  "schema_version":1,
+  "module":"omega-asm-t-bounded-superoptimizer",
+  "authority":"review_only",
+  "human_review_required":true,
+  "automatic_merge_allowed":false,
+  "automatic_publication_allowed":false,
+  "search_is_bounded":true,
+  "equivalence_before_selection":true,
+  "unverified_candidate_can_win":false,
+  "cost_model":"omega-asm-superopt-structural-v1",
+  "cost_model_calibrated":false,
+  "cost_units_are_hardware_cycles":false,
+  "runtime_speed_claim_allowed":false,
+  "package_executes_solver":false,
+  "package_executes_generated_assembly":false,
+  "default_max_candidates":128,
+  "default_max_states_per_proof":1000000,
+  "forbidden_claims":[
+    "lower structural cost implies runtime speedup",
+    "generated rewrite is safe without P7 acceptance",
+    "solver-only observed unsat can win in R2",
+    "bounded bit-vector proof implies source-language equivalence",
+    "superoptimizer result grants merge/publication authority"
+  ]
+}

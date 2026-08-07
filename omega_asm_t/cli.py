@@ -15,6 +15,7 @@ from .oak import oak_report
 from .parallax import build_parallax_report
 from .replication import aggregate_p5_reports
 from .search import estimate_builtin_candidates, pairwise_tradeoffs, pareto_front
+from .superopt import superoptimize
 
 
 def _json(data: object) -> str:
@@ -55,97 +56,73 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--native-verified", action="store_true")
     report.add_argument("--output")
 
-    benchmark_report = sub.add_parser(
-        "benchmark-report",
-        help="summarize observational native timing JSON with robust statistics",
-    )
+    benchmark_report = sub.add_parser("benchmark-report", help="summarize observational native timing JSON")
     benchmark_report.add_argument("path")
     benchmark_report.add_argument("--output")
 
-    parallax = sub.add_parser(
-        "parallax-report",
-        help="hash externally built source/object/disassembly artifacts into a compiler-parallax ledger",
-    )
-    parallax.add_argument("path", help="parallax build descriptor JSON")
+    parallax = sub.add_parser("parallax-report", help="hash externally built compiler-parallax artifacts")
+    parallax.add_argument("path")
     parallax.add_argument("--output")
 
-    microarch = sub.add_parser(
-        "microarch", help="emit an observational microarchitecture/cache/ISA manifest"
-    )
+    superopt = sub.add_parser("superopt", help="run bounded proof-first bit-vector rewrite search")
+    superopt.add_argument("path", help="superoptimizer JSON specification")
+    superopt.add_argument("--max-candidates", type=int, default=128)
+    superopt.add_argument("--max-states", type=int, default=1_000_000)
+    superopt.add_argument("--output")
+
+    microarch = sub.add_parser("microarch", help="emit observational microarchitecture/cache/ISA manifest")
     microarch.add_argument("--toolchains", action="store_true")
     microarch.add_argument("--output")
 
-    p5 = sub.add_parser(
-        "p5-report",
-        help="parse externally collected perf-stat evidence into a provenance-rich P5 report",
-    )
-    p5.add_argument("path", help="perf stat stderr captured with -x ';' --no-big-num")
-    p5.add_argument("--binary", help="optional measured binary path for SHA-256 provenance")
+    p5 = sub.add_parser("p5-report", help="parse externally collected perf-stat evidence")
+    p5.add_argument("path")
+    p5.add_argument("--binary")
     p5.add_argument("--exit-code", type=int)
     p5.add_argument("--output")
 
-    p6 = sub.add_parser(
-        "p6-aggregate",
-        help="aggregate P5 reports into conservative identified-target replication groups",
-    )
-    p6.add_argument("paths", nargs="+", help="P5 report JSON files")
+    p6 = sub.add_parser("p6-aggregate", help="aggregate P5 reports into identified-target replication groups")
+    p6.add_argument("paths", nargs="+")
     p6.add_argument("--min-replicates", type=int, default=3)
     p6.add_argument("--output")
 
-    p7_obligation = sub.add_parser(
-        "p7-obligation",
-        help="compile a fixed-width bit-vector equivalence spec into a replayable SMT-LIB obligation",
-    )
-    p7_obligation.add_argument("path", help="equivalence specification JSON")
+    p7_obligation = sub.add_parser("p7-obligation", help="compile a bit-vector equivalence spec into SMT-LIB")
+    p7_obligation.add_argument("path")
     p7_obligation.add_argument("--output")
 
-    p7_certificate = sub.add_parser(
-        "p7-certificate",
-        help="build a bounded equivalence certificate from exhaustive checking plus optional external solver text",
-    )
-    p7_certificate.add_argument("path", help="equivalence specification JSON")
-    p7_certificate.add_argument("--solver-result", help="optional externally produced sat/unsat/unknown text")
+    p7_certificate = sub.add_parser("p7-certificate", help="build a bounded equivalence certificate")
+    p7_certificate.add_argument("path")
+    p7_certificate.add_argument("--solver-result")
     p7_certificate.add_argument("--solver-name")
     p7_certificate.add_argument("--solver-version")
     p7_certificate.add_argument("--max-states", type=int, default=1_000_000)
     p7_certificate.add_argument("--output")
 
-    sub.add_parser("p5-events", help="show the conservative perf event request set")
-    sub.add_parser("machine", help="emit the R1 conservative execution-context manifest")
-    sub.add_parser("capabilities", help="show supported architectures, variants and evidence surfaces")
+    sub.add_parser("p5-events", help="show conservative perf event set")
+    sub.add_parser("machine", help="emit the R1 execution-context manifest")
+    sub.add_parser("capabilities", help="show supported architectures and evidence surfaces")
     return parser
 
 
 def _benchmark_report(path: str) -> dict[str, object]:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
-    sample_groups = payload.get("samples_ns_per_call")
-    if not isinstance(sample_groups, dict) or not sample_groups:
+    groups = payload.get("samples_ns_per_call")
+    if not isinstance(groups, dict) or not groups:
         raise ValueError("benchmark JSON must contain non-empty samples_ns_per_call")
-
-    summaries = {}
-    summary_objects = {}
-    for name, samples in sample_groups.items():
+    summaries, objects = {}, {}
+    for name, samples in groups.items():
         if not isinstance(name, str) or not isinstance(samples, list):
             raise ValueError("benchmark sample groups must map names to lists")
         summary = summarize_samples(samples)
-        summary_objects[name] = summary
+        objects[name] = summary
         summaries[name] = summary.to_dict()
-
-    reference = summary_objects.get("reference_c")
-    ratios: dict[str, float | None] = {}
-    if reference is not None:
-        for name, summary in summary_objects.items():
-            ratios[name] = relative_ratio(summary, reference)
-
-    metadata = {key: value for key, value in payload.items() if key != "samples_ns_per_call"}
+    reference = objects.get("reference_c")
+    ratios = {name: relative_ratio(summary, reference) for name, summary in objects.items()} if reference else {}
     return {
         "evidence_level": "P4-observational",
         "claim_scope": "single_execution_context_only",
-        "warning": (
-            "timings are observational; do not generalize speedups without controlled target-CPU replication"
-        ),
+        "warning": "timings are observational; do not generalize speedups without controlled target-CPU replication",
         "machine": machine_manifest(),
-        "native_metadata": metadata,
+        "native_metadata": {key: value for key, value in payload.items() if key != "samples_ns_per_call"},
         "statistics_ns_per_call": summaries,
         "median_ratio_to_reference_c": ratios,
     }
@@ -170,77 +147,50 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "emit":
         assembly = emit_dot_u64(args.arch, args.variant)
-        if args.output:
-            Path(args.output).write_text(assembly, encoding="utf-8")
-        else:
-            print(assembly, end="")
+        if args.output: Path(args.output).write_text(assembly, encoding="utf-8")
+        else: print(assembly, end="")
         return 0
     if args.command == "tournament":
         candidates = estimate_builtin_candidates(args.arch)
-        print(_json({
-            "architecture": args.arch,
-            "warning": "static heuristic only; benchmark on the target CPU before performance claims",
-            "candidates": [candidate.to_dict() for candidate in candidates],
-            "pareto_front": [candidate.to_dict() for candidate in pareto_front(candidates)],
-            "tradeoffs": pairwise_tradeoffs(candidates),
-        }))
+        print(_json({"architecture": args.arch, "warning": "static heuristic only; benchmark on target CPU before performance claims", "candidates": [c.to_dict() for c in candidates], "pareto_front": [c.to_dict() for c in pareto_front(candidates)], "tradeoffs": pairwise_tradeoffs(candidates)}))
         return 0
     if args.command == "report":
-        _write_or_print(oak_report(dot_u64_block_program(args.width), native_verified=args.native_verified).to_dict(), args.output)
-        return 0
+        _write_or_print(oak_report(dot_u64_block_program(args.width), native_verified=args.native_verified).to_dict(), args.output); return 0
     if args.command == "benchmark-report":
-        _write_or_print(_benchmark_report(args.path), args.output)
-        return 0
+        _write_or_print(_benchmark_report(args.path), args.output); return 0
     if args.command == "parallax-report":
-        _write_or_print(build_parallax_report(_load_json_object(args.path)), args.output)
-        return 0
+        _write_or_print(build_parallax_report(_load_json_object(args.path)), args.output); return 0
+    if args.command == "superopt":
+        _write_or_print(superoptimize(_load_json_object(args.path), max_candidates=args.max_candidates, max_states=args.max_states), args.output); return 0
     if args.command == "microarch":
-        _write_or_print(microarchitecture_manifest(include_toolchains=args.toolchains), args.output)
-        return 0
+        _write_or_print(microarchitecture_manifest(include_toolchains=args.toolchains), args.output); return 0
     if args.command == "p5-report":
-        perf_text = Path(args.path).read_text(encoding="utf-8", errors="replace")
-        _write_or_print(build_p5_report(perf_text, source_exit_code=args.exit_code, binary_path=args.binary), args.output)
-        return 0
+        text = Path(args.path).read_text(encoding="utf-8", errors="replace")
+        _write_or_print(build_p5_report(text, source_exit_code=args.exit_code, binary_path=args.binary), args.output); return 0
     if args.command == "p6-aggregate":
-        _write_or_print(aggregate_p5_reports([_load_json_object(path) for path in args.paths], min_replicates=args.min_replicates), args.output)
-        return 0
+        _write_or_print(aggregate_p5_reports([_load_json_object(p) for p in args.paths], min_replicates=args.min_replicates), args.output); return 0
     if args.command == "p7-obligation":
-        _write_or_print(build_equivalence_obligation(_load_json_object(args.path)), args.output)
-        return 0
+        _write_or_print(build_equivalence_obligation(_load_json_object(args.path)), args.output); return 0
     if args.command == "p7-certificate":
         solver_text = Path(args.solver_result).read_text(encoding="utf-8", errors="replace") if args.solver_result else None
-        _write_or_print(build_p7_certificate(
-            _load_json_object(args.path), solver_text=solver_text,
-            solver_name=args.solver_name, solver_version=args.solver_version,
-            max_states=args.max_states,
-        ), args.output)
-        return 0
+        _write_or_print(build_p7_certificate(_load_json_object(args.path), solver_text=solver_text, solver_name=args.solver_name, solver_version=args.solver_version, max_states=args.max_states), args.output); return 0
     if args.command == "p5-events":
-        print(_json({"events": list(requested_perf_events())}))
-        return 0
+        print(_json({"events": list(requested_perf_events())})); return 0
     if args.command == "machine":
-        print(_json(machine_manifest()))
-        return 0
+        print(_json(machine_manifest())); return 0
     if args.command == "capabilities":
         print(_json({
-            "x86_64": list(supported_variants("x86_64")),
-            "aarch64": list(supported_variants("aarch64")),
+            "x86_64": list(supported_variants("x86_64")), "aarch64": list(supported_variants("aarch64")),
             "evidence": {
-                "P1": "static structure",
-                "P2": "versioned uncalibrated heuristic",
-                "P3": "native differential correctness",
-                "P4": "observational timing",
-                "P5": "externally collected hardware-counter parsing and provenance",
-                "P6": "identified-target replication grouping; no universal promotion",
-                "P7": "bounded fixed-width bit-vector obligation/certificate; kernel_checked=false",
-                "parallax": "separate-translation-unit C/C++/Rust/ASM provenance and comparison",
+                "P1":"static structure", "P2":"versioned uncalibrated heuristic", "P3":"native differential correctness",
+                "P4":"observational timing", "P5":"externally collected hardware counters", "P6":"identified-target replication",
+                "P7":"bounded bit-vector certificates; kernel_checked=false",
+                "parallax":"separate-translation-unit C/C++/Rust/ASM provenance",
+                "superopt":"bounded proof-first rewrite search; structural cost only",
             },
             "p5_perf_events": list(requested_perf_events()),
-            "arbitrary_command_execution": False,
-            "package_executes_solver": False,
-            "package_executes_compilers": False,
-        }))
-        return 0
+            "arbitrary_command_execution": False, "package_executes_solver": False, "package_executes_compilers": False,
+        })); return 0
     raise AssertionError(args.command)
 
 
