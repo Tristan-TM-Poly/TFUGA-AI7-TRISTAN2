@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega_summary_fleet_history.schema.json",
+  "title": "Omega Summary Fleet History",
+  "type": "object",
+  "required": ["schema_version", "fleet_id", "runs", "privacy", "boundary"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "fleet_id": {"type": "string", "pattern": "^$|^fleet_[0-9a-f]{20}$"},
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ordinal", "previous_hash", "entry_hash", "report"],
+        "properties": {
+          "ordinal": {"type": "integer", "minimum": 1},
+          "previous_hash": {"type": "string", "pattern": "^$|^[0-9a-f]{64}$"},
+          "entry_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "report": {
+            "type": "object",
+            "required": ["schema_version", "fleet_id", "fingerprint", "repositories", "totals", "privacy", "boundary"],
+            "properties": {
+              "schema_version": {"type": "string"},
+              "fleet_id": {"type": "string", "pattern": "^fleet_[0-9a-f]{20}$"},
+              "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "source_kind": {"type": "string"},
+              "repositories": {"type": "array"},
+              "totals": {"type": "object"},
+              "privacy": {"type": "object"},
+              "boundary": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "required": ["contains_raw_repository_names", "contains_salt"],
+      "properties": {
+        "contains_raw_repository_names": {"const": false},
+        "contains_salt": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "boundary": {"type": "string"}
+  },
+  "additionalProperties": false
+}

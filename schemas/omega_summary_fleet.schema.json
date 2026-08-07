@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega_summary_fleet.schema.json",
+  "title": "Omega Summary Fleet Public Manifest",
+  "type": "object",
+  "required": ["schema_version", "fleet_id", "fingerprint", "repositories", "totals", "privacy", "boundary"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "fleet_id": {"type": "string", "pattern": "^fleet_[0-9a-f]{20}$"},
+    "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_kind": {"type": "string"},
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repository_token", "systems", "status_counts", "mean_structural_crystallization", "mean_structural_proof_debt", "attention"],
+        "properties": {
+          "repository_token": {"type": "string", "pattern": "^repo_[0-9a-f]{20}$"},
+          "systems": {"type": "integer", "minimum": 0},
+          "status_counts": {"type": "object"},
+          "mean_structural_crystallization": {"type": "number", "minimum": 0, "maximum": 1},
+          "mean_structural_proof_debt": {"type": "number", "minimum": 0},
+          "attention": {"type": "object"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "totals": {"type": "object"},
+    "privacy": {
+      "type": "object",
+      "required": ["raw_repository_names_serialized", "raw_system_names_serialized", "salt_serialized", "salt_required_at_runtime", "salt_rotation_breaks_token_continuity"],
+      "properties": {
+        "raw_repository_names_serialized": {"const": false},
+        "raw_system_names_serialized": {"const": false},
+        "repository_token_algorithm": {"type": "string"},
+        "salt_serialized": {"const": false},
+        "salt_required_at_runtime": {"const": true},
+        "salt_rotation_breaks_token_continuity": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "boundary": {"type": "string"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega_summary_query_plan.schema.json",
+  "title": "Omega Summary Query Plan",
+  "type": "object",
+  "properties": {
+    "seed": {
+      "type": "object",
+      "properties": {
+        "text": {"type": ["string", "null"]},
+        "kind": {"type": ["string", "null"]},
+        "status": {"type": ["string", "null"]},
+        "relation": {"type": ["string", "null"]},
+        "repository": {"type": ["string", "null"]},
+        "min_crystallization": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "max_crystallization": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+      },
+      "additionalProperties": false
+    },
+    "where": {"$ref": "#/$defs/conditions"},
+    "any": {"$ref": "#/$defs/conditions"},
+    "not": {"$ref": "#/$defs/conditions"},
+    "group_by": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "array", "items": {"type": "string", "minLength": 1}}
+      ]
+    },
+    "aggregates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["op"],
+        "properties": {
+          "name": {"type": "string"},
+          "op": {"enum": ["count", "sum", "mean", "min", "max"]},
+          "field": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "sort": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field"],
+        "properties": {
+          "field": {"type": "string", "minLength": 1},
+          "direction": {"enum": ["asc", "desc"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "limit": {"type": "integer", "minimum": 0, "maximum": 1000000}
+  },
+  "$defs": {
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "op"],
+        "properties": {
+          "field": {"type": "string", "minLength": 1},
+          "op": {"enum": ["eq", "ne", "gt", "gte", "lt", "lte", "contains", "in", "exists"]},
+          "value": {}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
