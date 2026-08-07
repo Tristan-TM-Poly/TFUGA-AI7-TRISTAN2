@@ -3,10 +3,11 @@
   "$id": "https://example.invalid/omega_summary_fleet.schema.json",
   "title": "Omega Summary Fleet Public Manifest",
   "type": "object",
-  "required": ["schema_version", "fleet_id", "repositories", "totals", "privacy", "boundary"],
+  "required": ["schema_version", "fleet_id", "fingerprint", "repositories", "totals", "privacy", "boundary"],
   "properties": {
     "schema_version": {"type": "string"},
     "fleet_id": {"type": "string", "pattern": "^fleet_[0-9a-f]{20}$"},
+    "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "source_kind": {"type": "string"},
     "repositories": {
       "type": "array",
@@ -27,14 +28,16 @@
     "totals": {"type": "object"},
     "privacy": {
       "type": "object",
-      "required": ["raw_repository_names_serialized", "raw_system_names_serialized", "salt_serialized", "salt_required_at_runtime"],
+      "required": ["raw_repository_names_serialized", "raw_system_names_serialized", "salt_serialized", "salt_required_at_runtime", "salt_rotation_breaks_token_continuity"],
       "properties": {
         "raw_repository_names_serialized": {"const": false},
         "raw_system_names_serialized": {"const": false},
         "repository_token_algorithm": {"type": "string"},
         "salt_serialized": {"const": false},
-        "salt_required_at_runtime": {"const": true}
-      }
+        "salt_required_at_runtime": {"const": true},
+        "salt_rotation_breaks_token_continuity": {"const": true}
+      },
+      "additionalProperties": false
     },
     "boundary": {"type": "string"}
   },
