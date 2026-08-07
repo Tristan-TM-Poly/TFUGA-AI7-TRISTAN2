@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_summary_relations.schema.json",
+  "title": "Omega Summary Explicit Relations Manifest",
+  "type": "object",
+  "required": ["relations"],
+  "properties": {
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "relation", "target"],
+        "properties": {
+          "source": {"type": "string", "minLength": 1},
+          "relation": {
+            "enum": ["IMPLEMENTS", "BENCHMARKS", "CONTRADICTS", "SUPERSEDES", "GENERATED_FROM", "DEPENDS_ON"]
+          },
+          "target": {"type": "string", "minLength": 1},
+          "evidence": {"type": "string"},
+          "note": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
