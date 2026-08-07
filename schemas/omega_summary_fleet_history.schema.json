@@ -16,7 +16,21 @@
           "ordinal": {"type": "integer", "minimum": 1},
           "previous_hash": {"type": "string", "pattern": "^$|^[0-9a-f]{64}$"},
           "entry_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-          "report": {"$ref": "omega_summary_fleet.schema.json"}
+          "report": {
+            "type": "object",
+            "required": ["schema_version", "fleet_id", "fingerprint", "repositories", "totals", "privacy", "boundary"],
+            "properties": {
+              "schema_version": {"type": "string"},
+              "fleet_id": {"type": "string", "pattern": "^fleet_[0-9a-f]{20}$"},
+              "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "source_kind": {"type": "string"},
+              "repositories": {"type": "array"},
+              "totals": {"type": "object"},
+              "privacy": {"type": "object"},
+              "boundary": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
         },
         "additionalProperties": false
       }
