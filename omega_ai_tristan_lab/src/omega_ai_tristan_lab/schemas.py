@@ -91,11 +91,27 @@ class SchemaGraph:
         }
 
 
+def coerce_schema_spec(raw: Any) -> SchemaSpec:
+    """Normalize central or peer-declared schemas without import coupling."""
+    if isinstance(raw, SchemaSpec):
+        return raw
+    if isinstance(raw, Mapping):
+        data = dict(raw)
+    elif callable(getattr(raw, "to_dict", None)):
+        data = dict(raw.to_dict())
+    else:
+        names = ("id", "kind", "required_keys", "optional_keys", "allow_extra", "description")
+        data = {name: getattr(raw, name) for name in names if hasattr(raw, name)}
+    for key in ("required_keys", "optional_keys"):
+        if key in data:
+            data[key] = tuple(str(item) for item in data[key])
+    if "id" not in data:
+        raise TypeError("schema spec must declare id")
+    return SchemaSpec(**data)
+
+
 def specs_from_plugin(plugin: Any) -> tuple[SchemaSpec, ...]:
     rich = getattr(plugin, "schema_specs", None)
     if not callable(rich):
         return ()
-    specs = tuple(rich())
-    if not all(isinstance(item, SchemaSpec) for item in specs):
-        raise TypeError("schema_specs() must return SchemaSpec objects")
-    return specs
+    return tuple(coerce_schema_spec(item) for item in rich())

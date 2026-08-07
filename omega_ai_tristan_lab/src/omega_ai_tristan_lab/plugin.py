@@ -12,7 +12,7 @@ from .schemas import SchemaSpec
 class OmegaAITristanLabPlugin:
     name = "omega-ai-tristan-lab"
     distribution = "omega-ai-tristan-lab"
-    version = "0.9.0"
+    version = "1.0.0"
 
     def capabilities(self) -> Sequence[str]:
         return ("idea-report", "analyze")

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from typing import Any, Iterable, Sequence
+from typing import Any, Iterable, Mapping, Sequence
 
 
 @dataclass(frozen=True, slots=True)
@@ -109,14 +109,39 @@ class CapabilityGraph:
         }
 
 
+def coerce_capability_spec(raw: Any) -> CapabilitySpec:
+    """Normalize central or peer-declared capability specs without import coupling.
+
+    Peer repositories may return plain mappings so they do not need to depend on
+    omega-ai-tristan-lab merely to describe their contracts. Unknown fields and
+    missing required fields fail closed through the CapabilitySpec constructor.
+    """
+    if isinstance(raw, CapabilitySpec):
+        return raw
+    if isinstance(raw, Mapping):
+        data = dict(raw)
+    elif callable(getattr(raw, "to_dict", None)):
+        data = dict(raw.to_dict())
+    else:
+        names = (
+            "id", "task", "description", "input_kind", "output_kind",
+            "input_schema", "output_schema", "permissions", "deterministic",
+            "cost_weight", "tags",
+        )
+        data = {name: getattr(raw, name) for name in names if hasattr(raw, name)}
+    for key in ("permissions", "tags"):
+        if key in data:
+            data[key] = tuple(str(item) for item in data[key])
+    if "id" not in data or "task" not in data:
+        raise TypeError("capability spec must declare at least id and task")
+    return CapabilitySpec(**data)
+
+
 def specs_from_plugin(plugin: Any) -> tuple[CapabilitySpec, ...]:
     """Read rich specs when available, else lift legacy string capabilities."""
     rich = getattr(plugin, "capability_specs", None)
     if callable(rich):
-        specs = tuple(rich())
-        if not all(isinstance(item, CapabilitySpec) for item in specs):
-            raise TypeError("capability_specs() must return CapabilitySpec objects")
-        return specs
+        return tuple(coerce_capability_spec(item) for item in rich())
     raw: Sequence[str] = plugin.capabilities()
     return tuple(
         CapabilitySpec(

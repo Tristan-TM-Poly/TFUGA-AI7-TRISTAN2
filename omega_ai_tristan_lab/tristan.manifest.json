@@ -1,8 +1,8 @@
 {
-  "schema": "tristan-capability-manifest/0.2",
+  "schema": "tristan-capability-manifest/0.3",
   "system": {
     "id": "omega-ai-tristan-lab",
-    "version": "0.9.0",
+    "version": "1.0.0",
     "distribution": "omega-ai-tristan-lab",
     "entrypoint_group": "tristan.plugins"
   },
@@ -22,6 +22,7 @@
   "fabric": {
     "schema_graph": true,
     "pipeline_compiler": true,
+    "structural_peer_contracts": true,
     "discovery_negative_memory": true,
     "distribution_provenance": true,
     "subprocess_sandbox": "USER_SPACE_BOUNDED",
@@ -31,7 +32,7 @@
   "integration": {
     "latest_lock": "tristan-integration-lock-0.2",
     "latest_environment": "tristan-runtime-four-repo-r02",
-    "latest_status": "CI_VERIFIED_FOUR_REPO_R02",
+    "latest_status": "V10_TYPED_PEERS_PENDING_FOUR_REPO_RECEIPT",
     "bundle_plan": "tristan-runtime-bundle-plan-0.1"
   },
   "runtime": {
@@ -47,6 +48,8 @@
     "negative_memory_required": true,
     "silent_plugin_discovery_failure_in_oak_strict": false,
     "declared_platform_target_implies_verified": false,
-    "sandbox_is_certified_security_boundary": false
+    "sandbox_is_certified_security_boundary": false,
+    "peer_mapping_specs_require_runtime_normalization": true,
+    "legacy_wildcards_permitted_outside_v10_critical_path": true
   }
 }
