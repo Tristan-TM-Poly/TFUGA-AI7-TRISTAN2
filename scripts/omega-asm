@@ -6,6 +6,19 @@ pull request does not invalidate every subsystem workflow that watches the
 shared packaging manifest.
 """
 
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+# When Python executes a script by path, sys.path[0] is the script directory
+# (``scripts/``), not the repository root. Add the root explicitly so this
+# launcher works from a clean checkout without installing the monorepo.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+repo_root_text = str(REPO_ROOT)
+if repo_root_text not in sys.path:
+    sys.path.insert(0, repo_root_text)
+
 from omega_asm_t.cli import main
 
 
