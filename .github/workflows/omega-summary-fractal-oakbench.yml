@@ -16,7 +16,7 @@ jobs:
   oakbench:
     name: D0-D9 deterministic court / Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -46,8 +46,8 @@ jobs:
           PY
       - name: Compile implementation
         run: python -m compileall -q omega_summary_fractal_t examples/omega_summary_fractal_demo.py
-      - name: Run focused tests
-        run: python -m pytest -q tests/test_omega_summary_fractal_t.py tests/test_omega_summary_corpus.py tests/test_omega_summary_lineage.py tests/test_omega_summary_delta.py tests/test_omega_summary_index_export.py tests/test_omega_summary_relations.py tests/test_omega_summary_r04.py
+      - name: Run focused tests R0.1-R0.5
+        run: python -m pytest -q tests/test_omega_summary_fractal_t.py tests/test_omega_summary_corpus.py tests/test_omega_summary_lineage.py tests/test_omega_summary_delta.py tests/test_omega_summary_index_export.py tests/test_omega_summary_relations.py tests/test_omega_summary_r04.py tests/test_omega_summary_r05.py
       - name: Generate all depths twice
         env: {SOURCE_DATE_EPOCH: '1786111200'}
         run: |
@@ -82,7 +82,8 @@ jobs:
           python -m omega_summary_fractal_t delta /tmp/summary-a/summary_d8_oak.json /tmp/summary-a/summary_d9_oak.json --output-dir /tmp/summary-delta
           test -s /tmp/summary-delta/DELTA_SUMMARY.json
           test -s /tmp/summary-delta/DELTA_SUMMARY.md
-      - name: Exercise identity continuity compiler
+      - name: Exercise identity continuity and explicit alias governance
+        env: {SOURCE_DATE_EPOCH: '1786111200'}
         run: |
           python - <<'PY'
           import json
@@ -97,17 +98,31 @@ jobs:
           Path('/tmp/identity-after.json').write_text(json.dumps(after))
           PY
           python -m omega_summary_fractal_t identity /tmp/identity-before.json /tmp/identity-after.json --output-dir /tmp/identity-out
+          python -m omega_summary_fractal_t alias-proposals /tmp/identity-out/IDENTITY_CONTINUITY.json --output /tmp/identity-out/ALIAS_PROPOSALS.json
+          source=$(python -c "import json; p=json.load(open('/tmp/identity-out/ALIAS_PROPOSALS.json')); print(p['proposals'][0]['source'])")
+          target=$(python -c "import json; p=json.load(open('/tmp/identity-out/ALIAS_PROPOSALS.json')); print(p['proposals'][0]['target'])")
+          python -m omega_summary_fractal_t alias-approve "$source" "$target" --registry /tmp/identity-out/ALIAS_REGISTRY.json --evidence-ref IDENTITY_CONTINUITY.json#candidate-1 --approved-by ci-reviewer
           python - <<'PY'
           import json
           from pathlib import Path
           from jsonschema import Draft202012Validator
-          payload=json.loads(Path('/tmp/identity-out/IDENTITY_CONTINUITY.json').read_text())
-          Draft202012Validator(json.loads(Path('schemas/omega_summary_identity.schema.json').read_text())).validate(payload)
-          assert payload['candidates'] and payload['candidates'][0]['automatic_rewrite'] is False
+          from omega_summary_fractal_t.aliases import verify_alias_registry
+          identity=json.loads(Path('/tmp/identity-out/IDENTITY_CONTINUITY.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_identity.schema.json').read_text())).validate(identity)
+          assert identity['candidates'] and identity['candidates'][0]['automatic_rewrite'] is False
+          proposals=json.loads(Path('/tmp/identity-out/ALIAS_PROPOSALS.json').read_text())
+          assert proposals['proposals'] and proposals['proposals'][0]['automatic_approval'] is False
+          registry=json.loads(Path('/tmp/identity-out/ALIAS_REGISTRY.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_alias_registry.schema.json').read_text())).validate(registry)
+          assert verify_alias_registry(registry)
           PY
-      - name: Exercise query engine
+      - name: Exercise query and composable query-plan engines
         run: |
           python -m omega_summary_fractal_t query /tmp/summary-a/summary_d9_oak.json --kind system --min-crystallization 0 --limit 25 --output-dir /tmp/query-out
+          cat >/tmp/query-plan.json <<'JSON'
+          {"seed":{"kind":"system"},"where":[{"field":"structural_crystallization","op":"gte","value":0}],"group_by":["status"],"aggregates":[{"name":"count","op":"count"},{"name":"mean_c","op":"mean","field":"structural_crystallization"}],"sort":[{"field":"count","direction":"desc"}],"limit":25}
+          JSON
+          python -m omega_summary_fractal_t query-plan /tmp/summary-a/summary_d9_oak.json /tmp/query-plan.json --output-dir /tmp/query-plan-out
           python - <<'PY'
           import json
           from pathlib import Path
@@ -115,6 +130,10 @@ jobs:
           payload=json.loads(Path('/tmp/query-out/QUERY_RESULTS.json').read_text())
           Draft202012Validator(json.loads(Path('schemas/omega_summary_query.schema.json').read_text())).validate(payload)
           assert payload['returned'] > 0
+          plan=json.loads(Path('/tmp/query-plan.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_query_plan.schema.json').read_text())).validate(plan)
+          result=json.loads(Path('/tmp/query-plan-out/QUERY_PLAN_RESULTS.json').read_text())
+          assert result['total_matches'] > 0 and result['groups']
           PY
       - name: Exercise persistent longitudinal index
         run: |
@@ -139,17 +158,40 @@ jobs:
           test -s /tmp/summary-graph/SUMMARY_GRAPH.graphml
           test -s /tmp/summary-graph/SUMMARY_GRAPH_EXPORT.json
           grep -q '<graphml' /tmp/summary-graph/SUMMARY_GRAPH.graphml
-      - name: Exercise cross-repository compiler with zero-touch dashboard
-        env: {SOURCE_DATE_EPOCH: '1786111200'}
+      - name: Exercise cross-repository compiler and privacy-safe fleet history
+        env:
+          SOURCE_DATE_EPOCH: '1786111200'
+          OMEGA_FLEET_SALT: 'ci-fixture-salt-not-a-production-secret'
         run: |
-          mkdir -p /tmp/corpus/demo-a /tmp/corpus/demo-b
+          mkdir -p /tmp/corpus/demo-a/omega_alpha_t /tmp/corpus/demo-b/omega_beta_t
           printf '# A\n' >/tmp/corpus/demo-a/README.md
+          printf '# Alpha\n' >/tmp/corpus/demo-a/omega_alpha_t/README.md
+          printf 'def alpha(): return 1\n' >/tmp/corpus/demo-a/omega_alpha_t/core.py
           printf '# B\n' >/tmp/corpus/demo-b/README.md
-          python -m omega_summary_fractal_t.corpus_cli --workspace /tmp/corpus --depth 4 --audience oak --output-dir /tmp/corpus-out
+          printf '# Beta\n' >/tmp/corpus/demo-b/omega_beta_t/README.md
+          printf 'def beta(): return 2\n' >/tmp/corpus/demo-b/omega_beta_t/core.py
+          python -m omega_summary_fractal_t.corpus_cli --workspace /tmp/corpus --depth 4 --audience oak --output-dir /tmp/corpus-out --require-fleet
           test -s /tmp/corpus-out/CORPUS_SUMMARY.json
           test -s /tmp/corpus-out/CORPUS_INDEX.json
           test -s /tmp/corpus-out/longitudinal/LONGITUDINAL_CRYSTALLIZATION.json
           test -s /tmp/corpus-out/dashboard/CORPUS_DASHBOARD.json
+          test -s /tmp/corpus-out/fleet/FLEET_PUBLIC.json
+          test -s /tmp/corpus-out/fleet/FLEET_HISTORY.json
+          test -s /tmp/corpus-out/fleet/FLEET_DASHBOARD.html
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from omega_summary_fractal_t.fleet import verify_fleet_history
+          public=json.loads(Path('/tmp/corpus-out/fleet/FLEET_PUBLIC.json').read_text())
+          Draft202012Validator(json.loads(Path('schemas/omega_summary_fleet.schema.json').read_text())).validate(public)
+          serialized=json.dumps(public)
+          assert 'demo-a' not in serialized and 'demo-b' not in serialized
+          assert 'omega_alpha_t' not in serialized and 'omega_beta_t' not in serialized
+          assert 'ci-fixture-salt' not in serialized
+          history=json.loads(Path('/tmp/corpus-out/fleet/FLEET_HISTORY.json').read_text())
+          assert verify_fleet_history(history) and len(history['runs'])==1
+          PY
       - name: Audit immutable action refs
         run: |
           python - <<'PY'
@@ -168,6 +210,7 @@ jobs:
           cp -R /tmp/summary-delta reports/omega-summary-fractal-ci/delta
           cp -R /tmp/identity-out reports/omega-summary-fractal-ci/identity
           cp -R /tmp/query-out reports/omega-summary-fractal-ci/query
+          cp -R /tmp/query-plan-out reports/omega-summary-fractal-ci/query-plan
           cp -R /tmp/summary-history reports/omega-summary-fractal-ci/history
           cp -R /tmp/summary-graph reports/omega-summary-fractal-ci/graph-explicit
           cp -R /tmp/corpus-out reports/omega-summary-fractal-ci/corpus
