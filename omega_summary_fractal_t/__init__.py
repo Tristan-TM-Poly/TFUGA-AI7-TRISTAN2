@@ -9,7 +9,12 @@ from .index import (
     verify_index,
     write_longitudinal_reports,
 )
-from .lineage import build_system_lineage, convergence_candidates, proof_debt
+from .lineage import (
+    build_system_lineage,
+    convergence_candidates,
+    proof_debt,
+    superkernel_candidates,
+)
 from .models import EvidenceRef, SummaryBundle, SummaryNode
 from .summarizer import SummaryEngine, build_summary
 
@@ -21,6 +26,7 @@ __all__ = [
     "build_summary",
     "build_system_lineage",
     "convergence_candidates",
+    "superkernel_candidates",
     "proof_debt",
     "delta_summaries",
     "render_delta_markdown",
