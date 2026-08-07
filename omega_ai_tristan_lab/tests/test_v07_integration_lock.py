@@ -4,7 +4,6 @@ from pathlib import Path
 import pytest
 
 from omega_ai_tristan_lab.integration import DEFAULT_R07_LOCK, IntegrationEvidence, PipelineProfile, RepositoryPin
-from omega_ai_tristan_lab.repo_registry import RepoRegistry
 
 
 def test_v07_lock_uses_exact_peer_commits_and_validates():
@@ -24,7 +23,7 @@ def test_v07_private_pefa_is_not_in_public_install_targets():
     assert any("PEFA-FractalEnergySystem" in target for target in all_targets)
 
 
-def test_v07_profile_is_exact_pinned_ci_verified_with_receipt():
+def test_v07_profile_remains_historical_exact_pinned_receipt():
     profile = DEFAULT_R07_LOCK.profile("pefa-cvcd-omni-oak-r01")
     assert profile.capabilities == (
         "pefa-omega-em2.cvcd-extract",
@@ -41,20 +40,11 @@ def test_v07_profile_is_exact_pinned_ci_verified_with_receipt():
     assert len(profile.evidence.artifact_sha256) == 64
 
 
-def test_v07_registry_tracks_verified_heads_without_overpromotion():
-    registry = RepoRegistry()
-    pefa = registry.get("pefa")
-    omni = registry.get("omni-core")
-    host = registry.get("tfuga-ai7")
-    assert pefa.distribution == "pefa-fractal-energy-system"
-    assert pefa.packaging_status == "adapter-candidate"
-    assert pefa.adapter_commit == "04914785353d3db59af36e57f5c19b3a75b74f1f"
-    assert omni.packaging_status == "adapter-candidate"
-    assert omni.adapter_commit == "29e77ad2e1214eb536043b31670071f5079285a5"
-    assert host.adapter_commit == "6f0c46401be32823e4370ed6bdae699955d81ca3"
-    summary = registry.doctor_summary()
-    assert summary["adapter_candidates"] == 2
-    assert summary["registered_runtime_capabilities"] >= 5
+def test_v07_lock_is_immutable_history_not_live_registry_state():
+    # The live RepoRegistry is allowed to advance to later exact adapter heads.
+    # R0.7 remains a reproducibility receipt for the environment that actually ran.
+    assert DEFAULT_R07_LOCK.peer_pins[0].commit == "04914785353d3db59af36e57f5c19b3a75b74f1f"
+    assert DEFAULT_R07_LOCK.peer_pins[1].commit == "29e77ad2e1214eb536043b31670071f5079285a5"
 
 
 def test_v07_lock_rejects_floating_or_malformed_refs():
@@ -92,5 +82,4 @@ def test_v07_receipt_rejects_invalid_artifact_digest():
 def test_v07_committed_json_lock_matches_python_contract():
     root = Path(__file__).resolve().parents[1]
     payload = json.loads((root / "integration" / "tristan_runtime_r07.lock.json").read_text(encoding="utf-8"))
-    python_lock = DEFAULT_R07_LOCK.to_dict()
-    assert payload == python_lock
+    assert payload == DEFAULT_R07_LOCK.to_dict()

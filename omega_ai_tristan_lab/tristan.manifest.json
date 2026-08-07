@@ -2,7 +2,7 @@
   "schema": "tristan-capability-manifest/0.1",
   "system": {
     "id": "omega-ai-tristan-lab",
-    "version": "0.6.0",
+    "version": "0.8.0",
     "distribution": "omega-ai-tristan-lab",
     "entrypoint_group": "tristan.plugins"
   },
@@ -17,10 +17,22 @@
       "oak_status": "TESTED"
     }
   ],
-  "runtime": {"python": ">=3.10", "network_default": false},
+  "integration": {
+    "latest_lock": "tristan-integration-lock-0.2",
+    "latest_environment": "tristan-runtime-four-repo-r02",
+    "latest_status": "CI_VERIFIED_FOUR_REPO_R02",
+    "bundle_plan": "tristan-runtime-bundle-plan-0.1"
+  },
+  "runtime": {
+    "python": ">=3.10",
+    "network_default": false,
+    "automatic_install": false,
+    "automatic_publish": false
+  },
   "oak": {
     "generated_adapters_execute_by_default": false,
     "scientific_proof_implied_by_execution": false,
+    "cross_domain_pipeline_inference": false,
     "negative_memory_required": true
   }
 }

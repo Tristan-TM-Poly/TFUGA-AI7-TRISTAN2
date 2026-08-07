@@ -69,9 +69,9 @@ DEFAULT_REPOSITORIES: tuple[RepositorySpec, ...] = (
         distribution="pefa-fractal-energy-system",
         package_hint="pefa_omega_em2",
         packaging_status="adapter-candidate",
-        notes="R0.1 adapter is exact-pinned and cross-repository CI verified; promotion to main remains review-gated.",
+        notes="R0.2 driver is exact-pinned and four-repository CI verified; promotion to main remains review-gated.",
         adapter_branch="feat/tristan-runtime-adapter-r01",
-        adapter_commit="04914785353d3db59af36e57f5c19b3a75b74f1f",
+        adapter_commit="1e72e4619c3fb2b2c175f23ae8053d752a709621",
         runtime_capabilities=("pefa-omega-em2.cvcd-extract", "pefa-omega-em2.cvcd-expand"),
     ),
     RepositorySpec(
@@ -80,29 +80,36 @@ DEFAULT_REPOSITORIES: tuple[RepositorySpec, ...] = (
         "private",
         "Multi-system accelerator / infrastructure collection",
         packaging_status="needs-packaging",
-        notes="Top-level repository is a collection of subsystems and does not yet expose a root Python distribution.",
+        notes="Real ai7_auto kernels exist, but no root adapter is promoted until dependency boundaries are modeled honestly.",
     ),
     RepositorySpec(
         "tfuga-ai7",
         "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
         "public",
-        "Omega/AI7 research tooling and CLI collection",
+        "Omega/AI7 research tooling and shared Tristan Runtime host",
         distribution="tfuga-ai7-tristan2",
         packaging_status="package",
-        notes="Root distribution exists; Ω-AI-TRISTAN-LAB v0.7 runtime commit was exercised by exact-pinned cross-repository CI.",
+        notes="The isolated omega_ai_tristan_lab subpackage is the shared capability runtime; exact f4f1968 runtime was exercised by four-repository CI.",
         adapter_branch="omega-ai-tristan-lab",
-        adapter_commit="6f0c46401be32823e4370ed6bdae699955d81ca3",
+        adapter_commit="f4f1968b6fd63ec4c2167f79d29701d92e65afa7",
         runtime_capabilities=("tristan.idea.analyze",),
     ),
     RepositorySpec(
         "tfug-corpus",
         "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
         "public",
-        "Large TFUG corpus and applied research modules",
+        "Large TFUG corpus; current runtime adapter targets the existing protein_fold_tristan package",
         distribution="protein-fold-tristan",
         package_hint="protein_fold_tristan",
-        packaging_status="partial",
-        notes="Root pyproject currently packages one focused module; the full corpus needs adapters for unified execution.",
+        packaging_status="adapter-candidate",
+        notes="Protein adapter exposes bounded dependency-free computational primitives and was executed inside the verified four-repository matrix.",
+        adapter_branch="feat/tristan-runtime-adapter-r01",
+        adapter_commit="42c3467b2675c7d83beae6b274586dc2cdf77d42",
+        runtime_capabilities=(
+            "protein-fold-tristan.sequence-validate",
+            "protein-fold-tristan.contact-map",
+            "protein-fold-tristan.oak-level",
+        ),
     ),
     RepositorySpec(
         "tfugag",
@@ -110,7 +117,7 @@ DEFAULT_REPOSITORIES: tuple[RepositorySpec, ...] = (
         "public",
         "TFUGAG companion repository",
         packaging_status="needs-packaging",
-        notes="No root pyproject detected during the runtime audit.",
+        notes="No root Python distribution has yet been promoted into the shared runtime contract.",
     ),
     RepositorySpec(
         "omni-core",
@@ -120,7 +127,7 @@ DEFAULT_REPOSITORIES: tuple[RepositorySpec, ...] = (
         distribution="tristan-omni-core",
         package_hint="tristan_omni_core",
         packaging_status="adapter-candidate",
-        notes="R0.1 adapter exact commit was built, installed and executed inside the verified three-repository pipeline; standalone workflow remains a separate signal.",
+        notes="Exact adapter commit was built, installed and executed in both three- and four-repository matrices; merge remains review-gated.",
         adapter_branch="feat/tristan-runtime-adapter-r01",
         adapter_commit="29e77ad2e1214eb536043b31670071f5079285a5",
         runtime_capabilities=("tristan-omni-core.evidence-to-idea", "tristan-omni-core.valuation-assess"),
@@ -129,15 +136,7 @@ DEFAULT_REPOSITORIES: tuple[RepositorySpec, ...] = (
 
 
 class RepoRegistry:
-    """Read-only registry of repositories participating in TristanLab."""
-
-    _SCORES = {
-        "package": 1.0,
-        "adapter-candidate": 0.85,
-        "partial": 0.55,
-        "needs-packaging": 0.2,
-        "unknown": 0.0,
-    }
+    _SCORES = {"package": 1.0, "adapter-candidate": 0.85, "partial": 0.55, "needs-packaging": 0.2, "unknown": 0.0}
 
     def __init__(self, repositories: Iterable[RepositorySpec] = DEFAULT_REPOSITORIES):
         self._repositories = tuple(repositories)
@@ -157,15 +156,15 @@ class RepoRegistry:
     def _actions(self, repo: RepositorySpec, installed: bool) -> tuple[str, ...]:
         actions: list[str] = []
         if repo.packaging_status == "adapter-candidate":
-            actions.append("Require human review before promoting the adapter to the default branch; cross-repo CI does not authorize merge.")
+            actions.append("Keep adapter exact-pinned and review-gated; CI integration does not authorize default-branch merge.")
         elif repo.packaging_status != "package":
-            actions.append("Generate/review a root Python distribution and tristan.plugins adapter.")
+            actions.append("Generate/review a root distribution and bounded tristan.plugins adapter.")
         if repo.distribution and not installed:
-            actions.append(f"Build and install a pinned wheel for {repo.distribution}.")
-        if not repo.runtime_capabilities:
-            actions.append("Publish a capability manifest with tests and OAK evidence.")
+            actions.append(f"Build/install an exact-pinned wheel for {repo.distribution}.")
+        if repo.runtime_capabilities:
+            actions.append("Retain capability tests, provenance, immutable source pins and OAK interpretation boundaries.")
         else:
-            actions.append("Retain capability-level tests, provenance, exact pins, and OAK non-claims during integration.")
+            actions.append("Publish no runtime capability until a real kernel and dependency boundary are identified.")
         return tuple(actions)
 
     def doctor(self) -> tuple[RepositoryHealth, ...]:
@@ -195,5 +194,6 @@ class RepoRegistry:
             "needs_packaging": sum(item.packaging_status == "needs-packaging" for item in health),
             "registered_runtime_capabilities": sum(len(repo.runtime_capabilities) for repo in self._repositories),
             "packaging_maturity": round(sum(item.packaging_score for item in health) / total if total else 0.0, 3),
-            "oak_rule": "Packaging and CI integration are software evidence, not proof that scientific capabilities are correct or ready to merge.",
+            "verified_environment": "CI_VERIFIED_FOUR_REPO_R02",
+            "oak_rule": "Packaging and multi-repository CI are software evidence, not scientific truth or merge authorization.",
         }

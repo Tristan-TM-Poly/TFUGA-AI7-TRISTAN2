@@ -125,7 +125,8 @@ def test_v06_repo_doctor_exposes_quantified_maturity():
     summary = RepoRegistry().doctor_summary()
     assert summary["repositories"] == 6
     assert 0 <= summary["packaging_maturity"] <= 1
-    assert summary["packaged"] >= 2
+    # v0.8 splits installable packaging from adapter-promotion maturity.
+    assert summary["packaged"] + summary["adapter_candidates"] >= 4
 
 
 def test_v06_capsule_can_be_persisted(tmp_path: Path):
@@ -138,10 +139,11 @@ def test_v06_capsule_can_be_persisted(tmp_path: Path):
     assert (root / "output.json").exists()
 
 
-def test_v06_repository_ships_machine_readable_manifest_and_tir_schema():
+def test_machine_manifest_and_tir_schema_follow_current_runtime():
     root = Path(__file__).parents[1]
     manifest = json.loads((root / "tristan.manifest.json").read_text(encoding="utf-8"))
     schema = json.loads((root / "schemas" / "tir_artifact.schema.json").read_text(encoding="utf-8"))
-    assert manifest["system"]["version"] == "0.6.0"
+    assert manifest["system"]["version"] == lab_plugin.version
+    assert manifest["integration"]["latest_status"] == "CI_VERIFIED_FOUR_REPO_R02"
     assert manifest["capabilities"][0]["id"] == "tristan.idea.analyze"
     assert schema["properties"]["schema_version"]["const"] == "tir-0.1"
