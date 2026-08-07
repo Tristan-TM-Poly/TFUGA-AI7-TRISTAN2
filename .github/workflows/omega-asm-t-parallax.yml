@@ -1,0 +1,200 @@
+name: Omega ASM-T Compiler Parallax
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - feat/omega-asm-t-r2-p7-bounded-equivalence
+    paths:
+      - 'omega_asm_t/**'
+      - 'tests/test_omega_asm_t*.py'
+      - 'examples/parallax/**'
+      - 'examples/native/omega_dot_u64_x86_64.S'
+      - 'schemas/omega_asm_*.schema.json'
+      - 'policies/omega_asm_t*.json'
+      - 'docs/architecture/OMEGA_ASM_T_*.md'
+      - '.github/workflows/omega-asm-t-parallax.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-asm-parallax-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-court:
+    name: Parallax Python/OAK court
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile package and complete stack courts
+        run: python -m compileall -q omega_asm_t tests/test_omega_asm_t*.py
+      - name: Run R1 through parallax courts
+        run: python -m pytest -q tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py tests/test_omega_asm_t_r2_p5.py tests/test_omega_asm_t_r2_p6.py tests/test_omega_asm_t_r2_p7.py tests/test_omega_asm_t_parallax.py
+      - name: Validate schema and policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          schema=json.loads(Path('schemas/omega_asm_parallax_report.schema.json').read_text())
+          policy=json.loads(Path('policies/omega_asm_t_parallax_policy.json').read_text())
+          Draft202012Validator.check_schema(schema)
+          assert policy['authority']=='review_only'
+          assert policy['package_executes_compilers'] is False
+          assert policy['reference_court_requires_separate_translation_units'] is True
+          assert policy['reference_court_allows_lto'] is False
+          assert policy['performance_thresholds_gate_ci'] is False
+          assert policy['universal_language_claim_allowed'] is False
+          PY
+      - name: Audit immutable action refs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('.github/workflows/omega-asm-t-parallax.yml').read_text()
+          refs=re.findall(r'(?m)^\s*uses:\s*([^\s#]+)', text)
+          assert refs
+          assert not [ref for ref in refs if not re.search(r'@[0-9a-f]{40}$', ref)]
+          PY
+
+  native-parallax-court:
+    name: C C++ Rust ASM differential/disassembly/P4 court
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install schema validator
+        run: python -m pip install --disable-pip-version-check jsonschema
+      - name: Require native toolchains
+        run: |
+          command -v cc
+          command -v c++
+          command -v rustc
+          command -v objdump
+          test "$(uname -m)" = "x86_64"
+      - name: Compile five implementations as separate translation units without LTO
+        run: |
+          mkdir -p /tmp/parallax
+          cc -std=c11 -O3 -fno-lto -Wall -Wextra -Werror \
+            -c examples/parallax/dot_u64_c.c -o /tmp/parallax/c.o
+          c++ -std=c++20 -O3 -fno-lto -fno-exceptions -fno-rtti -Wall -Wextra -Werror \
+            -c examples/parallax/dot_u64_cpp.cpp -o /tmp/parallax/cpp.o
+          rustc -O -C opt-level=3 -C panic=abort --crate-type=lib \
+            --emit=obj=/tmp/parallax/rust.o examples/parallax/dot_u64_rust.rs
+          cc -c examples/native/omega_dot_u64_x86_64.S -o /tmp/parallax/asm.o
+          cc --version | head -n 1 >/tmp/parallax/cc.version
+          c++ --version | head -n 1 >/tmp/parallax/cxx.version
+          rustc --version >/tmp/parallax/rustc.version
+          objdump --version | head -n 1 >/tmp/parallax/objdump.version
+      - name: Link and run multi-language differential court
+        run: |
+          cc -std=c11 -O2 -Wall -Wextra -Werror -c \
+            examples/parallax/dot_u64_parallax_harness.c -o /tmp/parallax/harness.o
+          c++ /tmp/parallax/harness.o /tmp/parallax/c.o /tmp/parallax/cpp.o \
+            /tmp/parallax/rust.o /tmp/parallax/asm.o -o /tmp/parallax/harness
+          /tmp/parallax/harness
+      - name: Extract symbol-specific disassembly
+        run: |
+          objdump -dr --disassemble=omega_dot_u64_c /tmp/parallax/c.o > /tmp/parallax/c.dis
+          objdump -dr --disassemble=omega_dot_u64_cpp /tmp/parallax/cpp.o > /tmp/parallax/cpp.dis
+          objdump -dr --disassemble=omega_dot_u64_rust /tmp/parallax/rust.o > /tmp/parallax/rust.dis
+          objdump -dr --disassemble=omega_dot_u64_indexed /tmp/parallax/asm.o > /tmp/parallax/asm-indexed.dis
+          objdump -dr --disassemble=omega_dot_u64_ptr /tmp/parallax/asm.o > /tmp/parallax/asm-ptr.dis
+          for f in /tmp/parallax/*.dis; do test -s "$f"; done
+      - name: Build source object disassembly provenance ledger
+        run: |
+          python -m omega_asm_t microarch --toolchains --output /tmp/parallax/microarch.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          microarch=json.loads(Path('/tmp/parallax/microarch.json').read_text())
+          descriptor={
+            'semantic_contract':'dot_u64_mod_2^64',
+            'build_context':{
+              'microarchitecture':microarch,
+              'separate_translation_units':True,
+              'lto':False,
+              'benchmark_protocol_version':2,
+            },
+            'artifacts':[
+              {'implementation_id':'c','language':'c','symbol':'omega_dot_u64_c','source_path':'examples/parallax/dot_u64_c.c','object_path':'/tmp/parallax/c.o','disassembly_path':'/tmp/parallax/c.dis','toolchain':Path('/tmp/parallax/cc.version').read_text().strip(),'flags':['-std=c11','-O3','-fno-lto']},
+              {'implementation_id':'cpp','language':'cpp','symbol':'omega_dot_u64_cpp','source_path':'examples/parallax/dot_u64_cpp.cpp','object_path':'/tmp/parallax/cpp.o','disassembly_path':'/tmp/parallax/cpp.dis','toolchain':Path('/tmp/parallax/cxx.version').read_text().strip(),'flags':['-std=c++20','-O3','-fno-lto','-fno-exceptions','-fno-rtti']},
+              {'implementation_id':'rust','language':'rust','symbol':'omega_dot_u64_rust','source_path':'examples/parallax/dot_u64_rust.rs','object_path':'/tmp/parallax/rust.o','disassembly_path':'/tmp/parallax/rust.dis','toolchain':Path('/tmp/parallax/rustc.version').read_text().strip(),'flags':['-O','-C opt-level=3','-C panic=abort','--crate-type=lib']},
+              {'implementation_id':'asm_indexed','language':'asm','symbol':'omega_dot_u64_indexed','source_path':'examples/native/omega_dot_u64_x86_64.S','object_path':'/tmp/parallax/asm.o','disassembly_path':'/tmp/parallax/asm-indexed.dis','toolchain':Path('/tmp/parallax/cc.version').read_text().strip(),'flags':['cc -c']},
+              {'implementation_id':'asm_ptr','language':'asm','symbol':'omega_dot_u64_ptr','source_path':'examples/native/omega_dot_u64_x86_64.S','object_path':'/tmp/parallax/asm.o','disassembly_path':'/tmp/parallax/asm-ptr.dis','toolchain':Path('/tmp/parallax/cc.version').read_text().strip(),'flags':['cc -c']},
+            ]
+          }
+          Path('/tmp/parallax/descriptor.json').write_text(json.dumps(descriptor, indent=2, sort_keys=True)+'\n')
+          PY
+          python -m omega_asm_t parallax-report /tmp/parallax/descriptor.json \
+            --output /tmp/parallax/parallax-report.json
+      - name: Validate parallax artifact ledger
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          report=json.loads(Path('/tmp/parallax/parallax-report.json').read_text())
+          schema=json.loads(Path('schemas/omega_asm_parallax_report.schema.json').read_text())
+          Draft202012Validator(schema).validate(report)
+          assert report['semantic_contract']=='dot_u64_mod_2^64'
+          assert report['implementation_count']==5
+          assert report['languages']==['asm','c','cpp','rust']
+          assert report['authority']=='review_only'
+          assert report['comparison_contract']['lto_forbidden_in_reference_court'] is True
+          assert report['comparison_contract']['universal_language_claim_allowed'] is False
+          assert all(len(row['source_sha256'])==64 for row in report['artifacts'])
+          assert all(len(row['object_sha256'])==64 for row in report['artifacts'])
+          assert all(len(row['disassembly_sha256'])==64 for row in report['artifacts'])
+          PY
+      - name: Build and run fair external-symbol P4-v2 parallax benchmark
+        run: |
+          cc -std=c11 -O3 -fno-lto -Wall -Wextra -Werror -c \
+            examples/parallax/dot_u64_parallax_benchmark.c -o /tmp/parallax/benchmark.o
+          c++ /tmp/parallax/benchmark.o /tmp/parallax/c.o /tmp/parallax/cpp.o \
+            /tmp/parallax/rust.o /tmp/parallax/asm.o -o /tmp/parallax/benchmark
+          /tmp/parallax/benchmark > /tmp/parallax/raw-benchmark.json
+          python -m omega_asm_t benchmark-report /tmp/parallax/raw-benchmark.json \
+            --output /tmp/parallax/p4-report.json
+      - name: Validate parallax timing protocol without speed threshold
+        run: |
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          raw=json.loads(Path('/tmp/parallax/raw-benchmark.json').read_text())
+          report=json.loads(Path('/tmp/parallax/p4-report.json').read_text())
+          assert raw['benchmark_protocol_version']==2
+          assert raw['parallax'] is True
+          assert raw['separate_translation_units'] is True
+          assert raw['anti_hoist_memory_barrier'] is True
+          expected={'reference_c','cpp','rust','asm_indexed','asm_ptr'}
+          assert set(report['statistics_ns_per_call'])==expected
+          for row in report['statistics_ns_per_call'].values():
+              assert row['count']==31
+              assert math.isfinite(row['median']) and row['median']>0
+          assert report['median_ratio_to_reference_c']['reference_c']==1.0
+          PY
+      - name: Print parallax evidence
+        run: |
+          cat /tmp/parallax/parallax-report.json
+          cat /tmp/parallax/p4-report.json

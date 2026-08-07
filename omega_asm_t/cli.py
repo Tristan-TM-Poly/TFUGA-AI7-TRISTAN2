@@ -12,6 +12,7 @@ from .formal import build_equivalence_obligation, build_p7_certificate
 from .ir import dot_u64_block_program, load_program
 from .microarch import microarchitecture_manifest
 from .oak import oak_report
+from .parallax import build_parallax_report
 from .replication import aggregate_p5_reports
 from .search import estimate_builtin_candidates, pairwise_tradeoffs, pareto_front
 
@@ -60,6 +61,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     benchmark_report.add_argument("path")
     benchmark_report.add_argument("--output")
+
+    parallax = sub.add_parser(
+        "parallax-report",
+        help="hash externally built source/object/disassembly artifacts into a compiler-parallax ledger",
+    )
+    parallax.add_argument("path", help="parallax build descriptor JSON")
+    parallax.add_argument("--output")
 
     microarch = sub.add_parser(
         "microarch", help="emit an observational microarchitecture/cache/ISA manifest"
@@ -154,22 +162,12 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "demo":
         program = dot_u64_block_program(args.width)
-        print(
-            _json(
-                {
-                    "program": program.to_dict(),
-                    "metrics": analyze(program).to_dict(),
-                    "cvcd": cvcd_signature(program),
-                }
-            )
-        )
+        print(_json({"program": program.to_dict(), "metrics": analyze(program).to_dict(), "cvcd": cvcd_signature(program)}))
         return 0
-
     if args.command == "analyze":
         program = load_program(args.path)
         print(_json({"metrics": analyze(program).to_dict(), "cvcd": cvcd_signature(program)}))
         return 0
-
     if args.command == "emit":
         assembly = emit_dot_u64(args.arch, args.variant)
         if args.output:
@@ -177,111 +175,72 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print(assembly, end="")
         return 0
-
     if args.command == "tournament":
         candidates = estimate_builtin_candidates(args.arch)
-        print(
-            _json(
-                {
-                    "architecture": args.arch,
-                    "warning": "static heuristic only; benchmark on the target CPU before performance claims",
-                    "candidates": [candidate.to_dict() for candidate in candidates],
-                    "pareto_front": [candidate.to_dict() for candidate in pareto_front(candidates)],
-                    "tradeoffs": pairwise_tradeoffs(candidates),
-                }
-            )
-        )
+        print(_json({
+            "architecture": args.arch,
+            "warning": "static heuristic only; benchmark on the target CPU before performance claims",
+            "candidates": [candidate.to_dict() for candidate in candidates],
+            "pareto_front": [candidate.to_dict() for candidate in pareto_front(candidates)],
+            "tradeoffs": pairwise_tradeoffs(candidates),
+        }))
         return 0
-
     if args.command == "report":
-        payload = oak_report(
-            dot_u64_block_program(args.width), native_verified=args.native_verified
-        ).to_dict()
-        _write_or_print(payload, args.output)
+        _write_or_print(oak_report(dot_u64_block_program(args.width), native_verified=args.native_verified).to_dict(), args.output)
         return 0
-
     if args.command == "benchmark-report":
         _write_or_print(_benchmark_report(args.path), args.output)
         return 0
-
-    if args.command == "microarch":
-        _write_or_print(
-            microarchitecture_manifest(include_toolchains=args.toolchains), args.output
-        )
+    if args.command == "parallax-report":
+        _write_or_print(build_parallax_report(_load_json_object(args.path)), args.output)
         return 0
-
+    if args.command == "microarch":
+        _write_or_print(microarchitecture_manifest(include_toolchains=args.toolchains), args.output)
+        return 0
     if args.command == "p5-report":
         perf_text = Path(args.path).read_text(encoding="utf-8", errors="replace")
-        _write_or_print(
-            build_p5_report(
-                perf_text,
-                source_exit_code=args.exit_code,
-                binary_path=args.binary,
-            ),
-            args.output,
-        )
+        _write_or_print(build_p5_report(perf_text, source_exit_code=args.exit_code, binary_path=args.binary), args.output)
         return 0
-
     if args.command == "p6-aggregate":
-        reports = [_load_json_object(path) for path in args.paths]
-        _write_or_print(
-            aggregate_p5_reports(reports, min_replicates=args.min_replicates), args.output
-        )
+        _write_or_print(aggregate_p5_reports([_load_json_object(path) for path in args.paths], min_replicates=args.min_replicates), args.output)
         return 0
-
     if args.command == "p7-obligation":
         _write_or_print(build_equivalence_obligation(_load_json_object(args.path)), args.output)
         return 0
-
     if args.command == "p7-certificate":
-        solver_text = (
-            Path(args.solver_result).read_text(encoding="utf-8", errors="replace")
-            if args.solver_result
-            else None
-        )
-        _write_or_print(
-            build_p7_certificate(
-                _load_json_object(args.path),
-                solver_text=solver_text,
-                solver_name=args.solver_name,
-                solver_version=args.solver_version,
-                max_states=args.max_states,
-            ),
-            args.output,
-        )
+        solver_text = Path(args.solver_result).read_text(encoding="utf-8", errors="replace") if args.solver_result else None
+        _write_or_print(build_p7_certificate(
+            _load_json_object(args.path), solver_text=solver_text,
+            solver_name=args.solver_name, solver_version=args.solver_version,
+            max_states=args.max_states,
+        ), args.output)
         return 0
-
     if args.command == "p5-events":
         print(_json({"events": list(requested_perf_events())}))
         return 0
-
     if args.command == "machine":
         print(_json(machine_manifest()))
         return 0
-
     if args.command == "capabilities":
-        print(
-            _json(
-                {
-                    "x86_64": list(supported_variants("x86_64")),
-                    "aarch64": list(supported_variants("aarch64")),
-                    "evidence": {
-                        "P1": "static structure",
-                        "P2": "versioned uncalibrated heuristic",
-                        "P3": "native differential correctness",
-                        "P4": "observational timing",
-                        "P5": "externally collected hardware-counter parsing and provenance",
-                        "P6": "identified-target replication grouping; no universal promotion",
-                        "P7": "bounded fixed-width bit-vector obligation/certificate; kernel_checked=false",
-                    },
-                    "p5_perf_events": list(requested_perf_events()),
-                    "arbitrary_command_execution": False,
-                    "package_executes_solver": False,
-                }
-            )
-        )
+        print(_json({
+            "x86_64": list(supported_variants("x86_64")),
+            "aarch64": list(supported_variants("aarch64")),
+            "evidence": {
+                "P1": "static structure",
+                "P2": "versioned uncalibrated heuristic",
+                "P3": "native differential correctness",
+                "P4": "observational timing",
+                "P5": "externally collected hardware-counter parsing and provenance",
+                "P6": "identified-target replication grouping; no universal promotion",
+                "P7": "bounded fixed-width bit-vector obligation/certificate; kernel_checked=false",
+                "parallax": "separate-translation-unit C/C++/Rust/ASM provenance and comparison",
+            },
+            "p5_perf_events": list(requested_perf_events()),
+            "arbitrary_command_execution": False,
+            "package_executes_solver": False,
+            "package_executes_compilers": False,
+        }))
         return 0
-
     raise AssertionError(args.command)
 
 
