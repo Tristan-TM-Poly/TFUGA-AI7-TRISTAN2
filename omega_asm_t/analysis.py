@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import math
 
+from .ir import validate_program
 from .models import AnalysisMetrics, Program
 
 
 def dependency_graph(program: Program) -> dict[int, tuple[int, ...]]:
+    validate_program(program)
     producer: dict[str, int] = {}
     graph: dict[int, tuple[int, ...]] = {}
     for index, instruction in enumerate(program.instructions):
@@ -52,15 +54,26 @@ def _last_uses(program: Program) -> dict[str, int]:
 
 
 def register_lifetime_metrics(program: Program) -> tuple[int, int]:
+    """Return proxy register-time volume and peak live values.
+
+    Program inputs are considered live before instruction 0 (birth = -1). This
+    avoids the old undercount where argument values contributed no pressure.
+    The metric remains an SSA liveness proxy, not a physical register allocator.
+    """
+
+    validate_program(program)
     last = _last_uses(program)
-    birth: dict[str, int] = {
-        instruction.output: index
-        for index, instruction in enumerate(program.instructions)
-        if instruction.output is not None
-    }
+    birth: dict[str, int] = {value: -1 for value in program.inputs}
+    birth.update(
+        {
+            instruction.output: index
+            for index, instruction in enumerate(program.instructions)
+            if instruction.output is not None
+        }
+    )
     volume = sum(max(0, last.get(value, born) - born) for value, born in birth.items())
     peak = 0
-    for time in range(len(program.instructions) + 1):
+    for time in range(-1, len(program.instructions) + 1):
         live = sum(
             1
             for value, born in birth.items()
@@ -71,7 +84,9 @@ def register_lifetime_metrics(program: Program) -> tuple[int, int]:
 
 
 def binary_entropy(probability: float) -> float:
-    if probability <= 0.0 or probability >= 1.0:
+    if not math.isfinite(probability) or not 0.0 <= probability <= 1.0:
+        raise ValueError("probability must be finite and inside [0, 1]")
+    if probability in {0.0, 1.0}:
         return 0.0
     return -probability * math.log2(probability) - (1.0 - probability) * math.log2(
         1.0 - probability
@@ -79,6 +94,7 @@ def binary_entropy(probability: float) -> float:
 
 
 def analyze(program: Program) -> AnalysisMetrics:
+    validate_program(program)
     count = len(program.instructions)
     path = critical_path(program)
     volume, peak = register_lifetime_metrics(program)

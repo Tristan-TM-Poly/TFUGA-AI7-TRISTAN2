@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -43,41 +44,90 @@ def load_program(path: str | Path) -> Program:
 
 
 def dump_program(program: Program, path: str | Path) -> None:
+    validate_program(program)
     Path(path).write_text(
         json.dumps(program.to_dict(), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
 
 
+def _validate_identifier(value: object, *, context: str) -> str:
+    if not isinstance(value, str) or not value:
+        raise ValueError(f"{context}: identifier must be a non-empty string")
+    if value.startswith("#"):
+        raise ValueError(f"{context}: '#' prefix is reserved for immediate values")
+    return value
+
+
 def validate_program(program: Program) -> None:
-    available = set(program.inputs)
+    if not isinstance(program.name, str) or not program.name.strip():
+        raise ValueError("program name must be a non-empty string")
+
+    inputs = tuple(
+        _validate_identifier(value, context="program input") for value in program.inputs
+    )
+    if len(set(inputs)) != len(inputs):
+        raise ValueError("program inputs must be unique")
+
+    available = set(inputs)
     produced: set[str] = set()
     for index, instruction in enumerate(program.instructions):
-        if instruction.latency < 0:
-            raise ValueError(f"instruction {index}: latency must be non-negative")
-        if instruction.size_bytes < 0 or instruction.memory_bytes < 0:
-            raise ValueError(f"instruction {index}: byte counts must be non-negative")
-        if instruction.vector_width < 1:
-            raise ValueError(f"instruction {index}: vector width must be positive")
-        if instruction.branch_probability is not None and not (
-            0.0 <= instruction.branch_probability <= 1.0
+        if not isinstance(instruction.op, str) or not instruction.op.strip():
+            raise ValueError(f"instruction {index}: op must be a non-empty string")
+        if not math.isfinite(instruction.latency) or instruction.latency < 0:
+            raise ValueError(f"instruction {index}: latency must be finite and non-negative")
+        if (
+            not isinstance(instruction.size_bytes, int)
+            or isinstance(instruction.size_bytes, bool)
+            or instruction.size_bytes < 0
+            or not isinstance(instruction.memory_bytes, int)
+            or isinstance(instruction.memory_bytes, bool)
+            or instruction.memory_bytes < 0
+        ):
+            raise ValueError(f"instruction {index}: byte counts must be non-negative integers")
+        if (
+            not isinstance(instruction.vector_width, int)
+            or isinstance(instruction.vector_width, bool)
+            or instruction.vector_width < 1
+        ):
+            raise ValueError(f"instruction {index}: vector width must be a positive integer")
+        if instruction.branch_probability is not None and (
+            not math.isfinite(instruction.branch_probability)
+            or not 0.0 <= instruction.branch_probability <= 1.0
         ):
             raise ValueError(f"instruction {index}: branch probability outside [0, 1]")
-        missing = [
-            value
-            for value in instruction.inputs
-            if not value.startswith("#") and value not in available
-        ]
+        if not isinstance(instruction.metadata, dict):
+            raise ValueError(f"instruction {index}: metadata must be a dictionary")
+
+        missing: list[str] = []
+        for value in instruction.inputs:
+            if not isinstance(value, str) or not value:
+                raise ValueError(
+                    f"instruction {index}: inputs must be non-empty strings"
+                )
+            if value == "#":
+                raise ValueError(f"instruction {index}: empty immediate value")
+            if not value.startswith("#") and value not in available:
+                missing.append(value)
         if missing:
             raise ValueError(f"instruction {index}: undefined inputs {missing}")
+
         if instruction.output is not None:
-            if instruction.output in produced or instruction.output in program.inputs:
+            output = _validate_identifier(
+                instruction.output, context=f"instruction {index} output"
+            )
+            if output in produced or output in available:
                 raise ValueError(
-                    f"instruction {index}: output {instruction.output!r} is not SSA-unique"
+                    f"instruction {index}: output {output!r} is not SSA-unique"
                 )
-            produced.add(instruction.output)
-            available.add(instruction.output)
-    unknown_outputs = [value for value in program.outputs if value not in available]
+            produced.add(output)
+            available.add(output)
+
+    unknown_outputs: list[str] = []
+    for value in program.outputs:
+        output = _validate_identifier(value, context="program output")
+        if output not in available:
+            unknown_outputs.append(output)
     if unknown_outputs:
         raise ValueError(f"undefined program outputs: {unknown_outputs}")
 
@@ -138,9 +188,11 @@ def dot_u64_block_program(width: int = 4) -> Program:
         layer = next_layer
         round_index += 1
     result = layer[0]
-    return Program(
+    program = Program(
         name=f"dot_u64_block_{width}",
         inputs=("a_ptr", "b_ptr"),
         instructions=tuple(instructions),
         outputs=(result,),
     )
+    validate_program(program)
+    return program

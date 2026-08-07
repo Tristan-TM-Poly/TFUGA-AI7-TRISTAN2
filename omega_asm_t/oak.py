@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 from .analysis import cvcd_signature
+from .ir import validate_program
 from .models import OAKReport, Program
 
 
 def oak_report(program: Program, *, native_verified: bool = False) -> OAKReport:
+    # The report is itself a claim surface: invalid direct Program objects must
+    # never receive a positive structural-validity claim.
+    validate_program(program)
     metrics = cvcd_signature(program)
     claims = [
         "ASM-IR is structurally valid and analyzable",
