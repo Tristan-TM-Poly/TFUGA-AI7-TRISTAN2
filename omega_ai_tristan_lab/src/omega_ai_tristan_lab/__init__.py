@@ -2,7 +2,7 @@
 
 OAK-safe scaffold that converts ideas and local documents into structured
 theory cards, agent plans, evaluation reports, IP classifications, revenue maps,
-and persisted artifacts.
+persisted artifacts, and composable multi-repository Python executions.
 """
 
 from .agent_harness import AgentHarness
@@ -20,8 +20,10 @@ from .models import (
 )
 from .oak_eval import OAKEvaluator
 from .rag_engine import MiniRAG
+from .repo_registry import RepoRegistry, RepositoryHealth, RepositorySpec
 from .reporting import ReportRenderer
 from .revenue_mapper import RevenueMapper
+from .runtime import PipelineStep, PluginInfo, TristanPlugin, TristanRuntime
 from .search_backends import LexicalSearchBackend, NullVectorBackend, SearchBackend, SearchResult
 from .theory_to_prototype import TheoryPrototypeFactory
 from .workspace import Workspace, WorkspaceRun
@@ -42,13 +44,20 @@ __all__ = [
     "OAKReport",
     "OAKStatus",
     "OAKEvaluator",
+    "PipelineStep",
+    "PluginInfo",
+    "RepoRegistry",
     "ReportRenderer",
+    "RepositoryHealth",
+    "RepositorySpec",
     "RevenueMapper",
     "RevenuePath",
     "SearchBackend",
     "SearchResult",
     "TheoryCard",
     "TheoryPrototypeFactory",
+    "TristanPlugin",
+    "TristanRuntime",
     "Workspace",
     "WorkspaceRun",
 ]
