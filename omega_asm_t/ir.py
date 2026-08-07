@@ -20,7 +20,7 @@ def _instruction_from_dict(data: dict[str, Any]) -> Instruction:
             if data.get("branch_probability") is None
             else float(data["branch_probability"])
         ),
-        vector_width=max(1, int(data.get("vector_width", 1))),
+        vector_width=int(data.get("vector_width", 1)),
         metadata=dict(data.get("metadata", {})),
     )
 
@@ -57,6 +57,8 @@ def validate_program(program: Program) -> None:
             raise ValueError(f"instruction {index}: latency must be non-negative")
         if instruction.size_bytes < 0 or instruction.memory_bytes < 0:
             raise ValueError(f"instruction {index}: byte counts must be non-negative")
+        if instruction.vector_width < 1:
+            raise ValueError(f"instruction {index}: vector width must be positive")
         if instruction.branch_probability is not None and not (
             0.0 <= instruction.branch_probability <= 1.0
         ):
@@ -84,23 +86,37 @@ def dot_u64_block_program(width: int = 4) -> Program:
     """Return an unrolled SSA block used for static optimization experiments.
 
     This is deliberately a block, not a complete loop. Native loop correctness is
-    tested separately by the built-in x86-64 assembly fixture.
+    tested separately by the built-in x86-64 assembly fixture. Load offsets are
+    carried as metadata because address lowering is a backend concern in ASM-IR.
     """
 
     if width <= 0:
         raise ValueError("width must be positive")
-    instructions: list[Instruction] = [
-        Instruction("const", "zero", ("#0",), latency=0.0, size_bytes=2)
-    ]
+    instructions: list[Instruction] = []
     products: list[str] = []
     for index in range(width):
         a = f"a{index}"
         b = f"b{index}"
         product = f"p{index}"
+        offset = index * 8
         instructions.extend(
             [
-                Instruction("load", a, ("a_ptr",), latency=4.0, memory_bytes=8),
-                Instruction("load", b, ("b_ptr",), latency=4.0, memory_bytes=8),
+                Instruction(
+                    "load",
+                    a,
+                    ("a_ptr",),
+                    latency=4.0,
+                    memory_bytes=8,
+                    metadata={"offset_bytes": offset},
+                ),
+                Instruction(
+                    "load",
+                    b,
+                    ("b_ptr",),
+                    latency=4.0,
+                    memory_bytes=8,
+                    metadata={"offset_bytes": offset},
+                ),
                 Instruction("mul", product, (a, b), latency=3.0),
             ]
         )
