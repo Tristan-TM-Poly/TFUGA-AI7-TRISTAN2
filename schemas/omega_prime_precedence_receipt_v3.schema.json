@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega_prime_precedence_receipt_v3.schema.json",
+  "title": "Omega Prime Precedence Receipt V3",
+  "type": "object",
+  "required": ["value", "status", "matching_sources", "checked_sources", "authoritative_sources", "coverage_complete_for_claim", "scoped_absence_claim_allowed", "global_novelty_claim_allowed", "limitations"],
+  "properties": {
+    "value": {"type": "integer", "minimum": 2},
+    "status": {"enum": ["known-in-snapshot", "not-found-in-snapshots", "unchecked"]},
+    "matching_sources": {"type": "array", "items": {"type": "string"}},
+    "checked_sources": {"type": "array", "items": {"type": "string"}},
+    "authoritative_sources": {"type": "integer", "minimum": 0},
+    "coverage_complete_for_claim": {"type": "boolean"},
+    "scoped_absence_claim_allowed": {"type": "boolean"},
+    "global_novelty_claim_allowed": {"const": false},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.local/schemas/omega_prime_transparency_checkpoint_v4.schema.json",
+  "title": "Omega Prime transparency checkpoint R0.4",
+  "type": "object",
+  "required": ["version", "tree_size", "merkle_root", "head_hash", "created_at_utc", "signature_algorithm", "signature_base64", "public_key_sha256", "oak", "sha256"],
+  "properties": {
+    "version": {"const": "4.0"},
+    "tree_size": {"type": "integer", "minimum": 1},
+    "merkle_root": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "head_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "created_at_utc": {"type": "string", "minLength": 1},
+    "signature_algorithm": {"type": ["string", "null"]},
+    "signature_base64": {"type": ["string", "null"]},
+    "public_key_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "oak": {
+      "type": "object",
+      "required": ["append_only_prefix_committed", "novelty_claimed"],
+      "properties": {
+        "append_only_prefix_committed": {"const": true},
+        "novelty_claimed": {"const": false}
+      },
+      "additionalProperties": true
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

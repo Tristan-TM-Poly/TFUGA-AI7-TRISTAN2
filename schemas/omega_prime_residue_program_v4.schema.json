@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.local/schemas/omega_prime_residue_program_v4.schema.json",
+  "title": "Omega Prime compiled Proth residue program R0.4",
+  "type": "object",
+  "required": ["version", "exponent_min", "exponent_max", "prime_bound", "rules", "oak", "sha256"],
+  "properties": {
+    "version": {"const": "4.0"},
+    "exponent_min": {"type": "integer", "minimum": 1},
+    "exponent_max": {"type": "integer", "minimum": 1},
+    "prime_bound": {"type": "integer", "minimum": 3},
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["exponent", "divisor", "forbidden_residue"],
+        "properties": {
+          "exponent": {"type": "integer", "minimum": 1},
+          "divisor": {"type": "integer", "minimum": 3},
+          "forbidden_residue": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    "oak": {
+      "type": "object",
+      "required": ["filter_is_not_primality_proof", "survivor_is_not_probable_prime_claim", "novelty_claimed"],
+      "properties": {
+        "filter_is_not_primality_proof": {"const": true},
+        "survivor_is_not_probable_prime_claim": {"const": true},
+        "novelty_claimed": {"const": false}
+      },
+      "additionalProperties": true
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

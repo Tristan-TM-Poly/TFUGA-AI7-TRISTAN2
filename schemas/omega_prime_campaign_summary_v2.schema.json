@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_prime_campaign_summary_v2.schema.json",
+  "title": "Omega Prime Campaign Summary V2",
+  "type": "object",
+  "required": ["campaign_id", "planned", "processed", "filtered_composites", "composites", "probable_primes", "proven_primes", "certified", "failed", "receipts", "checkpoint", "claims"],
+  "properties": {
+    "campaign_id": {"type": "string"},
+    "planned": {"type": "integer", "minimum": 0},
+    "processed": {"type": "integer", "minimum": 0},
+    "filtered_composites": {"type": "integer", "minimum": 0},
+    "composites": {"type": "integer", "minimum": 0},
+    "probable_primes": {"type": "integer", "minimum": 0},
+    "proven_primes": {"type": "integer", "minimum": 0},
+    "certified": {"type": "integer", "minimum": 0},
+    "failed": {"type": "integer", "minimum": 0},
+    "receipts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["task_id", "state", "candidate", "factor", "certificate_id", "certificate_sha256", "error"],
+        "properties": {
+          "task_id": {"type": "string"},
+          "state": {"enum": ["planned", "filtered_composite", "composite", "probable_prime", "proven_prime", "certified", "failed"]},
+          "candidate": {"type": "string", "pattern": "^[0-9]+$"},
+          "factor": {"type": ["integer", "null"], "minimum": 2},
+          "certificate_id": {"type": ["string", "null"]},
+          "certificate_sha256": {"type": ["string", "null"]},
+          "error": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "checkpoint": {"type": "object"},
+    "claims": {
+      "type": "object",
+      "properties": {
+        "external_novelty_checked": {"const": false},
+        "record_claimed": {"const": false},
+        "economic_value_guaranteed": {"const": false},
+        "cryptographic_secret_material": {"const": false}
+      },
+      "required": ["external_novelty_checked", "record_claimed", "economic_value_guaranteed", "cryptographic_secret_material"],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

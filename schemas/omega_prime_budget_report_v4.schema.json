@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.local/schemas/omega_prime_budget_report_v4.schema.json",
+  "title": "Omega Prime governed compute budget report R0.4",
+  "type": "object",
+  "required": ["policy", "observations", "totals", "effective_limits_after_reserve", "remaining", "utilization", "state", "oak"],
+  "properties": {
+    "policy": {"type": "object"},
+    "observations": {"type": "array", "items": {"type": "object"}},
+    "totals": {"type": "object"},
+    "effective_limits_after_reserve": {"type": "object"},
+    "remaining": {"type": "object"},
+    "utilization": {"type": "object"},
+    "state": {"enum": ["open", "backpressure", "halt"]},
+    "oak": {
+      "type": "object",
+      "required": ["financial_return_claimed", "unbounded_physical_compute_claimed", "reserve_enforced"],
+      "properties": {
+        "financial_return_claimed": {"const": false},
+        "unbounded_physical_compute_claimed": {"const": false},
+        "reserve_enforced": {"const": true}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
