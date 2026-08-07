@@ -206,7 +206,11 @@ def build_p5_report(
     reason: str | None = None
     if availability == "unavailable":
         if parsed.diagnostics:
-            reason = parsed.diagnostics[0]
+            # Plain perf/tooling errors are frequently multi-line (for example
+            # ``Error:`` followed by the actionable permission diagnostic).
+            # Preserve the bounded diagnostic context instead of truncating the
+            # report reason to an uninformative first line.
+            reason = " | ".join(parsed.diagnostics)
         elif parsed.skipped_events:
             reason = "all requested events were unsupported or not counted"
         elif source_exit_code not in (None, 0):
