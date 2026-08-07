@@ -32,8 +32,17 @@
   "integration": {
     "latest_lock": "tristan-integration-lock-0.2",
     "latest_environment": "tristan-runtime-four-repo-r02",
-    "latest_status": "V10_TYPED_PEERS_PENDING_FOUR_REPO_RECEIPT",
-    "bundle_plan": "tristan-runtime-bundle-plan-0.1"
+    "latest_status": "CI_VERIFIED_FOUR_REPO_R02",
+    "bundle_plan": "tristan-runtime-bundle-plan-1.0",
+    "v10_typed_receipt": {
+      "schema": "tristan-private-wheelhouse-receipt-1.0",
+      "status": "CI_VERIFIED_V10_FULL_TYPED_FOUR_REPO_OFFLINE",
+      "marker": "TRISTAN_V10_FULL_TYPED_FOUR_REPO_OFFLINE_PASS",
+      "runtime_source_commit": "72117c3e162533bae26c22be6fcac132fa917a94",
+      "artifact_sha256": "15caa0609fd560894ea2c7d5be1a8c55f6f4f4296843755fef77a7dd2cd2720b",
+      "critical_path_wildcard_free": true,
+      "offline_install": true
+    }
   },
   "runtime": {
     "python": ">=3.10",
@@ -50,6 +59,7 @@
     "declared_platform_target_implies_verified": false,
     "sandbox_is_certified_security_boundary": false,
     "peer_mapping_specs_require_runtime_normalization": true,
-    "legacy_wildcards_permitted_outside_v10_critical_path": true
+    "legacy_wildcards_permitted_outside_v10_critical_path": true,
+    "public_bundle_redacts_private_peer_topology": true
   }
 }
