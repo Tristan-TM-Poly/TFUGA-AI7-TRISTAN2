@@ -179,7 +179,7 @@ jobs:
       - name: Build exact typed public peer wheelhouse
         run: |
           python -m pip wheel --wheel-dir public_wheelhouse \
-            "git+https://github.com/Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2.git@23c5aa7c605b9c16b9a87db6ea4e2e3dec960ec4" \
+            "git+https://github.com/Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2.git@c21b3657e3216af85fc774eac2c4300de1d10328" \
             "git+https://github.com/Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG.git@c6a87d0145c45f20e1e9074b4c81cb17e9f28251"
       - name: Materialize public bundle without private topology
         run: |
