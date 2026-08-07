@@ -1,0 +1,343 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_competition_ledger_bundle_v11.schema.json",
+  "title": "Omega Competition Ledger Bundle V11",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "as_of",
+    "freshness_seconds",
+    "recommendation_timezone",
+    "sources",
+    "cycles",
+    "plans",
+    "submission_receipts"
+  ],
+  "properties": {
+    "schema": {"const": "omega-competition-ledger-bundle/11"},
+    "as_of": {"type": "string", "format": "date-time"},
+    "freshness_seconds": {"type": "integer", "minimum": 1},
+    "recommendation_timezone": {"type": "string", "minLength": 1},
+    "sources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "cycles": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/cycle"}
+    },
+    "plans": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/plan"}
+    },
+    "submission_receipts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/submissionReceipt"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "uniqueStrings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_kind",
+        "official_url",
+        "source_digest",
+        "observed_at",
+        "location",
+        "organizer_domain",
+        "metadata"
+      ],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_kind": {
+          "enum": [
+            "official_rules",
+            "official_announcement",
+            "official_task",
+            "official_results",
+            "official_faq"
+          ]
+        },
+        "official_url": {"type": "string", "format": "uri"},
+        "source_digest": {"$ref": "#/$defs/sha256"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "location": {"type": "string", "minLength": 1},
+        "organizer_domain": {"type": "string", "minLength": 1},
+        "metadata": {"type": "object"}
+      }
+    },
+    "deadlines": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "announced_at",
+        "registration_open",
+        "registration_close",
+        "task_release",
+        "submission_open",
+        "submission_close",
+        "judging_end",
+        "archive_at"
+      ],
+      "properties": {
+        "announced_at": {"type": "string", "format": "date-time"},
+        "registration_open": {"type": ["string", "null"], "format": "date-time"},
+        "registration_close": {"type": ["string", "null"], "format": "date-time"},
+        "task_release": {"type": ["string", "null"], "format": "date-time"},
+        "submission_open": {"type": ["string", "null"], "format": "date-time"},
+        "submission_close": {"type": "string", "format": "date-time"},
+        "judging_end": {"type": ["string", "null"], "format": "date-time"},
+        "archive_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registration_required",
+        "participation_mode",
+        "team_min_size",
+        "team_max_size",
+        "minimum_age",
+        "maximum_age",
+        "allowed_residencies",
+        "excluded_residencies",
+        "affiliation_requirements",
+        "identity_verification_required",
+        "terms_reference_ids"
+      ],
+      "properties": {
+        "registration_required": {"type": "boolean"},
+        "participation_mode": {"enum": ["individual", "team", "individual_or_team"]},
+        "team_min_size": {"type": "integer", "minimum": 1},
+        "team_max_size": {"type": "integer", "minimum": 1},
+        "minimum_age": {"type": ["integer", "null"], "minimum": 0},
+        "maximum_age": {"type": ["integer", "null"], "minimum": 0},
+        "allowed_residencies": {"$ref": "#/$defs/uniqueStrings"},
+        "excluded_residencies": {"$ref": "#/$defs/uniqueStrings"},
+        "affiliation_requirements": {"$ref": "#/$defs/uniqueStrings"},
+        "identity_verification_required": {"type": "boolean"},
+        "terms_reference_ids": {
+          "allOf": [{"$ref": "#/$defs/uniqueStrings"}, {"minItems": 1}]
+        }
+      }
+    },
+    "licenses": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data_license",
+        "code_license",
+        "model_license",
+        "external_data_policy",
+        "open_source_obligation",
+        "disclosure_obligation",
+        "publication_obligation",
+        "license_reference_ids"
+      ],
+      "properties": {
+        "data_license": {"type": "string", "minLength": 1},
+        "code_license": {"type": "string", "minLength": 1},
+        "model_license": {"type": "string", "minLength": 1},
+        "external_data_policy": {"type": "string", "minLength": 1},
+        "open_source_obligation": {"type": "string", "minLength": 1},
+        "disclosure_obligation": {"type": "string", "minLength": 1},
+        "publication_obligation": {"type": "string", "minLength": 1},
+        "license_reference_ids": {
+          "allOf": [{"$ref": "#/$defs/uniqueStrings"}, {"minItems": 1}]
+        }
+      }
+    },
+    "prize": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "amount_minor_units",
+        "currency",
+        "payment_conditions",
+        "tax_note",
+        "prize_reference_ids"
+      ],
+      "properties": {
+        "amount_minor_units": {"type": "integer", "minimum": 0},
+        "currency": {"type": "string", "pattern": "^[A-Za-z]{3}$"},
+        "payment_conditions": {"$ref": "#/$defs/uniqueStrings"},
+        "tax_note": {"type": "string", "minLength": 1},
+        "prize_reference_ids": {
+          "allOf": [{"$ref": "#/$defs/uniqueStrings"}, {"minItems": 1}]
+        }
+      }
+    },
+    "judging": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric",
+        "direction",
+        "public_leaderboard",
+        "private_leaderboard",
+        "leaderboard_leakage_risk",
+        "reproducibility_requirements",
+        "judging_reference_ids"
+      ],
+      "properties": {
+        "metric": {"type": "string", "minLength": 1},
+        "direction": {"enum": ["maximize", "minimize", "ranked", "judged"]},
+        "public_leaderboard": {"type": "boolean"},
+        "private_leaderboard": {"type": "boolean"},
+        "leaderboard_leakage_risk": {"type": "string", "minLength": 1},
+        "reproducibility_requirements": {"$ref": "#/$defs/uniqueStrings"},
+        "judging_reference_ids": {
+          "allOf": [{"$ref": "#/$defs/uniqueStrings"}, {"minItems": 1}]
+        }
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "title",
+        "task_type",
+        "artifact_digest",
+        "archive_license",
+        "task_reference_ids",
+        "metadata"
+      ],
+      "properties": {
+        "task_id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "task_type": {"type": "string", "minLength": 1},
+        "artifact_digest": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "archive_license": {"type": "string", "minLength": 1},
+        "task_reference_ids": {
+          "allOf": [{"$ref": "#/$defs/uniqueStrings"}, {"minItems": 1}]
+        },
+        "metadata": {"type": "object"}
+      }
+    },
+    "cycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "competition_id",
+        "cycle_id",
+        "title",
+        "organizer",
+        "organizer_domain",
+        "official_rule_url",
+        "cycle_version",
+        "timezone",
+        "deadlines",
+        "eligibility",
+        "licenses",
+        "prize",
+        "judging",
+        "tasks",
+        "source_reference_ids",
+        "predecessor_cycle_id",
+        "metadata"
+      ],
+      "properties": {
+        "competition_id": {"type": "string", "minLength": 1},
+        "cycle_id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "organizer": {"type": "string", "minLength": 1},
+        "organizer_domain": {"type": "string", "minLength": 1},
+        "official_rule_url": {"type": "string", "format": "uri"},
+        "cycle_version": {"type": "string", "minLength": 1},
+        "timezone": {"type": "string", "minLength": 1},
+        "deadlines": {"$ref": "#/$defs/deadlines"},
+        "eligibility": {"$ref": "#/$defs/eligibility"},
+        "licenses": {"$ref": "#/$defs/licenses"},
+        "prize": {"$ref": "#/$defs/prize"},
+        "judging": {"$ref": "#/$defs/judging"},
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/task"}
+        },
+        "source_reference_ids": {
+          "allOf": [{"$ref": "#/$defs/uniqueStrings"}, {"minItems": 1}]
+        },
+        "predecessor_cycle_id": {"type": ["string", "null"], "minLength": 1},
+        "metadata": {"type": "object"}
+      }
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plan_id",
+        "competition_id",
+        "cycle_id",
+        "plan_type",
+        "created_at",
+        "rule_digest",
+        "status",
+        "participant_age",
+        "participant_residency",
+        "team_size",
+        "assumptions",
+        "authorization_reference",
+        "metadata"
+      ],
+      "properties": {
+        "plan_id": {"type": "string", "minLength": 1},
+        "competition_id": {"type": "string", "minLength": 1},
+        "cycle_id": {"type": "string", "minLength": 1},
+        "plan_type": {"enum": ["eligibility", "submission"]},
+        "created_at": {"type": "string", "format": "date-time"},
+        "rule_digest": {"$ref": "#/$defs/sha256"},
+        "status": {"enum": ["draft", "reviewed", "authorized", "withdrawn"]},
+        "participant_age": {"type": ["integer", "null"], "minimum": 0},
+        "participant_residency": {"type": ["string", "null"], "minLength": 1},
+        "team_size": {"type": ["integer", "null"], "minimum": 1},
+        "assumptions": {"$ref": "#/$defs/uniqueStrings"},
+        "authorization_reference": {"type": ["string", "null"], "minLength": 1},
+        "metadata": {"type": "object"}
+      }
+    },
+    "submissionReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "competition_id",
+        "cycle_id",
+        "submitted_at",
+        "artifact_digest",
+        "external_receipt_reference",
+        "rule_digest",
+        "result_status",
+        "result_reference_ids",
+        "metadata"
+      ],
+      "properties": {
+        "receipt_id": {"type": "string", "minLength": 1},
+        "competition_id": {"type": "string", "minLength": 1},
+        "cycle_id": {"type": "string", "minLength": 1},
+        "submitted_at": {"type": "string", "format": "date-time"},
+        "artifact_digest": {"$ref": "#/$defs/sha256"},
+        "external_receipt_reference": {"type": "string", "minLength": 1},
+        "rule_digest": {"$ref": "#/$defs/sha256"},
+        "result_status": {
+          "enum": ["submitted", "accepted", "rejected", "scored", "winner", "not_selected"]
+        },
+        "result_reference_ids": {"$ref": "#/$defs/uniqueStrings"},
+        "metadata": {"type": "object"}
+      }
+    }
+  }
+}
