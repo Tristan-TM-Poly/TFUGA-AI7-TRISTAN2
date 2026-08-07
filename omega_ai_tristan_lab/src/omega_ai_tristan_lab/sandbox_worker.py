@@ -32,13 +32,13 @@ def main() -> int:
     request = json.load(sys.stdin)
     _apply_posix_limits(int(request.get("memory_mb", 512)))
     permissions = set(map(str, request.get("allowed_permissions", ("PURE",))))
+    if "NETWORK_READ" not in permissions:
+        _deny_network()
+
     from .policy import PolicyContext
     from .runtime import TristanRuntime
 
     runtime = TristanRuntime(auto_discover=True)
-    if "NETWORK_READ" not in permissions:
-        _deny_network()
-
     stream = io.StringIO()
     with contextlib.redirect_stdout(stream):
         execution = runtime.execute_capability(
