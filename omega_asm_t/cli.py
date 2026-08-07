@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .analysis import analyze, cvcd_signature
 from .backends import emit_dot_u64, supported_variants
+from .benchmark import machine_manifest, relative_ratio, summarize_samples
 from .ir import dot_u64_block_program, load_program
 from .oak import oak_report
 from .search import estimate_builtin_candidates, pairwise_tradeoffs, pareto_front
@@ -41,8 +42,51 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--native-verified", action="store_true")
     report.add_argument("--output")
 
+    benchmark_report = sub.add_parser(
+        "benchmark-report",
+        help="summarize observational native timing JSON with robust statistics",
+    )
+    benchmark_report.add_argument("path")
+    benchmark_report.add_argument("--output")
+
+    sub.add_parser("machine", help="emit a conservative execution-context manifest")
     sub.add_parser("capabilities", help="show supported architectures and variants")
     return parser
+
+
+def _benchmark_report(path: str) -> dict[str, object]:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    sample_groups = payload.get("samples_ns_per_call")
+    if not isinstance(sample_groups, dict) or not sample_groups:
+        raise ValueError("benchmark JSON must contain non-empty samples_ns_per_call")
+
+    summaries = {}
+    summary_objects = {}
+    for name, samples in sample_groups.items():
+        if not isinstance(name, str) or not isinstance(samples, list):
+            raise ValueError("benchmark sample groups must map names to lists")
+        summary = summarize_samples(samples)
+        summary_objects[name] = summary
+        summaries[name] = summary.to_dict()
+
+    reference = summary_objects.get("reference_c")
+    ratios: dict[str, float | None] = {}
+    if reference is not None:
+        for name, summary in summary_objects.items():
+            ratios[name] = relative_ratio(summary, reference)
+
+    metadata = {key: value for key, value in payload.items() if key != "samples_ns_per_call"}
+    return {
+        "evidence_level": "P4-observational",
+        "claim_scope": "single_execution_context_only",
+        "warning": (
+            "timings are observational; do not generalize speedups without controlled target-CPU replication"
+        ),
+        "machine": machine_manifest(),
+        "native_metadata": metadata,
+        "statistics_ns_per_call": summaries,
+        "median_ratio_to_reference_c": ratios,
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -97,6 +141,18 @@ def main(argv: list[str] | None = None) -> int:
             Path(args.output).write_text(text, encoding="utf-8")
         else:
             print(text, end="")
+        return 0
+
+    if args.command == "benchmark-report":
+        text = _json(_benchmark_report(args.path)) + "\n"
+        if args.output:
+            Path(args.output).write_text(text, encoding="utf-8")
+        else:
+            print(text, end="")
+        return 0
+
+    if args.command == "machine":
+        print(_json(machine_manifest()))
         return 0
 
     if args.command == "capabilities":
