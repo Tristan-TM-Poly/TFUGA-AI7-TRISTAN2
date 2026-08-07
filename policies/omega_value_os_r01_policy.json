@@ -1,0 +1,30 @@
+{
+  "system": "Ω-VALUE-OS-T∞",
+  "version": "R0.1",
+  "authority": "review_only",
+  "hard_gates": ["integrity", "safety", "legality", "consent", "critical_provenance"],
+  "hard_gates_are_non_compensatory": true,
+  "claim_strength_must_not_exceed_claim_ceiling": true,
+  "scores_are_probabilities": false,
+  "maximum_machine_authority_modeled": "A3_REVERSIBLE_EXECUTION",
+  "a4_and_a5_require_explicit_human_approval": true,
+  "automatic_merge_allowed": false,
+  "automatic_publication_allowed": false,
+  "automatic_release_allowed": false,
+  "automatic_deployment_allowed": false,
+  "automatic_spending_allowed": false,
+  "automatic_ip_filing_allowed": false,
+  "automatic_external_messaging_allowed": false,
+  "external_action_performed_by_package": false,
+  "human_review_required": true,
+  "abstention_is_valid": true,
+  "negative_memory_should_be_retained": true,
+  "external_evidence_does_not_override_hard_gates": true,
+  "non_claims": [
+    "No score is a probability of truth.",
+    "No score is a safety or legal certification.",
+    "No score proves scientific validity, novelty, product-market fit or economic value.",
+    "Pareto membership is not approval.",
+    "Eligibility for human review is not authority to merge, publish, deploy, spend or contact external parties."
+  ]
+}

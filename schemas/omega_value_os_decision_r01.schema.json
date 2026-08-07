@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-value-os-decision-r01.schema.json",
+  "title": "Omega Value OS R0.1 Decision Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id", "status", "profile", "hard_gate_passed", "failed_gates", "warnings",
+    "soft_score", "debt_penalty", "external_evidence_factor", "closure_factor", "reuse_factor",
+    "effective_value", "claim_ceiling", "claim_ceiling_respected", "authority",
+    "human_review_required", "next_action", "input_digest", "scores_are_probabilities",
+    "automatic_merge_allowed", "automatic_publication_allowed", "external_action_performed", "report_digest"
+  ],
+  "properties": {
+    "case_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["BLOCKED", "ABSTAIN_MORE_EVIDENCE", "ELIGIBLE_FOR_EXPERIMENT", "ELIGIBLE_FOR_HUMAN_REVIEW"]},
+    "profile": {"enum": ["research", "software", "venture", "high_consequence"]},
+    "hard_gate_passed": {"type": "boolean"},
+    "failed_gates": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "warnings": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "soft_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "debt_penalty": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+    "external_evidence_factor": {"type": "number", "minimum": 0, "maximum": 1},
+    "closure_factor": {"type": "number", "minimum": 0, "maximum": 1},
+    "reuse_factor": {"type": "number", "minimum": 0, "maximum": 1},
+    "effective_value": {"type": "number", "minimum": 0, "maximum": 1},
+    "claim_ceiling": {"type": "number", "minimum": 0, "maximum": 1},
+    "claim_ceiling_respected": {"type": "boolean"},
+    "authority": {"const": "review_only"},
+    "human_review_required": {"const": true},
+    "next_action": {"type": "string", "minLength": 1},
+    "input_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "scores_are_probabilities": {"const": false},
+    "automatic_merge_allowed": {"const": false},
+    "automatic_publication_allowed": {"const": false},
+    "external_action_performed": {"const": false},
+    "report_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
