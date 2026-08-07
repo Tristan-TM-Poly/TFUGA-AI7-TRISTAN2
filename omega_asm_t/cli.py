@@ -8,6 +8,7 @@ from .analysis import analyze, cvcd_signature
 from .backends import emit_dot_u64, supported_variants
 from .benchmark import machine_manifest, relative_ratio, summarize_samples
 from .counters import build_p5_report, requested_perf_events
+from .formal import build_equivalence_obligation, build_p7_certificate
 from .ir import dot_u64_block_program, load_program
 from .microarch import microarchitecture_manifest
 from .oak import oak_report
@@ -82,6 +83,24 @@ def build_parser() -> argparse.ArgumentParser:
     p6.add_argument("paths", nargs="+", help="P5 report JSON files")
     p6.add_argument("--min-replicates", type=int, default=3)
     p6.add_argument("--output")
+
+    p7_obligation = sub.add_parser(
+        "p7-obligation",
+        help="compile a fixed-width bit-vector equivalence spec into a replayable SMT-LIB obligation",
+    )
+    p7_obligation.add_argument("path", help="equivalence specification JSON")
+    p7_obligation.add_argument("--output")
+
+    p7_certificate = sub.add_parser(
+        "p7-certificate",
+        help="build a bounded equivalence certificate from exhaustive checking plus optional external solver text",
+    )
+    p7_certificate.add_argument("path", help="equivalence specification JSON")
+    p7_certificate.add_argument("--solver-result", help="optional externally produced sat/unsat/unknown text")
+    p7_certificate.add_argument("--solver-name")
+    p7_certificate.add_argument("--solver-version")
+    p7_certificate.add_argument("--max-states", type=int, default=1_000_000)
+    p7_certificate.add_argument("--output")
 
     sub.add_parser("p5-events", help="show the conservative perf event request set")
     sub.add_parser("machine", help="emit the R1 conservative execution-context manifest")
@@ -210,6 +229,28 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0
 
+    if args.command == "p7-obligation":
+        _write_or_print(build_equivalence_obligation(_load_json_object(args.path)), args.output)
+        return 0
+
+    if args.command == "p7-certificate":
+        solver_text = (
+            Path(args.solver_result).read_text(encoding="utf-8", errors="replace")
+            if args.solver_result
+            else None
+        )
+        _write_or_print(
+            build_p7_certificate(
+                _load_json_object(args.path),
+                solver_text=solver_text,
+                solver_name=args.solver_name,
+                solver_version=args.solver_version,
+                max_states=args.max_states,
+            ),
+            args.output,
+        )
+        return 0
+
     if args.command == "p5-events":
         print(_json({"events": list(requested_perf_events())}))
         return 0
@@ -231,9 +272,11 @@ def main(argv: list[str] | None = None) -> int:
                         "P4": "observational timing",
                         "P5": "externally collected hardware-counter parsing and provenance",
                         "P6": "identified-target replication grouping; no universal promotion",
+                        "P7": "bounded fixed-width bit-vector obligation/certificate; kernel_checked=false",
                     },
                     "p5_perf_events": list(requested_perf_events()),
                     "arbitrary_command_execution": False,
+                    "package_executes_solver": False,
                 }
             )
         )

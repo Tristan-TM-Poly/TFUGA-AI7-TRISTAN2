@@ -1,0 +1,181 @@
+name: Omega ASM-T R2 P7 Bounded Equivalence
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - feat/omega-asm-t-r2-p6-replication
+    paths:
+      - 'omega_asm_t/**'
+      - 'tests/test_omega_asm_t*.py'
+      - 'schemas/omega_asm_*.schema.json'
+      - 'policies/omega_asm_t*.json'
+      - 'docs/architecture/OMEGA_ASM_T_*.md'
+      - '.github/workflows/omega-asm-t-r2-p7.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-asm-r2-p7-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-court:
+    name: P7 Python court / ${{ matrix.python-version }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install focused validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile entire ASM-T stack
+        run: python -m compileall -q omega_asm_t tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py tests/test_omega_asm_t_r2_p5.py tests/test_omega_asm_t_r2_p6.py tests/test_omega_asm_t_r2_p7.py
+      - name: Run R1 through P7 courts
+        run: python -m pytest -q tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py tests/test_omega_asm_t_r2_p5.py tests/test_omega_asm_t_r2_p6.py tests/test_omega_asm_t_r2_p7.py
+      - name: Check P7 schemas and policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          obligation_schema=json.loads(Path('schemas/omega_asm_p7_obligation.schema.json').read_text())
+          certificate_schema=json.loads(Path('schemas/omega_asm_p7_certificate.schema.json').read_text())
+          policy=json.loads(Path('policies/omega_asm_t_r2_p7_policy.json').read_text())
+          Draft202012Validator.check_schema(obligation_schema)
+          Draft202012Validator.check_schema(certificate_schema)
+          assert policy['authority']=='review_only'
+          assert policy['package_executes_solver'] is False
+          assert policy['package_executes_arbitrary_commands'] is False
+          assert policy['solver_text_alone_grants_acceptance'] is False
+          assert policy['kernel_checked'] is False
+          assert policy['required_negative_court'] is True
+          PY
+      - name: Audit immutable action refs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('.github/workflows/omega-asm-t-r2-p7.yml').read_text()
+          refs=re.findall(r'(?m)^\s*uses:\s*([^\s#]+)', text)
+          moving=[ref for ref in refs if not re.search(r'@[0-9a-f]{40}$', ref)]
+          assert refs
+          assert not moving, moving
+          PY
+
+  dual-verifier-court:
+    name: P7 exhaustive plus external Z3 court
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install independent solver and schema validator
+        run: python -m pip install --disable-pip-version-check z3-solver jsonschema
+      - name: Write positive and negative bounded specs
+        run: |
+          cat >/tmp/positive.json <<'JSON'
+          {
+            "name":"add-commutativity-u4",
+            "width":4,
+            "lhs":{"op":"add","args":[{"op":"var","name":"x"},{"op":"var","name":"y"}]},
+            "rhs":{"op":"add","args":[{"op":"var","name":"y"},{"op":"var","name":"x"}]}
+          }
+          JSON
+          cat >/tmp/negative.json <<'JSON'
+          {
+            "name":"add-is-not-xor-u4",
+            "width":4,
+            "lhs":{"op":"add","args":[{"op":"var","name":"x"},{"op":"var","name":"y"}]},
+            "rhs":{"op":"xor","args":[{"op":"var","name":"x"},{"op":"var","name":"y"}]}
+          }
+          JSON
+      - name: Generate positive SMT obligation with public CLI
+        run: python -m omega_asm_t p7-obligation /tmp/positive.json --output /tmp/obligation.json
+      - name: Independently replay obligation with Z3 Python bindings
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import z3
+          obligation=json.loads(Path('/tmp/obligation.json').read_text())
+          smt='\n'.join(
+              line for line in obligation['smt2'].splitlines()
+              if line.strip() != '(check-sat)'
+          )
+          solver=z3.Solver()
+          solver.add(z3.parse_smt2_string(smt))
+          result=solver.check()
+          Path('/tmp/solver.txt').write_text(str(result)+'\n')
+          Path('/tmp/solver-version.txt').write_text(z3.get_version_string()+'\n')
+          assert result == z3.unsat
+          PY
+      - name: Build dual bounded certificate
+        run: |
+          version="$(tr -d '\n' </tmp/solver-version.txt)"
+          python -m omega_asm_t p7-certificate /tmp/positive.json \
+            --solver-result /tmp/solver.txt \
+            --solver-name z3-python \
+            --solver-version "$version" \
+            --max-states 1000000 \
+            --output /tmp/positive-certificate.json
+      - name: Build required negative counterexample certificate
+        run: |
+          python -m omega_asm_t p7-certificate /tmp/negative.json \
+            --max-states 1000000 \
+            --output /tmp/negative-certificate.json
+      - name: Validate positive and negative P7 contracts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          obligation=json.loads(Path('/tmp/obligation.json').read_text())
+          positive=json.loads(Path('/tmp/positive-certificate.json').read_text())
+          negative=json.loads(Path('/tmp/negative-certificate.json').read_text())
+          obligation_schema=json.loads(Path('schemas/omega_asm_p7_obligation.schema.json').read_text())
+          certificate_schema=json.loads(Path('schemas/omega_asm_p7_certificate.schema.json').read_text())
+
+          Draft202012Validator(obligation_schema).validate(obligation)
+          Draft202012Validator(certificate_schema).validate(positive)
+          Draft202012Validator(certificate_schema).validate(negative)
+          Draft202012Validator(obligation_schema).validate(positive['obligation'])
+          Draft202012Validator(obligation_schema).validate(negative['obligation'])
+
+          assert positive['verification_status']=='dual_verified_bounded'
+          assert positive['accepted_equivalent'] is True
+          assert positive['kernel_checked'] is False
+          assert positive['exhaustive_evidence']['complete'] is True
+          assert positive['exhaustive_evidence']['states_checked']==256
+          assert positive['solver_evidence']['status']=='unsat'
+          assert positive['solver_evidence']['solver_text_alone_grants_acceptance'] is False
+
+          assert negative['verification_status']=='refuted_exhaustive'
+          assert negative['accepted_equivalent'] is False
+          assert negative['kernel_checked'] is False
+          assert negative['exhaustive_evidence']['counterexample'] is not None
+          assert negative['exhaustive_evidence']['lhs_value'] != negative['exhaustive_evidence']['rhs_value']
+          PY
+      - name: Print P7 evidence
+        run: |
+          cat /tmp/positive-certificate.json
+          cat /tmp/negative-certificate.json

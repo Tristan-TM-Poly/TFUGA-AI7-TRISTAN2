@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_asm_p7_obligation.schema.json",
+  "title": "Omega ASM-T P7 bounded bit-vector equivalence obligation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_level",
+    "obligation_id",
+    "name",
+    "width",
+    "variables",
+    "lhs",
+    "rhs",
+    "semantics",
+    "claim_scope",
+    "smt_logic",
+    "smt2"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_level": {"const": "P7-bounded-equivalence-obligation"},
+    "obligation_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "name": {"type": "string", "minLength": 1},
+    "width": {"type": "integer", "minimum": 1, "maximum": 64},
+    "variables": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}
+    },
+    "lhs": {"type": "object"},
+    "rhs": {"type": "object"},
+    "semantics": {"const": "fixed_width_unsigned_bitvector_modulo_2^width"},
+    "claim_scope": {"const": "this_normalized_bitvector_statement_only"},
+    "smt_logic": {"const": "QF_BV"},
+    "smt2": {"type": "string", "minLength": 1}
+  }
+}
