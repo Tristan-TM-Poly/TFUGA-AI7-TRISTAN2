@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Iterable
 
 from .audit import duplicate_candidates
+from .index import append_snapshot, write_longitudinal_reports
 from .models import SummaryNode
 from .render import write_bundle, write_operational_views
 from .summarizer import SummaryEngine, deterministic_timestamp
@@ -91,17 +92,22 @@ def _corpus_fingerprint(repositories: list[dict], depth: int, audience: str) -> 
 
 def _cross_repo_duplicate_candidates(repository_records: list[dict], threshold: float = 0.72) -> tuple[list[dict], list[dict]]:
     nodes: list[SummaryNode] = []
-    ownership: dict[str, str] = {}
     for record in repository_records:
         for item in record.get("systems", []):
             node_id = f"{record['name']}::{item['path']}"
             nodes.append(SummaryNode(node_id, "system", node_id, item["title"], item["one_line"], item["status"]))
-            ownership[node_id] = record["name"]
     raw = duplicate_candidates(nodes, threshold=threshold)
-    cross = [item for item in raw if ownership.get(item["left"].split("::", 1)[0] + "::" + item["left"].split("::", 1)[-1], item["left"].split("::", 1)[0]) != ownership.get(item["right"].split("::", 1)[0] + "::" + item["right"].split("::", 1)[-1], item["right"].split("::", 1)[0])]
-    # duplicate_candidates returns node.path, already prefixed with repository display name.
     cross = [item for item in raw if item["left"].split("::", 1)[0] != item["right"].split("::", 1)[0]]
-    links = [{"source": item["left"], "target": item["right"], "relation": "NEAR_DUPLICATE_CANDIDATE", "confidence": item["similarity"], "authority": "review_only"} for item in cross]
+    links = [
+        {
+            "source": item["left"],
+            "target": item["right"],
+            "relation": "NEAR_DUPLICATE_CANDIDATE",
+            "confidence": item["similarity"],
+            "authority": "review_only",
+        }
+        for item in cross
+    ]
     return cross, links
 
 
@@ -125,7 +131,16 @@ class CorpusSummaryEngine:
                 "available": True,
                 "fingerprint": bundle.cache_fingerprint,
                 "health": bundle.health,
-                "systems": [{"path": n.path, "title": n.title, "one_line": n.one_line, "status": n.status, "metrics": n.metrics} for n in systems],
+                "systems": [
+                    {
+                        "path": n.path,
+                        "title": n.title,
+                        "one_line": n.one_line,
+                        "status": n.status,
+                        "metrics": n.metrics,
+                    }
+                    for n in systems
+                ],
                 "gap_count": len(bundle.gaps),
             }
             records.append(record)
@@ -163,8 +178,17 @@ class CorpusSummaryEngine:
                 write_bundle(repo_bundle, repo_out)
                 if depth >= 3:
                     write_operational_views(repo_bundle, repo_out)
-        (output / "CORPUS_SUMMARY.json").write_text(json.dumps(bundle.to_dict(), indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+        corpus_json = output / "CORPUS_SUMMARY.json"
+        corpus_json.write_text(
+            json.dumps(bundle.to_dict(), indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
         (output / "CORPUS_SUMMARY.md").write_text(render_corpus_markdown(bundle), encoding="utf-8")
+
+        # Zero-touch history: logically append-only and idempotent by fingerprint.
+        index_path = output / "CORPUS_INDEX.json"
+        append_snapshot(index_path, bundle.to_dict())
+        write_longitudinal_reports(index_path, output / "longitudinal")
         return bundle
 
 
@@ -181,6 +205,7 @@ def render_corpus_markdown(bundle: CorpusBundle) -> str:
         f"- **Fingerprint:** `{bundle.fingerprint}`",
         f"- **Repositories available:** {bundle.totals['repositories']}",
         f"- **Systems observed:** {bundle.totals['systems']}",
+        "- **Historique zéro-touch:** `CORPUS_INDEX.json` + `longitudinal/` dans le même répertoire de sortie",
         "",
         "## Repositories",
         "",
@@ -191,5 +216,11 @@ def render_corpus_markdown(bundle: CorpusBundle) -> str:
         lines.append(f"| `{record['name']}` | {'yes' if record.get('available') else 'no'} | {len(record.get('systems', []))} | {record.get('gap_count', 0)} | `{record.get('fingerprint', '-')}` |")
     lines += ["", "## Cross-repository candidates", ""]
     lines += [f"- `{item['left']}` ↔ `{item['right']}` — {item['similarity']:.2f}, review only." for item in bundle.duplicate_candidates[:100]] or ["_No cross-repository near-duplicate candidate above the current heuristic threshold._"]
-    lines += ["", "## OAK boundary", "", "This corpus view reports observable repository structure. Cross-repository similarity is heuristic and review-only; it does not prove identity, novelty, scientific validity, ownership, patentability, safety, or commercial value.", ""]
+    lines += [
+        "",
+        "## OAK boundary",
+        "",
+        "This corpus view reports observable repository structure. Cross-repository similarity and longitudinal crystallization are review/audit signals only; they do not prove identity, novelty, scientific validity, ownership, patentability, safety, commercial value or progress.",
+        "",
+    ]
     return "\n".join(lines)
