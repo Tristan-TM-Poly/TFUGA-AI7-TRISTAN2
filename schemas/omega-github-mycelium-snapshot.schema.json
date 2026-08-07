@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/omega-github-mycelium-snapshot.schema.json",
+  "title": "Omega GitHub Mycelium Snapshot",
+  "type": "object",
+  "required": ["source", "completeness", "repositories", "pull_requests"],
+  "properties": {
+    "source": {"type": "string", "minLength": 1},
+    "completeness": {"type": "string", "minLength": 1},
+    "generated_at": {"type": ["string", "null"]},
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["full_name", "visibility"],
+        "properties": {
+          "full_name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+          "visibility": {"enum": ["public", "private", "internal", "unknown"]},
+          "default_branch": {"type": "string"},
+          "archived": {"type": "boolean"},
+          "size_kb": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": true
+      }
+    },
+    "pull_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repo_full_name", "number", "title"],
+        "properties": {
+          "repo_full_name": {"type": "string"},
+          "number": {"type": "integer", "minimum": 1},
+          "title": {"type": "string", "minLength": 1},
+          "draft": {"type": "boolean"},
+          "mergeable": {"type": ["boolean", "null"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "metadata": {"type": "object"}
+  },
+  "additionalProperties": true
+}
