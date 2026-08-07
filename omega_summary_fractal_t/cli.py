@@ -167,8 +167,8 @@ def cmd_all_depths(args: argparse.Namespace) -> int:
             {
                 "depth": depth,
                 "fingerprint": bundle.cache_fingerprint,
-                "markdown": str(paths["markdown"]),
-                "json": str(paths["json"]),
+                "markdown": paths["markdown"].relative_to(out).as_posix(),
+                "json": paths["json"].relative_to(out).as_posix(),
             }
         )
         if depth == 9:
