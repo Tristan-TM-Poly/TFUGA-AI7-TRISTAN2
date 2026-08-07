@@ -4,6 +4,12 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from .lineage import (
+    build_system_lineage,
+    render_convergence_candidates,
+    render_evolution,
+    render_proof_debt,
+)
 from .models import SummaryBundle, SummaryNode
 
 AUDIENCE_HINTS = {
@@ -148,13 +154,18 @@ def write_bundle(bundle: SummaryBundle, output_dir: str | Path) -> dict[str, Pat
 def write_operational_views(bundle: SummaryBundle, output_dir: str | Path) -> dict[str, Path]:
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
+
     summary = out / "SUMMARY.md"
     summary.write_text(render_markdown(bundle), encoding="utf-8")
+
     status = out / "STATUS.md"
     status.write_text(
-        "# STATUS\n\n" + _system_table(bundle.nodes) + "\n\nStatuses are inferred only from observable repository artifacts and linked validation evidence.\n",
+        "# STATUS\n\n"
+        + _system_table(bundle.nodes)
+        + "\n\nStatuses are inferred only from observable repository artifacts and linked validation evidence.\n",
         encoding="utf-8",
     )
+
     oak = out / "OAK_REPORT.md"
     oak.write_text(
         "# OAK REPORT\n\n"
@@ -164,6 +175,7 @@ def write_operational_views(bundle: SummaryBundle, output_dir: str | Path) -> di
         + f"```json\n{json.dumps(bundle.health, indent=2, ensure_ascii=False, sort_keys=True)}\n```\n",
         encoding="utf-8",
     )
+
     actions = out / "NEXT_ACTIONS.md"
     action_lines = ["# NEXT ACTIONS", ""] + [
         f"- [ ] P{gap['priority']} `{gap['system']}` — {gap['action']}"
@@ -173,7 +185,33 @@ def write_operational_views(bundle: SummaryBundle, output_dir: str | Path) -> di
         "- [ ] Run deeper semantic/OAK review; structural checks found no immediate gaps."
     ]
     actions.write_text("\n".join(action_lines) + "\n", encoding="utf-8")
+
+    evolution = out / "EVOLUTION.md"
+    evolution.write_text(render_evolution(bundle), encoding="utf-8")
+
+    proof_debt = out / "PROOF_DEBT.md"
+    proof_debt.write_text(render_proof_debt(bundle), encoding="utf-8")
+
+    convergence = out / "CONVERGENCE_CANDIDATES.md"
+    convergence.write_text(render_convergence_candidates(bundle), encoding="utf-8")
+
+    lineage = out / "SYSTEM_LINEAGE.json"
+    lineage.write_text(
+        json.dumps(build_system_lineage(bundle), indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
     index = out / "SUMMARY_INDEX.json"
+    artifacts = [
+        "SUMMARY.md",
+        "STATUS.md",
+        "OAK_REPORT.md",
+        "NEXT_ACTIONS.md",
+        "EVOLUTION.md",
+        "PROOF_DEBT.md",
+        "CONVERGENCE_CANDIDATES.md",
+        "SYSTEM_LINEAGE.json",
+    ]
     index.write_text(
         json.dumps(
             {
@@ -182,7 +220,7 @@ def write_operational_views(bundle: SummaryBundle, output_dir: str | Path) -> di
                 "depth": bundle.depth,
                 "audience": bundle.audience,
                 "focus": bundle.focus,
-                "artifacts": ["SUMMARY.md", "STATUS.md", "OAK_REPORT.md", "NEXT_ACTIONS.md"],
+                "artifacts": artifacts,
             },
             indent=2,
             sort_keys=True,
@@ -190,4 +228,14 @@ def write_operational_views(bundle: SummaryBundle, output_dir: str | Path) -> di
         + "\n",
         encoding="utf-8",
     )
-    return {"summary": summary, "status": status, "oak": oak, "actions": actions, "index": index}
+    return {
+        "summary": summary,
+        "status": status,
+        "oak": oak,
+        "actions": actions,
+        "evolution": evolution,
+        "proof_debt": proof_debt,
+        "convergence": convergence,
+        "lineage": lineage,
+        "index": index,
+    }
