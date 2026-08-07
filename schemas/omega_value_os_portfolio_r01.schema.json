@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-value-os-portfolio-r01.schema.json",
+  "title": "Omega Value OS R0.1 Portfolio Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "system", "version", "reports", "pareto_dimensions", "pareto_frontier", "opportunity_costs",
+    "authority", "human_review_required", "automatic_merge_allowed", "automatic_publication_allowed",
+    "external_action_performed", "scores_are_probabilities", "portfolio_digest"
+  ],
+  "properties": {
+    "system": {"const": "Ω-VALUE-OS-T∞"},
+    "version": {"const": "R0.1"},
+    "reports": {"type": "array", "items": {"type": "object"}},
+    "pareto_dimensions": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "pareto_frontier": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "opportunity_costs": {
+      "type": "object",
+      "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}
+    },
+    "authority": {"const": "review_only"},
+    "human_review_required": {"const": true},
+    "automatic_merge_allowed": {"const": false},
+    "automatic_publication_allowed": {"const": false},
+    "external_action_performed": {"const": false},
+    "scores_are_probabilities": {"const": false},
+    "portfolio_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
