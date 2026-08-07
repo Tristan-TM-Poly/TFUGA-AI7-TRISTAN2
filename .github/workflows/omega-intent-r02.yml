@@ -1,0 +1,117 @@
+name: Omega Intent R0.2 Persistent Orchestration
+
+on:
+  push:
+    branches: [feat/omega-intent-to-everything-r01]
+    paths:
+      - "omega_intent_t/r02/**"
+      - "tests/test_omega_intent_r02.py"
+      - "examples/omega_intent_r02_demo.py"
+      - "schemas/omega_intent_completion_contract_v2.schema.json"
+      - "docs/omega-intent-t/R02_*.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-intent-r02.yml"
+  pull_request:
+    paths:
+      - "omega_intent_t/r02/**"
+      - "tests/test_omega_intent_r02.py"
+      - "examples/omega_intent_r02_demo.py"
+      - "schemas/omega_intent_completion_contract_v2.schema.json"
+      - "docs/omega-intent-t/R02_*.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-intent-r02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile R0.2
+        run: >-
+          python -m compileall -q
+          omega_intent_t/r02
+          tests/test_omega_intent_r02.py
+          examples/omega_intent_r02_demo.py
+      - name: Run focused tests
+        run: pytest -q tests/test_omega_intent_r02.py
+      - name: Validate schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          schema = json.loads(Path('schemas/omega_intent_completion_contract_v2.schema.json').read_text())
+          jsonschema.Draft202012Validator.check_schema(schema)
+          fixture = {
+              'requirements_total': 1,
+              'requirements_verified': 1,
+              'build_passed': True,
+              'tests_passed': True,
+              'documentation_synced': True,
+              'residuals_declared': True,
+          }
+          jsonschema.validate(fixture, schema)
+          PY
+      - name: Deterministic OAKBench
+        run: |
+          python -m omega_intent_t.r02.cli oak --campaign-items 4096 --output /tmp/oak.json
+          python examples/omega_intent_r02_demo.py > /tmp/demo.json
+          python - <<'PY'
+          import json
+          oak = json.load(open('/tmp/oak.json'))
+          demo = json.load(open('/tmp/demo.json'))
+          assert oak['passed'] is True
+          assert oak['permanent_total_cap'] is None
+          assert oak['remote_mutations'] == 0
+          assert oak['automatic_merge'] is False
+          assert demo['campaign']['consumed'] == 2048
+          assert demo['campaign']['failed'] == 0
+          assert demo['remote_mutations'] == 0
+          print('OAK_PASS_INTENT_R02')
+          PY
+
+  scale-250k:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Execute finite 250k persistent campaign
+        run: |
+          python -m omega_intent_t.r02.cli campaign \
+            --ledger /tmp/omega-intent-r02-scale.sqlite3 \
+            --intent-id INTENT-CI-SCALE-250K \
+            --count 250000 \
+            --initial-items 512 \
+            --initial-bytes 8388608 \
+            --output /tmp/scale.json
+          python - <<'PY'
+          import json
+          payload = json.load(open('/tmp/scale.json'))
+          report = payload['report']
+          ledger = payload['ledger']
+          assert report['consumed'] == 250000
+          assert report['checkpoint_offset'] == 250000
+          assert report['source_exhausted'] is True
+          assert report['failed'] == 0
+          assert ledger['work_total'] == 250000
+          assert ledger['remote_mutations'] == 0
+          assert ledger['automatic_merge'] is False
+          print('OAK_PASS_INTENT_R02_SCALE_250K')
+          PY
