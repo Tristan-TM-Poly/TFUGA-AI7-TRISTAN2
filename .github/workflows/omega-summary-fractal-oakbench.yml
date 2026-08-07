@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches: [feat/omega-summary-fractal-t-max]
-    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_bundle.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_FRACTAL_ARCHITECTURE.md','docs/architecture/OMEGA_SUMMARY_CROSS_REPO.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_FRACTAL_ARCHITECTURE.md','docs/architecture/OMEGA_SUMMARY_CROSS_REPO.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
   pull_request:
-    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_bundle.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_FRACTAL_ARCHITECTURE.md','docs/architecture/OMEGA_SUMMARY_CROSS_REPO.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
+    paths: ['omega_summary_fractal_t/**','tests/test_omega_summary_*.py','schemas/omega_summary_*.schema.json','docs/canon/OMEGA_SUMMARY_FRACTAL_T_INFINITY.md','docs/architecture/OMEGA_SUMMARY_FRACTAL_ARCHITECTURE.md','docs/architecture/OMEGA_SUMMARY_CROSS_REPO.md','examples/omega_summary_fractal_demo.py','pyproject.toml','.github/workflows/omega-summary-fractal-oakbench.yml','.github/workflows/omega-summary-reusable.yml']
 permissions:
   contents: read
 concurrency:
@@ -84,8 +84,11 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
+          from jsonschema import Draft202012Validator
           from omega_summary_fractal_t.index import verify_index
           payload=json.loads(Path('/tmp/summary-history/corpus-index.json').read_text())
+          schema=json.loads(Path('schemas/omega_summary_index.schema.json').read_text())
+          Draft202012Validator(schema).validate(payload)
           assert len(payload['runs'])==2
           assert verify_index(payload)
           report=json.loads(Path('/tmp/summary-history/reports/LONGITUDINAL_CRYSTALLIZATION.json').read_text())
@@ -99,7 +102,17 @@ jobs:
           test -s /tmp/summary-graph/SUMMARY_GRAPH.graphml
           test -s /tmp/summary-graph/SUMMARY_GRAPH_EXPORT.json
           grep -q '<graphml' /tmp/summary-graph/SUMMARY_GRAPH.graphml
-      - name: Exercise cross-repository compiler
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          manifest=json.loads(Path('/tmp/summary-graph/SUMMARY_GRAPH_EXPORT.json').read_text())
+          schema=json.loads(Path('schemas/omega_summary_graph_export.schema.json').read_text())
+          Draft202012Validator(schema).validate(manifest)
+          assert manifest['node_count'] > 0
+          assert manifest['edge_count'] > 0
+          PY
+      - name: Exercise cross-repository compiler with zero-touch history
         env: {SOURCE_DATE_EPOCH: '1786111200'}
         run: |
           mkdir -p /tmp/corpus/demo-a /tmp/corpus/demo-b
@@ -107,9 +120,6 @@ jobs:
           printf '# B\n' >/tmp/corpus/demo-b/README.md
           python -m omega_summary_fractal_t.corpus_cli --workspace /tmp/corpus --depth 4 --audience oak --output-dir /tmp/corpus-out
           test -s /tmp/corpus-out/CORPUS_SUMMARY.json
-      - name: Index corpus snapshot too
-        run: |
-          python -m omega_summary_fractal_t index /tmp/corpus-out/CORPUS_SUMMARY.json --index-file /tmp/corpus-out/CORPUS_INDEX.json --report-dir /tmp/corpus-out/longitudinal
           test -s /tmp/corpus-out/CORPUS_INDEX.json
           test -s /tmp/corpus-out/longitudinal/LONGITUDINAL_CRYSTALLIZATION.json
       - name: Audit immutable action refs
