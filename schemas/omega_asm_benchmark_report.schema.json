@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega_asm_benchmark_report.schema.json",
+  "title": "Omega ASM-T P4 Observational Benchmark Report",
+  "type": "object",
+  "required": [
+    "evidence_level",
+    "claim_scope",
+    "warning",
+    "machine",
+    "native_metadata",
+    "statistics_ns_per_call",
+    "median_ratio_to_reference_c"
+  ],
+  "properties": {
+    "evidence_level": {"const": "P4-observational"},
+    "claim_scope": {"const": "single_execution_context_only"},
+    "warning": {"type": "string", "minLength": 1},
+    "machine": {
+      "type": "object",
+      "required": ["architecture", "timing_claim_scope"],
+      "properties": {
+        "architecture": {"type": "string", "minLength": 1},
+        "cpu_model": {"type": "string", "minLength": 1},
+        "logical_cpus": {"type": ["integer", "null"], "minimum": 1},
+        "operating_system": {"type": "string", "minLength": 1},
+        "os_release": {"type": "string"},
+        "platform": {"type": "string"},
+        "python": {"type": "string"},
+        "python_implementation": {"type": "string"},
+        "byteorder": {"enum": ["little", "big"]},
+        "timing_claim_scope": {"const": "observational_on_this_execution_context_only"}
+      },
+      "additionalProperties": true
+    },
+    "native_metadata": {"type": "object"},
+    "statistics_ns_per_call": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["count", "minimum", "median", "mean", "maximum", "stdev", "mad", "p05", "p95"],
+        "properties": {
+          "count": {"type": "integer", "minimum": 1},
+          "minimum": {"type": "number", "minimum": 0},
+          "median": {"type": "number", "minimum": 0},
+          "mean": {"type": "number", "minimum": 0},
+          "maximum": {"type": "number", "minimum": 0},
+          "stdev": {"type": "number", "minimum": 0},
+          "mad": {"type": "number", "minimum": 0},
+          "p05": {"type": "number", "minimum": 0},
+          "p95": {"type": "number", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    "median_ratio_to_reference_c": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["number", "null"],
+        "exclusiveMinimum": 0
+      }
+    }
+  },
+  "additionalProperties": false
+}
