@@ -93,15 +93,20 @@ jobs:
             --audience "${{ inputs.audience || github.event.inputs.audience || 'oak' }}" \
             --output-dir reports/omega-summary \
             --max-files "${{ inputs.max_files || github.event.inputs.max_files || 20000 }}"
-      - name: Validate R0.3 zero-touch outputs
+      - name: Validate R0.4 zero-touch outputs
         run: |
           test -s reports/omega-summary/SUMMARY.md
           test -s reports/omega-summary/SUMMARY_HISTORY.json
           test -s reports/omega-summary/longitudinal/LONGITUDINAL_CRYSTALLIZATION.json
           test -s reports/omega-summary/graph/SUMMARY_GRAPH.jsonl
           test -s reports/omega-summary/graph/SUMMARY_GRAPH.graphml
+          test -s reports/omega-summary/dashboard/CORPUS_DASHBOARD.json
+          test -s reports/omega-summary/dashboard/CORPUS_DASHBOARD.md
       - name: Write job summary
-        run: cat reports/omega-summary/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          cat reports/omega-summary/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          printf '\n---\n\n' >> "$GITHUB_STEP_SUMMARY"
+          cat reports/omega-summary/dashboard/CORPUS_DASHBOARD.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload summary artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
