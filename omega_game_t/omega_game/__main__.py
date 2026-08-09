@@ -9,7 +9,9 @@ from .engines import (
     ArchiveConfig,
     ArenaConfig,
     EvolutionConfig,
+    EvolutionaryMemory,
     audit_match,
+    evaluate_anti_forgetting,
     evolve,
     fuzz_arena_t0,
     run_arena_t0,
@@ -44,6 +46,13 @@ def _parser() -> argparse.ArgumentParser:
     qd.add_argument("--population", type=int, default=8)
     qd.add_argument("--steps", type=int, default=48)
     qd.add_argument("--bins", type=int, default=8)
+
+    memory = sub.add_parser("memory-demo", help="build Hall of Fame and run anti-forgetting regression")
+    memory.add_argument("--seed", type=int, default=0)
+    memory.add_argument("--population", type=int, default=6)
+    memory.add_argument("--top-k", type=int, default=2)
+    memory.add_argument("--steps", type=int, default=32)
+    memory.add_argument("--threshold", type=float, default=0.50)
 
     fuzz = sub.add_parser("fuzz", help="fuzz deterministic arena invariants")
     fuzz.add_argument("--seed", type=int, default=0)
@@ -99,6 +108,35 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(experiment.to_json(include_matches=False), end="")
         return 0
+
+    if args.command == "memory-demo":
+        population = seed_population(args.population, seed=args.seed)
+        arena_config = ArenaConfig(max_steps=args.steps)
+        tournament = run_round_robin(
+            population,
+            seeds=(args.seed, args.seed + 1),
+            config=arena_config,
+            mirrored=True,
+        )
+        memory = EvolutionaryMemory()
+        memory.admit_tournament(population, tournament, generation=0, top_k=args.top_k)
+        candidate = seed_population(2, seed=args.seed + 10_000, prefix="candidate")[0]
+        regression = evaluate_anti_forgetting(
+            candidate,
+            memory.hall_of_fame,
+            seeds=(args.seed + 2, args.seed + 3),
+            config=arena_config,
+            threshold=args.threshold,
+        )
+        print(
+            json.dumps(
+                {"memory": memory.to_dict(), "anti_forgetting": regression.to_dict()},
+                sort_keys=True,
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return 0 if regression.passed else 4
 
     if args.command == "fuzz":
         report = fuzz_arena_t0(cases=args.cases, seed=args.seed)
