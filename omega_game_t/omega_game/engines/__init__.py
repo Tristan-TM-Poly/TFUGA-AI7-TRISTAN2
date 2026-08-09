@@ -7,6 +7,20 @@ from .language_gm_rubric import LanguageGMEvaluation, LanguageGMRubric, Language
 from .language_repair_loop import LanguageRepairLoop, RepairAction, RepairAttempt, RepairLoopResult, default_language_repair_loop
 from .language_validators import LanguageValidators, ValidationCheck, ValidationReport, default_language_validators
 from .polyglot_language import LanguageQuest, LanguageRun, PolyglotLanguageEngine
+from .scheduler import (
+    CostGraph,
+    CostNode,
+    DirtyFrontier,
+    Dispatch,
+    ScheduledEvent,
+    SchedulerTickReport,
+    SparseBenchmarkReport,
+    SparseEventScheduler,
+    SystemSpec,
+    TemporalLODPolicy,
+    TemporalSignal,
+    run_sparse_benchmark,
+)
 from .simulation import AgentGenome, AgentState, ArenaConfig, MatchResult, run_arena_t0
 from .tournament import RatingVector, TournamentReport, run_round_robin
 from .verification import FuzzFailure, FuzzReport, SimulationAudit, audit_match, fuzz_arena_t0, match_world_graph
@@ -32,6 +46,18 @@ __all__ = [
     "audit_match",
     "fuzz_arena_t0",
     "match_world_graph",
+    "TemporalSignal",
+    "TemporalLODPolicy",
+    "SystemSpec",
+    "ScheduledEvent",
+    "DirtyFrontier",
+    "Dispatch",
+    "SchedulerTickReport",
+    "CostNode",
+    "CostGraph",
+    "SparseEventScheduler",
+    "SparseBenchmarkReport",
+    "run_sparse_benchmark",
     "CurriculumProgress",
     "CurriculumQuest",
     "CurriculumTrack",

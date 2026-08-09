@@ -13,6 +13,7 @@ from .engines import (
     fuzz_arena_t0,
     run_arena_t0,
     run_round_robin,
+    run_sparse_benchmark,
     seed_population,
 )
 
@@ -39,6 +40,12 @@ def _parser() -> argparse.ArgumentParser:
     fuzz = sub.add_parser("fuzz", help="fuzz deterministic arena invariants")
     fuzz.add_argument("--seed", type=int, default=0)
     fuzz.add_argument("--cases", type=int, default=100)
+
+    sparse = sub.add_parser("sparse-bench", help="compare full-scan and sparse scheduler work units")
+    sparse.add_argument("--seed", type=int, default=0)
+    sparse.add_argument("--entities", type=int, default=10_000)
+    sparse.add_argument("--active", type=int, default=100)
+    sparse.add_argument("--ticks", type=int, default=128)
     return parser
 
 
@@ -78,6 +85,16 @@ def main(argv: list[str] | None = None) -> int:
         report = fuzz_arena_t0(cases=args.cases, seed=args.seed)
         print(report.to_json(), end="")
         return 0 if report.accepted else 3
+
+    if args.command == "sparse-bench":
+        report = run_sparse_benchmark(
+            entity_count=args.entities,
+            active_entities=args.active,
+            ticks=args.ticks,
+            seed=args.seed,
+        )
+        print(report.to_json(), end="")
+        return 0
 
     print(json.dumps({"error": "unknown command", "args": asdict(args) if hasattr(args, "__dataclass_fields__") else vars(args)}))
     return 2
