@@ -1,7 +1,10 @@
 """Finite symbolic Tensor Spectrum channels.
 
 The module does not alter the standard tensor product. It records explicitly
-chosen channels derived from it and their dimensions.
+chosen channels derived from it and their dimensions. Dimension identities are
+kept separate from stronger direct-sum/projection claims: in particular, the
+usual symmetrizer/antisymmetrizer splitting uses division by 2 and therefore
+requires 2 to be invertible in the base field.
 """
 
 from __future__ import annotations
@@ -48,7 +51,12 @@ def second_tensor_power_spectrum(
     *,
     include_trace_channel: bool = False,
 ) -> TensorSpectrum:
-    """Standard V⊗V, Sym²(V), Λ²(V) dimension decomposition.
+    """Record standard V⊗V, Sym²(V), Λ²(V) channel dimensions.
+
+    The formulas dim Sym²(V)=n(n+1)/2 and dim Λ²(V)=n(n-1)/2 are recorded as
+    dimensions. This routine does *not* by itself assert a canonical direct-sum
+    decomposition V⊗V=Sym²(V)⊕Λ²(V) in characteristic 2. The familiar
+    projection formulas (I±τ)/2 require 2 to be invertible.
 
     `trace` is optional because it requires additional structure (e.g. a chosen
     non-degenerate bilinear form); it is not canonical for a bare vector space.
@@ -68,12 +76,14 @@ def second_tensor_power_spectrum(
             dimension * (dimension + 1) // 2,
             "Sym²(V)",
             "linear isomorphisms of V",
+            "dimension channel only; canonical projection splitting needs 2 invertible",
         ),
         TensorChannel(
             "alternating",
             dimension * (dimension - 1) // 2,
             "Λ²(V)",
             "linear isomorphisms of V",
+            "dimension channel only; canonical projection splitting needs 2 invertible",
         ),
     ]
     if include_trace_channel and dimension:
@@ -90,7 +100,11 @@ def second_tensor_power_spectrum(
 
 
 def channel_dimension_conservation(spectrum: TensorSpectrum) -> bool:
-    """For the Sym²⊕Λ² split, verify n²=n(n+1)/2+n(n-1)/2."""
+    """Verify only n²=n(n+1)/2+n(n-1)/2 for recorded channel dimensions.
+
+    Returning True is a dimension identity, not a characteristic-independent
+    certificate of a direct-sum splitting.
+    """
 
     names = {channel.name for channel in spectrum.channels}
     if not {"tensor", "symmetric", "alternating"} <= names:
