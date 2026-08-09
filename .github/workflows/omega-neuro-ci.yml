@@ -11,6 +11,8 @@ on:
       - "pyproject.toml"
       - ".github/workflows/omega-neuro-ci.yml"
   push:
+    branches:
+      - main
     paths:
       - "omega_neuro_t/**"
       - "tests/test_omega_neuro*.py"
@@ -19,6 +21,10 @@ on:
       - "examples/omega_neuro*.py"
       - "pyproject.toml"
       - ".github/workflows/omega-neuro-ci.yml"
+
+concurrency:
+  group: omega-neuro-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -48,4 +54,5 @@ jobs:
         run: python -m omega_neuro_t.benchmark_cli --groups 12 --trials-per-group 4 --folds 3 --pretty
 
       - name: Validate packaging metadata
-        run: python -c "import tomllib; data=tomllib.load(open('pyproject.toml','rb')); assert data['project']['scripts']['omega-neuro']=='omega_neuro_t.cli:main'"
+        run: >-
+          python -c "import tomllib; data=tomllib.load(open('pyproject.toml','rb')); scripts=data['project']['scripts']; assert scripts['omega-neuro']=='omega_neuro_t.cli:main'; assert scripts['omega-neuro-bench']=='omega_neuro_t.benchmark_cli:main'"
