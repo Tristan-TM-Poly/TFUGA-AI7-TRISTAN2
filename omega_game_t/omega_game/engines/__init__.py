@@ -19,6 +19,16 @@ from .evolutionary_memory import (
     RegressionResult,
     evaluate_anti_forgetting,
 )
+from .game_spec import (
+    ARENA_ACTIONS,
+    GAME_SPEC_VERSION,
+    CompiledGame,
+    GameAgentSpec,
+    GameEnvironmentSpec,
+    GameRuleSpec,
+    GameSpec,
+    GameSpecCompiler,
+)
 from .language_curriculum import CurriculumProgress, CurriculumQuest, CurriculumTrack, LanguageCurriculum, default_language_curriculum
 from .language_dataset_forge import LanguageDataset, LanguageDatasetForge, LanguageDatasetItem, default_language_dataset_forge
 from .language_gm_rubric import LanguageGMEvaluation, LanguageGMRubric, LanguageRubricScores
@@ -76,6 +86,14 @@ __all__ = [
     "seed_environments",
     "run_coevolution_cycle",
     "evolve_environments",
+    "GAME_SPEC_VERSION",
+    "ARENA_ACTIONS",
+    "GameAgentSpec",
+    "GameEnvironmentSpec",
+    "GameRuleSpec",
+    "GameSpec",
+    "CompiledGame",
+    "GameSpecCompiler",
     "MemoryRecord",
     "ChampionRecord",
     "HallOfFame",

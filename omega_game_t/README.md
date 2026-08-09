@@ -21,33 +21,44 @@ BehaviorDescriptor, deterministic MAP-Elites, elite-per-cell retention, normaliz
 
 Hall of Fame receipts, explicit M+/M- stores, fuzz-failure retention and mirrored historical anti-forgetting regressions.
 
-### R0.5 — agent ↔ environment coevolution
+### R0.5 — agent ↔ environment coevolution — merged
 
-R0.5 makes the benchmark environment evolvable without changing Arena-T0's simulation code.
+Bounded environment genomes, train/held-out validation seeds, agent generalization receipts, adversarial environment ranking and deterministic environment evolution.
+
+### R0.6 — bounded GameSpec compiler
+
+R0.6 adds a declarative front door for the engine.
 
 Implemented:
 
-- `EnvironmentGenome` with bounded world/rule parameters;
-- deterministic `seed_environments`;
-- genome → validated `ArenaConfig` compilation;
-- train-seed tournament per environment;
-- strictly held-out validation-seed tournament per environment;
-- `EnvironmentEvaluation` with train/validation efficiency and difficulty;
-- validation discrimination across agent qualities;
-- `AgentGeneralization` with train mean, validation mean, gap, worst-case quality and validation standard deviation;
-- deterministic evidence/coevolution receipt hashes;
-- adversarial environment ranking;
-- `evolve_environments` with elite retention + bounded deterministic mutation;
-- `omega-game coevolve` CLI.
+- `GameSpec` version `0.1`;
+- strict rejection of unknown top-level/nested fields;
+- `GameAgentSpec`, `GameEnvironmentSpec`, `GameRuleSpec`;
+- bounded Arena-T0 action vocabulary: `attack`, `harvest`, `idle`, `move`;
+- agent normalization through the existing `AgentGenome` contract;
+- environment normalization through `EnvironmentGenome` → `ArenaConfig.validate()`;
+- unique-agent and minimum-population gates;
+- compilation to `WorldGraph + RuleKernel + ArenaConfig + AgentGenome[]`;
+- OAK evaluation before execution;
+- deterministic SHA-256 `build_receipt`;
+- `CompiledGame.run_tournament()` blocked when OAK rejects the build;
+- JSON Schema at `schemas/game_spec.schema.json`;
+- example at `examples/game_spec_arena_t0.json`;
+- `omega-game compile-spec` CLI.
 
-Current benchmark difficulty is:
+Compiler law:
 
 ```text
-difficulty = 1 / (1 + mean_efficiency)
-adversarial_score = validation_difficulty + 0.10 * validation_discrimination
+JSON GameSpec
+→ bounded parser
+→ normalize
+→ WorldGraph + RuleKernel + ArenaConfig + agents
+→ OAK
+→ deterministic build receipt
+→ optional mirrored tournament
 ```
 
-These are explicit benchmark metrics, not universal definitions of difficulty or game quality.
+The compiler never imports arbitrary user modules or evaluates code from the spec.
 
 ### Headless CLI
 
@@ -59,6 +70,7 @@ PYTHONPATH=. python -m omega_game evolve --seed 42 --population 8 --generations 
 PYTHONPATH=. python -m omega_game quality-diversity --seed 42 --population 16 --steps 48 --bins 8
 PYTHONPATH=. python -m omega_game memory-demo --seed 42 --population 8 --top-k 3 --steps 32 --threshold 0.5
 PYTHONPATH=. python -m omega_game coevolve --seed 42 --population 6 --environments 4 --adversarial-limit 2 --next-environments 4
+PYTHONPATH=. python -m omega_game compile-spec examples/game_spec_arena_t0.json --seed 42 --tournament
 PYTHONPATH=. python -m omega_game fuzz --seed 42 --cases 100
 PYTHONPATH=. python -m omega_game sparse-bench --seed 42 --entities 10000 --active 100 --ticks 128
 ```
@@ -66,16 +78,14 @@ PYTHONPATH=. python -m omega_game sparse-bench --seed 42 --entities 10000 --acti
 ## OAK boundaries
 
 ```text
+COMPILED_SPEC != FUN_GAME
+COMPILED_SPEC != FAIR_GAME
+BUILD_RECEIPT != EXTERNAL_CERTIFICATION
+SCHEMA_VALID != SEMANTICALLY_GOOD
+OAK_ACCEPTED_BUILD != SCIENTIFIC_TRUTH
 DETERMINISTIC_REPLAY != PHYSICAL_TRUTH
 TOURNAMENT_WIN != GENERAL_INTELLIGENCE
-QD_COVERAGE != BEHAVIORAL_COMPLETENESS
-NOVELTY != USEFULNESS
-HALL_OF_FAME != GLOBAL_OPTIMALITY
-M_PLUS != PROOF_OF_TRUTH
-M_MINUS != PROOF_OF_IMPOSSIBILITY
 HELD_OUT_SEEDS != REAL_WORLD_GENERALIZATION
-ADVERSARIAL_SCORE != UNIVERSAL_DIFFICULTY
-ENVIRONMENT_GENOME != COMPLETE_LEVEL_DESCRIPTION
 WORK_UNIT_REDUCTION != HARDWARE_SPEEDUP
 ```
 
@@ -88,8 +98,8 @@ python -m pytest
 
 ## Next split units
 
-1. GameSpec compiler / schema;
-2. adversarial fixed-map layouts rather than parameter-only environments;
+1. explicit fixed map layouts and connectivity/fairness gates;
+2. GameSpec map/layout extension;
 3. extinct-lineage registry and richer M- minimization;
 4. TextWorld / Quest-CVCD adapters;
 5. profiler-driven CPU/GPU scheduling experiments;

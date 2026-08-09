@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 from dataclasses import asdict
+from pathlib import Path
 
 from .engines import (
     AgentGenome,
@@ -10,6 +11,7 @@ from .engines import (
     ArenaConfig,
     EvolutionConfig,
     EvolutionaryMemory,
+    GameSpecCompiler,
     audit_match,
     evaluate_anti_forgetting,
     evolve,
@@ -63,6 +65,11 @@ def _parser() -> argparse.ArgumentParser:
     coevo.add_argument("--environments", type=int, default=4)
     coevo.add_argument("--adversarial-limit", type=int, default=2)
     coevo.add_argument("--next-environments", type=int, default=4)
+
+    compile_spec = sub.add_parser("compile-spec", help="compile a bounded JSON GameSpec into Omega GAME primitives")
+    compile_spec.add_argument("path")
+    compile_spec.add_argument("--seed", type=int, default=0)
+    compile_spec.add_argument("--tournament", action="store_true")
 
     fuzz = sub.add_parser("fuzz", help="fuzz deterministic arena invariants")
     fuzz.add_argument("--seed", type=int, default=0)
@@ -138,14 +145,7 @@ def main(argv: list[str] | None = None) -> int:
             config=arena_config,
             threshold=args.threshold,
         )
-        print(
-            json.dumps(
-                {"memory": memory.to_dict(), "anti_forgetting": regression.to_dict()},
-                sort_keys=True,
-                ensure_ascii=False,
-                indent=2,
-            )
-        )
+        print(json.dumps({"memory": memory.to_dict(), "anti_forgetting": regression.to_dict()}, sort_keys=True, ensure_ascii=False, indent=2))
         return 0 if regression.passed else 4
 
     if args.command == "coevolve":
@@ -165,18 +165,18 @@ def main(argv: list[str] | None = None) -> int:
             seed=args.seed + 2000,
             target_size=args.next_environments,
         )
-        print(
-            json.dumps(
-                {
-                    "coevolution": report.to_dict(),
-                    "next_environments": [asdict(environment) for environment in next_environments],
-                },
-                sort_keys=True,
-                ensure_ascii=False,
-                indent=2,
-            )
-        )
+        print(json.dumps({"coevolution": report.to_dict(), "next_environments": [asdict(environment) for environment in next_environments]}, sort_keys=True, ensure_ascii=False, indent=2))
         return 0
+
+    if args.command == "compile-spec":
+        text = Path(args.path).read_text(encoding="utf-8")
+        compiled = GameSpecCompiler().compile(text)
+        payload = {"compiled": compiled.to_dict()}
+        if compiled.accepted and args.tournament:
+            tournament = compiled.run_tournament(seeds=(args.seed, args.seed + 1), mirrored=True)
+            payload["tournament"] = tournament.to_dict(include_replays=False)
+        print(json.dumps(payload, sort_keys=True, ensure_ascii=False, indent=2))
+        return 0 if compiled.accepted else 5
 
     if args.command == "fuzz":
         report = fuzz_arena_t0(cases=args.cases, seed=args.seed)
@@ -184,12 +184,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if report.accepted else 3
 
     if args.command == "sparse-bench":
-        report = run_sparse_benchmark(
-            entity_count=args.entities,
-            active_entities=args.active,
-            ticks=args.ticks,
-            seed=args.seed,
-        )
+        report = run_sparse_benchmark(entity_count=args.entities, active_entities=args.active, ticks=args.ticks, seed=args.seed)
         print(report.to_json(), end="")
         return 0
 
