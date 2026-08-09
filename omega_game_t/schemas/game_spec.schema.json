@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-game/game-spec.schema.json",
+  "title": "Omega GAME-SIM-EVO GameSpec R0.6",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["spec_id", "agents"],
+  "properties": {
+    "spec_id": {"type": "string", "minLength": 1},
+    "version": {"const": "0.1"},
+    "metadata": {"type": "object"},
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "width": {"type": "integer"},
+        "height": {"type": "integer"},
+        "resource_density": {"type": "number"},
+        "initial_energy": {"type": "integer"},
+        "harvest_energy": {"type": "integer"},
+        "move_cost": {"type": "integer"},
+        "attack_cost": {"type": "integer"},
+        "attack_damage": {"type": "integer"},
+        "max_steps": {"type": "integer"}
+      }
+    },
+    "agents": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["agent_id"],
+        "properties": {
+          "agent_id": {"type": "string", "minLength": 1},
+          "seek_resource": {"type": "number"},
+          "aggression": {"type": "number"},
+          "conservation": {"type": "number"},
+          "exploration": {"type": "number"}
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowed_actions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["attack", "harvest", "idle", "move"]}
+        }
+      }
+    }
+  }
+}
