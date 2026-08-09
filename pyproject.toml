@@ -95,6 +95,7 @@ omega-synergy-n = "omega_synergy_n_t.cli:main"
 omega-summary = "omega_summary_fractal_t.cli:main"
 omega-summary-corpus = "omega_summary_fractal_t.corpus_cli:main"
 omega-neuro = "omega_neuro_t.cli:main"
+omega-neuro-bench = "omega_neuro_t.benchmark_cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
