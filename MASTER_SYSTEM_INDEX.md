@@ -35,7 +35,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | 7 | DeepTech → Company OS Bridge | `omega_deeptech_forge/review_packets.py` | D-MVP | Converts signal decisions into OfferCards, PriorArtQueryPacks, publication notes, IP disclosure drafts, gates, scores, and M⁻. | Add JSON schema and AUTO² issue generation behind OAKGate. |
 | 8 | Company Revenue IP Publication OS | `docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md` / review packets | X/D | Turns artifacts into company, revenue, IP, publication, and review packets safely. | Integrate Value Pipeline OAKBench scoring and approval records. |
 | 9 | Top40×256 | `docs/canon/Top-40x256-MANIFEST-v0.1.md` | Source/E | Mine of 10,240 candidates, explicitly not canonized in bulk. | Extract Top16 absolute into DCT-Ω cards. |
-| 10 | Ω-GAME-SIM-EVO-T∞ / Ω-GAME-T | `omega_game_t/omega_game/engines/` + `docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md` | D / R0.6 candidate | R0.1–R0.5 are merged. R0.6 adds bounded GameSpec IR/schema, allow-list parsing, compilation to WorldGraph/RuleKernel/ArenaConfig/agents, OAK-before-execution and deterministic build receipts. | Pass R0.6 CI; then extend GameSpec with fixed map layouts and connectivity/fairness gates. |
+| 10 | Ω-GAME-SIM-EVO-T∞ / Ω-GAME-T | `omega_game_t/omega_game/engines/` + `docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md` | D / R0.7 candidate | R0.1–R0.6 are merged. R0.7-v2 adds backward-compatible fixed layouts with canonical hashes, obstacles, reachability/asymmetry gates, layout-aware pathfinding, replay/tournament/WorldGraph provenance and GameSpec lowering. | Pass R0.7-v2 CI; retain failed R0.7-v1 as M⁻ evidence; then evolve fixed layouts over held-out map sets. |
 | 11 | U0 Core | `u0_core/` | X | Minimal generator hypothesis: Δ, R, T produce trace, memory, validation, scale, HGFM. | Add tests showing emergence and failure cases. |
 | 12 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add first conservation-tested simulation. |
 | 13 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
@@ -53,14 +53,13 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 AUTO² Kernel -> Ω-LIN-T -> FFWT-HAC-CVCD
 ```
 
-These have the strongest combination of code, tests, reports, and future product/research value.
-
 ### P2 — Merge path
 
-1. DeepTech Forge is now merged into `main`; use it as the native IP/revenue triage organ.
-2. Ω-GAME-T PR #82 is superseded and closed; core graph primitives/OAK/tests/CI were merged via #97. Continue GAME development as small tested units, including Ω-GAME-SIM-EVO-T∞.
-3. Use DCT-Ω + OAK + M⁻ for every merge decision.
-4. No external sending, filing, public publication, or IP disclosure without an explicit approval record.
+1. DeepTech Forge is merged into `main`; use it as the native IP/revenue triage organ.
+2. Ω-GAME-T PR #82 is superseded and closed; core graph primitives/OAK/tests/CI were merged via #97. Continue GAME development as small tested units through Ω-GAME-SIM-EVO-T∞.
+3. Failed candidate PRs are M⁻ evidence, not history to erase.
+4. Use DCT-Ω + OAK + M⁻ for every merge decision.
+5. No external sending, filing, public publication, or IP disclosure without an explicit approval record.
 
 ### P3 — Anti-inflation rule
 
@@ -70,8 +69,6 @@ Generate massively. Score brutally. Promote rarely.
 ```
 
 ## Universal DCT-Ω card contract
-
-Every object promoted from this index should have:
 
 ```yaml
 id: string
