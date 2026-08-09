@@ -1,6 +1,6 @@
 # Ω-GAME-SIM-EVO-T∞ / Ω-GENESIS-ENGINE-T∞
 
-**Maturity:** R0.6 executable prototype  
+**Maturity:** R0.7 executable prototype  
 **Host:** `omega_game_t`  
 **Authority:** research / benchmark / review only
 
@@ -9,7 +9,7 @@
 ```text
 GameSpec / generators
 → bounded compilation
-→ WorldGraph + ArenaConfig + RuleKernel + agents
+→ WorldGraph + ArenaConfig + RuleKernel + agents + optional ArenaLayout
 → Simulate
 → Compete
 → Measure
@@ -20,7 +20,7 @@ GameSpec / generators
 → next generation
 ```
 
-The project advances through small falsifiable units:
+Progression:
 
 ```text
 R0.1 deterministic experiment
@@ -29,243 +29,162 @@ R0.1 deterministic experiment
 → R0.4 evolutionary memory
 → R0.5 agent↔environment coevolution
 → R0.6 bounded GameSpec compiler
+→ R0.7 fixed hashed layouts
 ```
 
-Ω-GAME-SIM-EVO-T∞ extends the already-merged Ω-GAME-T `WorldGraph` / `OAKGate` lineage; it does not replace it.
+## R0.1–R0.6 retained
 
-## R0.1–R0.5 retained
+R0.1 established deterministic Arena-T0, replay receipts, tournaments, evolution, WorldGraph/OAK and fuzzing. R0.2 added sparse/event scheduling and work-unit accounting. R0.3 added deterministic MAP-Elites. R0.4 added Hall of Fame plus M+/M- anti-forgetting memory. R0.5 added environment coevolution with disjoint train/validation seeds. R0.6 added the bounded GameSpec IR/compiler and OAK-before-execution.
 
-### R0.1 — deterministic substrate
+## R0.7 — geometry as executable state
 
-Arena-T0 provides explicit seeds/configs/genomes, replay SHA-256 identity, mirrored tournaments, vector ratings, deterministic mutation/selection, WorldGraph projection, OAK audit and bounded fuzzing.
+R0.7 distinguishes two worlds that have identical dimensions and resource counts but different actual geometry.
 
-### R0.2 — sparse/event kernel
-
-Dirty frontiers, scheduled events, Temporal LOD, dependency DAGs, bounded batches and deterministic work-unit accounting operationalize the design target `cost ~ active frontier`.
-
-### R0.3 — quality diversity
-
-A deterministic MAP-Elites-style archive preserves strong but behaviorally distinct agents instead of collapsing the search to one scalar champion.
-
-### R0.4 — evolutionary memory
-
-Tournament champions become Hall-of-Fame/M+ evidence; fuzz failures become M- evidence; candidates are regressed against distinct historical champions to expose forgetting.
-
-### R0.5 — agent↔environment coevolution
-
-Bounded environment genomes compile to ArenaConfig, environments are evaluated on disjoint train/validation seeds, and agents receive explicit generalization-gap/worst-case receipts. Environments can evolve under a documented adversarial benchmark score.
-
-## R0.6 — GameSpec as bounded intermediate representation
-
-### Why a compiler layer
-
-Before R0.6, engine objects had to be constructed through Python APIs or specialized CLI commands. R0.6 introduces a declarative source representation:
+### ArenaLayout IR
 
 ```text
-GameSpec
-→ validation
-→ normalized IR
-→ existing engine primitives
+ArenaLayout = (
+  width, height,
+  left_spawn, right_spawn,
+  resources[], obstacles[]
+)
 ```
 
-The design goal is not unrestricted game-program synthesis. It is a small deterministic compiler whose accepted language is reviewable and testable.
+Validation fails closed for out-of-bounds coordinates, duplicate resources/obstacles, coincident spawns, spawn/resource overlap, spawn/obstacle overlap and resource/obstacle overlap.
 
-### GameSpec 0.1
+Resources and obstacles are sorted before canonical serialization.
 
-Top-level fields are limited to:
+### Canonical layout identity
 
 ```text
-spec_id
-version
-environment
-agents
-rules
-metadata
+layout_hash = SHA256(canonical_json(normalized_layout))
 ```
 
-Unknown fields fail closed at the top level and in environment/agent/rule records.
-
-Current version:
+The hash identifies exact normalized geometry only.
 
 ```text
-GAME_SPEC_VERSION = "0.1"
+LAYOUT_HASH != FAIRNESS
+LAYOUT_HASH != FUN
 ```
 
-Unsupported versions fail rather than being guessed or migrated silently.
+### Connectivity and resource reachability
 
-### Agent IR
+Four-neighbor BFS computes deterministic graph distance while excluding obstacles.
 
-`GameAgentSpec` supports only:
+A layout audit checks:
 
 ```text
-agent_id
-seek_resource
-aggression
-conservation
-exploration
+left_spawn ↔ right_spawn
+∀ resource r:
+    left_spawn ↔ r
+    right_spawn ↔ r
 ```
 
-It lowers through the already-tested `AgentGenome.normalized()` contract. Agent IDs must be unique and a compiled GameSpec requires at least two agents.
-
-### Environment IR
-
-`GameEnvironmentSpec` supports the current Arena-T0 parameter family:
+Signals:
 
 ```text
-width, height
-resource_density
-initial_energy
-harvest_energy
-move_cost
-attack_cost
-attack_damage
-max_steps
+spawn_disconnected
+resource_not_reachable_by_both
 ```
 
-Lowering path:
+Connectivity is necessary for this benchmark but is not strategic balance.
+
+### Geometric asymmetry
+
+For reachable resources:
 
 ```text
-GameEnvironmentSpec
-→ EnvironmentGenome(normalized)
-→ ArenaConfig
-→ ArenaConfig.validate()
+L = mean_r d(left_spawn, r)
+R = mean_r d(right_spawn, r)
+A = |L - R| / max(1, L, R)
 ```
 
-Therefore the compiler reuses R0.5's environment bounds instead of defining a second inconsistent environment model.
-
-### Rule IR
-
-R0.6 deliberately uses a tiny action vocabulary:
+The policy may flag a layout when `A > fairness_threshold`.
 
 ```text
-attack
-harvest
-idle
-move
+DISTANCE_SYMMETRY != STRATEGIC_FAIRNESS
+FAIRNESS_THRESHOLD != UNIVERSAL_FAIRNESS_DEFINITION
 ```
 
-Unknown actions fail closed. `GameRuleSpec` lowers to the historical `RuleKernel` with required actor kind `arena_agent`.
+### Runtime validity vs benchmark policy
+
+Arena-T0 enforces structural validity and reachability. Compiler/audit layers may impose stricter geometric asymmetry thresholds.
 
 ```text
-RULE_VOCABULARY != COMPLETE_GAME_LOGIC
+STRUCTURALLY_RUNNABLE != OAK_ACCEPTED_FOR_COMPETITION
 ```
 
-The rule surface is a bounded contract for the current Arena-T0 adapter, not a universal game DSL.
+This separation prevents runtime mechanics from silently hard-coding one universal fairness policy.
 
-### WorldGraph lowering
+### Obstacle-aware movement
 
-Each compiled normalized agent becomes a `WorldGraph` entity of kind `arena_agent`.
+Fixed-layout movement toward a target uses shortest-path candidates. Exploration uses walkable neighbors. Action application independently rejects obstacle moves as `blocked`.
+
+Without a layout, Arena-T0 keeps the R0.1–R0.6 seeded random-resource behavior.
+
+### Backward-compatible replay identity
+
+A critical R0.7 rule is:
 
 ```text
-GameSpec agents
-→ AgentGenome[]
-→ Entity[]
-→ WorldGraph("gamespec:<id>:<version>")
+NO_LAYOUT → preserve legacy serialized surface and replay hash payload
+HAS_LAYOUT → add normalized layout + layout_hash to receipt
 ```
 
-The world graph is then available to the existing game-quality/OAK machinery.
+Therefore merely upgrading the engine does not change the replay identity of historical no-layout matches.
 
-### OAK compilation gate
+`MatchResult.layout` is optional and appended to the dataclass contract so old manual constructions remain valid.
 
-The compiler evaluates a bounded payload containing:
+### Replay / WorldGraph / tournament propagation
+
+Fixed layout identity participates in replay hashing and deterministic reruns. WorldGraph receives an `arena_layout` entity. `run_round_robin(..., layout=...)` propagates the same geometry to every seed/orientation.
+
+### GameSpec integration
+
+GameSpec 0.1 gains optional `layout`. Compiler checks:
 
 ```text
-normalized GameSpec
-WorldGraph
-ArenaConfig
+environment dimensions == layout dimensions
+layout structural validity
+connectivity/resource reachability
+configured asymmetry threshold
+resource_count := len(layout.resources)
 ```
 
-through `OAKGate`.
+The build receipt gains `layout_hash` and exact `LayoutAudit` only when a layout exists. No-layout compiled outputs retain their previous layout-free surface.
 
-A compiled artifact can exist with `accepted = false`, but `CompiledGame.run_tournament()` refuses execution in that state.
+### Action vocabulary repair
+
+Arena-T0 emits `stay`; R0.6 accepted `idle`. R0.7 canonicalizes this boundary:
 
 ```text
-parse success
-!= compile acceptance
-!= tournament authorization
+canonical action: stay
+legacy input alias: idle → stay
 ```
 
-This distinction is essential for future generated specifications.
+Normalized specs and receipts therefore represent executable semantics rather than a phantom action name.
 
-### Deterministic build receipt
-
-Every compiled build receives SHA-256 identity over canonical JSON containing:
-
-```text
-compiler identity
-GameSpec version
-normalized spec
-ArenaConfig
-RuleKernel contract
-WorldGraph ID
-OAK report
-```
-
-Thus equivalent normalized agent ordering produces the same receipt.
-
-```text
-BUILD_RECEIPT = deterministic provenance identity
-BUILD_RECEIPT != external certification
-```
-
-### No arbitrary code execution
-
-The compiler never accepts:
-
-- Python source;
-- import/module names;
-- shell commands;
-- callback names;
-- dynamic expression strings;
-- executable hooks.
-
-The schema and parser use an allow-list model. A field such as `execute_python` or an action such as `shell_exec` fails as unknown/unsupported.
-
-### JSON Schema
-
-A machine-readable structural schema is stored at:
-
-```text
-omega_game_t/schemas/game_spec.schema.json
-```
-
-The runtime parser remains authoritative for R0.6 because it performs normalization and semantic checks beyond raw JSON shape.
-
-Example:
-
-```text
-omega_game_t/examples/game_spec_arena_t0.json
-```
-
-### Compiler-to-tournament path
-
-For an OAK-accepted build:
-
-```text
-GameSpec
-→ GameSpecCompiler.compile
-→ CompiledGame
-→ run_tournament(seeds, mirrored=True)
-→ TournamentReport
-```
-
-The CLI exposes the same path:
+### Example
 
 ```bash
-PYTHONPATH=. python -m omega_game compile-spec examples/game_spec_arena_t0.json --seed 42 --tournament
+cd omega_game_t
+PYTHONPATH=. python -m omega_game compile-spec examples/game_spec_fixed_layout.json --seed 42 --tournament
 ```
 
 ## OAK boundary ledger
 
 ```text
+LAYOUT_HASH != FAIRNESS
+CONNECTED_LAYOUT != BALANCED_LAYOUT
+DISTANCE_SYMMETRY != STRATEGIC_FAIRNESS
+FIXED_LAYOUT != FUN_LEVEL
+FAIRNESS_THRESHOLD != UNIVERSAL_FAIRNESS_DEFINITION
+STRUCTURALLY_RUNNABLE != OAK_ACCEPTED_FOR_COMPETITION
 COMPILED_SPEC != FUN_GAME
-COMPILED_SPEC != FAIR_GAME
-SCHEMA_VALID != SEMANTICALLY_GOOD
 BUILD_RECEIPT != EXTERNAL_CERTIFICATION
 OAK_ACCEPTED_BUILD != SCIENTIFIC_TRUTH
 DETERMINISTIC_REPLAY != PHYSICAL_TRUTH
 TOURNAMENT_WIN != GENERAL_INTELLIGENCE
-WORK_UNIT_REDUCTION != WALL_CLOCK_SPEEDUP
 QD_COVERAGE != BEHAVIORAL_COMPLETENESS
 HALL_OF_FAME != GLOBAL_OPTIMALITY
 M_PLUS != PROOF_OF_TRUTH
@@ -274,52 +193,24 @@ HELD_OUT_SEEDS != REAL_WORLD_GENERALIZATION
 ADVERSARIAL_SCORE != UNIVERSAL_DIFFICULTY
 ```
 
-## Executable operating laws
+## R0.8+ roadmap
 
-```text
-specification before code generation
-allow-list before extensibility
-normalization before hashing
-OAK before execution
-reproducibility before scale
-headless benchmark before rendering
-mirrored competition before champion claims
-active frontier before total-world scanning
-ecology of elites before single-champion collapse
-historical regression before declaring progress
-held-out seeds before generalization claims
-counterexamples before canonization
-```
+### R0.8 — adversarial layout evolution
 
-## R0.7+ roadmap
+- bounded mutation of resources/obstacles/spawns;
+- connectivity-preserving repair or rejection;
+- held-out map sets distinct from training maps;
+- layout difficulty/discrimination receipts;
+- map-generalization gaps;
+- M- registry for invalid/unfair/dead layouts.
 
-### R0.7 — explicit fixed map layouts
-
-Extend GameSpec with bounded map geometry rather than only environment parameters:
-
-```text
-layout
-→ bounds/connectivity validation
-→ spawn/resource invariants
-→ layout hash
-→ train/validation map split
-→ adversarial layout search
-```
-
-### R0.8 — scalable execution experiments
+### R0.9 — scalable execution
 
 - sharding;
 - checkpoints;
 - backpressure;
-- hardware profiler adapters;
+- profiler adapters;
 - CPU/GPU scheduling experiments;
 - empirical wall-clock/energy OAKBench.
 
-### R0.9 — richer adapters
-
-- TextWorld;
-- Quest-CVCD;
-- additional simulation domains;
-- each behind explicit typed adapter contracts.
-
-No compiled/generated game, evolved environment or benchmark champion is automatically considered fun, fair, safe, scientifically valid, generally intelligent or publishable.
+No generated map, compiled game, evolved environment or benchmark champion is automatically considered fun, fair, safe, scientifically valid, generally intelligent or publishable.
