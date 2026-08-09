@@ -14,7 +14,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 ## OAK status ladder
 
 | Status | Meaning | Promotion requirement |
-|---|---|---|
+|---|---|
 | S | speculative | definition and risk boundary |
 | E | exploratory | minimal DCT-Ω packet |
 | X | crystallizable | examples, assumptions, tests or proof path |
@@ -35,7 +35,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | 7 | DeepTech → Company OS Bridge | `omega_deeptech_forge/review_packets.py` | D-MVP | Converts signal decisions into OfferCards, PriorArtQueryPacks, publication notes, IP disclosure drafts, gates, scores, and M⁻. | Add JSON schema and AUTO² issue generation behind OAKGate. |
 | 8 | Company Revenue IP Publication OS | `docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md` / review packets | X/D | Turns artifacts into company, revenue, IP, publication, and review packets safely. | Integrate Value Pipeline OAKBench scoring and approval records. |
 | 9 | Top40×256 | `docs/canon/Top-40x256-MANIFEST-v0.1.md` | Source/E | Mine of 10,240 candidates, explicitly not canonized in bulk. | Extract Top16 absolute into DCT-Ω cards. |
-| 10 | Ω-GAME-SIM-EVO-T∞ / Ω-GAME-T | `omega_game_t/omega_game/engines/` + `docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md` | D / R0.2 candidate | R0.1 is merged with deterministic simulation, tournaments, evolution, replay/OAK/fuzzing; R0.2 adds DirtyFrontier, event wakeups, Temporal LOD, dependency DAG and deterministic CostGraph work accounting. | Pass R0.2 CI; then add MAP-Elites/quality-diversity as the next small unit. |
+| 10 | Ω-GAME-SIM-EVO-T∞ / Ω-GAME-T | `omega_game_t/omega_game/engines/` + `docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md` | D / R0.3 candidate | R0.1 deterministic simulation/tournament/evolution and R0.2 sparse/event scheduler are merged; R0.3 adds deterministic MAP-Elites, behavior descriptors, coverage, novelty and QD scoring. | Pass R0.3 CI; then add Hall of Fame + M+/M- evolutionary memory. |
 | 11 | U0 Core | `u0_core/` | X | Minimal generator hypothesis: Δ, R, T produce trace, memory, validation, scale, HGFM. | Add tests showing emergence and failure cases. |
 | 12 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add first conservation-tested simulation. |
 | 13 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
