@@ -98,6 +98,10 @@ omega-actions = "omega_actions_t.cli:main"
 omega-actions-telemetry = "omega_actions_t.telemetry:main"
 omega-actions-delta = "omega_actions_t.delta_ci:main"
 omega-actions-evidence = "omega_actions_t.evidence:main"
+omega-actions-shard = "omega_actions_t.sharding:main"
+omega-actions-twin = "omega_actions_t.digital_twin:main"
+omega-actions-cache = "omega_actions_t.cache_tensor:main"
+omega-actions-compile = "omega_actions_t.compiler:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
