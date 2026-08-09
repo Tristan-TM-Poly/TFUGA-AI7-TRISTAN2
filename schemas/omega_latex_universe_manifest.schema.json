@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {
+    "allowed_roots": {"items": {"minLength": 1, "type": "string"}, "minItems": 1, "type": "array"},
     "depths": {"items": {"minimum": 0, "type": "integer"}, "minItems": 1, "type": "array", "uniqueItems": true},
     "entries": {
       "items": {

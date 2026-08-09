@@ -7,9 +7,25 @@ on:
       - "tests/test_omega_latex_t.py"
       - "tests/test_omega_latex_t_r08.py"
       - "tests/test_omega_latex_t_r10.py"
+      - "tests/test_omega_latex_t_r101.py"
       - "schemas/omega_latex_*.schema.json"
       - "examples/omega_latex_t_*"
       - "docs/theories/OMEGA_LATEX_T_INFINITY.md"
+      - "docs/theories/OMEGA_LATEX_T_R101_HARDENING.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-latex-t-oak.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "omega_latex_t/**"
+      - "tests/test_omega_latex_t.py"
+      - "tests/test_omega_latex_t_r08.py"
+      - "tests/test_omega_latex_t_r10.py"
+      - "tests/test_omega_latex_t_r101.py"
+      - "schemas/omega_latex_*.schema.json"
+      - "examples/omega_latex_t_*"
+      - "docs/theories/OMEGA_LATEX_T_INFINITY.md"
+      - "docs/theories/OMEGA_LATEX_T_R101_HARDENING.md"
       - "pyproject.toml"
       - ".github/workflows/omega-latex-t-oak.yml"
   workflow_dispatch:
@@ -18,7 +34,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: omega-latex-t-${{ github.ref }}
+  group: omega-latex-t-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -34,9 +50,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile Python
-        run: python -m compileall -q omega_latex_t tests/test_omega_latex_t.py tests/test_omega_latex_t_r08.py tests/test_omega_latex_t_r10.py
-      - name: Run R0.1-R1.0 focused tests
-        run: python -m unittest -v tests.test_omega_latex_t tests.test_omega_latex_t_r08 tests.test_omega_latex_t_r10
+        run: python -m compileall -q omega_latex_t tests/test_omega_latex_t.py tests/test_omega_latex_t_r08.py tests/test_omega_latex_t_r10.py tests/test_omega_latex_t_r101.py
+      - name: Run R0.1-R1.0.1 focused tests
+        run: python -m unittest -v tests.test_omega_latex_t tests.test_omega_latex_t_r08 tests.test_omega_latex_t_r10 tests.test_omega_latex_t_r101
       - name: Parse schemas
         run: python -c 'import json,glob; [json.load(open(p)) for p in glob.glob("schemas/omega_latex_*.schema.json")]'
       - name: Deterministic R1.0 bundle
@@ -73,6 +89,7 @@ jobs:
           python -m omega_latex_t attach-metadata-receipt /tmp/with-fragment.json examples/omega_latex_t_metadata.json --provider crossref --output /tmp/with-metadata.json
           python -m omega_latex_t metadata-receipts /tmp/with-metadata.json > /tmp/metadata-report.json
           grep -q '"valid_count": 1' /tmp/metadata-report.json
+          grep -q '"verified_count": 1' /tmp/metadata-report.json
           python -m omega_latex_t audit /tmp/with-metadata.json
       - name: R1.0 covariance and SVG backend
         run: |
@@ -101,10 +118,24 @@ jobs:
           python -m omega_latex_t cache-index examples/omega_latex_t_cache_entries.json --output-dir /tmp/cache-index
           test -f /tmp/cache-index/aa.json
           test -f /tmp/cache-index/index.json
-      - name: Universe plan, build, resume retained
+      - name: R1.0.1 adversarial hardening
+        run: |
+          python -m unittest -v tests.test_omega_latex_t_r101
+          python - <<'PY'
+          from omega_latex_t.covariance import CovarianceError, covariance_diagnostics
+          try:
+              covariance_diagnostics([[1.0, 2.0], [2.0, 1.0]])
+          except CovarianceError:
+              pass
+          else:
+              raise SystemExit("indefinite covariance was admitted")
+          PY
+      - name: Universe plan, streaming build and resume
         run: |
           python -m omega_latex_t universe-plan examples/omega_latex_t_universe_manifest.json --output /tmp/universe-plan.json
           python -m omega_latex_t build-universe examples/omega_latex_t_universe_manifest.json --output-dir /tmp/universe --cache-dir /tmp/universe-cache
           python -m omega_latex_t build-universe examples/omega_latex_t_universe_manifest.json --output-dir /tmp/universe --cache-dir /tmp/universe-cache
           test -f /tmp/universe/checkpoint.json
           test -f /tmp/universe/r08-demo/D5/document.tex
+          grep -q '"complete": true' /tmp/universe/checkpoint.json
+          grep -q '"next_job_index"' /tmp/universe/checkpoint.json
