@@ -5,58 +5,61 @@ Status: small merge units split from the larger GAME branch.
 
 ## Scope already merged
 
-The first reviewable units established:
-
-- graph primitives;
-- event validation;
-- quality scoring;
-- OAK gate;
-- tests and CI;
-- LanguageGM engines, rubric, curriculum, validators, repair loop and dataset forge.
+The first reviewable units established graph/event primitives, quality scoring, OAK, tests/CI and the LanguageGM family.
 
 ## Ω-GAME-SIM-EVO-T∞ R0.1 — merged
 
-R0.1 reconnects the original GAME/world idea to an executable headless laboratory without reviving oversized PR #82.
+R0.1 provides the deterministic experimental substrate:
 
-Implemented:
-
-- deterministic `Arena-T0` simulation;
-- explicit `AgentGenome` and `ArenaConfig`;
+- `Arena-T0` headless simulation;
+- explicit `AgentGenome` / `ArenaConfig`;
 - replay SHA-256 receipts;
-- mirrored multi-seed round-robin tournaments;
-- multidimensional ratings: performance, robustness, efficiency, novelty, stability;
-- deterministic evolutionary selection/mutation;
-- replay projection into the already-merged `WorldGraph`;
-- OAK + deterministic replay audits;
-- bounded fuzzing for invariant discovery.
+- mirrored multi-seed tournaments;
+- vector ratings;
+- deterministic selection/mutation;
+- replay → `WorldGraph` projection;
+- OAK/determinism audits and fuzzing.
 
-## Ω-GAME-SIM-EVO-T∞ R0.2 — sparse/event kernel
+## Ω-GAME-SIM-EVO-T∞ R0.2 — merged
 
-R0.2 turns the optimization law `cost ~ active frontier` into executable scheduler primitives.
+R0.2 turns `cost ~ active frontier` into executable scheduling:
+
+- `DirtyFrontier`;
+- future `ScheduledEvent`s;
+- `SparseEventScheduler` wake/sleep dispatch;
+- activity/importance/uncertainty/visibility Temporal LOD;
+- dependency DAG + deterministic priority ordering;
+- bounded batches;
+- `CostGraph` work-unit accounting;
+- full-scan vs sparse accounting benchmark.
+
+`WORK_UNIT_REDUCTION != WALL_CLOCK_SPEEDUP` remains an explicit OAK boundary.
+
+## Ω-GAME-SIM-EVO-T∞ R0.3 — quality diversity
+
+R0.3 stops treating evolution as a search for only one champion.
 
 Implemented:
 
-- `DirtyFrontier`: deduplicated deterministic active entity set;
-- `ScheduledEvent`: explicit future event with tick/system/entity/payload;
-- `SparseEventScheduler`: wake/sleep dispatch from dirty state and events;
-- `TemporalSignal`: activity/importance/uncertainty/visibility signal;
-- `TemporalLODPolicy`: realtime/active/background/dormant cadences;
-- `SystemSpec.dependencies`: deterministic system dependency DAG;
-- priority ordering among dependency-ready systems;
-- fail-closed unknown dependency and cycle detection;
-- bounded `max_batch` processing;
-- `CostGraph`: deterministic work-unit accounting;
-- `run_sparse_benchmark`: full-scan vs sparse algorithmic accounting.
+- `ArchiveConfig` with selectable bounded genome axes;
+- `BehaviorDescriptor`;
+- deterministic multidimensional cell quantization;
+- `MapElitesArchive`;
+- one best elite per behavior cell;
+- deterministic tie-breaks;
+- normalized k-nearest archive novelty;
+- `quality_from_rating` using tournament evidence;
+- coverage, QD score, mean/max quality and mean novelty;
+- `QualityDiversityExperiment` coupling tournament → archive;
+- `quality-diversity` CLI command.
 
-The benchmark deliberately reports **work units**, not hardware speedup. For a baseline where each entity update costs one unit:
+Default descriptor space:
 
 ```text
-naive work = total_entities × ticks
-sparse work = processed_active_entities
-reduction = 1 - sparse_work / naive_work
+(aggression, exploration)
 ```
 
-A low sparse-work count demonstrates reduced algorithmic work under the benchmark assumptions; it does not by itself prove lower wall-clock time, energy, cache misses or GPU cost.
+with configurable bin counts. The axes are a modeling choice, not a claim that they exhaust behavior.
 
 ### Headless CLI
 
@@ -65,6 +68,7 @@ cd omega_game_t
 PYTHONPATH=. python -m omega_game arena --seed 42 --steps 96
 PYTHONPATH=. python -m omega_game tournament --seed 42 --population 8 --steps 64
 PYTHONPATH=. python -m omega_game evolve --seed 42 --population 8 --generations 3 --steps 48
+PYTHONPATH=. python -m omega_game quality-diversity --seed 42 --population 16 --steps 48 --bins 8
 PYTHONPATH=. python -m omega_game fuzz --seed 42 --cases 100
 PYTHONPATH=. python -m omega_game sparse-bench --seed 42 --entities 10000 --active 100 --ticks 128
 ```
@@ -75,7 +79,13 @@ Theory and evidence boundaries: `docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md`
 
 Omega GAME T is a game, simulation, and research lab. It is not a tool for manipulation, unfair automation, unsafe real-world instructions, or external certification.
 
-Deterministic simulation is a reproducibility property, not evidence that a simulated law is physically true. Tournament performance is benchmark evidence, not a claim of general intelligence. Scheduler work-unit reduction is an algorithmic accounting result, not a hardware performance claim.
+```text
+DETERMINISTIC_REPLAY != PHYSICAL_TRUTH
+TOURNAMENT_WIN != GENERAL_INTELLIGENCE
+QD_COVERAGE != BEHAVIORAL_COMPLETENESS
+NOVELTY != USEFULNESS
+WORK_UNIT_REDUCTION != HARDWARE_SPEEDUP
+```
 
 ## Local test
 
@@ -86,10 +96,10 @@ python -m pytest
 
 ## Next split units
 
-1. quality-diversity archive / MAP-Elites;
-2. Hall of Fame and M- counterexample memory;
+1. Hall of Fame + M+/M- evolutionary memory;
+2. regression challenge sets from champions and failures;
 3. agent ↔ map coevolution;
-4. adversarial level generation and hidden challenge seeds;
+4. adversarial level generation + hidden seeds;
 5. GameSpec compiler;
 6. TextWorld / Quest-CVCD adapters;
 7. profiler-driven CPU/GPU scheduling experiments;
