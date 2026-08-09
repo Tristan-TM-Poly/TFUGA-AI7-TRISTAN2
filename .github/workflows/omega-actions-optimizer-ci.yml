@@ -7,7 +7,7 @@ on:
       - 'tests/test_omega_actions_t.py'
       - 'tests/test_omega_actions_advanced.py'
       - 'tests/test_omega_actions_evidence.py'
-      - 'docs/OMEGA_ACTIONS_T.md'
+      - 'docs/OMEGA_ACTIONS_T*.md'
       - 'pyproject.toml'
       - '.github/workflows/omega-actions-optimizer-ci.yml'
       - '.github/workflows/omega-actions-telemetry.yml'
@@ -20,7 +20,7 @@ on:
       - 'tests/test_omega_actions_t.py'
       - 'tests/test_omega_actions_advanced.py'
       - 'tests/test_omega_actions_evidence.py'
-      - 'docs/OMEGA_ACTIONS_T.md'
+      - 'docs/OMEGA_ACTIONS_T*.md'
       - 'pyproject.toml'
       - '.github/workflows/omega-actions-optimizer-ci.yml'
       - '.github/workflows/omega-actions-telemetry.yml'
@@ -79,6 +79,12 @@ jobs:
             --markdown-out /tmp/OMEGA_ACTIONS_DELTA.md
           test -s /tmp/OMEGA_ACTIONS_DELTA.json
           test -s /tmp/OMEGA_ACTIONS_DELTA.md
+          python -m omega_actions_t evidence --root . \
+            --changed-files /tmp/OMEGA_CHANGED_FILES.txt \
+            --json-out /tmp/OMEGA_ACTIONS_EVIDENCE.json \
+            --markdown-out /tmp/OMEGA_ACTIONS_EVIDENCE.md
+          test -s /tmp/OMEGA_ACTIONS_EVIDENCE.json
+          test -s /tmp/OMEGA_ACTIONS_EVIDENCE.md
 
       - name: OAK read-only guard
         run: |
