@@ -20,6 +20,7 @@ from .evolutionary_memory import (
     evaluate_anti_forgetting,
 )
 from .game_spec import (
+    ARENA_ACTION_ALIASES,
     ARENA_ACTIONS,
     GAME_SPEC_VERSION,
     CompiledGame,
@@ -28,6 +29,14 @@ from .game_spec import (
     GameRuleSpec,
     GameSpec,
     GameSpecCompiler,
+)
+from .layout import (
+    ArenaLayout,
+    Coordinate,
+    LayoutAudit,
+    distance_map,
+    shortest_step_candidates,
+    walkable_neighbors,
 )
 from .language_curriculum import CurriculumProgress, CurriculumQuest, CurriculumTrack, LanguageCurriculum, default_language_curriculum
 from .language_dataset_forge import LanguageDataset, LanguageDatasetForge, LanguageDatasetItem, default_language_dataset_forge
@@ -70,6 +79,12 @@ __all__ = [
     "ArenaConfig",
     "MatchResult",
     "run_arena_t0",
+    "ArenaLayout",
+    "Coordinate",
+    "LayoutAudit",
+    "distance_map",
+    "walkable_neighbors",
+    "shortest_step_candidates",
     "RatingVector",
     "TournamentReport",
     "run_round_robin",
@@ -88,6 +103,7 @@ __all__ = [
     "evolve_environments",
     "GAME_SPEC_VERSION",
     "ARENA_ACTIONS",
+    "ARENA_ACTION_ALIASES",
     "GameAgentSpec",
     "GameEnvironmentSpec",
     "GameRuleSpec",
