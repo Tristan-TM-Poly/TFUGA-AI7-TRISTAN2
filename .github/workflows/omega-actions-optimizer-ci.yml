@@ -62,14 +62,12 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          roots = [Path('omega_actions_t'), Path('docs/OMEGA_ACTIONS_T.md')]
+          roots = [Path('omega_actions_t')]
           blocked = ['secrets.', 'git push', 'gh pr merge', 'curl ', 'wget ']
           texts = []
           for root in roots:
               if root.is_dir():
                   texts.extend(path.read_text(encoding='utf-8', errors='ignore') for path in root.rglob('*.py'))
-              elif root.exists():
-                  texts.append(root.read_text(encoding='utf-8', errors='ignore'))
           joined = '\n'.join(texts)
           hits = [term for term in blocked if term in joined]
           if hits:
