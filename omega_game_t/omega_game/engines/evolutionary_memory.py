@@ -275,12 +275,21 @@ def evaluate_anti_forgetting(
     seed_tuple = tuple(int(seed) for seed in seeds)
     if not seed_tuple:
         raise ValueError("at least one seed is required")
-    champions = hall_of_fame.challenge_agents(limit=champion_limit)
-    if not champions:
-        raise ValueError("Hall of Fame is empty")
 
     config = config or ArenaConfig()
     candidate = candidate.normalized()
+    champions = tuple(
+        champion
+        for champion in hall_of_fame.challenge_agents(limit=None)
+        if champion.agent_id != candidate.agent_id
+    )
+    if champion_limit is not None:
+        if champion_limit < 1:
+            raise ValueError("champion_limit must be >= 1 when provided")
+        champions = champions[:champion_limit]
+    if not champions:
+        raise ValueError("Hall of Fame has no distinct challenge agent for candidate")
+
     results: list[RegressionResult] = []
     total_points = 0.0
     total_available = 0.0
