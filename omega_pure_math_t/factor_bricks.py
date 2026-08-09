@@ -41,16 +41,21 @@ class BrickLanguage:
         return float(min(item.length for item in candidates))
 
     def irreducible(self, object_name: str) -> bool:
-        """Relative irreducibility inside the recorded language.
+        """Recorded relative irreducibility in the declared brick language.
 
-        Length 0 is reserved for the monoidal unit; length 1 is a brick.
-        Unknown objects are not labeled irreducible.
+        The object must be explicitly admitted as a one-brick witness and no
+        nontrivial (length >=2) factorization may be recorded. Unknown objects
+        are never promoted to irreducible merely because search found nothing.
+        This is an evidence-state predicate, not a theorem that no unrecorded
+        factorization exists.
         """
 
         candidates = self.witnesses.get(object_name)
         if not candidates:
             return False
-        return min(item.length for item in candidates) <= 1
+        admitted_as_brick = any(item.length == 1 for item in candidates)
+        has_nontrivial_factorization = any(item.length >= 2 for item in candidates)
+        return admitted_as_brick and not has_nontrivial_factorization
 
 
 def compose_witnesses(
