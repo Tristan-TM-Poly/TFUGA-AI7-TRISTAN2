@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/omega-game/game-spec.schema.json",
-  "title": "Omega GAME-SIM-EVO GameSpec R0.6",
+  "title": "Omega GAME-SIM-EVO GameSpec R0.7",
   "type": "object",
   "additionalProperties": false,
   "required": ["spec_id", "agents"],
@@ -22,6 +22,27 @@
         "attack_cost": {"type": "integer"},
         "attack_damage": {"type": "integer"},
         "max_steps": {"type": "integer"}
+      }
+    },
+    "layout": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["width", "height", "left_spawn", "right_spawn"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 2},
+        "height": {"type": "integer", "minimum": 2},
+        "left_spawn": {"$ref": "#/$defs/coordinate"},
+        "right_spawn": {"$ref": "#/$defs/coordinate"},
+        "resources": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/coordinate"}
+        },
+        "obstacles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/coordinate"}
+        }
       }
     },
     "agents": {
@@ -48,9 +69,17 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"enum": ["attack", "harvest", "idle", "move"]}
+          "items": {"enum": ["attack", "harvest", "idle", "move", "stay"]}
         }
       }
+    }
+  },
+  "$defs": {
+    "coordinate": {
+      "type": "array",
+      "prefixItems": [{"type": "integer"}, {"type": "integer"}],
+      "minItems": 2,
+      "maxItems": 2
     }
   }
 }
