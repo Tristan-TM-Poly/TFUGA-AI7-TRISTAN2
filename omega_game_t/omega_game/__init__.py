@@ -3,11 +3,13 @@
 Small, testable units extracted from the larger GAME branch. The
 Ω-GAME-SIM-EVO-T∞ layer extends the merged WorldGraph/OAK core with a
 reproducible simulation, tournament, evolution, fuzzing, sparse scheduling,
-quality diversity, evolutionary memory, coevolution and bounded GameSpec IR.
+quality diversity, evolutionary memory, coevolution, bounded GameSpec IR and
+hashed fixed layouts.
 """
 
 from .core import Entity, Event, RuleKernel, WorldGraph, GameQualityScore
 from .engines import (
+    ARENA_ACTION_ALIASES,
     ARENA_ACTIONS,
     GAME_SPEC_VERSION,
     AgentGeneralization,
@@ -16,10 +18,12 @@ from .engines import (
     AntiForgettingReport,
     ArchiveConfig,
     ArenaConfig,
+    ArenaLayout,
     BehaviorDescriptor,
     ChampionRecord,
     CoevolutionReport,
     CompiledGame,
+    Coordinate,
     CostGraph,
     CostNode,
     CurriculumProgress,
@@ -53,6 +57,7 @@ from .engines import (
     LanguageRubricScores,
     LanguageRun,
     LanguageValidators,
+    LayoutAudit,
     MapElitesArchive,
     MatchResult,
     MemoryRecord,
@@ -81,6 +86,7 @@ from .engines import (
     default_language_dataset_forge,
     default_language_repair_loop,
     default_language_validators,
+    distance_map,
     evaluate_anti_forgetting,
     evolve,
     evolve_environments,
@@ -95,6 +101,8 @@ from .engines import (
     run_sparse_benchmark,
     seed_environments,
     seed_population,
+    shortest_step_candidates,
+    walkable_neighbors,
 )
 from .oak import OAKGate, OAKReport
 
@@ -107,6 +115,12 @@ __all__ = [
     "AgentGenome",
     "AgentState",
     "ArenaConfig",
+    "ArenaLayout",
+    "Coordinate",
+    "LayoutAudit",
+    "distance_map",
+    "walkable_neighbors",
+    "shortest_step_candidates",
     "MatchResult",
     "run_arena_t0",
     "RatingVector",
@@ -127,6 +141,7 @@ __all__ = [
     "evolve_environments",
     "GAME_SPEC_VERSION",
     "ARENA_ACTIONS",
+    "ARENA_ACTION_ALIASES",
     "GameAgentSpec",
     "GameEnvironmentSpec",
     "GameRuleSpec",
