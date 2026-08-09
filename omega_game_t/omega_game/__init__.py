@@ -2,15 +2,17 @@
 
 Small, testable units extracted from the larger GAME branch. The
 Ω-GAME-SIM-EVO-T∞ layer extends the merged WorldGraph/OAK core with a
-reproducible simulation, tournament, evolution, fuzzing and sparse scheduling
-laboratory.
+reproducible simulation, tournament, evolution, fuzzing, sparse scheduling and
+quality-diversity laboratory.
 """
 
 from .core import Entity, Event, RuleKernel, WorldGraph, GameQualityScore
 from .engines import (
     AgentGenome,
     AgentState,
+    ArchiveConfig,
     ArenaConfig,
+    BehaviorDescriptor,
     CostGraph,
     CostNode,
     CurriculumProgress,
@@ -18,6 +20,7 @@ from .engines import (
     CurriculumTrack,
     DirtyFrontier,
     Dispatch,
+    EliteRecord,
     EvolutionConfig,
     EvolutionRun,
     FuzzFailure,
@@ -34,8 +37,11 @@ from .engines import (
     LanguageRubricScores,
     LanguageRun,
     LanguageValidators,
+    MapElitesArchive,
     MatchResult,
     PolyglotLanguageEngine,
+    QualityDiversityExperiment,
+    QualityDiversityReport,
     RatingVector,
     RepairAction,
     RepairAttempt,
@@ -52,6 +58,7 @@ from .engines import (
     ValidationCheck,
     ValidationReport,
     audit_match,
+    build_map_elites,
     default_language_curriculum,
     default_language_dataset_forge,
     default_language_repair_loop,
@@ -60,7 +67,9 @@ from .engines import (
     evolve_generation,
     fuzz_arena_t0,
     match_world_graph,
+    quality_from_rating,
     run_arena_t0,
+    run_quality_diversity,
     run_round_robin,
     run_sparse_benchmark,
     seed_population,
@@ -87,6 +96,15 @@ __all__ = [
     "evolve",
     "evolve_generation",
     "seed_population",
+    "ArchiveConfig",
+    "BehaviorDescriptor",
+    "EliteRecord",
+    "MapElitesArchive",
+    "QualityDiversityReport",
+    "QualityDiversityExperiment",
+    "quality_from_rating",
+    "build_map_elites",
+    "run_quality_diversity",
     "SimulationAudit",
     "FuzzFailure",
     "FuzzReport",
