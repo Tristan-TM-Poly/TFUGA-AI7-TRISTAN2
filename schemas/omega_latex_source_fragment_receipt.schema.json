@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega LaTeX source fragment receipt",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"type": "string"},
+    "source_id": {"type": "string", "minLength": 1},
+    "locator": {"type": "string", "minLength": 1},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fragment_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "start_line": {"type": "integer", "minimum": 1},
+    "end_line": {"type": "integer", "minimum": 1},
+    "byte_count": {"type": "integer", "minimum": 0},
+    "line_count": {"type": "integer", "minimum": 0},
+    "encoding": {"type": "string"}
+  },
+  "required": ["source_id", "locator", "source_sha256", "fragment_sha256", "start_line", "end_line"]
+}

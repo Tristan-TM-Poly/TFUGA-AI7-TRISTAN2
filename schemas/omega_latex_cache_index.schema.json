@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega LaTeX sharded cache index",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "index_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "entries": {"type": "array", "items": {"type": "object"}},
+    "shards": {"type": "object"}
+  },
+  "required": ["index_sha256", "entries", "shards"]
+}

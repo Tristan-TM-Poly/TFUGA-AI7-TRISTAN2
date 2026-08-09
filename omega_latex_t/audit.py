@@ -5,9 +5,13 @@ import re
 from typing import Mapping
 
 from .bibliography import validate_bibliography
+from .covariance import covariance_ledger
 from .figure_ir import validate_figure_ir
 from .math_ir import DimensionError, MathIRError, infer_dimension, render_math, symbol_units_from_specs
+from .metadata_receipts import metadata_receipt_report
 from .models import DocumentIR, NodeKind
+from .proof_lineage import proof_lineage
+from .source_fragments import source_fragment_report
 from .uncertainty import validate_result
 from .verifier_receipts import verifier_receipt_report
 
@@ -78,6 +82,11 @@ def _support_reviewed(node,source_ids):
         if item.get("reviewed") is True and relation in {"supports","derives","measures","verifies"} and source in source_ids:return True
     return False
 
+def _append_external_findings(out, report, *, node_id=""):
+    for item in report:
+        if not isinstance(item, Mapping): continue
+        out.append(AuditFinding(str(item.get("code","EXTERNAL_AUDIT")),str(item.get("severity","warning")),str(item.get("message","")),node_id))
+
 def audit_document(doc:DocumentIR)->AuditReport:
     out=[]; ids=[n.id for n in doc.nodes]; known=set(ids); source_ids={s.id for s in doc.sources}
     if len(ids)!=len(known): out.append(AuditFinding("DOCIR_DUPLICATE_ID","error","Node IDs must be unique."))
@@ -132,4 +141,12 @@ def audit_document(doc:DocumentIR)->AuditReport:
     for item in receipt_report["entries"]:
         if item.get("valid_receipt") is False: out.append(AuditFinding("VERIFIER_RECEIPT_INVALID","error","; ".join(item.get("reasons",[]))))
         elif item.get("verified_match") is False: out.append(AuditFinding("VERIFIER_RECEIPT_UNMATCHED","warning","; ".join(item.get("reasons",[]))))
+    fragment_report=source_fragment_report(doc)
+    for item in fragment_report["entries"]: _append_external_findings(out,item.get("findings",()))
+    covariance_report=covariance_ledger(doc)
+    for item in covariance_report["entries"]: _append_external_findings(out,item.get("findings",()))
+    lineage=proof_lineage(doc); _append_external_findings(out,lineage.get("findings",()))
+    metadata_report=metadata_receipt_report(doc)
+    for item in metadata_report["entries"]:
+        if item.get("valid") is False: out.append(AuditFinding("METADATA_RECEIPT_INVALID","error","; ".join(item.get("reasons",[]))))
     return AuditReport(tuple(out),doc.semantic_hash())

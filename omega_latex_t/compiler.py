@@ -9,15 +9,20 @@ from typing import Any, Mapping
 from .ast import Command, Environment, Raw, Sequence, Text
 from .audit import AuditReport, audit_document
 from .bibliography import bibliography_latex, bibliography_report, source_key
+from .covariance import covariance_ledger
 from .evidence import evidence_matrix
+from .figure_backends import figure_backend_manifest
 from .figure_ir import figure_manifest, render_figure_ir
 from .math_ir import render_math
+from .metadata_receipts import metadata_receipt_report
 from .models import DocumentIR, Node, NodeKind
 from .notation import notation_registry, notation_rename_plan
+from .proof_lineage import proof_lineage
+from .source_fragments import source_fragment_report
 from .uncertainty import render_result_latex, uncertainty_ledger
 from .verifier_receipts import verifier_receipt_report
 
-COMPILER_VERSION="0.8.0"
+COMPILER_VERSION="1.0.0"
 
 @dataclass(frozen=True)
 class BuildArtifact:
@@ -98,7 +103,24 @@ class DocumentCompiler:
         audit=audit_document(doc); fragments,receipt=incremental_fragments(self,doc,cache_dir,force_node_ids=force_node_ids); artifact=self.assemble(doc,fragments,audit); return BuildArtifact(artifact.latex,artifact.audit,artifact.semantic_hash,artifact.latex_hash,receipt.to_mapping())
     @staticmethod
     def _write_sidecars(doc,artifact,out):
-        (out/"document.tex").write_text(artifact.latex,encoding="utf-8"); sidecars={"docir.json":doc.to_mapping(),"oak-report.json":artifact.audit.to_mapping(),"manifest.json":artifact.manifest(),"notation-registry.json":notation_registry(doc),"notation-rename-plan.json":notation_rename_plan(doc),"evidence-matrix.json":evidence_matrix(doc),"bibliography-report.json":bibliography_report(doc),"figure-manifest.json":figure_manifest(doc),"uncertainty-ledger.json":uncertainty_ledger(doc),"verifier-receipts.json":verifier_receipt_report(doc)}
+        (out/"document.tex").write_text(artifact.latex,encoding="utf-8")
+        sidecars={
+            "docir.json":doc.to_mapping(),
+            "oak-report.json":artifact.audit.to_mapping(),
+            "manifest.json":artifact.manifest(),
+            "notation-registry.json":notation_registry(doc),
+            "notation-rename-plan.json":notation_rename_plan(doc),
+            "evidence-matrix.json":evidence_matrix(doc),
+            "bibliography-report.json":bibliography_report(doc),
+            "figure-manifest.json":figure_manifest(doc),
+            "figure-backends.json":figure_backend_manifest(doc),
+            "uncertainty-ledger.json":uncertainty_ledger(doc),
+            "covariance-ledger.json":covariance_ledger(doc),
+            "verifier-receipts.json":verifier_receipt_report(doc),
+            "proof-lineage.json":proof_lineage(doc),
+            "source-fragments.json":source_fragment_report(doc),
+            "metadata-receipts.json":metadata_receipt_report(doc),
+        }
         for name,payload in sidecars.items():(out/name).write_text(json.dumps(payload,ensure_ascii=False,indent=2,sort_keys=True)+"\n",encoding="utf-8")
         m_minus=[{"code":f.code,"severity":f.severity,"node_id":f.node_id,"message":f.message,"semantic_hash":doc.semantic_hash()} for f in artifact.audit.findings]; (out/"m_minus.jsonl").write_text("".join(json.dumps(x,ensure_ascii=False,sort_keys=True)+"\n" for x in m_minus),encoding="utf-8")
     def build_to(self,doc,output_dir):

@@ -1,89 +1,154 @@
-# Ω-LATEX-T∞ — Evidence-bound scientific document compiler
+# Ω-LATEX-T∞ — Evidence-bound scientific document factory
 
-**PR maturity:** R0.8 MAX prototype.  
+**PR maturity:** R1.0 MAX prototype.  
 **Authority:** review-only.  
 **Core law:** `LATEX != SOURCE_OF_TRUTH`.
 
-Ω-LATEX-T∞ compiles a typed semantic corpus into reviewable documents while keeping evidence, uncertainty, figures and formal-verifier receipts distinct from claims of truth.
+Ω-LATEX-T∞ compiles a typed semantic corpus into deterministic, reviewable documents while keeping source identity, evidence, uncertainty, figures, formal verification and publication authority separate.
 
 ```text
-local/authorized sources
+local/authorized sources + repository snapshots + machine results
+→ immutable source-fragment receipts
 → DocumentIR
 → OAK audit
-→ MathIR + Unit/Uncertainty + FigureIR
-→ claim-level source locators
+→ MathIR + units + covariance + FigureIR
+→ claim-level evidence locators
 → depth projections D^0…D^n
 → fragment cache + ΔK→ΔD rebuild plan
-→ LaTeX AST
-→ deterministic document.tex + evidence sidecars
-→ optional external formal-verifier receipts
-→ MetaDocumentGraph / universe campaign
+→ LaTeX/TikZ + deterministic SVG
+→ evidence/proof/provenance sidecars
+→ MetaDocumentGraph + human review queue
+→ repository inventory → universe manifest
+→ sharded/checkpointed document campaigns
 ```
 
-## R0.1–R0.5 retained
+## R0.1–R0.5 — compiler foundations
 
 R0.1 introduced typed DocumentIR, deterministic LaTeX lowering and OAK gates. R0.2 added conservative Markdown/SummaryBundle/GitHub adapters and semantic delta. R0.3 added bounded MathIR, SI-style unit algebra, notation registry and evidence routing. R0.4 added fractal depth projections, proof/dependency closure, content-addressed fragment cache and sharded rebuild plans. R0.5 added theorem multi-projection with a deliberately unproved Lean `sorry` stub.
 
-## R0.6 — bibliography and exact evidence locators
+## R0.6 — bibliography, locators and FigureIR
 
-`Source` now supports structured metadata and each semantic node can carry `source_locators`, so the evidence edge is no longer merely `claim → paper`; it can be `claim → paper:Sec.4/Eq.7/page 12/commit abc`. A bounded BibTeX parser accepts literal fields, rejects duplicate keys and macro concatenation, and converts entries into registered sources. Parsing bibliographic metadata is not external verification.
+`Source` supports structured metadata and nodes carry `source_locators`, so an evidence edge can target `paper:Sec.4/Eq.7/page 12/commit abc` rather than just a paper-level identifier. The bounded BibTeX parser remains metadata ingestion, not source verification.
 
-Builds emit `bibliography-report.json` and LaTeX `thebibliography` entries. Strong claims without a useful source locator receive an OAK warning.
+Figure nodes use bounded `FigureIR` (`graph` and numeric `plot`) rather than arbitrary TikZ. TikZ/PGFPlots rendering validates rendering structure only.
 
-## R0.6 — FigureIR → TikZ/PGFPlots
+## R0.7 — uncertainty and external verifier receipts
 
-Figure nodes may carry a bounded `figure_ir` rather than arbitrary TikZ text. Current kinds are:
+Structured results can carry value, uncertainty, unit, method and coverage. Independent first-order propagation remains available, without inferring distributions or calibration.
 
-- `graph`: finite nodes, coordinates, edges and labels;
-- `plot`: finite numeric series with line/scatter/line+markers modes.
+Formal theorem status cannot be promoted by `formal_verified=true`. A Lean/Coq/Isabelle verifier receipt must match theorem ID, exact formal-statement SHA-256, verifier result and optional artifact SHA-256.
 
-The renderer rejects unsafe identifiers, non-finite values and invalid edge endpoints. FigureIR validates the rendering contract only: `RENDERABLE_FIGURE != VALID_DATA`.
+## R0.8 — MetaDocumentGraph and build-universe
 
-## R0.7 — uncertainty as a first-class result object
+MetaDocumentGraph emits duplicate, canonical-key conflict, orphan and shared-source candidates. These are review signals, not semantic verdicts.
 
-A result may be a structured measurement:
+`build-universe` compiles finite manifests across requested depths with shared content-addressed cache, sharding and checkpoint/resume. There is no hard-coded total-document ceiling; each actual run is finite and resource-bounded.
 
-```json
-{"value": 12.5, "uncertainty": 0.4, "unit": "m", "method": "std", "coverage": 0.95}
-```
+## R0.9 — immutable source fragments
 
-LaTeX renders `value ± uncertainty` and `uncertainty-ledger.json` records the measurement contract. A small independent-error propagation kernel supports add/subtract, multiplication and division under explicit assumptions. It does not infer correlation, distribution or calibration.
-
-## R0.7 — external verifier receipts
-
-Bare metadata such as `formal_verified=true` no longer certifies a theorem. Formal verification requires an external receipt for Lean, Coq or Isabelle whose `statement_sha256` matches the exact formal statement, with optional artifact hash matching. The theorem bundle records the receipt separately and only then reports `verified-external-receipt`.
+R1.0 adds a first content-level provenance primitive:
 
 ```text
-FORMAL_STUB != FORMAL_PROOF
-FORMAL_RECEIPT != NATURAL_LANGUAGE_EQUIVALENCE
-FORMAL_RECEIPT != SCIENTIFIC_TRUTH
+source bytes
+→ source_sha256
+→ exact line range
+→ fragment bytes
+→ fragment_sha256
+→ SourceFragmentReceipt
 ```
 
-## R0.8 — MetaDocumentGraph
+A receipt records source ID, exact line locator, source hash, fragment hash, byte count and encoding. OAK verifies that the source is registered and, when `Source.sha256` is known, that the receipt source hash matches it.
 
-Multiple DocumentIR objects can be compiled into a structural MetaDocumentGraph. It reports:
+This closes an important gap between `claim → source ID` and `claim → immutable source fragment identity` while preserving the boundary:
 
-- exact content duplicate candidates;
-- `canonical_key` conflict candidates;
-- orphan candidates;
-- source usage and shared-source edges.
-
-These are navigation/review signals. A conflict candidate is not automatically a logical contradiction.
-
-## R0.8 — `build-universe`
-
-A finite manifest of local/authorized inputs can generate all requested document-depth jobs with shared content-addressed cache and checkpoint/resume:
-
-```bash
-omega-doc universe-plan examples/omega_latex_t_universe_manifest.json
-omega-doc build-universe examples/omega_latex_t_universe_manifest.json \
-  --output-dir generated/omega_latex_universe \
-  --cache-dir .omega-latex-universe-cache
+```text
+SOURCE_FRAGMENT_HASH_MATCH != CLAIM_ENTAILMENT
 ```
 
-The manifest can contain hundreds or thousands of entries. There is no hard-coded total-document ceiling; each run remains finite and bounded by actual resources, quality gates and explicit input scope. No network access, GitHub mutation, publication or merge occurs inside `build-universe`.
+The compiler never needs network access to create or verify these receipts.
 
-## R0.8 build sidecars
+## R0.9 — metadata receipts without truth promotion
+
+Already-retrieved Crossref/DataCite/OpenAlex/manual metadata can be normalized into deterministic receipts containing raw and normalized SHA-256 hashes. DOI syntax is normalized, but metadata existence never upgrades claim status.
+
+```text
+DOI_METADATA_RECEIPT != PEER_REVIEW
+DOI_METADATA_RECEIPT != REPRODUCIBILITY
+DOI_METADATA_RECEIPT != CLAIM_TRUTH
+```
+
+No remote DOI lookup is performed inside the compiler.
+
+## R0.9 — covariance-aware uncertainty
+
+A document may register named covariance models in provenance. R1.0 validates finite square symmetric covariance matrices, variable cardinality and non-negative diagonal terms, then supports:
+
+- scalar linear propagation `u² = gᵀΣg`;
+- multi-output Jacobian propagation `Σ_y = JΣ_xJᵀ`;
+- deterministic covariance ledgers.
+
+This is algebraic propagation under supplied assumptions. It does not certify calibration, stationarity, covariance estimation quality or model adequacy.
+
+## R0.9 — deterministic SVG backend
+
+FigureIR now has a second renderer in addition to TikZ/PGFPlots: a standard-library deterministic SVG backend for bounded graph/plot figures. Each render receives a `spec_sha256` and `artifact_sha256` receipt.
+
+```text
+SVG_HASH_MATCH != DATA_VALIDATED
+SVG_RENDER_SUCCESS != SCIENTIFIC_CORRECTNESS
+```
+
+PDF remains an external render-engine concern rather than being falsely claimed as universally available.
+
+## R1.0 — proof lineage
+
+Verifier receipts are now projected into an explicit lineage graph:
+
+```text
+theorem
+→ verifier receipt
+→ proof artifact hash
+→ optional parent receipt
+```
+
+This records how formal evidence artifacts relate across runs. Missing parent receipts are OAK findings. Lineage does not prove that a natural-language theorem was formalized correctly or that the verifier environment itself is trustworthy.
+
+## R1.0 — repository inventory → universe compiler
+
+An already-authorized normalized repository inventory can be transformed into an Ω-LATEX universe manifest. A repository is admitted only when it explicitly declares a local/authorized `document_source` path.
+
+Repository metadata stays in a separate routing table; compilable manifest entries remain compatible with the existing universe schema. Repositories without an authorized document source are skipped with a reason rather than guessed.
+
+```text
+REPOSITORY_EXISTS != DOCUMENT_SOURCE_AUTHORIZED
+REPOSITORY_METADATA != SCIENTIFIC_EVIDENCE
+```
+
+This is the bridge required for GitHub-wide SummaryBundle/DocIR campaigns without embedding GitHub credentials or network mutation into the compiler.
+
+## R1.0 — sharded content-addressed cache index
+
+A deterministic cache index maps explicit keys to SHA-256-addressed content and prefix shards. The index detects key collisions with different content and emits its own content hash. This is a routing layer suitable for later distributed storage adapters.
+
+```text
+CACHE_IDENTITY != CURRENT_TRUTH
+```
+
+Semantic/environment inputs still belong in caller-generated cache keys.
+
+## R1.0 — MetaDocument review queue
+
+Structural candidates from MetaDocumentGraph are converted into a deterministic human review queue:
+
+1. canonical-key conflict candidate;
+2. exact duplicate candidate;
+3. orphan candidate.
+
+Priority is workflow ordering only. The queue does not declare contradiction, plagiarism, novelty, equivalence or error.
+
+## R1.0 build sidecars
+
+Normal builds now emit:
 
 ```text
 document.tex
@@ -96,9 +161,38 @@ notation-rename-plan.json
 evidence-matrix.json
 bibliography-report.json
 figure-manifest.json
+figure-backends.json
 uncertainty-ledger.json
+covariance-ledger.json
 verifier-receipts.json
+proof-lineage.json
+source-fragments.json
+metadata-receipts.json
 ```
+
+## R1.0 CLI surfaces
+
+In addition to the retained compiler commands:
+
+```text
+source-fragment
+attach-source-fragment
+source-fragments
+metadata-receipt
+attach-metadata-receipt
+metadata-receipts
+attach-covariance-model
+covariance
+covariance-linear
+covariance-jacobian
+figure-svg
+proof-lineage
+universe-from-repos
+cache-index
+metadocument-review
+```
+
+All operate on local/already-authorized artifacts. They do not mutate GitHub, publish documents or contact external metadata/proof services.
 
 ## OAK canon
 
@@ -109,20 +203,28 @@ MATH_IR_VALID != THEOREM_TRUE
 DIMENSIONALLY_CONSISTENT != PHYSICALLY_CORRECT
 REGISTERED_SOURCE != SUPPORTED_CLAIM
 SOURCE_LOCATOR != ENTAILMENT
+SOURCE_FRAGMENT_HASH_MATCH != CLAIM_ENTAILMENT
 BIBTEX_PARSED != SOURCE_VERIFIED
+METADATA_RECEIPT != CLAIM_TRUTH
 REVIEWED_SUPPORT != INDEPENDENT_REPLICATION
 FIGURE_RENDERED != DATA_VALIDATED
+SVG_HASH_MATCH != DATA_VALIDATED
 UNCERTAINTY_FIELD != CALIBRATED_UNCERTAINTY
+COVARIANCE_PROPAGATED != COVARIANCE_VALIDATED
 CACHE_HIT != CURRENT_TRUTH
+CACHE_INDEXED != CURRENT_TRUTH
 AFFECTED_CLOSURE != COMPLETE_SEMANTIC_IMPACT
 FORMAL_STUB != FORMAL_PROOF
 VERIFIER_RECEIPT != NATURAL_LANGUAGE_EQUIVALENCE
+PROOF_LINEAGE != SPECIFICATION_CORRECTNESS
 META_CONFLICT_CANDIDATE != CONTRADICTION
+REVIEW_QUEUE_PRIORITY != TRUTH_PRIORITY
+REPOSITORY_METADATA != SCIENTIFIC_TRUTH
 UNIVERSE_BUILD_SUCCESS != PUBLICATION_READINESS
 SIMULATION != MEASUREMENT
 GENERATED_DOCUMENT != PUBLICATION_AUTHORITY
 ```
 
-## Next frontier
+## Next frontier after R1.0
 
-R0.9+ should focus on verified source-fragment ingestion, DOI/Crossref metadata receipts without treating metadata as truth, richer covariance-aware uncertainty, SVG/PDF figure backends, external proof-artifact adapters, publisher-specific backends as separately tested targets, distributed cache indexes, GitHub-wide SummaryBundle manifests and MetaDocumentGraph dashboards.
+The next evidence-driven layer should focus on immutable binary/PDF fragment locators, normalized external metadata adapters executed outside the pure compiler, covariance estimation provenance, SVG→PDF renderer receipts, formal proof environment/container hashes, repository-level SummaryBundle discovery, distributed object-store adapters, publisher profiles as separately tested render targets and interactive MetaDocumentGraph review dashboards.
