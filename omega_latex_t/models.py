@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from enum import Enum
 from hashlib import sha256
 import json
@@ -42,7 +42,12 @@ class Source:
 
     @classmethod
     def from_mapping(cls, data: Mapping[str, Any]) -> "Source":
-        return cls(id=str(data["id"]), citation=str(data.get("citation", "")), locator=str(data.get("locator", "")), sha256=str(data.get("sha256", "")))
+        return cls(
+            id=str(data["id"]),
+            citation=str(data.get("citation", "")),
+            locator=str(data.get("locator", "")),
+            sha256=str(data.get("sha256", "")),
+        )
 
 
 @dataclass(frozen=True)
@@ -54,7 +59,12 @@ class SymbolSpec:
 
     @classmethod
     def from_mapping(cls, data: Mapping[str, Any]) -> "SymbolSpec":
-        return cls(symbol=str(data["symbol"]), meaning=str(data.get("meaning", "")), scope=str(data.get("scope", "global")), unit=str(data.get("unit", "")))
+        return cls(
+            symbol=str(data["symbol"]),
+            meaning=str(data.get("meaning", "")),
+            scope=str(data.get("scope", "global")),
+            unit=str(data.get("unit", "")),
+        )
 
 
 @dataclass(frozen=True)
@@ -70,15 +80,31 @@ class Node:
     result_key: str = ""
     dimension_lhs: str = ""
     dimension_rhs: str = ""
+    math_ir: Mapping[str, Any] = field(default_factory=dict)
+    min_depth: int | None = None
+    max_depth: int | None = None
     metadata: Mapping[str, Any] = field(default_factory=dict)
 
     @classmethod
     def from_mapping(cls, data: Mapping[str, Any]) -> "Node":
+        min_depth = data.get("min_depth")
+        max_depth = data.get("max_depth")
         return cls(
-            id=str(data["id"]), kind=NodeKind(str(data["kind"])), content=str(data.get("content", "")), title=str(data.get("title", "")), status=str(data.get("status", "draft")),
-            dependencies=tuple(str(x) for x in data.get("dependencies", ())), sources=tuple(str(x) for x in data.get("sources", ())),
-            symbols=tuple(SymbolSpec.from_mapping(x) for x in data.get("symbols", ())), result_key=str(data.get("result_key", "")),
-            dimension_lhs=str(data.get("dimension_lhs", "")), dimension_rhs=str(data.get("dimension_rhs", "")), metadata=dict(data.get("metadata", {})),
+            id=str(data["id"]),
+            kind=NodeKind(str(data["kind"])),
+            content=str(data.get("content", "")),
+            title=str(data.get("title", "")),
+            status=str(data.get("status", "draft")),
+            dependencies=tuple(str(x) for x in data.get("dependencies", ())),
+            sources=tuple(str(x) for x in data.get("sources", ())),
+            symbols=tuple(SymbolSpec.from_mapping(x) for x in data.get("symbols", ())),
+            result_key=str(data.get("result_key", "")),
+            dimension_lhs=str(data.get("dimension_lhs", "")),
+            dimension_rhs=str(data.get("dimension_rhs", "")),
+            math_ir=dict(data.get("math_ir", {})),
+            min_depth=None if min_depth is None else int(min_depth),
+            max_depth=None if max_depth is None else int(max_depth),
+            metadata=dict(data.get("metadata", {})),
         )
 
 
@@ -93,7 +119,14 @@ class DocumentMeta:
 
     @classmethod
     def from_mapping(cls, data: Mapping[str, Any]) -> "DocumentMeta":
-        return cls(title=str(data.get("title", "Untitled")), author=str(data.get("author", "")), template=str(data.get("template", "research-paper")), depth=int(data.get("depth", 3)), language=str(data.get("language", "en")), date=str(data.get("date", "")))
+        return cls(
+            title=str(data.get("title", "Untitled")),
+            author=str(data.get("author", "")),
+            template=str(data.get("template", "research-paper")),
+            depth=int(data.get("depth", 3)),
+            language=str(data.get("language", "en")),
+            date=str(data.get("date", "")),
+        )
 
 
 @dataclass(frozen=True)
@@ -106,7 +139,13 @@ class DocumentIR:
 
     @classmethod
     def from_mapping(cls, data: Mapping[str, Any]) -> "DocumentIR":
-        return cls(meta=DocumentMeta.from_mapping(data.get("meta", {})), nodes=tuple(Node.from_mapping(x) for x in data.get("nodes", ())), sources=tuple(Source.from_mapping(x) for x in data.get("sources", ())), results=dict(data.get("results", {})), provenance=dict(data.get("provenance", {})))
+        return cls(
+            meta=DocumentMeta.from_mapping(data.get("meta", {})),
+            nodes=tuple(Node.from_mapping(x) for x in data.get("nodes", ())),
+            sources=tuple(Source.from_mapping(x) for x in data.get("sources", ())),
+            results=dict(data.get("results", {})),
+            provenance=dict(data.get("provenance", {})),
+        )
 
     def to_mapping(self) -> dict[str, Any]:
         def clean(value: Any) -> Any:
@@ -122,5 +161,13 @@ class DocumentIR:
         return clean(self)
 
     def semantic_hash(self) -> str:
-        payload = json.dumps(self.to_mapping(), ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        payload = json.dumps(
+            self.to_mapping(),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
         return sha256(payload).hexdigest()
+
+    def with_depth(self, depth: int) -> "DocumentIR":
+        return replace(self, meta=replace(self.meta, depth=int(depth)))

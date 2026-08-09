@@ -1,0 +1,20 @@
+{
+  "action": "synchronize",
+  "number": 365,
+  "pull_request": {
+    "base": {
+      "sha": "def456"
+    },
+    "draft": true,
+    "head": {
+      "sha": "abc123"
+    },
+    "html_url": "https://example.invalid/pr/365",
+    "number": 365,
+    "state": "open",
+    "title": "Ω-LATEX-T∞ demo"
+  },
+  "repository": {
+    "full_name": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2"
+  }
+}

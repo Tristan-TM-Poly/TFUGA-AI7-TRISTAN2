@@ -6,7 +6,10 @@ on:
       - "omega_latex_t/**"
       - "tests/test_omega_latex_t.py"
       - "schemas/omega_latex_document_ir.schema.json"
+      - "schemas/omega_latex_math_ir.schema.json"
+      - "schemas/omega_latex_rebuild_plan.schema.json"
       - "examples/omega_latex_t_demo.json"
+      - "examples/omega_latex_t_pr_event.json"
       - "docs/theories/OMEGA_LATEX_T_INFINITY.md"
       - "pyproject.toml"
       - ".github/workflows/omega-latex-t-oak.yml"
@@ -31,21 +34,65 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Compile Python
         run: python -m compileall -q omega_latex_t tests/test_omega_latex_t.py
+
       - name: Run focused tests
         run: python -m unittest -v tests.test_omega_latex_t
+
       - name: Build deterministic evidence bundle twice
         run: |
           python -m omega_latex_t build examples/omega_latex_t_demo.json --output-dir generated/omega_latex_t/a
           python -m omega_latex_t build examples/omega_latex_t_demo.json --output-dir generated/omega_latex_t/b
           cmp generated/omega_latex_t/a/document.tex generated/omega_latex_t/b/document.tex
           cmp generated/omega_latex_t/a/manifest.json generated/omega_latex_t/b/manifest.json
-      - name: Audit demo
-        run: python -m omega_latex_t audit examples/omega_latex_t_demo.json
+          cmp generated/omega_latex_t/a/notation-registry.json generated/omega_latex_t/b/notation-registry.json
+          cmp generated/omega_latex_t/a/evidence-matrix.json generated/omega_latex_t/b/evidence-matrix.json
+
+      - name: Audit structured MathIR demo
+        run: |
+          python -m omega_latex_t audit examples/omega_latex_t_demo.json
+          python -m omega_latex_t math-render examples/omega_latex_t_demo.json --node-id eq.mass-energy
+
+      - name: Depth projections
+        run: |
+          python -m omega_latex_t project examples/omega_latex_t_demo.json --depth 2 --output /tmp/D2.json
+          python -m omega_latex_t build-depths examples/omega_latex_t_demo.json --depths 0,1,2,3,4,5 --output-dir generated/omega_latex_t/depths
+          test -f generated/omega_latex_t/depths/depth-manifest.json
+          test -f generated/omega_latex_t/depths/D5/document.tex
+
+      - name: Incremental cache determinism
+        run: |
+          python -m omega_latex_t incremental-build examples/omega_latex_t_demo.json --cache-dir /tmp/omega-latex-cache --output-dir /tmp/inc-a
+          python -m omega_latex_t incremental-build examples/omega_latex_t_demo.json --cache-dir /tmp/omega-latex-cache --output-dir /tmp/inc-b
+          cmp /tmp/inc-a/document.tex /tmp/inc-b/document.tex
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          first = json.loads(Path("/tmp/inc-a/manifest.json").read_text())
+          second = json.loads(Path("/tmp/inc-b/manifest.json").read_text())
+          assert first["cache"]["misses"] > 0
+          assert second["cache"]["hits"] > 0
+          assert first["latex_sha256"] == second["latex_sha256"]
+          PY
+
       - name: Adapter and delta CLI smoke
         run: |
           printf '# Demo\n\nText.\n' > /tmp/demo.md
           python -m omega_latex_t from-markdown /tmp/demo.md --title Demo --output /tmp/demo-docir.json
           python -m omega_latex_t audit /tmp/demo-docir.json
           python -m omega_latex_t delta /tmp/demo-docir.json /tmp/demo-docir.json
+          python -m omega_latex_t from-pr-event examples/omega_latex_t_pr_event.json --output /tmp/pr-docir.json
+          python -m omega_latex_t rebuild-plan /tmp/demo-docir.json /tmp/pr-docir.json --shard-size 2 --output /tmp/rebuild-plan.json
+          test -s /tmp/rebuild-plan.json
+
+      - name: Notation, evidence and theorem projection smoke
+        run: |
+          python -m omega_latex_t notation examples/omega_latex_t_demo.json > /tmp/notation.json
+          python -m omega_latex_t evidence examples/omega_latex_t_demo.json > /tmp/evidence.json
+          python -m omega_latex_t theorem-bundle examples/omega_latex_t_demo.json --theorem-id thm.demo --output-dir /tmp/theorem
+          test -f /tmp/theorem/theorem.tex
+          test -f /tmp/theorem/formal_stub.lean
+          test -f /tmp/theorem/proof_graph.json
+          grep -q "sorry" /tmp/theorem/formal_stub.lean

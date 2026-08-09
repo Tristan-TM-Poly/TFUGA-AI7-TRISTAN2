@@ -1,13 +1,168 @@
 {
-  "meta": {"title": "Ω-LATEX-T∞ Demonstration", "author": "Tristan Tardif-Morency", "template": "research-paper", "depth": 4, "language": "en"},
-  "sources": [{"id": "src.einstein1905", "citation": "A. Einstein (1905), mass-energy equivalence example"}],
-  "results": {"classifier.accuracy": "94.7%", "tests.passed": 12},
-  "provenance": {"repository": "TFUGA-AI7-TRISTAN2", "generator": "omega_latex_t"},
+  "meta": {
+    "author": "Tristan",
+    "depth": 5,
+    "language": "en",
+    "title": "Ω-LATEX-T∞ executable demo"
+  },
   "nodes": [
-    {"id": "sec.core", "kind": "section", "title": "Semantic compilation", "content": ""},
-    {"id": "def.document", "kind": "definition", "title": "DocumentGraph", "content": "A document is a typed projection of a knowledge graph with provenance and audit obligations.", "status": "draft"},
-    {"id": "eq.mass_energy", "kind": "equation", "content": "E = mc^2", "status": "established", "sources": ["src.einstein1905"], "symbols": [{"symbol": "E", "meaning": "energy", "unit": "J"}, {"symbol": "m", "meaning": "mass", "unit": "kg"}, {"symbol": "c", "meaning": "speed of light", "unit": "m/s"}], "dimension_lhs": "M L^2 T^-2", "dimension_rhs": "M L^2 T^-2"},
-    {"id": "claim.boundary", "kind": "claim", "title": "Evidence boundary", "content": "Generated prose is not promoted beyond the evidence encoded in the DocumentIR.", "status": "draft", "dependencies": ["def.document"]},
-    {"id": "res.metric", "kind": "result", "title": "Executable result", "content": "The current classifier accuracy is injected through the Result macro rather than copied by hand.", "status": "measured", "dependencies": ["claim.boundary"], "result_key": "classifier.accuracy"}
+    {
+      "id": "sec.core",
+      "kind": "section",
+      "title": "Semantic core"
+    },
+    {
+      "content": "Mass is represented by m in this fixture.",
+      "id": "def.mass",
+      "kind": "definition",
+      "status": "draft",
+      "symbols": [
+        {
+          "meaning": "mass",
+          "scope": "physics",
+          "symbol": "m",
+          "unit": "kg"
+        }
+      ],
+      "title": "Mass"
+    },
+    {
+      "content": "",
+      "dependencies": [
+        "def.mass"
+      ],
+      "id": "eq.mass-energy",
+      "kind": "equation",
+      "math_ir": {
+        "lhs": {
+          "name": "E",
+          "op": "symbol"
+        },
+        "op": "eq",
+        "rhs": {
+          "args": [
+            {
+              "name": "m",
+              "op": "symbol"
+            },
+            {
+              "base": {
+                "name": "c",
+                "op": "symbol"
+              },
+              "exp": {
+                "op": "number",
+                "value": 2
+              },
+              "op": "pow"
+            }
+          ],
+          "op": "mul"
+        }
+      },
+      "metadata": {
+        "support": [
+          {
+            "relation": "supports",
+            "reviewed": true,
+            "source": "src.rel"
+          }
+        ]
+      },
+      "sources": [
+        "src.rel"
+      ],
+      "status": "established",
+      "symbols": [
+        {
+          "meaning": "energy",
+          "scope": "physics",
+          "symbol": "E",
+          "unit": "J"
+        },
+        {
+          "meaning": "mass",
+          "scope": "physics",
+          "symbol": "m",
+          "unit": "kg"
+        },
+        {
+          "meaning": "speed parameter",
+          "scope": "physics",
+          "symbol": "c",
+          "unit": "m/s"
+        }
+      ]
+    },
+    {
+      "content": "Typesetting and dimensional consistency do not prove semantic truth.",
+      "dependencies": [
+        "eq.mass-energy"
+      ],
+      "id": "claim.boundary",
+      "kind": "claim",
+      "status": "draft",
+      "title": "Boundary"
+    },
+    {
+      "content": "Example machine-injected value.",
+      "dependencies": [
+        "claim.boundary"
+      ],
+      "id": "result.demo",
+      "kind": "result",
+      "result_key": "benchmark.accuracy",
+      "status": "draft",
+      "title": "Injected metric"
+    },
+    {
+      "content": "This theorem exists only to exercise proof routing.",
+      "dependencies": [
+        "def.mass"
+      ],
+      "id": "thm.demo",
+      "kind": "theorem",
+      "metadata": {
+        "formal_statement": "True",
+        "formal_system": "lean",
+        "formal_verified": false,
+        "numerical_test_contract": {
+          "authority": "evidence_only",
+          "cases": 3
+        }
+      },
+      "status": "proven",
+      "title": "Fixture theorem"
+    },
+    {
+      "content": "Narrative fixture proof.",
+      "dependencies": [
+        "thm.demo"
+      ],
+      "id": "proof.demo",
+      "kind": "proof",
+      "status": "draft"
+    },
+    {
+      "content": "",
+      "id": "appendix",
+      "kind": "appendix",
+      "min_depth": 5,
+      "title": "Deep evidence"
+    }
+  ],
+  "provenance": {
+    "boundary": "demonstration data only",
+    "fixture": true
+  },
+  "results": {
+    "benchmark.accuracy": "94.7%"
+  },
+  "sources": [
+    {
+      "citation": "Mass-energy relation fixture",
+      "id": "src.rel",
+      "locator": "fixture://mass-energy"
+    }
   ]
 }

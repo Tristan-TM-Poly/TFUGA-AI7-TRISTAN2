@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import re
 
+from .math_ir import DimensionError, MathIRError, infer_dimension, render_math, symbol_units_from_specs
 from .models import DocumentIR, NodeKind
 
 
@@ -35,7 +36,16 @@ class AuditReport:
         return not self.errors
 
     def to_mapping(self) -> dict:
-        return {"passed": self.passed, "semantic_hash": self.semantic_hash, "counts": {"errors": len(self.errors), "warnings": len(self.warnings), "total": len(self.findings)}, "findings": [x.to_mapping() for x in self.findings]}
+        return {
+            "passed": self.passed,
+            "semantic_hash": self.semantic_hash,
+            "counts": {
+                "errors": len(self.errors),
+                "warnings": len(self.warnings),
+                "total": len(self.findings),
+            },
+            "findings": [x.to_mapping() for x in self.findings],
+        }
 
 
 def _balanced_braces(value: str) -> bool:
@@ -72,6 +82,7 @@ def _cycle(doc: DocumentIR) -> tuple[str, ...]:
     by_id = {n.id: n for n in doc.nodes}
     state: dict[str, int] = {}
     stack: list[str] = []
+
     def visit(node_id: str) -> tuple[str, ...]:
         state[node_id] = 1
         stack.append(node_id)
@@ -88,12 +99,27 @@ def _cycle(doc: DocumentIR) -> tuple[str, ...]:
         stack.pop()
         state[node_id] = 2
         return ()
+
     for node_id in by_id:
         if state.get(node_id, 0) == 0:
             found = visit(node_id)
             if found:
                 return found
     return ()
+
+
+def _support_reviewed(node, source_ids: set[str]) -> bool:
+    support = node.metadata.get("support", ()) if isinstance(node.metadata, dict) else ()
+    if not isinstance(support, (list, tuple)):
+        return False
+    for item in support:
+        if not isinstance(item, dict):
+            continue
+        relation = str(item.get("relation", "")).lower()
+        source = str(item.get("source", ""))
+        if item.get("reviewed") is True and relation in {"supports", "derives", "measures", "verifies"} and source in source_ids:
+            return True
+    return False
 
 
 def audit_document(doc: DocumentIR) -> AuditReport:
@@ -103,37 +129,156 @@ def audit_document(doc: DocumentIR) -> AuditReport:
     source_ids = {s.id for s in doc.sources}
     if len(ids) != len(known):
         out.append(AuditFinding("DOCIR_DUPLICATE_ID", "error", "Node IDs must be unique."))
+
     for node in doc.nodes:
         for dep in node.dependencies:
             if dep not in known:
-                out.append(AuditFinding("DOCIR_MISSING_DEPENDENCY", "error", f"Dependency {dep!r} does not exist.", node.id))
+                out.append(
+                    AuditFinding(
+                        "DOCIR_MISSING_DEPENDENCY",
+                        "error",
+                        f"Dependency {dep!r} does not exist.",
+                        node.id,
+                    )
+                )
         for src in node.sources:
             if src not in source_ids:
-                out.append(AuditFinding("PROVENANCE_UNKNOWN_SOURCE", "error", f"Source {src!r} is not registered.", node.id))
-        if node.kind == NodeKind.EQUATION and (not _balanced_braces(node.content) or not _environment_pairs(node.content)):
-            out.append(AuditFinding("LATEX_UNBALANCED", "error", "Equation contains unbalanced braces or environments.", node.id))
+                out.append(
+                    AuditFinding(
+                        "PROVENANCE_UNKNOWN_SOURCE",
+                        "error",
+                        f"Source {src!r} is not registered.",
+                        node.id,
+                    )
+                )
+        equation_latex = node.content
+        if node.kind == NodeKind.EQUATION and node.math_ir:
+            try:
+                equation_latex = render_math(node.math_ir)
+            except MathIRError as exc:
+                out.append(AuditFinding("MATH_IR_INVALID", "error", str(exc), node.id))
+                equation_latex = ""
+            if equation_latex:
+                try:
+                    infer_dimension(node.math_ir, symbol_units_from_specs(node.symbols))
+                except DimensionError as exc:
+                    message = str(exc)
+                    severity = "warning" if "unit unknown" in message else "error"
+                    code = "MATH_DIMENSION_UNKNOWN" if severity == "warning" else "MATH_DIMENSION_MISMATCH"
+                    out.append(AuditFinding(code, severity, message, node.id))
+        if node.kind == NodeKind.EQUATION and equation_latex and (
+            not _balanced_braces(equation_latex) or not _environment_pairs(equation_latex)
+        ):
+            out.append(
+                AuditFinding(
+                    "LATEX_UNBALANCED",
+                    "error",
+                    "Equation contains unbalanced braces or environments.",
+                    node.id,
+                )
+            )
         if node.dimension_lhs and node.dimension_rhs and node.dimension_lhs != node.dimension_rhs:
-            out.append(AuditFinding("DIMENSION_MISMATCH", "error", f"Declared dimensions differ: {node.dimension_lhs!r} != {node.dimension_rhs!r}.", node.id))
+            out.append(
+                AuditFinding(
+                    "DIMENSION_MISMATCH",
+                    "error",
+                    f"Declared dimensions differ: {node.dimension_lhs!r} != {node.dimension_rhs!r}.",
+                    node.id,
+                )
+            )
         strong = node.status.lower() in {"proven", "established", "measured", "certified"}
-        if strong and node.kind in {NodeKind.CLAIM, NodeKind.THEOREM, NodeKind.RESULT, NodeKind.EXPERIMENT} and not node.sources and not node.dependencies:
-            out.append(AuditFinding("EVIDENCE_BOUNDARY", "warning", "Strong status has neither registered sources nor dependencies.", node.id))
+        if strong and node.kind in {NodeKind.CLAIM, NodeKind.THEOREM, NodeKind.RESULT, NodeKind.EXPERIMENT}:
+            if not node.sources and not node.dependencies:
+                out.append(
+                    AuditFinding(
+                        "EVIDENCE_BOUNDARY",
+                        "warning",
+                        "Strong status has neither registered sources nor dependencies.",
+                        node.id,
+                    )
+                )
+            if node.sources and not _support_reviewed(node, source_ids):
+                out.append(
+                    AuditFinding(
+                        "SOURCE_SUPPORT_UNREVIEWED",
+                        "warning",
+                        "Registered source is not yet marked as reviewed support/derivation/measurement/verification.",
+                        node.id,
+                    )
+                )
         if node.kind == NodeKind.THEOREM and node.status.lower() == "proven":
-            proof_deps = [x for x in node.dependencies if x in known and next(n for n in doc.nodes if n.id == x).kind == NodeKind.PROOF]
-            reverse_proofs = [n.id for n in doc.nodes if n.kind == NodeKind.PROOF and node.id in n.dependencies]
+            proof_deps = [
+                x
+                for x in node.dependencies
+                if x in known and next(n for n in doc.nodes if n.id == x).kind == NodeKind.PROOF
+            ]
+            reverse_proofs = [
+                n.id
+                for n in doc.nodes
+                if n.kind == NodeKind.PROOF and node.id in n.dependencies
+            ]
             if not proof_deps and not reverse_proofs:
-                out.append(AuditFinding("PROOF_MISSING", "error", "A theorem marked proven must be linked to a proof node.", node.id))
+                out.append(
+                    AuditFinding(
+                        "PROOF_MISSING",
+                        "error",
+                        "A theorem marked proven must be linked to a proof node.",
+                        node.id,
+                    )
+                )
+        if node.min_depth is not None and node.min_depth < 0:
+            out.append(AuditFinding("DEPTH_INVALID", "error", "min_depth must be >= 0.", node.id))
+        if node.max_depth is not None and node.max_depth < 0:
+            out.append(AuditFinding("DEPTH_INVALID", "error", "max_depth must be >= 0.", node.id))
+        if node.min_depth is not None and node.max_depth is not None and node.min_depth > node.max_depth:
+            out.append(AuditFinding("DEPTH_RANGE_INVALID", "error", "min_depth cannot exceed max_depth.", node.id))
+
     cyc = _cycle(doc)
     if cyc:
-        out.append(AuditFinding("DEPENDENCY_CYCLE", "error", "Dependency cycle: " + " -> ".join(cyc)))
-    registry: dict[tuple[str, str], set[str]] = {}
+        out.append(
+            AuditFinding(
+                "DEPENDENCY_CYCLE",
+                "error",
+                "Dependency cycle: " + " -> ".join(cyc),
+            )
+        )
+
+    registry: dict[tuple[str, str], dict[str, set[str]]] = {}
     for node in doc.nodes:
         for spec in node.symbols:
-            registry.setdefault((spec.scope, spec.symbol), set()).add(spec.meaning.strip())
-    for (scope, symbol), meanings in sorted(registry.items()):
-        meanings.discard("")
-        if len(meanings) > 1:
-            out.append(AuditFinding("SYMBOL_COLLISION", "warning", f"{symbol!r} has multiple meanings in scope {scope!r}: {sorted(meanings)}"))
+            bucket = registry.setdefault(
+                (spec.scope, spec.symbol),
+                {"meanings": set(), "units": set()},
+            )
+            if spec.meaning.strip():
+                bucket["meanings"].add(spec.meaning.strip())
+            if spec.unit.strip():
+                bucket["units"].add(spec.unit.strip())
+    for (scope, symbol), bucket in sorted(registry.items()):
+        if len(bucket["meanings"]) > 1:
+            out.append(
+                AuditFinding(
+                    "SYMBOL_COLLISION",
+                    "warning",
+                    f"{symbol!r} has multiple meanings in scope {scope!r}: {sorted(bucket['meanings'])}",
+                )
+            )
+        if len(bucket["units"]) > 1:
+            out.append(
+                AuditFinding(
+                    "SYMBOL_UNIT_COLLISION",
+                    "warning",
+                    f"{symbol!r} has multiple units in scope {scope!r}: {sorted(bucket['units'])}",
+                )
+            )
+
     for key in sorted(doc.results):
         if not re.fullmatch(r"[A-Za-z0-9_.:-]+", key):
-            out.append(AuditFinding("RESULT_KEY_UNSAFE", "error", f"Result key {key!r} contains unsupported characters."))
+            out.append(
+                AuditFinding(
+                    "RESULT_KEY_UNSAFE",
+                    "error",
+                    f"Result key {key!r} contains unsupported characters.",
+                )
+            )
     return AuditReport(tuple(out), doc.semantic_hash())
