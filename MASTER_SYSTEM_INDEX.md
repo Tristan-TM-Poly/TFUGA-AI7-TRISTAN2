@@ -1,6 +1,6 @@
 # MASTER SYSTEM INDEX — TFUGA-AI7-TRISTAN2
 
-Date: 2026-06-27  
+Date: 2026-08-09  
 Status: OAK-safe navigation layer. This file is an index, not a proof, legal opinion, revenue guarantee, or scientific certification.
 
 ## Purpose
@@ -35,7 +35,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | 7 | DeepTech → Company OS Bridge | `omega_deeptech_forge/review_packets.py` | D-MVP | Converts signal decisions into OfferCards, PriorArtQueryPacks, publication notes, IP disclosure drafts, gates, scores, and M⁻. | Add JSON schema and AUTO² issue generation behind OAKGate. |
 | 8 | Company Revenue IP Publication OS | `docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md` / review packets | X/D | Turns artifacts into company, revenue, IP, publication, and review packets safely. | Integrate Value Pipeline OAKBench scoring and approval records. |
 | 9 | Top40×256 | `docs/canon/Top-40x256-MANIFEST-v0.1.md` | Source/E | Mine of 10,240 candidates, explicitly not canonized in bulk. | Extract Top16 absolute into DCT-Ω cards. |
-| 10 | Ω-GAME-T | PR #82 branch `omega-game-t-2026-06-27` | D-MVP but large | Hypergraph game/world lab for CVCD, OAK, GM agents, rules, memory, simulations. | Split or CI-validate before merge. |
+| 10 | Ω-GAME-SIM-EVO-T∞ / Ω-GAME-T | `omega_game_t/omega_game/engines/` + `docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md` | X/D candidate | Extends the merged GAME core with deterministic Arena-T0 simulation, mirrored tournaments, vector ratings, evolution, replay hashes, WorldGraph/OAK audit and fuzzing. | Pass CI; then add sparse/event scheduler, quality-diversity archive and coevolution as small reviewable units. |
 | 11 | U0 Core | `u0_core/` | X | Minimal generator hypothesis: Δ, R, T produce trace, memory, validation, scale, HGFM. | Add tests showing emergence and failure cases. |
 | 12 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add first conservation-tested simulation. |
 | 13 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
@@ -58,7 +58,7 @@ These have the strongest combination of code, tests, reports, and future product
 ### P2 — Merge path
 
 1. DeepTech Forge is now merged into `main`; use it as the native IP/revenue triage organ.
-2. Treat PR #82 as high-potential but high-review-load; split or add CI before full merge.
+2. Ω-GAME-T PR #82 is superseded and closed; core graph primitives/OAK/tests/CI were merged via #97. Continue GAME development as small tested units, including Ω-GAME-SIM-EVO-T∞.
 3. Use DCT-Ω + OAK + M⁻ for every merge decision.
 4. No external sending, filing, public publication, or IP disclosure without an explicit approval record.
 
