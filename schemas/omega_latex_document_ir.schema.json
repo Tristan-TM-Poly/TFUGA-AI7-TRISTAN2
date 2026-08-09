@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_latex_document_ir.schema.json",
+  "title": "Omega LaTeX Document IR",
+  "type": "object",
+  "required": ["meta", "nodes"],
+  "properties": {
+    "meta": {"type": "object", "required": ["title"], "properties": {"title": {"type": "string", "minLength": 1}, "author": {"type": "string"}, "template": {"type": "string"}, "depth": {"type": "integer", "minimum": 0}, "language": {"type": "string"}, "date": {"type": "string"}}, "additionalProperties": false},
+    "nodes": {"type": "array", "items": {"type": "object", "required": ["id", "kind"], "properties": {"id": {"type": "string", "minLength": 1}, "kind": {"enum": ["section", "paragraph", "definition", "axiom", "conjecture", "lemma", "proposition", "theorem", "corollary", "proof", "proof_sketch", "equation", "algorithm", "experiment", "dataset", "result", "figure", "table", "claim", "warning", "open_question", "counterexample", "appendix"]}, "content": {"type": "string"}, "title": {"type": "string"}, "status": {"type": "string"}, "dependencies": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "sources": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "symbols": {"type": "array", "items": {"type": "object", "required": ["symbol"], "properties": {"symbol": {"type": "string"}, "meaning": {"type": "string"}, "scope": {"type": "string"}, "unit": {"type": "string"}}, "additionalProperties": false}}, "result_key": {"type": "string"}, "dimension_lhs": {"type": "string"}, "dimension_rhs": {"type": "string"}, "metadata": {"type": "object"}}, "additionalProperties": false}},
+    "sources": {"type": "array", "items": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}, "citation": {"type": "string"}, "locator": {"type": "string"}, "sha256": {"type": "string"}}, "additionalProperties": false}},
+    "results": {"type": "object"},
+    "provenance": {"type": "object"}
+  },
+  "additionalProperties": false
+}

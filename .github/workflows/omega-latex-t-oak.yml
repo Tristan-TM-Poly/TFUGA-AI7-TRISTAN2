@@ -1,0 +1,45 @@
+name: omega-latex-t-oak
+
+on:
+  pull_request:
+    paths:
+      - "omega_latex_t/**"
+      - "tests/test_omega_latex_t.py"
+      - "schemas/omega_latex_document_ir.schema.json"
+      - "examples/omega_latex_t_demo.json"
+      - "docs/theories/OMEGA_LATEX_T_INFINITY.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-latex-t-oak.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-latex-t-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oak:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile Python
+        run: python -m compileall -q omega_latex_t tests/test_omega_latex_t.py
+      - name: Run focused tests
+        run: python -m unittest -v tests.test_omega_latex_t
+      - name: Build deterministic evidence bundle twice
+        run: |
+          python -m omega_latex_t build examples/omega_latex_t_demo.json --output-dir generated/omega_latex_t/a
+          python -m omega_latex_t build examples/omega_latex_t_demo.json --output-dir generated/omega_latex_t/b
+          cmp generated/omega_latex_t/a/document.tex generated/omega_latex_t/b/document.tex
+          cmp generated/omega_latex_t/a/manifest.json generated/omega_latex_t/b/manifest.json
+      - name: Audit demo
+        run: python -m omega_latex_t audit examples/omega_latex_t_demo.json
