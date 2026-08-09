@@ -1,0 +1,3 @@
+Omega source fragment fixture.
+Line two is the referenced fragment.
+Line three closes the fragment.

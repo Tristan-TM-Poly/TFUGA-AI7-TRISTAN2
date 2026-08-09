@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega LaTeX FigureIR",
+  "oneOf": [
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "nodes", "edges"],
+      "properties": {
+        "kind": {"const": "graph"}, "caption": {"type": "string"},
+        "nodes": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id"], "properties": {"id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.:-]*$"}, "label": {"type": "string"}, "x": {"type": "number"}, "y": {"type": "number"}}}},
+        "edges": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["source", "target"], "properties": {"source": {"type": "string"}, "target": {"type": "string"}, "label": {"type": "string"}, "directed": {"type": "boolean"}}}}
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "series"],
+      "properties": {
+        "kind": {"const": "plot"}, "caption": {"type": "string"}, "x_label": {"type": "string"}, "y_label": {"type": "string"},
+        "series": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["x", "y"], "properties": {"name": {"type": "string"}, "x": {"type": "array", "items": {"type": "number"}}, "y": {"type": "array", "items": {"type": "number"}}, "mode": {"enum": ["line", "scatter", "line+markers"]}}}}
+      }
+    }
+  ]
+}

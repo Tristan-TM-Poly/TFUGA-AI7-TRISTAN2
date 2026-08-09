@@ -1,0 +1,100 @@
+{
+  "$id": "https://example.invalid/schemas/omega_latex_rebuild_plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "affected_after": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "after_semantic_hash": {
+      "type": "string"
+    },
+    "before_semantic_hash": {
+      "type": "string"
+    },
+    "boundary": {
+      "type": "string"
+    },
+    "checkpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "complete": {
+          "type": "boolean"
+        },
+        "completed_shards": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "next_shard": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "completed_shards",
+        "next_shard",
+        "complete"
+      ],
+      "type": "object"
+    },
+    "delta": {
+      "type": "object"
+    },
+    "rebuild_required": {
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "shard_size": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "shards": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "node_hashes": {
+            "type": "object"
+          },
+          "node_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "shard_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "shard_id",
+          "node_ids",
+          "node_hashes"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "before_semantic_hash",
+    "after_semantic_hash",
+    "rebuild_required",
+    "affected_after",
+    "shards",
+    "checkpoint"
+  ],
+  "title": "Omega LaTeX Rebuild Plan",
+  "type": "object"
+}

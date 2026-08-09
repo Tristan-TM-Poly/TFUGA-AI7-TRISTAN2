@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega LaTeX metadata receipt",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "provider": {"enum": ["crossref", "datacite", "openalex", "manual"]},
+    "doi": {"type": "string"},
+    "normalized": {"type": "object"},
+    "raw_metadata_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "normalized_metadata_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "required": ["provider", "raw_metadata_sha256", "normalized_metadata_sha256"]
+}

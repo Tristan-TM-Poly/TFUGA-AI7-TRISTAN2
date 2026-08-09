@@ -1,0 +1,188 @@
+{
+  "$defs": {
+    "expr": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "op": {
+              "const": "symbol"
+            }
+          },
+          "required": [
+            "op",
+            "name"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "op": {
+              "const": "number"
+            },
+            "value": {
+              "type": [
+                "number",
+                "integer",
+                "string"
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "value"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "args": {
+              "items": {
+                "$ref": "#/$defs/expr"
+              },
+              "minItems": 2,
+              "type": "array"
+            },
+            "op": {
+              "enum": [
+                "add",
+                "mul"
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "args"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "left": {
+              "$ref": "#/$defs/expr"
+            },
+            "op": {
+              "enum": [
+                "sub",
+                "div"
+              ]
+            },
+            "right": {
+              "$ref": "#/$defs/expr"
+            }
+          },
+          "required": [
+            "op",
+            "left",
+            "right"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "$ref": "#/$defs/expr"
+            },
+            "exp": {
+              "$ref": "#/$defs/expr"
+            },
+            "op": {
+              "const": "pow"
+            }
+          },
+          "required": [
+            "op",
+            "base",
+            "exp"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "arg": {
+              "$ref": "#/$defs/expr"
+            },
+            "op": {
+              "const": "neg"
+            }
+          },
+          "required": [
+            "op",
+            "arg"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "lhs": {
+              "$ref": "#/$defs/expr"
+            },
+            "op": {
+              "const": "eq"
+            },
+            "rhs": {
+              "$ref": "#/$defs/expr"
+            }
+          },
+          "required": [
+            "op",
+            "lhs",
+            "rhs"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "args": {
+              "items": {
+                "$ref": "#/$defs/expr"
+              },
+              "maxItems": 1,
+              "minItems": 1,
+              "type": "array"
+            },
+            "name": {
+              "enum": [
+                "sin",
+                "cos",
+                "tan",
+                "exp",
+                "log",
+                "ln",
+                "sqrt",
+                "abs"
+              ]
+            },
+            "op": {
+              "const": "func"
+            }
+          },
+          "required": [
+            "op",
+            "name",
+            "args"
+          ],
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "$id": "https://example.invalid/schemas/omega_latex_math_ir.schema.json",
+  "$ref": "#/$defs/expr",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega LaTeX MathIR"
+}

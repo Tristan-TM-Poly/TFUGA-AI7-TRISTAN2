@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega LaTeX covariance model",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "variables": {"type": "array", "items": {"type": "string"}},
+    "covariance": {"type": "array", "items": {"type": "array", "items": {"type": "number"}}},
+    "units": {"type": "array", "items": {"type": "string"}},
+    "assumptions": {"type": "array", "items": {"type": "string"}}
+  },
+  "required": ["variables", "covariance"]
+}

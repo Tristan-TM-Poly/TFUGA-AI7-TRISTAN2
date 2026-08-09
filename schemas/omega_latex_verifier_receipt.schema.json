@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "provenance": {"type": "object"},
+    "run_id": {"type": "string"},
+    "statement_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "status": {"enum": ["passed", "failed", "unknown"]},
+    "system": {"enum": ["lean", "coq", "isabelle"]},
+    "theorem_id": {"type": "string"},
+    "timestamp": {"type": "string"},
+    "verifier_version": {"type": "string"}
+  },
+  "required": ["system", "theorem_id", "statement_sha256", "status"],
+  "title": "Omega external verifier receipt",
+  "type": "object"
+}

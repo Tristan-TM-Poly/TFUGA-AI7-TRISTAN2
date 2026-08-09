@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "entry_type": {"pattern": "^[A-Za-z]+$", "type": "string"},
+    "fields": {"additionalProperties": {"type": "string"}, "type": "object"},
+    "key": {"pattern": "^[A-Za-z0-9_.:-]+$", "type": "string"},
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["key", "entry_type", "fields"],
+  "title": "Omega LaTeX bibliography entry",
+  "type": "object"
+}
