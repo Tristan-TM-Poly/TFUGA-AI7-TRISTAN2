@@ -1,4 +1,10 @@
-"""Finite orbit classification and invariant-completeness experiments."""
+"""Finite group-action classification and invariant-completeness experiments.
+
+Orbit *partitions* are only constructed after every declared generator has been
+verified to act as a permutation of the finite universe. Without bijectivity,
+forward reachability under a semigroup need not define disjoint equivalence
+classes and must not be silently called a group orbit partition.
+"""
 
 from __future__ import annotations
 
@@ -11,20 +17,49 @@ Action = Callable[[Object], Object]
 InvariantFn = Callable[[Object], Any]
 
 
+def validate_permutation_generators(
+    universe: Iterable[Object],
+    generators: Iterable[Action],
+) -> tuple[Action, ...]:
+    """Require each generator to be a bijection of the declared finite universe."""
+
+    points = set(universe)
+    actions = tuple(generators)
+    for index, action in enumerate(actions):
+        images = [action(point) for point in points]
+        if any(image not in points for image in images):
+            raise ValueError(f"generator {index} leaves the declared finite universe")
+        if len(set(images)) != len(points):
+            raise ValueError(f"generator {index} is not bijective on the finite universe")
+    return actions
+
+
 def orbit(
     seed: Object,
     generators: Iterable[Action],
     *,
     universe: set[Object] | None = None,
 ) -> frozenset[Object]:
-    actions = tuple(generators)
+    """Orbit/reachability closure of a seed under supplied generators.
+
+    When `universe` is supplied, generators are first verified to be finite
+    permutations, so this is a genuine orbit under the subgroup they generate.
+    Without `universe`, the result is only forward reachability and callers must
+    not infer group-action equivalence properties from it.
+    """
+
+    actions = (
+        validate_permutation_generators(universe, generators)
+        if universe is not None
+        else tuple(generators)
+    )
     seen = {seed}
     frontier = [seed]
     while frontier:
         current = frontier.pop()
         for action in actions:
             nxt = action(current)
-            if universe is not None and nxt not in universe:
+            if universe is not None and nxt not in universe:  # defensive after validation
                 raise ValueError("action left the declared finite universe")
             if nxt not in seen:
                 seen.add(nxt)
@@ -36,8 +71,10 @@ def orbit_partition(
     objects: Iterable[Object],
     generators: Iterable[Action],
 ) -> tuple[frozenset[Object], ...]:
+    """Partition a finite universe into orbits of permutation generators."""
+
     universe = set(objects)
-    actions = tuple(generators)
+    actions = validate_permutation_generators(universe, generators)
     remaining = set(universe)
     parts: list[frozenset[Object]] = []
     while remaining:
@@ -53,7 +90,7 @@ def invariant_collisions(
     generators: Iterable[Action],
     invariant: InvariantFn,
 ) -> tuple[tuple[Object, Object], ...]:
-    """Pairs with equal invariant value but lying in different orbits."""
+    """Pairs with equal invariant value but lying in different finite orbits."""
 
     points = tuple(objects)
     parts = orbit_partition(points, generators)
@@ -74,10 +111,10 @@ def invariant_is_complete(
     generators: Iterable[Action],
     invariant: InvariantFn,
 ) -> bool:
-    """Finite completeness: equal invariant iff same orbit.
+    """Finite completeness: equal invariant iff same group-action orbit.
 
     Preservation is checked as well: all members of an orbit must have the same
-    invariant value.
+    invariant value. Generators must act bijectively on the finite universe.
     """
 
     points = tuple(objects)
