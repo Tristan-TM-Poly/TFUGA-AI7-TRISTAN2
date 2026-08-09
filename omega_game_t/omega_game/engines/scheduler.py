@@ -83,6 +83,7 @@ class TemporalLODPolicy:
 class SystemSpec:
     system_id: str
     priority: int = 0
+    dependencies: tuple[str, ...] = ()
     max_batch: int = 1024
     cost_per_entity: float = 1.0
     cost_per_event: float = 0.25
@@ -92,6 +93,12 @@ class SystemSpec:
     def validate(self) -> None:
         if not self.system_id:
             raise ValueError("system_id cannot be empty")
+        if self.system_id in self.dependencies:
+            raise ValueError("system cannot depend on itself")
+        if len(set(self.dependencies)) != len(self.dependencies):
+            raise ValueError("dependencies cannot contain duplicates")
+        if any(not dependency for dependency in self.dependencies):
+            raise ValueError("dependency IDs cannot be empty")
         if self.max_batch < 1:
             raise ValueError("max_batch must be >= 1")
         if self.cost_per_entity < 0 or self.cost_per_event < 0:
@@ -246,7 +253,9 @@ class SparseEventScheduler:
     Dirty entities and due events form the active causal frontier. Systems with
     no pending work are skipped even when their timer is due. Events can wake a
     dormant system immediately, while systems may opt out of dirty/event wakeups
-    to respect a coarser temporal cadence.
+    to respect a coarser temporal cadence. A deterministic dependency DAG orders
+    dispatched systems before priority is considered among simultaneously-ready
+    systems.
     """
 
     def __init__(self, policy: TemporalLODPolicy | None = None) -> None:
@@ -267,6 +276,9 @@ class SparseEventScheduler:
         self._frontiers[spec.system_id] = DirtyFrontier()
         self._ready_events[spec.system_id] = []
         self._next_due[spec.system_id] = 0
+
+    def dependency_order(self) -> tuple[str, ...]:
+        return tuple(spec.system_id for spec in self._ordered_specs())
 
     def mark_dirty(self, system_id: str, entity_id: str) -> None:
         self._require_system(system_id)
@@ -307,8 +319,7 @@ class SparseEventScheduler:
         dispatches: list[Dispatch] = []
         skipped: list[str] = []
 
-        ordered_specs = sorted(self._specs.values(), key=lambda spec: (-spec.priority, spec.system_id))
-        for spec in ordered_specs:
+        for spec in self._ordered_specs():
             system_id = spec.system_id
             frontier = self._frontiers[system_id]
             ready_events = self._ready_events[system_id]
@@ -356,6 +367,31 @@ class SparseEventScheduler:
             dispatches=tuple(dispatches),
             skipped_systems=tuple(skipped),
         )
+
+    def _ordered_specs(self) -> tuple[SystemSpec, ...]:
+        for spec in self._specs.values():
+            for dependency in spec.dependencies:
+                if dependency not in self._specs:
+                    raise KeyError(f"unknown dependency {dependency!r} for system {spec.system_id!r}")
+
+        remaining = set(self._specs)
+        emitted: set[str] = set()
+        ordered: list[SystemSpec] = []
+        while remaining:
+            ready = [
+                self._specs[system_id]
+                for system_id in remaining
+                if all(dependency in emitted for dependency in self._specs[system_id].dependencies)
+            ]
+            if not ready:
+                cycle = ",".join(sorted(remaining))
+                raise ValueError(f"system dependency cycle detected: {cycle}")
+            ready.sort(key=lambda spec: (-spec.priority, spec.system_id))
+            for spec in ready:
+                ordered.append(spec)
+                emitted.add(spec.system_id)
+                remaining.remove(spec.system_id)
+        return tuple(ordered)
 
     def _activate_events(self, tick: int) -> None:
         while self._event_heap and self._event_heap[0][0] <= tick:
