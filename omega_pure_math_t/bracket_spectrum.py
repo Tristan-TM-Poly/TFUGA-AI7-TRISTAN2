@@ -145,3 +145,77 @@ def zero_triple_defect_on(
         for y in points
         for z in points
     )
+
+
+def tree_signature(tree: BracketTree) -> str:
+    """Canonical parenthesization signature independent of input values."""
+
+    if isinstance(tree, Leaf):
+        return str(tree.index)
+    return f"({tree_signature(tree.left)}{tree_signature(tree.right)})"
+
+
+def rotation_neighbors(tree: BracketTree) -> tuple[BracketTree, ...]:
+    """All trees one elementary associativity rotation away.
+
+    Local rotations implement ((ab)c) <-> (a(bc)) and are propagated at every
+    subtree. The resulting graph is the 1-skeleton of the associahedron.
+    """
+
+    if isinstance(tree, Leaf):
+        return ()
+    neighbors: set[BracketTree] = set()
+    if isinstance(tree.left, Node):
+        neighbors.add(Node(tree.left.left, Node(tree.left.right, tree.right)))
+    if isinstance(tree.right, Node):
+        neighbors.add(Node(Node(tree.left, tree.right.left), tree.right.right))
+    for rotated_left in rotation_neighbors(tree.left):
+        neighbors.add(Node(rotated_left, tree.right))
+    for rotated_right in rotation_neighbors(tree.right):
+        neighbors.add(Node(tree.left, rotated_right))
+    return tuple(sorted(neighbors, key=tree_signature))
+
+
+def rotation_graph(n: int) -> dict[BracketTree, tuple[BracketTree, ...]]:
+    trees = all_parenthesizations(n)
+    return {tree: rotation_neighbors(tree) for tree in trees}
+
+
+def rotation_graph_connected(n: int) -> bool:
+    graph = rotation_graph(n)
+    if not graph:
+        return False
+    start = next(iter(graph))
+    seen = {start}
+    frontier = [start]
+    while frontier:
+        node = frontier.pop()
+        for neighbor in graph[node]:
+            if neighbor not in seen:
+                seen.add(neighbor)
+                frontier.append(neighbor)
+    return len(seen) == len(graph)
+
+
+def edge_associator_field(
+    values: Iterable[Any],
+    operation: Callable[[Any, Any], Any],
+    *,
+    metric: Callable[[Any, Any], float] = _default_metric,
+) -> dict[tuple[str, str], float]:
+    """Metric defect on each associahedron rotation edge."""
+
+    values_tuple = tuple(values)
+    graph = rotation_graph(len(values_tuple))
+    field: dict[tuple[str, str], float] = {}
+    for tree, neighbors in graph.items():
+        left_sig = tree_signature(tree)
+        left_value = evaluate_tree(tree, values_tuple, operation)
+        for neighbor in neighbors:
+            right_sig = tree_signature(neighbor)
+            edge = tuple(sorted((left_sig, right_sig)))
+            if edge in field:
+                continue
+            right_value = evaluate_tree(neighbor, values_tuple, operation)
+            field[edge] = float(metric(left_value, right_value))
+    return field
