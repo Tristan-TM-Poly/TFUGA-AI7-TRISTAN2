@@ -2,17 +2,19 @@
 
 Small, testable units extracted from the larger GAME branch. The
 Ω-GAME-SIM-EVO-T∞ layer extends the merged WorldGraph/OAK core with a
-reproducible simulation, tournament, evolution, fuzzing, sparse scheduling and
-quality-diversity laboratory.
+reproducible simulation, tournament, evolution, fuzzing, sparse scheduling,
+quality diversity and evolutionary memory laboratory.
 """
 
 from .core import Entity, Event, RuleKernel, WorldGraph, GameQualityScore
 from .engines import (
     AgentGenome,
     AgentState,
+    AntiForgettingReport,
     ArchiveConfig,
     ArenaConfig,
     BehaviorDescriptor,
+    ChampionRecord,
     CostGraph,
     CostNode,
     CurriculumProgress,
@@ -23,9 +25,11 @@ from .engines import (
     EliteRecord,
     EvolutionConfig,
     EvolutionRun,
+    EvolutionaryMemory,
     FuzzFailure,
     FuzzReport,
     GenerationReport,
+    HallOfFame,
     LanguageCurriculum,
     LanguageDataset,
     LanguageDatasetForge,
@@ -39,10 +43,12 @@ from .engines import (
     LanguageValidators,
     MapElitesArchive,
     MatchResult,
+    MemoryRecord,
     PolyglotLanguageEngine,
     QualityDiversityExperiment,
     QualityDiversityReport,
     RatingVector,
+    RegressionResult,
     RepairAction,
     RepairAttempt,
     RepairLoopResult,
@@ -63,6 +69,7 @@ from .engines import (
     default_language_dataset_forge,
     default_language_repair_loop,
     default_language_validators,
+    evaluate_anti_forgetting,
     evolve,
     evolve_generation,
     fuzz_arena_t0,
@@ -96,6 +103,13 @@ __all__ = [
     "evolve",
     "evolve_generation",
     "seed_population",
+    "MemoryRecord",
+    "ChampionRecord",
+    "HallOfFame",
+    "EvolutionaryMemory",
+    "RegressionResult",
+    "AntiForgettingReport",
+    "evaluate_anti_forgetting",
     "ArchiveConfig",
     "BehaviorDescriptor",
     "EliteRecord",
