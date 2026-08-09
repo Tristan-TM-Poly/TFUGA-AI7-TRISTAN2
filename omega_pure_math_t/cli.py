@@ -8,6 +8,7 @@ import operator
 from typing import Sequence
 
 from .bracket_spectrum import bracket_spectrum
+from .canon import canon_summary
 from .core import oak_audit_claims
 from .theorem_protocol import THEOREM_CANDIDATES, protocol_as_dict
 
@@ -34,6 +35,7 @@ def _parser() -> argparse.ArgumentParser:
     bracket.add_argument("--op", choices=sorted(OPERATIONS), default="sub")
 
     sub.add_parser("oak", help="audit the canonical theorem/conjecture registry")
+    sub.add_parser("canon", help="emit the machine-readable branch canon")
     return parser
 
 
@@ -52,8 +54,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             "distinct_values": spectrum.distinct_values,
             "diameter": spectrum.diameter,
         }
-    else:
+    elif args.command == "oak":
         payload = oak_audit_claims(THEOREM_CANDIDATES).to_dict()
+    else:
+        payload = canon_summary()
 
     print(json.dumps(payload, indent=2, ensure_ascii=False))
     return 0
