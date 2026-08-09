@@ -55,5 +55,18 @@ jobs:
       - name: Run P1 benchmark smoke test
         run: python -m omega_neuro_t.benchmark_cli --groups 12 --trials-per-group 4 --folds 3 --pretty
 
+      - name: Run P2/P3 campaign smoke test
+        run: |
+          python -m omega_neuro_t.campaign_cli --hypothesis all > /tmp/neuro-campaign.json
+          python - <<'PY'
+          import json
+          report = json.load(open('/tmp/neuro-campaign.json'))
+          assert report['software_validation_passed'] is True
+          assert report['biological_promotion_allowed'] is False
+          assert report['reports']['P2']['oak']['candidate_justified'] is True
+          assert report['reports']['P3']['oak']['candidate_justified'] is True
+          PY
+
       - name: Import public API
-        run: python -c "import omega_neuro_t; import omega_neuro_t.benchmark; import omega_neuro_t.dataset; import omega_neuro_t.provenance; import omega_neuro_t.robustness"
+        run: >-
+          python -c "import omega_neuro_t; import omega_neuro_t.benchmark; import omega_neuro_t.dataset; import omega_neuro_t.provenance; import omega_neuro_t.robustness; import omega_neuro_t.hypothesis_campaign"
