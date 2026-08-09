@@ -5,11 +5,9 @@ on:
     paths:
       - "omega_latex_t/**"
       - "tests/test_omega_latex_t.py"
-      - "schemas/omega_latex_document_ir.schema.json"
-      - "schemas/omega_latex_math_ir.schema.json"
-      - "schemas/omega_latex_rebuild_plan.schema.json"
-      - "examples/omega_latex_t_demo.json"
-      - "examples/omega_latex_t_pr_event.json"
+      - "tests/test_omega_latex_t_r08.py"
+      - "schemas/omega_latex_*.schema.json"
+      - "examples/omega_latex_t_*"
       - "docs/theories/OMEGA_LATEX_T_INFINITY.md"
       - "pyproject.toml"
       - ".github/workflows/omega-latex-t-oak.yml"
@@ -34,65 +32,42 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-
       - name: Compile Python
-        run: python -m compileall -q omega_latex_t tests/test_omega_latex_t.py
-
-      - name: Run focused tests
-        run: python -m unittest -v tests.test_omega_latex_t
-
-      - name: Build deterministic evidence bundle twice
+        run: python -m compileall -q omega_latex_t tests/test_omega_latex_t.py tests/test_omega_latex_t_r08.py
+      - name: Run R0.1-R0.8 focused tests
+        run: python -m unittest -v tests.test_omega_latex_t tests.test_omega_latex_t_r08
+      - name: Parse schemas
+        run: python -c 'import json,glob; [json.load(open(p)) for p in glob.glob("schemas/omega_latex_*.schema.json")]'
+      - name: Deterministic R0.8 bundle
         run: |
-          python -m omega_latex_t build examples/omega_latex_t_demo.json --output-dir generated/omega_latex_t/a
-          python -m omega_latex_t build examples/omega_latex_t_demo.json --output-dir generated/omega_latex_t/b
-          cmp generated/omega_latex_t/a/document.tex generated/omega_latex_t/b/document.tex
-          cmp generated/omega_latex_t/a/manifest.json generated/omega_latex_t/b/manifest.json
-          cmp generated/omega_latex_t/a/notation-registry.json generated/omega_latex_t/b/notation-registry.json
-          cmp generated/omega_latex_t/a/evidence-matrix.json generated/omega_latex_t/b/evidence-matrix.json
-
-      - name: Audit structured MathIR demo
+          python -m omega_latex_t build examples/omega_latex_t_r08_demo.json --output-dir /tmp/r08-a
+          python -m omega_latex_t build examples/omega_latex_t_r08_demo.json --output-dir /tmp/r08-b
+          cmp /tmp/r08-a/document.tex /tmp/r08-b/document.tex
+          cmp /tmp/r08-a/manifest.json /tmp/r08-b/manifest.json
+          test -f /tmp/r08-a/bibliography-report.json
+          test -f /tmp/r08-a/figure-manifest.json
+          test -f /tmp/r08-a/uncertainty-ledger.json
+          test -f /tmp/r08-a/verifier-receipts.json
+      - name: R0.8 evidence surfaces
         run: |
-          python -m omega_latex_t audit examples/omega_latex_t_demo.json
-          python -m omega_latex_t math-render examples/omega_latex_t_demo.json --node-id eq.mass-energy
-
-      - name: Depth projections
+          python -m omega_latex_t audit examples/omega_latex_t_r08_demo.json
+          python -m omega_latex_t figure-render examples/omega_latex_t_r08_demo.json --node-id fig.demo > /tmp/figure.tex
+          grep -q "tikzpicture" /tmp/figure.tex
+          python -m omega_latex_t uncertainty examples/omega_latex_t_r08_demo.json > /tmp/uncertainty.json
+          python -m omega_latex_t verifier-receipts examples/omega_latex_t_r08_demo.json > /tmp/receipts.json
+          grep -q '"verified_count": 1' /tmp/receipts.json
+          python -m omega_latex_t theorem-bundle examples/omega_latex_t_r08_demo.json --theorem-id thm.demo --output-dir /tmp/theorem-r08
+          grep -q 'verified-external-receipt' /tmp/theorem-r08/bundle-manifest.json
+      - name: Bibliography and MetaDocumentGraph
         run: |
-          python -m omega_latex_t project examples/omega_latex_t_demo.json --depth 2 --output /tmp/D2.json
-          python -m omega_latex_t build-depths examples/omega_latex_t_demo.json --depths 0,1,2,3,4,5 --output-dir generated/omega_latex_t/depths
-          test -f generated/omega_latex_t/depths/depth-manifest.json
-          test -f generated/omega_latex_t/depths/D5/document.tex
-
-      - name: Incremental cache determinism
+          python -m omega_latex_t from-bibtex examples/omega_latex_t_r08_demo.json examples/omega_latex_t_refs.bib --output /tmp/with-bib.json
+          python -m omega_latex_t bibliography /tmp/with-bib.json > /tmp/bib-report.json
+          python -m omega_latex_t metadocument examples/omega_latex_t_r08_demo.json /tmp/with-bib.json --output /tmp/meta.json
+          test -s /tmp/meta.json
+      - name: Universe plan, build, resume
         run: |
-          python -m omega_latex_t incremental-build examples/omega_latex_t_demo.json --cache-dir /tmp/omega-latex-cache --output-dir /tmp/inc-a
-          python -m omega_latex_t incremental-build examples/omega_latex_t_demo.json --cache-dir /tmp/omega-latex-cache --output-dir /tmp/inc-b
-          cmp /tmp/inc-a/document.tex /tmp/inc-b/document.tex
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          first = json.loads(Path("/tmp/inc-a/manifest.json").read_text())
-          second = json.loads(Path("/tmp/inc-b/manifest.json").read_text())
-          assert first["cache"]["misses"] > 0
-          assert second["cache"]["hits"] > 0
-          assert first["latex_sha256"] == second["latex_sha256"]
-          PY
-
-      - name: Adapter and delta CLI smoke
-        run: |
-          printf '# Demo\n\nText.\n' > /tmp/demo.md
-          python -m omega_latex_t from-markdown /tmp/demo.md --title Demo --output /tmp/demo-docir.json
-          python -m omega_latex_t audit /tmp/demo-docir.json
-          python -m omega_latex_t delta /tmp/demo-docir.json /tmp/demo-docir.json
-          python -m omega_latex_t from-pr-event examples/omega_latex_t_pr_event.json --output /tmp/pr-docir.json
-          python -m omega_latex_t rebuild-plan /tmp/demo-docir.json /tmp/pr-docir.json --shard-size 2 --output /tmp/rebuild-plan.json
-          test -s /tmp/rebuild-plan.json
-
-      - name: Notation, evidence and theorem projection smoke
-        run: |
-          python -m omega_latex_t notation examples/omega_latex_t_demo.json > /tmp/notation.json
-          python -m omega_latex_t evidence examples/omega_latex_t_demo.json > /tmp/evidence.json
-          python -m omega_latex_t theorem-bundle examples/omega_latex_t_demo.json --theorem-id thm.demo --output-dir /tmp/theorem
-          test -f /tmp/theorem/theorem.tex
-          test -f /tmp/theorem/formal_stub.lean
-          test -f /tmp/theorem/proof_graph.json
-          grep -q "sorry" /tmp/theorem/formal_stub.lean
+          python -m omega_latex_t universe-plan examples/omega_latex_t_universe_manifest.json --output /tmp/universe-plan.json
+          python -m omega_latex_t build-universe examples/omega_latex_t_universe_manifest.json --output-dir /tmp/universe --cache-dir /tmp/universe-cache
+          python -m omega_latex_t build-universe examples/omega_latex_t_universe_manifest.json --output-dir /tmp/universe --cache-dir /tmp/universe-cache
+          test -f /tmp/universe/checkpoint.json
+          test -f /tmp/universe/r08-demo/D5/document.tex

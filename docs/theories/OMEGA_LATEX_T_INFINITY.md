@@ -1,40 +1,89 @@
 # Ω-LATEX-T∞ — Evidence-bound scientific document compiler
 
-**PR maturity:** R0.5 MAX prototype.  
+**PR maturity:** R0.8 MAX prototype.  
 **Authority:** review-only.  
-**Core rule:** `LATEX != SOURCE_OF_TRUTH`.
+**Core law:** `LATEX != SOURCE_OF_TRUTH`.
 
-Ω-LATEX-T∞ treats LaTeX as a deterministic projection of a typed semantic corpus rather than the primary truth store.
+Ω-LATEX-T∞ compiles a typed semantic corpus into reviewable documents while keeping evidence, uncertainty, figures and formal-verifier receipts distinct from claims of truth.
 
 ```text
-sources / Markdown / SummaryBundle / GitHub event / machine results
+local/authorized sources
 → DocumentIR
 → OAK audit
-→ MathIR + notation + evidence routing
-→ depth projection D^n
-→ dependency sort
-→ content-addressed fragment cache
+→ MathIR + Unit/Uncertainty + FigureIR
+→ claim-level source locators
+→ depth projections D^0…D^n
+→ fragment cache + ΔK→ΔD rebuild plan
 → LaTeX AST
-→ deterministic .tex
-→ optional TeX engine
-→ evidence bundle
-→ semantic ΔK → sharded/checkpointed ΔD plan
+→ deterministic document.tex + evidence sidecars
+→ optional external formal-verifier receipts
+→ MetaDocumentGraph / universe campaign
 ```
 
-## R0.1 — DocumentIR and compiler
+## R0.1–R0.5 retained
 
-The canonical source object contains:
+R0.1 introduced typed DocumentIR, deterministic LaTeX lowering and OAK gates. R0.2 added conservative Markdown/SummaryBundle/GitHub adapters and semantic delta. R0.3 added bounded MathIR, SI-style unit algebra, notation registry and evidence routing. R0.4 added fractal depth projections, proof/dependency closure, content-addressed fragment cache and sharded rebuild plans. R0.5 added theorem multi-projection with a deliberately unproved Lean `sorry` stub.
 
-- document metadata;
-- typed semantic nodes;
-- dependencies;
-- sources and provenance;
-- result registry;
-- notation declarations;
-- OAK status;
-- optional declared dimensions.
+## R0.6 — bibliography and exact evidence locators
 
-The compiler emits:
+`Source` now supports structured metadata and each semantic node can carry `source_locators`, so the evidence edge is no longer merely `claim → paper`; it can be `claim → paper:Sec.4/Eq.7/page 12/commit abc`. A bounded BibTeX parser accepts literal fields, rejects duplicate keys and macro concatenation, and converts entries into registered sources. Parsing bibliographic metadata is not external verification.
+
+Builds emit `bibliography-report.json` and LaTeX `thebibliography` entries. Strong claims without a useful source locator receive an OAK warning.
+
+## R0.6 — FigureIR → TikZ/PGFPlots
+
+Figure nodes may carry a bounded `figure_ir` rather than arbitrary TikZ text. Current kinds are:
+
+- `graph`: finite nodes, coordinates, edges and labels;
+- `plot`: finite numeric series with line/scatter/line+markers modes.
+
+The renderer rejects unsafe identifiers, non-finite values and invalid edge endpoints. FigureIR validates the rendering contract only: `RENDERABLE_FIGURE != VALID_DATA`.
+
+## R0.7 — uncertainty as a first-class result object
+
+A result may be a structured measurement:
+
+```json
+{"value": 12.5, "uncertainty": 0.4, "unit": "m", "method": "std", "coverage": 0.95}
+```
+
+LaTeX renders `value ± uncertainty` and `uncertainty-ledger.json` records the measurement contract. A small independent-error propagation kernel supports add/subtract, multiplication and division under explicit assumptions. It does not infer correlation, distribution or calibration.
+
+## R0.7 — external verifier receipts
+
+Bare metadata such as `formal_verified=true` no longer certifies a theorem. Formal verification requires an external receipt for Lean, Coq or Isabelle whose `statement_sha256` matches the exact formal statement, with optional artifact hash matching. The theorem bundle records the receipt separately and only then reports `verified-external-receipt`.
+
+```text
+FORMAL_STUB != FORMAL_PROOF
+FORMAL_RECEIPT != NATURAL_LANGUAGE_EQUIVALENCE
+FORMAL_RECEIPT != SCIENTIFIC_TRUTH
+```
+
+## R0.8 — MetaDocumentGraph
+
+Multiple DocumentIR objects can be compiled into a structural MetaDocumentGraph. It reports:
+
+- exact content duplicate candidates;
+- `canonical_key` conflict candidates;
+- orphan candidates;
+- source usage and shared-source edges.
+
+These are navigation/review signals. A conflict candidate is not automatically a logical contradiction.
+
+## R0.8 — `build-universe`
+
+A finite manifest of local/authorized inputs can generate all requested document-depth jobs with shared content-addressed cache and checkpoint/resume:
+
+```bash
+omega-doc universe-plan examples/omega_latex_t_universe_manifest.json
+omega-doc build-universe examples/omega_latex_t_universe_manifest.json \
+  --output-dir generated/omega_latex_universe \
+  --cache-dir .omega-latex-universe-cache
+```
+
+The manifest can contain hundreds or thousands of entries. There is no hard-coded total-document ceiling; each run remains finite and bounded by actual resources, quality gates and explicit input scope. No network access, GitHub mutation, publication or merge occurs inside `build-universe`.
+
+## R0.8 build sidecars
 
 ```text
 document.tex
@@ -45,276 +94,13 @@ m_minus.jsonl
 notation-registry.json
 notation-rename-plan.json
 evidence-matrix.json
+bibliography-report.json
+figure-manifest.json
+uncertainty-ledger.json
+verifier-receipts.json
 ```
 
-The rendered LaTeX and the semantic input both receive SHA-256 identities.
-
-## R0.2 — conservative adapters
-
-Current offline adapters:
-
-```text
-Markdown → DocumentIR
-omega_summary_fractal_t SummaryBundle → DocumentIR
-normalized GitHub snapshot → DocumentIR
-GitHub pull_request event payload → DocumentIR
-machine result mapping → DocumentIR.results
-```
-
-Adapters do not silently promote:
-
-```text
-SUMMARY_EDGE → PROOF_DEPENDENCY
-REPO_METADATA → SCIENTIFIC_TRUTH
-REGISTERED_SOURCE → SUPPORTED_CLAIM
-```
-
-The PR event adapter only normalizes an already-received event. It performs no network access.
-
-## R0.3 — MathIR and notation
-
-Equations may now carry a structured `math_ir`.
-
-Example:
-
-```json
-{
-  "op": "eq",
-  "lhs": {"op": "symbol", "name": "E"},
-  "rhs": {
-    "op": "mul",
-    "args": [
-      {"op": "symbol", "name": "m"},
-      {
-        "op": "pow",
-        "base": {"op": "symbol", "name": "c"},
-        "exp": {"op": "number", "value": 2}
-      }
-    ]
-  }
-}
-```
-
-With symbol units:
-
-```text
-E : J
-m : kg
-c : m/s
-```
-
-the stdlib-only unit algebra verifies
-
-```text
-[J] = [kg m^2 s^-2]
-```
-
-before rendering.
-
-Supported R0.3 operators:
-
-```text
-symbol
-number
-add
-sub
-mul
-div
-pow
-neg
-eq
-func(sin, cos, tan, exp, log, ln, sqrt, abs)
-```
-
-This is a bounded symbolic grammar, not a general CAS.
-
-### Notation registry
-
-Every declared symbol is indexed by:
-
-```text
-scope
-symbol
-meaning
-unit
-node IDs
-```
-
-Collisions produce reviewable rename proposals. The compiler never silently renames mathematical symbols.
-
-## R0.4 — fractal depths and ΔK→ΔD
-
-Nodes have optional:
-
-```text
-min_depth
-max_depth
-```
-
-A default semantic policy projects a corpus into \(D^0,\ldots,D^n\). If a selected node requires a dependency outside the requested depth, the dependency is promoted into the projection and recorded in provenance.
-
-Example:
-
-```bash
-omega-doc project corpus.json --depth 2 --output D2.json
-omega-doc build-depths corpus.json --depths 0,1,2,3,4,5 --output-dir generated/depths
-```
-
-### Content-addressed fragment cache
-
-Each rendered node fragment is keyed by:
-
-```text
-compiler cache version
-node semantic hash
-result key
-current result value
-```
-
-Unchanged nodes can be reused without re-rendering.
-
-```bash
-omega-doc incremental-build corpus.json \
-  --cache-dir .omega-latex-cache \
-  --output-dir generated/current
-```
-
-With a previous corpus:
-
-```bash
-omega-doc incremental-build after.json \
-  --before before.json \
-  --cache-dir .omega-latex-cache \
-  --output-dir generated/current
-```
-
-the semantic delta forces the affected structural closure while allowing unrelated cached fragments to survive.
-
-### Rebuild plan
-
-```bash
-omega-doc rebuild-plan before.json after.json \
-  --shard-size 128 \
-  --output rebuild-plan.json
-```
-
-The plan contains:
-
-```text
-added
-removed
-changed
-result drift
-source drift
-affected_after
-shards
-checkpoint
-```
-
-The finite shard size is execution policy, not an ontological ceiling. Higher-scale orchestration can route these shards through Ω-SANS-PLAFOND-T∞.
-
-## R0.5 — theorem multi-projection
-
-A theorem-like node can be projected into:
-
-```text
-theorem.json
-theorem.tex
-proof_graph.json
-formal_stub.lean
-numerical-test-contract.json
-bundle-manifest.json
-```
-
-Example:
-
-```bash
-omega-doc theorem-bundle corpus.json \
-  --theorem-id thm.demo \
-  --output-dir generated/theorem-demo
-```
-
-Critical boundary:
-
-```text
-NARRATIVE_PROOF != FORMAL_PROOF
-FORMAL_STUB != VERIFIED_PROOF
-NUMERICAL_EVIDENCE != PROOF
-PROOF_METADATA != INDEPENDENT_VERIFICATION
-```
-
-If Lean metadata is supplied, R0.5 deliberately emits a `sorry` proof obligation unless an external formal verifier later supplies a real checked proof. A generated stub can never promote theorem status.
-
-## Evidence routing
-
-`evidence-matrix.json` maps theorem/claim/result/experiment nodes to their registered sources and dependencies.
-
-For strong statuses, a source can additionally be marked through metadata such as:
-
-```json
-{
-  "support": [
-    {
-      "source": "src.paper",
-      "relation": "supports",
-      "reviewed": true
-    }
-  ]
-}
-```
-
-This only records a review decision. It does not make citation entailment automatic.
-
-## OAK gates
-
-R0.5 detects or records:
-
-- duplicate IDs;
-- missing dependencies;
-- dependency cycles;
-- unknown provenance sources;
-- malformed MathIR;
-- dimensional contradictions discoverable inside the supported grammar;
-- unknown symbol units as warnings;
-- raw LaTeX balance failures;
-- notation meaning/unit collisions;
-- unsafe result keys;
-- invalid depth ranges;
-- theorem `proven` without a linked proof node;
-- strong claims with no evidence path;
-- registered but unreviewed source support.
-
-## Determinism
-
-A build manifest records:
-
-```text
-semantic_hash
-latex_sha256
-audit counts
-compiler version
-optional fragment-cache receipt
-```
-
-The CI double-builds the same fixture and byte-compares the resulting `.tex` and manifest.
-
-## Current limitations
-
-R0.5 does **not** prove:
-
-- mathematical correctness of arbitrary theorems;
-- truth of prose;
-- complete physical-unit inference;
-- semantic equivalence between natural language and MathIR;
-- citation entailment;
-- Lean/Coq/Isabelle verification;
-- completeness of structural impact analysis;
-- publisher-template compliance;
-- PDF portability across every TeX distribution;
-- infinite compute, storage, CI or review capacity;
-- publication, merge, patent, legal or scientific authority.
-
-## Canon laws
+## OAK canon
 
 ```text
 LATEX != SOURCE_OF_TRUTH
@@ -322,27 +108,21 @@ TYPESETTING != PROOF
 MATH_IR_VALID != THEOREM_TRUE
 DIMENSIONALLY_CONSISTENT != PHYSICALLY_CORRECT
 REGISTERED_SOURCE != SUPPORTED_CLAIM
+SOURCE_LOCATOR != ENTAILMENT
+BIBTEX_PARSED != SOURCE_VERIFIED
 REVIEWED_SUPPORT != INDEPENDENT_REPLICATION
-SUMMARY_EDGE != PROOF_DEPENDENCY
-REPO_METADATA != SCIENTIFIC_TRUTH
+FIGURE_RENDERED != DATA_VALIDATED
+UNCERTAINTY_FIELD != CALIBRATED_UNCERTAINTY
 CACHE_HIT != CURRENT_TRUTH
 AFFECTED_CLOSURE != COMPLETE_SEMANTIC_IMPACT
 FORMAL_STUB != FORMAL_PROOF
+VERIFIER_RECEIPT != NATURAL_LANGUAGE_EQUIVALENCE
+META_CONFLICT_CANDIDATE != CONTRADICTION
+UNIVERSE_BUILD_SUCCESS != PUBLICATION_READINESS
 SIMULATION != MEASUREMENT
 GENERATED_DOCUMENT != PUBLICATION_AUTHORITY
 ```
 
 ## Next frontier
 
-The next evidence-driven layers should be:
-
-1. exact bibliography/citation-entry parsing;
-2. source-fragment locators and claim-level quotation bounds;
-3. formal-proof verifier adapters that ingest verifier receipts rather than self-certifying;
-4. richer SI/non-SI unit grammar and uncertainty propagation;
-5. TikZ/PGFPlots FigureIR;
-6. GitHub Actions artifact publication for generated review PDFs;
-7. repository-wide SummaryBundle → multi-depth monograph campaigns;
-8. distributed cache/index integration with Ω-SANS-PLAFOND-T∞;
-9. publisher/template backends as separate tested render targets;
-10. content-addressed cross-document deduplication and a MetaDocumentGraph.
+R0.9+ should focus on verified source-fragment ingestion, DOI/Crossref metadata receipts without treating metadata as truth, richer covariance-aware uncertainty, SVG/PDF figure backends, external proof-artifact adapters, publisher-specific backends as separately tested targets, distributed cache indexes, GitHub-wide SummaryBundle manifests and MetaDocumentGraph dashboards.
