@@ -1,5 +1,14 @@
 """Omega GAME T engine split units."""
 
+from .coevolution import (
+    AgentGeneralization,
+    CoevolutionReport,
+    EnvironmentEvaluation,
+    EnvironmentGenome,
+    evolve_environments,
+    run_coevolution_cycle,
+    seed_environments,
+)
 from .evolution import EvolutionConfig, EvolutionRun, GenerationReport, evolve, evolve_generation, seed_population
 from .evolutionary_memory import (
     AntiForgettingReport,
@@ -60,6 +69,13 @@ __all__ = [
     "evolve",
     "evolve_generation",
     "seed_population",
+    "EnvironmentGenome",
+    "EnvironmentEvaluation",
+    "AgentGeneralization",
+    "CoevolutionReport",
+    "seed_environments",
+    "run_coevolution_cycle",
+    "evolve_environments",
     "MemoryRecord",
     "ChampionRecord",
     "HallOfFame",

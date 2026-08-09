@@ -13,11 +13,14 @@ from .engines import (
     audit_match,
     evaluate_anti_forgetting,
     evolve,
+    evolve_environments,
     fuzz_arena_t0,
     run_arena_t0,
+    run_coevolution_cycle,
     run_quality_diversity,
     run_round_robin,
     run_sparse_benchmark,
+    seed_environments,
     seed_population,
 )
 
@@ -53,6 +56,13 @@ def _parser() -> argparse.ArgumentParser:
     memory.add_argument("--top-k", type=int, default=2)
     memory.add_argument("--steps", type=int, default=32)
     memory.add_argument("--threshold", type=float, default=0.50)
+
+    coevo = sub.add_parser("coevolve", help="evaluate agents across train/held-out environment seeds")
+    coevo.add_argument("--seed", type=int, default=0)
+    coevo.add_argument("--population", type=int, default=6)
+    coevo.add_argument("--environments", type=int, default=4)
+    coevo.add_argument("--adversarial-limit", type=int, default=2)
+    coevo.add_argument("--next-environments", type=int, default=4)
 
     fuzz = sub.add_parser("fuzz", help="fuzz deterministic arena invariants")
     fuzz.add_argument("--seed", type=int, default=0)
@@ -138,6 +148,36 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0 if regression.passed else 4
 
+    if args.command == "coevolve":
+        population = seed_population(args.population, seed=args.seed)
+        environments = seed_environments(args.environments, seed=args.seed + 1000)
+        report = run_coevolution_cycle(
+            population,
+            environments,
+            train_seeds=(args.seed, args.seed + 1),
+            validation_seeds=(args.seed + 10_000, args.seed + 10_001),
+            adversarial_limit=args.adversarial_limit,
+        )
+        next_environments = evolve_environments(
+            environments,
+            report,
+            generation=0,
+            seed=args.seed + 2000,
+            target_size=args.next_environments,
+        )
+        print(
+            json.dumps(
+                {
+                    "coevolution": report.to_dict(),
+                    "next_environments": [asdict(environment) for environment in next_environments],
+                },
+                sort_keys=True,
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return 0
+
     if args.command == "fuzz":
         report = fuzz_arena_t0(cases=args.cases, seed=args.seed)
         print(report.to_json(), end="")
@@ -153,7 +193,7 @@ def main(argv: list[str] | None = None) -> int:
         print(report.to_json(), end="")
         return 0
 
-    print(json.dumps({"error": "unknown command", "args": asdict(args) if hasattr(args, "__dataclass_fields__") else vars(args)}))
+    print(json.dumps({"error": "unknown command", "args": vars(args)}))
     return 2
 
 

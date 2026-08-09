@@ -3,11 +3,12 @@
 Small, testable units extracted from the larger GAME branch. The
 Ω-GAME-SIM-EVO-T∞ layer extends the merged WorldGraph/OAK core with a
 reproducible simulation, tournament, evolution, fuzzing, sparse scheduling,
-quality diversity and evolutionary memory laboratory.
+quality diversity, evolutionary memory and agent-environment coevolution lab.
 """
 
 from .core import Entity, Event, RuleKernel, WorldGraph, GameQualityScore
 from .engines import (
+    AgentGeneralization,
     AgentGenome,
     AgentState,
     AntiForgettingReport,
@@ -15,6 +16,7 @@ from .engines import (
     ArenaConfig,
     BehaviorDescriptor,
     ChampionRecord,
+    CoevolutionReport,
     CostGraph,
     CostNode,
     CurriculumProgress,
@@ -23,6 +25,8 @@ from .engines import (
     DirtyFrontier,
     Dispatch,
     EliteRecord,
+    EnvironmentEvaluation,
+    EnvironmentGenome,
     EvolutionConfig,
     EvolutionRun,
     EvolutionaryMemory,
@@ -71,14 +75,17 @@ from .engines import (
     default_language_validators,
     evaluate_anti_forgetting,
     evolve,
+    evolve_environments,
     evolve_generation,
     fuzz_arena_t0,
     match_world_graph,
     quality_from_rating,
     run_arena_t0,
+    run_coevolution_cycle,
     run_quality_diversity,
     run_round_robin,
     run_sparse_benchmark,
+    seed_environments,
     seed_population,
 )
 from .oak import OAKGate, OAKReport
@@ -103,6 +110,13 @@ __all__ = [
     "evolve",
     "evolve_generation",
     "seed_population",
+    "EnvironmentGenome",
+    "EnvironmentEvaluation",
+    "AgentGeneralization",
+    "CoevolutionReport",
+    "seed_environments",
+    "run_coevolution_cycle",
+    "evolve_environments",
     "MemoryRecord",
     "ChampionRecord",
     "HallOfFame",
