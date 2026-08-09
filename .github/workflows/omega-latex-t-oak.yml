@@ -43,3 +43,9 @@ jobs:
           cmp generated/omega_latex_t/a/manifest.json generated/omega_latex_t/b/manifest.json
       - name: Audit demo
         run: python -m omega_latex_t audit examples/omega_latex_t_demo.json
+      - name: Adapter and delta CLI smoke
+        run: |
+          printf '# Demo\n\nText.\n' > /tmp/demo.md
+          python -m omega_latex_t from-markdown /tmp/demo.md --title Demo --output /tmp/demo-docir.json
+          python -m omega_latex_t audit /tmp/demo-docir.json
+          python -m omega_latex_t delta /tmp/demo-docir.json /tmp/demo-docir.json
