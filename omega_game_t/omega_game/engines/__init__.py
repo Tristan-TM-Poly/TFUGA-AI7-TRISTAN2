@@ -1,6 +1,15 @@
 """Omega GAME T engine split units."""
 
 from .evolution import EvolutionConfig, EvolutionRun, GenerationReport, evolve, evolve_generation, seed_population
+from .evolutionary_memory import (
+    AntiForgettingReport,
+    ChampionRecord,
+    EvolutionaryMemory,
+    HallOfFame,
+    MemoryRecord,
+    RegressionResult,
+    evaluate_anti_forgetting,
+)
 from .language_curriculum import CurriculumProgress, CurriculumQuest, CurriculumTrack, LanguageCurriculum, default_language_curriculum
 from .language_dataset_forge import LanguageDataset, LanguageDatasetForge, LanguageDatasetItem, default_language_dataset_forge
 from .language_gm_rubric import LanguageGMEvaluation, LanguageGMRubric, LanguageRubricScores
@@ -51,6 +60,13 @@ __all__ = [
     "evolve",
     "evolve_generation",
     "seed_population",
+    "MemoryRecord",
+    "ChampionRecord",
+    "HallOfFame",
+    "EvolutionaryMemory",
+    "RegressionResult",
+    "AntiForgettingReport",
+    "evaluate_anti_forgetting",
     "ArchiveConfig",
     "BehaviorDescriptor",
     "EliteRecord",
