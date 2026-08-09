@@ -158,14 +158,14 @@ omega_neuro_t/
   regression.py    transparent reference regression
   benchmark.py     P1 baseline tournament + ablations
   robustness.py    permutation controls + split-stability probes
-  realdata.py      verified external JSONL/manifest adapter
+  external.py      verified external JSONL/manifest adapter
   cli.py           deterministic architecture demonstration
   benchmark_cli.py deterministic evidence-harness report
 
 tests/test_omega_neuro_t.py
 tests/test_omega_neuro_r03.py
 tests/test_omega_neuro_robustness.py
-tests/test_omega_neuro_realdata.py
+tests/test_omega_neuro_external.py
 examples/omega_neuro_t_demo.py
 examples/omega_neuro_p1_benchmark.py
 docs/omega-neuro/HYPOTHESES.md
