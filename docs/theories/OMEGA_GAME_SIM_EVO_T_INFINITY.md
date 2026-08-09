@@ -1,6 +1,6 @@
 # Ω-GAME-SIM-EVO-T∞ / Ω-GENESIS-ENGINE-T∞
 
-**Maturity:** R0.4 executable prototype  
+**Maturity:** R0.5 executable prototype  
 **Host:** `omega_game_t`  
 **Authority:** research / benchmark / review only
 
@@ -19,7 +19,7 @@ R0.1 deterministic experiment
 → R0.2 sparse/event execution
 → R0.3 quality diversity
 → R0.4 evolutionary memory
-→ R0.5 coevolution
+→ R0.5 agent↔environment coevolution
 → R0.6 GameSpec compiler
 ```
 
@@ -27,26 +27,24 @@ R0.1 deterministic experiment
 
 ## R0.1 — deterministic experimental substrate
 
-R0.1 established Arena-T0, explicit seeds/configs/genomes, canonical replay hashes, mirrored tournaments, vector ratings, deterministic mutation/selection, WorldGraph projection, OAK audit and bounded fuzzing.
-
-Practical reproduction tuple:
+Arena-T0 establishes explicit seeds/configs/genomes, canonical replay hashes, mirrored tournaments, vector ratings, deterministic mutation/selection, WorldGraph projection, OAK audit and bounded fuzzing.
 
 ```text
-(seed, ArenaConfig, left AgentGenome, right AgentGenome, code revision)
+DETERMINISTIC_REPLAY != PHYSICAL_TRUTH
+TOURNAMENT_WIN != GENERAL_INTELLIGENCE
+SIMULATION_EVOLUTION != BIOLOGICAL_EVOLUTION
 ```
 
 ## R0.2 — sparse/event kernel
 
-R0.2 operationalized:
+R0.2 operationalizes the target law:
 
 ```text
 full scan:  C_t ~ |W_t|
 sparse:     C_t ~ |ΔW_t|
 ```
 
-using `DirtyFrontier`, `ScheduledEvent`, `SparseEventScheduler`, Temporal LOD, a deterministic dependency DAG, bounded batches and `CostGraph` work-unit accounting.
-
-The benchmark boundary remains:
+through `DirtyFrontier`, scheduled events, Temporal LOD, a dependency DAG, bounded batches and deterministic `CostGraph` work-unit accounting.
 
 ```text
 WORK_UNIT_REDUCTION != WALL_CLOCK_SPEEDUP
@@ -56,23 +54,7 @@ DEPENDENCY_DAG != THREAD_SAFETY
 
 ## R0.3 — quality diversity
 
-R0.3 introduced deterministic MAP-Elites-style storage over bounded genome projections.
-
-Default descriptor:
-
-```text
-(aggression, exploration)
-```
-
-For coordinate `x ∈ [0,1]` and `B` bins:
-
-```text
-cell(x) = min(B - 1, floor(B x))
-```
-
-Each archive cell retains the highest-quality elite, with deterministic `agent_id` tie-breaking. Novelty is normalized k-nearest Euclidean distance in the chosen descriptor projection.
-
-Archive metrics include coverage, QD score, mean/max quality and mean novelty.
+R0.3 introduces deterministic MAP-Elites-style storage over chosen bounded genome projections. Each behavior cell retains one elite; the archive reports coverage, QD score, quality and normalized descriptor-space novelty.
 
 ```text
 QD_COVERAGE != BEHAVIORAL_COMPLETENESS
@@ -83,149 +65,180 @@ NOVELTY != SCIENTIFIC_OR_PATENT_NOVELTY
 
 ## R0.4 — evolutionary memory / anti-forgetting
 
-### Why memory is a first-class engine component
-
-A purely generational optimizer can improve its current benchmark while silently losing historical capabilities. R0.4 therefore changes the evolution loop from:
+R0.4 makes historical evidence first-class:
 
 ```text
-population_t → select → population_t+1
-```
-
-into:
-
-```text
-population_t
-→ tournament / OAK
-→ M+ champions
-→ M- failures
-→ Hall of Fame
-→ next population
+population
+→ tournament/OAK
+→ Hall of Fame + M+
+→ fuzz/counterexamples + M-
+→ next generation
 → historical regression
 ```
 
-The system now preserves both what worked and what failed.
-
-### ChampionRecord / HallOfFame
-
-A `ChampionRecord` stores:
-
-```text
-generation
-rank
-normalized AgentGenome
-RatingVector
-quality
-tournament seeds
-receipt_hash
-```
-
-The receipt hash is SHA-256 over the canonical tournament-derived champion payload. It provides deterministic identity/provenance, not external certification.
-
-`HallOfFame.admit` takes a tournament and the exact population covered by its ratings, selects `top_k`, and stores immutable-by-receipt champion records.
-
-The Hall of Fame is an archive of historically strong benchmark participants:
+Champion records carry deterministic tournament-derived receipts. M+ stores useful positive benchmark evidence; M- stores observed failures/counterexamples. Anti-forgetting tests new candidates against distinct historical champions on explicit mirrored seeds.
 
 ```text
 HALL_OF_FAME != GLOBAL_OPTIMALITY
-HALL_OF_FAME != GENERAL_INTELLIGENCE
-```
-
-### M+ / M-
-
-`MemoryRecord` has explicit polarity:
-
-```text
-plus  = useful result retained as positive evidence
-minus = failure/counterexample retained as negative evidence
-```
-
-Every record has a canonical evidence hash and deterministic ID.
-
-`EvolutionaryMemory` maintains separate stores:
-
-```text
-hall_of_fame
-m_plus
-m_minus
-```
-
-Tournament champions automatically become `M+ / champion` records.
-
-Fuzzer failures become `M- / fuzz_failure` records containing:
-
-```text
-campaign_seed
-case_index
-case_seed
-failure flags
-```
-
-Repeated ingestion is deduplicated by deterministic memory ID.
-
-The epistemic boundary is strict:
-
-```text
 M_PLUS != PROOF_OF_TRUTH
 M_MINUS != PROOF_OF_IMPOSSIBILITY
-```
-
-M+ says "retain this successful evidence under the recorded conditions." M- says "do not forget this observed failure/counterexample under the recorded conditions."
-
-### Anti-forgetting tournament
-
-`evaluate_anti_forgetting` extracts historical challenge agents from the Hall of Fame and plays the candidate against each champion under explicit fixed seeds in both orientations.
-
-For every historical champion `h`:
-
-```text
-candidate vs h
-h vs candidate
-```
-
-are run for each challenge seed.
-
-Scoring:
-
-```text
-win  = 1 point
-draw = 0.5 point
-loss = 0 points
-```
-
-Aggregate score:
-
-```text
-F = candidate_points / available_points
-```
-
-and project policy:
-
-```text
-passed = F >= threshold
-```
-
-The threshold is configurable and belongs to the benchmark contract. Therefore:
-
-```text
 ANTI_FORGETTING_THRESHOLD != UNIVERSAL_PROGRESS_CRITERION
-PASS != PROOF_OF_MONOTONIC_INTELLIGENCE
-FAIL != PROOF_THAT_NEW_AGENT_IS_GLOBALLY_WORSE
 ```
 
-It measures only performance against the recorded historical challenge set.
+## R0.5 — agent ↔ environment coevolution
 
-### Memory as negative-computation reduction
+### Goal
 
-M- also creates a computational optimization opportunity:
+A fixed environment encourages agents to specialize to one narrow benchmark. R0.5 makes the environment itself an explicit bounded genome and separates environment **training seeds** from **held-out validation seeds**.
+
+The new loop is:
 
 ```text
-failed state / mutation / seed
-→ canonical memory hash
-→ regression fixture or prefilter
-→ avoid rediscovering identical failure blindly
+agent population A_t
+×
+environment population E_t
+→ train tournaments
+→ held-out validation tournaments
+→ agent generalization receipts
+→ environment difficulty/discrimination receipts
+→ adversarial environment selection
+→ mutate E_t
+→ E_t+1
 ```
 
-Future work can generalize exact hashes into similarity neighborhoods, but R0.4 deliberately keeps exact deterministic provenance separate from heuristic generalization.
+R0.5 deliberately evolves parameterized Arena-T0 environments rather than claiming to generate arbitrary game levels.
+
+### EnvironmentGenome
+
+`EnvironmentGenome` contains bounded Arena-T0 parameters:
+
+```text
+environment_id
+width, height
+resource_density
+initial_energy
+harvest_energy
+move_cost
+attack_cost
+attack_damage
+max_steps
+```
+
+Normalization clamps every dimension into a finite documented domain. `to_config()` compiles the normalized genome into a validated `ArenaConfig`; resource density is converted to a bounded integer resource count.
+
+This creates the compiler boundary:
+
+```text
+EnvironmentGenome
+→ normalization
+→ ArenaConfig
+→ ArenaConfig.validate()
+→ tournament
+```
+
+An environment genome is a parameter vector, not a complete map layout or semantic game description.
+
+### Deterministic environment generation
+
+`seed_environments(count, seed)` creates a finite reproducible environment population. Each environment has a stable unique ID and parameters derived only from the explicit seed and generation procedure.
+
+### Train / validation separation
+
+`run_coevolution_cycle` requires:
+
+```text
+train_seeds ∩ validation_seeds = ∅
+```
+
+Overlap fails closed. Each environment is evaluated twice using exactly the same agent population:
+
+```text
+T_train(e) = round_robin(A, train_seeds, config=e)
+T_val(e)   = round_robin(A, validation_seeds, config=e)
+```
+
+Held-out seeds reduce one obvious form of seed overfitting; they do not establish real-world or out-of-distribution generalization.
+
+### Environment difficulty
+
+For each tournament, R0.5 computes mean agent efficiency and the bounded benchmark difficulty:
+
+```text
+D = 1 / (1 + max(0, mean_efficiency))
+```
+
+so lower measured efficiency corresponds to a larger `D` within this benchmark.
+
+Validation discrimination is the population standard deviation of tournament-derived agent quality under that environment:
+
+```text
+S = std_pop(Q_agent)
+```
+
+Current adversarial score:
+
+```text
+A_env = D_validation + 0.10 S_validation
+```
+
+The coefficient `0.10` is a benchmark policy. It can be changed or replaced later through OAKBench comparisons.
+
+```text
+ADVERSARIAL_SCORE != UNIVERSAL_DIFFICULTY
+LOW_EFFICIENCY != BAD_GAME
+HIGH_DISCRIMINATION != FAIRNESS
+```
+
+### Agent generalization receipt
+
+For every agent across the environment population, R0.5 records:
+
+```text
+train_mean_quality
+validation_mean_quality
+generalization_gap = train_mean - validation_mean
+worst_validation_quality
+validation_quality_std
+```
+
+This distinguishes average performance from worst-environment behavior and validation variability.
+
+```text
+HELD_OUT_SEEDS != REAL_WORLD_GENERALIZATION
+SMALL_GENERALIZATION_GAP != GENERAL_INTELLIGENCE
+```
+
+### Environment receipts
+
+Each `EnvironmentEvaluation` carries a SHA-256 receipt over:
+
+```text
+environment genome
+train seeds
+validation seeds
+train/validation efficiency
+train/validation difficulty
+validation discrimination
+```
+
+The whole `CoevolutionReport` also receives a deterministic canonical receipt hash. These hashes provide reproducible identity/provenance, not external certification.
+
+### Adversarial environment evolution
+
+`evolve_environments` ranks environments by the recorded adversarial score, preserves a bounded elite fraction, then creates a target-size next population through deterministic bounded mutation.
+
+Mutated fields include dimensions, resource density, energy/cost parameters, damage and maximum steps. Every child is normalized before use.
+
+```text
+E_t
+→ validation adversarial ranking
+→ elites
+→ deterministic mutation(seed, generation)
+→ normalize
+→ E_t+1
+```
+
+This is computational coevolution inside Arena-T0. It is not biological evolution and does not imply that a harder benchmark is a better game.
 
 ## CLI
 
@@ -237,6 +250,7 @@ PYTHONPATH=. python -m omega_game tournament --seed 42 --population 8 --steps 64
 PYTHONPATH=. python -m omega_game evolve --seed 42 --population 8 --generations 3 --steps 48
 PYTHONPATH=. python -m omega_game quality-diversity --seed 42 --population 16 --steps 48 --bins 8
 PYTHONPATH=. python -m omega_game memory-demo --seed 42 --population 8 --top-k 3 --steps 32 --threshold 0.5
+PYTHONPATH=. python -m omega_game coevolve --seed 42 --population 6 --environments 4 --adversarial-limit 2 --next-environments 4
 PYTHONPATH=. python -m omega_game fuzz --seed 42 --cases 100
 PYTHONPATH=. python -m omega_game sparse-bench --seed 42 --entities 10000 --active 100 --ticks 128
 ```
@@ -254,6 +268,9 @@ HALL_OF_FAME != GLOBAL_OPTIMALITY
 M_PLUS != PROOF_OF_TRUTH
 M_MINUS != PROOF_OF_IMPOSSIBILITY
 ANTI_FORGETTING_THRESHOLD != UNIVERSAL_PROGRESS_CRITERION
+HELD_OUT_SEEDS != REAL_WORLD_GENERALIZATION
+ADVERSARIAL_SCORE != UNIVERSAL_DIFFICULTY
+ENVIRONMENT_GENOME != COMPLETE_LEVEL_DESCRIPTION
 ```
 
 ## Executable operating laws
@@ -268,33 +285,35 @@ cost accounting before speed claims
 ecology of elites before single-champion collapse
 positive memory plus negative memory
 historical regression before declaring progress
+held-out seeds before generalization claims
+coevolve challenges without confusing hardness with quality
 counterexamples before canonization
 ```
 
-## R0.5–R0.7 roadmap
-
-### R0.5 — coevolution
-
-- agents ↔ maps;
-- map genome / terrain parameters;
-- adversarial map search;
-- hidden validation seeds;
-- generalization gap reports.
+## R0.6–R0.8 roadmap
 
 ### R0.6 — GameSpec compiler
 
 ```text
 GameSpec
-→ schema validation
-→ ECS/HGFM projection
-→ simulation adapter
+→ bounded schema validation
+→ WorldGraph/ECS-style projection
+→ Arena adapter
 → agent API
 → tournament adapter
 → OAK tests
-→ benchmark receipt
+→ deterministic build receipt
 ```
 
-### R0.7 — scalable execution experiments
+### R0.7 — explicit map layouts / adversarial level generation
+
+- fixed resource/obstacle layouts;
+- map hashes;
+- connectivity/fairness gates;
+- train/validation map splits;
+- adversarial map search distinct from environment-parameter search.
+
+### R0.8 — scalable execution experiments
 
 - sharding;
 - checkpoints;
@@ -303,4 +322,4 @@ GameSpec
 - CPU/GPU scheduling experiments;
 - empirical wall-clock/energy OAKBench.
 
-No generated game, evolved agent or benchmark champion is automatically considered fun, fair, safe, scientifically valid, generally intelligent or publishable.
+No generated environment, evolved agent or benchmark champion is automatically considered fun, fair, safe, scientifically valid, generally intelligent or publishable.
