@@ -5,22 +5,28 @@ on:
     paths:
       - 'omega_actions_t/**'
       - 'tests/test_omega_actions*.py'
-      - 'docs/OMEGA_ACTIONS_T*.md'
+      - 'docs/OMEGA_ACTIONS*.md'
+      - 'config/omega_actions/**'
       - 'pyproject.toml'
       - '.github/workflows/omega-actions-optimizer-ci.yml'
       - '.github/workflows/omega-actions-telemetry.yml'
       - '.github/workflows/omega-actions-delta-audit.yml'
+      - '.github/workflows/omega-problem-atlas-r*.yml'
+      - '.github/workflows/omega-problem-atlas-router.yml'
   push:
     branches:
       - main
     paths:
       - 'omega_actions_t/**'
       - 'tests/test_omega_actions*.py'
-      - 'docs/OMEGA_ACTIONS_T*.md'
+      - 'docs/OMEGA_ACTIONS*.md'
+      - 'config/omega_actions/**'
       - 'pyproject.toml'
       - '.github/workflows/omega-actions-optimizer-ci.yml'
       - '.github/workflows/omega-actions-telemetry.yml'
       - '.github/workflows/omega-actions-delta-audit.yml'
+      - '.github/workflows/omega-problem-atlas-r*.yml'
+      - '.github/workflows/omega-problem-atlas-router.yml'
   workflow_dispatch:
 
 permissions:

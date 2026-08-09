@@ -8,7 +8,6 @@ on:
       - "tests/test_omega_problem_atlas_r10*.py"
       - "schemas/omega_problem_stream_*_v10.schema.json"
       - "docs/omega_millennium_t/r10/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r10-streaming.yml"
   pull_request:
     paths:
@@ -16,7 +15,6 @@ on:
       - "tests/test_omega_problem_atlas_r10*.py"
       - "schemas/omega_problem_stream_*_v10.schema.json"
       - "docs/omega_millennium_t/r10/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r10-streaming.yml"
   workflow_dispatch:
     inputs:

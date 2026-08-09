@@ -8,7 +8,6 @@ on:
       - "tests/test_omega_problem_atlas_r07*.py"
       - "schemas/omega_problem_job_report_v7.schema.json"
       - "docs/omega_millennium_t/r07/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r07-runners.yml"
   pull_request:
     paths:
@@ -16,7 +15,6 @@ on:
       - "tests/test_omega_problem_atlas_r07*.py"
       - "schemas/omega_problem_job_report_v7.schema.json"
       - "docs/omega_millennium_t/r07/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r07-runners.yml"
   workflow_dispatch:
 

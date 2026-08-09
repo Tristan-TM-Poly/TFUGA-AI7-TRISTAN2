@@ -6,6 +6,7 @@ on:
       - "pyproject.toml"
       - "omega_actions_t/project_surface.py"
       - "omega_actions_t/trigger_hotspots.py"
+      - "omega_latex_t/omega_doc_cli.py"
       - "tests/test_omega_actions_project_surface.py"
       - "tests/test_omega_actions_trigger_hotspots.py"
       - ".github/workflows/omega-project-surface-ci.yml"
@@ -15,6 +16,7 @@ on:
       - "pyproject.toml"
       - "omega_actions_t/project_surface.py"
       - "omega_actions_t/trigger_hotspots.py"
+      - "omega_latex_t/omega_doc_cli.py"
       - "tests/test_omega_actions_project_surface.py"
       - "tests/test_omega_actions_trigger_hotspots.py"
       - ".github/workflows/omega-project-surface-ci.yml"
@@ -55,7 +57,14 @@ jobs:
         run: |
           python -m omega_actions_t.project_surface pyproject.toml \
             --prefix omega-code-dojo \
-            --json-out /tmp/OMEGA_PROJECT_SURFACE.json
+            --json-out /tmp/OMEGA_PROJECT_SURFACE_DOJO.json
+
+      - name: Validate Omega LaTeX script surface
+        run: |
+          python -m omega_actions_t.project_surface pyproject.toml \
+            --prefix omega-doc \
+            --prefix omega-latex \
+            --json-out /tmp/OMEGA_PROJECT_SURFACE_LATEX.json
 
       - name: Measure trigger hotspots
         run: |
@@ -68,13 +77,16 @@ jobs:
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
           import json
           from pathlib import Path
-          surface = json.loads(Path('/tmp/OMEGA_PROJECT_SURFACE.json').read_text())
+          dojo = json.loads(Path('/tmp/OMEGA_PROJECT_SURFACE_DOJO.json').read_text())
+          latex = json.loads(Path('/tmp/OMEGA_PROJECT_SURFACE_LATEX.json').read_text())
           hotspots = json.loads(Path('/tmp/OMEGA_TRIGGER_HOTSPOTS.json').read_text())
           print('## Ω Project Script Surface')
           print()
-          print(f"- status: **{surface['status']}**")
-          print(f"- selected Code Dojo scripts: **{surface['selected_script_count']}**")
-          print(f"- violations: **{len(surface['violations'])}**")
+          print(f"- Code Dojo status: **{dojo['status']}**")
+          print(f"- Code Dojo scripts: **{dojo['selected_script_count']}**")
+          print(f"- Omega LaTeX status: **{latex['status']}**")
+          print(f"- Omega LaTeX scripts: **{latex['selected_script_count']}**")
+          print(f"- total structural violations: **{len(dojo['violations']) + len(latex['violations'])}**")
           print(f"- workflows scanned for trigger hotspots: **{hotspots['workflow_count']}**")
           print()
           print('### Top shared trigger paths')
