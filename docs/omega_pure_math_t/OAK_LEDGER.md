@@ -61,14 +61,40 @@ obstruction routing and collision-driven invariant discovery.
    language.
 8. **Executable certificate ≠ proof of hidden premise:** T1 code verifies a
    witness inequality, not minimality of unknown factorizations.
+9. **Dimension identity ≠ canonical tensor splitting:** although
+   `dim Sym²(V)+dim Λ²(V)=dim(V⊗V)`, the usual symmetrizer/antisymmetrizer
+   projections use division by 2; characteristic 2 requires separate treatment.
+10. **Semigroup reachability ≠ group orbit:** finite orbit partitions are only
+    constructed after each declared generator is verified to be a bijection of
+    the finite universe.
+11. **Signed potential residue ≠ zero source:** positive and negative discrete
+    `Δ log|f|/(2π)` samples must remain sign-separated; a negative response may
+    carry pole-like or discretization information and is not relabeled a zero.
+12. **One-brick witness ≠ irreducibility if a nontrivial witness exists:** the
+    evidence registry blocks irreducible promotion whenever any recorded
+    factorization of length ≥2 exists.
 
-## R0.2 targets
+## R0.2 promoted laboratories
 
-- associahedron/rotation graph and edgewise associator field;
-- defect hierarchy registry;
-- explicit invariant-completeness experiments on finite group actions;
-- factorization tree metrics and exact small search spaces;
-- prior-art map for each Ω branch;
-- formal proof export candidates (Lean/Coq/Isabelle selection after scoping);
-- adapter to `omega_logexp_morph_t`;
-- Zero Tomography finite numerical laboratory with analytic baselines.
+The following R0.1 targets now have executable finite laboratories:
+
+- associahedron rotation graph and edgewise associator field;
+- explicit invariant-completeness experiments on finite **permutation** actions;
+- exact small factorization-tree search and structural distance;
+- guarded adapter to `omega_logexp_morph_t`;
+- Zero Tomography finite numerical grid/Laplacian/source-density laboratory.
+
+These promotions do not turn the corresponding broad theory programs into
+proved general theorems.
+
+## Next promotion targets
+
+- defect hierarchy registry beyond first associators/commutators;
+- characteristic-aware and group-specific equivariant Tensor Spectrum examples;
+- formal proof export candidates for T1–T3 (Lean/Coq/Isabelle after scoping);
+- Zero Tomography noise, smoothing, pole separation, resolution and analytic baselines;
+- exact proof-library compression benchmark;
+- HGFM renormalization fixed-point experiments;
+- multigraded hypernumber example with explicit coherence laws;
+- specialized local-global/sheaf example;
+- nontrivial finite-group invariant-basis benchmarks and collision-driven feature synthesis.
