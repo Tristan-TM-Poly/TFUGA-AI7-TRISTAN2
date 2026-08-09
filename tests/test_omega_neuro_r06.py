@@ -3,6 +3,12 @@ from dataclasses import replace
 import pytest
 
 from omega_neuro_t.public_sources import PUBLIC_SOURCES, get_public_source
+from omega_neuro_t.r06_acquisition import (
+    acquisition_plan_summary,
+    allen_p1_plan,
+    dandi_plan,
+    microns_p3_plan,
+)
 from omega_neuro_t.r06_cli import build_report
 from omega_neuro_t.r06_protocol import PROTOCOLS, admission_gate, get_protocol, protocol_registry
 
@@ -67,3 +73,45 @@ def test_r06_report_can_emit_specific_admission_gate():
     assert gate["source_id"] == "microns_mm3"
     assert gate["hypothesis_id"] == "P3_HIGHER_ORDER_WIRING"
     assert gate["automatic_biological_promotion"] is False
+
+
+def test_allen_p1_acquisition_plan_is_frozen_and_non_promotional():
+    plan = allen_p1_plan(source_version="evidence-2026-08-09", specimen_ids=("320654829", "313862022"))
+    summary = acquisition_plan_summary(plan)
+    assert plan.protocol_hash == get_protocol("P1_DENDRITIC_ADDRESS").digest()
+    assert set(plan.asset_ids) == {"320654829", "313862022"}
+    assert len(plan.digest()) == 64
+    assert summary["payload_hash_required_after_fetch"] is True
+    assert summary["automatic_biological_promotion"] is False
+
+
+def test_dandi_plan_requires_published_version_and_preregistered_hypothesis():
+    with pytest.raises(ValueError):
+        dandi_plan(hypothesis_id="P2_SYNAPTIC_STATE_TENSOR", dandiset_id="000001", published_version="")
+    plan = dandi_plan(
+        hypothesis_id="P2_SYNAPTIC_STATE_TENSOR",
+        dandiset_id="000001",
+        published_version="0.1.0",
+        asset_ids=("asset-a",),
+    )
+    assert "000001" in plan.resource_locator
+    assert plan.source_id == "dandi_nwb"
+    assert plan.network_fetch_authorized is False
+    with pytest.raises(ValueError):
+        dandi_plan(hypothesis_id="P3_HIGHER_ORDER_WIRING", dandiset_id="000001", published_version="0.1.0")
+
+
+def test_microns_p3_prefers_manual_coregistration_and_freezes_materialization():
+    plan = microns_p3_plan(materialization_version="343")
+    assert plan.source_version == "materialization:343"
+    assert "coregistration_manual_v3" in plan.asset_ids
+    assert plan.grouping_keys == ("root_id", "session", "scan_idx", "unit_id")
+    assert plan.automatic_biological_promotion is False
+    with pytest.raises(ValueError):
+        microns_p3_plan(materialization_version="343", coregistration_table="unregistered_table")
+
+
+def test_acquisition_plan_digest_changes_when_asset_selection_changes():
+    first = allen_p1_plan(source_version="v1", specimen_ids=("1", "2"))
+    second = allen_p1_plan(source_version="v1", specimen_ids=("1", "3"))
+    assert first.digest() != second.digest()
