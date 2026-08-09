@@ -6,12 +6,14 @@ from dataclasses import asdict
 
 from .engines import (
     AgentGenome,
+    ArchiveConfig,
     ArenaConfig,
     EvolutionConfig,
     audit_match,
     evolve,
     fuzz_arena_t0,
     run_arena_t0,
+    run_quality_diversity,
     run_round_robin,
     run_sparse_benchmark,
     seed_population,
@@ -36,6 +38,12 @@ def _parser() -> argparse.ArgumentParser:
     evo.add_argument("--population", type=int, default=8)
     evo.add_argument("--generations", type=int, default=2)
     evo.add_argument("--steps", type=int, default=48)
+
+    qd = sub.add_parser("quality-diversity", help="run MAP-Elites quality-diversity analysis")
+    qd.add_argument("--seed", type=int, default=0)
+    qd.add_argument("--population", type=int, default=8)
+    qd.add_argument("--steps", type=int, default=48)
+    qd.add_argument("--bins", type=int, default=8)
 
     fuzz = sub.add_parser("fuzz", help="fuzz deterministic arena invariants")
     fuzz.add_argument("--seed", type=int, default=0)
@@ -79,6 +87,17 @@ def main(argv: list[str] | None = None) -> int:
             arena_config=ArenaConfig(max_steps=args.steps),
         )
         print(run.to_json(), end="")
+        return 0
+
+    if args.command == "quality-diversity":
+        population = seed_population(args.population, seed=args.seed)
+        experiment = run_quality_diversity(
+            population,
+            seeds=(args.seed, args.seed + 1),
+            arena_config=ArenaConfig(max_steps=args.steps),
+            archive_config=ArchiveConfig(bins=(args.bins, args.bins)),
+        )
+        print(experiment.to_json(include_matches=False), end="")
         return 0
 
     if args.command == "fuzz":
