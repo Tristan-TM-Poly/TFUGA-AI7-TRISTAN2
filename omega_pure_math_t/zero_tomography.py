@@ -79,20 +79,25 @@ def source_density(grid: Grid) -> Grid:
 
 
 def strongest_interior_sources(grid: Grid, count: int = 1) -> tuple[tuple[complex, float], ...]:
-    """Return the largest finite *positive* interior source-density samples.
+    """Return the largest finite *positive* strictly interior samples.
 
-    Negative samples are not silently relabeled as zero sources; in meromorphic
-    settings they can instead carry pole-like information and should be handled
-    by a separate signed-source analysis.
+    The outermost row and column are excluded geometrically, even if a caller
+    supplies finite values there. Negative samples are not silently relabeled as
+    zero sources; in meromorphic settings they can instead carry pole-like or
+    discretization information and should be handled by a signed-source analysis.
     """
 
     from math import isfinite
 
     if count < 1:
         raise ValueError("count must be >=1")
+    if len(grid.xs) < 3 or len(grid.ys) < 3:
+        return ()
     candidates: list[tuple[float, complex]] = []
-    for j, y in enumerate(grid.ys):
-        for i, x in enumerate(grid.xs):
+    for j in range(1, len(grid.ys) - 1):
+        y = grid.ys[j]
+        for i in range(1, len(grid.xs) - 1):
+            x = grid.xs[i]
             value = grid.values[j][i]
             if isfinite(value) and value > 0:
                 candidates.append((value, complex(x, y)))
