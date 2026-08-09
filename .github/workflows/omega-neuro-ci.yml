@@ -8,6 +8,7 @@ on:
       - "schemas/omega_neuro*.json"
       - "docs/omega-neuro/**"
       - "examples/omega_neuro*.py"
+      - "reports/omega_neuro*.json"
       - ".github/workflows/omega-neuro-ci.yml"
   push:
     branches:
@@ -18,6 +19,7 @@ on:
       - "schemas/omega_neuro*.json"
       - "docs/omega-neuro/**"
       - "examples/omega_neuro*.py"
+      - "reports/omega_neuro*.json"
       - ".github/workflows/omega-neuro-ci.yml"
 
 concurrency:
@@ -85,4 +87,4 @@ jobs:
 
       - name: Import public API
         run: >-
-          python -c "import omega_neuro_t; import omega_neuro_t.benchmark; import omega_neuro_t.dataset; import omega_neuro_t.provenance; import omega_neuro_t.robustness; import omega_neuro_t.hypothesis_campaign; import omega_neuro_t.public_sources; import omega_neuro_t.r06_protocol"
+          python -c "import omega_neuro_t; import omega_neuro_t.benchmark; import omega_neuro_t.dataset; import omega_neuro_t.provenance; import omega_neuro_t.robustness; import omega_neuro_t.hypothesis_campaign; import omega_neuro_t.public_sources; import omega_neuro_t.r06_protocol; import omega_neuro_t.r06_acquisition"
