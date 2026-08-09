@@ -1,6 +1,6 @@
 # MASTER SYSTEM INDEX — TFUGA-AI7-TRISTAN2
 
-Date: 2026-06-27  
+Date: 2026-08-09  
 Status: OAK-safe navigation layer. This file is an index, not a proof, legal opinion, revenue guarantee, or scientific certification.
 
 ## Purpose
@@ -39,6 +39,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | 11 | U0 Core | `u0_core/` | X | Minimal generator hypothesis: Δ, R, T produce trace, memory, validation, scale, HGFM. | Add tests showing emergence and failure cases. |
 | 12 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add first conservation-tested simulation. |
 | 13 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
+| 14 | Ω-NEURO-CELL-SYN-NET-T∞ | `omega_neuro_t/`, `docs/omega-neuro/` | X/D-MVP | Turns neuron→dendrite→synapse→hypernetwork ideas into typed executable models with falsifiable P1–P7 hypotheses and complexity-aware OAKBench. | Add provenance-preserving public-data adapters and run P1/P2 empirical baseline tournaments. |
 
 ## Promotion priorities
 
@@ -54,6 +55,8 @@ AUTO² Kernel -> Ω-LIN-T -> FFWT-HAC-CVCD
 ```
 
 These have the strongest combination of code, tests, reports, and future product/research value.
+
+Ω-NEURO-CELL-SYN-NET-T∞ enters as an X/D-MVP software nucleus: the code may be locally demonstrated while biological hypotheses remain unpromoted until evidence-backed benchmarks reproduce.
 
 ### P2 — Merge path
 
