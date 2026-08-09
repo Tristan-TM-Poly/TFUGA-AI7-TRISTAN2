@@ -1,0 +1,61 @@
+name: Omega Pure Math OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_pure_math_t/**"
+      - "tests/test_omega_pure_math_t*.py"
+      - "docs/omega_pure_math_t/**"
+      - "examples/omega_pure_math_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-pure-math-oakbench.yml"
+  push:
+    paths:
+      - "omega_pure_math_t/**"
+      - "tests/test_omega_pure_math_t*.py"
+      - "docs/omega_pure_math_t/**"
+      - "examples/omega_pure_math_demo.py"
+      - "pyproject.toml"
+      - ".github/workflows/omega-pure-math-oakbench.yml"
+  workflow_dispatch:
+
+jobs:
+  pure-math-oakbench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependency
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Compile pure-math package
+        run: python -m compileall -q omega_pure_math_t
+
+      - name: Run Ω-PURE-MATH targeted tests
+        run: python -m pytest -q tests/test_omega_pure_math_t*.py
+
+      - name: CLI OAK audit
+        run: python -m omega_pure_math_t oak
+
+      - name: CLI canon validation
+        run: |
+          python -m omega_pure_math_t canon > /tmp/omega-pure-math-canon.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path('/tmp/omega-pure-math-canon.json').read_text())
+          assert data['valid'], data['errors']
+          assert data['branch_count'] >= 50
+          print(data['status_counts'])
+          PY
+
+      - name: CLI bracket smoke test
+        run: python -m omega_pure_math_t bracket 10 3 2 --op sub
