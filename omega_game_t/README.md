@@ -5,84 +5,67 @@ Status: small merge units split from the larger GAME branch.
 
 ## Ω-GAME-SIM-EVO-T∞ progression
 
-### R0.1 — deterministic substrate — merged
+- **R0.1 merged:** deterministic Arena-T0, replay SHA-256, tournaments/evolution/OAK/fuzzing.
+- **R0.2 merged:** DirtyFrontier, event scheduler, Temporal LOD, dependency DAG, CostGraph.
+- **R0.3 merged:** deterministic MAP-Elites quality diversity.
+- **R0.4 merged:** Hall of Fame, M+/M-, anti-forgetting regression.
+- **R0.5 merged:** agent↔environment coevolution with held-out seeds.
+- **R0.6 merged:** bounded GameSpec compiler and deterministic build receipts.
 
-Arena-T0, replay SHA-256, mirrored tournaments, vector ratings, deterministic selection/mutation, WorldGraph/OAK bridge and fuzzing.
+### R0.7 — fixed hashed layouts
 
-### R0.2 — sparse/event kernel — merged
-
-DirtyFrontier, ScheduledEvent, SparseEventScheduler, Temporal LOD, dependency DAG, bounded batches and deterministic CostGraph accounting.
-
-### R0.3 — quality diversity — merged
-
-BehaviorDescriptor, deterministic MAP-Elites, elite-per-cell retention, normalized novelty and QD/coverage metrics.
-
-### R0.4 — evolutionary memory — merged
-
-Hall of Fame receipts, explicit M+/M- stores, fuzz-failure retention and mirrored historical anti-forgetting regressions.
-
-### R0.5 — agent ↔ environment coevolution — merged
-
-Bounded environment genomes, train/held-out validation seeds, agent generalization receipts, adversarial environment ranking and deterministic environment evolution.
-
-### R0.6 — bounded GameSpec compiler
-
-R0.6 adds a declarative front door for the engine.
+R0.7 makes map geometry executable rather than decorative metadata.
 
 Implemented:
 
-- `GameSpec` version `0.1`;
-- strict rejection of unknown top-level/nested fields;
-- `GameAgentSpec`, `GameEnvironmentSpec`, `GameRuleSpec`;
-- bounded Arena-T0 action vocabulary: `attack`, `harvest`, `idle`, `move`;
-- agent normalization through the existing `AgentGenome` contract;
-- environment normalization through `EnvironmentGenome` → `ArenaConfig.validate()`;
-- unique-agent and minimum-population gates;
-- compilation to `WorldGraph + RuleKernel + ArenaConfig + AgentGenome[]`;
-- OAK evaluation before execution;
-- deterministic SHA-256 `build_receipt`;
-- `CompiledGame.run_tournament()` blocked when OAK rejects the build;
-- JSON Schema at `schemas/game_spec.schema.json`;
-- example at `examples/game_spec_arena_t0.json`;
-- `omega-game compile-spec` CLI.
-
-Compiler law:
+- immutable `ArenaLayout(width, height, left_spawn, right_spawn, resources, obstacles)`;
+- canonical sorting + SHA-256 `layout_hash`;
+- bounds/uniqueness/no-overlap validation;
+- BFS connectivity and distance maps;
+- bilateral resource-reachability gate;
+- configurable resource-distance asymmetry policy;
+- obstacle-aware shortest-path movement;
+- fixed spawns/resources/obstacles consumed by Arena-T0;
+- layout identity in replay receipts and deterministic reruns;
+- `arena_layout` entity in WorldGraph projection;
+- `run_round_robin(..., layout=...)` propagation;
+- explicit `layout_fairness_threshold` in audits/compiler;
+- optional GameSpec `layout` lowering;
+- GameSpec environment/layout dimension consistency;
+- compiler derives `resource_count` from fixed resources;
+- layout audit/hash inside build receipt;
+- canonical runtime action `stay`, with legacy input alias `idle → stay`;
+- schema + `examples/game_spec_fixed_layout.json`;
+- backward compatibility: matches/specs without a layout keep their previous serialized surface and replay hash contract.
 
 ```text
-JSON GameSpec
-→ bounded parser
-→ normalize
-→ WorldGraph + RuleKernel + ArenaConfig + agents
-→ OAK
-→ deterministic build receipt
-→ optional mirrored tournament
+GameSpec.layout
+→ ArenaLayout
+→ structural validation
+→ connectivity/reachability
+→ fairness-policy audit
+→ layout_hash
+→ Arena-T0
+→ tournament / replay / WorldGraph
 ```
 
-The compiler never imports arbitrary user modules or evaluates code from the spec.
-
-### Headless CLI
+Example:
 
 ```bash
 cd omega_game_t
-PYTHONPATH=. python -m omega_game arena --seed 42 --steps 96
-PYTHONPATH=. python -m omega_game tournament --seed 42 --population 8 --steps 64
-PYTHONPATH=. python -m omega_game evolve --seed 42 --population 8 --generations 3 --steps 48
-PYTHONPATH=. python -m omega_game quality-diversity --seed 42 --population 16 --steps 48 --bins 8
-PYTHONPATH=. python -m omega_game memory-demo --seed 42 --population 8 --top-k 3 --steps 32 --threshold 0.5
-PYTHONPATH=. python -m omega_game coevolve --seed 42 --population 6 --environments 4 --adversarial-limit 2 --next-environments 4
-PYTHONPATH=. python -m omega_game compile-spec examples/game_spec_arena_t0.json --seed 42 --tournament
-PYTHONPATH=. python -m omega_game fuzz --seed 42 --cases 100
-PYTHONPATH=. python -m omega_game sparse-bench --seed 42 --entities 10000 --active 100 --ticks 128
+PYTHONPATH=. python -m omega_game compile-spec examples/game_spec_fixed_layout.json --seed 42 --tournament
 ```
 
 ## OAK boundaries
 
 ```text
-COMPILED_SPEC != FUN_GAME
-COMPILED_SPEC != FAIR_GAME
+LAYOUT_HASH != FAIRNESS
+CONNECTED_LAYOUT != BALANCED_LAYOUT
+DISTANCE_SYMMETRY != STRATEGIC_FAIRNESS
+FIXED_LAYOUT != FUN_LEVEL
+FAIRNESS_THRESHOLD != UNIVERSAL_FAIRNESS_DEFINITION
+STRUCTURALLY_RUNNABLE != OAK_ACCEPTED_FOR_COMPETITION
 BUILD_RECEIPT != EXTERNAL_CERTIFICATION
-SCHEMA_VALID != SEMANTICALLY_GOOD
-OAK_ACCEPTED_BUILD != SCIENTIFIC_TRUTH
 DETERMINISTIC_REPLAY != PHYSICAL_TRUTH
 TOURNAMENT_WIN != GENERAL_INTELLIGENCE
 HELD_OUT_SEEDS != REAL_WORLD_GENERALIZATION
@@ -98,8 +81,8 @@ python -m pytest
 
 ## Next split units
 
-1. explicit fixed map layouts and connectivity/fairness gates;
-2. GameSpec map/layout extension;
+1. adversarial fixed-layout mutation/evolution with connectivity-preserving repair/rejection;
+2. train/validation layout sets and map-generalization receipts;
 3. extinct-lineage registry and richer M- minimization;
 4. TextWorld / Quest-CVCD adapters;
 5. profiler-driven CPU/GPU scheduling experiments;
