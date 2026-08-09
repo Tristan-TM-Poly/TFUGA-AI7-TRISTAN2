@@ -12,7 +12,7 @@
     {
       "category": "canon",
       "evidence": {
-        "cvcd_files": 3,
+        "cvcd_files": 4,
         "ffwt_files": 3,
         "oak_files": 5,
         "theory_files": 5
@@ -145,7 +145,7 @@
       "status": "CANON"
     }
   ],
-  "generated_at": "2026-08-09T22:09:54+00:00",
+  "generated_at": "2026-08-09T22:14:35+00:00",
   "guardrails": {
     "allowed_output_dir": "reports/auto_genesis",
     "requires_human_review_for_code_changes": true,
@@ -199,9 +199,9 @@
   "system": "TTM-TFUGA-AI7-TRISTAN2 Guarded Auto-Genesis",
   "theories": [
     {
-      "bytes": 9611,
+      "bytes": 7864,
       "lines": 325,
-      "mentions_cvcd": false,
+      "mentions_cvcd": true,
       "mentions_ffwt": false,
       "mentions_oak": true,
       "path": "docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md",
