@@ -67,6 +67,22 @@ jobs:
           assert report['reports']['P3']['oak']['candidate_justified'] is True
           PY
 
+      - name: Validate R0.6 preregistration
+        run: |
+          python -m omega_neuro_t.r06_cli --pretty > /tmp/neuro-r06.json
+          python -m omega_neuro_t.r06_cli --hypothesis P3_HIGHER_ORDER_WIRING --source microns_mm3 > /tmp/neuro-r06-p3.json
+          python - <<'PY'
+          import json
+          report = json.load(open('/tmp/neuro-r06.json'))
+          gate = json.load(open('/tmp/neuro-r06-p3.json'))['admission_gate']
+          assert report['stage'] == 'R0.6_PUBLIC_DATA_PREREGISTRATION'
+          assert report['automatic_biological_promotion'] is False
+          assert all(len(item['protocol_hash']) == 64 for item in report['protocols'].values())
+          assert gate['source_id'] == 'microns_mm3'
+          assert gate['negative_control_required'] is True
+          assert gate['automatic_biological_promotion'] is False
+          PY
+
       - name: Import public API
         run: >-
-          python -c "import omega_neuro_t; import omega_neuro_t.benchmark; import omega_neuro_t.dataset; import omega_neuro_t.provenance; import omega_neuro_t.robustness; import omega_neuro_t.hypothesis_campaign"
+          python -c "import omega_neuro_t; import omega_neuro_t.benchmark; import omega_neuro_t.dataset; import omega_neuro_t.provenance; import omega_neuro_t.robustness; import omega_neuro_t.hypothesis_campaign; import omega_neuro_t.public_sources; import omega_neuro_t.r06_protocol"
