@@ -145,16 +145,29 @@ This exactly linearizes multiplicative updates in log-space. It does **not** imp
 
 ```text
 omega_neuro_t/
-  models.py       typed states + epistemic status + hyperedges
-  dendrite.py     branch-local nonlinear reference model
-  synapse.py      scalar and contextual synapse projections + LOG update
-  hypergraph.py   multiscale multilayer relation model
-  networks.py     synthetic network fingerprints/archetypes
-  oakbench.py     explicit predictive/complexity/uncertainty gate
-  cli.py          deterministic JSON demonstration
+  __main__.py      primary `python -m omega_neuro_t` entrypoint
+  models.py        typed states + epistemic status + hyperedges
+  dendrite.py      branch-local nonlinear reference model
+  synapse.py       scalar and contextual synapse projections + LOG update
+  hypergraph.py    multiscale multilayer relation model
+  networks.py      synthetic network fingerprints/archetypes
+  oakbench.py      explicit predictive/complexity/uncertainty gate
+  dataset.py       observations + deterministic synthetic fixture
+  provenance.py    SHA-256 dataset manifest and provenance contract
+  split.py         group-safe held-out folds
+  regression.py    transparent reference regression
+  benchmark.py     P1 baseline tournament + ablations
+  robustness.py    permutation controls + split-stability probes
+  realdata.py      verified external JSONL/manifest adapter
+  cli.py           deterministic architecture demonstration
+  benchmark_cli.py deterministic evidence-harness report
 
 tests/test_omega_neuro_t.py
+tests/test_omega_neuro_r03.py
+tests/test_omega_neuro_robustness.py
+tests/test_omega_neuro_realdata.py
 examples/omega_neuro_t_demo.py
+examples/omega_neuro_p1_benchmark.py
 docs/omega-neuro/HYPOTHESES.md
 docs/omega-neuro/ROADMAP.md
 ```
@@ -162,10 +175,12 @@ docs/omega-neuro/ROADMAP.md
 ## Quick start
 
 ```bash
-python -m pytest tests/test_omega_neuro_t.py
-python -m omega_neuro_t.cli --pretty
-omega-neuro --pretty
+python -m pytest tests/test_omega_neuro*.py -q
+python -m omega_neuro_t --pretty
+python -m omega_neuro_t.benchmark_cli --pretty
 ```
+
+The branch intentionally does **not** modify the repository-wide `[project.scripts]` registry. That shared packaging concern is kept outside this subsystem PR so a neuro-only change does not fan out into unrelated subsystem CI. A dedicated packaging integration can register short command aliases later after the scientific core is merged.
 
 ## Promotion gates
 
