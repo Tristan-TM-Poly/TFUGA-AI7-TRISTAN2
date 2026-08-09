@@ -116,8 +116,8 @@ def run_arena_t0(
 
     Without ``layout`` Arena-T0 preserves its seeded random-resource behavior.
     With a layout, spawns/resources/obstacles are fixed, validated and included
-    in replay identity. This remains a benchmark substrate, not a physical or
-    biological model.
+    in replay identity. Runtime validation enforces structural reachability;
+    fairness thresholds belong to higher-level compiler/benchmark policy.
     """
 
     config = config or ArenaConfig()
@@ -130,9 +130,9 @@ def run_arena_t0(
     rng = random.Random(int(seed))
     if layout is not None:
         layout.validate_structure()
-        audit = layout.audit()
+        audit = layout.audit(fairness_threshold=1.0)
         if not audit.accepted:
-            raise ValueError(f"layout failed audit: {','.join(audit.flags)}")
+            raise ValueError(f"layout failed runtime audit: {','.join(audit.flags)}")
         if (layout.width, layout.height) != (config.width, config.height):
             raise ValueError("layout dimensions must match ArenaConfig")
         if len(layout.resources) != config.resource_count:
@@ -230,9 +230,9 @@ def _choose_action(
         return ("stay", None)
     if resources and rng.random() < genome.seek_resource:
         target = min(resources, key=lambda p: (abs(actor.x - p[0]) + abs(actor.y - p[1]), p[0], p[1]))
-        return ("move", _step_toward(position, target, rng, config, layout))
+        return ("move", _step_toward(position, target, rng, layout))
     if other.alive and rng.random() < genome.aggression:
-        return ("move", _step_toward(position, (other.x, other.y), rng, config, layout))
+        return ("move", _step_toward(position, (other.x, other.y), rng, layout))
     if rng.random() < genome.exploration:
         if layout is not None:
             choices = walkable_neighbors(layout, position)
@@ -250,7 +250,6 @@ def _step_toward(
     position: tuple[int, int],
     target: tuple[int, int],
     rng: random.Random,
-    config: ArenaConfig,
     layout: ArenaLayout | None,
 ) -> tuple[int, int]:
     if layout is not None:
