@@ -21,12 +21,21 @@ from .core import (
     law_defect,
     oak_audit_claims,
 )
+from .dimension_spectrum import DimensionFunctional, DimensionSpectrum, dimension_spectrum
 from .factor_bricks import (
     BrickLanguage,
     FactorizationWitness,
     compose_witnesses,
     minimum_recorded_length,
     subadditivity_certificate,
+)
+from .hgfm_formal import (
+    HGFM,
+    HypergraphLevel,
+    ScaleMap,
+    compose_scale_maps,
+    growth_dimension,
+    scale_coherence_defect,
 )
 from .invariants import (
     Invariant,
@@ -40,7 +49,33 @@ from .negative_math import (
     NegativeMathRegistry,
     minimal_sufficient_subsets,
 )
+from .proof_geometry import (
+    Inference,
+    ProofHypergraph,
+    expected_proof_cost,
+    proof_free_energy,
+    proof_partition_function,
+)
+from .representation_geometry import (
+    RepresentationGraph,
+    RepresentationScore,
+    dominates,
+    pareto_front,
+)
+from .residuals import (
+    ResidualStep,
+    geometric_residual_bound,
+    residual_tower,
+    uniformly_contracting,
+)
 from .structural_dna import StructuralDNA
+from .tensor_spectrum import (
+    TensorChannel,
+    TensorSpectrum,
+    channel_dimension_conservation,
+    custom_tensor_spectrum,
+    second_tensor_power_spectrum,
+)
 from .theorem_protocol import (
     MUTATION_AXES,
     QUESTION_KINDS,
@@ -49,13 +84,32 @@ from .theorem_protocol import (
     generate_research_protocol,
     protocol_as_dict,
 )
+from .theory_evolution import (
+    FiniteTheory,
+    symmetric_difference_distance,
+    theory_intersection,
+)
+from .zero_tomography import (
+    Grid,
+    discrete_laplacian,
+    log_modulus_grid,
+    source_density,
+    strongest_interior_sources,
+)
 
 __all__ = [
     "BracketSpectrum",
     "BrickLanguage",
     "Claim",
     "ClaimStatus",
+    "DimensionFunctional",
+    "DimensionSpectrum",
     "FactorizationWitness",
+    "FiniteTheory",
+    "Grid",
+    "HGFM",
+    "HypergraphLevel",
+    "Inference",
     "Invariant",
     "InvariantComparison",
     "Leaf",
@@ -65,27 +119,55 @@ __all__ = [
     "Node",
     "OAKFinding",
     "OAKReport",
+    "ProofHypergraph",
     "QUESTION_KINDS",
+    "RepresentationGraph",
+    "RepresentationScore",
     "ResearchQuestion",
+    "ResidualStep",
+    "ScaleMap",
     "StructuralDNA",
     "THEOREM_CANDIDATES",
+    "TensorChannel",
+    "TensorSpectrum",
     "TheorySpec",
     "all_parenthesizations",
     "associativity_defect",
     "bracket_spectrum",
+    "channel_dimension_conservation",
     "compare_invariants",
+    "compose_scale_maps",
     "compose_witnesses",
+    "custom_tensor_spectrum",
     "cvcd_matrix",
+    "dimension_spectrum",
+    "discrete_laplacian",
+    "dominates",
     "evaluate_tree",
+    "expected_proof_cost",
     "fertile_compression_score",
     "generate_research_protocol",
+    "geometric_residual_bound",
+    "growth_dimension",
     "invariant_defect",
     "invariant_preorder",
     "law_defect",
+    "log_modulus_grid",
     "minimal_sufficient_subsets",
     "minimum_recorded_length",
     "oak_audit_claims",
+    "pareto_front",
+    "proof_free_energy",
+    "proof_partition_function",
     "protocol_as_dict",
+    "residual_tower",
+    "scale_coherence_defect",
+    "second_tensor_power_spectrum",
+    "source_density",
+    "strongest_interior_sources",
     "subadditivity_certificate",
+    "symmetric_difference_distance",
+    "theory_intersection",
+    "uniformly_contracting",
     "zero_triple_defect_on",
 ]
