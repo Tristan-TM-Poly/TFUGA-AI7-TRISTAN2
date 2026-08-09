@@ -68,6 +68,8 @@ def discrete_laplacian(grid: Grid) -> Grid:
 
 
 def source_density(grid: Grid) -> Grid:
+    """Return the discrete diagnostic rho=Delta(log|f|)/(2*pi)."""
+
     lap = discrete_laplacian(grid)
     return Grid(
         lap.xs,
@@ -77,7 +79,12 @@ def source_density(grid: Grid) -> Grid:
 
 
 def strongest_interior_sources(grid: Grid, count: int = 1) -> tuple[tuple[complex, float], ...]:
-    """Return largest finite positive interior samples."""
+    """Return the largest finite *positive* interior source-density samples.
+
+    Negative samples are not silently relabeled as zero sources; in meromorphic
+    settings they can instead carry pole-like information and should be handled
+    by a separate signed-source analysis.
+    """
 
     from math import isfinite
 
@@ -87,7 +94,7 @@ def strongest_interior_sources(grid: Grid, count: int = 1) -> tuple[tuple[comple
     for j, y in enumerate(grid.ys):
         for i, x in enumerate(grid.xs):
             value = grid.values[j][i]
-            if isfinite(value):
+            if isfinite(value) and value > 0:
                 candidates.append((value, complex(x, y)))
     candidates.sort(key=lambda pair: pair[0], reverse=True)
     return tuple((point, value) for value, point in candidates[:count])
