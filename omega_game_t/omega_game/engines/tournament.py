@@ -7,6 +7,7 @@ import statistics
 from dataclasses import asdict, dataclass
 from typing import Any, Iterable
 
+from .layout import ArenaLayout
 from .simulation import AgentGenome, ArenaConfig, MatchResult, run_arena_t0
 
 
@@ -67,6 +68,7 @@ def run_round_robin(
     seeds: Iterable[int] = (0, 1, 2),
     config: ArenaConfig | None = None,
     mirrored: bool = True,
+    layout: ArenaLayout | None = None,
 ) -> TournamentReport:
     agents = tuple(genome.normalized() for genome in population)
     seed_tuple = tuple(int(seed) for seed in seeds)
@@ -96,7 +98,7 @@ def run_round_robin(
         orientations = ((first, second), (second, first)) if mirrored else ((first, second),)
         for seed in seed_tuple:
             for left, right in orientations:
-                result = run_arena_t0(left, right, seed=seed, config=config)
+                result = run_arena_t0(left, right, seed=seed, config=config, layout=layout)
                 matches.append(result)
                 _accumulate(stats, result)
 
