@@ -1,0 +1,110 @@
+name: omega-latex-t-oak
+
+on:
+  pull_request:
+    paths:
+      - "omega_latex_t/**"
+      - "tests/test_omega_latex_t.py"
+      - "tests/test_omega_latex_t_r08.py"
+      - "tests/test_omega_latex_t_r10.py"
+      - "schemas/omega_latex_*.schema.json"
+      - "examples/omega_latex_t_*"
+      - "docs/theories/OMEGA_LATEX_T_INFINITY.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-latex-t-oak.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-latex-t-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oak:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile Python
+        run: python -m compileall -q omega_latex_t tests/test_omega_latex_t.py tests/test_omega_latex_t_r08.py tests/test_omega_latex_t_r10.py
+      - name: Run R0.1-R1.0 focused tests
+        run: python -m unittest -v tests.test_omega_latex_t tests.test_omega_latex_t_r08 tests.test_omega_latex_t_r10
+      - name: Parse schemas
+        run: python -c 'import json,glob; [json.load(open(p)) for p in glob.glob("schemas/omega_latex_*.schema.json")]'
+      - name: Deterministic R1.0 bundle
+        run: |
+          python -m omega_latex_t build examples/omega_latex_t_r08_demo.json --output-dir /tmp/r10-a
+          python -m omega_latex_t build examples/omega_latex_t_r08_demo.json --output-dir /tmp/r10-b
+          cmp /tmp/r10-a/document.tex /tmp/r10-b/document.tex
+          cmp /tmp/r10-a/manifest.json /tmp/r10-b/manifest.json
+          test -f /tmp/r10-a/bibliography-report.json
+          test -f /tmp/r10-a/figure-manifest.json
+          test -f /tmp/r10-a/figure-backends.json
+          test -f /tmp/r10-a/uncertainty-ledger.json
+          test -f /tmp/r10-a/covariance-ledger.json
+          test -f /tmp/r10-a/verifier-receipts.json
+          test -f /tmp/r10-a/proof-lineage.json
+          test -f /tmp/r10-a/source-fragments.json
+          test -f /tmp/r10-a/metadata-receipts.json
+      - name: R0.8 retained evidence surfaces
+        run: |
+          python -m omega_latex_t audit examples/omega_latex_t_r08_demo.json
+          python -m omega_latex_t figure-render examples/omega_latex_t_r08_demo.json --node-id fig.demo > /tmp/figure.tex
+          grep -q "tikzpicture" /tmp/figure.tex
+          python -m omega_latex_t uncertainty examples/omega_latex_t_r08_demo.json > /tmp/uncertainty.json
+          python -m omega_latex_t verifier-receipts examples/omega_latex_t_r08_demo.json > /tmp/receipts.json
+          grep -q '"verified_count": 1' /tmp/receipts.json
+          python -m omega_latex_t theorem-bundle examples/omega_latex_t_r08_demo.json --theorem-id thm.demo --output-dir /tmp/theorem-r08
+          grep -q 'verified-external-receipt' /tmp/theorem-r08/bundle-manifest.json
+      - name: R1.0 source fragments and metadata receipts
+        run: |
+          python -m omega_latex_t source-fragment examples/omega_latex_t_source.txt --source-id src.paper --start-line 2 --end-line 3 --output /tmp/fragment-receipt.json
+          python -m omega_latex_t attach-source-fragment examples/omega_latex_t_r08_demo.json examples/omega_latex_t_source.txt --source-id src.paper --start-line 2 --end-line 3 --output /tmp/with-fragment.json
+          python -m omega_latex_t source-fragments /tmp/with-fragment.json > /tmp/fragment-report.json
+          grep -q '"count": 1' /tmp/fragment-report.json
+          python -m omega_latex_t attach-metadata-receipt /tmp/with-fragment.json examples/omega_latex_t_metadata.json --provider crossref --output /tmp/with-metadata.json
+          python -m omega_latex_t metadata-receipts /tmp/with-metadata.json > /tmp/metadata-report.json
+          grep -q '"valid_count": 1' /tmp/metadata-report.json
+          python -m omega_latex_t audit /tmp/with-metadata.json
+      - name: R1.0 covariance and SVG backend
+        run: |
+          python -m omega_latex_t attach-covariance-model examples/omega_latex_t_r08_demo.json examples/omega_latex_t_covariance.json --model-id xy --output /tmp/with-covariance.json
+          python -m omega_latex_t covariance /tmp/with-covariance.json > /tmp/covariance-ledger.json
+          grep -q '"count": 1' /tmp/covariance-ledger.json
+          python -m omega_latex_t covariance-linear examples/omega_latex_t_covariance_linear.json --output /tmp/covariance-linear.json
+          grep -q '"variance": 19.0' /tmp/covariance-linear.json
+          python -m omega_latex_t figure-svg examples/omega_latex_t_r08_demo.json --node-id fig.demo --output /tmp/figure.svg
+          grep -q '<svg' /tmp/figure.svg
+          test -f /tmp/figure.svg.receipt.json
+      - name: R1.0 proof lineage and review queue
+        run: |
+          python -m omega_latex_t proof-lineage examples/omega_latex_t_r08_demo.json --output /tmp/proof-lineage.json
+          grep -q 'verified_by' /tmp/proof-lineage.json
+          python -m omega_latex_t metadocument examples/omega_latex_t_r08_demo.json /tmp/with-metadata.json --output /tmp/meta.json
+          python -m omega_latex_t metadocument-review examples/omega_latex_t_r08_demo.json /tmp/with-metadata.json --output /tmp/review-queue.json
+          test -s /tmp/meta.json
+          test -s /tmp/review-queue.json
+      - name: R1.0 repository universe and cache index
+        run: |
+          python -m omega_latex_t universe-from-repos examples/omega_latex_t_repo_inventory.json --depths 0,2 --shard-size 64 --output /tmp/repo-universe.json --report /tmp/repo-universe-report.json
+          grep -q '"admitted_count": 1' /tmp/repo-universe-report.json
+          python -m omega_latex_t universe-plan /tmp/repo-universe.json --output /tmp/repo-plan.json
+          grep -q '"job_count": 2' /tmp/repo-plan.json
+          python -m omega_latex_t cache-index examples/omega_latex_t_cache_entries.json --output-dir /tmp/cache-index
+          test -f /tmp/cache-index/aa.json
+          test -f /tmp/cache-index/index.json
+      - name: Universe plan, build, resume retained
+        run: |
+          python -m omega_latex_t universe-plan examples/omega_latex_t_universe_manifest.json --output /tmp/universe-plan.json
+          python -m omega_latex_t build-universe examples/omega_latex_t_universe_manifest.json --output-dir /tmp/universe --cache-dir /tmp/universe-cache
+          python -m omega_latex_t build-universe examples/omega_latex_t_universe_manifest.json --output-dir /tmp/universe --cache-dir /tmp/universe-cache
+          test -f /tmp/universe/checkpoint.json
+          test -f /tmp/universe/r08-demo/D5/document.tex

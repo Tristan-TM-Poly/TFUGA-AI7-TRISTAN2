@@ -1,0 +1,15 @@
+{
+  "meta": {"author": "Tristan / Ω-LATEX-T∞", "depth": 5, "language": "en", "title": "Ω-LATEX-T∞ R0.8 Demo"},
+  "nodes": [
+    {"id": "sec.core", "kind": "section", "title": "Evidence-bound core"},
+    {"content": "This fixture exercises claim-level locators.", "id": "claim.demo", "kind": "claim", "metadata": {"support": [{"relation": "supports", "reviewed": true, "source": "src.paper"}]}, "source_locators": {"src.paper": "Sec. 2, Eq. 3"}, "sources": ["src.paper"], "status": "established"},
+    {"dependencies": ["claim.demo"], "id": "eq.mass-energy", "kind": "equation", "math_ir": {"lhs": {"name": "E", "op": "symbol"}, "op": "eq", "rhs": {"args": [{"name": "m", "op": "symbol"}, {"base": {"name": "c", "op": "symbol"}, "exp": {"op": "number", "value": 2}, "op": "pow"}], "op": "mul"}}, "symbols": [{"meaning": "energy", "symbol": "E", "unit": "J"}, {"meaning": "mass", "symbol": "m", "unit": "kg"}, {"meaning": "speed", "symbol": "c", "unit": "m/s"}]},
+    {"dependencies": ["claim.demo"], "figure_ir": {"caption": "Bounded FigureIR graph", "edges": [{"directed": true, "label": "depends", "source": "a", "target": "b"}], "kind": "graph", "nodes": [{"id": "a", "label": "Claim", "x": 0, "y": 0}, {"id": "b", "label": "Equation", "x": 3, "y": 0}]}, "id": "fig.demo", "kind": "figure", "title": "Dependency projection"},
+    {"content": "Structured result with explicit uncertainty.", "dependencies": ["claim.demo"], "id": "result.demo", "kind": "result", "result_key": "metric.length", "status": "measured", "title": "Length result"},
+    {"content": "A narrative theorem used only to exercise proof plumbing.", "dependencies": ["claim.demo"], "id": "thm.demo", "kind": "theorem", "metadata": {"formal_artifact_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "formal_statement": "True", "formal_system": "lean", "formal_verified": true, "numerical_test_contract": {"cases": 3}}, "status": "proven", "title": "Compiler theorem fixture"},
+    {"content": "Narrative proof fixture; not an external formal proof.", "dependencies": ["thm.demo"], "id": "proof.demo", "kind": "proof"}
+  ],
+  "provenance": {"verifier_receipts": [{"artifact_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "provenance": {"kind": "synthetic-ci-fixture"}, "run_id": "fixture-r08", "statement_sha256": "3cbc87c7681f34db4617feaa2c8801931bc5e42d8d0f560e756dd4cd92885f18", "status": "passed", "system": "lean", "theorem_id": "thm.demo", "timestamp": "2026-08-09T00:00:00Z", "verifier_version": "4.x-fixture"}]},
+  "results": {"metric.length": {"coverage": 0.95, "method": "synthetic-standard-uncertainty", "uncertainty": 0.4, "unit": "m", "value": 12.5}},
+  "sources": [{"citation": "Synthetic reference for compiler validation", "id": "src.paper", "locator": "Sec. 2", "metadata": {"kind": "fixture"}, "sha256": ""}]
+}

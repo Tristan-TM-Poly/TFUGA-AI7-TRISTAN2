@@ -1,0 +1,5 @@
+{
+  "entries": [{"id": "r08-demo", "kind": "docir", "path": "omega_latex_t_r08_demo.json"}],
+  "depths": [0, 1, 2, 3, 4, 5],
+  "shard_size": 3
+}

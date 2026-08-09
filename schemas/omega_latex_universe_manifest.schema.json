@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "depths": {"items": {"minimum": 0, "type": "integer"}, "minItems": 1, "type": "array", "uniqueItems": true},
+    "entries": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "author": {"type": "string"}, "id": {"minLength": 1, "type": "string"},
+          "kind": {"enum": ["docir", "markdown", "summary", "github_snapshot"]},
+          "language": {"type": "string"}, "path": {"minLength": 1, "type": "string"}, "title": {"type": "string"}
+        },
+        "required": ["id", "kind", "path"], "type": "object"
+      },
+      "type": "array"
+    },
+    "shard_size": {"minimum": 1, "type": "integer"}
+  },
+  "required": ["entries"],
+  "title": "Omega LaTeX universe manifest",
+  "type": "object"
+}

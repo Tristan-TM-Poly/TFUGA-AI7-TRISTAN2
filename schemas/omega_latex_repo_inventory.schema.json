@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega LaTeX repository inventory",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {},
+          "full_name": {"type": "string"},
+          "document_source": {
+            "type": "object",
+            "properties": {
+              "kind": {"enum": ["docir", "markdown", "summary", "github_snapshot"]},
+              "path": {"type": "string", "minLength": 1},
+              "title": {"type": "string"},
+              "author": {"type": "string"},
+              "language": {"type": "string"}
+            },
+            "required": ["path"]
+          }
+        }
+      }
+    }
+  },
+  "required": ["repositories"]
+}

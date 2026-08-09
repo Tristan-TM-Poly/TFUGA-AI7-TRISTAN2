@@ -1,0 +1,18 @@
+{
+  "$id": "https://example.invalid/schemas/omega_latex_document_ir.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega LaTeX Document IR",
+  "type": "object", "additionalProperties": false,
+  "required": ["meta", "nodes"],
+  "properties": {
+    "meta": {"type": "object", "additionalProperties": false, "required": ["title"], "properties": {"title": {"type": "string", "minLength": 1}, "author": {"type": "string"}, "date": {"type": "string"}, "depth": {"type": "integer", "minimum": 0}, "language": {"type": "string"}, "template": {"type": "string"}}},
+    "nodes": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "kind"], "properties": {
+      "id": {"type": "string", "minLength": 1}, "kind": {"enum": ["section","paragraph","definition","axiom","conjecture","lemma","proposition","theorem","corollary","proof","proof_sketch","equation","algorithm","experiment","dataset","result","figure","table","claim","warning","open_question","counterexample","appendix"]}, "content": {"type": "string"}, "title": {"type": "string"}, "status": {"type": "string"},
+      "dependencies": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "sources": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "source_locators": {"type": "object", "additionalProperties": {"type": "string"}},
+      "symbols": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["symbol"], "properties": {"symbol": {"type": "string"}, "meaning": {"type": "string"}, "scope": {"type": "string"}, "unit": {"type": "string"}}}},
+      "result_key": {"type": "string"}, "dimension_lhs": {"type": "string"}, "dimension_rhs": {"type": "string"}, "math_ir": {"type": "object"}, "figure_ir": {"type": "object"}, "min_depth": {"type": ["integer","null"], "minimum": 0}, "max_depth": {"type": ["integer","null"], "minimum": 0}, "metadata": {"type": "object"}
+    }}},
+    "sources": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id"], "properties": {"id": {"type": "string", "minLength": 1}, "citation": {"type": "string"}, "locator": {"type": "string"}, "sha256": {"type": "string"}, "metadata": {"type": "object"}}}},
+    "results": {"type": "object"}, "provenance": {"type": "object"}
+  }
+}
