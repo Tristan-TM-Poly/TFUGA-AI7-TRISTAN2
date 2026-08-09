@@ -1,0 +1,71 @@
+{
+  "observed_at": "2026-08-09T20:51:00Z",
+  "runs": [
+    {
+      "id": 31334586743,
+      "run_attempt": 1,
+      "workflow_id": 330648349,
+      "name": "Ω Actions ΔCI Audit R0.3",
+      "head_sha": "1feb82827307d4f83d6cbc9ae1164cf229cec000",
+      "event": "pull_request",
+      "status": "queued",
+      "conclusion": null,
+      "created_at": "2026-08-09T20:34:10Z",
+      "run_started_at": "2026-08-09T20:34:10Z",
+      "updated_at": "2026-08-09T20:34:10Z"
+    },
+    {
+      "id": 31334586762,
+      "run_attempt": 1,
+      "workflow_id": 330671950,
+      "name": "Ω WorkMax Git R0.1",
+      "head_sha": "1feb82827307d4f83d6cbc9ae1164cf229cec000",
+      "event": "pull_request",
+      "status": "queued",
+      "conclusion": null,
+      "created_at": "2026-08-09T20:34:10Z",
+      "run_started_at": "2026-08-09T20:34:10Z",
+      "updated_at": "2026-08-09T20:34:10Z"
+    },
+    {
+      "id": 31334586782,
+      "run_attempt": 1,
+      "workflow_id": 298933310,
+      "name": "GitHub Autonomous Reactor Audit",
+      "head_sha": "1feb82827307d4f83d6cbc9ae1164cf229cec000",
+      "event": "pull_request",
+      "status": "queued",
+      "conclusion": null,
+      "created_at": "2026-08-09T20:34:10Z",
+      "run_started_at": "2026-08-09T20:34:10Z",
+      "updated_at": "2026-08-09T20:34:10Z"
+    }
+  ],
+  "jobs_by_run": {
+    "31334586743": [
+      {
+        "id": 93298242997,
+        "name": "impact-audit",
+        "status": "queued",
+        "conclusion": null
+      }
+    ],
+    "31334586762": [
+      {
+        "id": 93298235933,
+        "name": "workmax-tests",
+        "status": "queued",
+        "conclusion": null
+      }
+    ],
+    "31334586782": [
+      {
+        "id": 93298236154,
+        "name": "Non-destructive reactor audit",
+        "status": "queued",
+        "conclusion": null
+      }
+    ]
+  },
+  "provenance_note": "Snapshot assembled from GitHub connector responses for PR #370 head 1feb828; queued state only, no causal speedup claim."
+}
