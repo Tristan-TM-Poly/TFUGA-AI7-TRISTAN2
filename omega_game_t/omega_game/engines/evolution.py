@@ -98,9 +98,10 @@ def evolve_generation(
     config: EvolutionConfig | None = None,
     arena_config: ArenaConfig | None = None,
 ) -> GenerationReport:
-    config = config or EvolutionConfig(population_size=len(tuple(population)))
+    raw_population = tuple(population)
+    config = config or EvolutionConfig(population_size=len(raw_population))
     config.validate()
-    agents = tuple(agent.normalized() for agent in population)
+    agents = tuple(agent.normalized() for agent in raw_population)
     if len(agents) < 2:
         raise ValueError("population must contain at least two agents")
 
