@@ -2,7 +2,8 @@
 
 Small, testable units extracted from the larger GAME branch. The
 Ω-GAME-SIM-EVO-T∞ layer extends the merged WorldGraph/OAK core with a
-reproducible simulation, tournament, evolution and fuzzing laboratory.
+reproducible simulation, tournament, evolution, fuzzing and sparse scheduling
+laboratory.
 """
 
 from .core import Entity, Event, RuleKernel, WorldGraph, GameQualityScore
@@ -10,9 +11,13 @@ from .engines import (
     AgentGenome,
     AgentState,
     ArenaConfig,
+    CostGraph,
+    CostNode,
     CurriculumProgress,
     CurriculumQuest,
     CurriculumTrack,
+    DirtyFrontier,
+    Dispatch,
     EvolutionConfig,
     EvolutionRun,
     FuzzFailure,
@@ -35,7 +40,14 @@ from .engines import (
     RepairAction,
     RepairAttempt,
     RepairLoopResult,
+    ScheduledEvent,
+    SchedulerTickReport,
     SimulationAudit,
+    SparseBenchmarkReport,
+    SparseEventScheduler,
+    SystemSpec,
+    TemporalLODPolicy,
+    TemporalSignal,
     TournamentReport,
     ValidationCheck,
     ValidationReport,
@@ -50,6 +62,7 @@ from .engines import (
     match_world_graph,
     run_arena_t0,
     run_round_robin,
+    run_sparse_benchmark,
     seed_population,
 )
 from .oak import OAKGate, OAKReport
@@ -80,6 +93,18 @@ __all__ = [
     "audit_match",
     "fuzz_arena_t0",
     "match_world_graph",
+    "TemporalSignal",
+    "TemporalLODPolicy",
+    "SystemSpec",
+    "ScheduledEvent",
+    "DirtyFrontier",
+    "Dispatch",
+    "SchedulerTickReport",
+    "CostNode",
+    "CostGraph",
+    "SparseEventScheduler",
+    "SparseBenchmarkReport",
+    "run_sparse_benchmark",
     "CurriculumProgress",
     "CurriculumQuest",
     "CurriculumTrack",
