@@ -1,13 +1,23 @@
 """Omega GAME T core split.
 
-Small, testable subset extracted from the larger GAME branch.
+Small, testable units extracted from the larger GAME branch. The
+Ω-GAME-SIM-EVO-T∞ layer extends the merged WorldGraph/OAK core with a
+reproducible simulation, tournament, evolution and fuzzing laboratory.
 """
 
 from .core import Entity, Event, RuleKernel, WorldGraph, GameQualityScore
 from .engines import (
+    AgentGenome,
+    AgentState,
+    ArenaConfig,
     CurriculumProgress,
     CurriculumQuest,
     CurriculumTrack,
+    EvolutionConfig,
+    EvolutionRun,
+    FuzzFailure,
+    FuzzReport,
+    GenerationReport,
     LanguageCurriculum,
     LanguageDataset,
     LanguageDatasetForge,
@@ -19,16 +29,28 @@ from .engines import (
     LanguageRubricScores,
     LanguageRun,
     LanguageValidators,
+    MatchResult,
     PolyglotLanguageEngine,
+    RatingVector,
     RepairAction,
     RepairAttempt,
     RepairLoopResult,
+    SimulationAudit,
+    TournamentReport,
     ValidationCheck,
     ValidationReport,
+    audit_match,
     default_language_curriculum,
     default_language_dataset_forge,
     default_language_repair_loop,
     default_language_validators,
+    evolve,
+    evolve_generation,
+    fuzz_arena_t0,
+    match_world_graph,
+    run_arena_t0,
+    run_round_robin,
+    seed_population,
 )
 from .oak import OAKGate, OAKReport
 
@@ -38,6 +60,26 @@ __all__ = [
     "RuleKernel",
     "WorldGraph",
     "GameQualityScore",
+    "AgentGenome",
+    "AgentState",
+    "ArenaConfig",
+    "MatchResult",
+    "run_arena_t0",
+    "RatingVector",
+    "TournamentReport",
+    "run_round_robin",
+    "EvolutionConfig",
+    "EvolutionRun",
+    "GenerationReport",
+    "evolve",
+    "evolve_generation",
+    "seed_population",
+    "SimulationAudit",
+    "FuzzFailure",
+    "FuzzReport",
+    "audit_match",
+    "fuzz_arena_t0",
+    "match_world_graph",
     "CurriculumProgress",
     "CurriculumQuest",
     "CurriculumTrack",
