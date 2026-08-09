@@ -7,6 +7,17 @@ from .language_gm_rubric import LanguageGMEvaluation, LanguageGMRubric, Language
 from .language_repair_loop import LanguageRepairLoop, RepairAction, RepairAttempt, RepairLoopResult, default_language_repair_loop
 from .language_validators import LanguageValidators, ValidationCheck, ValidationReport, default_language_validators
 from .polyglot_language import LanguageQuest, LanguageRun, PolyglotLanguageEngine
+from .quality_diversity import (
+    ArchiveConfig,
+    BehaviorDescriptor,
+    EliteRecord,
+    MapElitesArchive,
+    QualityDiversityExperiment,
+    QualityDiversityReport,
+    build_map_elites,
+    quality_from_rating,
+    run_quality_diversity,
+)
 from .scheduler import (
     CostGraph,
     CostNode,
@@ -40,6 +51,15 @@ __all__ = [
     "evolve",
     "evolve_generation",
     "seed_population",
+    "ArchiveConfig",
+    "BehaviorDescriptor",
+    "EliteRecord",
+    "MapElitesArchive",
+    "QualityDiversityReport",
+    "QualityDiversityExperiment",
+    "quality_from_rating",
+    "build_map_elites",
+    "run_quality_diversity",
     "SimulationAudit",
     "FuzzFailure",
     "FuzzReport",
