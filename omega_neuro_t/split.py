@@ -1,18 +1,31 @@
 from __future__ import annotations
 
 from hashlib import sha256
-from typing import Iterable, List, Sequence, Tuple
+from typing import Iterable, List, Protocol, Sequence, Tuple, TypeVar
 
-from .dataset import NeuroObservation
+
+class GroupedObservation(Protocol):
+    """Minimal record contract required by leakage-safe splitting."""
+
+    sample_id: str
+    group_id: str
+
+
+TGrouped = TypeVar("TGrouped", bound=GroupedObservation)
 
 
 def group_kfold(
-    records: Sequence[NeuroObservation],
+    records: Sequence[TGrouped],
     *,
     folds: int = 5,
     seed: str = "omega-neuro",
-) -> List[Tuple[List[NeuroObservation], List[NeuroObservation]]]:
-    """Deterministic group-separated folds to prevent group leakage."""
+) -> List[Tuple[List[TGrouped], List[TGrouped]]]:
+    """Deterministic group-separated folds to prevent group leakage.
+
+    The splitter is intentionally agnostic to the biological hypothesis. Any
+    record carrying stable `sample_id` and `group_id` fields can reuse the same
+    leakage barrier.
+    """
 
     if folds < 2:
         raise ValueError("folds must be >= 2")
@@ -25,7 +38,7 @@ def group_kfold(
         key=lambda group: sha256(f"{seed}|{group}".encode("utf-8")).hexdigest(),
     )
     assignment = {group: index % folds for index, group in enumerate(ordered)}
-    result: List[Tuple[List[NeuroObservation], List[NeuroObservation]]] = []
+    result: List[Tuple[List[TGrouped], List[TGrouped]]] = []
     for fold in range(folds):
         test = [record for record in records if assignment[record.group_id] == fold]
         train = [record for record in records if assignment[record.group_id] != fold]
@@ -39,7 +52,7 @@ def group_kfold(
     return result
 
 
-def split_signature(splits: Iterable[Tuple[Sequence[NeuroObservation], Sequence[NeuroObservation]]]) -> str:
+def split_signature(splits: Iterable[Tuple[Sequence[TGrouped], Sequence[TGrouped]]]) -> str:
     """Hash the exact held-out sample IDs for reproducibility ledgers."""
 
     text = "\n".join(
