@@ -103,6 +103,38 @@ def test_priority_order_is_deterministic() -> None:
     assert [dispatch.system_id for dispatch in report.dispatches] == ["high", "low"]
 
 
+def test_dependency_order_precedes_priority() -> None:
+    scheduler = SparseEventScheduler()
+    scheduler.register(SystemSpec("physics", priority=0))
+    scheduler.register(SystemSpec("render", priority=100, dependencies=("physics",)))
+    scheduler.mark_dirty("physics", "body")
+    scheduler.mark_dirty("render", "body")
+    assert scheduler.dependency_order() == ("physics", "render")
+    report = scheduler.dispatch_tick(0)
+    assert [dispatch.system_id for dispatch in report.dispatches] == ["physics", "render"]
+
+
+def test_dependency_graph_fails_closed_on_unknown_or_cycle() -> None:
+    unknown = SparseEventScheduler()
+    unknown.register(SystemSpec("render", dependencies=("physics",)))
+    try:
+        unknown.dependency_order()
+    except KeyError:
+        pass
+    else:
+        raise AssertionError("unknown dependency should fail")
+
+    cycle = SparseEventScheduler()
+    cycle.register(SystemSpec("a", dependencies=("b",)))
+    cycle.register(SystemSpec("b", dependencies=("a",)))
+    try:
+        cycle.dependency_order()
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("dependency cycle should fail")
+
+
 def test_cost_graph_accounts_work_units() -> None:
     scheduler = SparseEventScheduler()
     scheduler.register(SystemSpec("agents", cost_per_entity=2.0, cost_per_event=0.5))
