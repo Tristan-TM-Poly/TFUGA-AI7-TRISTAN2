@@ -1,5 +1,3 @@
-import math
-
 import pytest
 
 from omega_pure_math_t import (
@@ -26,15 +24,16 @@ def test_orbit_partition_rejects_nonbijective_semigroup_generator():
         orbit_partition({0, 1, 2}, [lambda _: 0])
 
 
-def test_zero_source_extractor_never_promotes_negative_density():
-    nan = math.nan
+def test_zero_source_extractor_requires_positive_strictly_interior_density():
     grid = Grid(
-        xs=(0.0, 1.0, 2.0),
-        ys=(0.0, 1.0, 2.0),
+        xs=(0.0, 1.0, 2.0, 3.0, 4.0),
+        ys=(0.0, 1.0, 2.0, 3.0, 4.0),
         values=(
-            (nan, nan, nan),
-            (nan, -10.0, 2.0),
-            (nan, 1.0, nan),
+            (99.0, 99.0, 99.0, 99.0, 99.0),
+            (99.0, -10.0, 2.0, 0.0, 99.0),
+            (99.0, 1.0, -5.0, 0.0, 99.0),
+            (99.0, 0.0, 0.0, 0.0, 99.0),
+            (99.0, 99.0, 99.0, 99.0, 99.0),
         ),
     )
     sources = strongest_interior_sources(grid, count=3)
