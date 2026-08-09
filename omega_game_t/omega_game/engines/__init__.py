@@ -1,13 +1,37 @@
 """Omega GAME T engine split units."""
 
+from .evolution import EvolutionConfig, EvolutionRun, GenerationReport, evolve, evolve_generation, seed_population
 from .language_curriculum import CurriculumProgress, CurriculumQuest, CurriculumTrack, LanguageCurriculum, default_language_curriculum
 from .language_dataset_forge import LanguageDataset, LanguageDatasetForge, LanguageDatasetItem, default_language_dataset_forge
 from .language_gm_rubric import LanguageGMEvaluation, LanguageGMRubric, LanguageRubricScores
 from .language_repair_loop import LanguageRepairLoop, RepairAction, RepairAttempt, RepairLoopResult, default_language_repair_loop
 from .language_validators import LanguageValidators, ValidationCheck, ValidationReport, default_language_validators
 from .polyglot_language import LanguageQuest, LanguageRun, PolyglotLanguageEngine
+from .simulation import AgentGenome, AgentState, ArenaConfig, MatchResult, run_arena_t0
+from .tournament import RatingVector, TournamentReport, run_round_robin
+from .verification import FuzzFailure, FuzzReport, SimulationAudit, audit_match, fuzz_arena_t0, match_world_graph
 
 __all__ = [
+    "AgentGenome",
+    "AgentState",
+    "ArenaConfig",
+    "MatchResult",
+    "run_arena_t0",
+    "RatingVector",
+    "TournamentReport",
+    "run_round_robin",
+    "EvolutionConfig",
+    "EvolutionRun",
+    "GenerationReport",
+    "evolve",
+    "evolve_generation",
+    "seed_population",
+    "SimulationAudit",
+    "FuzzFailure",
+    "FuzzReport",
+    "audit_match",
+    "fuzz_arena_t0",
+    "match_world_graph",
     "CurriculumProgress",
     "CurriculumQuest",
     "CurriculumTrack",

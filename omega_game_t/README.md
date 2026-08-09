@@ -125,9 +125,40 @@ It stores quest, run, evaluation, validation, repair result, tags, score summary
 - `LanguageDataset`
 - `LanguageDatasetForge`
 
+## Split unit: Ω-GAME-SIM-EVO-T∞ R0.1
+
+This split reconnects the original GAME/world idea to an executable headless laboratory without reviving the oversized PR #82.
+
+Implemented:
+
+- deterministic `Arena-T0` simulation;
+- explicit `AgentGenome` and `ArenaConfig`;
+- replay SHA-256 receipts;
+- mirrored multi-seed round-robin tournaments;
+- multidimensional ratings: performance, robustness, efficiency, novelty, stability;
+- deterministic evolutionary selection/mutation;
+- projection of replays into the already-merged `WorldGraph`;
+- OAK + deterministic replay audits;
+- bounded fuzzing for invariant discovery;
+- one CLI for arena, tournament, evolution and fuzzing.
+
+### Headless CLI
+
+```bash
+cd omega_game_t
+PYTHONPATH=. python -m omega_game arena --seed 42 --steps 96
+PYTHONPATH=. python -m omega_game tournament --seed 42 --population 8 --steps 64
+PYTHONPATH=. python -m omega_game evolve --seed 42 --population 8 --generations 3 --steps 48
+PYTHONPATH=. python -m omega_game fuzz --seed 42 --cases 100
+```
+
+Theory and evidence boundaries: `docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md`.
+
 ## Boundary
 
 Omega GAME T is a game, simulation, and research lab. It is not a tool for manipulation, unfair automation, unsafe real-world instructions, or external certification.
+
+Deterministic simulation is a reproducibility property, not evidence that a simulated law is physically true. Tournament performance is benchmark evidence, not a claim of general intelligence.
 
 ## Local test
 
@@ -138,9 +169,11 @@ python -m pytest
 
 ## Next split units
 
-1. memory plus GM agent;
-2. TextWorld engine;
-3. Quest-CVCD;
-4. tests and docs;
-5. GameQualityScore benchmark;
-6. dataset-driven LanguageGM benchmarks.
+1. sparse/event-driven scheduler + Temporal LOD;
+2. quality-diversity archive / MAP-Elites;
+3. Hall of Fame and M- counterexample memory;
+4. agent ↔ map coevolution;
+5. adversarial level generation and hidden challenge seeds;
+6. GameSpec compiler;
+7. TextWorld / Quest-CVCD adapters;
+8. profiler-driven CPU/GPU scheduling experiments.
