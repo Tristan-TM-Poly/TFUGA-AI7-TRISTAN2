@@ -92,7 +92,14 @@ def match_world_graph(match: MatchResult) -> WorldGraph:
     return world
 
 
-def audit_match(match: MatchResult, *, check_determinism: bool = True) -> SimulationAudit:
+def audit_match(
+    match: MatchResult,
+    *,
+    check_determinism: bool = True,
+    layout_fairness_threshold: float = 0.50,
+) -> SimulationAudit:
+    if not 0.0 <= layout_fairness_threshold <= 1.0:
+        raise ValueError("layout_fairness_threshold must be in [0, 1]")
     flags: list[str] = []
     warnings: list[str] = []
     config = match.config
@@ -103,7 +110,7 @@ def audit_match(match: MatchResult, *, check_determinism: bool = True) -> Simula
 
     if match.layout is not None:
         try:
-            layout_audit = match.layout.audit()
+            layout_audit = match.layout.audit(fairness_threshold=layout_fairness_threshold)
             if not layout_audit.accepted:
                 flags.extend(f"layout:{flag}" for flag in layout_audit.flags)
             if (match.layout.width, match.layout.height) != (config.width, config.height):
