@@ -1,0 +1,50 @@
+{
+  "automatic_biological_promotion": false,
+  "base_head_sha": "39c74ede318d4c33f9a786965c2e4fe28bbc0767",
+  "branch": "feat/omega-neuro-r06-public-data",
+  "created_date": "2026-08-09",
+  "protocols": {
+    "P1_DENDRITIC_ADDRESS": {
+      "protocol_hash": "0c091abb8a2a7fb6ad02510a406c82e53601ffb3ef58dc0a88f9544c014cac98",
+      "protocol_id": "omega-neuro-r06-p1-v1",
+      "source_priority": [
+        "allen_cell_types",
+        "dandi_nwb"
+      ]
+    },
+    "P2_SYNAPTIC_STATE_TENSOR": {
+      "protocol_hash": "c0f90646af108bbb5752eb7de95d3ecbcf2f45ac66cde9dfac40882d20564ac3",
+      "protocol_id": "omega-neuro-r06-p2-v1",
+      "source_priority": [
+        "dandi_nwb",
+        "allen_cell_types"
+      ]
+    },
+    "P3_HIGHER_ORDER_WIRING": {
+      "protocol_hash": "c09b4c34dc4af2af41d4cb3136a72de6ca67ec7a1d6feaaedb125b8480f7fa77",
+      "protocol_id": "omega-neuro-r06-p3-v1",
+      "source_priority": [
+        "microns_mm3"
+      ]
+    }
+  },
+  "source_registry": {
+    "allen_cell_types": {
+      "documentation_uri": "https://brain-map.org/support/documentation/cell-types-database-api",
+      "provenance_review_required": true,
+      "license_review_required": true
+    },
+    "dandi_nwb": {
+      "documentation_uri": "https://docs.dandiarchive.org/introduction/",
+      "provenance_review_required": true,
+      "license_review_required": true
+    },
+    "microns_mm3": {
+      "documentation_uri": "https://www.microns-explorer.org/cortical-mm3",
+      "provenance_review_required": true,
+      "license_review_required": true
+    }
+  },
+  "stage": "R0.6_PUBLIC_DATA_PREREGISTRATION",
+  "status": "PROTOCOL_FROZEN_NO_EXTERNAL_BIOLOGICAL_RESULT"
+}
