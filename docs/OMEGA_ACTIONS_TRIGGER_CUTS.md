@@ -55,3 +55,7 @@ For a future PR that changes `pyproject.toml` but no Code Dojo domain file:
 - after: the five heavy Code Dojo workflows are not selected by `pyproject.toml`; one project-surface job validates the Code Dojo entrypoint mappings.
 
 This is a predicted topology change until confirmed on an independent post-migration head. Ω-ACTIONS must record the actual run set before calling the reduction measured.
+
+## Post-migration measurement head
+
+The follow-up commit that adds this section is intentionally **documentation-only**. It exists as an independent trigger-selection experiment: it changes `docs/OMEGA_ACTIONS_TRIGGER_CUTS.md` and nothing in Code Dojo or `pyproject.toml`. The associated PR run set is the empirical post-migration check for whether Code Dojo has been removed from unrelated Ω-ACTIONS fan-out.
