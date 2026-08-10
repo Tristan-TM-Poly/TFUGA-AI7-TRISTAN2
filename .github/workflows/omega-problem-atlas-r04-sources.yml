@@ -9,7 +9,6 @@ on:
       - "tests/test_omega_problem_atlas_r04_sources.py"
       - "schemas/omega_problem_source_adapter_report_v4.schema.json"
       - "docs/omega_millennium_t/r04/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r04-sources.yml"
   pull_request:
     paths:
@@ -18,7 +17,6 @@ on:
       - "tests/test_omega_problem_atlas_r04_sources.py"
       - "schemas/omega_problem_source_adapter_report_v4.schema.json"
       - "docs/omega_millennium_t/r04/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r04-sources.yml"
   workflow_dispatch:
 

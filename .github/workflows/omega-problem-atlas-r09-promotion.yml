@@ -8,7 +8,6 @@ on:
       - "tests/test_omega_problem_atlas_r09*.py"
       - "schemas/omega_problem_promotion_*_v9.schema.json"
       - "docs/omega_millennium_t/r09/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r09-promotion.yml"
   pull_request:
     paths:
@@ -16,7 +15,6 @@ on:
       - "tests/test_omega_problem_atlas_r09*.py"
       - "schemas/omega_problem_promotion_*_v9.schema.json"
       - "docs/omega_millennium_t/r09/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r09-promotion.yml"
   workflow_dispatch:
 
