@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-neuro-dataset-manifest.schema.json",
+  "title": "Omega Neuro Dataset Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dataset_id", "version", "source_uri", "license_id", "access_mode", "sha256"],
+  "properties": {
+    "dataset_id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "minLength": 1},
+    "source_uri": {"type": "string", "minLength": 1},
+    "license_id": {"type": "string", "minLength": 1},
+    "access_mode": {"enum": ["public", "consented", "synthetic"]},
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "citation": {"type": "string"}
+  }
+}

@@ -1,0 +1,72 @@
+name: Omega Neuro CI
+
+on:
+  pull_request:
+    paths:
+      - "omega_neuro_t/**"
+      - "tests/test_omega_neuro*.py"
+      - "schemas/omega_neuro*.json"
+      - "docs/omega-neuro/**"
+      - "examples/omega_neuro*.py"
+      - ".github/workflows/omega-neuro-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "omega_neuro_t/**"
+      - "tests/test_omega_neuro*.py"
+      - "schemas/omega_neuro*.json"
+      - "docs/omega-neuro/**"
+      - "examples/omega_neuro*.py"
+      - ".github/workflows/omega-neuro-ci.yml"
+
+concurrency:
+  group: omega-neuro-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test-omega-neuro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependency
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Compile neuro package
+        run: python -m compileall -q omega_neuro_t tests/test_omega_neuro*.py examples/omega_neuro*.py
+
+      - name: Run focused unit tests
+        run: python -m pytest tests/test_omega_neuro*.py -q
+
+      - name: Run primary module smoke test
+        run: python -m omega_neuro_t --pretty
+
+      - name: Run P1 benchmark smoke test
+        run: python -m omega_neuro_t.benchmark_cli --groups 12 --trials-per-group 4 --folds 3 --pretty
+
+      - name: Run P2/P3 campaign smoke test
+        run: |
+          python -m omega_neuro_t.campaign_cli --hypothesis all > /tmp/neuro-campaign.json
+          python - <<'PY'
+          import json
+          report = json.load(open('/tmp/neuro-campaign.json'))
+          assert report['software_validation_passed'] is True
+          assert report['biological_promotion_allowed'] is False
+          assert report['reports']['P2']['oak']['candidate_justified'] is True
+          assert report['reports']['P3']['oak']['candidate_justified'] is True
+          PY
+
+      - name: Import public API
+        run: >-
+          python -c "import omega_neuro_t; import omega_neuro_t.benchmark; import omega_neuro_t.dataset; import omega_neuro_t.provenance; import omega_neuro_t.robustness; import omega_neuro_t.hypothesis_campaign"

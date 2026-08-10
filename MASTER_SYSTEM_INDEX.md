@@ -40,6 +40,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | 12 | Ω-RECYCLE-T∞ | `omega_recycle_t/` | D-MVP candidate / R0.2 | Structure-preserving circular-recovery kernel with ResourceGraph, MaterialPassport, local and coupled route optimization, uncertainty sweeps, industrial symbiosis, UrbanMine, OAK/M⁻ and CPython 3.11–3.13 CI. | Add scalable constrained solver, provenance-tracked datasets, mass/value baselines, Bayesian uncertainty and LCA-compatible inventories before industrial/environmental superiority claims. |
 | 13 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add conservation-tested simulation. |
 | 14 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
+| 15 | Ω-NEURO-CELL-SYN-NET-T∞ | `omega_neuro_t/`, `docs/omega-neuro/` | X/D-MVP | Turns neuron→dendrite→synapse→hypernetwork ideas into typed executable models with falsifiable P1–P7 hypotheses, synthetic evidence harnesses, provenance gates and complexity-aware OAKBench. | Connect provenance-reviewed empirical datasets and rerun P1–P3 baseline, ablation and negative-control campaigns while keeping biological promotion explicitly gated. |
 
 ## Merge and promotion rules
 
