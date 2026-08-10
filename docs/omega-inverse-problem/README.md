@@ -29,7 +29,16 @@ forward model
 
 ### 1. Spectral identifiability gate
 
-For a linear map `y = A x`, the kernel estimates singular values from the eigensystem of `A^T A` using a stdlib-only Jacobi symmetric eigensolver. It reports:
+For a linear map `y = A x`, the reference kernel estimates singular values from a **small Gram matrix**:
+
+\[
+G=\begin{cases}
+A^TA,&m\ge n,\\
+AA^T,&m<n.
+\end{cases}
+\]
+
+A stdlib-only Jacobi symmetric eigensolver then reports:
 
 - row/column dimensions;
 - numerical rank;
@@ -38,17 +47,25 @@ For a linear map `y = A x`, the kernel estimates singular values from the eigens
 - nonzero-subspace condition number;
 - full-row-rank/full-column-rank flags.
 
-This makes the inverse geometry explicit before solving.
+Using the smaller Gram avoids introducing structural zero modes merely because a matrix is wide or tall.
+
+Because forming a Gram matrix squares the condition number, R0.1 also enforces a numerical resolution floor proportional to `sqrt(machine epsilon)`. Modes below that floor are treated as numerical null modes instead of being inverted.
 
 ### 2. Moore–Penrose inverse
 
-R0.1 constructs
+For `m >= n`, R0.1 uses
 
 \[
-A^+ = (A^T A)^+A^T
+A^+=(A^TA)^+A^T.
 \]
 
-through the spectral pseudoinverse of `A^T A`.
+For `m < n`, it uses
+
+\[
+A^+=A^T(AA^T)^+.
+\]
+
+The spectral pseudoinverse of the symmetric Gram matrix is constructed from its eigenvectors and retained eigenvalues.
 
 The router distinguishes:
 
@@ -110,19 +127,21 @@ The posterior is conditional on the declared prior and noise model.
 
 ### 6. Forward↔inverse cycle checks
 
-For linear systems, the kernel records
+For linear systems, the kernel records both forward and inverse cycle residuals. In a null-space direction, a perfect forward reconstruction can coexist with imperfect recovery of the original state; this is expected ambiguity, not automatically a solver bug.
 
-\[
-R_F = \|A(A^+Ax)-Ax\|,
-\]
+## Independent NumPy baseline
 
-and, where identifiable,
+The runtime remains standard-library-only, but CI installs NumPy **only as an external baseline**.
 
-\[
-R_I = \|A^+Ax-x\|.
-\]
+`tests/test_omega_inverse_problem_numpy_baseline.py` compares the reference Moore–Penrose implementation against `numpy.linalg.pinv` on:
 
-A nonzero inverse residual in a null-space direction is expected and informative rather than automatically a solver failure.
+- square matrices;
+- overdetermined matrices;
+- underdetermined matrices;
+- multiple deterministic random families;
+- explicit rank-deficient matrices.
+
+This baseline exposed and forced the correction from a universal `A^T A` path to the current small-Gram geometry. The failed design is retained conceptually as M⁻ evidence: a mathematically valid identity can still be a poor finite-precision implementation.
 
 ## Reference presets
 
@@ -134,18 +153,9 @@ python -m omega_inverse_problem_t.cli --preset bayes-scalar
 python -m omega_inverse_problem_t.cli --preset nonlinear-calibration
 ```
 
-Reports can be persisted as JSON and Markdown:
-
-```bash
-python -m omega_inverse_problem_t.cli \
-  --preset sensor-overdetermined \
-  --output reports/omega-inverse-problem/sensor.json \
-  --markdown-output reports/omega-inverse-problem/sensor.md
-```
+Reports can be persisted as JSON and Markdown.
 
 ## Domain interpretations
-
-The same kernel can represent many tasks without claiming they are physically equivalent:
 
 | Forward model | Inverse interpretation |
 |---|---|
@@ -187,9 +197,10 @@ R0.1 deliberately separates:
 4. **regularization** from evidence;
 5. **posterior probability** from proof;
 6. **local nonlinear convergence** from global uniqueness;
-7. **condition-number diagnostics** from certified uncertainty bounds.
+7. **condition-number diagnostics** from certified uncertainty bounds;
+8. **Gram-based reference numerics** from a production-quality SVD.
 
-The current Jacobi spectral kernel is designed for small research examples and deterministic tests. It is not a replacement for production LAPACK/SVD libraries on large or safety-critical systems.
+The current Jacobi/Gram kernel is designed for small research examples and deterministic tests. It is not a replacement for LAPACK/SVD libraries on large or safety-critical systems.
 
 ## R0.2+ roadmap
 
@@ -205,4 +216,4 @@ The current Jacobi spectral kernel is designed for small research examples and d
 - identifiability maps across parameter space;
 - uncertainty propagation and interval/ball certificates;
 - domain adapters for circuits, sensors, spectra and dynamical systems;
-- OAKBench baselines against recognized numerical libraries before any performance claim.
+- OAKBench performance/scaling baselines against recognized numerical libraries before any speed or robustness claim.
