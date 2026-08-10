@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.3.0",
+  "checkpoint_type": "historical_backfill",
+  "checkpoint_id": "chatmem-backfill-2026-08-10-2303Z",
+  "generated_at": "2026-08-10T23:03:00Z",
+  "previous_live_checkpoint": "memory/chatgpt/live/2026-08-10T224200Z/checkpoint.json",
+  "source_types": [
+    "chatgpt_personal_context_summary",
+    "chatgpt_recent_context_index"
+  ],
+  "counts": {
+    "sessions": 62,
+    "nodes": 329,
+    "hyperedges": 441,
+    "provenance": 124
+  },
+  "coverage_file": "coverage.json",
+  "oak_report": "reports/oak_report.json",
+  "raw_transcript_committed": false,
+  "public_derivation_only": true
+}
