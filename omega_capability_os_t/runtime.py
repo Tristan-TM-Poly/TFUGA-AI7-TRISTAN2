@@ -21,7 +21,16 @@ class HandlerResult:
         raise TypeError("capability handler must return a mapping or HandlerResult")
 
 
+class ActionRequired(LookupError):
+    """Signal that an external, separately authorized action must be executed."""
+
+    def __init__(self, message: str, *, action: Mapping[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.action = dict(action or {})
+
+
 Handler = Callable[[Capability, Mapping[str, Any]], HandlerResult | Mapping[str, Any]]
+Resolver = Callable[[Capability, Mapping[str, Any]], HandlerResult | Mapping[str, Any]]
 
 
 def learn_health(records: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
@@ -56,8 +65,14 @@ def learn_health(records: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, An
 
 
 class CapabilityRuntime:
-    def __init__(self, handlers: Mapping[str, Handler] | None = None) -> None:
+    def __init__(
+        self,
+        handlers: Mapping[str, Handler] | None = None,
+        *,
+        resolver: Resolver | None = None,
+    ) -> None:
         self.handlers: dict[str, Handler] = dict(handlers or {})
+        self.resolver = resolver
 
     def register(self, capability_id: str, handler: Handler) -> None:
         self.handlers[str(capability_id)] = handler
@@ -67,18 +82,40 @@ class CapabilityRuntime:
         cap: Capability,
         state: dict[str, Any],
     ) -> HandlerResult:
-        handler = self.handlers.get(cap.capability_id)
-        if handler is None:
-            raise LookupError(f"no handler registered for {cap.capability_id}")
         inputs = {token: state[token] for token in cap.consumes if token in state}
         missing = [token for token in cap.consumes if token not in state]
         if missing:
             raise KeyError(f"missing runtime inputs for {cap.capability_id}: {missing}")
-        result = HandlerResult.coerce(handler(cap, inputs))
+
+        handler = self.handlers.get(cap.capability_id)
+        if handler is not None:
+            raw = handler(cap, inputs)
+        elif self.resolver is not None:
+            raw = self.resolver(cap, inputs)
+        else:
+            raise LookupError(f"no handler registered for {cap.capability_id}")
+
+        result = HandlerResult.coerce(raw)
         missing_outputs = [token for token in cap.produces if token not in result.outputs]
         if missing_outputs:
             raise ValueError(f"{cap.capability_id} omitted declared outputs: {missing_outputs}")
         return result
+
+    @staticmethod
+    def _action_required_payload(cap: Capability, exc: LookupError, *, triggered_by: str | None = None) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "capability_id": cap.capability_id,
+            "reason": str(exc),
+            "consumes": list(cap.consumes),
+            "produces": list(cap.produces),
+            "authority": cap.authority,
+        }
+        if triggered_by is not None:
+            payload["triggered_by"] = triggered_by
+        external = getattr(exc, "action", None)
+        if external:
+            payload["external_request"] = dict(external)
+        return payload
 
     def execute(
         self,
@@ -122,15 +159,7 @@ class CapabilityRuntime:
                     )
                     continue
                 except LookupError as exc:
-                    actions_required.append(
-                        {
-                            "capability_id": cap.capability_id,
-                            "reason": str(exc),
-                            "consumes": list(cap.consumes),
-                            "produces": list(cap.produces),
-                            "authority": cap.authority,
-                        }
-                    )
+                    actions_required.append(self._action_required_payload(cap, exc))
                     observations.append(
                         {
                             "capability_id": cap.capability_id,
@@ -186,6 +215,24 @@ class CapabilityRuntime:
                             }
                         )
                         continue
+                    except LookupError as fallback_exc:
+                        actions_required.append(
+                            self._action_required_payload(
+                                alt,
+                                fallback_exc,
+                                triggered_by=cap.capability_id,
+                            )
+                        )
+                        observations.append(
+                            {
+                                "capability_id": cap.capability_id,
+                                "outcome": "ACTION_REQUIRED",
+                                "error": str(exc),
+                                "fallback": alt.capability_id,
+                                "fallback_error": str(fallback_exc),
+                            }
+                        )
+                        break
                     except Exception as fallback_exc:
                         records.append(
                             outcome_record(
@@ -228,7 +275,7 @@ class CapabilityRuntime:
             "oak": {
                 "status": oak_status,
                 "boundary": (
-                    "PASS certifies deterministic plan coverage, registered-handler completion, "
+                    "PASS certifies deterministic plan coverage, registered/resolved handler completion, "
                     "declared outputs, and exact SHA freshness only."
                 ),
             },

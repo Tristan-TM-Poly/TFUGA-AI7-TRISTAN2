@@ -1,219 +1,256 @@
-# Ω-CAPABILITY-OS-T∞ — Capability Fabric R0.2
+# Ω-CAPABILITY-OS-T∞ — Capability Fabric R0.3
 
-Status: **prototype executable / WorkUnit bridge / bounded runtime / non-autonomous**
+Status: **prototype executable / external-adapter contract / OAK-bounded / non-autonomous**
 
-Ω-CAPABILITY-OS-T∞ is the capability-selection, execution-receipt and evidence layer
-below `Ω-INTENT-TO-EVERYTHING`.
+Ω-CAPABILITY-OS-T∞ sits below `Ω-INTENT-TO-EVERYTHING`.
+The intent layer decides **what work should exist**. Capability OS decides **which
+available capability chain should be used**, how failures fall back, what external
+action is still required, and what evidence is strong enough to continue.
 
-The upstream intent system decides **what work should exist**. Capability OS decides
-**which capability chain can realize it**, whether the chain is currently healthy and
-authorized, what actually executed, and whether the evidence is fresh enough for a
-bounded OAK result.
-
-## R0.2 convergence
-
-R0.2 closes the largest R0.1 gap:
+## Canonical loop
 
 ```text
-omega_intent_t.WorkUnit
+Intent
+  -> WorkUnit
   -> Capability Intent
-  -> capability plan
-  -> registered handler runtime
-  -> execution observations
-  -> M+ / M-
-  -> learned health
-  -> exact-SHA EvidenceReceipt
+  -> Capability Genome
+  -> health/VOI planner
+  -> local handler OR external adapter request
+  -> normalized receipt
+  -> resume
+  -> EvidenceReceipt
   -> OAK
+  -> M+ / M-
+  -> updated capability health
 ```
 
-This is intentionally not a second intent planner. `omega_intent_t` keeps ownership of
-requirements, work-unit decomposition and dependency topology.
+R0.3 adds the missing boundary between the Python planner/runtime and actual ChatGPT
+connectors/tools. **The package still never calls remote tools by itself.** It emits a
+normalized request that an authorized execution layer can invoke through GitHub,
+Files, Drive, Gmail, Calendar, Web, or another connector, then validates the returned
+receipt before resuming.
 
-## 1. WorkUnit bridge
+## R0.1 — Capability Genome
 
-`compile_workunit()` converts an existing `WorkUnit` into:
+Each capability declares domains, consumed/produced tokens, authority, quality,
+information gain, verifiability, reuse, cost, latency, risk, alternatives and known
+failure modes.
 
-- a spec token containing the serialized work unit;
-- dependency-completion tokens;
-- artifact tokens for every declared output path;
-- validation tokens for every declared validation;
-- one synthetic generation capability;
-- one validation capability per validation;
-- a Capability OS `Intent`.
+Authority is explicit:
 
-If a required upstream work unit is not listed as completed, its dependency token is
-absent and the plan is `HOLD`.
+- `read` and `draft` may be planned by default;
+- `write` requires `allow_mutation=true`;
+- `irreversible` requires both `allow_mutation=true` and `allow_irreversible=true`.
 
-### Authority mapping
+Planning permission is **not** execution authorization.
 
-Default generation authority is deliberately conservative:
+The first live benchmark came from PR #415: a generic log route returned empty
+content, while the specialized GitHub Actions job-log path exposed `No module named
+pytest`. That failure is retained as M- and the fallback path is a permanent regression
+case.
 
-| WorkUnit risk | Capability authority |
-| --- | --- |
-| `low`, `normal`, `ip_sensitive` | `draft` |
-| `elevated`, `public` | `write` |
-| `irreversible` | `irreversible` |
+## R0.2 — WorkUnit bridge and bounded runtime
 
-Thus an elevated work unit cannot become executable merely because it was planned
-upstream. `allow_mutation=true` is still required; irreversible work additionally
-requires `allow_irreversible=true`.
-
-## 2. Bounded runtime
-
-`CapabilityRuntime` executes only registered handlers.
-
-A handler receives:
+`omega_intent_t.models.WorkUnit` is used as the execution IR rather than replaced:
 
 ```text
-(capability, consumed_token_values)
+WorkUnit
+  -> dependency evidence tokens
+  -> generator capability
+  -> artifact tokens
+  -> validation capabilities
+  -> validation tokens
+  -> Capability plan
 ```
 
-and must return either a token mapping or `HandlerResult`.
+`CapabilityRuntime` executes only explicitly registered handlers. Missing handlers
+produce `ACTION_REQUIRED`, never fake success. Runtime outputs include observations,
+sources, output fingerprints, M+/M- records and learned health.
 
-The runtime verifies that all outputs declared by the capability are actually returned.
-Missing outputs are failures, not partial successes.
-
-If no handler exists, execution stops with:
-
-```text
-ACTION_REQUIRED
-```
-
-This matters for ChatGPT connectors and external tools: the Python package does not
-pretend it can call a connector that has not been explicitly bridged into the runtime.
-
-## 3. Safe fallback execution
-
-When a handler fails, R0.2 can try a declared alternative only if the fallback:
-
-1. exists in the same registry;
-2. is not health=`FAIL`;
-3. is allowed by the current authority policy;
-4. can produce every output required from the failed capability;
-5. has all runtime inputs available.
-
-Eligible fallbacks are ranked by health-adjusted utility.
-
-This blocks the unsafe pattern:
+A runtime OAK PASS requires:
 
 ```text
-read capability fails -> silently use write capability
-```
-
-unless mutation was explicitly allowed.
-
-## 4. Runtime EvidenceReceipt
-
-The execution receipt contains:
-
-- plan fingerprint;
-- execution status;
-- candidate and evidence SHAs;
-- freshness boolean;
-- required and unresolved outputs;
-- actions still requiring an external handler;
-- observations per capability;
-- output fingerprints;
-- sources;
-- M+ / M- records;
-- learned health snapshot;
-- OAK status;
-- a stable receipt fingerprint.
-
-R0.2 OAK PASS requires all three:
-
-```text
-plan READY
-AND runtime outputs complete
+plan == READY
+AND all required outputs exist
+AND no action remains pending
 AND candidate_sha == evidence_sha
 ```
 
-It does **not** certify semantic correctness, scientific truth, external authorization,
-or that a pull request should be merged.
+## R0.3 — External Execution Adapters
 
-## 5. Health learning
+### ExternalBinding
 
-`learn_health()` compiles outcome records into a deterministic next health snapshot.
+A binding maps one Capability Genome node to one external connector action.
 
-Current conservative rules:
+Example:
 
-- successes only -> `PASS`;
-- any mixed failure/degraded evidence -> `DEGRADED`;
-- two failures and no successes -> `FAIL`;
-- no evidence -> `UNKNOWN`.
-
-The receipt preserves both positive memory `M+` and negative memory `M-`.
-
-## 6. R0.1 PR #415 benchmark retained
-
-The first live benchmark remains the PR #415 diagnosis:
-
-```text
-CI failure
- -> generic logs DEGRADED
- -> specialized GitHub Actions logs
- -> exact cause: pytest missing
- -> refresh PR state
- -> abandon stale repair after merge
+```json
+{
+  "capability_id": "github.fetch_pr",
+  "connector": "GitHub",
+  "action": "fetch_pr",
+  "argument_template": {
+    "repo_full_name": "$repo",
+    "pr_number": "$pr_number"
+  }
+}
 ```
 
-That failure mode is encoded permanently in Capability OS CI, which installs `pytest`
-explicitly before the test suite.
+Template references are validated against the capability's declared inputs. Unknown
+input tokens fail validation before execution.
 
-## Commands
+The repository ships concrete binding descriptions for the currently modeled read
+paths:
 
-Existing planning:
+- GitHub PR metadata and PR diff;
+- ChatGPT Files semantic search;
+- Google Drive search;
+- Gmail message-ID search;
+- Google Calendar bounded event search;
+- Web search.
+
+These bindings describe invocation shape. They do not grant OAuth scope, connector
+availability, user consent, or write permission.
+
+### ExternalActionRequest
+
+When CapabilityRuntime reaches a capability without a local handler, an
+`ExternalResolver` converts the step into a deterministic request.
+
+The audit form contains:
+
+```text
+request_id
+capability_id
+connector
+action
+authority
+expected_outputs
+candidate_sha
+plan_fingerprint
+arguments_fingerprint
+```
+
+Raw arguments are **redacted by default**. `execution_payload()` or
+`pending_requests(include_arguments=True)` must be requested explicitly by the
+execution layer.
+
+This separation is important for Gmail, Drive, Files and other contexts where request
+arguments may contain private search terms or identifiers.
+
+### ExternalActionReceipt
+
+The execution layer normalizes a real connector result into:
+
+```text
+request_id
+capability_id
+connector
+action
+status = SUCCESS | FAILURE | DEGRADED
+outputs
+sources
+notes
+error
+observed_candidate_sha
+```
+
+A SUCCESS receipt is rejected unless it:
+
+1. matches the deterministic request ID;
+2. matches capability, connector and action;
+3. contains every output declared by the capability;
+4. does not contradict an explicitly observed candidate SHA.
+
+Outputs are also redacted by default in audit serialization and represented by a
+stable fingerprint.
+
+## Suspend -> external action -> resume
+
+R0.3 supports a deterministic two-pass pattern:
+
+```text
+pass 1
+  CapabilityRuntime
+  -> ExternalResolver
+  -> ACTION_REQUIRED + redacted request
+
+external execution layer
+  -> invoke authorized connector
+  -> normalize result as ExternalActionReceipt
+
+pass 2
+  same intent + same inputs + receipt
+  -> request_id reproduced
+  -> receipt validated
+  -> output injected into runtime state
+  -> remaining plan continues
+```
+
+The request ID depends on capability, connector/action, argument fingerprint,
+candidate SHA and optional plan fingerprint, so changed inputs or changed candidate
+state invalidate the old receipt instead of silently reusing it.
+
+## Fallback semantics
+
+If an external receipt reports failure, CapabilityRuntime records M- and may use a
+fallback only when that fallback:
+
+- is explicitly declared;
+- is not health `FAIL`;
+- preserves the outputs required by the failed capability;
+- has all runtime inputs;
+- respects the intent's authority gates.
+
+A `write` fallback therefore cannot silently replace a failed `read` operation when
+mutation is not authorized.
+
+If the fallback itself is external and has no receipt yet, runtime emits a normalized
+external request for that fallback rather than recording a fabricated failure.
+
+## CLI
 
 ```bash
 python -m omega_capability_os_t describe examples/capability_os_registry.json
 
-python -m omega_capability_os_t plan \
-  examples/capability_os_registry.json \
-  examples/capability_os_intent_pr_ci.json \
-  --health examples/capability_os_health_pr415.json
-```
-
-Compile an existing WorkUnit:
-
-```bash
 python -m omega_capability_os_t workunit-plan \
   examples/capability_os_workunit.json \
   --completed-dependency WU-PREV
+
+python -m omega_capability_os_t external-run \
+  examples/capability_os_registry.json \
+  examples/capability_os_external_intent.json \
+  examples/capability_os_external_bindings.json \
+  --values examples/capability_os_external_values.json \
+  --candidate-sha <SHA> \
+  --evidence-sha <SHA>
 ```
 
-Learn the next health snapshot from a receipt/outcome file:
+Without an external receipt the command exits non-zero with OAK `HOLD` and a redacted
+request. `--include-arguments` exposes the execution payload intentionally. A later run
+may provide `--receipts <json>` to resume.
 
-```bash
-python -m omega_capability_os_t learn-health receipt.json
-```
+## Evidence boundaries
 
-## Tests
+R0.3 can certify only the following narrow properties:
 
-R0.2 adds integration tests for:
+- deterministic capability selection;
+- binding schema consistency;
+- authority gating inside the planner;
+- receipt/request identity consistency;
+- declared output presence;
+- runtime completion;
+- candidate/evidence SHA freshness;
+- M+/M- health derivation from recorded outcomes.
 
-- WorkUnit dependency gating;
-- elevated-risk mutation gating;
-- successful handler execution;
-- exact-SHA OAK receipts;
-- unavailable-handler `ACTION_REQUIRED`;
-- fallback output/authority preservation;
-- stale evidence rejection;
-- M+ / M- health learning.
-
-CI runs the Capability OS suite on Python 3.10, 3.11, 3.12 and 3.13.
+It does **not** certify semantic truth, scientific truth, legal permission, external
+provider correctness, consent, or that a proposed write/merge/send/delete should occur.
+Those remain separate gates.
 
 ## Next convergence
 
-The next high-value layer is **R0.3 external execution adapters**:
-
-```text
-Capability plan
- -> adapter contract
- -> ChatGPT/GitHub/Drive/Gmail/etc. invocation
- -> normalized tool receipt
- -> capability health update
- -> resume suspended plan
-```
-
-External adapters must remain explicit about permissions and must never convert tool
-availability into permission to perform a write.
+R0.4 should add **connector-specific receipt normalizers and a ChatGPT execution
+bridge**: real connector response -> normalized outputs/sources -> receipt -> resumed
+CapabilityRuntime, with schema tests for GitHub, Files, Drive, Gmail, Calendar and Web.
+That layer should remain read-first and require explicit authorization for every
+mutation class.

@@ -64,3 +64,38 @@ jobs:
           assert any(item.startswith("workunit.validate.WU-CAP-R02") for item in ids), ids
           print(json.dumps(payload, indent=2))
           PY
+      - name: External adapter contract smoke
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from omega_capability_os_t.core import Intent, load_registry, plan
+          from omega_capability_os_t.external import ExternalResolver, load_external_bindings, validate_external_bindings
+          from omega_capability_os_t.runtime import CapabilityRuntime
+
+          registry = load_registry(json.loads(Path("examples/capability_os_registry.json").read_text()))
+          bindings = load_external_bindings(json.loads(Path("examples/capability_os_external_bindings.json").read_text()))
+          validation = validate_external_bindings(registry, bindings)
+          assert validation["status"] == "PASS", validation
+
+          intent = Intent.from_dict(json.loads(Path("examples/capability_os_external_intent.json").read_text()))
+          values = json.loads(Path("examples/capability_os_external_values.json").read_text())
+          planned = plan(registry, intent)
+          resolver = ExternalResolver(bindings, candidate_sha="ci-sha", plan_fingerprint=planned["fingerprint"])
+          receipt = CapabilityRuntime(resolver=resolver).execute(
+              registry,
+              intent,
+              initial_values=values,
+              candidate_sha="ci-sha",
+              evidence_sha="ci-sha",
+          )
+          assert receipt["oak"]["status"] == "HOLD", receipt
+          assert len(receipt["actions_required"]) == 1, receipt
+          audit_request = receipt["actions_required"][0]["external_request"]
+          assert audit_request["connector"] == "GitHub", audit_request
+          assert audit_request["arguments_redacted"] is True, audit_request
+          assert "arguments" not in audit_request, audit_request
+          execution_request = resolver.pending_requests(include_arguments=True)[0]
+          assert execution_request["arguments"]["pr_number"] == 417, execution_request
+          print(json.dumps({"binding_validation": validation, "request": audit_request}, indent=2))
+          PY

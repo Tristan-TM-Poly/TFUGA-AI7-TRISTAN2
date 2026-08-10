@@ -6,7 +6,8 @@ from pathlib import Path
 
 from .bridge import compile_workunit, workunit_from_mapping
 from .core import Intent, load_registry, make_evidence_receipt, plan, suggest_fallback, validate_registry
-from .runtime import learn_health
+from .external import ExternalResolver, load_external_bindings, validate_external_bindings
+from .runtime import CapabilityRuntime, learn_health
 
 
 def _load(path: str) -> dict:
@@ -46,6 +47,17 @@ def _parser() -> argparse.ArgumentParser:
 
     health = sub.add_parser("learn-health")
     health.add_argument("records")
+
+    ext = sub.add_parser("external-run")
+    ext.add_argument("registry")
+    ext.add_argument("intent")
+    ext.add_argument("bindings")
+    ext.add_argument("--values")
+    ext.add_argument("--receipts")
+    ext.add_argument("--health")
+    ext.add_argument("--candidate-sha")
+    ext.add_argument("--evidence-sha")
+    ext.add_argument("--include-arguments", action="store_true")
     return parser
 
 
@@ -81,6 +93,46 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "describe":
         print(json.dumps(validate_registry(registry), indent=2, sort_keys=True))
         return 0
+
+    if args.command == "external-run":
+        intent = Intent.from_dict(_load(args.intent))
+        bindings = load_external_bindings(_load(args.bindings))
+        binding_validation = validate_external_bindings(registry, bindings)
+        if binding_validation["status"] != "PASS":
+            print(json.dumps({"binding_validation": binding_validation}, indent=2, sort_keys=True))
+            return 2
+        values = _load(args.values) if args.values else {}
+        receipt_payload = _load(args.receipts) if args.receipts else {}
+        raw_receipts = receipt_payload.get("receipts", receipt_payload.get("external_receipts", []))
+        if not isinstance(raw_receipts, list):
+            raise TypeError("receipts file must contain a list under receipts or external_receipts")
+        health = _load(args.health) if args.health else {}
+        plan_payload = plan(registry, intent, health)
+        resolver = ExternalResolver(
+            bindings,
+            receipts=raw_receipts,
+            candidate_sha=args.candidate_sha,
+            plan_fingerprint=plan_payload.get("fingerprint"),
+        )
+        execution = CapabilityRuntime(resolver=resolver).execute(
+            registry,
+            intent,
+            health=health,
+            initial_values=values,
+            candidate_sha=args.candidate_sha,
+            evidence_sha=args.evidence_sha,
+        )
+        payload = {
+            "schema": "omega-capability-external-run/v1",
+            "binding_validation": binding_validation,
+            "execution": execution,
+            "external_requests": resolver.pending_requests(
+                include_arguments=args.include_arguments
+            ),
+            "consumed_external_receipts": list(resolver.consumed_receipt_ids),
+        }
+        print(json.dumps(payload, indent=2, sort_keys=True))
+        return 0 if execution["oak"]["status"] == "PASS" else 2
 
     health = _load(args.health) if getattr(args, "health", None) else {}
     if args.command == "fallback":
