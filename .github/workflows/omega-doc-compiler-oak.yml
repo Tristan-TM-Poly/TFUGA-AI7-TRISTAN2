@@ -188,6 +188,15 @@ jobs:
           assert not [ref for ref in refs if not re.search(r'@[0-9a-f]{40}$', ref)]
           PY
 
+      - name: Upload deterministic campaign bundle
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: omega-doc-factory-r10-${{ github.run_id }}
+          path: /tmp/omega-doc-factory-1/**
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Print campaign summary
         if: matrix.python-version == '3.12'
         run: |
