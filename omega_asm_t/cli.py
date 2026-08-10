@@ -7,7 +7,9 @@ from pathlib import Path
 from .analysis import analyze, cvcd_signature
 from .backends import emit_dot_u64, supported_variants
 from .benchmark import machine_manifest, relative_ratio, summarize_samples
+from .counters import build_p5_report, requested_perf_events
 from .ir import dot_u64_block_program, load_program
+from .microarch import microarchitecture_manifest
 from .oak import oak_report
 from .search import estimate_builtin_candidates, pairwise_tradeoffs, pareto_front
 
@@ -16,10 +18,18 @@ def _json(data: object) -> str:
     return json.dumps(data, indent=2, sort_keys=True)
 
 
+def _write_or_print(payload: object, output: str | None) -> None:
+    text = _json(payload) + "\n"
+    if output:
+        Path(output).write_text(text, encoding="utf-8")
+    else:
+        print(text, end="")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="omega-asm",
-        description="Ω-ASM-T∞ R1: OAK-safe assembly analysis and built-in kernel generation",
+        description="Ω-ASM-T∞: OAK-safe assembly analysis, evidence and trusted kernel laboratory",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -49,8 +59,24 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark_report.add_argument("path")
     benchmark_report.add_argument("--output")
 
-    sub.add_parser("machine", help="emit a conservative execution-context manifest")
-    sub.add_parser("capabilities", help="show supported architectures and variants")
+    microarch = sub.add_parser(
+        "microarch", help="emit an observational microarchitecture/cache/ISA manifest"
+    )
+    microarch.add_argument("--toolchains", action="store_true")
+    microarch.add_argument("--output")
+
+    p5 = sub.add_parser(
+        "p5-report",
+        help="parse externally collected perf-stat evidence into a provenance-rich P5 report",
+    )
+    p5.add_argument("path", help="perf stat stderr captured with -x ';' --no-big-num")
+    p5.add_argument("--binary", help="optional measured binary path for SHA-256 provenance")
+    p5.add_argument("--exit-code", type=int)
+    p5.add_argument("--output")
+
+    sub.add_parser("p5-events", help="show the conservative perf event request set")
+    sub.add_parser("machine", help="emit the R1 conservative execution-context manifest")
+    sub.add_parser("capabilities", help="show supported architectures, variants and evidence surfaces")
     return parser
 
 
@@ -136,19 +162,33 @@ def main(argv: list[str] | None = None) -> int:
         payload = oak_report(
             dot_u64_block_program(args.width), native_verified=args.native_verified
         ).to_dict()
-        text = _json(payload) + "\n"
-        if args.output:
-            Path(args.output).write_text(text, encoding="utf-8")
-        else:
-            print(text, end="")
+        _write_or_print(payload, args.output)
         return 0
 
     if args.command == "benchmark-report":
-        text = _json(_benchmark_report(args.path)) + "\n"
-        if args.output:
-            Path(args.output).write_text(text, encoding="utf-8")
-        else:
-            print(text, end="")
+        _write_or_print(_benchmark_report(args.path), args.output)
+        return 0
+
+    if args.command == "microarch":
+        _write_or_print(
+            microarchitecture_manifest(include_toolchains=args.toolchains), args.output
+        )
+        return 0
+
+    if args.command == "p5-report":
+        perf_text = Path(args.path).read_text(encoding="utf-8", errors="replace")
+        _write_or_print(
+            build_p5_report(
+                perf_text,
+                source_exit_code=args.exit_code,
+                binary_path=args.binary,
+            ),
+            args.output,
+        )
+        return 0
+
+    if args.command == "p5-events":
+        print(_json({"events": list(requested_perf_events())}))
         return 0
 
     if args.command == "machine":
@@ -161,6 +201,15 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "x86_64": list(supported_variants("x86_64")),
                     "aarch64": list(supported_variants("aarch64")),
+                    "evidence": {
+                        "P1": "static structure",
+                        "P2": "versioned uncalibrated heuristic",
+                        "P3": "native differential correctness",
+                        "P4": "observational timing",
+                        "P5": "externally collected hardware-counter parsing and provenance",
+                    },
+                    "p5_perf_events": list(requested_perf_events()),
+                    "arbitrary_command_execution": False,
                 }
             )
         )

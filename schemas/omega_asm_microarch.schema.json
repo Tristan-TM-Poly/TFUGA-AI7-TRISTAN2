@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_asm_microarch.schema.json",
+  "title": "Omega ASM-T observational microarchitecture manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "architecture",
+    "logical_cpus",
+    "isa_features",
+    "caches",
+    "frequency_context",
+    "operating_system",
+    "os_release",
+    "github_actions",
+    "runner",
+    "claim_scope",
+    "sources"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "architecture": {"type": "string", "minLength": 1},
+    "vendor": {"type": ["string", "null"]},
+    "family": {"type": ["string", "null"]},
+    "model": {"type": ["string", "null"]},
+    "stepping": {"type": ["string", "null"]},
+    "model_name": {"type": ["string", "null"]},
+    "logical_cpus": {"type": ["integer", "null"], "minimum": 1},
+    "physical_cores_observed": {"type": ["integer", "null"], "minimum": 1},
+    "socket_count_observed": {"type": ["integer", "null"], "minimum": 1},
+    "isa_features": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string"}
+    },
+    "hypervisor_flag_present": {"type": "boolean"},
+    "caches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "index",
+          "level",
+          "cache_type",
+          "size_bytes",
+          "line_size_bytes",
+          "ways_of_associativity",
+          "number_of_sets",
+          "shared_cpu_list"
+        ],
+        "properties": {
+          "index": {"type": "string"},
+          "level": {"type": ["integer", "null"], "minimum": 1},
+          "cache_type": {"type": ["string", "null"]},
+          "size_bytes": {"type": ["integer", "null"], "minimum": 0},
+          "line_size_bytes": {"type": ["integer", "null"], "minimum": 0},
+          "ways_of_associativity": {"type": ["integer", "null"], "minimum": 0},
+          "number_of_sets": {"type": ["integer", "null"], "minimum": 0},
+          "shared_cpu_list": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "frequency_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scaling_governor",
+        "scaling_driver",
+        "current_khz",
+        "min_khz",
+        "max_khz",
+        "cpuinfo_min_khz",
+        "cpuinfo_max_khz"
+      ],
+      "properties": {
+        "scaling_governor": {"type": ["string", "null"]},
+        "scaling_driver": {"type": ["string", "null"]},
+        "current_khz": {"type": ["integer", "null"], "minimum": 0},
+        "min_khz": {"type": ["integer", "null"], "minimum": 0},
+        "max_khz": {"type": ["integer", "null"], "minimum": 0},
+        "cpuinfo_min_khz": {"type": ["integer", "null"], "minimum": 0},
+        "cpuinfo_max_khz": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "operating_system": {"type": "string"},
+    "os_release": {"type": "string"},
+    "kernel_or_platform": {"type": "string"},
+    "github_actions": {"type": "boolean"},
+    "runner": {"type": "object"},
+    "claim_scope": {"const": "observational_hardware_context_only"},
+    "sources": {
+      "type": "object",
+      "required": ["proc_cpuinfo", "sysfs_cache", "sysfs_cpufreq"],
+      "properties": {
+        "proc_cpuinfo": {"type": "boolean"},
+        "sysfs_cache": {"type": "boolean"},
+        "sysfs_cpufreq": {"type": "boolean"}
+      }
+    },
+    "toolchains": {"type": "object"}
+  }
+}
