@@ -1,0 +1,76 @@
+name: omega-inverse-ci
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/omega_inverse_compiler.py'
+      - 'tests/test_omega_inverse_compiler.py'
+      - 'docs/omega-inverse/**'
+      - 'data/knowledge_cells/omega_inverse_t_r0_1.json'
+      - '.github/workflows/omega_inverse_ci.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/omega_inverse_compiler.py'
+      - 'tests/test_omega_inverse_compiler.py'
+      - 'docs/omega-inverse/**'
+      - 'data/knowledge_cells/omega_inverse_t_r0_1.json'
+      - '.github/workflows/omega_inverse_ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Compile module
+        run: python -m py_compile scripts/omega_inverse_compiler.py
+
+      - name: Run deterministic tests
+        run: python -m pytest tests/test_omega_inverse_compiler.py -q
+
+      - name: Generate regular reference reports
+        run: |
+          python scripts/omega_inverse_compiler.py --preset quadratic --order 8 --output reports/omega-inverse/quadratic.json --markdown-output reports/omega-inverse/quadratic.md
+          python scripts/omega_inverse_compiler.py --preset exp-minus-one --order 8 --output reports/omega-inverse/log.json --markdown-output reports/omega-inverse/log.md
+          python scripts/omega_inverse_compiler.py --preset lambert --order 7 --output reports/omega-inverse/lambert.json --markdown-output reports/omega-inverse/lambert.md
+          python scripts/omega_inverse_compiler.py --preset sin --order 9 --output reports/omega-inverse/arcsin.json --markdown-output reports/omega-inverse/arcsin.md
+          python scripts/omega_inverse_compiler.py --preset mobius --order 9 --output reports/omega-inverse/mobius.json --markdown-output reports/omega-inverse/mobius.md
+
+      - name: Generate critical Puiseux report
+        run: python scripts/omega_inverse_compiler.py --preset critical-square --order 6 --output reports/omega-inverse/critical-square.json --markdown-output reports/omega-inverse/critical-square.md
+
+      - name: OAK smoke assertions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          q = json.loads(Path('reports/omega-inverse/quadratic.json').read_text())
+          assert q['direct_newton_agreement'] is True
+          assert q['validation']['left_exact_through_order'] is True
+          assert q['validation']['right_exact_through_order'] is True
+          assert q['inverse_coefficients'][:7] == ['0', '1', '-1', '2', '-5', '14', '-42']
+          assert q['algebraic_candidate'] is not None
+
+          c = json.loads(Path('reports/omega-inverse/critical-square.json').read_text())
+          assert c['status'] == 'critical'
+          assert c['multiplicity'] == 2
+          assert len(c['puiseux']['branches']) == 2
+          PY
+
+      - name: Upload generated evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-inverse-reference-reports
+          path: reports/omega-inverse/
