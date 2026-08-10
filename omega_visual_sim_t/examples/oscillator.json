@@ -1,0 +1,39 @@
+{
+  "visual": {
+    "id": "damped_oscillator_001",
+    "title": "Oscillateur harmonique amorti",
+    "type": "simulation_animation"
+  },
+  "model": {
+    "type": "damped_harmonic_oscillator",
+    "parameters": {
+      "mass_kg": 1.0,
+      "stiffness_n_m": 20.0,
+      "damping_n_s_m": 0.7,
+      "initial_displacement_m": 0.1,
+      "initial_velocity_m_s": 0.0
+    },
+    "units": {
+      "mass": "kg",
+      "stiffness": "N/m",
+      "damping": "N*s/m",
+      "displacement": "m"
+    }
+  },
+  "animation": {
+    "duration_s": 4.0,
+    "frames": 96,
+    "fps": 24,
+    "loop": true
+  },
+  "output": {
+    "width": 800,
+    "height": 450,
+    "formats": ["svg", "png", "gif"]
+  },
+  "oak": {
+    "require_units": true,
+    "require_provenance": true,
+    "forbid_generated_numbers": true
+  }
+}
