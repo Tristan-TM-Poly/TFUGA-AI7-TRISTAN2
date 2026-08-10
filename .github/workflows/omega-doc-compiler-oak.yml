@@ -47,7 +47,7 @@ jobs:
       - name: Compile
         run: python -m compileall -q omega_latex_t/doc_universe.py omega_latex_t/doc_universe_cli.py tests/test_omega_doc_compiler_t_r03.py
       - name: Unit tests
-        run: python tests/test_omega_doc_compiler_t_r03.py -v
+        run: PYTHONPATH=. python tests/test_omega_doc_compiler_t_r03.py -v
       - name: Parse schema
         run: python -c 'import json; json.load(open("schemas/omega_doc_universe.schema.json", encoding="utf-8"))'
       - name: Repository smoke
