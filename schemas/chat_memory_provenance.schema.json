@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/chat_memory_provenance.schema.json",
+  "title": "Ω-CHATMEM Provenance Record",
+  "type": "object",
+  "required": ["derived_id", "source_type", "conversation_id", "message_id", "source_hash", "extractor_version"],
+  "properties": {
+    "derived_id": {"type": "string"},
+    "source_type": {"type": "string"},
+    "conversation_id": {"type": "string"},
+    "message_id": {"type": "string"},
+    "timestamp": {},
+    "role": {"type": "string"},
+    "source_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "extractor_version": {"type": "string"},
+    "source_span": {"type": "string"}
+  },
+  "additionalProperties": true
+}

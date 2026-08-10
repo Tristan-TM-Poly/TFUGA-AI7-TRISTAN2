@@ -1,0 +1,58 @@
+name: ChatMem HGFM CI
+
+on:
+  pull_request:
+    paths:
+      - "omega_chatmem_hgfm_t/**"
+      - "tests/test_omega_chatmem_hgfm_t.py"
+      - "tests/fixtures/chatgpt_export_minimal.json"
+      - ".agents/skills/chatgpt-hgfm-memory-sync/**"
+      - "schemas/chat_memory_*.schema.json"
+      - "docs/OMEGA_CHATMEM_HGFM_T.md"
+      - "pyproject.toml"
+      - ".github/workflows/chatmem-hgfm-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "omega_chatmem_hgfm_t/**"
+      - "tests/test_omega_chatmem_hgfm_t.py"
+      - "tests/fixtures/chatgpt_export_minimal.json"
+      - ".agents/skills/chatgpt-hgfm-memory-sync/**"
+      - "schemas/chat_memory_*.schema.json"
+      - "docs/OMEGA_CHATMEM_HGFM_T.md"
+      - "pyproject.toml"
+      - ".github/workflows/chatmem-hgfm-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chatmem:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Unit tests
+        run: python -m pytest -q tests/test_omega_chatmem_hgfm_t.py
+      - name: CLI smoke + OAK gate
+        run: |
+          rm -rf /tmp/chatmem-hgfm
+          python -m omega_chatmem_hgfm_t sync tests/fixtures/chatgpt_export_minimal.json /tmp/chatmem-hgfm
+          python -m omega_chatmem_hgfm_t recall /tmp/chatmem-hgfm CHATMEM > /tmp/recall.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/chatmem-hgfm/reports/oak_report.json").read_text())
+          assert report["status"] == "PASS", report
+          corpus = "\n".join(
+              p.read_text(errors="ignore")
+              for p in Path("/tmp/chatmem-hgfm").rglob("*")
+              if p.is_file()
+          )
+          assert "THIS_IS_A_SYNTHETIC_SECRET_123456" not in corpus
+          print(json.dumps(report, indent=2))
+          PY

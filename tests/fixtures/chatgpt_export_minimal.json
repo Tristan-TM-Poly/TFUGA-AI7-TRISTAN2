@@ -1,0 +1,32 @@
+[
+  {
+    "id": "conv-demo-1",
+    "title": "Synthetic Ω-CHATMEM demo",
+    "create_time": 1786400000.0,
+    "mapping": {
+      "root": {"id": "root", "message": null, "parent": null, "children": ["u1"]},
+      "u1": {
+        "id": "u1",
+        "parent": "root",
+        "children": ["a1"],
+        "message": {
+          "id": "m-user-1",
+          "author": {"role": "user"},
+          "create_time": 1786400001.0,
+          "content": {"content_type": "text", "parts": ["Je veux développer Ω-CHATMEM-HGFM-T∞. GO CHATMEM-HGFM\nIl faut garder la provenance et une mémoire M-.\napi_key=sk-proj-THIS_IS_A_SYNTHETIC_SECRET_123456"]}
+        }
+      },
+      "a1": {
+        "id": "a1",
+        "parent": "u1",
+        "children": [],
+        "message": {
+          "id": "m-assistant-1",
+          "author": {"role": "assistant"},
+          "create_time": 1786400002.0,
+          "content": {"content_type": "text", "parts": ["Définition canonique: HGFM relie Concept, Claim et Evidence. On doit tester le pipeline et préserver OAK."]}
+        }
+      }
+    }
+  }
+]
