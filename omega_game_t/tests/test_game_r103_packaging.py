@@ -6,7 +6,7 @@ from importlib.metadata import distribution
 
 def test_distribution_metadata_and_console_script_are_installed() -> None:
     dist = distribution("omega-game-t")
-    assert dist.version == "1.0.3"
+    assert dist.version == "1.0.4"
     console_scripts = {
         entry.name: entry.value
         for entry in dist.entry_points
