@@ -1,0 +1,8 @@
+{
+  "github.fetch_pr": {"status": "PASS"},
+  "github.fetch_commit_workflow_runs": {"status": "PASS"},
+  "github.fetch_generic_logs": {"status": "DEGRADED", "symptom": "empty_content"},
+  "github.fetch_workflow_job_logs": {"status": "PASS"},
+  "github.check_annotations": {"status": "PASS"},
+  "github.get_pr_diff": {"status": "PASS"}
+}
