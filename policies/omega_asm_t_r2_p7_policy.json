@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "module": "omega-asm-t-r2-p7-bounded-equivalence",
+  "authority": "review_only",
+  "human_review_required": true,
+  "automatic_merge_allowed": false,
+  "automatic_publication_allowed": false,
+  "package_executes_solver": false,
+  "package_executes_arbitrary_commands": false,
+  "supported_semantics": "fixed_width_unsigned_bitvector_modulo_2^width",
+  "supported_width_min": 1,
+  "supported_width_max": 64,
+  "default_exhaustive_state_budget": 1000000,
+  "solver_text_alone_grants_acceptance": false,
+  "kernel_checked": false,
+  "accepted_equivalence_requires_complete_exhaustive_evidence": true,
+  "evidence_conflict_grants_acceptance": false,
+  "counterexample_grants_acceptance": false,
+  "c_cpp_undefined_behavior_modeled": false,
+  "floating_point_modeled": false,
+  "universal_semantic_claim_allowed": false,
+  "formal_result_grants_merge_authority": false,
+  "required_negative_court": true,
+  "future_promotion_requirements": [
+    "independent solver replay for solver-only large-domain evidence",
+    "proof-object or independently checkable certificate when solver proof strength is claimed",
+    "explicit language-semantics bridge before applying bit-vector equivalence to C/C++/Rust source claims",
+    "kernel_checked must remain false until a separate trusted checker actually verifies a certificate"
+  ],
+  "forbidden_claims": [
+    "solver transcript text alone is a proof",
+    "bounded bit-vector equivalence implies unbounded integer equivalence",
+    "bit-vector equivalence automatically preserves C/C++ undefined behavior semantics",
+    "P7 equivalence implies performance improvement",
+    "formal evidence grants automatic merge or publication authority"
+  ]
+}
