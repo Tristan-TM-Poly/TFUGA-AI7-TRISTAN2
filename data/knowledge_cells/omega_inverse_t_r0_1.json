@@ -1,0 +1,159 @@
+{
+  "cell_id": "KC-OMEGA-INVERSE-T-001",
+  "subject": "Ω-INVERSE-T∞",
+  "definition": "OAK-safe local inverse compiler that transforms a shifted Taylor jet into an inverse Taylor jet when the linear coefficient is nonzero, cross-validates three exact reversion engines, switches to Puiseux branches at finite critical multiplicity, and records composition residuals plus reconstruction-candidate boundaries.",
+  "domain": "mathematics-scientific-computing",
+  "oak_status": "IMPLEMENTED",
+  "claims": [
+    {
+      "claim_id": "CLM-INVERSE-FORMAL-001",
+      "text": "For a truncated formal series F(h) with F(0)=0 and nonzero linear coefficient, three implemented reversion engines construct the same H through requested order and the core verifies F(H)=z and H(F)=h through that order.",
+      "canonical_key": "regular formal series reversion verified by three engines and two-sided composition",
+      "domain": "mathematics",
+      "polarity": "affirm",
+      "scope": "finite-order formal power series with exact rational coefficients and nonzero linear term",
+      "status": "implemented_claim",
+      "assumptions": [
+        "a0 is zero after local shifting",
+        "a1 is nonzero",
+        "requested order is finite"
+      ],
+      "failure_conditions": [
+        "left or right composition residual is nonzero through claimed order",
+        "triangular, formal-Newton and Lagrange-Bürmann engines disagree",
+        "input is critical or degenerate but is treated as ordinary Taylor-invertible"
+      ],
+      "source_paths": [
+        "scripts/omega_inverse_compiler.py",
+        "scripts/omega_inverse_lagrange.py",
+        "tests/test_omega_inverse_compiler.py",
+        "tests/test_omega_inverse_lagrange.py",
+        "docs/omega-inverse/"
+      ]
+    },
+    {
+      "claim_id": "CLM-INVERSE-CRITICAL-001",
+      "text": "When the first nonzero local term has degree m>1, the implementation refuses ordinary Taylor inversion and constructs m numerical Puiseux branches for the supplied truncated polynomial using z=t^m.",
+      "canonical_key": "critical finite multiplicity routes to Puiseux branches",
+      "domain": "complex-analysis-formal-series",
+      "polarity": "affirm",
+      "scope": "supplied finite local polynomial with finite first nonzero degree m>1",
+      "status": "prototype_claim",
+      "assumptions": [
+        "the supplied coefficients define the local truncated polynomial under study",
+        "complex numeric branch coefficients are acceptable for the prototype"
+      ],
+      "failure_conditions": [
+        "reported branch count differs from m",
+        "leading coefficients fail a_m c_1^m = 1",
+        "the result is presented as a complete global Riemann-surface analysis"
+      ],
+      "source_paths": [
+        "scripts/omega_inverse_compiler.py",
+        "tests/test_omega_inverse_compiler.py"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVD-INVERSE-CODE-001",
+      "kind": "code",
+      "title": "Ω-INVERSE-T∞ exact-series compiler and Lagrange oracle",
+      "source_path": "scripts/omega_inverse_compiler.py",
+      "locator": "revert_series, revert_series_newton, compile_inverse; companion revert_series_lagrange",
+      "content_hash": null,
+      "status": "implemented",
+      "supports_claim_ids": ["CLM-INVERSE-FORMAL-001", "CLM-INVERSE-CRITICAL-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {
+        "arithmetic": "exact Fraction arithmetic for regular formal-series path",
+        "independent_reversion_engines": 3,
+        "third_oracle_path": "scripts/omega_inverse_lagrange.py"
+      }
+    },
+    {
+      "evidence_id": "EVD-INVERSE-TEST-001",
+      "kind": "test",
+      "title": "Deterministic inverse-series test suites",
+      "source_path": "tests/",
+      "locator": "test_omega_inverse_compiler.py + test_omega_inverse_lagrange.py",
+      "content_hash": null,
+      "status": "reproduced_local",
+      "supports_claim_ids": ["CLM-INVERSE-FORMAL-001", "CLM-INVERSE-CRITICAL-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {
+        "reference_cases": ["x+x^2", "exp(x)-1", "x exp(x)", "sin(x)", "x/(1-x)", "x^2"],
+        "three_engine_rational_sweep_cases": 20
+      }
+    },
+    {
+      "evidence_id": "EVD-INVERSE-CI-001",
+      "kind": "ci",
+      "title": "Dedicated Ω-INVERSE-T∞ OAK workflow",
+      "source_path": ".github/workflows/omega_inverse_ci.yml",
+      "locator": null,
+      "content_hash": null,
+      "status": "pending_remote_run_on_final_head",
+      "supports_claim_ids": ["CLM-INVERSE-FORMAL-001", "CLM-INVERSE-CRITICAL-001"],
+      "contradicts_claim_ids": [],
+      "metadata": {
+        "generated_evidence": "six JSON/Markdown reference report pairs uploaded as workflow artifact",
+        "required_cross_check": "triangular == formal Newton == Lagrange-Bürmann"
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "transition_id": "TR-INVERSE-001",
+      "timestamp": "2026-08-10T00:00:00Z",
+      "from_status": "IDEA",
+      "to_status": "FORMALIZED",
+      "cause": "The local jet, regular reversion, critical/Puiseux route, reconstruction hierarchy, branch boundary and OAK validation contract were specified.",
+      "evidence_ids": [],
+      "residues": ["global analytic continuation and multivariate inversion remain future work"],
+      "approved_by": "Tristan"
+    },
+    {
+      "transition_id": "TR-INVERSE-002",
+      "timestamp": "2026-08-10T00:00:00Z",
+      "from_status": "FORMALIZED",
+      "to_status": "IMPLEMENTED",
+      "cause": "Executable compiler, three exact reversion engines, deterministic tests, documentation and dedicated CI workflow were added on a feature branch.",
+      "evidence_ids": ["EVD-INVERSE-CODE-001", "EVD-INVERSE-TEST-001", "EVD-INVERSE-CI-001"],
+      "residues": ["remote CI must pass on the final head before promotion to demonstrated", "special-function recognition is not yet a proof engine"],
+      "approved_by": "Tristan"
+    }
+  ],
+  "risks": [
+    "finite-series pattern matching mistaken for proof",
+    "critical values of truncated polynomial mistaken for exact convergence radius",
+    "local inverse extrapolated globally",
+    "Puiseux prototype mistaken for complete monodromy or Riemann-surface analysis",
+    "high-order reference implementation used where faster algorithms are required"
+  ],
+  "next_actions": [
+    "Pass dedicated remote CI on the final PR head and promote evidence status from pending to reproduced.",
+    "Benchmark high-order scaling of the three current exact reversion engines.",
+    "Add Bell/Faa di Bruno as a fourth direct inverse-derivative oracle.",
+    "Add symbolic front-end from f(x), x0 to exact Taylor coefficients.",
+    "Implement branch continuation atlas and certified interval/ball validation.",
+    "Add multivariate inverse jets and implicit systems.",
+    "Export surviving algebraic identities to formal proof obligations."
+  ],
+  "aliases": ["Omega Inverse Tristan", "InverseCompiler-T", "Series2Analytic-T", "Local Inverse Jet Compiler"],
+  "source_paths": [
+    "scripts/omega_inverse_compiler.py",
+    "scripts/omega_inverse_lagrange.py",
+    "tests/test_omega_inverse_compiler.py",
+    "tests/test_omega_inverse_lagrange.py",
+    "docs/omega-inverse/",
+    ".github/workflows/omega_inverse_ci.yml",
+    "MASTER_SYSTEM_INDEX.md"
+  ],
+  "owner": "Tristan",
+  "public_disclosure": true,
+  "metadata": {
+    "knowledge_cell_version": "0.1",
+    "oak_boundary": "Implemented formal/local prototype; three-engine agreement is formal implementation evidence, while candidate recognition and global analytic claims remain unproven until separately validated."
+  }
+}

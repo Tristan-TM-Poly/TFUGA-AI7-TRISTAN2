@@ -1,0 +1,32 @@
+id: omega-inverse-t-v0.1
+name: "Ω-INVERSE-T∞ — Local inverse-series compiler"
+repo_path: "scripts/omega_inverse_compiler.py"
+status: X
+definition: >-
+  Transform a shifted local Taylor jet into an inverse Taylor jet when the
+  linear coefficient is nonzero; route finite critical multiplicity to
+  Puiseux branches; validate two-sided composition; treat Padé/rational/
+  algebraic/pattern reconstruction only as candidates until separately proved.
+hypotheses:
+  - "Local input is shifted so a0 = 0."
+  - "Regular Taylor mode requires a1 != 0."
+  - "Analytic interpretation requires the hypotheses of the local inverse theorem."
+  - "Critical/Puiseux v0.1 acts on the supplied truncated polynomial."
+equation_or_model: "F(H(z)) = z + O(z^(N+1)); H(F(h)) = h + O(h^(N+1))"
+code_or_calculation: "scripts/omega_inverse_compiler.py"
+test_path: "tests/test_omega_inverse_compiler.py"
+proof_path: null
+risk_boundary:
+  - "No global injectivity claim from local series reversion."
+  - "Finite coefficient recognition is not proof."
+  - "Padé poles are not automatically singularities."
+  - "Truncated-polynomial critical values are only convergence-radius proxies."
+  - "Puiseux branch output is not a complete monodromy/Riemann-surface analysis."
+m_minus:
+  - "Do not promote a finite pattern match to analytic identity without proof."
+  - "Do not extrapolate local conditioning or local inverse charts globally."
+  - "Do not call the current reference implementation asymptotically optimal."
+next_experiment: >-
+  Pass dedicated remote CI, add a Lagrange-Bürmann third oracle, compare all
+  three engines at increasing order, then add certified branch continuation.
+promotion_decision: prototype
