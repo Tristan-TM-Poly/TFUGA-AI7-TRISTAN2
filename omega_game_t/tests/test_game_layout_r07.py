@@ -201,10 +201,13 @@ def test_unfair_layout_build_is_rejected_by_compiler_policy() -> None:
     payload = {
         "spec_id": "unfair",
         "version": "0.1",
-        "environment": {"width": 7, "height": 3, "max_steps": 12},
+        # Keep this fixture inside EnvironmentGenome's normalized 4..32 bounds;
+        # otherwise it would correctly fail on dimensions before reaching the
+        # fairness-policy gate that this test is intended to exercise.
+        "environment": {"width": 7, "height": 4, "max_steps": 12},
         "layout": {
             "width": 7,
-            "height": 3,
+            "height": 4,
             "left_spawn": [0, 1],
             "right_spawn": [6, 1],
             "resources": [[1, 1]],
