@@ -1,6 +1,6 @@
 # Omega GAME T — Ω-GAME-SIM-EVO-T∞
 
-Status: **R1.0.3 local executable research package candidate**.  
+Status: **R1.0.4 local executable research package candidate**.  
 Authority: simulation / benchmark / provenance / OAK review only.
 
 Omega GAME T is a deterministic research laboratory for generated games and algorithmic worlds. Development is intentionally split into small tested layers and consolidated through an integrated OAKBench rather than promoted from architecture alone.
@@ -25,6 +25,7 @@ R1.0  integrated OAKBench + fault matrix + capability report
 R1.0.1 checkpoint round-trip + retry/replay hardening
 R1.0.2 public integrated OAKBench API + CLI
 R1.0.3 installable Python package + console-entry CI
+R1.0.4 CPython 3.11–3.13 CI matrix + isolated wheel/OAKBench smoke
 ```
 
 ## Install for development
@@ -42,7 +43,7 @@ The package installs the console command:
 omega-game --help
 ```
 
-Python requirement: **3.11+**.
+Python requirement: **3.11+**. R1.0.4 CI explicitly exercises CPython 3.11, 3.12 and 3.13.
 
 ## Integrated OAKBench
 
@@ -148,9 +149,9 @@ INTEGRATED_PASS != SCIENTIFIC_TRUTH
 
 The capability report intentionally marks as **not demonstrated**: distributed consensus, remote durable artifact storage, guaranteed multi-process speedup, strategic fairness, fun, and general intelligence.
 
-## CI / local validation
+## CI / packaging validation
 
-GitHub Actions installs the package itself, verifies the `omega-game` console entry point, then runs the complete test suite:
+The primary test job installs the package itself, verifies the console entry point and runs the complete suite on CPython 3.11, 3.12 and 3.13:
 
 ```bash
 cd omega_game_t
@@ -158,6 +159,15 @@ python -m pip install -e .
 omega-game --help
 python -m pytest tests -q
 ```
+
+A separate wheel-smoke job builds a wheel, installs it into a fresh virtual environment outside the checkout, and runs:
+
+```bash
+omega-game --help
+omega-game oakbench --workers 1 --max-steps 4 --layouts 3 --shards 2
+```
+
+This guards against a false success caused only by the source tree or editable-install path.
 
 ## Provenance and theory notes
 
@@ -172,11 +182,11 @@ Key consolidation documents:
 
 ## Next OAK work
 
-Priority is **hardening and empirical measurement**, not another abstraction layer:
+Priority remains **hardening and empirical measurement**, not another abstraction layer:
 
 1. larger deterministic/fault campaigns;
 2. profiler-driven CPU/process experiments;
 3. memory and checkpoint scale tests;
-4. more mutation/property-based fault generation;
+4. mutation/property-based fault generation;
 5. artifact/receipt migration tests across package versions;
 6. only then evaluate real remote coordination/storage adapters if an actual backend is available.

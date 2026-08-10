@@ -15,6 +15,33 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    defaults:
+      run:
+        working-directory: omega_game_t
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package and pytest
+        run: python -m pip install --upgrade pip pytest && python -m pip install -e .
+
+      - name: Verify console entry point
+        run: omega-game --help
+
+      - name: Run tests
+        run: python -m pytest tests -q
+
+  wheel-smoke:
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: omega_game_t
@@ -27,11 +54,28 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install package and pytest
-        run: python -m pip install --upgrade pip pytest && python -m pip install -e .
+      - name: Build wheel
+        run: |
+          python -m pip install --upgrade pip
+          rm -rf /tmp/omega-wheelhouse /tmp/omega-game-wheel-venv
+          mkdir -p /tmp/omega-wheelhouse
+          python -m pip wheel . --no-deps --wheel-dir /tmp/omega-wheelhouse
 
-      - name: Verify console entry point
-        run: omega-game --help
+      - name: Install wheel outside checkout
+        run: |
+          python -m venv /tmp/omega-game-wheel-venv
+          /tmp/omega-game-wheel-venv/bin/python -m pip install /tmp/omega-wheelhouse/omega_game_t-*.whl
 
-      - name: Run tests
-        run: python -m pytest tests -q
+      - name: Smoke installed wheel outside checkout
+        working-directory: /tmp
+        run: |
+          /tmp/omega-game-wheel-venv/bin/omega-game --help
+          /tmp/omega-game-wheel-venv/bin/omega-game oakbench --seed 1701 --max-steps 4 --layouts 3 --shards 2 --workers 1 --fairness-threshold 0.5 > /tmp/omega-oakbench.json
+          /tmp/omega-game-wheel-venv/bin/python - <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(Path('/tmp/omega-oakbench.json').read_text())
+          assert payload['accepted'] is True
+          assert payload['invariant_checks']['all_faults_detected'] is True
+          assert len(payload['deterministic_receipt']) == 64
+          PY
