@@ -11,6 +11,7 @@ from .counters import build_p5_report, requested_perf_events
 from .ir import dot_u64_block_program, load_program
 from .microarch import microarchitecture_manifest
 from .oak import oak_report
+from .replication import aggregate_p5_reports
 from .search import estimate_builtin_candidates, pairwise_tradeoffs, pareto_front
 
 
@@ -74,6 +75,14 @@ def build_parser() -> argparse.ArgumentParser:
     p5.add_argument("--exit-code", type=int)
     p5.add_argument("--output")
 
+    p6 = sub.add_parser(
+        "p6-aggregate",
+        help="aggregate P5 reports into conservative identified-target replication groups",
+    )
+    p6.add_argument("paths", nargs="+", help="P5 report JSON files")
+    p6.add_argument("--min-replicates", type=int, default=3)
+    p6.add_argument("--output")
+
     sub.add_parser("p5-events", help="show the conservative perf event request set")
     sub.add_parser("machine", help="emit the R1 conservative execution-context manifest")
     sub.add_parser("capabilities", help="show supported architectures, variants and evidence surfaces")
@@ -113,6 +122,13 @@ def _benchmark_report(path: str) -> dict[str, object]:
         "statistics_ns_per_call": summaries,
         "median_ratio_to_reference_c": ratios,
     }
+
+
+def _load_json_object(path: str) -> dict[str, object]:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path}: expected a JSON object")
+    return payload
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -187,6 +203,13 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0
 
+    if args.command == "p6-aggregate":
+        reports = [_load_json_object(path) for path in args.paths]
+        _write_or_print(
+            aggregate_p5_reports(reports, min_replicates=args.min_replicates), args.output
+        )
+        return 0
+
     if args.command == "p5-events":
         print(_json({"events": list(requested_perf_events())}))
         return 0
@@ -207,6 +230,7 @@ def main(argv: list[str] | None = None) -> int:
                         "P3": "native differential correctness",
                         "P4": "observational timing",
                         "P5": "externally collected hardware-counter parsing and provenance",
+                        "P6": "identified-target replication grouping; no universal promotion",
                     },
                     "p5_perf_events": list(requested_perf_events()),
                     "arbitrary_command_execution": False,

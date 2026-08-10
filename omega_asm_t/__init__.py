@@ -25,6 +25,13 @@ from .microarch import (
     toolchain_manifest,
 )
 from .oak import oak_report
+from .replication import (
+    ReplicationGroup,
+    aggregate_p5_reports,
+    canonical_machine_identity,
+    machine_fingerprint,
+    validate_p5_replication_input,
+)
 from .search import estimate_builtin_candidates, pareto_front
 
 __all__ = [
@@ -34,10 +41,13 @@ __all__ = [
     "HARDWARE_PERF_EVENTS",
     "PerfCounter",
     "PerfParseResult",
+    "ReplicationGroup",
     "StaticCostProfile",
+    "aggregate_p5_reports",
     "analyze",
     "build_p5_report",
     "cache_descriptors",
+    "canonical_machine_identity",
     "cvcd_signature",
     "dependency_graph",
     "derive_counter_metrics",
@@ -46,6 +56,7 @@ __all__ = [
     "estimate_builtin_candidates",
     "file_sha256",
     "get_static_cost_profile",
+    "machine_fingerprint",
     "machine_manifest",
     "microarchitecture_manifest",
     "normalize_architecture",
@@ -60,7 +71,8 @@ __all__ = [
     "summarize_samples",
     "supported_variants",
     "toolchain_manifest",
+    "validate_p5_replication_input",
     "validate_program",
 ]
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
