@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.example/schemas/omega_doc_universe.schema.json",
+  "title": "Ω-DOC-COMPILER-T R0.3 repository documentation universe",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_root",
+    "source_commit",
+    "system_count",
+    "systems",
+    "family_candidates",
+    "truth_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.3.0"},
+    "source_root": {"type": "string"},
+    "source_commit": {"type": "string"},
+    "system_count": {"type": "integer", "minimum": 0},
+    "systems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "statuses", "metrics", "modules", "receipts", "oak_boundaries"]
+      }
+    },
+    "family_candidates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {"type": "string"},
+        "minItems": 2
+      }
+    },
+    "truth_boundary": {"type": "string"}
+  },
+  "additionalProperties": true
+}
