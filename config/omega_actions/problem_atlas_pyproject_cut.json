@@ -1,0 +1,47 @@
+{
+  "schema": "omega-actions-trigger-cut-plan/v1",
+  "family": "omega-problem-atlas",
+  "shared_trigger_path": "pyproject.toml",
+  "migration_status": "APPLIED_IN_PR_367",
+  "causal_after_status": "PENDING_FRESH_UNCONTAMINATED_PR",
+  "baseline": {
+    "pull_request": 367,
+    "head_sha": "e1fa9624f0a521933755c3036ee4c9101635c0fd",
+    "latest_commit_changed_paths": [
+      "pyproject.toml"
+    ],
+    "state": "PRE_MIGRATION_BASELINE_CAPTURED",
+    "after_measurement_required": "FRESH_POST_MERGE_OR_UNCONTAMINATED_PR"
+  },
+  "candidate_specialized_workflows": [
+    ".github/workflows/omega-problem-atlas-r03.yml",
+    ".github/workflows/omega-problem-atlas-r04-sources.yml",
+    ".github/workflows/omega-problem-atlas-r05-identity.yml",
+    ".github/workflows/omega-problem-atlas-r06-evidence.yml",
+    ".github/workflows/omega-problem-atlas-r07-runners.yml",
+    ".github/workflows/omega-problem-atlas-r08-routing.yml",
+    ".github/workflows/omega-problem-atlas-r09-promotion.yml",
+    ".github/workflows/omega-problem-atlas-r10-streaming.yml",
+    ".github/workflows/omega-problem-atlas-r11-competition.yml"
+  ],
+  "retained_shared_validators": [
+    ".github/workflows/omega-problem-atlas-router.yml",
+    ".github/workflows/omega-project-surface-ci.yml"
+  ],
+  "static_specialized_job_eligibility_upper_bound": 37,
+  "migration_contract": {
+    "remove_only_shared_trigger_edge": true,
+    "preserve_workflow_self_path": true,
+    "preserve_validation_commands": true,
+    "preserve_matrix_membership": true,
+    "preserve_permissions_or_reduce": true,
+    "required_checks_review_before_merge": true,
+    "automatic_merge_authorized": false
+  },
+  "oak_limits": [
+    "The 37-job figure is static potential eligibility, not observed billed compute.",
+    "No direct runtime signal is not proof of semantic independence.",
+    "Same-PR after measurements are contaminated once target workflow YAMLs enter the cumulative PR diff.",
+    "Causal after proof requires a fresh post-merge or otherwise uncontaminated PR."
+  ]
+}

@@ -8,7 +8,6 @@ on:
       - "tests/test_omega_problem_atlas_r11*.py"
       - "schemas/omega_competition_ledger_*_v11.schema.json"
       - "docs/omega_millennium_t/r11/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r11-competition.yml"
   pull_request:
     paths:
@@ -16,7 +15,6 @@ on:
       - "tests/test_omega_problem_atlas_r11*.py"
       - "schemas/omega_competition_ledger_*_v11.schema.json"
       - "docs/omega_millennium_t/r11/**"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r11-competition.yml"
   workflow_dispatch:
 

@@ -17,7 +17,6 @@ on:
       - "docs/omega_millennium_t/r03/**"
       - "docs/omega_millennium_t/r04/**"
       - "examples/omega_problem_atlas_r03*.py"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r03.yml"
   pull_request:
     paths:
@@ -32,7 +31,6 @@ on:
       - "docs/omega_millennium_t/r03/**"
       - "docs/omega_millennium_t/r04/**"
       - "examples/omega_problem_atlas_r03*.py"
-      - "pyproject.toml"
       - ".github/workflows/omega-problem-atlas-r03.yml"
   workflow_dispatch:
 
