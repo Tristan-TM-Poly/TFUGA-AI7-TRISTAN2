@@ -1,36 +1,52 @@
 {
-  "schema_version": "0.3.0",
+  "schema_version": "0.4.0",
   "system": "Ω-CHATMEM-HGFM-T∞",
-  "mode": "cross_conversation_live_plus_historical_backfill",
+  "mode": "cross_conversation_live_plus_multisource_historical_backfill",
   "capture_origin": "2026-08-10T22:42:00Z",
   "latest_checkpoint": "memory/chatgpt/live/2026-08-10T224200Z/checkpoint.json",
   "latest_context_capsule": "memory/chatgpt/live/2026-08-10T224200Z/canon/CHATGPT_CONTEXT_LIVE.md",
-  "latest_historical_backfill": "memory/chatgpt/backfill/2026-08-10T230300Z/manifest.json",
-  "latest_historical_context": "memory/chatgpt/backfill/2026-08-10T230300Z/canon/HISTORICAL_CONTEXT.md",
+  "latest_historical_backfill": "memory/chatgpt/backfill/2026-08-10T232400Z/manifest.json",
+  "latest_historical_context": "memory/chatgpt/backfill/2026-08-10T232400Z/canon/HISTORICAL_CONTEXT_R2_PUBLIC.md",
+  "latest_private_historical_bundle": "/Tristan/ChatGPT Memory/Historical Backfill R2 2026-08-10/",
   "historical_coverage": {
-    "earliest_observed": "2026-06-10",
-    "latest_observed": "2026-08-10T22:42:00Z",
-    "session_records": 62,
-    "status": "PARTIAL_ACCESSIBLE_BACKFILL",
-    "backfill_sequence": 1
+    "earliest_exact_observed": "2025-11-06T20:27:04",
+    "latest_exact_observed": "2026-01-10T02:56:51",
+    "link_index_range_utc_heuristic": [
+      "2026-04-05T16:44:41Z",
+      "2026-08-02T16:02:22Z"
+    ],
+    "r1_observed_range": [
+      "2026-06-10",
+      "2026-08-10T22:42:00Z"
+    ],
+    "combined_registry_records": 336,
+    "exact_unique_conversations": 78,
+    "exact_messages": 3634,
+    "link_only_conversations": 196,
+    "r1_sessions": 62,
+    "status": "MULTI_SOURCE_PARTIAL_BUT_HIGH_COVERAGE",
+    "backfill_sequence": 2
   },
   "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
   "library_folder": "/Tristan/ChatGPT Memory",
   "checkpoint_sequence": 1,
   "bootstrap_policy": [
-    "When a future ChatGPT conversation materially concerns Tristan systems, projects, research, GitHub, or prior work, recover this pointer and the smallest relevant memory capsule/subgraph before relying on recollection alone.",
-    "For work referring to dates before the live capture origin, consult the latest historical backfill and its fidelity labels before using generic recollection.",
+    "When a future ChatGPT conversation materially concerns Tristan systems, projects, research, GitHub, or prior work, recover this pointer before relying on generic recollection.",
+    "Retrieve the smallest relevant R2 subgraph from ChatGPT Library and prefer message_exact provenance over title_link_only and summary-level records.",
+    "Use the public GitHub R2 anchor to verify counts, privacy boundaries and SHA-256 commitments; use the private Library bundle for detailed historical retrieval.",
+    "Treat a title/link registry as evidence that a conversation reference existed, not as proof of its message content.",
+    "Treat timestamp inference from opaque conversation identifiers as heuristic only and never as an official ChatGPT API guarantee.",
     "Treat the current conversation actually visible to the assistant as a new authorized live source when durable information should be captured.",
     "Create a new live checkpoint delta rather than rewriting previous live checkpoints.",
     "Link new live checkpoints to the previous live checkpoint using continues/supersedes/touches_system relations as applicable.",
     "Update this global pointer only after a new checkpoint/backfill passes OAK privacy/provenance/structural checks.",
-    "Keep raw transcripts, secrets, sensitive personal data and unreviewed IP out of public GitHub.",
-    "Do not claim capture of conversations that were never visible or otherwise authorized."
+    "Keep raw transcripts, private chat URLs, conversation IDs, secrets, sensitive personal data and unreviewed IP out of public GitHub.",
+    "Do not claim exhaustive capture of conversations that were never visible, supplied, exported or retrievable through an authorized source."
   ],
   "limitations": [
     "No background webhook exists here to intercept a conversation that is not actively available to the assistant.",
     "Cross-chat continuity is performed when the future conversation is active and the relevant retrieval/write tools are available.",
-    "Historical backfill is reconstructed from accessible summaries/indexes unless exact exported transcript data is available.",
-    "The current backfill is partial, not exhaustive account history."
+    "Exact message-level coverage is currently verified for 78 unique archived conversations; other periods use weaker title/link or summary-level provenance.",
+    "The current multi-source backfill is high coverage but not exhaustive account history."
   ]
 }

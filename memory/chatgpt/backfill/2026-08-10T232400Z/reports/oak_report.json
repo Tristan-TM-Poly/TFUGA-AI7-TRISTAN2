@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "gate": "PROMOTE_PUBLIC_R2_ANCHOR",
+  "checks": {
+    "raw_transcript_committed": false,
+    "private_chat_urls_committed": false,
+    "private_conversation_ids_committed": false,
+    "selected_private_excerpts_committed": false,
+    "source_hashes_present": true,
+    "aggregate_counts_present": true,
+    "private_bundle_hashed": true,
+    "scientific_truth_not_inferred_from_chat_history": true
+  },
+  "note": "PASS certifies the public anchor privacy/provenance boundary, not truth of historical claims."
+}
