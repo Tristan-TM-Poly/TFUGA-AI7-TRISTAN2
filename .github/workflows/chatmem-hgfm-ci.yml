@@ -36,6 +36,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
       - name: Unit tests
         run: python -m pytest -q tests/test_omega_chatmem_hgfm_t.py
       - name: CLI smoke + OAK gate
