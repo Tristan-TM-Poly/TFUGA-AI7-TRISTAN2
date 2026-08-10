@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_intent_impact_plan_v3.schema.json",
+  "title": "Omega Intent R0.3 Impact Plan",
+  "type": "object",
+  "required": [
+    "schema",
+    "plan_id",
+    "changed_paths",
+    "affected_packages",
+    "affected_tests",
+    "selected_workflows",
+    "tiers",
+    "full_suite_required",
+    "cost",
+    "manifest_digest",
+    "automatic_merge",
+    "remote_mutations"
+  ],
+  "properties": {
+    "schema": {"const": "omega-intent-impact-plan/v3"},
+    "plan_id": {"type": "string", "pattern": "^IMPACT-[A-F0-9]{20}$"},
+    "changed_paths": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+    "affected_packages": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "affected_tests": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "selected_workflows": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "tiers": {
+      "type": "array",
+      "items": {"enum": ["focused", "integration", "nightly_or_manual_full"]},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "reasons": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "full_suite_required": {"type": "boolean"},
+    "unknown_paths": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "cost": {
+      "type": "object",
+      "required": ["focused_test_units", "integration_test_units", "workflow_units", "file_scan_units", "relative_cost_score", "interpretation"],
+      "properties": {
+        "focused_test_units": {"type": "integer", "minimum": 0},
+        "integration_test_units": {"type": "integer", "minimum": 0},
+        "workflow_units": {"type": "integer", "minimum": 0},
+        "file_scan_units": {"type": "integer", "minimum": 0},
+        "relative_cost_score": {"type": "number", "minimum": 0},
+        "interpretation": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "manifest_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "automatic_merge": {"const": false},
+    "remote_mutations": {"const": 0}
+  },
+  "additionalProperties": false
+}
