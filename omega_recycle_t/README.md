@@ -1,77 +1,84 @@
 # Ω-RECYCLE-T∞ — Structure-Preserving Recycling Lab
 
-R0.5 advances the R0.4 circular-flow laboratory into a source-aware evidence kernel. It keeps the exact route/symbiosis/transport courts and adds source-specific schema contracts, revision detection, temporal calibration drift, baseline-regret campaigns, exact multi-hop flow and time-expanded flow without claiming that fixtures are live empirical evidence.
+R0.6 turns the R0.5 source-aware kernel into an externally challenged circular-flow laboratory. The internal directed/time-expanded optimizers are cross-checked against SciPy/HiGHS, shared capacities can couple multiple materials in one fractional LP, temporal holdouts preserve baseline wins, and a read-only CI lane acquires live Eurostat/EPA content into hash-addressed evidence manifests.
 
 Core law:
 
 > Prefer the recovery path that destroys the least useful structure while producing the most future value, subject to measured cost, energy, risk, uncertainty, safety, physical constraints and explicit evidence boundaries.
 
-## R0.5 pipeline
+## R0.6 pipeline
 
 ```text
-object / waste stream
-  -> ResourceGraph + MaterialPassport
-  -> route scoring + ablation baselines
-  -> exhaustive oracle <-> branch-and-bound
-  -> Bayes posterior -> calibration + temporal-drift court
-  -> industrial offers/needs -> greedy <-> exact regret court
-  -> bipartite transport -> directed multi-hop -> time-expanded flow
-  -> Eurostat TSV / EPA normalized bridge
-  -> schema + units + status flags + revision detector
-  -> provenance snapshot
-  -> empirical/negative-control campaign
-  -> LCI inventory -> external LCIA adapter
-  -> OAK + M- + reproducible evidence reports
+ResourceGraph + passports
+ -> route/baseline courts
+ -> exact oracle <-> branch-and-bound
+ -> calibration + temporal holdout
+ -> symbiosis regret
+ -> directed/time-expanded internal flow <-> SciPy/HiGHS
+ -> shared-capacity fractional multi-commodity LP
+ -> Eurostat/EPA source contracts + revision detection
+ -> read-only live HTTP manifest (hash / ETag / Last-Modified)
+ -> unit ontology + governed LCIA method descriptor
+ -> OAK + M- + CI evidence
 ```
 
-## New in R0.5
+## New in R0.6
 
-- Eurostat TSV parser that preserves dimensions, time periods, missing values and status flags;
-- `env_wasmun` contract requiring `geo`, `unit` and `wst_oper`, with explicit unit normalization;
-- EPA SMM normalized bridge with explicit US-short-ton to metric-tonne conversion;
-- snapshot revision court for added, removed, modified and structural changes;
-- yearly temporal calibration windows and Brier/ECE drift detection;
-- weighted prediction campaign harness with MAE, RMSE, bias and canonical regret;
-- permanent negative control where the baseline beats the canonical Ω method;
-- exact dependency-free directed multi-hop single-commodity min-cost maximum flow;
-- time-expanded material-flow network with holdover arcs and no backward-time transfers;
-- deterministic CLI `omega-recycle evidence-r05`;
-- CPython 3.11–3.13 CI gates preserving all R0.3/R0.4 contracts.
+- independent SciPy/HiGHS cross-checks for directed and time-expanded flow;
+- fractional multi-commodity optimization with shared arc capacities;
+- temporal holdout scoring with a retained case where a persistence baseline beats Ω;
+- minimal mass/energy unit ontology and incompatibility rejection;
+- LCIA method governance requiring version, publisher, HTTPS source and factor-set hash;
+- allowlisted, read-only live acquisition from Eurostat and US EPA;
+- live manifest records for SHA256, HTTP status, content type, ETag and Last-Modified;
+- dedicated weekly/manual/PR live-evidence workflow that uploads artifacts and never writes to the repository;
+- CLI `omega-recycle evidence-r06`;
+- CPython 3.11–3.13 courts retaining R0.3–R0.5 contracts.
+
+## First live evidence run
+
+Run `31412921771` acquired both configured public sources successfully (`success_count=2`, `failure_count=0`). The artifact `omega-recycle-r06-live-manifest` has artifact ID `9072280694` and archive digest `sha256:803bafc89f979011044641cd7c430a1336587999e7edf6b4e890c8961dda41be`.
+
+The Eurostat response was JSON (3,677 bytes) with content SHA256 `f3fa4ef25f83227fe9fa26014fbf3819c9faca9154df142c0c9f43f4efe4d069`. The EPA response was HTML (65,422 bytes) with content SHA256 `6c413ec9c38ca99c07f74185117b4ce01cdf3fb4cfe16b0b89a19d2a44c73224`.
+
+These hashes prove only the identity of retrieved HTTP content at that run.
 
 ## Permanent M- evidence
 
-R0.4 already retains a case where greedy industrial symbiosis recovers 1 unit while the exact matcher recovers 2. R0.5 adds a second negative control: a prediction campaign where the declared baseline has lower RMSE than the canonical Ω method. Both failures are regression assets and must remain visible.
+1. Greedy symbiosis can recover 1 unit where exact matching recovers 2.
+2. A declared baseline can beat canonical Ω on held-out RMSE.
+3. Two separately feasible material flows cannot each consume the full capacity of one shared bottleneck; R0.6 has a 1.5-unit shared-capacity court that rejects an invalid total flow of 2.
 
 ## Run
 
 ```bash
 cd omega_recycle_t
-python -m pip install -e .
+python -m pip install -e ".[evidence]"
 python -m omega_recycle oakbench
 python -m omega_recycle evidence-r05
+python -m omega_recycle evidence-r06
 pytest -q
 ```
 
 ## Truth boundaries
 
-- Eurostat parsing validates the declared TSV contract; it does not certify statistical comparability across jurisdictions or revisions.
-- The EPA adapter consumes a normalized bridge table. It intentionally does not claim one stable parser for arbitrary EPA HTML, XLS or PDF layouts.
-- Fixture-based evidence courts are schema/algorithm regression tests, not live empirical validation.
-- Snapshot revision detection identifies record/structure change; it does not decide whether two revisions are semantically comparable.
-- Calibration drift measures supplied predictions/outcomes and does not establish causality or guarantee future performance.
-- `min_cost_general_flow` and the time-expanded wrapper certify only their finite single-commodity optimization problems.
-- Shared-capacity multi-commodity material flow is not implemented in R0.5.
-- The LCIA adapter ships no endorsed factor set and does not certify lifecycle conclusions.
-- No environmental-superiority, profitability, regulatory-compliance or hazardous-processing claim is authorized by the package.
+- SciPy/HiGHS agreement is independent software evidence, not formal proof.
+- Multi-commodity optimality is for the declared continuous/fractional LP only; integer/process/chemistry coupling is outside the certificate.
+- Live hashes are provenance evidence, not semantic or factual certification.
+- Temporal holdout scores supplied predictions; it does not train a model or establish causality.
+- The unit ontology is intentionally small and must reject unsupported dimensions rather than guess.
+- No recognized/proprietary LCIA factor set is bundled; method descriptors do not certify LCA conclusions.
+- No environmental-superiority, profitability, regulatory-compliance or hazardous-processing claim is authorized.
 
 ## Promotion path
 
 ```text
-R0.5 D-MVP+++ candidate
- -> R0.6 provenance-pinned live snapshots + independent solver cross-checks
-       + shared-capacity multi-commodity flow + governed LCIA factor adapters
- -> R0.7 battery/electronics/building empirical campaigns
+R0.6 D-MVP++++ candidate
+ -> R0.7 repeated live manifests + revision history
+       + independent large-instance solver campaigns
+       + integer/process-coupled multi-commodity models
+       + real battery/electronics/building temporal campaigns
  -> R1.0 externally benchmarked decision engine
 ```
 
-See `docs/DCT_OMEGA_CARD.md`, `docs/R05_EVIDENCE.md`, `docs/PUBLIC_DATASETS.md`, `docs/ARCHITECTURE.md` and `docs/M_MINUS.md`.
+See `docs/DCT_OMEGA_CARD.md`, `docs/R06_EVIDENCE.md`, `docs/PUBLIC_DATASETS.md`, `docs/ARCHITECTURE.md` and `docs/M_MINUS.md`.

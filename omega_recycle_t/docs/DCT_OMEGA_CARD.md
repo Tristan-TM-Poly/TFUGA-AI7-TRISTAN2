@@ -1,56 +1,55 @@
-# DCT-Ω Card — Ω-RECYCLE-T∞ R0.5
+# DCT-Ω Card — Ω-RECYCLE-T∞ R0.6
 
 ```yaml
-id: OMEGA-RECYCLE-T-INF-R0.5
+id: OMEGA-RECYCLE-T-INF-R0.6
 name: Structure-Preserving Recycling and Regeneration
 repo_path: omega_recycle_t/
 status: D
 definition: >
   OAK-safe circular-recovery evidence kernel combining route optimization,
-  explicit baselines, uncertainty/calibration, exact symbiosis and network-flow
-  courts, source-aware schema/unit/revision contracts, provenance and lifecycle
-  inventory/characterization boundaries.
+  baselines, uncertainty/calibration, exact flow courts, source-aware contracts,
+  independent HiGHS parallax, shared-capacity fractional multi-commodity flow,
+  read-only live provenance manifests and LCIA/unit governance.
 hypotheses:
   - useful structure can be represented as an explicit ablatable prior
-  - exact flow optimization can expose losses hidden by greedy matching
-  - source-aware schema, unit, flag and revision contracts reduce silent data drift
-  - temporal calibration metrics can expose model deterioration on observed outcomes
-  - canonical methods must be allowed to lose against declared baselines
-  - time-expanded directed flow can represent storage/transfer timing for one commodity
+  - independent optimization software can expose defects in internal solvers
+  - shared-capacity coupling changes feasible circular material allocations
+  - repeated raw-content hashes can expose upstream source change without silently mutating canon
+  - temporal holdouts can expose degradation and baseline wins
+  - explicit unit/method governance reduces silent LCIA incompatibility
 equation_or_model: >
-  lexicographic max flow -> min cost; campaign regret = RMSE_canonical - RMSE_best;
-  J = V - C - lambda_E E - lambda_R R - X + lambda_P P + lambda_F F
+  lexicographic max flow -> min cost; sum_k x[k,a] <= cap[a];
+  campaign regret = RMSE_canonical - RMSE_best
 code_or_calculation: omega_recycle_t/omega_recycle/
 test_path: omega_recycle_t/tests/
-proof_path: omega_recycle_t/docs/R05_EVIDENCE.md
+proof_path: omega_recycle_t/docs/R06_EVIDENCE.md
 risk_boundary:
   - no hazardous physical-processing instructions
   - no claim of physical law
-  - source adapters do not certify semantic comparability
-  - fixture courts are not live empirical evidence
-  - calibration/drift metrics are not causal or safety validation
-  - single-commodity optimization is not a multi-commodity certificate
-  - LCIA adapter does not certify lifecycle conclusions
+  - solver cross-check is not formal proof
+  - fractional LP is not integer/process/chemistry coupling
+  - live hashes do not certify source truth or semantic comparability
+  - temporal holdout is not causal validation
+  - no recognized LCIA factor set is bundled or certified
 m_minus:
-  - historical greedy symbiosis has a retained counterexample
-  - R0.5 keeps a negative-control campaign where the baseline beats Omega
-  - EPA ingestion is a normalized bridge rather than an arbitrary-layout scraper
-  - live source acquisition/version polling remains external to the pure package
-  - shared-capacity multi-commodity optimization remains open
-  - current economics remain synthetic in OAKBench
+  - greedy symbiosis counterexample remains permanent
+  - baseline-win holdout remains permanent
+  - shared-capacity double-counting counterexample remains permanent
+  - live HTTP availability can fail and must be recorded separately from revision
+  - static source anchors age and are not raw snapshots
+  - integer/process-coupled multi-commodity optimization remains open
 next_experiment: >
-  ingest provenance-pinned live public snapshots, compare against independent
-  optimization solvers, add shared-capacity multi-commodity flow, and run real
-  baseline/calibration campaigns without deleting failures
+  accumulate repeated live manifests, compare larger instances against additional
+  independent solvers, add integer/process coupling, and run real temporally held-out
+  battery/electronics/building campaigns
 promotion_decision: prototype
 ```
 
-## Falsification targets
+## OAK promotion tests
 
-1. Find a valid Eurostat TSV revision that the parser silently misreads.
-2. Find schema/unit changes that bypass the revision court.
-3. Measure calibration drift on temporally held-out real inspections.
-4. Run empirical campaigns where mass/value/no-preservation/greedy baselines can beat Ω and preserve every loss.
-5. Cross-check directed and time-expanded optimum/cost against an independent recognized solver.
-6. Add shared-capacity multi-commodity cases where independent commodity solves are demonstrably invalid.
-7. Keep every discovered counterexample in M⁻.
+1. Internal directed/time-expanded flow must match HiGHS on declared courts.
+2. Shared arc capacity must be respected jointly across commodities.
+3. Baselines must be allowed to beat Ω on held-out data.
+4. Live evidence must be read-only and separately hash-addressed.
+5. Unsupported units/method metadata must fail closed.
+6. Every discovered failure remains eligible for M⁻.
