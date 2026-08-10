@@ -12,6 +12,7 @@ from .engines import (
     EvolutionConfig,
     EvolutionaryMemory,
     GameSpecCompiler,
+    IntegratedOAKBenchConfig,
     audit_match,
     evaluate_anti_forgetting,
     evolve,
@@ -19,6 +20,7 @@ from .engines import (
     fuzz_arena_t0,
     run_arena_t0,
     run_coevolution_cycle,
+    run_integrated_oakbench,
     run_quality_diversity,
     run_round_robin,
     run_sparse_benchmark,
@@ -70,6 +72,14 @@ def _parser() -> argparse.ArgumentParser:
     compile_spec.add_argument("path")
     compile_spec.add_argument("--seed", type=int, default=0)
     compile_spec.add_argument("--tournament", action="store_true")
+
+    oakbench = sub.add_parser("oakbench", help="run the integrated R1.0 OAKBench and fault matrix")
+    oakbench.add_argument("--seed", type=int, default=1401)
+    oakbench.add_argument("--max-steps", type=int, default=8)
+    oakbench.add_argument("--layouts", type=int, default=3)
+    oakbench.add_argument("--shards", type=int, default=2)
+    oakbench.add_argument("--workers", type=int, default=2)
+    oakbench.add_argument("--fairness-threshold", type=float, default=0.50)
 
     fuzz = sub.add_parser("fuzz", help="fuzz deterministic arena invariants")
     fuzz.add_argument("--seed", type=int, default=0)
@@ -177,6 +187,20 @@ def main(argv: list[str] | None = None) -> int:
             payload["tournament"] = tournament.to_dict(include_replays=False)
         print(json.dumps(payload, sort_keys=True, ensure_ascii=False, indent=2))
         return 0 if compiled.accepted else 5
+
+    if args.command == "oakbench":
+        report = run_integrated_oakbench(
+            IntegratedOAKBenchConfig(
+                seed=args.seed,
+                max_steps=args.max_steps,
+                layout_count=args.layouts,
+                campaign_shards=args.shards,
+                process_workers=args.workers,
+                fairness_threshold=args.fairness_threshold,
+            )
+        )
+        print(report.to_json(), end="")
+        return 0 if report.accepted else 6
 
     if args.command == "fuzz":
         report = fuzz_arena_t0(cases=args.cases, seed=args.seed)
