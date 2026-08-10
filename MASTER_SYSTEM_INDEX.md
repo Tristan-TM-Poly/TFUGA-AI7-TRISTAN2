@@ -1,6 +1,6 @@
 # MASTER SYSTEM INDEX — TFUGA-AI7-TRISTAN2
 
-Date: 2026-08-09  
+Date: 2026-08-10  
 Status: OAK-safe navigation layer. This file is an index, not a proof, legal opinion, revenue guarantee, or scientific certification.
 
 ## Purpose
@@ -37,8 +37,9 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | 9 | Top40×256 | `docs/canon/Top-40x256-MANIFEST-v0.1.md` | Source/E | Mine of 10,240 candidates, explicitly not canonized in bulk. | Extract Top16 absolute into DCT-Ω cards. |
 | 10 | Ω-GAME-SIM-EVO-T∞ / Ω-GAME-T | `omega_game_t/` + `docs/theories/OMEGA_GAME_R100_INTEGRATED_OAKBENCH.md` | D / R1.0.4 candidate | R0.1–R0.13 and R1.0–R1.0.3 are merged: deterministic simulation/evolution, sparse scheduling, MAP-Elites, M+/M-, coevolution, GameSpec, hashed layouts, adversarial maps, checkpointed campaigns, local process runtime, bundles/CAS/TTL, causal ledger, ExperimentGraph, integrated fault-injected OAKBench, hardening, public API/CLI, and installable Python packaging. R1.0.4 adds CPython 3.11–3.13 CI plus a wheel installed outside the checkout that must run the integrated OAKBench. | Pass R1.0.4 compatibility/wheel CI; then prioritize larger fault campaigns, profiling, scale tests and version-migration hardening before new abstractions. |
 | 11 | U0 Core | `u0_core/` | X | Minimal generator hypothesis: Δ, R, T produce trace, memory, validation, scale, HGFM. | Add tests showing emergence and failure cases. |
-| 12 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add first conservation-tested simulation. |
-| 13 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
+| 12 | Ω-RECYCLE-T∞ | `omega_recycle_t/` | D-MVP candidate | Turns structure-preserving recycling into an executable ResourceGraph + MaterialPassport + deterministic recovery optimizer + OAKBench, with hazardous processing kept simulation-only. | Add coupled capacity/transport constraints, uncertainty, public datasets and a mass-only baseline before any industrial or environmental superiority claim. |
+| 13 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add first conservation-tested simulation. |
+| 14 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
 
 ## Promotion priorities
 
@@ -52,6 +53,8 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 ```text
 AUTO² Kernel -> Ω-LIN-T -> FFWT-HAC-CVCD
 ```
+
+Ω-RECYCLE-T∞ enters as a D-MVP candidate but does not displace the existing P1 promotion sequence until it has real baseline data.
 
 ### P2 — Merge path
 
