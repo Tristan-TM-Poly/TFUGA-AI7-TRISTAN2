@@ -35,6 +35,11 @@ When `a1 != 0`, this is an ordinary Taylor reversion. When the first nonzero coe
   \[
   H \leftarrow H-\frac{F(H)-z}{F'(H)};
   \]
+- independent Lagrange-Bürmann coefficient oracle
+  \[
+  [z^n]H(z)=\frac1n[h^{n-1}]\left(\frac{h}{F(h)}\right)^n;
+  \]
+- deterministic three-engine agreement tests, including a 20-case rational-polynomial sweep;
 - inverse derivative jet `g^(n)(y0)=n! b_n`;
 - exact left/right composition checks through the requested order;
 - regular / critical / degenerate invertibility gate;
@@ -57,6 +62,7 @@ python scripts/omega_inverse_compiler.py --preset lambert --order 7
 python scripts/omega_inverse_compiler.py --preset sin --order 9
 python scripts/omega_inverse_compiler.py --preset mobius --order 9
 python scripts/omega_inverse_compiler.py --preset critical-square --order 6
+python scripts/omega_inverse_lagrange.py
 ```
 
 Custom local Taylor coefficients are accepted in increasing degree order:
@@ -123,6 +129,14 @@ assert report.validation["left_exact_through_order"]
 assert report.validation["right_exact_through_order"]
 ```
 
+For a third independent coefficient check:
+
+```python
+from scripts.omega_inverse_lagrange import cross_validate_three_engines
+
+assert cross_validate_three_engines([0, 1, 1], 8)["all_equal"]
+```
+
 Low-level functions such as `revert_series`, `revert_series_newton`, `pade`, `guess_algebraic_relation`, `critical_point_analysis`, and `puiseux_branches` can also be imported directly.
 
 ## OAK boundary
@@ -134,26 +148,26 @@ The implementation distinguishes four levels that must not be conflated:
 3. **candidate reconstruction** — Padé, rational, algebraic, or coefficient-pattern recognition from finite data;
 4. **global inverse claim** — requires separate domain, branch, singularity, and injectivity analysis.
 
-A candidate relation matching finite coefficients is not by itself a proof of an analytic identity. A Padé pole is not automatically a singularity. Critical values of a truncated Taylor polynomial are only proxies for singularities of the true inverse branch.
+Three exact engines agreeing on finite formal coefficients is strong implementation evidence, but it is still not a proof of global analyticity or global invertibility. A candidate relation matching finite coefficients is not by itself a proof of an analytic identity. A Padé pole is not automatically a singularity. Critical values of a truncated Taylor polynomial are only proxies for singularities of the true inverse branch.
 
 ## Tests
 
 ```bash
-python -m pytest tests/test_omega_inverse_compiler.py -q
+python -m pytest tests/test_omega_inverse_compiler.py tests/test_omega_inverse_lagrange.py -q
 ```
 
-The deterministic suite covers Catalan reversion, logarithm, Lambert-W coefficients, arcsine coefficients, Möbius rational reconstruction, Padé, critical-value analysis, Puiseux branching, derivative jets, shifted metadata, degenerate inputs, and CLI reports.
+The deterministic suites cover Catalan reversion, logarithm, Lambert-W coefficients, arcsine coefficients, Möbius rational reconstruction, Padé, critical-value analysis, Puiseux branching, derivative jets, shifted metadata, degenerate inputs, CLI reports, three-engine reference agreement, and a deterministic 20-series exact-rational sweep.
 
 ## Next layer
 
 The natural v0.2+ extensions are:
 
 - symbolic front-end `f(x), x0 -> Taylor jet`;
-- Lagrange-Bürmann coefficient engine as an independent third oracle;
+- Bell/Faà di Bruno direct inverse-derivative oracle;
 - fast polynomial arithmetic / faster high-order reversion;
 - certified interval bounds and analytic radius certificates;
 - branch continuation atlas with predictor-corrector tracking;
-- multivariate inverse jets via Jacobians, Hessians, Bell/Faà di Bruno tensors;
+- multivariate inverse jets via Jacobians, Hessians and higher tensors;
 - implicit-system inversion;
 - D-finite/hypergeometric/special-function recognition with holdout evidence;
 - formal proof export for identities discovered by the recognition layer.
