@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/omega-visual-sim-t/visual-spec.schema.json",
+  "title": "Omega VisualSpec 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["visual", "model", "animation", "output", "oak"],
+  "properties": {
+    "visual": {
+      "type": "object",
+      "required": ["id", "title", "type"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1, "maxLength": 200},
+        "type": {"enum": ["simulation_animation"]}
+      },
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "required": ["type", "parameters", "units"],
+      "properties": {
+        "type": {"const": "damped_harmonic_oscillator"},
+        "parameters": {
+          "type": "object",
+          "required": ["mass_kg", "stiffness_n_m", "damping_n_s_m", "initial_displacement_m"],
+          "properties": {
+            "mass_kg": {"type": "number", "exclusiveMinimum": 0},
+            "stiffness_n_m": {"type": "number", "exclusiveMinimum": 0},
+            "damping_n_s_m": {"type": "number", "minimum": 0},
+            "initial_displacement_m": {"type": "number"},
+            "initial_velocity_m_s": {"type": "number"}
+          },
+          "additionalProperties": false
+        },
+        "units": {
+          "const": {"mass": "kg", "stiffness": "N/m", "damping": "N*s/m", "displacement": "m"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "animation": {
+      "type": "object",
+      "required": ["duration_s", "frames", "fps", "loop"],
+      "properties": {
+        "duration_s": {"type": "number", "exclusiveMinimum": 0},
+        "frames": {"type": "integer", "minimum": 2, "maximum": 10000},
+        "fps": {"type": "integer", "minimum": 1, "maximum": 120},
+        "loop": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "output": {
+      "type": "object",
+      "required": ["width", "height", "formats"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 64, "maximum": 4096},
+        "height": {"type": "integer", "minimum": 64, "maximum": 4096},
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["svg", "png", "gif"]}
+        }
+      },
+      "additionalProperties": false
+    },
+    "oak": {
+      "type": "object",
+      "required": ["require_units", "require_provenance", "forbid_generated_numbers"],
+      "properties": {
+        "require_units": {"const": true},
+        "require_provenance": {"const": true},
+        "forbid_generated_numbers": {"const": true}
+      },
+      "additionalProperties": false
+    }
+  }
+}
