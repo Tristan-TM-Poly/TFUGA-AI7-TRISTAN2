@@ -74,7 +74,8 @@ def test_bounded_rejections_are_exposed_and_can_feed_m_minus() -> None:
     assert found is not None
     assert found.rejected
     assert memory.minus
-    assert any(record.kind == "layout_mutation_rejected" for record in memory.minus.values())
+    # MemoryRecord's canonical classifier is `category` (R0.4 contract).
+    assert any(record.category == "layout_mutation_rejected" for record in memory.minus.values())
 
 
 def test_seed_layout_population_is_unique_valid_and_deterministic() -> None:
@@ -114,7 +115,7 @@ def test_layout_evolution_retains_elite_and_fills_unique_population() -> None:
     elite_hash = report.ranking()[0].layout.layout_hash
     assert elite_hash in {layout.layout_hash for layout in a}
     assert all(layout.audit(fairness_threshold=cfg.fairness_threshold).accepted for layout in a)
-    assert any(record.kind == "layout_mutation_admitted" for record in memory.plus.values())
+    assert any(record.category == "layout_mutation_admitted" for record in memory.plus.values())
 
 
 def test_map_generalization_uses_disjoint_layout_sets() -> None:
@@ -131,7 +132,10 @@ def test_map_generalization_uses_disjoint_layout_sets() -> None:
     assert {row.agent_id for row in report.agents} == {agent.agent_id for agent in agents}
     assert report.receipt_hash
     for row in report.agents:
-        assert row.generalization_gap == round(row.train_mean_quality - row.validation_mean_quality, 6)
+        # Stored means and the stored gap are independently rounded to 6 decimals,
+        # so their reconstructed difference can differ by one final decimal unit.
+        reconstructed_gap = round(row.train_mean_quality - row.validation_mean_quality, 6)
+        assert abs(row.generalization_gap - reconstructed_gap) <= 1e-6
         assert row.worst_validation_quality >= 0.0
 
 
