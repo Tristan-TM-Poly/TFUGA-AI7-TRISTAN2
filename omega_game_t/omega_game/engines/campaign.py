@@ -141,7 +141,9 @@ class CampaignCheckpoint:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> "CampaignCheckpoint":
-        if set(data) != {"plan_receipt", "completed"}:
+        required = {"plan_receipt", "completed"}
+        allowed = required | {"checkpoint_receipt"}
+        if not required.issubset(data) or not set(data).issubset(allowed):
             raise ValueError("invalid checkpoint fields")
         completed_raw = data["completed"]
         if not isinstance(completed_raw, Mapping):
@@ -155,7 +157,11 @@ class CampaignCheckpoint:
                 raise ValueError("checkpoint result key/job_id mismatch")
             _validate_result_receipt(result)
             completed[job_id] = result
-        return cls(plan_receipt=str(data["plan_receipt"]), completed=completed)
+        checkpoint = cls(plan_receipt=str(data["plan_receipt"]), completed=completed)
+        supplied_receipt = data.get("checkpoint_receipt")
+        if supplied_receipt is not None and str(supplied_receipt) != checkpoint.checkpoint_receipt:
+            raise ValueError("checkpoint receipt mismatch")
+        return checkpoint
 
     @classmethod
     def from_json(cls, text: str) -> "CampaignCheckpoint":
