@@ -20,7 +20,7 @@ def preset(name: str) -> dict:
     if name == "design-underdetermined":
         return {"kind": "linear", "A": [[1.0, 1.0]], "y": [2.0], "regularization": 0.0}
     if name == "ill-conditioned":
-        return {"kind": "linear", "A": [[1.0, 0.0], [0.0, 1e-9]], "y": [1.0, 1e-9], "regularization": 1e-6}
+        return {"kind": "linear", "A": [[1.0, 0.0], [0.0, 1e-6]], "y": [1.0, 1e-6], "regularization": 1e-6}
     if name == "bayes-scalar":
         return {
             "kind": "bayes",
