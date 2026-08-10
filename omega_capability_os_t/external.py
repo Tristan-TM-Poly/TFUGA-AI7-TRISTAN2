@@ -3,11 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Iterable, Mapping
 
-from .core import Capability, stable_digest
+from .core import AUTHORITIES, Capability, stable_digest
 from .runtime import ActionRequired, HandlerResult
 
-EXTERNAL_SCHEMA_VERSION = "0.3.0"
+EXTERNAL_SCHEMA_VERSION = "0.4.0"
 EXTERNAL_STATUSES = ("SUCCESS", "FAILURE", "DEGRADED")
+_AUTHORITY_RANK = {name: index for index, name in enumerate(AUTHORITIES)}
 
 
 def _template_tokens(value: Any) -> set[str]:
@@ -38,12 +39,25 @@ def _render_template(value: Any, inputs: Mapping[str, Any]) -> Any:
     return value
 
 
+def _validate_authority_name(authority: str) -> bool:
+    return authority in _AUTHORITY_RANK
+
+
+def _binding_authority_allowed(capability_authority: str, external_authority: str) -> bool:
+    if not _validate_authority_name(capability_authority):
+        return False
+    if not _validate_authority_name(external_authority):
+        return False
+    return _AUTHORITY_RANK[external_authority] <= _AUTHORITY_RANK[capability_authority]
+
+
 @dataclass(frozen=True)
 class ExternalBinding:
     capability_id: str
     connector: str
     action: str
     argument_template: Mapping[str, Any]
+    external_authority: str = "read"
     adapter_version: str = EXTERNAL_SCHEMA_VERSION
     notes: tuple[str, ...] = ()
 
@@ -57,6 +71,9 @@ class ExternalBinding:
             connector=str(payload["connector"]),
             action=str(payload["action"]),
             argument_template=dict(template),
+            external_authority=str(
+                payload.get("external_authority", payload.get("authority", "read"))
+            ),
             adapter_version=str(payload.get("adapter_version", EXTERNAL_SCHEMA_VERSION)),
             notes=tuple(map(str, payload.get("notes", []))),
         )
@@ -96,6 +113,17 @@ def validate_external_bindings(
             continue
         if not binding.connector.strip() or not binding.action.strip():
             errors.append(f"{binding.capability_id}: connector/action cannot be empty")
+        if not _validate_authority_name(binding.external_authority):
+            errors.append(
+                f"{binding.capability_id}: invalid external_authority "
+                f"{binding.external_authority!r}"
+            )
+        elif not _binding_authority_allowed(cap.authority, binding.external_authority):
+            errors.append(
+                f"{binding.capability_id}: external authority "
+                f"{binding.external_authority!r} exceeds capability authority "
+                f"{cap.authority!r}"
+            )
         unknown_tokens = sorted(set(binding.referenced_tokens) - set(cap.consumes))
         if unknown_tokens:
             errors.append(
@@ -108,7 +136,7 @@ def validate_external_bindings(
             )
 
     return {
-        "schema": "omega-capability-external-binding-validation/v1",
+        "schema": "omega-capability-external-binding-validation/v2",
         "status": "PASS" if not errors else "FAIL",
         "binding_count": len(items),
         "errors": errors,
@@ -123,6 +151,7 @@ class ExternalActionRequest:
     connector: str
     action: str
     authority: str
+    external_authority: str
     arguments: Mapping[str, Any]
     expected_outputs: tuple[str, ...]
     candidate_sha: str | None = None
@@ -130,12 +159,13 @@ class ExternalActionRequest:
 
     def to_dict(self, *, include_arguments: bool = False) -> dict[str, Any]:
         payload: dict[str, Any] = {
-            "schema": "omega-capability-external-request/v1",
+            "schema": "omega-capability-external-request/v2",
             "request_id": self.request_id,
             "capability_id": self.capability_id,
             "connector": self.connector,
             "action": self.action,
             "authority": self.authority,
+            "external_authority": self.external_authority,
             "expected_outputs": list(self.expected_outputs),
             "candidate_sha": self.candidate_sha,
             "plan_fingerprint": self.plan_fingerprint,
@@ -162,6 +192,8 @@ class ExternalActionReceipt:
     notes: tuple[str, ...] = ()
     error: str | None = None
     observed_candidate_sha: str | None = None
+    mutation_performed: bool = False
+    mutation_refs: tuple[str, ...] = ()
 
     @classmethod
     def from_dict(cls, payload: Mapping[str, Any]) -> "ExternalActionReceipt":
@@ -186,11 +218,13 @@ class ExternalActionReceipt:
                 if payload.get("observed_candidate_sha") is not None
                 else None
             ),
+            mutation_performed=bool(payload.get("mutation_performed", False)),
+            mutation_refs=tuple(map(str, payload.get("mutation_refs", []))),
         )
 
     def to_dict(self, *, include_outputs: bool = False) -> dict[str, Any]:
         payload: dict[str, Any] = {
-            "schema": "omega-capability-external-receipt/v1",
+            "schema": "omega-capability-external-receipt/v2",
             "request_id": self.request_id,
             "capability_id": self.capability_id,
             "connector": self.connector,
@@ -200,6 +234,8 @@ class ExternalActionReceipt:
             "notes": list(self.notes),
             "error": self.error,
             "observed_candidate_sha": self.observed_candidate_sha,
+            "mutation_performed": self.mutation_performed,
+            "mutation_refs": list(self.mutation_refs),
             "outputs_fingerprint": stable_digest(dict(self.outputs)),
             "outputs_redacted": not include_outputs,
         }
@@ -218,12 +254,19 @@ def make_external_request(
 ) -> ExternalActionRequest:
     if binding.capability_id != capability.capability_id:
         raise ValueError("binding capability_id does not match capability")
+    if not _binding_authority_allowed(capability.authority, binding.external_authority):
+        raise ValueError(
+            "external binding authority exceeds capability authority: "
+            f"{binding.external_authority!r} > {capability.authority!r}"
+        )
     arguments = binding.render_arguments(inputs)
     identity = {
         "schema": EXTERNAL_SCHEMA_VERSION,
         "capability_id": capability.capability_id,
         "connector": binding.connector,
         "action": binding.action,
+        "capability_authority": capability.authority,
+        "external_authority": binding.external_authority,
         "arguments_fingerprint": stable_digest(arguments),
         "candidate_sha": candidate_sha,
         "plan_fingerprint": plan_fingerprint,
@@ -235,6 +278,7 @@ def make_external_request(
         connector=binding.connector,
         action=binding.action,
         authority=capability.authority,
+        external_authority=binding.external_authority,
         arguments=arguments,
         expected_outputs=tuple(capability.produces),
         candidate_sha=candidate_sha,
@@ -264,12 +308,29 @@ def validate_external_receipt(
     missing_outputs = sorted(set(request.expected_outputs) - set(receipt.outputs))
     if receipt.status == "SUCCESS" and missing_outputs:
         errors.append(f"successful receipt missing declared outputs: {missing_outputs}")
+
+    mutating_request = request.external_authority in {"write", "irreversible"}
+    if receipt.mutation_performed and not mutating_request:
+        errors.append(
+            "receipt reports remote mutation for a non-mutating external request"
+        )
+    if (
+        receipt.status == "SUCCESS"
+        and mutating_request
+        and not receipt.mutation_performed
+    ):
+        errors.append(
+            "successful mutating external request lacks mutation_performed=true"
+        )
+
     return {
-        "schema": "omega-capability-external-receipt-validation/v1",
+        "schema": "omega-capability-external-receipt-validation/v2",
         "status": "PASS" if not errors else "FAIL",
         "receipt_status": receipt.status,
         "errors": errors,
         "missing_outputs": missing_outputs,
+        "mutation_expected": mutating_request,
+        "mutation_performed": receipt.mutation_performed,
     }
 
 
@@ -293,7 +354,11 @@ class ExternalResolver:
         self.bindings = {item.capability_id: item for item in bindings}
         parsed: list[ExternalActionReceipt] = []
         for item in receipts:
-            parsed.append(item if isinstance(item, ExternalActionReceipt) else ExternalActionReceipt.from_dict(item))
+            parsed.append(
+                item
+                if isinstance(item, ExternalActionReceipt)
+                else ExternalActionReceipt.from_dict(item)
+            )
         self.receipts = {item.request_id: item for item in parsed}
         self.candidate_sha = candidate_sha
         self.plan_fingerprint = plan_fingerprint
@@ -321,7 +386,9 @@ class ExternalResolver:
 
         validation = validate_external_receipt(request, receipt)
         if validation["status"] != "PASS":
-            raise RuntimeError("invalid external receipt: " + "; ".join(validation["errors"]))
+            raise RuntimeError(
+                "invalid external receipt: " + "; ".join(validation["errors"])
+            )
         if receipt.status != "SUCCESS":
             detail = receipt.error or f"external receipt status={receipt.status}"
             raise RuntimeError(detail)
@@ -334,6 +401,8 @@ class ExternalResolver:
                 f"external_request_id={receipt.request_id}",
                 f"external_connector={receipt.connector}",
                 f"external_action={receipt.action}",
+                f"external_authority={request.external_authority}",
+                f"mutation_performed={str(receipt.mutation_performed).lower()}",
                 *receipt.notes,
             ),
         )
