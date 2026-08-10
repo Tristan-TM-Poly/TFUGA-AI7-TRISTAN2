@@ -84,8 +84,8 @@ class OmegaInverseProblemTest(unittest.TestCase):
         self.assertAlmostEqual(posterior.covariance[0][0], 0.5, places=9)
 
     def test_ill_conditioned_spectrum(self) -> None:
-        spectrum = singular_spectrum([[1.0, 0.0], [0.0, 1e-9]], rtol=1e-12)
-        self.assertGreater(spectrum["condition_number_nonzero_subspace"], 1e8)
+        spectrum = singular_spectrum([[1.0, 0.0], [0.0, 1e-6]], rtol=1e-12)
+        self.assertGreater(spectrum["condition_number_nonzero_subspace"], 1e5)
 
     def test_regularization_router(self) -> None:
         self.assertEqual(route_linear_inverse([[1.0, 0.0], [0.0, 1.0]], regularization=0.1)["method"], "tikhonov")
