@@ -1,6 +1,6 @@
-# Public data source catalog — Ω-RECYCLE-T∞ R0.4
+# Public data source contracts — Ω-RECYCLE-T∞ R0.5
 
-Verified 2026-08-10. This file records source descriptors, not a claim that upstream data are immutable or universally comparable.
+Verified 2026-08-10. This file records source contracts and evidence boundaries; it does not claim that upstream data are immutable or universally comparable.
 
 ## Eurostat `env_wasmun`
 
@@ -8,29 +8,45 @@ Verified 2026-08-10. This file records source descriptors, not a claim that upst
 - Dataset: Municipal waste by waste management operations
 - Online code: `env_wasmun`
 - DOI: `10.2908/env_wasmun`
-- Source: https://ec.europa.eu/eurostat/databrowser/view/env_wasmun/default/table?lang=en
-- Coverage reported when verified: 1995–2024
-- Important boundary: Eurostat warns that municipal-waste composition/scope can differ across countries; cross-country differences must not be interpreted causally without additional analysis.
+- Data-browser source: `https://ec.europa.eu/eurostat/databrowser/view/env_wasmun/default/table?lang=en`
+- Coverage observed at verification: 1995–2024
+- R0.5 adapter: Eurostat TSV parser plus `env_wasmun` contract.
 
-R0.4 uses this source only as a provenance/catalog example and a tiny regression snapshot. Production ingestion must retain dimensions, units, flags, update date and source metadata.
+The adapter retains raw dimension codes, time period, numeric value/missingness and observation status flags. The `env_wasmun` adapter requires at least `geo`, `unit` and `wst_oper`. Known unit normalization currently includes `KG_HAB -> kg_per_capita`, `THS_T -> thousand_tonnes`, and `T -> tonnes` while retaining the original unit code.
+
+This is schema validation, not a claim that countries, years or methods are automatically comparable.
 
 ## US EPA SMM Facts and Figures
 
 - Publisher: US Environmental Protection Agency
 - Series: Advancing Sustainable Materials Management: Facts and Figures
-- Source: https://www.epa.gov/facts-and-figures-about-materials-waste-and-recycling/advancing-sustainable-materials-management
-- EPA states that the most recent national Facts and Figures data are from 2018.
-- Data cover US municipal solid waste generation and management pathways, with methodology documents maintained separately.
+- Source: `https://www.epa.gov/facts-and-figures-about-materials-waste-and-recycling/advancing-sustainable-materials-management`
+- Current national Facts & Figures series identified at verification is through 2018.
+- R0.5 adapter: normalized bridge CSV requiring `year`, `material`, `management_pathway`, `short_tons`.
 
-R0.4 does not mirror the EPA tables. It provides source metadata plus a generic snapshot/provenance layer so later adapters can ingest specific tables while retaining hashes and retrieval dates.
+The package performs explicit US-short-ton to metric-tonne conversion with `1 short ton = 0.90718474 metric tonnes`. It intentionally does not pretend that every EPA webpage, spreadsheet or PDF shares one stable machine-readable layout.
+
+## Revision court
+
+Normalized snapshots can be compared by declared key fields. R0.5 records:
+
+- added records;
+- removed records;
+- modified records;
+- structural field-set changes;
+- deterministic structural hashes.
+
+A revision report detects change. It does not decide that two revisions are semantically equivalent, methodologically comparable or factually correct.
 
 ## OAK rule
 
 ```text
 URL != provenance
 hash != truth
-catalog entry != dataset validation
+schema match != semantic equivalence
+revision detected != revision explained
+fixture != live evidence
 one dataset != causal evidence
 ```
 
-Every empirical adapter must preserve source, retrieval time, schema, units, upstream revision information, license/terms when known, and a canonical content hash.
+Every live empirical acquisition should preserve source, retrieval time, source/version/update metadata, schema, units, flags/codelists, license/terms when known and a canonical content hash.
