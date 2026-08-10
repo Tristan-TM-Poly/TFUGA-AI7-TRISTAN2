@@ -34,7 +34,7 @@ jobs:
         run: python -m compileall -q omega_recycle_t/omega_recycle
       - name: Unit tests
         run: pytest -q omega_recycle_t/tests
-      - name: OAKBench evidence courts
+      - name: OAKBench R0.3-R0.4 compatibility courts
         run: |
           python -m omega_recycle oakbench > /tmp/omega-recycle-oakbench.json
           python - <<'PY'
@@ -50,4 +50,18 @@ jobs:
           assert r04["transport"]["optimality_certified"] is True
           assert r04["dataset_snapshot"]["hash_reproducible"] is True
           assert r04["lcia"]["certified_lca"] is False
+          PY
+      - name: R0.5 source, drift, negative-control and multi-hop courts
+        run: |
+          python -m omega_recycle evidence-r05 > /tmp/omega-recycle-r05.json
+          python - <<'PY'
+          from omega_recycle.r05_evidence import run_r05_evidence
+          report = run_r05_evidence()
+          assert report["bench_version"] == "0.5.0"
+          assert report["eurostat"]["latest_status"] == "p"
+          assert report["revision"]["changed"] is True
+          assert report["calibration_drift"]["deterioration_detected"] is True
+          assert report["negative_control_campaign"]["canonical_is_best"] is False
+          assert report["multi_hop_flow"]["optimality_certified"] is True
+          assert report["time_expanded_flow"]["optimality_certified"] is True
           PY
