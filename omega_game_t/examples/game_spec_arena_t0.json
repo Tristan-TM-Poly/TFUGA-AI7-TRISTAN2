@@ -1,0 +1,44 @@
+{
+  "spec_id": "arena-demo",
+  "version": "0.1",
+  "metadata": {
+    "purpose": "deterministic research benchmark"
+  },
+  "environment": {
+    "width": 10,
+    "height": 8,
+    "resource_density": 0.2,
+    "initial_energy": 24,
+    "harvest_energy": 5,
+    "move_cost": 1,
+    "attack_cost": 2,
+    "attack_damage": 6,
+    "max_steps": 48
+  },
+  "agents": [
+    {
+      "agent_id": "alpha",
+      "seek_resource": 0.85,
+      "aggression": 0.25,
+      "conservation": 0.55,
+      "exploration": 0.2
+    },
+    {
+      "agent_id": "beta",
+      "seek_resource": 0.5,
+      "aggression": 0.7,
+      "conservation": 0.3,
+      "exploration": 0.4
+    },
+    {
+      "agent_id": "gamma",
+      "seek_resource": 0.65,
+      "aggression": 0.45,
+      "conservation": 0.7,
+      "exploration": 0.65
+    }
+  ],
+  "rules": {
+    "allowed_actions": ["move", "harvest", "attack", "idle"]
+  }
+}

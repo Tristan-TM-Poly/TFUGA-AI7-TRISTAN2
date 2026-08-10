@@ -1,6 +1,6 @@
 # MASTER SYSTEM INDEX — TFUGA-AI7-TRISTAN2
 
-Date: 2026-06-27  
+Date: 2026-08-10  
 Status: OAK-safe navigation layer. This file is an index, not a proof, legal opinion, revenue guarantee, or scientific certification.
 
 ## Purpose
@@ -27,51 +27,28 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | Rank | System | Primary repo/path | Current status | Why it matters | Next OAK action |
 |---:|---|---|---|---|---|
 | 1 | OAK + DCT-Ω | `docs/canon/TFUGA-AI7-TRISTAN2-CANON-v0.2.md` | C/X | Converts large imagination into proof/test/prototype/canon flow. | Create reusable DCT-Ω schema and packet generator. |
-| 2 | TFUGA-HGFM-AI7 Absolute Kernel | `canon/TFUGA_BEST_ABSOLUTE_KERNEL_2026-05-03.md` | X | Root theory for HGFM, action, projection, AI-7, canonization, and respect gates. | Extract 8 publishable definitions and 3 small propositions. |
-| 3 | AUTO² Kernel | `omega_auto2_kernel/` | D | Workflow compiler with OAK, forbidden actions, rollback, telemetry. | Add CI, CLI examples, dry-run GitHub issue generator. |
-| 4 | Ω-LIN-T | `scripts/omega_lin_oakbench.py`, `docs/omega-lin/` | D | Scientific OAKBench for local linearization with residuals and validity domains. | Package as first public prototype/paper. |
-| 5 | FFWT-HAC-CVCD | `prototypes/omega_ffwt_hac_cvcd/` | E/D | Early benchmark suggests complementary multiscale features vs FFT on synthetic tasks. | Add DWT/scattering baselines, real datasets, noise sweeps, ablations. |
-| 6 | Ω-DeepTech Intelligence Forge | `omega_deeptech_forge/` | D-MVP | Routes deeptech signals into IP/revenue/publication/prototype decisions and public-safe handoff packets. | Connect to review packets, prior-art packs, offer cards, and Value Pipeline OAKBench. |
-| 7 | DeepTech → Company OS Bridge | `omega_deeptech_forge/review_packets.py` | D-MVP | Converts signal decisions into OfferCards, PriorArtQueryPacks, publication notes, IP disclosure drafts, gates, scores, and M⁻. | Add JSON schema and AUTO² issue generation behind OAKGate. |
-| 8 | Company Revenue IP Publication OS | `docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md` / review packets | X/D | Turns artifacts into company, revenue, IP, publication, and review packets safely. | Integrate Value Pipeline OAKBench scoring and approval records. |
-| 9 | Top40×256 | `docs/canon/Top-40x256-MANIFEST-v0.1.md` | Source/E | Mine of 10,240 candidates, explicitly not canonized in bulk. | Extract Top16 absolute into DCT-Ω cards. |
-| 10 | Ω-GAME-T | PR #82 branch `omega-game-t-2026-06-27` | D-MVP but large | Hypergraph game/world lab for CVCD, OAK, GM agents, rules, memory, simulations. | Split or CI-validate before merge. |
-| 11 | U0 Core | `u0_core/` | X | Minimal generator hypothesis: Δ, R, T produce trace, memory, validation, scale, HGFM. | Add tests showing emergence and failure cases. |
-| 12 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add first conservation-tested simulation. |
+| 2 | TFUGA-HGFM-AI7 Absolute Kernel | `canon/TFUGA_BEST_ABSOLUTE_KERNEL_2026-05-03.md` | X | Root theory for HGFM, action, projection, AI-7, canonization, and respect gates. | Extract publishable definitions and small propositions. |
+| 3 | AUTO² Kernel | `omega_auto2_kernel/` | D | Workflow compiler with OAK, forbidden actions, rollback, telemetry. | Add stronger CI and dry-run integration. |
+| 4 | Ω-LIN-T | `scripts/omega_lin_oakbench.py`, `docs/omega-lin/` | D | Scientific OAKBench for local linearization with residuals and validity domains. | Package as a public-safe prototype/paper candidate. |
+| 5 | FFWT-HAC-CVCD | `prototypes/omega_ffwt_hac_cvcd/` | E/D | Complementary multiscale research features with explicit baselines required. | Add recognized baselines, real datasets, noise sweeps and ablations. |
+| 6 | Ω-DeepTech Intelligence Forge | `omega_deeptech_forge/` | D-MVP | Routes deeptech signals into IP/revenue/publication/prototype decisions and public-safe handoff packets. | Connect review packets and prior-art/value gates. |
+| 7 | DeepTech → Company OS Bridge | `omega_deeptech_forge/review_packets.py` | D-MVP | Converts signal decisions into governed review artifacts. | Add schemas and approval-aware AUTO² integration. |
+| 8 | Company Revenue IP Publication OS | `docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md` | X/D | Connects artifacts to company/revenue/IP/publication review. | Strengthen value-pipeline evidence. |
+| 9 | Top40×256 | `docs/canon/Top-40x256-MANIFEST-v0.1.md` | Source/E | Large candidate mine explicitly not canonized in bulk. | Extract strongest candidates into DCT-Ω cards. |
+| 10 | Ω-GAME-SIM-EVO-T∞ / Ω-GAME-T | `omega_game_t/` | D / R1.0.6 candidate | R0.1–R0.13 and R1.0–R1.0.5 form an executable deterministic game/simulation/evolution stack with OAKBench, fault injection, installable packaging, CPython matrix, isolated-wheel smoke and deterministic-vs-empirical ScaleBench. R1.0.6 retains bounded ScaleBench observations as commit-addressed CI artifacts without promoting runner timings into deterministic truth. | Pass R1.0.6 five-job CI; then accumulate comparable observations before statistical regression gates. |
+| 11 | U0 Core | `u0_core/` | X | Minimal generator hypothesis. | Add tests showing emergence and failure cases. |
+| 12 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add conservation-tested simulation. |
 | 13 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
 
-## Promotion priorities
+## Merge and promotion rules
 
-### P0 — Make the system legible
-
-- Maintain this file as the top-level navigation index.
-- Each major system must link to one DCT-Ω card, one OAK report, one M⁻ note, and one next experiment.
-
-### P1 — Promote three nuclei first
-
-```text
-AUTO² Kernel -> Ω-LIN-T -> FFWT-HAC-CVCD
-```
-
-These have the strongest combination of code, tests, reports, and future product/research value.
-
-### P2 — Merge path
-
-1. DeepTech Forge is now merged into `main`; use it as the native IP/revenue triage organ.
-2. Treat PR #82 as high-potential but high-review-load; split or add CI before full merge.
-3. Use DCT-Ω + OAK + M⁻ for every merge decision.
-4. No external sending, filing, public publication, or IP disclosure without an explicit approval record.
-
-### P3 — Anti-inflation rule
-
-```text
-Top40×256 is a mine, not a throne.
-Generate massively. Score brutally. Promote rarely.
-```
+1. Small tested increments beat giant cumulative diffs.
+2. Failed or superseded candidates remain M⁻ evidence.
+3. Use DCT-Ω + OAK + provenance for every promotion.
+4. Public, legal, financial, IP-sensitive and irreversible actions remain explicitly approval-gated.
+5. Empirical timing observations never become deterministic truth by being stored in CI.
 
 ## Universal DCT-Ω card contract
-
-Every object promoted from this index should have:
 
 ```yaml
 id: string
