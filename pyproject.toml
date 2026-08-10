@@ -104,6 +104,8 @@ omega-actions-shard = "omega_actions_t.sharding:main"
 omega-actions-twin = "omega_actions_t.digital_twin:main"
 omega-actions-cache = "omega_actions_t.cache_tensor:main"
 omega-actions-compile = "omega_actions_t.compiler:main"
+omega-intent = "omega_intent_t.cli:main"
+omega-intent-r02 = "omega_intent_t.r02.cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
