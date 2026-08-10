@@ -1,6 +1,6 @@
 ---
 name: chatgpt-hgfm-memory-sync
-description: Ingest authorized ChatGPT conversation exports, supplied transcripts, or the active conversation context actually visible to the assistant; extract durable knowledge into provenance-preserving HGFM memory, run OAK/privacy checks, version derived artifacts in GitHub, and generate compact ChatGPT context capsules. Use when the user asks to preserve, recover, synchronize, recall, summarize, canonize, graph, or checkpoint important information from ChatGPT conversations.
+description: Ingest authorized ChatGPT conversation exports, supplied transcripts, or the active conversation context actually visible to the assistant; extract durable knowledge into provenance-preserving HGFM memory, run OAK/privacy checks, version derived artifacts in GitHub, and generate compact ChatGPT context capsules. Use when the user asks to preserve, recover, synchronize, recall, summarize, canonize, graph, checkpoint, or continue important information from ChatGPT conversations.
 ---
 
 # Ω-CHATMEM-HGFM-T∞
@@ -20,14 +20,34 @@ Use this skill to turn authorized ChatGPT conversation data into an external, ve
 9. Repetition is not evidence. Summaries are not sources. Hypotheses are not proofs.
 10. Prefer incremental processing and the smallest relevant retrieval subgraph.
 11. For GitHub writes, use a feature branch, limited scope, tests/OAK where applicable, and reviewable changes.
+12. A new ChatGPT conversation is a new **session node**, not a new memory universe.
+
+## Cross-conversation bootstrap
+
+For future conversations that materially concern Tristan's systems, theories, applications, research, GitHub, prior decisions, or continuing work:
+
+1. Recover `/Tristan/ChatGPT Memory/CHATMEM_GLOBAL_POINTER.json` from ChatGPT Library when available.
+2. Recover the latest compact context and the smallest relevant HGFM subgraph.
+3. Use reference-chat-history/personal context only as supplementary context; canonical GitHub/Library memory remains authoritative for stored state.
+4. Represent the active conversation as a new `ConversationSession` node with `source_type=chatgpt_active_context`.
+5. Work using the recovered canonical state.
+6. At a substantive milestone, extract a **delta checkpoint** rather than rewriting earlier checkpoints.
+7. Link the new checkpoint to the previous checkpoint with `continues`; use `updates`, `supersedes`, `contradicts`, and `touches_system` where applicable.
+8. Run OAK privacy/provenance/structural checks.
+9. Promote only reviewed PUBLIC derived artifacts to public GitHub.
+10. Update `CHECKPOINT_REGISTRY.jsonl`, `CHATMEM_GLOBAL_POINTER.json`, and the ChatGPT Library capsule after successful promotion.
+
+Cross-chat invariant:
+
+`new active chat → global pointer → relevant subgraph → work → delta checkpoint → OAK → registry/pointer update`
+
+This does **not** imply a background listener. Closed, deleted, temporary, unseen, or otherwise inaccessible chats are not claimed as captured.
 
 ## Two ingestion modes
 
 ### Export/backfill mode
 
 Use an official export or supplied transcript when the user wants older history reconstructed.
-
-Pipeline:
 
 `export/transcript → normalize → provenance → extract → HGFM → OAK → M+/M− → canon → capsule`
 
@@ -43,63 +63,22 @@ When the user says things such as **"à partir d'ici"**, **"remember this from n
 4. Extract only durable/high-signal information: systems, definitions, decisions, constraints, evidence, failures, artifacts, next actions and stable preferences.
 5. For public GitHub, store derived PUBLIC memory only; do not publish the raw transcript.
 6. Preserve source provenance with turn keys and SHA-256 hashes when exact message IDs are unavailable.
-7. Emit a live checkpoint containing:
-   - `checkpoint.json`
-   - `hgfm/nodes.jsonl`
-   - `hgfm/hyperedges.jsonl`
-   - `hgfm/provenance.jsonl`
-   - `canon/CHATGPT_CONTEXT_LIVE.md`
-8. When ChatGPT Library is available and the user wants reusable ChatGPT memory, keep a compact current capsule there as a retrieval surface.
+7. Emit a live checkpoint containing `checkpoint.json`, HGFM nodes/hyperedges/provenance and a compact context capsule.
+8. When ChatGPT Library is available, maintain the compact global pointer/capsule there for cross-conversation retrieval.
 9. Later exports may backfill history **before** the capture epoch, but are not a prerequisite for memory **after** it.
 10. Never describe unseen history as captured.
 
-The live-memory invariant is:
-
-`visible current context → derived checkpoint → HGFM GitHub → compact ChatGPT capsule`
-
-not:
-
-`assumed full ChatGPT history → GitHub`.
-
 ## Checkpoint selection
 
-Promote a current-context item only when it is meaningfully reusable. Prefer:
+Promote only meaningfully reusable content: canonical system/theory names, durable definitions, explicit decisions/constraints, important results with evidence, GitHub artifacts/PRs/commits, stable workflow preferences, open questions/next actions, and M− failures/contradictions/rejected hypotheses.
 
-- canonical system/theory names;
-- durable definitions;
-- explicit decisions and constraints;
-- important results with evidence;
-- GitHub artifacts/PRs/commits;
-- stable user workflow preferences;
-- open questions and next actions;
-- M− failures, contradictions and rejected hypotheses.
-
-Avoid:
-
-- greetings and conversational filler;
-- transient phrasing;
-- duplicated restatements;
-- raw chain-of-thought;
-- secrets or sensitive data;
-- unsupported claims promoted as facts.
-
-## Pipeline for an export or supplied transcript
-
-1. Run `omega-chatmem sync <input.json> <output-dir>`.
-2. Inspect `<output-dir>/reports/oak_report.json`.
-3. Stop promotion if OAK is `FAIL`.
-4. Inspect `candidates/memory_candidates.jsonl`.
-5. Promote only appropriate PUBLIC derived artifacts to a public repo.
-6. Keep PRIVATE/SECRET/IP-sensitive raw data outside public GitHub.
-7. Use `omega-chatmem recall <output-dir> "<topic>"` to retrieve a minimal subgraph.
-8. Use `canon/CHATGPT_CONTEXT.md`, `canon/CHATGPT_CONTEXT_LIVE.md`, or `canon/MEMORY_CAPSULE.md` as compact context, not as the sole source of truth.
-9. When a new source arrives, update incrementally and record the delta.
+Avoid greetings, filler, transient phrasing, duplicated restatements, raw chain-of-thought, secrets/sensitive data, and unsupported claims promoted as facts.
 
 ## Fractal levels
 
 - L0: source span/message/turn hash
 - L1: atomic Concept/System/Equation/Decision/Action
-- L2: conversation/checkpoint graph
+- L2: conversation session/checkpoint graph
 - L3: theory/system/project graph
 - L4: global Tristan corpus
 - L5: meta-architecture and cross-domain links
@@ -113,33 +92,24 @@ Use typed relations such as:
 `contains`, `mentions`, `defines`, `extends`, `specializes`, `generalizes`,
 `depends_on`, `derived_from`, `supports`, `contradicts`, `falsifies`, `tests`,
 `implements`, `measures`, `predicts`, `explains`, `uses`, `produces`,
-`supersedes`, `duplicates`, `variant_of`, `motivates`, `blocks`, `resolves`,
-`failed_because`, `next_action_for`, `commercializes`, `patent_candidate_for`,
-`activates`, `constrains`, `allows_backfill`.
+`supersedes`, `updates`, `duplicates`, `variant_of`, `motivates`, `blocks`,
+`resolves`, `failed_because`, `next_action_for`, `commercializes`,
+`patent_candidate_for`, `activates`, `constrains`, `allows_backfill`,
+`continues`, `touches_system`.
 
 ## OAK promotion contract
 
-`PROMOTE` means the generated graph passed structural/provenance/privacy gates.
-It does **not** mean a scientific or mathematical claim is true.
+`PROMOTE` means the generated graph passed structural/provenance/privacy gates. It does **not** mean a scientific or mathematical claim is true.
 
-Never automatically classify a claim as `PROVEN` from language alone.
-
-For a live checkpoint, also verify:
-
-- every public node is PUBLIC;
-- source hashes are well formed;
-- no raw transcript field is emitted;
-- every hyperedge member exists;
-- the checkpoint explicitly states its source scope and capture epoch;
-- no claim is made that inaccessible history was captured.
+For a live checkpoint, verify every public node is PUBLIC, source hashes are valid, no raw transcript field is emitted, every hyperedge member exists, scope/capture epoch are explicit, and no inaccessible history is claimed as captured.
 
 ## ChatGPT-facing memory
 
 Use three layers:
 
-1. **GitHub HGFM** — detailed, versioned, auditable source of external memory.
-2. **ChatGPT Library capsule** — compact persistent file retrievable across conversations when available.
-3. **Native ChatGPT memory candidate** — only durable preferences, stable goals, persistent operating rules and highly reused canonical names.
+1. **GitHub HGFM** — detailed, versioned, auditable external memory.
+2. **ChatGPT Library** — `CHATMEM_GLOBAL_POINTER.json` plus compact context capsules retrievable across conversations.
+3. **Native ChatGPT memory/history** — supplementary durable preferences/context, not an exhaustive database.
 
 Keep equations, large theory bodies, transient PR state, raw transcripts and detailed evidence external.
 
@@ -147,6 +117,7 @@ Keep equations, large theory bodies, transient PR state, raw transcripts and det
 
 - `GO CHATMEM-LIVE`
 - `GO CHATMEM-CHECKPOINT`
+- `GO CHATMEM-BOOTSTRAP`
 - `GO CHATMEM-INGEST`
 - `GO CHATMEM-HGFM`
 - `GO CHATMEM-OAK`
@@ -159,5 +130,4 @@ Keep equations, large theory bodies, transient PR state, raw transcripts and det
 
 ## Success metric
 
-Maximize recoverable useful knowledge × provenance × correctness × reuse,
-while minimizing noise × duplication × privacy risk × stale context × retrieval cost.
+Maximize recoverable useful knowledge × provenance × correctness × reuse, while minimizing noise × duplication × privacy risk × stale context × retrieval cost.
