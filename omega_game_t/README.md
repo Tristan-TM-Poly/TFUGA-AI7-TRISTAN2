@@ -1,89 +1,182 @@
-# Omega GAME T — Core Split
+# Omega GAME T — Ω-GAME-SIM-EVO-T∞
 
-Issue: #90  
-Status: small merge units split from the larger GAME branch.
+Status: **R1.0.3 local executable research package candidate**.  
+Authority: simulation / benchmark / provenance / OAK review only.
 
-## Ω-GAME-SIM-EVO-T∞ progression
+Omega GAME T is a deterministic research laboratory for generated games and algorithmic worlds. Development is intentionally split into small tested layers and consolidated through an integrated OAKBench rather than promoted from architecture alone.
 
-- **R0.1 merged:** deterministic Arena-T0, replay SHA-256, tournaments/evolution/OAK/fuzzing.
-- **R0.2 merged:** DirtyFrontier, event scheduler, Temporal LOD, dependency DAG, CostGraph.
-- **R0.3 merged:** deterministic MAP-Elites quality diversity.
-- **R0.4 merged:** Hall of Fame, M+/M-, anti-forgetting regression.
-- **R0.5 merged:** agent↔environment coevolution with held-out seeds.
-- **R0.6 merged:** bounded GameSpec compiler and deterministic build receipts.
-
-### R0.7 — fixed hashed layouts
-
-R0.7 makes map geometry executable rather than decorative metadata.
-
-Implemented:
-
-- immutable `ArenaLayout(width, height, left_spawn, right_spawn, resources, obstacles)`;
-- canonical sorting + SHA-256 `layout_hash`;
-- bounds/uniqueness/no-overlap validation;
-- BFS connectivity and distance maps;
-- bilateral resource-reachability gate;
-- configurable resource-distance asymmetry policy;
-- obstacle-aware shortest-path movement;
-- fixed spawns/resources/obstacles consumed by Arena-T0;
-- layout identity in replay receipts and deterministic reruns;
-- `arena_layout` entity in WorldGraph projection;
-- `run_round_robin(..., layout=...)` propagation;
-- explicit `layout_fairness_threshold` in audits/compiler;
-- optional GameSpec `layout` lowering;
-- GameSpec environment/layout dimension consistency;
-- compiler derives `resource_count` from fixed resources;
-- layout audit/hash inside build receipt;
-- canonical runtime action `stay`, with legacy input alias `idle → stay`;
-- schema + `examples/game_spec_fixed_layout.json`;
-- backward compatibility: matches/specs without a layout keep their previous serialized surface and replay hash contract.
+## Executable ladder
 
 ```text
-GameSpec.layout
-→ ArenaLayout
-→ structural validation
-→ connectivity/reachability
-→ fairness-policy audit
-→ layout_hash
-→ Arena-T0
-→ tournament / replay / WorldGraph
+R0.1  deterministic Arena-T0 / tournaments / evolution / replay audit
+R0.2  sparse-event scheduling / Temporal LOD / CostGraph
+R0.3  MAP-Elites quality diversity
+R0.4  Hall of Fame + M+ / M- + anti-forgetting
+R0.5  agent↔environment coevolution + held-out seeds
+R0.6  bounded GameSpec compiler
+R0.7  fixed hashed layouts + geometry gates
+R0.8  adversarial layout evolution + held-out maps
+R0.9  deterministic sharded campaigns + checkpoints
+R0.10 local persisted/process runtime
+R0.11 portable campaign bundles + heartbeat/TTL + local CAS
+R0.12 causal coordinator ledger + replay audit
+R0.13 ExperimentGraph + selection evidence closure
+R1.0  integrated OAKBench + fault matrix + capability report
+R1.0.1 checkpoint round-trip + retry/replay hardening
+R1.0.2 public integrated OAKBench API + CLI
+R1.0.3 installable Python package + console-entry CI
 ```
 
-Example:
+## Install for development
+
+From the repository root:
 
 ```bash
 cd omega_game_t
-PYTHONPATH=. python -m omega_game compile-spec examples/game_spec_fixed_layout.json --seed 42 --tournament
+python -m pip install -e .
 ```
 
-## OAK boundaries
+The package installs the console command:
+
+```bash
+omega-game --help
+```
+
+Python requirement: **3.11+**.
+
+## Integrated OAKBench
+
+The main consolidation gate can be launched directly:
+
+```bash
+omega-game oakbench
+```
+
+Example with explicit controls:
+
+```bash
+omega-game oakbench \
+  --seed 1401 \
+  --max-steps 8 \
+  --layouts 3 \
+  --shards 2 \
+  --workers 2 \
+  --fairness-threshold 0.5
+```
+
+The integrated path is:
 
 ```text
-LAYOUT_HASH != FAIRNESS
-CONNECTED_LAYOUT != BALANCED_LAYOUT
-DISTANCE_SYMMETRY != STRATEGIC_FAIRNESS
-FIXED_LAYOUT != FUN_LEVEL
-FAIRNESS_THRESHOLD != UNIVERSAL_FAIRNESS_DEFINITION
-STRUCTURALLY_RUNNABLE != OAK_ACCEPTED_FOR_COMPETITION
-BUILD_RECEIPT != EXTERNAL_CERTIFICATION
+GameSpec
+→ fixed ArenaLayout
+→ deterministic Arena-T0
+→ replay/audit
+→ held-out map generalization
+→ sharded campaign
+→ checkpoint
+→ bundle + local CAS restore
+→ causal coordinator ledger
+→ ExperimentGraph + M+/M-
+→ evidence-backed selection decision
+→ process equivalence
+→ fault injection
+→ capability report
+```
+
+The command exits non-zero when the integrated report is not accepted.
+
+### Fault matrix currently exercised
+
+- replay SHA tamper;
+- disconnected layout;
+- checkpoint-result tamper;
+- bundle-manifest tamper;
+- local CAS corruption;
+- coordinator-event tamper;
+- selection decision with missing evidence;
+- train/validation layout leakage;
+- acknowledgement by a non-owning worker.
+
+A detected fault means the named detector rejected that perturbation. It does **not** prove all fault classes are covered.
+
+## Other CLI surfaces
+
+```bash
+omega-game arena --seed 42 --steps 96
+omega-game tournament --seed 42 --population 8 --steps 64
+omega-game evolve --seed 42 --population 8 --generations 3 --steps 48
+omega-game quality-diversity --seed 42 --population 16 --steps 48 --bins 8
+omega-game memory-demo --seed 42 --population 8 --top-k 3 --steps 32 --threshold 0.5
+omega-game coevolve --seed 42 --population 6 --environments 4
+omega-game compile-spec examples/game_spec_fixed_layout.json --seed 42 --tournament
+omega-game fuzz --seed 42 --cases 100
+omega-game sparse-bench --seed 42 --entities 10000 --active 100 --ticks 128
+```
+
+## Public Python OAKBench API
+
+```python
+from omega_game import IntegratedOAKBenchConfig, run_integrated_oakbench
+
+report = run_integrated_oakbench(
+    IntegratedOAKBenchConfig(seed=1401, process_workers=2)
+)
+assert report.accepted
+```
+
+## Evidence boundaries
+
+The following distinctions are contractual:
+
+```text
 DETERMINISTIC_REPLAY != PHYSICAL_TRUTH
 TOURNAMENT_WIN != GENERAL_INTELLIGENCE
-HELD_OUT_SEEDS != REAL_WORLD_GENERALIZATION
-WORK_UNIT_REDUCTION != HARDWARE_SPEEDUP
+WORK_UNIT_REDUCTION != WALL_CLOCK_SPEEDUP
+QD_COVERAGE != BEHAVIORAL_COMPLETENESS
+M_PLUS != PROOF_OF_TRUTH
+M_MINUS != PROOF_OF_IMPOSSIBILITY
+HELD_OUT_SEEDS/MAPS != REAL_WORLD_GENERALIZATION
+LAYOUT_HASH != FAIRNESS
+GEOMETRIC_SYMMETRY != STRATEGIC_FAIRNESS
+LOCAL_PROCESS_EQUIVALENCE != GUARANTEED_SPEEDUP
+TTL_LEASE_COORDINATOR != DISTRIBUTED_CONSENSUS
+LOCAL_CAS != REMOTE_DURABILITY
+EVENT_CHAIN_INTEGRITY != EXTERNAL_EVENT_TRUTH
+PROVENANCE_CLOSURE != LOGICAL_PROOF
+INTEGRATED_PASS != SCIENTIFIC_TRUTH
 ```
 
-## Local test
+The capability report intentionally marks as **not demonstrated**: distributed consensus, remote durable artifact storage, guaranteed multi-process speedup, strategic fairness, fun, and general intelligence.
+
+## CI / local validation
+
+GitHub Actions installs the package itself, verifies the `omega-game` console entry point, then runs the complete test suite:
 
 ```bash
 cd omega_game_t
-python -m pytest
+python -m pip install -e .
+omega-game --help
+python -m pytest tests -q
 ```
 
-## Next split units
+## Provenance and theory notes
 
-1. adversarial fixed-layout mutation/evolution with connectivity-preserving repair/rejection;
-2. train/validation layout sets and map-generalization receipts;
-3. extinct-lineage registry and richer M- minimization;
-4. TextWorld / Quest-CVCD adapters;
-5. profiler-driven CPU/GPU scheduling experiments;
-6. scheduler sharding/checkpoint/backpressure experiments.
+Key consolidation documents:
+
+- `docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md`
+- `docs/theories/OMEGA_GAME_CAMPAIGN_RUNTIME_R10.md`
+- `docs/theories/OMEGA_GAME_CAMPAIGN_BUNDLES_R11.md`
+- `docs/theories/OMEGA_GAME_COORDINATOR_LEDGER_R12.md`
+- `docs/theories/OMEGA_GAME_EXPERIMENT_GRAPH_R13.md`
+- `docs/theories/OMEGA_GAME_R100_INTEGRATED_OAKBENCH.md`
+
+## Next OAK work
+
+Priority is **hardening and empirical measurement**, not another abstraction layer:
+
+1. larger deterministic/fault campaigns;
+2. profiler-driven CPU/process experiments;
+3. memory and checkpoint scale tests;
+4. more mutation/property-based fault generation;
+5. artifact/receipt migration tests across package versions;
+6. only then evaluate real remote coordination/storage adapters if an actual backend is available.
