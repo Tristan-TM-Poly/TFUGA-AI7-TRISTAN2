@@ -4,8 +4,10 @@
   "type": "object",
   "additionalProperties": true,
   "properties": {
+    "schema_version": {"enum": ["1.0.0", "1.0.1"]},
     "provider": {"enum": ["crossref", "datacite", "openalex", "manual"]},
     "doi": {"type": "string"},
+    "raw_metadata": {"type": "object"},
     "normalized": {"type": "object"},
     "raw_metadata_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "normalized_metadata_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
