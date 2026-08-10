@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_asm_p7_certificate.schema.json",
+  "title": "Omega ASM-T P7 bounded equivalence certificate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_level",
+    "obligation_id",
+    "name",
+    "width",
+    "variables",
+    "verification_status",
+    "accepted_equivalent",
+    "kernel_checked",
+    "authority",
+    "claim_scope",
+    "semantics",
+    "exhaustive_evidence",
+    "solver_evidence",
+    "obligation",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_level": {"const": "P7-bounded-equivalence-certificate"},
+    "obligation_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "name": {"type": "string", "minLength": 1},
+    "width": {"type": "integer", "minimum": 1, "maximum": 64},
+    "variables": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}
+    },
+    "verification_status": {
+      "enum": [
+        "dual_verified_bounded",
+        "exhaustive_verified_bounded",
+        "solver_unsat_observed",
+        "solver_sat_observed",
+        "refuted_exhaustive",
+        "evidence_conflict",
+        "unverified"
+      ]
+    },
+    "accepted_equivalent": {"type": "boolean"},
+    "kernel_checked": {"const": false},
+    "authority": {"const": "review_only"},
+    "claim_scope": {"const": "fixed_width_bitvector_semantics_only"},
+    "semantics": {"const": "fixed_width_unsigned_bitvector_modulo_2^width"},
+    "exhaustive_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "complete",
+        "states_total",
+        "states_checked",
+        "max_states",
+        "counterexample",
+        "lhs_value",
+        "rhs_value"
+      ],
+      "properties": {
+        "status": {"enum": ["equivalent", "counterexample", "not_run"]},
+        "complete": {"type": "boolean"},
+        "states_total": {"type": "integer", "minimum": 1},
+        "states_checked": {"type": "integer", "minimum": 0},
+        "max_states": {"type": "integer", "minimum": 1},
+        "counterexample": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+          ]
+        },
+        "lhs_value": {"type": ["integer", "null"], "minimum": 0},
+        "rhs_value": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "solver_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "name",
+        "version",
+        "transcript_sha256",
+        "transcript_present",
+        "solver_text_alone_grants_acceptance"
+      ],
+      "properties": {
+        "status": {"enum": ["sat", "unsat", "unknown", "invalid", null]},
+        "name": {"type": ["string", "null"]},
+        "version": {"type": ["string", "null"]},
+        "transcript_sha256": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          ]
+        },
+        "transcript_present": {"type": "boolean"},
+        "solver_text_alone_grants_acceptance": {"const": false}
+      }
+    },
+    "obligation": {"type": "object"},
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"accepted_equivalent": {"const": true}}},
+      "then": {
+        "properties": {
+          "verification_status": {
+            "enum": ["dual_verified_bounded", "exhaustive_verified_bounded"]
+          },
+          "exhaustive_evidence": {
+            "properties": {
+              "status": {"const": "equivalent"},
+              "complete": {"const": true}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

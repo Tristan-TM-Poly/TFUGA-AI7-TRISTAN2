@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega_asm_p6_replication.schema.json",
+  "title": "Omega ASM-T P6 identified-target replication campaign",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_level",
+    "status",
+    "claim_scope",
+    "authority",
+    "warning",
+    "minimum_available_replicates",
+    "input_report_count",
+    "eligible_report_count",
+    "available_report_count",
+    "excluded_reports",
+    "groups",
+    "promotion_contract"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "evidence_level": {"const": "P6-replication-campaign"},
+    "status": {
+      "enum": [
+        "replicated_identified_target",
+        "replicated_target_with_additional_groups",
+        "multiple_replicated_targets",
+        "mixed_or_insufficient_targets",
+        "insufficient_replication"
+      ]
+    },
+    "claim_scope": {"const": "replicated_identified_target_only"},
+    "authority": {"const": "review_only"},
+    "warning": {"type": "string", "minLength": 1},
+    "minimum_available_replicates": {"type": "integer", "minimum": 2},
+    "input_report_count": {"type": "integer", "minimum": 0},
+    "eligible_report_count": {"type": "integer", "minimum": 0},
+    "available_report_count": {"type": "integer", "minimum": 0},
+    "excluded_reports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["index", "reasons"],
+        "properties": {
+          "index": {"type": "integer", "minimum": 0},
+          "reasons": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "replication_key",
+          "machine_fingerprint",
+          "machine_identity",
+          "binary_sha256",
+          "input_count",
+          "available_count",
+          "partial_count",
+          "unavailable_count",
+          "qualifies_for_identified_target_replication",
+          "source_indexes",
+          "metrics"
+        ],
+        "properties": {
+          "replication_key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "machine_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "machine_identity": {"type": "object"},
+          "binary_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "input_count": {"type": "integer", "minimum": 1},
+          "available_count": {"type": "integer", "minimum": 0},
+          "partial_count": {"type": "integer", "minimum": 0},
+          "unavailable_count": {"type": "integer", "minimum": 0},
+          "qualifies_for_identified_target_replication": {"type": "boolean"},
+          "source_indexes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "integer", "minimum": 0}
+          },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "count",
+                "minimum",
+                "median",
+                "mean",
+                "maximum",
+                "stdev",
+                "mad",
+                "p05",
+                "p95"
+              ],
+              "properties": {
+                "count": {"type": "integer", "minimum": 1},
+                "minimum": {"type": "number", "minimum": 0},
+                "median": {"type": "number", "minimum": 0},
+                "mean": {"type": "number", "minimum": 0},
+                "maximum": {"type": "number", "minimum": 0},
+                "stdev": {"type": "number", "minimum": 0},
+                "mad": {"type": "number", "minimum": 0},
+                "p05": {"type": "number", "minimum": 0},
+                "p95": {"type": "number", "minimum": 0}
+              }
+            }
+          }
+        }
+      }
+    },
+    "promotion_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "same_machine_fingerprint_required",
+        "same_binary_sha256_required",
+        "available_p5_reports_required",
+        "partial_or_unavailable_reports_count_toward_threshold",
+        "universal_claim_allowed",
+        "automatic_authority_promotion"
+      ],
+      "properties": {
+        "same_machine_fingerprint_required": {"const": true},
+        "same_binary_sha256_required": {"const": true},
+        "available_p5_reports_required": {"type": "integer", "minimum": 2},
+        "partial_or_unavailable_reports_count_toward_threshold": {"const": false},
+        "universal_claim_allowed": {"const": false},
+        "automatic_authority_promotion": {"const": false}
+      }
+    }
+  }
+}

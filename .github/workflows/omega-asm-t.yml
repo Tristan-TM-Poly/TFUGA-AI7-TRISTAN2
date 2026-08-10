@@ -1,0 +1,161 @@
+name: Omega ASM-T R1 OAKBench
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'omega_asm_t/**'
+      - 'tests/test_omega_asm_t*.py'
+      - 'examples/native/omega_dot_u64_*'
+      - 'scripts/omega-asm'
+      - 'docs/canon/OMEGA_ASM_T_INFINITY_R1.md'
+      - 'docs/architecture/OMEGA_ASM_T_R1_ARCHITECTURE.md'
+      - 'docs/architecture/OMEGA_ASM_T_P4_BENCHMARK_PROTOCOL.md'
+      - 'docs/architecture/OMEGA_ASM_T_CLI_ISOLATION.md'
+      - 'schemas/omega_asm_report.schema.json'
+      - 'schemas/omega_asm_benchmark_report.schema.json'
+      - 'policies/omega_asm_t_policy.json'
+      - '.github/workflows/omega-asm-t.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-asm-r1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-court:
+    name: Python court / ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install focused validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile package and courts
+        run: python -m compileall -q omega_asm_t tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py
+      - name: Run focused and adversarial OAKBench
+        run: python -m pytest -q tests/test_omega_asm_t.py tests/test_omega_asm_t_hardening.py
+      - name: Verify repository-local CLI launcher
+        run: |
+          test -x scripts/omega-asm
+          ./scripts/omega-asm capabilities > /tmp/omega-asm-launcher-capabilities.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path('/tmp/omega-asm-launcher-capabilities.json').read_text())
+          assert 'x86_64' in payload
+          assert 'aarch64' in payload
+          PY
+      - name: Confirm root packaging manifest stays ASM-independent
+        run: |
+          if grep -Eq '^omega-asm[[:space:]]*=' pyproject.toml; then
+            echo 'omega-asm must remain repository-local until an explicit packaging/release change'
+            exit 1
+          fi
+      - name: Generate deterministic report
+        run: python -m omega_asm_t report --width 8 --output /tmp/omega-asm-report.json
+      - name: Validate report schemas and authority
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          report=json.loads(Path('/tmp/omega-asm-report.json').read_text())
+          schema=json.loads(Path('schemas/omega_asm_report.schema.json').read_text())
+          benchmark_schema=json.loads(Path('schemas/omega_asm_benchmark_report.schema.json').read_text())
+          policy=json.loads(Path('policies/omega_asm_t_policy.json').read_text())
+          Draft202012Validator.check_schema(schema)
+          Draft202012Validator.check_schema(benchmark_schema)
+          Draft202012Validator(schema).validate(report)
+          assert report['authority']=='review_only'
+          assert report['human_review_required'] is True
+          assert report['automatic_merge_allowed'] is False
+          assert policy['execute_arbitrary_user_assembly'] is False
+          assert policy['automatic_publication_allowed'] is False
+          PY
+      - name: Audit immutable action refs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('.github/workflows/omega-asm-t.yml').read_text()
+          refs=re.findall(r'(?m)^\s*uses:\s*([^\s#]+)', text)
+          moving=[ref for ref in refs if not re.search(r'@[0-9a-f]{40}$', ref)]
+          assert refs, 'expected at least one uses directive'
+          assert not moving, moving
+          PY
+
+  native-x86-64:
+    name: Native x86-64 differential and P4 court
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Confirm architecture
+        run: test "$(uname -m)" = "x86_64"
+      - name: Assemble, link and execute differential harness
+        run: |
+          cc -std=c11 -O2 -Wall -Wextra -Werror \
+            examples/native/omega_dot_u64_harness.c \
+            examples/native/omega_dot_u64_x86_64.S \
+            -o /tmp/omega-asm-native
+          /tmp/omega-asm-native
+      - name: Run observational timing harness protocol v2
+        run: |
+          cc -std=c11 -O3 -Wall -Wextra -Werror \
+            examples/native/omega_dot_u64_benchmark.c \
+            examples/native/omega_dot_u64_x86_64.S \
+            -o /tmp/omega-asm-benchmark
+          /tmp/omega-asm-benchmark > /tmp/omega-asm-native-benchmark.json
+          python3 -m omega_asm_t benchmark-report \
+            /tmp/omega-asm-native-benchmark.json \
+            --output /tmp/omega-asm-p4-report.json
+      - name: Validate P4 protocol v2 evidence without performance threshold
+        run: |
+          python3 - <<'PY'
+          import json, math
+          from pathlib import Path
+          raw=json.loads(Path('/tmp/omega-asm-native-benchmark.json').read_text())
+          report=json.loads(Path('/tmp/omega-asm-p4-report.json').read_text())
+          assert raw['evidence_level']=='P4-observational'
+          assert raw['claim_scope']=='single_execution_context_only'
+          assert raw['benchmark_protocol_version']==2
+          assert raw['anti_hoist_memory_barrier'] is True
+          assert raw['checksum_scheme']=='rotate-xor-index-v2'
+          assert raw['rounds']==31
+          assert raw['inner_iterations']==127
+          assert report['evidence_level']=='P4-observational'
+          assert report['machine']['architecture']=='x86_64'
+          assert report['native_metadata']['benchmark_protocol_version']==2
+          assert report['native_metadata']['anti_hoist_memory_barrier'] is True
+          assert report['native_metadata']['checksum_scheme']=='rotate-xor-index-v2'
+          stats=report['statistics_ns_per_call']
+          assert set(stats)=={'reference_c','x86_64_indexed','x86_64_ptr'}
+          for item in stats.values():
+              assert item['count']==31
+              assert math.isfinite(item['median']) and item['median']>0
+              assert math.isfinite(item['mad']) and item['mad']>=0
+          ratios=report['median_ratio_to_reference_c']
+          assert ratios['reference_c']==1.0
+          assert all(value is None or (math.isfinite(value) and value>0) for value in ratios.values())
+          PY
+      - name: Print P4 observational report
+        run: cat /tmp/omega-asm-p4-report.json
+      - name: Record compiler identity
+        run: cc --version | head -n 1

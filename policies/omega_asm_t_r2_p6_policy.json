@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "module": "omega-asm-t-r2-p6-replication",
+  "authority": "review_only",
+  "human_review_required": true,
+  "automatic_merge_allowed": false,
+  "automatic_publication_allowed": false,
+  "minimum_available_replicates": 3,
+  "same_machine_fingerprint_required": true,
+  "same_binary_sha256_required": true,
+  "partial_reports_count_toward_replication": false,
+  "unavailable_reports_count_toward_replication": false,
+  "mixed_targets_may_be_merged_into_one_claim": false,
+  "universal_claim_allowed": false,
+  "automatic_authority_promotion": false,
+  "ephemeral_frequency_is_machine_identity": false,
+  "runner_name_is_machine_identity": false,
+  "isa_feature_mask_is_machine_identity": true,
+  "cache_geometry_is_machine_identity": true,
+  "required_target_specific_claim_context": [
+    "machine_fingerprint",
+    "binary_sha256",
+    "minimum replicated P5 evidence",
+    "metric distribution",
+    "source report provenance"
+  ],
+  "forbidden_promotions": [
+    "single P5 report -> P6",
+    "partial/unavailable P5 report -> replication count",
+    "different binary SHA-256 -> same replication group",
+    "different machine fingerprint -> same replication group",
+    "P6 target-specific evidence -> universal ISA/language claim",
+    "P6 benchmark evidence -> P7 formal equivalence"
+  ]
+}
