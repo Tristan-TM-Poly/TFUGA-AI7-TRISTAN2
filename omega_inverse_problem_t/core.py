@@ -167,18 +167,33 @@ def jacobi_eigh_symmetric(a: Matrix, tol: float = 1e-13, max_sweeps: int = 200) 
     return [evals[i] for i in order], [[v[r][i] for i in order] for r in range(n)]
 
 
+def _spectral_pseudoinverse_symmetric(a: Matrix, rtol: float) -> tuple[Matrix, Vector, float]:
+    evals, vecs = jacobi_eigh_symmetric(a)
+    singular_values = [sqrt(max(0.0, value)) for value in evals]
+    largest = singular_values[0] if singular_values else 0.0
+    # Forming a Gram matrix squares the condition number. The sqrt(machine-eps)
+    # floor prevents inversion of numerical null modes that the Gram representation
+    # cannot reliably distinguish from zero.
+    threshold = max(1e-14, rtol * largest, sqrt(2.220446049250313e-16) * largest)
+    inv_eigs = [
+        1.0 / value if value > 0.0 and sqrt(max(0.0, value)) > threshold else 0.0
+        for value in evals
+    ]
+    return matmul(matmul(vecs, diag(inv_eigs)), transpose(vecs)), singular_values, threshold
+
+
 def singular_spectrum(a: Matrix, rtol: float = 1e-10) -> dict[str, Any]:
     a = _as_matrix(a)
-    gram = matmul(transpose(a), a)
-    evals, _ = jacobi_eigh_symmetric(gram)
-    singular_values = [sqrt(max(0.0, x)) for x in evals]
-    largest = singular_values[0] if singular_values else 0.0
-    threshold = max(1e-14, rtol * largest)
+    m, n = shape(a)
+    # Use the smaller Gram matrix. Besides reducing work, this avoids creating
+    # structural zero modes solely because a rectangular map is wide/tall.
+    gram = matmul(transpose(a), a) if m >= n else matmul(a, transpose(a))
+    _, singular_values, threshold = _spectral_pseudoinverse_symmetric(gram, rtol)
     rank = sum(s > threshold for s in singular_values)
     positive = [s for s in singular_values if s > threshold]
+    largest = singular_values[0] if singular_values else 0.0
     smallest = min(positive) if positive else 0.0
     condition = (largest / smallest) if smallest > 0 else float("inf")
-    m, n = shape(a)
     return {
         "rows": m,
         "cols": n,
@@ -195,15 +210,15 @@ def singular_spectrum(a: Matrix, rtol: float = 1e-10) -> dict[str, Any]:
 
 def pseudoinverse(a: Matrix, rtol: float = 1e-10) -> Matrix:
     a = _as_matrix(a)
+    m, n = shape(a)
     at = transpose(a)
-    gram = matmul(at, a)
-    evals, v = jacobi_eigh_symmetric(gram)
-    singular_values = [sqrt(max(0.0, x)) for x in evals]
-    largest = singular_values[0] if singular_values else 0.0
-    threshold = max(1e-14, rtol * largest)
-    inv_eigs = [1.0 / e if e > 0 and sqrt(max(0.0, e)) > threshold else 0.0 for e in evals]
-    gp = matmul(matmul(v, diag(inv_eigs)), transpose(v))
-    return matmul(gp, at)
+    if m >= n:
+        gram = matmul(at, a)
+        gram_plus, _, _ = _spectral_pseudoinverse_symmetric(gram, rtol)
+        return matmul(gram_plus, at)
+    gram = matmul(a, at)
+    gram_plus, _, _ = _spectral_pseudoinverse_symmetric(gram, rtol)
+    return matmul(at, gram_plus)
 
 
 def least_squares(a: Matrix, y: Sequence[float], rtol: float = 1e-10) -> Vector:
@@ -389,7 +404,7 @@ def inverse_problem_report(a: Matrix, y: Sequence[float], *, regularization: flo
         warnings.append("rank-deficient map: inverse is not unique on the full state space")
     if spec["nullity"] > 0:
         warnings.append("nontrivial null space: unobservable design/state directions exist")
-    if spec["condition_number_nonzero_subspace"] > 1e8:
+    if spec["condition_number_nonzero_subspace"] > 1e5:
         warnings.append("ill-conditioned nonzero subspace: measurement noise may be strongly amplified")
     if regularization > 0:
         warnings.append("regularized solution trades exact data fit against prior/solution norm")
@@ -405,5 +420,6 @@ def inverse_problem_report(a: Matrix, y: Sequence[float], *, regularization: flo
             "a numerical inverse representative is not proof of global identifiability",
             "minimum-norm selection is a convention when multiple exact preimages exist",
             "regularization encodes an assumption and can bias the reconstruction",
+            "Gram-based spectral resolution is bounded by finite-precision conditioning",
         ],
     }
