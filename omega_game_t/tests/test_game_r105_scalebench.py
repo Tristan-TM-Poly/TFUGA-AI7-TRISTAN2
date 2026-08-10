@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+
+from omega_game.__main__ import main
 from omega_game.engines.scale_bench import (
     ScaleScenario,
     run_scale_bench,
@@ -88,6 +91,26 @@ def test_scale_bench_multi_scenario_receipt_is_deterministic() -> None:
     assert first.deterministic_payload() == second.deterministic_payload()
     assert first.deterministic_receipt == second.deterministic_receipt
     assert [row.job_count for row in first.scenarios] == [6, 12]
+
+
+def test_scale_bench_cli_runs_bounded_single_scenario(capsys) -> None:
+    code = main(
+        [
+            "scale-bench",
+            "--seed", "1870",
+            "--population", "3",
+            "--seed-count", "1",
+            "--max-steps", "4",
+            "--shards", "1",
+            "--repetitions", "1",
+            "--workers", "1",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert payload["accepted"] is True
+    assert payload["scenarios"][0]["job_count"] == 6
+    assert len(payload["deterministic_receipt"]) == 64
 
 
 def test_scale_bench_invalid_contracts_fail_closed() -> None:
