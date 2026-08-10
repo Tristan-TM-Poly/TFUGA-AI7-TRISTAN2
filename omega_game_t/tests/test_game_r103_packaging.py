@@ -6,7 +6,7 @@ from importlib.metadata import distribution
 
 def test_distribution_metadata_and_console_script_are_installed() -> None:
     dist = distribution("omega-game-t")
-    assert dist.version == "1.0.4"
+    assert dist.version == "1.0.5"
     console_scripts = {
         entry.name: entry.value
         for entry in dist.entry_points
@@ -24,4 +24,5 @@ def test_installed_console_script_help_runs() -> None:
     )
     assert completed.returncode == 0, completed.stderr
     assert "oakbench" in completed.stdout
+    assert "scale-bench" in completed.stdout
     assert "compile-spec" in completed.stdout

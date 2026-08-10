@@ -27,6 +27,7 @@ from .engines import (
     seed_environments,
     seed_population,
 )
+from .engines.scale_bench import ScaleScenario, run_scale_bench
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -80,6 +81,16 @@ def _parser() -> argparse.ArgumentParser:
     oakbench.add_argument("--shards", type=int, default=2)
     oakbench.add_argument("--workers", type=int, default=2)
     oakbench.add_argument("--fairness-threshold", type=float, default=0.50)
+
+    scale = sub.add_parser("scale-bench", help="measure deterministic campaign work and empirical local scale metrics")
+    scale.add_argument("--seed", type=int, default=1801)
+    scale.add_argument("--population", type=int, default=6)
+    scale.add_argument("--seed-count", type=int, default=2)
+    scale.add_argument("--max-steps", type=int, default=8)
+    scale.add_argument("--shards", type=int, default=3)
+    scale.add_argument("--repetitions", type=int, default=2)
+    scale.add_argument("--workers", type=int, default=2)
+    scale.add_argument("--matrix", action="store_true", help="run the built-in tiny/small/medium matrix")
 
     fuzz = sub.add_parser("fuzz", help="fuzz deterministic arena invariants")
     fuzz.add_argument("--seed", type=int, default=0)
@@ -201,6 +212,27 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(report.to_json(), end="")
         return 0 if report.accepted else 6
+
+    if args.command == "scale-bench":
+        if args.matrix:
+            report = run_scale_bench(seed=args.seed)
+        else:
+            report = run_scale_bench(
+                (
+                    ScaleScenario(
+                        "cli",
+                        seed=args.seed,
+                        population_size=args.population,
+                        seed_count=args.seed_count,
+                        max_steps=args.max_steps,
+                        shard_count=args.shards,
+                        repetitions=args.repetitions,
+                        process_workers=args.workers,
+                    ),
+                )
+            )
+        print(report.to_json(), end="")
+        return 0 if report.accepted else 7
 
     if args.command == "fuzz":
         report = fuzz_arena_t0(cases=args.cases, seed=args.seed)
