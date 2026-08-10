@@ -80,4 +80,4 @@ jobs:
           print('OAK_PASS_OMEGA_INTENT_R03')
           PY
       - name: Run deterministic demo
-        run: python examples/omega_intent_r03_demo.py > /tmp/demo-r03.json
+        run: PYTHONPATH=. python examples/omega_intent_r03_demo.py > /tmp/demo-r03.json
