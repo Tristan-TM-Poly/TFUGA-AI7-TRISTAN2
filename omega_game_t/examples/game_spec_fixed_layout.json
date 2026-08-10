@@ -1,0 +1,30 @@
+{
+  "spec_id": "fixed-layout-demo",
+  "version": "0.1",
+  "metadata": {"purpose": "deterministic fixed-layout benchmark"},
+  "environment": {
+    "width": 7,
+    "height": 5,
+    "resource_density": 0.1,
+    "initial_energy": 24,
+    "harvest_energy": 5,
+    "move_cost": 1,
+    "attack_cost": 2,
+    "attack_damage": 6,
+    "max_steps": 48
+  },
+  "layout": {
+    "width": 7,
+    "height": 5,
+    "left_spawn": [0, 2],
+    "right_spawn": [6, 2],
+    "resources": [[2, 1], [2, 3], [4, 1], [4, 3]],
+    "obstacles": [[3, 0], [3, 4]]
+  },
+  "agents": [
+    {"agent_id": "alpha", "seek_resource": 0.85, "aggression": 0.25, "conservation": 0.55, "exploration": 0.2},
+    {"agent_id": "beta", "seek_resource": 0.5, "aggression": 0.7, "conservation": 0.3, "exploration": 0.4},
+    {"agent_id": "gamma", "seek_resource": 0.65, "aggression": 0.45, "conservation": 0.7, "exploration": 0.65}
+  ],
+  "rules": {"allowed_actions": ["move", "harvest", "attack", "idle"]}
+}

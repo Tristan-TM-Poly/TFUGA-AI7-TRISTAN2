@@ -63,19 +63,23 @@ class FuzzReport:
 
 
 def match_world_graph(match: MatchResult) -> WorldGraph:
-    """Project an Arena-T0 replay into the already-merged Omega GAME WorldGraph."""
+    """Project an Arena-T0 replay and optional fixed layout into WorldGraph."""
 
     world = WorldGraph(world_id=f"arena-t0:{match.seed}:{match.replay_hash[:12]}")
     for genome in (match.left, match.right):
         world.add_entity(Entity(entity_id=genome.agent_id, kind="arena_agent", traits=asdict(genome)))
+    if match.layout is not None:
+        world.add_entity(
+            Entity(
+                entity_id=f"layout:{match.layout.layout_hash[:16]}",
+                kind="arena_layout",
+                traits=match.layout.normalized_dict(),
+            )
+        )
     for index, replay_event in enumerate(match.replay):
         target = replay_event.get("target")
         target_id = target if isinstance(target, str) and target in world.entities else None
-        payload = {
-            key: value
-            for key, value in replay_event.items()
-            if key not in {"actor", "action", "target"}
-        }
+        payload = {key: value for key, value in replay_event.items() if key not in {"actor", "action", "target"}}
         world.add_event(
             Event(
                 event_id=f"event-{index:06d}",
@@ -88,7 +92,14 @@ def match_world_graph(match: MatchResult) -> WorldGraph:
     return world
 
 
-def audit_match(match: MatchResult, *, check_determinism: bool = True) -> SimulationAudit:
+def audit_match(
+    match: MatchResult,
+    *,
+    check_determinism: bool = True,
+    layout_fairness_threshold: float = 0.50,
+) -> SimulationAudit:
+    if not 0.0 <= layout_fairness_threshold <= 1.0:
+        raise ValueError("layout_fairness_threshold must be in [0, 1]")
     flags: list[str] = []
     warnings: list[str] = []
     config = match.config
@@ -96,6 +107,18 @@ def audit_match(match: MatchResult, *, check_determinism: bool = True) -> Simula
         config.validate()
     except ValueError as exc:
         flags.append(f"invalid_config:{exc}")
+
+    if match.layout is not None:
+        try:
+            layout_audit = match.layout.audit(fairness_threshold=layout_fairness_threshold)
+            if not layout_audit.accepted:
+                flags.extend(f"layout:{flag}" for flag in layout_audit.flags)
+            if (match.layout.width, match.layout.height) != (config.width, config.height):
+                flags.append("layout:dimension_mismatch")
+            if len(match.layout.resources) != config.resource_count:
+                flags.append("layout:resource_count_mismatch")
+        except ValueError as exc:
+            flags.append(f"invalid_layout:{exc}")
 
     ids = (match.left.agent_id, match.right.agent_id)
     if match.ticks < 1 or match.ticks > config.max_steps:
@@ -118,7 +141,7 @@ def audit_match(match: MatchResult, *, check_determinism: bool = True) -> Simula
 
     deterministic = True
     if check_determinism:
-        repeated = run_arena_t0(match.left, match.right, seed=match.seed, config=match.config)
+        repeated = run_arena_t0(match.left, match.right, seed=match.seed, config=match.config, layout=match.layout)
         deterministic = repeated.replay_hash == match.replay_hash and repeated.winner == match.winner
         if not deterministic:
             flags.append("determinism_failure")
@@ -184,7 +207,7 @@ def _random_genome(rng: random.Random, agent_id: str) -> AgentGenome:
 
 
 def _replay_digest(match: MatchResult) -> str:
-    payload = {
+    payload: dict[str, Any] = {
         "seed": match.seed,
         "config": asdict(match.config),
         "left": asdict(match.left),
@@ -194,6 +217,9 @@ def _replay_digest(match: MatchResult) -> str:
         "metrics": match.metrics,
         "replay": list(match.replay),
     }
+    if match.layout is not None:
+        payload["layout"] = match.layout.normalized_dict()
+        payload["layout_hash"] = match.layout_hash
     return hashlib.sha256(
         json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
