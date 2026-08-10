@@ -14,8 +14,8 @@
       "evidence": {
         "cvcd_files": 3,
         "ffwt_files": 3,
-        "oak_files": 5,
-        "theory_files": 5
+        "oak_files": 6,
+        "theory_files": 6
       },
       "name": "Theory corpus integrity",
       "next_action": "Keep theories linked to executable benchmarks and ablation reports.",
@@ -145,7 +145,7 @@
       "status": "CANON"
     }
   ],
-  "generated_at": "2026-08-10T00:11:05+00:00",
+  "generated_at": "2026-08-10T00:13:57+00:00",
   "guardrails": {
     "allowed_output_dir": "reports/auto_genesis",
     "requires_human_review_for_code_changes": true,
@@ -198,6 +198,15 @@
   },
   "system": "TTM-TFUGA-AI7-TRISTAN2 Guarded Auto-Genesis",
   "theories": [
+    {
+      "bytes": 4281,
+      "lines": 164,
+      "mentions_cvcd": false,
+      "mentions_ffwt": false,
+      "mentions_oak": true,
+      "path": "docs/theories/OMEGA_GAME_LAYOUT_EVOLUTION_R08.md",
+      "title": "Ω-GAME-SIM-EVO-T∞ R0.8 — Adversarial Fixed-Layout Evolution"
+    },
     {
       "bytes": 6153,
       "lines": 216,
