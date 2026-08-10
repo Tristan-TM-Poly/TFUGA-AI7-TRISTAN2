@@ -1,0 +1,11 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"omega-ci-metamorphic-contracts/v5",
+  "type":"object",
+  "required":["schema","contracts"],
+  "properties":{
+    "schema":{"const":"omega-ci-metamorphic-contracts/v5"},
+    "contracts":{"type":"array","minItems":1,"items":{"type":"object","required":["property_id","claim_id","kind","description","seed_inputs"],"properties":{"property_id":{"type":"string"},"claim_id":{"type":"string"},"kind":{"enum":["exact_one_prefix_removal","leading_dot_preservation","ordinary_path_stability","suffix_preservation"]},"description":{"type":"string"},"seed_inputs":{"type":"array","minItems":1,"items":{"type":"string"}}}}}
+  },
+  "additionalProperties":false
+}

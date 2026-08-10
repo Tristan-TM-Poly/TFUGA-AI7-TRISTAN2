@@ -1,0 +1,34 @@
+{
+  "schema": "omega-ci-epistemic-graph/v3",
+  "nodes": [
+    {"node_id":"CLAIM-REPOTWIN-DETERMINISTIC","kind":"claim","label":"RepoTwin manifest is deterministic for unchanged bytes and policy","status":"PROTOTYPED","criticality":4,"metadata":{"discriminating_experiments":["EXP-REPOTWIN-CROSS-ENV"]}},
+    {"node_id":"CLAIM-ROUTER-CONSERVATIVE","kind":"claim","label":"Impact routing conservatively includes statically visible consumers","status":"PROTOTYPED","criticality":5,"metadata":{"conflict_hypotheses":["dynamic_import_gap","fixture_scope_difference"],"discriminating_experiments":["EXP-ROUTER-DYNAMIC-FIXTURE"]}},
+    {"node_id":"CLAIM-EVIDENCE-EXPIRY","kind":"claim","label":"Evidence validity changes deterministically under declared invalidators","status":"PROTOTYPED","criticality":5},
+    {"node_id":"CLAIM-CLAIM-COVERAGE","kind":"claim","label":"Claim coverage blocks missing adversarial evidence and broken provenance","status":"PROTOTYPED","criticality":4},
+    {"node_id":"EVID-REPOTWIN-LINUX","kind":"evidence","label":"Finite Linux RepoTwin determinism receipt","status":"CURRENT"},
+    {"node_id":"EVID-ROUTER-STATIC","kind":"evidence","label":"Finite static reverse-closure receipt","status":"CURRENT"},
+    {"node_id":"COUNTER-ROUTER-DYNAMIC","kind":"counterevidence","label":"Dynamic import fixture outside static graph scope","status":"CURRENT"},
+    {"node_id":"EVID-EXPIRY-FIXTURE","kind":"evidence","label":"Temporal state transition fixture","status":"CURRENT"},
+    {"node_id":"EVID-COVERAGE-FIXTURE","kind":"evidence","label":"Coverage dimensions fixture","status":"CURRENT"},
+    {"node_id":"TEST-REPOTWIN-DETERMINISM","kind":"test","label":"RepoTwin determinism test"},
+    {"node_id":"TEST-ROUTER-REVERSE","kind":"test","label":"Reverse dependency closure test"},
+    {"node_id":"TEST-EXPIRY-STATES","kind":"test","label":"Evidence expiry state test"},
+    {"node_id":"TEST-COVERAGE-ADVERSARIAL","kind":"test","label":"Claim coverage adversarial test"},
+    {"node_id":"ASSUME-STATIC-VISIBILITY","kind":"assumption","label":"Relevant imports are statically visible","status":"HYPOTHESIZED"},
+    {"node_id":"ENV-PY312-LINUX","kind":"environment","label":"Ubuntu 24.04 Python 3.12"}
+  ],
+  "edges": [
+    {"source":"CLAIM-REPOTWIN-DETERMINISTIC","target":"EVID-REPOTWIN-LINUX","relation":"supported_by"},
+    {"source":"CLAIM-REPOTWIN-DETERMINISTIC","target":"TEST-REPOTWIN-DETERMINISM","relation":"verified_by"},
+    {"source":"EVID-REPOTWIN-LINUX","target":"ENV-PY312-LINUX","relation":"produced_by"},
+    {"source":"CLAIM-ROUTER-CONSERVATIVE","target":"EVID-ROUTER-STATIC","relation":"supported_by"},
+    {"source":"CLAIM-ROUTER-CONSERVATIVE","target":"COUNTER-ROUTER-DYNAMIC","relation":"contradicted_by"},
+    {"source":"CLAIM-ROUTER-CONSERVATIVE","target":"TEST-ROUTER-REVERSE","relation":"verified_by"},
+    {"source":"CLAIM-ROUTER-CONSERVATIVE","target":"ASSUME-STATIC-VISIBILITY","relation":"assumes"},
+    {"source":"CLAIM-EVIDENCE-EXPIRY","target":"EVID-EXPIRY-FIXTURE","relation":"supported_by"},
+    {"source":"CLAIM-EVIDENCE-EXPIRY","target":"TEST-EXPIRY-STATES","relation":"verified_by"},
+    {"source":"CLAIM-CLAIM-COVERAGE","target":"EVID-COVERAGE-FIXTURE","relation":"supported_by"},
+    {"source":"CLAIM-CLAIM-COVERAGE","target":"TEST-COVERAGE-ADVERSARIAL","relation":"verified_by"},
+    {"source":"CLAIM-CLAIM-COVERAGE","target":"CLAIM-EVIDENCE-EXPIRY","relation":"depends_on"}
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega_ci_proof_plan_v1.schema.json",
+  "title": "Omega CI Proof Plan v1",
+  "type": "object",
+  "required": ["schema", "plan_id", "digest", "impact_plan_id", "changed_paths", "affected_packages", "claim_ids", "tests", "environments", "completion_conditions", "limitations", "manifest_digest"],
+  "properties": {
+    "schema": {"const": "omega-ci-proof-plan/v1"},
+    "plan_id": {"type": "string", "pattern": "^PROOFPLAN-"},
+    "digest": {"type": "string", "minLength": 64, "maxLength": 64},
+    "impact_plan_id": {"type": "string"},
+    "changed_paths": {"type": "array", "items": {"type": "string"}},
+    "affected_packages": {"type": "array", "items": {"type": "string"}},
+    "claim_ids": {"type": "array", "items": {"type": "string"}},
+    "stale_claim_ids": {"type": "array", "items": {"type": "string"}},
+    "tests": {"type": "array", "items": {"type": "object"}},
+    "missing_test_ids": {"type": "array", "items": {"type": "string"}},
+    "environments": {"type": "array", "items": {"type": "string"}},
+    "completion_conditions": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "manifest_digest": {"type": "string"},
+    "remote_mutations": {"const": 0},
+    "automatic_merge": {"const": false}
+  },
+  "additionalProperties": false
+}

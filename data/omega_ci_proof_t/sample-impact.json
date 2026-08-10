@@ -1,0 +1,13 @@
+{
+  "schema": "omega-intent-impact-plan/v3",
+  "plan_id": "IMPACT-SAMPLE-R03",
+  "changed_paths": ["omega_intent_t/r03/router.py"],
+  "affected_packages": ["omega_intent_t.r03", "omega_ci_proof_t"],
+  "affected_tests": ["tests/test_omega_intent_r03.py"],
+  "selected_workflows": [".github/workflows/omega-intent-r03.yml"],
+  "tiers": ["focused", "integration"],
+  "reasons": ["router changed"],
+  "full_suite_required": false,
+  "unknown_paths": [],
+  "manifest_digest": "sample-manifest-digest"
+}

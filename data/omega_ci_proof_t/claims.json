@@ -1,0 +1,35 @@
+{
+  "schema": "omega-ci-claim-registry/v1",
+  "claims": [
+    {
+      "claim_id": "CLAIM-REPOTWIN-DETERMINISTIC",
+      "statement": "RepoTwin produces a deterministic manifest for unchanged repository content.",
+      "subject_packages": ["omega_intent_t.r03"],
+      "required_test_ids": ["TEST-REPOTWIN-DETERMINISM"],
+      "assumptions": ["same repository bytes", "same scanner policy"],
+      "domain_of_validity": ["static repository inventory"],
+      "status": "PROTOTYPED",
+      "evidence_ttl_days": 30
+    },
+    {
+      "claim_id": "CLAIM-ROUTER-REVERSE-CLOSURE",
+      "statement": "A changed package propagates impact to static consumers in the reverse dependency closure.",
+      "subject_packages": ["omega_intent_t.r03"],
+      "required_test_ids": ["TEST-ROUTER-REVERSE-CLOSURE", "TEST-DOT-GITHUB-REGRESSION"],
+      "assumptions": ["imports are statically visible"],
+      "domain_of_validity": ["Python AST import graph"],
+      "status": "PROTOTYPED",
+      "evidence_ttl_days": 30
+    },
+    {
+      "claim_id": "CLAIM-PROOF-ARTIFACT-INTEGRITY",
+      "statement": "Proof-carrying artifacts detect content or size changes after receipt creation.",
+      "subject_packages": ["omega_intent_t.r03", "omega_ci_proof_t"],
+      "required_test_ids": ["TEST-PROOF-TAMPER-DETECTION"],
+      "assumptions": ["SHA-256 implementation behaves as specified"],
+      "domain_of_validity": ["local file content integrity"],
+      "status": "PROTOTYPED",
+      "evidence_ttl_days": 30
+    }
+  ]
+}

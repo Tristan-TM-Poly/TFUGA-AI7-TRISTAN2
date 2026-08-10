@@ -1,0 +1,15 @@
+{
+  "run_id": "CI-R02-SAMPLE-001",
+  "test_results": [
+    {"test_id": "TEST-EXPIRY-UNIT", "status": "PASSED", "environment": "python-3.12"},
+    {"test_id": "TEST-EXPIRY-ADVERSARIAL", "status": "PASSED", "environment": "python-3.12"},
+    {"test_id": "TEST-EXPIRY-PROPERTY", "status": "PASSED", "environment": "python-3.12"},
+    {"test_id": "TEST-EXPIRY-DIFFERENTIAL", "status": "PASSED", "environment": "python-3.12"},
+    {"test_id": "TEST-CONSTITUTION-UNIT", "status": "PASSED", "environment": "python-3.12"},
+    {"test_id": "TEST-CONSTITUTION-ADVERSARIAL", "status": "PASSED", "environment": "python-3.12"},
+    {"test_id": "TEST-CONSTITUTION-SCHEMA", "status": "PASSED", "environment": "python-3.12"},
+    {"test_id": "TEST-PINNING-UNIT", "status": "PASSED", "environment": "python-3.12"},
+    {"test_id": "TEST-PINNING-ADVERSARIAL", "status": "PASSED", "environment": "python-3.12"},
+    {"test_id": "TEST-PINNING-PROPERTY", "status": "PASSED", "environment": "python-3.12"}
+  ]
+}

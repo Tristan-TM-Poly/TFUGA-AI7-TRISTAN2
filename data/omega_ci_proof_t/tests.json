@@ -1,0 +1,39 @@
+{
+  "schema": "omega-ci-test-catalog/v1",
+  "tests": [
+    {
+      "test_id": "TEST-REPOTWIN-DETERMINISM",
+      "kind": "determinism",
+      "target": "omega_intent_t.r03",
+      "command": "pytest -q tests/test_omega_intent_r03.py -k deterministic",
+      "description": "Compile two manifests from unchanged input and compare their content identities.",
+      "source_claim_ids": ["CLAIM-REPOTWIN-DETERMINISTIC"]
+    },
+    {
+      "test_id": "TEST-ROUTER-REVERSE-CLOSURE",
+      "kind": "property",
+      "target": "omega_intent_t.r03",
+      "command": "pytest -q tests/test_omega_intent_r03.py -k reverse",
+      "description": "Verify that reverse dependency consumers are included in the impact closure.",
+      "source_claim_ids": ["CLAIM-ROUTER-REVERSE-CLOSURE"]
+    },
+    {
+      "test_id": "TEST-DOT-GITHUB-REGRESSION",
+      "kind": "mminus_regression",
+      "target": "omega_intent_t.r03",
+      "command": "pytest -q tests/test_omega_intent_r03.py -k dot_github",
+      "description": "Prevent removal of the leading dot in .github paths.",
+      "source_claim_ids": ["CLAIM-ROUTER-REVERSE-CLOSURE"],
+      "generated": true,
+      "source_rule_id": "MMINUS-R03-001"
+    },
+    {
+      "test_id": "TEST-PROOF-TAMPER-DETECTION",
+      "kind": "adversarial",
+      "target": "omega_intent_t.r03",
+      "command": "pytest -q tests/test_omega_intent_r03.py -k tamper",
+      "description": "Verify that changed artifact bytes invalidate the receipt.",
+      "source_claim_ids": ["CLAIM-PROOF-ARTIFACT-INTEGRITY"]
+    }
+  ]
+}

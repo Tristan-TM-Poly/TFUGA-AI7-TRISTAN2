@@ -1,0 +1,241 @@
+name: Omega CI Proof Autonomy A1-A3
+
+on:
+  pull_request:
+    paths:
+      - "omega_ci_proof_t/**"
+      - "tests/test_omega_ci_proof_t.py"
+      - "tests/test_omega_ci_proof_r02.py"
+      - "tests/test_omega_ci_proof_r03.py"
+      - "tests/test_omega_ci_proof_r04.py"
+      - "data/omega_ci_proof_t/**"
+      - "schemas/omega_ci_*.schema.json"
+      - "docs/omega-ci-proof-autonomy-t/**"
+      - "examples/omega_ci_proof_demo.py"
+      - "examples/omega_ci_proof_r02_demo.py"
+      - "examples/omega_ci_proof_r03_demo.py"
+      - "examples/omega_ci_proof_r04_demo.py"
+      - ".github/workflows/omega-ci-proof-autonomy.yml"
+  push:
+    branches: [feat/omega-ci-proof-autonomy-r01]
+    paths:
+      - "omega_ci_proof_t/**"
+      - "tests/test_omega_ci_proof_t.py"
+      - "tests/test_omega_ci_proof_r02.py"
+      - "tests/test_omega_ci_proof_r03.py"
+      - "tests/test_omega_ci_proof_r04.py"
+      - "data/omega_ci_proof_t/**"
+      - "schemas/omega_ci_*.schema.json"
+      - "docs/omega-ci-proof-autonomy-t/**"
+      - "examples/omega_ci_proof_demo.py"
+      - "examples/omega_ci_proof_r02_demo.py"
+      - "examples/omega_ci_proof_r03_demo.py"
+      - "examples/omega_ci_proof_r04_demo.py"
+      - ".github/workflows/omega-ci-proof-autonomy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-ci-proof-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof-kernel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # immutable reviewed commit
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile
+        run: >-
+          python -m compileall -q omega_ci_proof_t
+          tests/test_omega_ci_proof_t.py tests/test_omega_ci_proof_r02.py
+          tests/test_omega_ci_proof_r03.py tests/test_omega_ci_proof_r04.py
+          examples/omega_ci_proof_demo.py examples/omega_ci_proof_r02_demo.py
+          examples/omega_ci_proof_r03_demo.py examples/omega_ci_proof_r04_demo.py
+      - name: Test A1-A3 reliability layers
+        run: >-
+          pytest -q tests/test_omega_ci_proof_t.py tests/test_omega_ci_proof_r02.py
+          tests/test_omega_ci_proof_r03.py tests/test_omega_ci_proof_r04.py
+      - name: Validate schemas and registries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          pairs = [
+              ('schemas/omega_ci_claim_v1.schema.json', 'data/omega_ci_proof_t/claims.json'),
+              ('schemas/omega_ci_epistemic_graph_v3.schema.json', 'data/omega_ci_proof_t/r03-graph.json'),
+              ('schemas/omega_ci_causal_model_v4.schema.json', 'data/omega_ci_proof_t/r04-model.json'),
+          ]
+          for schema_path, data_path in pairs:
+              schema = json.loads(Path(schema_path).read_text())
+              jsonschema.Draft202012Validator.check_schema(schema)
+              jsonschema.validate(json.loads(Path(data_path).read_text()), schema)
+          for schema_path in (
+              'schemas/omega_ci_proof_plan_v1.schema.json', 'schemas/omega_ci_evidence_v1.schema.json',
+              'schemas/omega_ci_evidence_validity_v2.schema.json', 'schemas/omega_ci_claim_coverage_v2.schema.json',
+              'schemas/omega_ci_promotion_proof_v2.schema.json', 'schemas/omega_ci_proof_debt_v3.schema.json',
+              'schemas/omega_ci_truth_slo_v3.schema.json', 'schemas/omega_ci_causal_diagnosis_v4.schema.json',
+              'schemas/omega_ci_discrimination_plan_v4.schema.json', 'schemas/omega_ci_minimal_reproduction_v4.schema.json',
+              'schemas/omega_ci_bisect_plan_v4.schema.json', 'schemas/omega_ci_causal_dossier_v4.schema.json',
+          ):
+              jsonschema.Draft202012Validator.check_schema(json.loads(Path(schema_path).read_text()))
+          print('OMEGA_CI_SCHEMAS_VALID')
+          PY
+      - name: Generate deterministic R0.1 proof plan twice
+        run: |
+          rm -rf /tmp/omega-ci-proof && mkdir -p /tmp/omega-ci-proof
+          python -m omega_ci_proof_t plan --impact data/omega_ci_proof_t/sample-impact.json --claims data/omega_ci_proof_t/claims.json --tests data/omega_ci_proof_t/tests.json --output /tmp/omega-ci-proof/plan-a.json
+          python -m omega_ci_proof_t plan --impact data/omega_ci_proof_t/sample-impact.json --claims data/omega_ci_proof_t/claims.json --tests data/omega_ci_proof_t/tests.json --output /tmp/omega-ci-proof/plan-b.json
+          cmp /tmp/omega-ci-proof/plan-a.json /tmp/omega-ci-proof/plan-b.json
+      - name: Generate M-minus regression candidates
+        run: |
+          python -m omega_ci_proof_t generate-regressions --mminus data/omega_ci_proof_t/mminus.json --output /tmp/omega-ci-proof/test_mminus_generated.py
+          python -m compileall -q /tmp/omega-ci-proof/test_mminus_generated.py
+          grep -q 'M_MINUS-R0.3-001' /tmp/omega-ci-proof/test_mminus_generated.py
+      - name: Produce and verify R0.1 Evidence Bundle and ledger
+        run: |
+          python -m omega_ci_proof_t bundle --plan /tmp/omega-ci-proof/plan-a.json --results data/omega_ci_proof_t/sample-results.json --commit-sha "${{ github.sha }}" --artifact /tmp/omega-ci-proof/plan-a.json --output /tmp/omega-ci-proof/evidence.json --ledger /tmp/omega-ci-proof/ledger.jsonl
+          python -m omega_ci_proof_t verify --bundle /tmp/omega-ci-proof/evidence.json --plan /tmp/omega-ci-proof/plan-a.json
+          python -m omega_ci_proof_t oak --ledger /tmp/omega-ci-proof/ledger.jsonl
+      - name: Produce R0.2 validity, claim coverage and promotion proof
+        run: |
+          python -m omega_ci_proof_t.r02 expiry --bundle data/omega_ci_proof_t/r02-bundle.json --claims data/omega_ci_proof_t/r02-claims.json --observed-at 2026-08-03T20:00:00Z --evaluated-at 2026-08-04T20:00:00Z --output /tmp/omega-ci-proof/validity.json
+          python -m omega_ci_proof_t.r02 coverage --claims data/omega_ci_proof_t/r02-claims.json --tests data/omega_ci_proof_t/r02-tests.json --results data/omega_ci_proof_t/r02-results.json --output /tmp/omega-ci-proof/coverage.json
+          python -m omega_ci_proof_t.r02 promotion --claim-id CLAIM-EVIDENCE-EXPIRY --from-status PROTOTYPED --to-status MEASURED --validity /tmp/omega-ci-proof/validity.json --coverage /tmp/omega-ci-proof/coverage.json --bundle-id EVIDENCE-R02-SAMPLE --output /tmp/omega-ci-proof/promotion.json
+          python -m omega_ci_proof_t.r02 verify-promotion --proof /tmp/omega-ci-proof/promotion.json
+      - name: Validate R0.2 schemas and invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          pairs = [
+              ('schemas/omega_ci_evidence_validity_v2.schema.json', '/tmp/omega-ci-proof/validity.json'),
+              ('schemas/omega_ci_claim_coverage_v2.schema.json', '/tmp/omega-ci-proof/coverage.json'),
+              ('schemas/omega_ci_promotion_proof_v2.schema.json', '/tmp/omega-ci-proof/promotion.json'),
+          ]
+          for schema_path, data_path in pairs:
+              jsonschema.validate(json.loads(Path(data_path).read_text()), json.loads(Path(schema_path).read_text()))
+          validity = json.loads(Path('/tmp/omega-ci-proof/validity.json').read_text())
+          coverage = json.loads(Path('/tmp/omega-ci-proof/coverage.json').read_text())
+          promotion = json.loads(Path('/tmp/omega-ci-proof/promotion.json').read_text())
+          assert validity['status'] == 'CURRENT'
+          assert coverage['blocked_claims'] == 0
+          assert coverage['weighted_score'] >= 0.80
+          assert promotion['decision'] == 'ELIGIBLE_FOR_HUMAN_REVIEW'
+          assert promotion['automatic_merge_allowed'] is False
+          assert promotion['human_review_required'] is True
+          print('OMEGA_CI_R02_PROOFS_VALID')
+          PY
+      - name: Produce R0.3 epistemic graph, proof debt and Truth SLO receipts
+        run: |
+          python -m omega_ci_proof_t.r03 graph --graph data/omega_ci_proof_t/r03-graph.json --output /tmp/omega-ci-proof/r03-graph.json >/tmp/omega-ci-proof/r03-graph.stdout
+          python -m omega_ci_proof_t.r03 invalidate --graph data/omega_ci_proof_t/r03-graph.json --changed EVID-EXPIRY-FIXTURE --output /tmp/omega-ci-proof/r03-invalidation.json
+          python -m omega_ci_proof_t.r03 debt --graph data/omega_ci_proof_t/r03-graph.json --state data/omega_ci_proof_t/r03-state.json --output /tmp/omega-ci-proof/r03-debt.json
+          python -m omega_ci_proof_t.r03 slo --graph data/omega_ci_proof_t/r03-graph.json --state data/omega_ci_proof_t/r03-state.json --slos data/omega_ci_proof_t/r03-slos.json --output /tmp/omega-ci-proof/r03-slo.json
+          python -m omega_ci_proof_t.r03 conflicts --graph data/omega_ci_proof_t/r03-graph.json --output /tmp/omega-ci-proof/r03-conflicts.json
+          python -m omega_ci_proof_t.r03 experiments --candidates data/omega_ci_proof_t/r03-experiments.json --budget 1.0 --output /tmp/omega-ci-proof/r03-experiments.json
+          python -m omega_ci_proof_t.r03 oak > /tmp/omega-ci-proof/r03-oak.json
+      - name: Validate R0.3 schemas and invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          pairs = [
+              ('schemas/omega_ci_proof_debt_v3.schema.json', '/tmp/omega-ci-proof/r03-debt.json'),
+              ('schemas/omega_ci_truth_slo_v3.schema.json', '/tmp/omega-ci-proof/r03-slo.json'),
+          ]
+          for schema_path, data_path in pairs:
+              jsonschema.validate(json.loads(Path(data_path).read_text()), json.loads(Path(schema_path).read_text()))
+          invalidation = json.loads(Path('/tmp/omega-ci-proof/r03-invalidation.json').read_text())
+          debt = json.loads(Path('/tmp/omega-ci-proof/r03-debt.json').read_text())
+          slo = json.loads(Path('/tmp/omega-ci-proof/r03-slo.json').read_text())
+          conflicts = json.loads(Path('/tmp/omega-ci-proof/r03-conflicts.json').read_text())
+          experiments = json.loads(Path('/tmp/omega-ci-proof/r03-experiments.json').read_text())
+          oak = json.loads(Path('/tmp/omega-ci-proof/r03-oak.json').read_text())
+          assert 'CLAIM-CLAIM-COVERAGE' in invalidation['invalidated_node_ids']
+          assert debt['total_score'] == 3.0 and debt['critical_open'] == 0
+          assert slo['passed'] is True and slo['critical_failures'] == 0
+          assert conflicts['open_conflicts'] == 1
+          assert experiments['execution_authorized'] is False
+          assert experiments['remote_mutations'] == 0
+          assert 'EXP-PUBLISH-RESULTS' in experiments['rejected']
+          assert oak['passed'] is True and oak['maximum_authority'] == 'A3'
+          print('OMEGA_CI_R03_PROOFS_VALID')
+          PY
+      - name: Produce R0.4 causal diagnosis receipts
+        run: |
+          python -m omega_ci_proof_t.r04 diagnose --model data/omega_ci_proof_t/r04-model.json --observations data/omega_ci_proof_t/r04-observations.json --output /tmp/omega-ci-proof/r04-diagnosis.json
+          python -m omega_ci_proof_t.r04 experiments --model data/omega_ci_proof_t/r04-model.json --observations data/omega_ci_proof_t/r04-observations.json --experiments data/omega_ci_proof_t/r04-experiments.json --budget 1.0 --output /tmp/omega-ci-proof/r04-experiments.json
+          python -m omega_ci_proof_t.r04 minimize --case data/omega_ci_proof_t/r04-case.json --output /tmp/omega-ci-proof/r04-reproduction.json
+          python -m omega_ci_proof_t.r04 bisect --history data/omega_ci_proof_t/r04-history.json --output /tmp/omega-ci-proof/r04-bisect.json
+          python -m omega_ci_proof_t.r04 dossier --model data/omega_ci_proof_t/r04-model.json --observations data/omega_ci_proof_t/r04-observations.json --experiments data/omega_ci_proof_t/r04-experiments.json --case data/omega_ci_proof_t/r04-case.json --history data/omega_ci_proof_t/r04-history.json --budget 1.0 --output /tmp/omega-ci-proof/r04-dossier.json
+          python -m omega_ci_proof_t.r04 oak > /tmp/omega-ci-proof/r04-oak.json
+      - name: Validate R0.4 schemas and invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import jsonschema
+          pairs = [
+              ('schemas/omega_ci_causal_diagnosis_v4.schema.json', '/tmp/omega-ci-proof/r04-diagnosis.json'),
+              ('schemas/omega_ci_discrimination_plan_v4.schema.json', '/tmp/omega-ci-proof/r04-experiments.json'),
+              ('schemas/omega_ci_minimal_reproduction_v4.schema.json', '/tmp/omega-ci-proof/r04-reproduction.json'),
+              ('schemas/omega_ci_bisect_plan_v4.schema.json', '/tmp/omega-ci-proof/r04-bisect.json'),
+              ('schemas/omega_ci_causal_dossier_v4.schema.json', '/tmp/omega-ci-proof/r04-dossier.json'),
+          ]
+          for schema_path, data_path in pairs:
+              jsonschema.validate(json.loads(Path(data_path).read_text()), json.loads(Path(schema_path).read_text()))
+          diagnosis = json.loads(Path('/tmp/omega-ci-proof/r04-diagnosis.json').read_text())
+          experiments = json.loads(Path('/tmp/omega-ci-proof/r04-experiments.json').read_text())
+          reproduction = json.loads(Path('/tmp/omega-ci-proof/r04-reproduction.json').read_text())
+          bisect_plan = json.loads(Path('/tmp/omega-ci-proof/r04-bisect.json').read_text())
+          dossier = json.loads(Path('/tmp/omega-ci-proof/r04-dossier.json').read_text())
+          oak = json.loads(Path('/tmp/omega-ci-proof/r04-oak.json').read_text())
+          assert diagnosis['top_hypothesis_id'] == 'H-LSTRIP'
+          assert diagnosis['causality_proven'] is False
+          assert experiments['execution_authorized'] is False
+          assert 'EXP-PUBLISH-PRELIMINARY' in experiments['rejected']
+          assert 'EXP-HIGH-RISK-REMOTE-MUTATION' in experiments['rejected']
+          assert reproduction['minimized_items'] == ['.github', 'workflows/ci.yml', 'normalize-path']
+          assert bisect_plan['next_step']['candidate_sha'] == 'c002'
+          assert dossier['maximum_authority'] == 'A3'
+          assert dossier['automatic_patch_allowed'] is False
+          assert dossier['automatic_merge_allowed'] is False
+          assert dossier['remote_mutations'] == 0
+          assert oak['passed'] is True and oak['maximum_authority'] == 'A3'
+          print('OMEGA_CI_R04_PROOFS_VALID')
+          PY
+      - name: Audit constitution, capabilities and pinned supply chain
+        run: |
+          python -m omega_ci_proof_t.r02 constitution --file data/omega_ci_proof_t/constitution.json
+          python -m omega_ci_proof_t.r02 capability --constitution data/omega_ci_proof_t/constitution.json --agent RegressionGenerator --run-id "${{ github.run_id }}" --level A3 --action generate_tests --scope generated/tests --issued-at 2026-08-03T20:00:00Z --expires-at 2026-08-03T21:00:00Z --output /tmp/omega-ci-proof/capability.json
+          python -m omega_ci_proof_t.r02 supply-chain .github/workflows/omega-ci-proof-autonomy.yml
+          python -m omega_ci_proof_t.r02 oak
+      - name: Enforce autonomy boundary
+        run: |
+          python -m omega_ci_proof_t autonomy --level A3
+          if python -m omega_ci_proof_t autonomy --level A4; then
+            echo 'A4 must remain disabled' >&2
+            exit 1
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # immutable reviewed commit
+        if: always()
+        with:
+          name: omega-ci-proof-${{ matrix.python-version }}
+          path: /tmp/omega-ci-proof
+          if-no-files-found: error
+          retention-days: 30

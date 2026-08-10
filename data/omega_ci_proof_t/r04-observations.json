@@ -1,0 +1,56 @@
+{
+  "observations": [
+    {
+      "observation_id": "OBS-DIRECT-CALL",
+      "statement": "A direct normalizer call transforms .github/workflows/ci.yml into github/workflows/ci.yml.",
+      "likelihood_by_hypothesis": {
+        "H-LSTRIP": 0.99,
+        "H-FIXTURE": 0.10,
+        "H-OS": 0.30,
+        "H-CALLER": 0.05
+      },
+      "reliability": 0.98,
+      "source_evidence_ids": ["EVID-R03-MINIMAL-REPRO"],
+      "limitations": ["finite synthetic fixture"]
+    },
+    {
+      "observation_id": "OBS-RAW-BYTES",
+      "statement": "The raw fixture bytes preserve the leading dot before normalization.",
+      "likelihood_by_hypothesis": {
+        "H-LSTRIP": 0.92,
+        "H-FIXTURE": 0.03,
+        "H-OS": 0.45,
+        "H-CALLER": 0.40
+      },
+      "reliability": 0.95,
+      "source_evidence_ids": ["EVID-R04-RAW-FIXTURE"],
+      "limitations": ["does not inspect every fixture loader"]
+    },
+    {
+      "observation_id": "OBS-CROSS-PLATFORM",
+      "statement": "The defect reproduces in equivalent Linux and Windows path fixtures.",
+      "likelihood_by_hypothesis": {
+        "H-LSTRIP": 0.88,
+        "H-FIXTURE": 0.35,
+        "H-OS": 0.08,
+        "H-CALLER": 0.35
+      },
+      "reliability": 0.85,
+      "source_evidence_ids": ["EVID-R04-CROSS-PLATFORM"],
+      "limitations": ["fixtures do not reproduce every host filesystem behavior"]
+    },
+    {
+      "observation_id": "OBS-EXACT-PREFIX",
+      "statement": "Replacing broad lstrip with exact './' prefix removal preserves .github in the isolated fixture.",
+      "likelihood_by_hypothesis": {
+        "H-LSTRIP": 0.98,
+        "H-FIXTURE": 0.15,
+        "H-OS": 0.20,
+        "H-CALLER": 0.10
+      },
+      "reliability": 0.92,
+      "source_evidence_ids": ["EVID-R03-REGRESSION"],
+      "limitations": ["supports a local mechanism, not universal causation"]
+    }
+  ]
+}

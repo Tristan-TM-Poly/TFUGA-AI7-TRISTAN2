@@ -1,0 +1,15 @@
+{
+  "schema": "omega-ci-test-catalog/v2",
+  "tests": [
+    {"test_id": "TEST-EXPIRY-UNIT", "kind": "unit", "target": "omega_ci_proof_t.r02.expiry", "source_claim_ids": ["CLAIM-EVIDENCE-EXPIRY"]},
+    {"test_id": "TEST-EXPIRY-ADVERSARIAL", "kind": "adversarial", "target": "omega_ci_proof_t.r02.expiry", "source_claim_ids": ["CLAIM-EVIDENCE-EXPIRY"]},
+    {"test_id": "TEST-EXPIRY-PROPERTY", "kind": "property", "target": "omega_ci_proof_t.r02.expiry", "source_claim_ids": ["CLAIM-EVIDENCE-EXPIRY"]},
+    {"test_id": "TEST-EXPIRY-DIFFERENTIAL", "kind": "differential", "target": "omega_ci_proof_t.r02.expiry", "source_claim_ids": ["CLAIM-EVIDENCE-EXPIRY"]},
+    {"test_id": "TEST-CONSTITUTION-UNIT", "kind": "unit", "target": "omega_ci_proof_t.r02.constitution", "source_claim_ids": ["CLAIM-CONSTITUTION-A3-BOUND"]},
+    {"test_id": "TEST-CONSTITUTION-ADVERSARIAL", "kind": "adversarial", "target": "omega_ci_proof_t.r02.constitution", "source_claim_ids": ["CLAIM-CONSTITUTION-A3-BOUND"]},
+    {"test_id": "TEST-CONSTITUTION-SCHEMA", "kind": "schema", "target": "data/omega_ci_proof_t/constitution.json", "source_claim_ids": ["CLAIM-CONSTITUTION-A3-BOUND"]},
+    {"test_id": "TEST-PINNING-UNIT", "kind": "unit", "target": "omega_ci_proof_t.r02.supply_chain", "source_claim_ids": ["CLAIM-SUPPLY-CHAIN-PINNING"]},
+    {"test_id": "TEST-PINNING-ADVERSARIAL", "kind": "adversarial", "target": "omega_ci_proof_t.r02.supply_chain", "source_claim_ids": ["CLAIM-SUPPLY-CHAIN-PINNING"]},
+    {"test_id": "TEST-PINNING-PROPERTY", "kind": "property", "target": ".github/workflows/omega-ci-proof-autonomy.yml", "source_claim_ids": ["CLAIM-SUPPLY-CHAIN-PINNING"]}
+  ]
+}

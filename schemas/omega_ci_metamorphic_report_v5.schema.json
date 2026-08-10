@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"omega-ci-metamorphic-report/v5",
+  "type":"object",
+  "required":["schema","report_id","contracts_evaluated","behaviors_evaluated","findings","passed_checks","failed_checks","remote_mutations"],
+  "properties":{
+    "schema":{"const":"omega-ci-metamorphic-report/v5"},
+    "report_id":{"type":"string","pattern":"^METAMORPHIC-"},
+    "contracts_evaluated":{"type":"integer","minimum":0},"behaviors_evaluated":{"type":"array","items":{"type":"string"}},"findings":{"type":"array","items":{"type":"object"}},"passed_checks":{"type":"integer","minimum":0},"failed_checks":{"type":"integer","minimum":0},"remote_mutations":{"const":0}
+  },
+  "additionalProperties":true
+}

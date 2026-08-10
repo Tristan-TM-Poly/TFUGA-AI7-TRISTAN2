@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/omega_ci_discrimination_plan_v4.schema.json",
+  "title": "Omega CI discrimination plan v4",
+  "type": "object",
+  "required": ["schema", "plan_id", "failure_id", "recommendations", "rejected", "budget", "consumed_budget", "expected_information_gain", "execution_authorized", "automatic_patch_allowed", "remote_mutations"],
+  "properties": {
+    "schema": {"const": "omega-ci-discrimination-plan/v4"},
+    "plan_id": {"type": "string", "pattern": "^DISCRIM-[A-F0-9]{20}$"},
+    "failure_id": {"type": "string"},
+    "recommendations": {"type": "array"},
+    "rejected": {"type": "object", "additionalProperties": {"type": "string"}},
+    "budget": {"type": "number", "minimum": 0},
+    "consumed_budget": {"type": "number", "minimum": 0},
+    "expected_information_gain": {"type": "number", "minimum": 0},
+    "execution_authorized": {"const": false},
+    "automatic_patch_allowed": {"const": false},
+    "remote_mutations": {"const": 0}
+  },
+  "additionalProperties": false
+}
