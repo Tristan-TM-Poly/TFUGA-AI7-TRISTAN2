@@ -1,9 +1,9 @@
 # Omega GAME T — Ω-GAME-SIM-EVO-T∞
 
-Status: **R1.0.4 local executable research package candidate**.  
+Status: **R1.0.6 local executable research package candidate**.  
 Authority: simulation / benchmark / provenance / OAK review only.
 
-Omega GAME T is a deterministic research laboratory for generated games and algorithmic worlds. Development is intentionally split into small tested layers and consolidated through an integrated OAKBench rather than promoted from architecture alone.
+Omega GAME T is a deterministic research laboratory for generated games and algorithmic worlds. Development is split into small tested layers and consolidated through executable OAK gates rather than promoted from architecture alone.
 
 ## Executable ladder
 
@@ -26,167 +26,96 @@ R1.0.1 checkpoint round-trip + retry/replay hardening
 R1.0.2 public integrated OAKBench API + CLI
 R1.0.3 installable Python package + console-entry CI
 R1.0.4 CPython 3.11–3.13 CI matrix + isolated wheel/OAKBench smoke
+R1.0.5 deterministic-vs-empirical ScaleBench
+R1.0.6 retained CI ScaleBench observations per commit
 ```
 
-## Install for development
-
-From the repository root:
+## Install
 
 ```bash
 cd omega_game_t
 python -m pip install -e .
-```
-
-The package installs the console command:
-
-```bash
 omega-game --help
 ```
 
-Python requirement: **3.11+**. R1.0.4 CI explicitly exercises CPython 3.11, 3.12 and 3.13.
+Python requirement: **3.11+**. CI explicitly exercises CPython 3.11, 3.12 and 3.13.
 
 ## Integrated OAKBench
-
-The main consolidation gate can be launched directly:
 
 ```bash
 omega-game oakbench
 ```
 
-Example with explicit controls:
+The integrated path spans GameSpec, fixed layout, deterministic Arena-T0, replay audit, held-out maps, sharded campaign, checkpoint, bundle/local CAS, coordinator ledger, ExperimentGraph, evidence-backed selection, process equivalence and fault injection.
+
+The current fault matrix exercises replay tamper, disconnected layouts, checkpoint/bundle/CAS tamper, coordinator-event tamper, missing selection evidence, held-out-map leakage and wrong-worker acknowledgement.
+
+## ScaleBench
+
+Run the bounded matrix:
 
 ```bash
-omega-game oakbench \
-  --seed 1401 \
-  --max-steps 8 \
-  --layouts 3 \
-  --shards 2 \
-  --workers 2 \
-  --fairness-threshold 0.5
+omega-game scale-bench --matrix --seed 1901
 ```
 
-The integrated path is:
+or one explicit scenario:
+
+```bash
+omega-game scale-bench --seed 1801 --population 6 --seed-count 2 --max-steps 8 --shards 3 --repetitions 2 --workers 2
+```
+
+ScaleBench hashes deterministic workload identity, work units and checkpoint/benchmark receipts. It reports wall-clock, `tracemalloc` and observed process speedup separately; those empirical fields are not part of deterministic provenance.
+
+## CI observability
+
+GitHub Actions runs five validation surfaces:
 
 ```text
-GameSpec
-→ fixed ArenaLayout
-→ deterministic Arena-T0
-→ replay/audit
-→ held-out map generalization
-→ sharded campaign
-→ checkpoint
-→ bundle + local CAS restore
-→ causal coordinator ledger
-→ ExperimentGraph + M+/M-
-→ evidence-backed selection decision
-→ process equivalence
-→ fault injection
-→ capability report
+CPython 3.11 full suite
+CPython 3.12 full suite
+CPython 3.13 full suite
+isolated wheel + integrated OAKBench
+ScaleBench observation + artifact upload
 ```
 
-The command exits non-zero when the integrated report is not accepted.
+The final job uploads `omega-game-scale-observation-<commit-sha>` containing `scale-observation.json` with 30-day retention. This is an empirical observation ledger, not a canonical performance truth ledger.
 
-### Fault matrix currently exercised
-
-- replay SHA tamper;
-- disconnected layout;
-- checkpoint-result tamper;
-- bundle-manifest tamper;
-- local CAS corruption;
-- coordinator-event tamper;
-- selection decision with missing evidence;
-- train/validation layout leakage;
-- acknowledgement by a non-owning worker.
-
-A detected fault means the named detector rejected that perturbation. It does **not** prove all fault classes are covered.
-
-## Other CLI surfaces
-
-```bash
-omega-game arena --seed 42 --steps 96
-omega-game tournament --seed 42 --population 8 --steps 64
-omega-game evolve --seed 42 --population 8 --generations 3 --steps 48
-omega-game quality-diversity --seed 42 --population 16 --steps 48 --bins 8
-omega-game memory-demo --seed 42 --population 8 --top-k 3 --steps 32 --threshold 0.5
-omega-game coevolve --seed 42 --population 6 --environments 4
-omega-game compile-spec examples/game_spec_fixed_layout.json --seed 42 --tournament
-omega-game fuzz --seed 42 --cases 100
-omega-game sparse-bench --seed 42 --entities 10000 --active 100 --ticks 128
-```
-
-## Public Python OAKBench API
+## Public Python API
 
 ```python
 from omega_game import IntegratedOAKBenchConfig, run_integrated_oakbench
 
-report = run_integrated_oakbench(
-    IntegratedOAKBenchConfig(seed=1401, process_workers=2)
-)
+report = run_integrated_oakbench(IntegratedOAKBenchConfig(seed=1401, process_workers=2))
 assert report.accepted
 ```
 
 ## Evidence boundaries
 
-The following distinctions are contractual:
-
 ```text
 DETERMINISTIC_REPLAY != PHYSICAL_TRUTH
 TOURNAMENT_WIN != GENERAL_INTELLIGENCE
-WORK_UNIT_REDUCTION != WALL_CLOCK_SPEEDUP
-QD_COVERAGE != BEHAVIORAL_COMPLETENESS
-M_PLUS != PROOF_OF_TRUTH
-M_MINUS != PROOF_OF_IMPOSSIBILITY
+WORK_UNITS != CPU_CYCLES
+RUNNER_TIME != DETERMINISTIC_RECEIPT
+TRACEMALLOC_PEAK != TOTAL_PROCESS_MEMORY
+OBSERVED_SPEEDUP != GUARANTEED_SPEEDUP
 HELD_OUT_SEEDS/MAPS != REAL_WORLD_GENERALIZATION
-LAYOUT_HASH != FAIRNESS
 GEOMETRIC_SYMMETRY != STRATEGIC_FAIRNESS
-LOCAL_PROCESS_EQUIVALENCE != GUARANTEED_SPEEDUP
 TTL_LEASE_COORDINATOR != DISTRIBUTED_CONSENSUS
 LOCAL_CAS != REMOTE_DURABILITY
 EVENT_CHAIN_INTEGRITY != EXTERNAL_EVENT_TRUTH
 PROVENANCE_CLOSURE != LOGICAL_PROOF
 INTEGRATED_PASS != SCIENTIFIC_TRUTH
+CI_ARTIFACT != CANONICAL_PROOF
 ```
 
-The capability report intentionally marks as **not demonstrated**: distributed consensus, remote durable artifact storage, guaranteed multi-process speedup, strategic fairness, fun, and general intelligence.
+The capability report intentionally keeps distributed consensus, remote durable storage, guaranteed process speedup, strategic fairness, fun and general intelligence as **not demonstrated**.
 
-## CI / packaging validation
+## Key theory notes
 
-The primary test job installs the package itself, verifies the console entry point and runs the complete suite on CPython 3.11, 3.12 and 3.13:
-
-```bash
-cd omega_game_t
-python -m pip install -e .
-omega-game --help
-python -m pytest tests -q
-```
-
-A separate wheel-smoke job builds a wheel, installs it into a fresh virtual environment outside the checkout, and runs:
-
-```bash
-omega-game --help
-omega-game oakbench --workers 1 --max-steps 4 --layouts 3 --shards 2
-```
-
-This guards against a false success caused only by the source tree or editable-install path.
-
-## Provenance and theory notes
-
-Key consolidation documents:
-
-- `docs/theories/OMEGA_GAME_SIM_EVO_T_INFINITY.md`
-- `docs/theories/OMEGA_GAME_CAMPAIGN_RUNTIME_R10.md`
-- `docs/theories/OMEGA_GAME_CAMPAIGN_BUNDLES_R11.md`
-- `docs/theories/OMEGA_GAME_COORDINATOR_LEDGER_R12.md`
-- `docs/theories/OMEGA_GAME_EXPERIMENT_GRAPH_R13.md`
 - `docs/theories/OMEGA_GAME_R100_INTEGRATED_OAKBENCH.md`
+- `docs/theories/OMEGA_GAME_SCALEBENCH_R105.md`
+- `docs/theories/OMEGA_GAME_CI_OBSERVABILITY_R106.md`
 
 ## Next OAK work
 
-Priority remains **hardening and empirical measurement**, not another abstraction layer:
-
-1. larger deterministic/fault campaigns;
-2. profiler-driven CPU/process experiments;
-3. memory and checkpoint scale tests;
-4. mutation/property-based fault generation;
-5. artifact/receipt migration tests across package versions;
-6. only then evaluate real remote coordination/storage adapters if an actual backend is available.
+Accumulate repeated comparable ScaleBench observations before introducing statistical performance-regression bands. Then extend fault/property campaigns and version-migration tests before considering remote coordination/storage adapters.

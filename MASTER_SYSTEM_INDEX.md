@@ -27,49 +27,27 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | Rank | System | Primary repo/path | Current status | Why it matters | Next OAK action |
 |---:|---|---|---|---|---|
 | 1 | OAK + DCT-Ω | `docs/canon/TFUGA-AI7-TRISTAN2-CANON-v0.2.md` | C/X | Converts large imagination into proof/test/prototype/canon flow. | Create reusable DCT-Ω schema and packet generator. |
-| 2 | TFUGA-HGFM-AI7 Absolute Kernel | `canon/TFUGA_BEST_ABSOLUTE_KERNEL_2026-05-03.md` | X | Root theory for HGFM, action, projection, AI-7, canonization, and respect gates. | Extract 8 publishable definitions and 3 small propositions. |
-| 3 | AUTO² Kernel | `omega_auto2_kernel/` | D | Workflow compiler with OAK, forbidden actions, rollback, telemetry. | Add CI, CLI examples, dry-run GitHub issue generator. |
-| 4 | Ω-LIN-T | `scripts/omega_lin_oakbench.py`, `docs/omega-lin/` | D | Scientific OAKBench for local linearization with residuals and validity domains. | Package as first public prototype/paper. |
-| 5 | FFWT-HAC-CVCD | `prototypes/omega_ffwt_hac_cvcd/` | E/D | Early benchmark suggests complementary multiscale features vs FFT on synthetic tasks. | Add DWT/scattering baselines, real datasets, noise sweeps, ablations. |
-| 6 | Ω-DeepTech Intelligence Forge | `omega_deeptech_forge/` | D-MVP | Routes deeptech signals into IP/revenue/publication/prototype decisions and public-safe handoff packets. | Connect to review packets, prior-art packs, offer cards, and Value Pipeline OAKBench. |
-| 7 | DeepTech → Company OS Bridge | `omega_deeptech_forge/review_packets.py` | D-MVP | Converts signal decisions into OfferCards, PriorArtQueryPacks, publication notes, IP disclosure drafts, gates, scores, and M⁻. | Add JSON schema and AUTO² issue generation behind OAKGate. |
-| 8 | Company Revenue IP Publication OS | `docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md` / review packets | X/D | Turns artifacts into company, revenue, IP, publication, and review packets safely. | Integrate Value Pipeline OAKBench scoring and approval records. |
-| 9 | Top40×256 | `docs/canon/Top-40x256-MANIFEST-v0.1.md` | Source/E | Mine of 10,240 candidates, explicitly not canonized in bulk. | Extract Top16 absolute into DCT-Ω cards. |
-| 10 | Ω-GAME-SIM-EVO-T∞ / Ω-GAME-T | `omega_game_t/` + `docs/theories/OMEGA_GAME_R100_INTEGRATED_OAKBENCH.md` | D / R1.0.4 candidate | R0.1–R0.13 and R1.0–R1.0.3 are merged: deterministic simulation/evolution, sparse scheduling, MAP-Elites, M+/M-, coevolution, GameSpec, hashed layouts, adversarial maps, checkpointed campaigns, local process runtime, bundles/CAS/TTL, causal ledger, ExperimentGraph, integrated fault-injected OAKBench, hardening, public API/CLI, and installable Python packaging. R1.0.4 adds CPython 3.11–3.13 CI plus a wheel installed outside the checkout that must run the integrated OAKBench. | Pass R1.0.4 compatibility/wheel CI; then prioritize larger fault campaigns, profiling, scale tests and version-migration hardening before new abstractions. |
-| 11 | U0 Core | `u0_core/` | X | Minimal generator hypothesis: Δ, R, T produce trace, memory, validation, scale, HGFM. | Add tests showing emergence and failure cases. |
-| 12 | Ω-RECYCLE-T∞ | `omega_recycle_t/` | D-MVP candidate | Turns structure-preserving recycling into an executable ResourceGraph + MaterialPassport + deterministic recovery optimizer + OAKBench, with hazardous processing kept simulation-only. | Add coupled capacity/transport constraints, uncertainty, public datasets and a mass-only baseline before any industrial or environmental superiority claim. |
-| 13 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add first conservation-tested simulation. |
+| 2 | TFUGA-HGFM-AI7 Absolute Kernel | `canon/TFUGA_BEST_ABSOLUTE_KERNEL_2026-05-03.md` | X | Root theory for HGFM, action, projection, AI-7, canonization, and respect gates. | Extract publishable definitions and small propositions. |
+| 3 | AUTO² Kernel | `omega_auto2_kernel/` | D | Workflow compiler with OAK, forbidden actions, rollback, telemetry. | Add stronger CI and dry-run integration. |
+| 4 | Ω-LIN-T | `scripts/omega_lin_oakbench.py`, `docs/omega-lin/` | D | Scientific OAKBench for local linearization with residuals and validity domains. | Package as a public-safe prototype/paper candidate. |
+| 5 | FFWT-HAC-CVCD | `prototypes/omega_ffwt_hac_cvcd/` | E/D | Complementary multiscale research features with explicit baselines required. | Add recognized baselines, real datasets, noise sweeps and ablations. |
+| 6 | Ω-DeepTech Intelligence Forge | `omega_deeptech_forge/` | D-MVP | Routes deeptech signals into IP/revenue/publication/prototype decisions and public-safe handoff packets. | Connect review packets and prior-art/value gates. |
+| 7 | DeepTech → Company OS Bridge | `omega_deeptech_forge/review_packets.py` | D-MVP | Converts signal decisions into governed review artifacts. | Add schemas and approval-aware AUTO² integration. |
+| 8 | Company Revenue IP Publication OS | `docs/COMPANY_REVENUE_IP_PUBLICATION_OS.md` | X/D | Connects artifacts to company/revenue/IP/publication review. | Strengthen value-pipeline evidence. |
+| 9 | Top40×256 | `docs/canon/Top-40x256-MANIFEST-v0.1.md` | Source/E | Large candidate mine explicitly not canonized in bulk. | Extract strongest candidates into DCT-Ω cards. |
+| 10 | Ω-GAME-SIM-EVO-T∞ / Ω-GAME-T | `omega_game_t/` | D / R1.0.6 candidate | R0.1–R0.13 and R1.0–R1.0.5 form an executable deterministic game/simulation/evolution stack with OAKBench, fault injection, installable packaging, CPython matrix, isolated-wheel smoke and deterministic-vs-empirical ScaleBench. R1.0.6 retains bounded ScaleBench observations as commit-addressed CI artifacts without promoting runner timings into deterministic truth. | Pass R1.0.6 five-job CI; then accumulate comparable observations before statistical regression gates. |
+| 11 | U0 Core | `u0_core/` | X | Minimal generator hypothesis. | Add tests showing emergence and failure cases. |
+| 12 | Ω-RECYCLE-T∞ | `omega_recycle_t/` | D-MVP candidate / R0.2 | Structure-preserving circular-recovery kernel with ResourceGraph, MaterialPassport, local and coupled route optimization, uncertainty sweeps, industrial symbiosis, UrbanMine, OAK/M⁻ and CPython 3.11–3.13 CI. | Add scalable constrained solver, provenance-tracked datasets, mass/value baselines, Bayesian uncertainty and LCA-compatible inventories before industrial/environmental superiority claims. |
+| 13 | PEFA Energy | `PEFA-FractalEnergySystem` | X | Energy/thermodynamic fractal scaffold with conservation hygiene. | Add conservation-tested simulation. |
 | 14 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
 
-## Promotion priorities
+## Merge and promotion rules
 
-### P0 — Make the system legible
-
-- Maintain this file as the top-level navigation index.
-- Each major system must link to one DCT-Ω card, one OAK report, one M⁻ note, and one next experiment.
-
-### P1 — Promote three nuclei first
-
-```text
-AUTO² Kernel -> Ω-LIN-T -> FFWT-HAC-CVCD
-```
-
-Ω-RECYCLE-T∞ enters as a D-MVP candidate but does not displace the existing P1 promotion sequence until it has real baseline data.
-
-### P2 — Merge path
-
-1. DeepTech Forge is merged into `main`; use it as the native IP/revenue triage organ.
-2. Ω-GAME-T PR #82 is superseded and closed; core graph primitives/OAK/tests/CI were merged via #97. Ω-GAME-SIM-EVO-T∞ is now consolidated through R1.0.x as small tested units rather than one oversized branch.
-3. Failed or superseded candidate PRs are M⁻ evidence, not history to erase.
-4. Use DCT-Ω + OAK + M⁻ for every merge decision.
-5. No external sending, filing, public publication, or IP disclosure without an explicit approval record.
-
-### P3 — Anti-inflation rule
-
-```text
-Top40×256 is a mine, not a throne.
-Generate massively. Score brutally. Promote rarely.
-```
+1. Small tested increments beat giant cumulative diffs.
+2. Failed or superseded candidates remain M⁻ evidence.
+3. Use DCT-Ω + OAK + provenance for every promotion.
+4. Public, legal, financial, IP-sensitive and irreversible actions remain explicitly approval-gated.
+5. Empirical timing observations never become deterministic truth by being stored in CI.
 
 ## Universal DCT-Ω card contract
 
