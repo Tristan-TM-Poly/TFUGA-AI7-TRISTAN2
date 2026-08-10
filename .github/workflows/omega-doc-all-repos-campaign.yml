@@ -1,0 +1,89 @@
+name: omega-doc-all-repos-campaign
+
+on:
+  push:
+    branches: ["ops/omega-doc-all-20260810-1354"]
+    paths: [".github/workflows/omega-doc-all-repos-campaign.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      FACTORY_COMMIT: 82750034b619e1fc2a7e9a2fb46ba8606809fb53
+    steps:
+      - name: Checkout repository main snapshot
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          path: target
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+
+      - name: Fetch immutable Ω-DOC-FACTORY source
+        shell: bash
+        run: |
+          git init factory-source
+          git -C factory-source remote add origin https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2.git
+          git -C factory-source fetch --depth=1 origin "${FACTORY_COMMIT}"
+          git -C factory-source checkout --detach FETCH_HEAD
+
+      - name: Build synthetic repository system
+        id: prep
+        shell: bash
+        run: |
+          TARGET_SHA="$(git -C target rev-parse HEAD)"
+          SAFE_REPO="$(printf '%s' '${{ github.event.repository.name }}' | tr -c 'A-Za-z0-9_' '_')"
+          INPUT_ROOT="${RUNNER_TEMP}/omega-doc-input"
+          SYSTEM_ROOT="${INPUT_ROOT}/omega_repo_${SAFE_REPO}"
+          mkdir -p "${SYSTEM_ROOT}"
+          rsync -a --exclude='.git' target/ "${SYSTEM_ROOT}/"
+          echo "target_sha=${TARGET_SHA}" >> "$GITHUB_OUTPUT"
+          echo "input_root=${INPUT_ROOT}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate complete documentation universe
+        shell: bash
+        env:
+          PYTHONPATH: ${{ github.workspace }}/factory-source
+        run: |
+          OUT="${RUNNER_TEMP}/omega-doc-output"
+          CACHE="${RUNNER_TEMP}/omega-doc-cache"
+          rm -rf "$OUT" "$CACHE"
+          python -m omega_latex_t.doc_factory_cli "${{ steps.prep.outputs.input_root }}" \
+            --source-commit "${{ steps.prep.outputs.target_sha }}" \
+            --cache-dir "$CACHE" \
+            --output-dir "$OUT" | tee "${RUNNER_TEMP}/omega-doc-summary.json"
+          cp "${RUNNER_TEMP}/omega-doc-summary.json" "$OUT/CAMPAIGN_SUMMARY.json"
+
+      - name: Validate generated bundle
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          out = Path(os.environ['RUNNER_TEMP']) / 'omega-doc-output'
+          report = json.loads((out / 'factory-report.json').read_text(encoding='utf-8'))
+          manifest = json.loads((out / 'MANIFEST.json').read_text(encoding='utf-8'))
+          assert report['factory_version'] == '1.0.0'
+          assert report['system_count'] >= 1
+          assert (out / 'MASTER_DOC_ATLAS.md').is_file()
+          assert (out / 'graph/evidence-graph.graphml').is_file()
+          assert (out / 'latex/MASTER_DOC_ATLAS.tex').is_file()
+          print(json.dumps({'systems': report['system_count'], 'claims': len(report['claims']), 'graph_nodes': len(report['graph']['nodes']), 'graph_edges': len(report['graph']['edges']), 'manifest_entries': len(manifest.get('files', manifest))}, sort_keys=True))
+          PY
+
+      - name: Upload full documentation bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: omega-doc-${{ github.event.repository.name }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/omega-doc-output/**
+          retention-days: 30
+          if-no-files-found: error
