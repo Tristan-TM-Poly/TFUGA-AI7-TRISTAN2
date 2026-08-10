@@ -6,10 +6,13 @@
 - [x] regular / critical / degenerate gate implemented;
 - [x] exact triangular reversion implemented;
 - [x] formal Newton reversion implemented independently;
+- [x] Lagrange-Bürmann coefficient oracle implemented independently;
+- [x] three-engine exact agreement tested on reference families;
+- [x] three-engine exact agreement tested on a deterministic 20-series rational sweep;
 - [x] inverse derivative jet exported;
 - [x] left composition checked through requested order;
 - [x] right composition checked through requested order;
-- [x] direct/Newton agreement recorded.
+- [x] direct/Newton agreement recorded in core reports.
 
 ## Critical branch path
 
@@ -42,7 +45,7 @@
 - [x] `x^2` -> two Puiseux branches;
 - [x] critical point/value test for `x+x^2`;
 - [x] CLI JSON and Markdown report test;
-- [ ] dedicated GitHub Actions run green on PR;
+- [ ] dedicated GitHub Actions run green on final PR head;
 - [ ] generated reference reports inspected from workflow artifact.
 
 ## OAK boundary
@@ -51,10 +54,11 @@
 - [x] no exact convergence-radius claim from truncated critical values;
 - [x] no Padé-pole-equals-singularity claim;
 - [x] no finite-pattern-equals-proof claim;
+- [x] three-engine agreement described as implementation/formal evidence, not global analytic proof;
 - [x] M-minus limitations stored;
 - [x] knowledge cell added;
 - [x] master system index entry added.
 
 ## Promotion rule
 
-Promote from `X/D candidate` to `D` only after the dedicated PR workflow passes and the generated evidence reports preserve the documented OAK boundaries. Promote beyond `D` only after broader independent benchmarks, certified convergence/branch evidence where claimed, and stable downstream reuse.
+Promote from `X/D candidate` to `D` only after the dedicated PR workflow passes on the final head and the generated evidence reports preserve the documented OAK boundaries. Promote beyond `D` only after broader independent benchmarks, certified convergence/branch evidence where claimed, and stable downstream reuse.
