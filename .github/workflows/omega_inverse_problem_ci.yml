@@ -1,0 +1,82 @@
+name: omega-inverse-problem-ci
+
+on:
+  pull_request:
+    paths:
+      - 'omega_inverse_problem_t/**'
+      - 'tests/test_omega_inverse_problem_t.py'
+      - 'docs/omega-inverse-problem/**'
+      - 'data/knowledge_cells/omega_inverse_problem_t_r0_1.json'
+      - '.github/workflows/omega_inverse_problem_ci.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'omega_inverse_problem_t/**'
+      - 'tests/test_omega_inverse_problem_t.py'
+      - 'docs/omega-inverse-problem/**'
+      - 'data/knowledge_cells/omega_inverse_problem_t_r0_1.json'
+      - '.github/workflows/omega_inverse_problem_ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pytest
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Compile package
+        run: python -m py_compile omega_inverse_problem_t/core.py omega_inverse_problem_t/cli.py
+
+      - name: Run deterministic tests
+        run: python -m pytest tests/test_omega_inverse_problem_t.py -q
+
+      - name: Generate reference reports
+        run: |
+          python -m omega_inverse_problem_t.cli --preset sensor-overdetermined --output reports/omega-inverse-problem/sensor.json --markdown-output reports/omega-inverse-problem/sensor.md
+          python -m omega_inverse_problem_t.cli --preset design-underdetermined --output reports/omega-inverse-problem/design.json --markdown-output reports/omega-inverse-problem/design.md
+          python -m omega_inverse_problem_t.cli --preset ill-conditioned --output reports/omega-inverse-problem/ill-conditioned.json --markdown-output reports/omega-inverse-problem/ill-conditioned.md
+          python -m omega_inverse_problem_t.cli --preset bayes-scalar --output reports/omega-inverse-problem/bayes.json --markdown-output reports/omega-inverse-problem/bayes.md
+          python -m omega_inverse_problem_t.cli --preset nonlinear-calibration --output reports/omega-inverse-problem/nonlinear.json --markdown-output reports/omega-inverse-problem/nonlinear.md
+
+      - name: OAK smoke assertions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          sensor = json.loads(Path('reports/omega-inverse-problem/sensor.json').read_text())
+          assert sensor['route']['method'] == 'least-squares-moore-penrose'
+          assert sensor['residual_norm'] < 1e-8
+          assert sensor['route']['spectrum']['rank'] == 2
+
+          design = json.loads(Path('reports/omega-inverse-problem/design.json').read_text())
+          assert design['route']['method'] == 'minimum-norm-moore-penrose'
+          assert design['route']['spectrum']['nullity'] == 1
+          assert any('null space' in item for item in design['warnings'])
+
+          ill = json.loads(Path('reports/omega-inverse-problem/ill-conditioned.json').read_text())
+          assert ill['solver'] == 'tikhonov'
+          assert ill['route']['spectrum']['condition_number_nonzero_subspace'] > 1e8
+
+          bayes = json.loads(Path('reports/omega-inverse-problem/bayes.json').read_text())
+          assert abs(bayes['posterior']['mean'][0] - 1.0) < 1e-9
+          assert abs(bayes['posterior']['covariance'][0][0] - 0.5) < 1e-9
+
+          nonlinear = json.loads(Path('reports/omega-inverse-problem/nonlinear.json').read_text())
+          assert nonlinear['result']['residual_norm'] < 1e-7
+          PY
+
+      - name: Upload reference evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-inverse-problem-reference-reports
+          path: reports/omega-inverse-problem/
