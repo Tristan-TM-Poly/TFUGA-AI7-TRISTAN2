@@ -1,0 +1,100 @@
+{
+  "cell_id": "KC-OMEGA-INVERSE-PROBLEM-T-001",
+  "subject": "Ω-INVERSE-PROBLEM-T∞",
+  "definition": "General OAK-safe inverse-problem kernel that analyzes rank, nullity and conditioning before routing to Moore-Penrose, Tikhonov, nonlinear local or linear-Gaussian Bayesian reconstruction.",
+  "domain": "mathematics-scientific-computing-inverse-problems",
+  "oak_status": "IMPLEMENTED_CANDIDATE",
+  "claims": [
+    {
+      "claim_id": "CLM-INVERSE-PROBLEM-LINEAR-001",
+      "text": "For small linear systems, the implementation computes a spectral Moore-Penrose representative and reports rank/nullity/conditioning plus forward residuals.",
+      "status": "implemented_claim",
+      "scope": "small dense matrices in the stdlib-only reference kernel",
+      "assumptions": [
+        "numerical rank tolerance is appropriate to the scaling",
+        "the forward matrix is the intended model"
+      ],
+      "failure_conditions": [
+        "Penrose-style reconstruction tests fail on reference cases",
+        "rank/nullity is unstable under reasonable tolerance changes",
+        "a null-space ambiguity is presented as unique recovery"
+      ]
+    },
+    {
+      "claim_id": "CLM-INVERSE-PROBLEM-NONLINEAR-001",
+      "text": "The implementation provides a damped finite-difference Gauss-Newton inverse step with residual-decreasing backtracking for local nonlinear reconstruction.",
+      "status": "prototype_claim",
+      "scope": "small smooth nonlinear maps near a usable initial guess",
+      "assumptions": [
+        "finite-difference Jacobian is meaningful locally",
+        "the selected branch is reachable from the initial guess"
+      ],
+      "failure_conditions": [
+        "residual increases without rejection",
+        "local convergence is presented as a global uniqueness theorem"
+      ]
+    },
+    {
+      "claim_id": "CLM-INVERSE-PROBLEM-BAYES-001",
+      "text": "For a declared linear-Gaussian model, the implementation computes the closed-form posterior mean and covariance.",
+      "status": "implemented_claim",
+      "scope": "finite-dimensional nonsingular prior and noise covariance matrices",
+      "assumptions": [
+        "Gaussian prior and likelihood are the intended model"
+      ],
+      "failure_conditions": [
+        "posterior result is presented as prior-independent evidence",
+        "covariance inputs are singular but treated as invertible"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVD-INVERSE-PROBLEM-CODE-001",
+      "kind": "code",
+      "source_path": "omega_inverse_problem_t/core.py",
+      "status": "implemented"
+    },
+    {
+      "evidence_id": "EVD-INVERSE-PROBLEM-TEST-001",
+      "kind": "test",
+      "source_path": "tests/test_omega_inverse_problem_t.py",
+      "status": "local_reference_suite"
+    },
+    {
+      "evidence_id": "EVD-INVERSE-PROBLEM-CI-001",
+      "kind": "ci",
+      "source_path": ".github/workflows/omega_inverse_problem_ci.yml",
+      "status": "pending_remote_run"
+    }
+  ],
+  "risks": [
+    "false uniqueness from minimum-norm reconstruction",
+    "numerical rank sensitivity to scaling and threshold",
+    "noise amplification in ill-conditioned maps",
+    "regularization bias",
+    "prior sensitivity in Bayesian inversion",
+    "local nonlinear solver converging to the wrong branch"
+  ],
+  "next_actions": [
+    "Pass exact-head dedicated CI.",
+    "Benchmark Moore-Penrose results against NumPy/SciPy on deterministic matrix families.",
+    "Connect Ω-INVERSE-T∞ Taylor/Puiseux local predictors.",
+    "Add null-space basis and resolution-matrix diagnostics.",
+    "Add constraints, generalized Tikhonov and robust losses.",
+    "Add nonlinear Bayesian and multimodal branch representations."
+  ],
+  "aliases": ["InverseProblem-T", "General Inverse Compiler", "Inverse Representation Router"],
+  "source_paths": [
+    "omega_inverse_problem_t/",
+    "tests/test_omega_inverse_problem_t.py",
+    "docs/omega-inverse-problem/",
+    ".github/workflows/omega_inverse_problem_ci.yml"
+  ],
+  "owner": "Tristan",
+  "public_disclosure": true,
+  "metadata": {
+    "knowledge_cell_version": "0.1",
+    "oak_boundary": "Executable prototype candidate; no large-scale numerical superiority, global identifiability, or physical uniqueness claim."
+  }
+}
