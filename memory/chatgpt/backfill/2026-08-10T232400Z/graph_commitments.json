@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.4.0",
+  "private_bundle_sha256": "a01200b3cacd48a68e9f294ea9240c4ad0a84db52d97f6fb88636baae4c2db55",
+  "private_bundle_size_bytes": 765333,
+  "private_artifact_sha256": {
+    "coverage.json": "29b1b822d473e24f5b804322b02f2c74574dd0d5d697c0d2727753162dc3129f",
+    "manifest.json": "0461073b8a17ee1aa94367d42b6985e82c17ecabad976e090c43c81ff895817b",
+    "indexes/conversations.jsonl": "798d10a0db97ae9b2bcc62a7e5d03c19c558522bf0a4973d3564d9c1e8d62c24",
+    "candidates/m_minus_candidates.jsonl": "1fb9ee632c4ae8db6874211382667af42811a03294833b1714c4516a29a88d24",
+    "candidates/m_plus_candidates.jsonl": "f5860ae363e13c3cab0cfe0a641013dcf38b9c57ac0222d256f4412cab4fc537",
+    "candidates/selected_memory.jsonl": "ef395f1e75f703dff65eb97f5e669008e7d1f1b9f14542b9d255c7ff7e90d961",
+    "hgfm/provenance.jsonl": "221316633cfc5c7f46e8f1d4a47c3dec8075add666c07e42cb35a1ea70129472",
+    "hgfm/hyperedges.jsonl": "c62617ff1db9bd17267880217dd265c3e61a345872bbeff812f6b382f396e154",
+    "hgfm/nodes.jsonl": "735c04a4dde291c6476a7cf54902e46ff4542dfc82c89befc35ebd1f937b3243"
+  }
+}
