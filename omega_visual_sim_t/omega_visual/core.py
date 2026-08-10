@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import math
 from dataclasses import dataclass
@@ -51,6 +52,14 @@ def load_spec(path: Path) -> dict[str, Any]:
     frames = int(spec["animation"].get("frames", 0))
     if not 2 <= frames <= 10_000:
         raise SpecError("animation.frames must be between 2 and 10000")
+    width = int(spec["output"].get("width", 0))
+    height = int(spec["output"].get("height", 0))
+    if not 64 <= width <= 4096 or not 64 <= height <= 4096:
+        raise SpecError("output dimensions must be between 64 and 4096 pixels")
+    duration = float(spec["animation"].get("duration_s", 0))
+    fps = int(spec["animation"].get("fps", 0))
+    if duration <= 0 or not 1 <= fps <= 120:
+        raise SpecError("duration_s must be positive and fps must be between 1 and 120")
     return spec
 
 
@@ -99,7 +108,7 @@ def _geometry(spec: dict[str, Any], state: State) -> tuple[int, int, int, int]:
 def render_svg(spec: dict[str, Any], state: State) -> str:
     width, height = int(spec["output"]["width"]), int(spec["output"]["height"])
     x, y, r, _ = _geometry(spec, state)
-    title = str(spec["visual"]["title"])
+    title = html.escape(str(spec["visual"]["title"]), quote=True)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
 <rect width="100%" height="100%" fill="#08111f"/>
 <text x="24" y="36" fill="#e8f1ff" font-family="sans-serif" font-size="22">{title}</text>
