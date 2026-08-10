@@ -109,3 +109,4 @@ omega-actions-compile = "omega_actions_t.compiler:main"
 pythonpath = ["."]
 
 # Ω-ACTIONS trigger-cut measurement: project-script surface centralized.
+# OMEGA_ACTIONS_CAUSAL_WITNESS_R01: pyproject-only trigger observation; no runtime semantics.
