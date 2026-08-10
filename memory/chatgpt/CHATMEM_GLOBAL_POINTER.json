@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.2.0",
+  "system": "Ω-CHATMEM-HGFM-T∞",
+  "mode": "cross_conversation_live",
+  "capture_origin": "2026-08-10T22:42:00Z",
+  "latest_checkpoint": "memory/chatgpt/live/2026-08-10T224200Z/checkpoint.json",
+  "latest_context_capsule": "memory/chatgpt/live/2026-08-10T224200Z/canon/CHATGPT_CONTEXT_LIVE.md",
+  "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "library_folder": "/Tristan/ChatGPT Memory",
+  "checkpoint_sequence": 1,
+  "bootstrap_policy": [
+    "When a future ChatGPT conversation materially concerns Tristan systems, projects, research, GitHub, or prior work, recover this pointer and the smallest relevant memory capsule/subgraph before relying on recollection alone.",
+    "Treat the current conversation actually visible to the assistant as a new authorized live source when durable information should be captured.",
+    "Create a new checkpoint delta rather than rewriting previous checkpoints.",
+    "Link the new checkpoint to the previous checkpoint using continues/supersedes/touches_system relations as applicable.",
+    "Update this global pointer only after the new checkpoint passes OAK privacy/provenance/structural checks.",
+    "Keep raw transcripts, secrets, sensitive personal data and unreviewed IP out of public GitHub.",
+    "Do not claim capture of conversations that were never visible or otherwise authorized."
+  ],
+  "limitations": [
+    "No background webhook exists here to intercept a conversation that is not actively available to the assistant.",
+    "Cross-chat continuity is performed when the future conversation is active and the relevant retrieval/write tools are available.",
+    "Historical export remains optional for pre-origin backfill."
+  ]
+}
