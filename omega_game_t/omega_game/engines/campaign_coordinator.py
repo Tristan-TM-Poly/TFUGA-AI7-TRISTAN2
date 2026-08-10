@@ -395,6 +395,7 @@ def replay_coordinator_events(
             state.attempt = int(event.attempt)
             state.worker_id = event.worker_id
             state.lease_token = str(event.payload.get("lease_token") or "")
+            state.failure_receipt = None
             if not state.lease_token:
                 raise ValueError("assignment missing lease token")
         elif event.kind == "shard_acknowledged":
