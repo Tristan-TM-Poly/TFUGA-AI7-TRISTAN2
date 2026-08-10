@@ -69,7 +69,7 @@ jobs:
       - name: Deterministic OAKBench
         run: |
           python -m omega_intent_t.r02.cli oak --campaign-items 4096 --output /tmp/oak.json
-          python examples/omega_intent_r02_demo.py > /tmp/demo.json
+          PYTHONPATH=. python examples/omega_intent_r02_demo.py > /tmp/demo.json
           python - <<'PY'
           import json
           oak = json.load(open('/tmp/oak.json'))
