@@ -24,6 +24,15 @@ Artefacts produits : `preview.svg`, `preview.png`, `animation.gif`,
 - rendu reproductible à paramètres identiques;
 - animation calculée depuis les états simulés, jamais interpolée par IA;
 - rapport OAK distinguant `SIMULATED` de `VERIFIED`.
+- bornes explicites sur dimensions, cadence et nombre d'images;
+- échappement des annotations SVG provenant de la spécification;
+- schéma JSON versionné pour outillage et validation externe.
+
+## Contrat VisualSpec
+
+Le contrat machine-readable se trouve dans `schema/visual-spec.schema.json`. Le
+validateur d'exécution applique en plus les contraintes physiques du solveur :
+masse et raideur positives, amortissement non négatif et régime sous-amorti.
 
 Le GIF est une sortie de compatibilité. Le modèle source demeure le VisualSpec et
 la trajectoire `states.json`.
