@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from math import isclose
+
 from omega_game.engines.evolution import seed_population
 from omega_game.engines.evolutionary_memory import EvolutionaryMemory
 from omega_game.engines.layout import ArenaLayout
@@ -74,7 +76,6 @@ def test_bounded_rejections_are_exposed_and_can_feed_m_minus() -> None:
     assert found is not None
     assert found.rejected
     assert memory.minus
-    # MemoryRecord's canonical classifier is `category` (R0.4 contract).
     assert any(record.category == "layout_mutation_rejected" for record in memory.minus.values())
 
 
@@ -132,10 +133,10 @@ def test_map_generalization_uses_disjoint_layout_sets() -> None:
     assert {row.agent_id for row in report.agents} == {agent.agent_id for agent in agents}
     assert report.receipt_hash
     for row in report.agents:
-        # Stored means and the stored gap are independently rounded to 6 decimals,
-        # so their reconstructed difference can differ by one final decimal unit.
         reconstructed_gap = round(row.train_mean_quality - row.validation_mean_quality, 6)
-        assert abs(row.generalization_gap - reconstructed_gap) <= 1e-6
+        # The stored means and stored gap are independently rounded to six decimals.
+        # Accept one serialized ULP plus a tiny IEEE-754 guard band.
+        assert isclose(row.generalization_gap, reconstructed_gap, rel_tol=0.0, abs_tol=1.1e-6)
         assert row.worst_validation_quality >= 0.0
 
 
