@@ -12,14 +12,14 @@ class MasterAtlasTests(unittest.TestCase):
         self.assertEqual(atlas["repository_count"],6)
         self.assertIn("REPOSITORY_OVERLAP != SUPERSESSION",atlas["oak_boundaries"])
         self.assertIn("REVIEW_BINDING_VOLUME != EVIDENCE_STRENGTH",atlas["oak_boundaries"])
-        self.assertEqual(atlas["totals"]["module_observations"],5202)
-        self.assertEqual(atlas["totals"]["public_symbol_observations"],26249)
+        self.assertEqual(atlas["totals"]["module_observations"],5206)
+        self.assertEqual(atlas["totals"]["public_symbol_observations"],26262)
         self.assertEqual(atlas["totals"]["claim_candidates"],33)
         self.assertEqual(atlas["totals"]["cross_repository_identical_module_hash_groups"],5)
 
     def test_review_links_are_not_promoted(self):
         atlas=build_atlas(load_registry(self.registry))
-        self.assertEqual(atlas["totals"]["review_only_claim_evidence_bindings"],54303)
+        self.assertEqual(atlas["totals"]["review_only_claim_evidence_bindings"],54318)
         self.assertNotIn("supported_claims",atlas["totals"])
 
     def test_bundle_is_deterministic(self):

@@ -21,7 +21,7 @@ The atlas is deliberately conservative. Equal hashes establish identical bytes f
 
 ## R1.0 source campaign
 
-The first campaign absorbs six owner repositories, including both public and private repositories, using the artifact IDs and SHA-256 digests retained in each source snapshot. The current frozen observation contains 5,202 Python module observations, 26,249 public-symbol observations and 33 explicit claim candidates.
+The first campaign absorbs six owner repositories, including both public and private repositories, using the artifact IDs and SHA-256 digests retained in each source snapshot. The current frozen observation contains 5,206 Python module observations, 26,262 public-symbol observations and 33 explicit claim candidates.
 
 Only five module-content hashes occur in more than one repository. This is strong evidence against treating the six repositories as simple mirrors; the atlas therefore models them as related repository roots rather than forcing a canonical merge.
 

@@ -54,8 +54,8 @@ jobs:
           Draft202012Validator.check_schema(schema)
           Draft202012Validator(schema).validate(report)
           assert report['repository_count'] == 6
-          assert report['totals']['module_observations'] == 5202
-          assert report['totals']['public_symbol_observations'] == 26249
+          assert report['totals']['module_observations'] == 5206
+          assert report['totals']['public_symbol_observations'] == 26262
           assert report['totals']['claim_candidates'] == 33
           assert report['totals']['cross_repository_identical_module_hash_groups'] == 5
           assert 'REVIEW_BINDING_VOLUME != EVIDENCE_STRENGTH' in report['oak_boundaries']
