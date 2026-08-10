@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.4.0",
+  "checkpoint_type": "historical_backfill_r2_public_anchor",
+  "checkpoint_id": "chatmem-backfill-r2-2026-08-10T232400Z",
+  "generated_at": "2026-08-10T23:24:00Z",
+  "coverage": {
+    "earliest_exact_conversation_local": "2025-11-06T20:27:04",
+    "latest_exact_conversation_local": "2026-01-10T02:56:51",
+    "link_index_range_utc_heuristic": [
+      "2026-04-05T16:44:41+00:00",
+      "2026-08-02T16:02:22+00:00"
+    ],
+    "r1_observed_range": [
+      "2026-06-10",
+      "2026-08-10T22:42:00Z"
+    ],
+    "status": "MULTI_SOURCE_PARTIAL_BUT_HIGH_COVERAGE"
+  },
+  "counts": {
+    "combined_registry_records": 336,
+    "exact_unique_conversations": 78,
+    "exact_messages": 3634,
+    "link_only_conversations": 196,
+    "r1_sessions": 62,
+    "nodes": 4041,
+    "hyperedges": 4323,
+    "provenance": 3634,
+    "selected_memory": 232,
+    "m_plus_candidates": 30,
+    "m_minus_candidates": 69,
+    "concept_system_nodes": 68
+  },
+  "source_commitments": {
+    "all_conversations_json_sha256": "015a44514b026629436aa38b0bff734e8c078b1baf3af1976ff8d0f283b8aefa",
+    "conversation_link_index_sha256": "c613972ed8d2bd37e688cd1f0e186a9b31180617a107efd9be31cb92970747b2",
+    "r1_session_index_sha256": "fdbe74ce4d4a9a678b0c64dafd3dfba39086f4b1087ece6dffa91a150dc5a252"
+  },
+  "privacy": {
+    "raw_transcript_committed": false,
+    "private_chat_urls_committed": false,
+    "private_conversation_ids_committed": false,
+    "selected_excerpts_committed_publicly": false,
+    "private_bundle_location": "ChatGPT Library /Tristan/ChatGPT Memory/Historical Backfill R2 2026-08-10/"
+  },
+  "oak_status": "PASS"
+}
