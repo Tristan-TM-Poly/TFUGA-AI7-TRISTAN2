@@ -1,47 +1,42 @@
 # Ω-RECYCLE-T∞ — Structure-Preserving Recycling Lab
 
-R0.3 turns the R0.2 recovery kernel into a more falsifiable decision engine: the original exhaustive coupled solver is retained as a small-instance oracle, while an auditable branch-and-bound solver, explicit counterfactual baselines, Bayesian functional-state uncertainty, LCA-shaped inventories, domain UrbanMine adapters and provenance hashes are added around it.
+R0.4 turns the R0.3 evidence kernel into a circular-flow laboratory that can now expose failures of greedy industrial-symbiosis decisions, solve capacity-limited transport exactly for the declared bipartite network, score probability calibration, bind caller-supplied public-data snapshots to provenance hashes, and apply externally supplied LCIA characterization factors without claiming certification.
 
 Core law:
 
-> Prefer the recovery path that destroys the least useful structure while producing the most future value, subject to measured cost, energy, risk, uncertainty, safety and physical constraints.
+> Prefer the recovery path that destroys the least useful structure while producing the most future value, subject to measured cost, energy, risk, uncertainty, safety, physical constraints and explicit evidence boundaries.
 
-The hierarchy
-
-```text
-reuse > repair > remanufacture > component harvest
-      > material recycle > energy recovery > disposal
-```
-
-is an explicit prior, not a law. R0.3 therefore benchmarks the canonical policy against mass-only, value-only and no-preservation-prior counterfactuals.
-
-## R0.3 pipeline
+## R0.4 pipeline
 
 ```text
 object / waste stream
-  -> ResourceGraph + MaterialPassport + provenance
-  -> candidate routes
-  -> canonical score + explicit baselines
-  -> exact small-instance oracle <-> branch-and-bound cross-check
-  -> Bayesian functional-state propagation
-  -> LCA-shaped inventory (not LCIA)
-  -> UrbanMine / electronics / battery / building adapters
-  -> OAK audit + M- registry
-  -> reproducible OAKBench
+  -> ResourceGraph + MaterialPassport
+  -> route scoring + baselines
+  -> exhaustive oracle <-> branch-and-bound
+  -> Bayes posterior -> calibration court
+  -> industrial offers/needs -> greedy <-> exact regret court
+  -> capacity transport min-cost max-flow
+  -> public-data snapshot -> provenance hash
+  -> LCI inventory -> external LCIA adapter
+  -> OAK + M- + reproducible OAKBench
 ```
 
-## New in R0.3
+## New in R0.4
 
-- `BranchAndBoundRecoveryOptimizer` with admissible score upper bound;
-- finite `SearchBudget` that returns an incumbent without falsely claiming optimality;
-- exact-oracle cross-check on small coupled problems;
-- mass-only, value-only and preservation-ablation baselines;
-- Beta posterior for component functional probability;
-- deterministic seeded posterior route-preference sampling;
-- inventory-only LCA interface with explicit no-impact-assessment claim boundary;
-- ElectronicsMine, BatteryMine and BuildingMine adapters into `UrbanMine`;
-- canonical dataset hashing and provenance record primitives;
-- OAKBench R0.3 evidence for solver agreement and claim boundaries.
+- exact dependency-free bipartite min-cost maximum-flow transport solver;
+- exact industrial-symbiosis matcher using the same compatibility rules as the existing greedy matcher;
+- explicit quantity/cost regret report that preserves counterexamples instead of tuning them away;
+- weighted Brier score, log loss, reliability bins and expected calibration error;
+- public dataset source catalog and deterministic delimited-snapshot ingestion;
+- canonical snapshot hashing bound to source URL and retrieval timestamp;
+- initial official-source descriptors for Eurostat `env_wasmun` and US EPA SMM Facts and Figures;
+- externally supplied, provenance-bound LCIA characterization-factor adapter;
+- explicit unmatched-flow reporting and non-certification boundary;
+- R0.4 OAKBench courts and CPython 3.11–3.13 CI gates.
+
+## Critical counterexample retained in M-
+
+The R0.2 greedy symbiosis matcher can lose total recoverable flow. R0.4 contains a two-offer/two-need case where greedy recovers 1 unit while the exact court recovers 2. This is kept as a regression test and negative-memory artifact.
 
 ## Run
 
@@ -52,34 +47,23 @@ python -m omega_recycle oakbench
 pytest -q
 ```
 
-## Solver truth contract
+## Truth boundaries
 
-The R0.2 `ConstrainedRecoveryOptimizer` remains the exhaustive oracle. R0.3 branch-and-bound is considered correct on a benchmark only when it reproduces the oracle's score and selected modes.
-
-A finite search budget may terminate early. In that case:
-
-```text
-optimality_certified = false
-```
-
-and the returned plan is only an incumbent.
-
-Branch-and-bound remains exponential in the worst case; R0.3 does not claim a polynomial-time industrial optimizer.
-
-## OAK claim boundary
-
-R0.3 demonstrates executable software and synthetic reproducible cross-checks. It does **not** establish industrial superiority, real lifecycle benefit, regulatory compliance, safe hazardous processing, calibrated failure probabilities, or a new physical law.
-
-The LCA layer is an inventory interface only. Environmental impact claims require external inventory data, characterization factors, system boundaries and a recognized LCA methodology.
+- `min_cost_transport` certifies only the declared finite bipartite max-flow/min-cost problem.
+- Calibration metrics measure predictive calibration on supplied observations; they do not establish causality, safety or stationarity.
+- Dataset hashing establishes byte/record identity after parsing, not truth, comparability or absence of revision.
+- The public-source catalog is metadata, not an automatically mirrored authoritative dataset.
+- The LCIA adapter ships no endorsed characterization method; factors must be externally supplied with provenance.
+- No environmental-superiority, regulatory-compliance or hazardous-processing claim is authorized by the package.
 
 ## Promotion path
 
 ```text
-R0.3 D-MVP+
- -> R0.4 provenance-tracked public datasets + exact/greedy symbiosis regret
- -> R0.5 scalable capacity/transport network optimization + LCIA adapters
- -> R0.6 empirical battery/electronics/building mine calibration
+R0.4 D-MVP++ candidate
+ -> R0.5 source-specific Eurostat/EPA adapters + empirical baselines
+ -> R0.6 general multi-hop material network + factor-set adapters
+ -> R0.7 battery/electronics/building calibration campaigns
  -> R1.0 externally benchmarked decision engine
 ```
 
-See `docs/DCT_OMEGA_CARD.md`, `docs/R03_EVIDENCE.md`, `docs/ARCHITECTURE.md` and `docs/M_MINUS.md`.
+See `docs/DCT_OMEGA_CARD.md`, `docs/R04_EVIDENCE.md`, `docs/PUBLIC_DATASETS.md`, `docs/ARCHITECTURE.md` and `docs/M_MINUS.md`.

@@ -34,15 +34,20 @@ jobs:
         run: python -m compileall -q omega_recycle_t/omega_recycle
       - name: Unit tests
         run: pytest -q omega_recycle_t/tests
-      - name: OAKBench solver court
+      - name: OAKBench evidence courts
         run: |
           python -m omega_recycle oakbench > /tmp/omega-recycle-oakbench.json
           python - <<'PY'
           from omega_recycle.bench import run_oakbench
           report = run_oakbench()
-          court = report["solver_crosscheck"]
-          assert court["score_equal"] is True
-          assert court["modes_equal"] is True
-          assert court["optimality_certified"] is True
+          solver = report["solver_crosscheck"]
+          assert solver["score_equal"] is True
+          assert solver["modes_equal"] is True
+          assert solver["optimality_certified"] is True
           assert report["lca_inventory"]["claim_boundary"] == "inventory_only_no_lifecycle_impact_claim"
+          r04 = report["r04_courts"]
+          assert r04["symbiosis"]["quantity_regret_detected"] is True
+          assert r04["transport"]["optimality_certified"] is True
+          assert r04["dataset_snapshot"]["hash_reproducible"] is True
+          assert r04["lcia"]["certified_lca"] is False
           PY
