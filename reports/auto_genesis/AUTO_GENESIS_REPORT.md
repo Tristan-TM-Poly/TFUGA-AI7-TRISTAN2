@@ -1,6 +1,6 @@
 # TTM Auto-Genesis OAK Report
 
-Generated: `2026-08-10T06:21:31+00:00`
+Generated: `2026-08-10T14:58:50+00:00`
 
 ## Verdict summary
 
@@ -20,8 +20,8 @@ Generated: `2026-08-10T06:21:31+00:00`
 {
   "cvcd_files": 3,
   "ffwt_files": 3,
-  "oak_files": 12,
-  "theory_files": 12
+  "oak_files": 13,
+  "theory_files": 13
 }
 ```
 
