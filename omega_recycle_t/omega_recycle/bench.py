@@ -5,13 +5,20 @@ import json
 
 from .baselines import compare_baselines
 from .bayes import BetaFunctionalPosterior, bayesian_route_preferences
+from .calibration import ProbabilisticObservation, calibration_report
+from .datasets import EUROSTAT_ENV_WASMUN, ingest_delimited_snapshot
 from .flows import ConstrainedRecoveryOptimizer, FlowConstraints
 from .lca import inventory_for_route
+from .lcia import CharacterizationFactor, CharacterizationSet, characterize_inventory
 from .models import Component, Material, RecoveryMode, RecoveryRoute
+from .network import DemandNode, SupplyNode, TransferArc, min_cost_transport
 from .oak import audit_plan
 from .optimizer import Candidate, RecoveryOptimizer
+from .provenance import ProvenanceRecord
 from .scalable import BranchAndBoundRecoveryOptimizer, SearchBudget
 from .scoring import ScoringPolicy, material_entropy
+from .symbiosis import MaterialNeed, MaterialOffer
+from .symbiosis_court import symbiosis_regret
 
 
 def demo_problem() -> tuple[dict[str, Material], tuple[Candidate, ...]]:
@@ -74,6 +81,102 @@ def demo_problem() -> tuple[dict[str, Material], tuple[Candidate, ...]]:
     return materials, (Candidate(motor, common_routes), Candidate(battery_module, hazardous_routes))
 
 
+def _r04_courts() -> dict:
+    offers = (
+        MaterialOffer("A1", "copper", 1, 1.0, 1.0),
+        MaterialOffer("A2", "copper", 1, 1.0, 2.0),
+    )
+    needs = (
+        MaterialNeed("B1", "copper", 1, 1.0, 2.0),
+        MaterialNeed("B2", "copper", 1, 1.0, 1.5),
+    )
+    regret = symbiosis_regret(offers, needs)
+
+    transport = min_cost_transport(
+        (SupplyNode("s1", 1), SupplyNode("s2", 1)),
+        (DemandNode("d1", 1), DemandNode("d2", 1)),
+        (
+            TransferArc("s1", "d1", 1, 1),
+            TransferArc("s1", "d2", 1, 1),
+            TransferArc("s2", "d1", 1, 2),
+        ),
+    )
+
+    calibration = calibration_report(
+        (
+            ProbabilisticObservation(0.90, 1),
+            ProbabilisticObservation(0.75, 1),
+            ProbabilisticObservation(0.60, 0),
+            ProbabilisticObservation(0.25, 0),
+            ProbabilisticObservation(0.10, 0),
+        ),
+        bins=5,
+    )
+
+    public_text = "geo,year,value\nEU,2024,517\n"
+    first_snapshot = ingest_delimited_snapshot(
+        EUROSTAT_ENV_WASMUN,
+        public_text,
+        retrieved_at="2026-08-10T12:00:00-04:00",
+    )
+    second_snapshot = ingest_delimited_snapshot(
+        EUROSTAT_ENV_WASMUN,
+        public_text,
+        retrieved_at="2026-08-10T12:00:00-04:00",
+    )
+
+    materials, candidates = demo_problem()
+    inventory = inventory_for_route(candidates[0].component, candidates[0].routes[0])
+    synthetic_provenance = ProvenanceRecord(
+        "synthetic-lcia-factors",
+        "https://example.invalid/synthetic-lcia-factors",
+        "2026-08-10",
+        "0" * 64,
+    )
+    factor_set = CharacterizationSet(
+        name="synthetic-benchmark-only",
+        version="1",
+        methodology="synthetic-test",
+        provenance=synthetic_provenance,
+        factors=(CharacterizationFactor("electricity", "kWh", "climate", 0.5, "kgCO2e", "input"),),
+    )
+    characterization = characterize_inventory(inventory, factor_set)
+
+    return {
+        "symbiosis": {
+            "greedy_quantity_kg": regret.greedy_quantity_kg,
+            "exact_quantity_kg": regret.exact_quantity_kg,
+            "quantity_regret_kg": regret.quantity_regret_kg,
+            "quantity_regret_detected": regret.quantity_regret_kg > 0,
+            "cost_regret_comparable": regret.comparable_cost_regret is not None,
+        },
+        "transport": {
+            "total_flow": transport.total_flow,
+            "total_cost": transport.total_cost,
+            "optimality_certified": transport.optimality_certified,
+            "unmet_demand": transport.unmet_demand,
+        },
+        "calibration": {
+            "brier_score": round(calibration.brier_score, 6),
+            "log_loss": round(calibration.log_loss, 6),
+            "ece": round(calibration.expected_calibration_error, 6),
+            "claim_boundary": calibration.claim_boundary,
+        },
+        "dataset_snapshot": {
+            "source_id": first_snapshot.provenance.source_id,
+            "sha256": first_snapshot.provenance.sha256,
+            "hash_reproducible": first_snapshot.provenance.sha256 == second_snapshot.provenance.sha256,
+            "claim_boundary": first_snapshot.claim_boundary,
+        },
+        "lcia": {
+            "matched_flows": characterization.matched_flows,
+            "unmatched_flows": list(characterization.unmatched_flows),
+            "claim_boundary": characterization.claim_boundary,
+            "certified_lca": False,
+        },
+    }
+
+
 def run_oakbench() -> dict:
     materials, candidates = demo_problem()
     policy = ScoringPolicy(
@@ -107,8 +210,9 @@ def run_oakbench() -> dict:
     lca_inventory = inventory_for_route(candidates[0].component, candidates[0].routes[0])
 
     return {
-        "bench_version": "0.3.0",
+        "bench_version": "0.4.0",
         "deterministic": True,
+        "compatibility": {"r03_contract_preserved": True},
         "capabilities": [
             "resource_graph",
             "material_passport",
@@ -117,10 +221,15 @@ def run_oakbench() -> dict:
             "branch_and_bound_solver",
             "baseline_ablations",
             "bayesian_uncertainty",
+            "probability_calibration_metrics",
             "lca_inventory_interface",
+            "external_lcia_adapter",
             "industrial_symbiosis",
+            "exact_symbiosis_regret_court",
+            "capacity_transport_min_cost_flow",
             "urban_mine",
             "provenance_hashing",
+            "public_dataset_snapshot_ingestion",
         ],
         "plan": {
             "total_score": round(plan.total_score, 6),
@@ -172,16 +281,20 @@ def run_oakbench() -> dict:
             ],
         },
         "lca_inventory": lca_inventory.to_dict(),
+        "r04_courts": _r04_courts(),
         "component_entropy": {
             candidate.component.component_id: round(material_entropy(candidate.component), 6)
             for candidate in candidates
         },
         "oak": asdict(report),
         "limits": [
-            "synthetic benchmark only",
+            "synthetic decision benchmark only",
             "branch-and-bound remains exponential in the worst case",
-            "Bayesian posterior is model-level and not empirically calibrated",
-            "LCA interface is inventory-only and performs no impact assessment",
+            "transport court certifies only the declared bipartite min-cost flow problem",
+            "Bayesian posterior remains a model until calibrated on observations",
+            "calibration metrics do not establish causality or safety",
+            "public source catalog and snapshot hashing do not validate source semantics",
+            "LCIA adapter uses externally supplied factors and does not certify lifecycle conclusions",
             "no physical processing authorization",
         ],
     }
