@@ -30,6 +30,13 @@ from .game_spec import (
     GameSpec,
     GameSpecCompiler,
 )
+from .integrated_oakbench import (
+    CapabilityRecord,
+    FaultInjectionResult,
+    IntegratedOAKBenchConfig,
+    IntegratedOAKBenchReport,
+    run_integrated_oakbench,
+)
 from .layout import ArenaLayout, Coordinate, LayoutAudit, distance_map, shortest_step_candidates, walkable_neighbors
 from .language_curriculum import CurriculumProgress, CurriculumQuest, CurriculumTrack, LanguageCurriculum, default_language_curriculum
 from .language_dataset_forge import LanguageDataset, LanguageDatasetForge, LanguageDatasetItem, default_language_dataset_forge
@@ -73,6 +80,7 @@ __all__ = [
     "EvolutionConfig", "EvolutionRun", "GenerationReport", "evolve", "evolve_generation", "seed_population",
     "EnvironmentGenome", "EnvironmentEvaluation", "AgentGeneralization", "CoevolutionReport", "seed_environments", "run_coevolution_cycle", "evolve_environments",
     "GAME_SPEC_VERSION", "ARENA_ACTIONS", "ARENA_ACTION_ALIASES", "GameAgentSpec", "GameEnvironmentSpec", "GameRuleSpec", "GameSpec", "CompiledGame", "GameSpecCompiler",
+    "IntegratedOAKBenchConfig", "IntegratedOAKBenchReport", "FaultInjectionResult", "CapabilityRecord", "run_integrated_oakbench",
     "MemoryRecord", "ChampionRecord", "HallOfFame", "EvolutionaryMemory", "RegressionResult", "AntiForgettingReport", "evaluate_anti_forgetting",
     "ArchiveConfig", "BehaviorDescriptor", "EliteRecord", "MapElitesArchive", "QualityDiversityReport", "QualityDiversityExperiment", "quality_from_rating", "build_map_elites", "run_quality_diversity",
     "SimulationAudit", "FuzzFailure", "FuzzReport", "audit_match", "fuzz_arena_t0", "match_world_graph",
