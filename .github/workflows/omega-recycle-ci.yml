@@ -6,7 +6,6 @@ on:
       - "omega_recycle_t/**"
       - ".github/workflows/omega-recycle-ci.yml"
   push:
-    branches: [main]
     paths:
       - "omega_recycle_t/**"
       - ".github/workflows/omega-recycle-ci.yml"

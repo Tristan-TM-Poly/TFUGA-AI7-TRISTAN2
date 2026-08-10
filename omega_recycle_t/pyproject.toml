@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omega-recycle-t"
-version = "0.1.0"
+version = "0.2.0"
 description = "OAK-safe research lab for structure-preserving recycling and circular recovery"
 readme = "README.md"
 requires-python = ">=3.11"

@@ -1,6 +1,6 @@
 # Ω-RECYCLE-T∞ — Structure-Preserving Recycling Lab
 
-R0.1 turns the recycling theory into an executable, OAK-safe research artifact.
+R0.2 turns the recycling theory into an executable, OAK-safe research artifact.
 
 Core law:
 
@@ -15,32 +15,36 @@ product / waste stream
     -> ResourceGraph + MaterialPassport
     -> candidate recovery routes
     -> value / energy / risk / preservation scoring
-    -> RecoveryOptimizer
+    -> local or coupled RecoveryOptimizer
     -> OAK audit
     -> reproducible report
 ```
 
-The hierarchy encoded by the MVP is:
+The hierarchy encoded by the MVP is a prior, not a hard law:
 
 ```text
 reuse > repair > remanufacture > component harvest
       > material recycle > energy recovery > disposal
 ```
 
-The ordering is a *prior*, not a hard rule. A lower-level path can win whenever measured value, cost, quality, risk or feasibility makes it superior.
+A lower-level path can win whenever measured value, cost, quality, risk, constraints or feasibility make it superior.
 
-## What R0.1 implements
+## What R0.2 implements
 
 - typed Material, Component, RecoveryRoute and RecoveryPlan models;
 - ResourceGraph with multi-component hyperedges;
 - normalized material-mixture entropy;
 - quality-, purity-, contamination-, energy-, risk- and structure-aware scoring;
-- deterministic route optimizer;
+- deterministic component-wise route optimizer;
+- exact small-instance coupled optimizer under cost/energy/risk constraints;
+- functional-probability sensitivity and route-switch detection;
+- industrial-symbiosis matcher for compatible secondary-material flows;
+- UrbanMine spatiotemporal stock aggregation;
 - machine-readable MaterialPassport JSON roundtrip;
 - OAK gate that explicitly keeps physical execution unauthorized;
 - synthetic OAKBench;
 - zero-dependency Python package and CLI;
-- regression tests.
+- regression tests and CPython 3.11–3.13 CI.
 
 ## Run
 
@@ -50,27 +54,20 @@ python -m pip install -e .
 python -m omega_recycle oakbench
 ```
 
-or:
-
-```bash
-omega-recycle oakbench
-```
-
 ## Objective
 
-For component i and candidate route r, R0.1 uses a transparent utility:
+For component i and candidate route r:
 
 J(i,r) = V(i,r) - C(i,r) - λE E(i,r) - λR R(i,r) - X(i,r) + λP P(r) + λF F(i,r).
 
-The optimizer selects r*(i) = argmax_r J(i,r).
-
-R0.1 is intentionally component-wise. Coupled plant capacity, routing, inventory, uncertain prices, stochastic degradation and multi-period industrial symbiosis belong to later releases.
+Local selection uses r*(i) = argmax_r J(i,r). R0.2 also provides an exact small-instance coupled oracle over route combinations subject to declared budgets.
 
 ## OAK status
 
 - **Definition:** explicit.
 - **Executable artifact:** yes.
 - **Synthetic reproducible benchmark:** yes.
+- **Local validation:** 14 tests pass in the candidate environment.
 - **Physical validation:** no.
 - **LCA certification:** no.
 - **Industrial superiority claim:** no.
@@ -79,12 +76,11 @@ R0.1 is intentionally component-wise. Coupled plant capacity, routing, inventory
 Target promotion path:
 
 ```text
-R0.1 D-MVP
- -> R0.2 coupled-flow optimizer
- -> R0.3 uncertainty + Bayes
- -> R0.4 industrial-symbiosis matcher
- -> R0.5 public datasets + baselines
- -> R1.0 experimentally benchmarked decision engine
+R0.2 D-MVP candidate
+ -> R0.3 Bayes uncertainty + scalable constrained solver
+ -> R0.4 empirical symbiosis + provenance datasets
+ -> R0.5 LCA-compatible inventory adapters + baselines
+ -> R1.0 externally benchmarked decision engine
 ```
 
-See `docs/DCT_OMEGA_CARD.md` and `docs/M_MINUS.md`.
+See `docs/DCT_OMEGA_CARD.md`, `docs/ARCHITECTURE.md` and `docs/M_MINUS.md`.
