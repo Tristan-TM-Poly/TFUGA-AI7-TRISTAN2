@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omega-game-t"
-version = "1.0.4"
+version = "1.0.5"
 description = "Deterministic Omega GAME-SIM-EVO research lab with integrated OAKBench"
 readme = "README.md"
 requires-python = ">=3.11"
