@@ -5,6 +5,8 @@
 - [x] singular-spectrum estimator implemented;
 - [x] numerical rank and nullity exposed;
 - [x] square / overdetermined / underdetermined / rank-deficient routing implemented;
+- [x] small-Gram geometry selected by matrix shape;
+- [x] sqrt(machine-epsilon) Gram precision floor implemented;
 - [x] condition-number warning path implemented;
 - [ ] scaling-policy sensitivity benchmark;
 - [ ] explicit null-space basis export.
@@ -34,9 +36,16 @@
 - [x] scalar Bayesian closed-form reference;
 - [x] ill-conditioning diagnostic reference;
 - [x] CLI JSON/Markdown reference generation;
-- [ ] exact-head GitHub CI green;
-- [ ] generated workflow artifact inspected;
-- [ ] NumPy/SciPy comparison suite.
+- [x] deterministic NumPy `pinv` baseline suite added;
+- [x] first exact-head core CI passed before NumPy hardening;
+- [ ] final exact-head GitHub CI green with NumPy court;
+- [ ] final generated workflow artifact inspected.
+
+## M⁻ captured during hardening
+
+- [x] universal `A^T A` Gram path rejected after independent NumPy baseline found false numerical null-mode inversion for wide matrices;
+- [x] implementation changed to smaller Gram `A^T A` / `A A^T` according to geometry;
+- [x] Gram condition-squaring limitation recorded explicitly.
 
 ## OAK boundary
 
@@ -46,8 +55,8 @@
 - [x] regularization bias documented;
 - [x] posterior prior/noise dependence documented;
 - [x] local nonlinear convergence != global uniqueness documented;
-- [x] stdlib Jacobi backend not presented as production SVD documented.
+- [x] stdlib Jacobi/Gram backend not presented as production SVD documented.
 
 ## Promotion rule
 
-Keep status at `X/D candidate` until the exact-head dedicated CI passes. Promote to local `D` only for the bounded deterministic capabilities actually exercised by the tests. Do not claim broad numerical robustness or performance until a recognized-library baseline and scaling campaign are added.
+Keep status at `X/D candidate` until the final exact-head dedicated CI including the NumPy court passes. Promote to local `D` only for the bounded deterministic capabilities actually exercised by the tests. Do not claim broad numerical robustness or performance until scaling, tolerance and production-library campaigns are added.
