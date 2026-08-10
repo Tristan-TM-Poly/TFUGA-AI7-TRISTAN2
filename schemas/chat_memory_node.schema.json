@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/chat_memory_node.schema.json",
+  "title": "Ω-CHATMEM HGFM Node",
+  "type": "object",
+  "required": ["id", "kind", "label", "text", "epistemic_state", "importance", "sensitivity", "schema_version"],
+  "properties": {
+    "id": {"type": "string"},
+    "kind": {"type": "string"},
+    "label": {"type": "string"},
+    "text": {"type": "string"},
+    "epistemic_state": {"enum": ["OBSERVATION", "USER_PROPOSAL", "DEFINITION", "HYPOTHESIS", "HEURISTIC", "MODEL", "SIMULATION_RESULT", "MEASURED_RESULT", "SUPPORTED", "FALSIFIED", "PROVEN", "DISPUTED", "UNKNOWN"]},
+    "importance": {"type": "object", "required": ["score"], "properties": {"score": {"type": "number", "minimum": 0, "maximum": 1}}},
+    "sensitivity": {"enum": ["PUBLIC", "INTERNAL", "PRIVATE", "SECRET", "IP_SENSITIVE", "PERSONAL"]},
+    "schema_version": {"type": "string"}
+  },
+  "additionalProperties": true
+}

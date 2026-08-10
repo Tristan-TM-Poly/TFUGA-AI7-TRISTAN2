@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/chat_memory_hyperedge.schema.json",
+  "title": "Ω-CHATMEM HGFM Hyperedge",
+  "type": "object",
+  "required": ["id", "type", "members", "schema_version"],
+  "properties": {
+    "id": {"type": "string"},
+    "type": {"type": "string"},
+    "members": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+    "source_ref": {"type": "object"},
+    "schema_version": {"type": "string"}
+  },
+  "additionalProperties": true
+}

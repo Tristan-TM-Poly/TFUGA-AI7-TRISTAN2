@@ -1,0 +1,4 @@
+#!/usr/bin/env python3
+from omega_chatmem_hgfm_t.cli import main
+
+raise SystemExit(main())
