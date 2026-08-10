@@ -1,0 +1,52 @@
+name: omega-recycle-live-evidence
+
+on:
+  pull_request:
+    paths:
+      - "omega_recycle_t/**"
+      - ".github/workflows/omega-recycle-live-evidence.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "23 8 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  live-source-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: python -m pip install ./omega_recycle_t
+      - name: Acquire read-only public source evidence
+        run: |
+          python - <<'PY'
+          from dataclasses import asdict
+          from datetime import datetime, timezone
+          import json
+          from pathlib import Path
+          from omega_recycle.live_sources import EPA_SMM_LANDING_LIVE, EUROSTAT_ENV_WASMUN_LIVE, fetch_live_snapshot
+          retrieved_at = datetime.now(timezone.utc).isoformat()
+          successes = []
+          failures = []
+          for spec in (EUROSTAT_ENV_WASMUN_LIVE, EPA_SMM_LANDING_LIVE):
+              try:
+                  _, snapshot = fetch_live_snapshot(spec, retrieved_at=retrieved_at)
+                  successes.append(asdict(snapshot))
+              except Exception as exc:
+                  failures.append({"source_id": spec.source_id, "url": spec.url, "error_type": type(exc).__name__, "error": str(exc), "claim_boundary": "availability_failure_record_not_source_revision"})
+          manifest = {"schema": "omega-recycle-live-run-v1", "retrieved_at": retrieved_at, "success_count": len(successes), "failure_count": len(failures), "snapshots": successes, "failures": failures, "claim_boundary": "read_only_live_acquisition_artifact_not_canon_mutation_or_truth_certificate"}
+          path = Path("/tmp/omega-recycle-r06-live-manifest.json")
+          path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
+          print(path.read_text(encoding="utf-8"))
+          PY
+      - name: Upload live evidence manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-recycle-r06-live-manifest
+          path: /tmp/omega-recycle-r06-live-manifest.json
+          if-no-files-found: error

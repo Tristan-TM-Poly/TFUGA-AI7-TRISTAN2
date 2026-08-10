@@ -1,52 +1,51 @@
-# Public data source contracts — Ω-RECYCLE-T∞ R0.5
+# Public data source contracts — Ω-RECYCLE-T∞ R0.6
 
-Verified 2026-08-10. This file records source contracts and evidence boundaries; it does not claim that upstream data are immutable or universally comparable.
+Verified/observed 2026-08-10. Source contracts, static anchors and live HTTP manifests are distinct evidence classes.
 
 ## Eurostat `env_wasmun`
 
-- Publisher: Eurostat
-- Dataset: Municipal waste by waste management operations
-- Online code: `env_wasmun`
+- dataset code: `env_wasmun`
 - DOI: `10.2908/env_wasmun`
-- Data-browser source: `https://ec.europa.eu/eurostat/databrowser/view/env_wasmun/default/table?lang=en`
-- Coverage observed at verification: 1995–2024
-- R0.5 adapter: Eurostat TSV parser plus `env_wasmun` contract.
+- R0.5 contract retains dimensions, time, values/missingness, status flags and raw unit codes.
+- R0.6 live spec requests the EU27 aggregate with the two latest periods through Eurostat's Statistics API.
 
-The adapter retains raw dimension codes, time period, numeric value/missingness and observation status flags. The `env_wasmun` adapter requires at least `geo`, `unit` and `wst_oper`. Known unit normalization currently includes `KG_HAB -> kg_per_capita`, `THS_T -> thousand_tonnes`, and `T -> tonnes` while retaining the original unit code.
-
-This is schema validation, not a claim that countries, years or methods are automatically comparable.
+First R0.6 live run: HTTP 200, JSON, 3,677 bytes, SHA256 `f3fa4ef25f83227fe9fa26014fbf3819c9faca9154df142c0c9f43f4efe4d069`.
 
 ## US EPA SMM Facts and Figures
 
-- Publisher: US Environmental Protection Agency
-- Series: Advancing Sustainable Materials Management: Facts and Figures
-- Source: `https://www.epa.gov/facts-and-figures-about-materials-waste-and-recycling/advancing-sustainable-materials-management`
-- Current national Facts & Figures series identified at verification is through 2018.
-- R0.5 adapter: normalized bridge CSV requiring `year`, `material`, `management_pathway`, `short_tons`.
+- publisher: US EPA
+- R0.5 normalized bridge remains the machine-contract layer for parsed table data.
+- R0.6 live spec hashes the official Facts & Figures landing page instead of pretending every table/PDF/XLS shares one stable schema.
 
-The package performs explicit US-short-ton to metric-tonne conversion with `1 short ton = 0.90718474 metric tonnes`. It intentionally does not pretend that every EPA webpage, spreadsheet or PDF shares one stable machine-readable layout.
+First R0.6 live run: HTTP 200, HTML, 65,422 bytes, SHA256 `6c413ec9c38ca99c07f74185117b4ce01cdf3fb4cfe16b0b89a19d2a44c73224`; ETag and Last-Modified were recorded by the manifest.
 
-## Revision court
+## Evidence classes
 
-Normalized snapshots can be compared by declared key fields. R0.5 records:
+```text
+SourceAnchor = manually web-verified dated descriptor
+DatasetSnapshot = normalized parsed records + deterministic record hash
+LiveSnapshot = raw HTTP content identity + retrieval metadata
+RevisionReport = normalized record/schema change signal
+```
 
-- added records;
-- removed records;
-- modified records;
-- structural field-set changes;
-- deterministic structural hashes.
+These are intentionally not interchangeable.
 
-A revision report detects change. It does not decide that two revisions are semantically equivalent, methodologically comparable or factually correct.
+## First live artifact
+
+- workflow run: `31412921771`
+- artifact ID: `9072280694`
+- artifact archive SHA256: `803bafc89f979011044641cd7c430a1336587999e7edf6b4e890c8961dda41be`
+- success count: 2
+- failure count: 0
 
 ## OAK rule
 
 ```text
 URL != provenance
-hash != truth
-schema match != semantic equivalence
+HTTP 200 != factual truth
+hash != semantic correctness
+schema match != comparability
 revision detected != revision explained
-fixture != live evidence
+one successful live run != availability guarantee
 one dataset != causal evidence
 ```
-
-Every live empirical acquisition should preserve source, retrieval time, source/version/update metadata, schema, units, flags/codelists, license/terms when known and a canonical content hash.

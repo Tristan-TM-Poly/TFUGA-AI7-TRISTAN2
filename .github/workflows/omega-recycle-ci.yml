@@ -5,10 +5,12 @@ on:
     paths:
       - "omega_recycle_t/**"
       - ".github/workflows/omega-recycle-ci.yml"
+      - ".github/workflows/omega-recycle-live-evidence.yml"
   push:
     paths:
       - "omega_recycle_t/**"
       - ".github/workflows/omega-recycle-ci.yml"
+      - ".github/workflows/omega-recycle-live-evidence.yml"
 
 permissions:
   contents: read
@@ -25,11 +27,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install package and test runner
+      - name: Install package, evidence solver and test runner
         run: |
           python -m pip install --upgrade pip
           python -m pip install pytest
-          python -m pip install ./omega_recycle_t
+          python -m pip install "./omega_recycle_t[evidence]"
       - name: Compile package
         run: python -m compileall -q omega_recycle_t/omega_recycle
       - name: Unit tests
@@ -64,4 +66,20 @@ jobs:
           assert report["negative_control_campaign"]["canonical_is_best"] is False
           assert report["multi_hop_flow"]["optimality_certified"] is True
           assert report["time_expanded_flow"]["optimality_certified"] is True
+          PY
+      - name: R0.6 independent-solver, multi-commodity and governance courts
+        run: |
+          python -m omega_recycle evidence-r06 > /tmp/omega-recycle-r06.json
+          python - <<'PY'
+          from omega_recycle.r06_evidence import run_r06_evidence
+          report = run_r06_evidence()
+          assert report["bench_version"] == "0.6.0"
+          assert report["solver_crosscheck"]["flow_agreement"] is True
+          assert report["solver_crosscheck"]["cost_agreement"] is True
+          assert report["time_expanded_crosscheck"]["flow_agreement"] is True
+          assert report["time_expanded_crosscheck"]["cost_agreement"] is True
+          assert report["multi_commodity"]["shared_capacity_binding"] is True
+          assert report["multi_commodity"]["optimality_certified"] is True
+          assert report["temporal_holdout"]["canonical_is_best"] is False
+          assert report["lcia_governance"]["bundled_recognized_factor_set"] is False
           PY
