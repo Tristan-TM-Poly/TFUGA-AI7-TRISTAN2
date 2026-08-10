@@ -14,7 +14,7 @@ R0.1 implements a small dense numerical subset of this architecture.
 
 ## 2. Structural gate
 
-For linear `F(x)=Ax`, compute the singular spectrum and numerical rank `r`.
+For linear `F(x)=Ax`, compute a numerical singular spectrum and rank `r`.
 
 The router classifies:
 
@@ -26,27 +26,64 @@ The router classifies:
 
 The gate must execute before a uniqueness statement.
 
-## 3. Moore–Penrose backend
+## 3. Reference spectral backend
 
-Using the eigendecomposition
+R0.1 uses the smaller Gram matrix
 
 \[
-A^TA=V\Lambda V^T,
+G=\begin{cases}
+A^TA,&m\ge n,\\
+AA^T,&m<n.
+\end{cases}
 \]
 
-R0.1 constructs
+and a Jacobi eigendecomposition
 
 \[
-(A^TA)^+=V\Lambda^+V^T,
-\qquad
+G=V\Lambda V^T.
+\]
+
+The retained singular values are `sqrt(lambda_i)`.
+
+Because Gram formation squares condition number, the numerical singular-value threshold is bounded below by a scale proportional to
+
+\[
+\sqrt{\epsilon_{machine}}\,\sigma_{max}.
+\]
+
+This is an explicit precision boundary, not a theorem about the exact rank of `A`.
+
+## 4. Moore–Penrose backend
+
+For `m>=n`,
+
+\[
 A^+=(A^TA)^+A^T.
 \]
 
-Eigenvalues below the singular-value tolerance are mapped to zero.
+For `m<n`,
+
+\[
+A^+=A^T(AA^T)^+.
+\]
+
+The symmetric pseudoinverse is formed by inverting retained eigenvalues and zeroing numerical null modes.
 
 The implementation is deliberately reference-grade and stdlib-only; it is not a performance substitute for LAPACK/SVD.
 
-## 4. Regularized backend
+## 5. Independent baseline court
+
+CI installs NumPy only for validation and compares R0.1 to
+
+\[
+\texttt{numpy.linalg.pinv}
+\]
+
+on deterministic full-rank rectangular families and explicit rank-deficient cases.
+
+This court exists because the first implementation used `A^T A` for every geometry. That identity is mathematically valid, but its wide-matrix finite-precision behavior produced false invertible numerical modes. The baseline detected the defect; R0.1 now uses the smaller Gram and precision floor.
+
+## 6. Regularized backend
 
 For scalar Tikhonov weight `lambda >= 0` and optional prior center `x_p`, solve
 
@@ -62,7 +99,7 @@ For `lambda>0`,
 
 For `lambda=0`, use Moore–Penrose instead of blindly inverting `A^TA`.
 
-## 5. Local nonlinear backend
+## 7. Local nonlinear backend
 
 Given current `x_k`, estimate `J_k` by centered finite differences and solve
 
@@ -74,7 +111,7 @@ Then apply residual-decreasing backtracking before accepting the step.
 
 Termination is based on residual and step norms. Convergence is local evidence only.
 
-## 6. Bayesian backend
+## 8. Bayesian backend
 
 For declared linear-Gaussian assumptions,
 
@@ -96,7 +133,7 @@ C_{post}=(C_0^{-1}+A^TR^{-1}A)^{-1},
 
 R0.1 requires invertible `C0` and `R`.
 
-## 7. Identifiability semantics
+## 9. Identifiability semantics
 
 A small forward residual does not establish unique recovery.
 
@@ -111,7 +148,7 @@ The report therefore exposes:
 
 Future versions should export a null-space basis and resolution matrix.
 
-## 8. Cycle-consistency semantics
+## 10. Cycle-consistency semantics
 
 For a reference state `x`, compute
 
@@ -133,9 +170,7 @@ R_F=\|\hat y-y\|_2.
 
 `R_F≈0` with `R_I>0` can be the correct result for a state containing null-space components.
 
-## 9. Router contract
-
-R0.1 linear routing rules:
+## 11. Router contract
 
 ```text
 if noise_level > 0 or lambda > 0:
@@ -158,7 +193,7 @@ Future routing adds:
 - nonlinear Bayesian backend;
 - multimodal branch ensemble.
 
-## 10. OAK failure conditions
+## 12. OAK failure conditions
 
 The implementation must fail promotion if any of these occur:
 
@@ -168,9 +203,10 @@ The implementation must fail promotion if any of these occur:
 4. Bayesian posterior is described without its prior/noise assumptions;
 5. nonlinear solver increases residual without rejection;
 6. deterministic reference tests disagree with closed-form cases;
-7. large-scale numerical superiority is claimed without recognized-library baselines.
+7. NumPy baseline materially disagrees on the declared bounded matrix families;
+8. large-scale numerical superiority is claimed without recognized-library scaling evidence.
 
-## 11. Integration graph
+## 13. Integration graph
 
 ```text
 Ω-LIN-T --------------------+
