@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.3.0",
+  "generated_at": "2026-08-10T23:03:00Z",
+  "capture_origin_live": "2026-08-10T22:42:00Z",
+  "backfill_window_observed": {
+    "earliest": "2026-06-10",
+    "latest": "2026-08-10T22:42:00Z"
+  },
+  "session_records": 62,
+  "personal_context_summary_sessions": 27,
+  "recent_context_index_sessions": 35,
+  "completeness": "PARTIAL_ACCESSIBLE_BACKFILL",
+  "not_claimed": [
+    "exhaustive account history",
+    "raw transcript reconstruction",
+    "deleted/inaccessible chats",
+    "exact wording where only summaries exist"
+  ],
+  "privacy_exclusions": [
+    "medical/personal sensitive facts",
+    "email addresses",
+    "credentials/tokens",
+    "raw private transcript text",
+    "unreviewed private IP details"
+  ]
+}

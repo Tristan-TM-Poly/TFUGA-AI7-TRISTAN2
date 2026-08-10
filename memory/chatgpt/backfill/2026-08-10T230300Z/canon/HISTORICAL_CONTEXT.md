@@ -1,0 +1,242 @@
+# CHATMEM HISTORICAL BACKFILL — 2026-08-10
+
+> Derived from accessible prior-context summaries and the recent-conversation index. This is not a raw transcript archive.
+
+- Coverage observed: **2026-06-10 → 2026-08-10T22:42:00Z**
+- Session records: **62**
+- HGFM nodes: **329**
+- Hyperedges: **441**
+- Provenance records: **124**
+- OAK: **PASS / PROMOTE_DERIVED_PUBLIC_BACKFILL**
+
+## Durable historical systems/topics
+- `AIT`
+- `AIT-TGNT-HGFM`
+- `ActionDNA`
+- `Asset Factory`
+- `Audit OAK Express`
+- `Build-To-Green`
+- `CVCD`
+- `Carleman`
+- `ChatGPT`
+- `ClaimGraph`
+- `Claim–Evidence–Residue`
+- `Evidence DNA`
+- `Evidence Graph`
+- `Evidence Ledger`
+- `FACT∞`
+- `FFWT`
+- `FWT`
+- `Floquet`
+- `FrontGraphOS-T`
+- `GUI`
+- `Git Chrono Atlas`
+- `GitHub`
+- `GitHub PR`
+- `GitHub automation`
+- `GitHub harness`
+- `GitHub optimization`
+- `GitHub systems`
+- `GraphML`
+- `HGFM`
+- `HGFM-SVD`
+- `IPGate`
+- `JKD`
+- `Koopman`
+- `LLMT`
+- `LOG/EXP`
+- `M+`
+- `MethodGraph`
+- `M−`
+- `Noether`
+- `OAK`
+- `OAK Air-Gap`
+- `OAKBench`
+- `OAKGate`
+- `OAKGate GitHub Factory`
+- `OMEGA-INTERCOMPANY-MESH`
+- `Omega Genesis`
+- `PR Consolidator`
+- `PR fusion`
+- `PageDNA`
+- `PolyResearchTwin`
+- `PrimeObject`
+- `ProfessorGenome`
+- `Python library`
+- `ResearchAtom`
+- `Rosette`
+- `SAGE`
+- `SINDy-Tristan`
+- `TFUGA`
+- `TFUGA PDF corpus`
+- `TFUGAG`
+- `TGNT`
+- `THT-HGFM`
+- `TemporalPhotonicCrystalLab-T`
+- `TensorProd-Lift`
+- `Tristan²`
+- `U²`
+- `Vercel`
+- `WikiForge-T`
+- `Workflow DNA`
+- `YY3`
+- `ablations`
+- `adversarial tests`
+- `ancient pyramids`
+- `anti-company detector`
+- `articles`
+- `assembly optimization`
+- `browser verification`
+- `bubble vibration modes`
+- `causal inference`
+- `circuit impedance`
+- `citation offsets`
+- `company forge`
+- `connectors`
+- `contagion`
+- `deduplication`
+- `documentation`
+- `dry-run`
+- `electromagnetic detectors`
+- `error correction`
+- `exceptional points`
+- `formal proof`
+- `incidence tensor`
+- `invention inventory`
+- `loop prevention`
+- `memory audit`
+- `memory ledger`
+- `mutation`
+- `pipelines`
+- `plugins`
+- `policy engine`
+- `production skills`
+- `provenance`
+- `quantum factoring`
+- `recycling`
+- `research summary`
+- `self-improvement`
+- `self-improving tests`
+- `skills`
+- `stale-source detection`
+- `tail risk`
+- `theory absorption`
+- `theses`
+- `topological scheduling`
+- `venture mapper`
+- `visualization`
+- `web`
+- `Ω-ABSORB-POLY-PROF-T`
+- `Ω-ACTECON-T`
+- `Ω-ACTION-EXT-T`
+- `Ω-ACTIONS-T∞`
+- `Ω-AIT-SECRET-VAULT-T`
+- `Ω-AUTO-OPT∞-T`
+- `Ω-AUTO²-Kernel`
+- `Ω-CAPABILITY-BROKER-T`
+- `Ω-CER`
+- `Ω-CHATGIT-T`
+- `Ω-CHATMEM-HGFM-T∞`
+- `Ω-CHEM`
+- `Ω-CIRCUITS-T`
+- `Ω-CITÉ-WEB-T`
+- `Ω-CORP-JARVIS-T`
+- `Ω-DE-TensorProd∞`
+- `Ω-ECC-T`
+- `Ω-ENERGY-T`
+- `Ω-FRONT-PARALLÈLE-T`
+- `Ω-GAME-SIM-EVO-T∞`
+- `Ω-INVERSE-T∞`
+- `Ω-JKD-OS`
+- `Ω-LATEX-T∞`
+- `Ω-LIN-T`
+- `Ω-MATRIX-256`
+- `Ω-META-SEARCH-T`
+- `Ω-MGHFM-TGNT`
+- `Ω-OAK-EVIDENCE-OS`
+- `Ω-PHOTON-TIME-T`
+- `Ω-PLP3D`
+- `Ω-PROF-POLY-T`
+- `Ω-PURE-T∞`
+- `Ω-QMAP-T∞`
+- `Ω-RESEARCH-VAULT-30T`
+- `Ω-ROI-OAK`
+- `Ω-SCI-PATENT-QC`
+- `Ω-STACK-T∞`
+- `Ω-TRANSFORM-T`
+- `Ω-UNI-QC`
+- `Ω-UNI-RESEARCH-MAP-T`
+- `Ω-VTP-T`
+- `Ω-WIKI-T∞`
+
+## Historical checkpoints by date
+- **2026-06-10** — TFUGAG / TFUGA / OAK / HGFM bootstrap (`personal_context_summary`)
+- **2026-06-13** — Ω-MGHFM-TGNT / integrated Tristan engines (`personal_context_summary`)
+- **2026-06-16** — TFUGA PDF corpus absorption + HGFM-SVD (`personal_context_summary`)
+- **2026-06-18** — Tristan Hypergraphs / THT-HGFM (`personal_context_summary`)
+- **2026-06-21** — Ω-LIN-T nonlinear local certification (`personal_context_summary`)
+- **2026-06-26** — Ω-AUTO²-Kernel (`personal_context_summary`)
+- **2026-06-26** — Ω-TRANSFORM-T / FFWT OAKBench (`personal_context_summary`)
+- **2026-06-27** — Ω-ECC-T error-correction lab (`personal_context_summary`)
+- **2026-06-28** — Ω-PROF-POLY-T / public research absorption (`personal_context_summary`)
+- **2026-06-28** — Ω-VTP-T++ / TensorProd-Lift (`personal_context_summary`)
+- **2026-06-29** — Green PR Merge / Ω-ACTION-EXT-T (`personal_context_summary`)
+- **2026-06-29** — Ω-CHATGIT-T semantic Git interface (`personal_context_summary`)
+- **2026-07-03** — GitHub harness / evidence and IP gates (`personal_context_summary`)
+- **2026-07-06** — Omega Genesis company forge (`personal_context_summary`)
+- **2026-07-06** — PrimeObject / FACT∞ (`personal_context_summary`)
+- **2026-07-06** — Ω-CITÉ-WEB-T (`personal_context_summary`)
+- **2026-07-14** — Matrix-256 / PLP3D / CHEM batch (`personal_context_summary`)
+- **2026-07-14** — Ω-ACTECON-T actuarial/economic theory (`personal_context_summary`)
+- **2026-07-14** — Ω-UNI-RESEARCH-MAP-T (`personal_context_summary`)
+- **2026-07-17** — TCR-0.2 Ω-CER Claim–Evidence–Residue (`personal_context_summary`)
+- **2026-07-31** — PDF source vs GitHub executable canon (`personal_context_summary`)
+- **2026-08-02** — OAKGate GitHub Factory / Audit OAK Express (`personal_context_summary`)
+- **2026-08-02** — OMEGA-INTERCOMPANY-MESH (`personal_context_summary`)
+- **2026-08-02** — WikiForge-T / Ω-WIKI-T∞ (`personal_context_summary`)
+- **2026-08-02** — Ω-FRONT-PARALLÈLE-T / FrontGraphOS-T (`personal_context_summary`)
+- **2026-08-02** — Ω-META-SEARCH-T (`personal_context_summary`)
+- **2026-08-02** — Ω-PHOTON-TIME-T (`personal_context_summary`)
+- **2026-08-07** — Architecture convertisseur AC (`recent_context_index`)
+- **2026-08-07** — Expansion multiplicative de l'espace (`recent_context_index`)
+- **2026-08-07** — GitHub en librairie Python (`recent_context_index`)
+- **2026-08-07** — Résumé travaux de recherche (`recent_context_index`)
+- **2026-08-07** — Simplifications itératives circuits (`recent_context_index`)
+- **2026-08-07** — Théorie Détecteurs Électromagnétiques (`recent_context_index`)
+- **2026-08-07** — Théorie de génération de preuves (`recent_context_index`)
+- **2026-08-07** — Théorie hypergraphique des GUI (`recent_context_index`)
+- **2026-08-07** — Théories du Calcul Assembleur (`recent_context_index`)
+- **2026-08-07** — Travail sur systèmes GitHub (`recent_context_index`)
+- **2026-08-07** — Valeurs en mémoire (`recent_context_index`)
+- **2026-08-09** — Fusion intelligente des PR (`recent_context_index`)
+- **2026-08-09** — Génération documentaire LaTeX (`recent_context_index`)
+- **2026-08-09** — Moteur Génératif Jeu-Simulation (`recent_context_index`)
+- **2026-08-09** — Optimisation des GitHub Actions (`recent_context_index`)
+- **2026-08-09** — Optimisation travail GitHub (`recent_context_index`)
+- **2026-08-09** — Théories pures innovatrices (`recent_context_index`)
+- **2026-08-10** — Analyse LLMT Github (`recent_context_index`)
+- **2026-08-10** — Analyse PR et documentation (`recent_context_index`)
+- **2026-08-10** — Analyse de la fusion (`recent_context_index`)
+- **2026-08-10** — Analyse des compétences (`recent_context_index`)
+- **2026-08-10** — Compétences de l'assistant (`recent_context_index`)
+- **2026-08-10** — Facteur Quantique Compressé (`recent_context_index`)
+- **2026-08-10** — Génération d'images et simulations (`recent_context_index`)
+- **2026-08-10** — Inventaire d'inventions atomiques (`recent_context_index`)
+- **2026-08-10** — Inversion de fonction analytique (`recent_context_index`)
+- **2026-08-10** — Modes de vibration bulle (`recent_context_index`)
+- **2026-08-10** — Mémoire externe ChatGPT (`recent_context_index`)
+- **2026-08-10** — Simplification calcul quantique (`recent_context_index`)
+- **2026-08-10** — Systèmes et créations intégrées (`recent_context_index`)
+- **2026-08-10** — Théorie Hypergraphique du Recyclage (`recent_context_index`)
+- **2026-08-10** — Théories pyramides anciennes (`recent_context_index`)
+- **2026-08-10** — Usine scientifique éditoriale (`recent_context_index`)
+- **2026-08-10** — Échec déploiement Vercel (`recent_context_index`)
+- **2026-08-10** — Évolution de ChatGPT 2026 (`recent_context_index`)
+
+## Fidelity rule
+- `personal_context_summary`: recovered summary of prior interactions; exact original wording is not asserted.
+- `recent_context_index`: conversation title/topic still visible in current session context; not a full transcript.
+- Future official export can attach exact message-level provenance and fill missing conversations.
+
+## Privacy rule
+- No raw transcripts, credentials, sensitive personal/medical facts, or private email addresses are included in this public-derived backfill.

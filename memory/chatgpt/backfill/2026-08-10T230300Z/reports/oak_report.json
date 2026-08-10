@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "gate": "PROMOTE_DERIVED_PUBLIC_BACKFILL",
+  "node_count": 329,
+  "hyperedge_count": 441,
+  "provenance_count": 124,
+  "raw_transcript_committed": false,
+  "sensitive_personal_data_included": false,
+  "source_fidelity_separated": true,
+  "historical_summary_not_misrepresented_as_transcript": true,
+  "coverage_status": "PARTIAL_ACCESSIBLE_BACKFILL",
+  "notes": [
+    "PASS certifies structural/privacy/provenance labeling only, not scientific truth.",
+    "Historical records recovered from summary-level context remain summary-level evidence.",
+    "Future official exports may increase coverage and attach exact message-level provenance."
+  ]
+}

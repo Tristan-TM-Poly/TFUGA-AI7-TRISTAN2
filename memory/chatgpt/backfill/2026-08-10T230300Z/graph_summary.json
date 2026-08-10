@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.3.0",
+  "checkpoint_id": "chatmem-backfill-2026-08-10-2303Z",
+  "detailed_graph_location": "ChatGPT Library /Tristan/ChatGPT Memory/Historical Backfill 2026-08-10/chatmem_historical_backfill_2026-08-10.zip",
+  "counts": {
+    "nodes": 329,
+    "hyperedges": 441,
+    "provenance": 124
+  },
+  "sha256": {
+    "hgfm/nodes.jsonl": "043efb457ca4e6291c50efa40de30c72d0680dc93f8c89d48b1c0bde93493314",
+    "hgfm/hyperedges.jsonl": "f1355102c2cd6c06c9fe6eee3d1357f51facc8e5e8baed08db5086ba269b78cd",
+    "hgfm/provenance.jsonl": "49913c1fc10c2947f69048f489c252d762e160725fa8d7f2076a781999fb5f1a",
+    "library_bundle_zip": "45c68e4b71bff166293f0a64d6bf248a97bc7ab0f12ffb976ba9b7da41d35942"
+  },
+  "note": "GitHub stores the public canonical context, coverage, OAK report and cryptographic commitments; the full generated HGFM bundle is also stored in ChatGPT Library for cross-chat retrieval."
+}
