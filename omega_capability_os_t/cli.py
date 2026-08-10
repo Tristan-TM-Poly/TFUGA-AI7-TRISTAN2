@@ -4,7 +4,9 @@ import argparse
 import json
 from pathlib import Path
 
+from .bridge import compile_workunit, workunit_from_mapping
 from .core import Intent, load_registry, make_evidence_receipt, plan, suggest_fallback, validate_registry
+from .runtime import learn_health
 
 
 def _load(path: str) -> dict:
@@ -34,11 +36,46 @@ def _parser() -> argparse.ArgumentParser:
     fallback.add_argument("registry")
     fallback.add_argument("capability_id")
     fallback.add_argument("--health")
+
+    bridge = sub.add_parser("workunit-plan")
+    bridge.add_argument("workunit")
+    bridge.add_argument("--completed-dependency", action="append", default=[])
+    bridge.add_argument("--allow-mutation", action="store_true")
+    bridge.add_argument("--allow-irreversible", action="store_true")
+    bridge.add_argument("--authority", choices=("read", "draft", "write", "irreversible"))
+
+    health = sub.add_parser("learn-health")
+    health.add_argument("records")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
+
+    if args.command == "workunit-plan":
+        work_unit = workunit_from_mapping(_load(args.workunit))
+        bridge = compile_workunit(
+            work_unit,
+            completed_dependencies=args.completed_dependency,
+            allow_mutation=args.allow_mutation,
+            allow_irreversible=args.allow_irreversible,
+            authority=args.authority,
+        )
+        payload = {
+            "bridge": bridge.to_dict(),
+            "plan": plan(bridge.capabilities, bridge.intent),
+        }
+        print(json.dumps(payload, indent=2, sort_keys=True))
+        return 0 if payload["plan"]["status"] == "READY" else 2
+
+    if args.command == "learn-health":
+        payload = _load(args.records)
+        records = payload.get("outcomes", payload.get("records", []))
+        if not isinstance(records, list):
+            raise TypeError("records file must contain a list under outcomes or records")
+        print(json.dumps(learn_health(records), indent=2, sort_keys=True))
+        return 0
+
     registry = load_registry(_load(args.registry))
 
     if args.command == "describe":

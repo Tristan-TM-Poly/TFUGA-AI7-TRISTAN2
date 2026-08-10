@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "omega_capability_os_t/**"
-      - "tests/test_omega_capability_os_t.py"
+      - "tests/test_omega_capability_os*.py"
       - "examples/capability_os_*.json"
       - "docs/OMEGA_CAPABILITY_OS_T.md"
       - ".agents/skills/capability-os/**"
@@ -29,8 +29,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install test runner
         run: python -m pip install pytest
-      - name: Unit tests
-        run: python -m pytest -q tests/test_omega_capability_os_t.py
+      - name: Unit and integration tests
+        run: python -m pytest -q tests/test_omega_capability_os*.py
       - name: PR-415 fallback planning smoke
         run: |
           python -m omega_capability_os_t describe examples/capability_os_registry.json
@@ -47,4 +47,20 @@ jobs:
           assert "github.fetch_workflow_job_logs" in ids, ids
           assert "github.fetch_generic_logs" not in ids, ids
           print(json.dumps(plan, indent=2))
+          PY
+      - name: WorkUnit bridge smoke
+        run: |
+          python -m omega_capability_os_t workunit-plan \
+            examples/capability_os_workunit.json \
+            --completed-dependency WU-PREV > /tmp/workunit-plan.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(Path("/tmp/workunit-plan.json").read_text())
+          plan = payload["plan"]
+          assert plan["status"] == "READY", plan
+          ids = [step["capability_id"] for step in plan["steps"]]
+          assert ids[0] == "workunit.generate.WU-CAP-R02", ids
+          assert any(item.startswith("workunit.validate.WU-CAP-R02") for item in ids), ids
+          print(json.dumps(payload, indent=2))
           PY
