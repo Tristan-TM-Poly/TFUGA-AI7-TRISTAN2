@@ -1,0 +1,24 @@
+{
+  "capture_epoch": "2026-08-10T22:42:00Z",
+  "counts": {
+    "hyperedges": 7,
+    "nodes": 8,
+    "provenance": 4
+  },
+  "origin_commit": "2d15df28d7ed92721dcba0ec0f1d9e8a1c3c1d95",
+  "origin_pull_request": 415,
+  "public_derivation_only": true,
+  "raw_transcript_committed": false,
+  "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "rules": [
+    "Current visible conversation is a valid authorized source.",
+    "Unseen ChatGPT history must not be claimed as captured.",
+    "Historical export is optional backfill, not a prerequisite for live capture.",
+    "Public GitHub receives only reviewed derived PUBLIC memory, never raw transcripts by default.",
+    "Each checkpoint preserves source hashes and provenance without requiring raw text publication.",
+    "Future recall should retrieve the smallest relevant HGFM neighborhood and include M− when applicable."
+  ],
+  "schema_version": "0.1.0",
+  "scope": "Current conversation from the explicit ChatMem skill request through the 'start from here' decision.",
+  "source_type": "chatgpt_active_context"
+}

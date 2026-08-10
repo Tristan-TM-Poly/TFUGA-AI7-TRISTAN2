@@ -1,0 +1,7 @@
+{"id": "edge:d7692512babbb6adf0ab5ad3", "members": ["conversation:b0e89e983898bc501cc7d202", "system:2ed022973430bfec0d63ca27", "system:766201754134c304a3318dc1"], "schema_version": "0.1.0", "type": "defines"}
+{"id": "edge:aad07c4e4384d51f5d94dece", "members": ["repository:1b90e63bf4d3f8172750f5e2", "system:2ed022973430bfec0d63ca27"], "schema_version": "0.1.0", "type": "implements"}
+{"id": "edge:cc672a3483c51aae1186cd64", "members": ["decision:8c83a91aab2b4c883f14f841", "system:766201754134c304a3318dc1"], "schema_version": "0.1.0", "type": "activates"}
+{"id": "edge:3abed8dabb733dd065824302", "members": ["constraint:f994746600d517111ea5d4f3", "system:766201754134c304a3318dc1", "repository:1b90e63bf4d3f8172750f5e2"], "schema_version": "0.1.0", "type": "constrains"}
+{"id": "edge:c7453819a79c97e6aed1b142", "members": ["system:2ed022973430bfec0d63ca27", "concept:aa53d889878e5bed0d8762c0", "repository:1b90e63bf4d3f8172750f5e2"], "schema_version": "0.1.0", "type": "uses"}
+{"id": "edge:e7e2554189ee7c752cadbdb2", "members": ["decision:8c83a91aab2b4c883f14f841", "nextaction:893710bbb409d1a103e78b61"], "schema_version": "0.1.0", "type": "supersedes"}
+{"id": "edge:1df3d6144e9e103844262450", "members": ["system:766201754134c304a3318dc1", "nextaction:893710bbb409d1a103e78b61"], "schema_version": "0.1.0", "type": "allows_backfill"}
