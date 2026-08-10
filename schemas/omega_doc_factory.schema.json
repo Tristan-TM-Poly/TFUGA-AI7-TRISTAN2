@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.example/schemas/omega_doc_factory.schema.json",
+  "title": "Ω-DOC-FACTORY-T∞ R1.0 evidence-bound documentation campaign",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "factory_version",
+    "source_root",
+    "source_commit",
+    "system_count",
+    "systems",
+    "execution_receipts",
+    "claims",
+    "claim_evidence_bindings",
+    "quality",
+    "delta",
+    "graph",
+    "campaign_fingerprint",
+    "oak_boundaries",
+    "truth_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.3.0"},
+    "factory_version": {"const": "1.0.0"},
+    "source_root": {"type": "string"},
+    "source_commit": {"type": "string"},
+    "system_count": {"type": "integer", "minimum": 0},
+    "systems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "statuses", "metrics", "modules", "receipts", "oak_boundaries", "fingerprint"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^omega_"},
+          "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "statuses": {
+            "type": "object",
+            "required": [
+              "declared_system_status",
+              "documentation_status",
+              "evidence_status",
+              "oak_review_status",
+              "implementation_status",
+              "reproducibility_status",
+              "product_status",
+              "ip_status"
+            ]
+          },
+          "modules": {"type": "array"},
+          "receipts": {"type": "array"}
+        }
+      }
+    },
+    "execution_receipts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id", "kind", "system_id", "artifact_path", "source_sha256", "status",
+          "observed_at", "environment", "details", "authority", "boundary", "stale", "stale_reason"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "test-run", "workflow-run", "benchmark-run", "schema-validation", "build-run",
+              "package-smoke", "formal-proof", "measurement", "simulation"
+            ]
+          },
+          "stale": {"type": "boolean"},
+          "authority": {"const": "observation-only"}
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "source_path", "source_line", "source_sha256", "system_ids", "status", "authority", "boundary"],
+        "properties": {
+          "status": {"const": "candidate-unverified"},
+          "boundary": {"const": "CLAIM_DOCUMENTED != CLAIM_PROVEN"}
+        }
+      }
+    },
+    "claim_evidence_bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "claim_id", "system_id", "evidence_kind", "evidence_ref", "relation", "support_strength", "authority", "boundary"],
+        "properties": {
+          "support_strength": {"const": "unknown"},
+          "authority": {"const": "review-only"}
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": ["aggregate", "systems"]
+    },
+    "delta": {
+      "type": "object",
+      "required": ["baseline", "added_systems", "removed_systems", "changed_systems", "unchanged_systems", "invalidated_previous_documentation", "boundary"]
+    },
+    "graph": {
+      "type": "object",
+      "required": ["schema_version", "nodes", "edges", "boundary"]
+    },
+    "campaign_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "oak_boundaries": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "truth_boundary": {"type": "string"}
+  },
+  "additionalProperties": true
+}
