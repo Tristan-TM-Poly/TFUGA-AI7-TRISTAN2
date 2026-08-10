@@ -1,0 +1,13 @@
+{
+  "stages": [
+    {"name": "cheap", "beam_width": 3},
+    {"name": "medium", "beam_width": 2},
+    {"name": "full", "beam_width": 1}
+  ],
+  "candidates": [
+    {"candidate_id": "incumbent", "evaluations": {"cheap": {"utility": 7.5, "evidence": 1.0, "risk": 0.1, "cost": 1}, "medium": {"utility": 8.0, "evidence": 1.0, "risk": 0.1, "cost": 3}, "full": {"utility": 8.2, "evidence": 1.0, "risk": 0.1, "cost": 7}}},
+    {"candidate_id": "fanout-first", "evaluations": {"cheap": {"utility": 8.5, "evidence": 0.9, "risk": 0.1, "cost": 1}, "medium": {"utility": 9.2, "evidence": 1.0, "risk": 0.1, "cost": 3}, "full": {"utility": 9.4, "evidence": 1.0, "risk": 0.1, "cost": 6}}},
+    {"candidate_id": "closure-first", "evaluations": {"cheap": {"utility": 8.0, "evidence": 1.0, "risk": 0.05, "cost": 1}, "medium": {"utility": 8.8, "evidence": 1.0, "risk": 0.05, "cost": 2}, "full": {"utility": 9.1, "evidence": 1.0, "risk": 0.05, "cost": 5}}},
+    {"candidate_id": "aggressive-generation", "evaluations": {"cheap": {"utility": 9.0, "evidence": 0.5, "risk": 0.5, "cost": 1}, "medium": {"utility": 8.0, "evidence": 0.5, "risk": 0.6, "cost": 4}, "full": {"utility": 7.0, "evidence": 0.5, "risk": 0.7, "cost": 10}}}
+  ]
+}

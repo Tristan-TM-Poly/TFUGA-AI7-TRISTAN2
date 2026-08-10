@@ -1,0 +1,107 @@
+{
+  "workers": 4,
+  "packets": [
+    {
+      "work_id": "discover-hotspots",
+      "objective": "measure shared GitHub Actions trigger hotspots",
+      "artifact": "trigger_hotspots.json",
+      "estimated_seconds": 8,
+      "value": 8,
+      "evidence_weight": 0.8,
+      "crystallization": 0.8,
+      "reuse_score": 1.0,
+      "risk": 0.05,
+      "failure_probability": 0.1,
+      "tags": ["github", "actions", "fanout"],
+      "capability_id": "omega-actions-trigger-hotspots"
+    },
+    {
+      "work_id": "dependency-audit",
+      "objective": "audit direct dependency before trigger cut",
+      "artifact": "trigger_dependency.json",
+      "dependencies": ["discover-hotspots"],
+      "estimated_seconds": 15,
+      "value": 10,
+      "evidence_weight": 0.9,
+      "crystallization": 0.7,
+      "reuse_score": 1.0,
+      "risk": 0.1,
+      "failure_probability": 0.25,
+      "tags": ["github", "actions", "dependency", "oak"]
+    },
+    {
+      "work_id": "trigger-cut-plan",
+      "objective": "compile reversible minimal trigger-cut plan",
+      "artifact": "trigger_cut_plan.json",
+      "dependencies": ["dependency-audit"],
+      "estimated_seconds": 12,
+      "value": 9,
+      "evidence_weight": 0.8,
+      "crystallization": 0.8,
+      "reuse_score": 0.8,
+      "risk": 0.15,
+      "tags": ["github", "actions", "routing"]
+    },
+    {
+      "work_id": "fresh-witness",
+      "objective": "measure uncontaminated post-migration eligibility witness",
+      "artifact": "before_after_evidence.json",
+      "dependencies": ["trigger-cut-plan"],
+      "estimated_seconds": 30,
+      "value": 10,
+      "evidence_weight": 1.0,
+      "crystallization": 1.0,
+      "reuse_score": 0.6,
+      "risk": 0.1,
+      "failure_probability": 0.35,
+      "tags": ["github", "actions", "telemetry", "evidence"]
+    },
+    {
+      "work_id": "promotion-gate",
+      "objective": "compare before and after metrics under proof gates",
+      "artifact": "promotion_decision.json",
+      "dependencies": ["fresh-witness"],
+      "estimated_seconds": 10,
+      "value": 10,
+      "evidence_weight": 1.0,
+      "crystallization": 1.0,
+      "reuse_score": 0.9,
+      "risk": 0.05,
+      "tags": ["oak", "promotion", "github"]
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "omega-actions-trigger-hotspots",
+      "canonical_name": "GitHub Actions trigger hotspot analyzer",
+      "domains": ["github", "actions", "fanout"],
+      "evidence_weight": 0.8,
+      "default_authority": "L3_PLAN",
+      "reusable": true
+    },
+    {
+      "capability_id": "omega-actions-trigger-dependency",
+      "canonical_name": "GitHub Actions trigger dependency audit",
+      "domains": ["github", "actions", "dependency", "oak"],
+      "evidence_weight": 0.8,
+      "default_authority": "L3_PLAN",
+      "reusable": true
+    }
+  ],
+  "telemetry": {
+    "impacted_workunits": 3,
+    "triggered_jobs": 37,
+    "started_artifacts": 18,
+    "crystallized_artifacts": 9,
+    "validated_integrated_artifacts": 7,
+    "maintained_manual_lines": 500,
+    "wall_seconds": 900,
+    "validation_compute_seconds": 2500,
+    "evidence_points": 40,
+    "queue_seconds": 1200,
+    "obsolete_queue_seconds": 700,
+    "raw_work_units": 24,
+    "duplicate_work_units": 5,
+    "mean_quality": 0.97
+  }
+}

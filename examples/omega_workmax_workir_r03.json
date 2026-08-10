@@ -1,0 +1,41 @@
+{
+  "intent": {
+    "id": "pr370-r03",
+    "text": "Advance Ω-WORKMAX-GIT-T∞ without increasing repository-wide fan-out",
+    "value": 1.0
+  },
+  "changed_files": [
+    "omega_workmax_t/github_telemetry.py",
+    "omega_workmax_t/work_ir.py",
+    "omega_workmax_t/evidence_subgraph.py",
+    "omega_workmax_t/frontier_bridge.py",
+    ".github/workflows/omega-workmax-ci.yml"
+  ],
+  "issues": [
+    {
+      "number": 370,
+      "title": "Crystallize WorkMax stacked PR",
+      "value": 0.9,
+      "estimated_seconds": 5
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "omega-actions-t",
+      "reuse_score": 1.0,
+      "evidence_weight": 0.9,
+      "crystallization": 0.9
+    }
+  ],
+  "oak_residues": [
+    {
+      "residue_id": "M-QUEUE-SATURATION",
+      "description": "Remote Actions runs remain queued; do not outrun validation absorption.",
+      "blocking": true,
+      "required_evidence": [
+        "completed-actions-telemetry",
+        "fresh-witness"
+      ]
+    }
+  ]
+}

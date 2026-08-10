@@ -1,0 +1,20 @@
+{
+  "intent": "route GitHub control plane, WorkMax, capability registry, canon, private vault and energy simulation work across current repositories",
+  "top": 8,
+  "repositories": [
+    {"repository":"Tristan-TM-Poly/PEFA-FractalEnergySystem","head_sha":"f06f47bb2b68bd1c7ca03772ed28b1abc9e33134","default_branch":"main","ref":"main","visibility":"private","authority":"READ_PLAN"},
+    {"repository":"Tristan-TM-Poly/TFACC","head_sha":"ce6ca0ac9e63adfb469d3dae11fc5ebeadd9431d","default_branch":"main","ref":"main","visibility":"private","authority":"READ_PLAN"},
+    {"repository":"Tristan-TM-Poly/TFUGA-AI7-TRISTAN2","head_sha":"8ead7d6ce86a5b7042e05df6df097428d9b4c7af","default_branch":"main","ref":"feat/omega-workmax-git-r01","visibility":"public","authority":"READ_PLAN"},
+    {"repository":"Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG","head_sha":"0877c90ebcdd6095fcf03df00985ecedad919902","default_branch":"main","ref":"main","visibility":"public","authority":"READ_PLAN"},
+    {"repository":"Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG","head_sha":"96c92584a331ca7339f6d4aa155abc9e191f48a8","default_branch":"main","ref":"main","visibility":"public","authority":"READ_PLAN"},
+    {"repository":"Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2","head_sha":"017e546c675e9d961623a2e55b95481ebf552d94","default_branch":"main","ref":"main","visibility":"public","authority":"READ_PLAN"}
+  ],
+  "capabilities": [
+    {"capability_id":"omega-em2-resonant-ladder","repository":"Tristan-TM-Poly/PEFA-FractalEnergySystem","head_sha":"f06f47bb2b68bd1c7ca03772ed28b1abc9e33134","name":"Resonant transformer ladder MNA SPICE OAKBench","domains":["energy","transformer","mna","spice","simulation"],"evidence_weight":0.8,"maturity":"MERGED_EXECUTABLE","read_only":true},
+    {"capability_id":"omega-private-drive-vault","repository":"Tristan-TM-Poly/TFACC","head_sha":"ce6ca0ac9e63adfb469d3dae11fc5ebeadd9431d","name":"Private Drive vault seed and OAK CI","domains":["private","drive","vault","provenance"],"evidence_weight":0.7,"maturity":"MERGED_SEED","read_only":true,"limitations":["private content stays opaque"]},
+    {"capability_id":"omega-workmax","repository":"Tristan-TM-Poly/TFUGA-AI7-TRISTAN2","head_sha":"8ead7d6ce86a5b7042e05df6df097428d9b4c7af","name":"WorkMax repository work optimization stack","domains":["github","work","optimization","actions","scheduling"],"evidence_weight":0.7,"maturity":"ACTIVE_STACKED_PR","read_only":true},
+    {"capability_id":"omega-chatgit-capability-registry","repository":"Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG","head_sha":"0877c90ebcdd6095fcf03df00985ecedad919902","name":"Universal Capability Contract and GitHub memory","domains":["github","capability","registry","memory","reuse"],"evidence_weight":0.9,"maturity":"MERGED_EXECUTABLE","read_only":true},
+    {"capability_id":"omega-canon-smoke","repository":"Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG","head_sha":"96c92584a331ca7339f6d4aa155abc9e191f48a8","name":"Canon role and OAK smoke validation","domains":["canon","oak","claim","review"],"evidence_weight":0.8,"maturity":"MERGED_EXECUTABLE","read_only":true},
+    {"capability_id":"omega-github-control-plane","repository":"Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2","head_sha":"017e546c675e9d961623a2e55b95481ebf552d94","name":"GitHub control plane and self-reference-safe merge receipts","domains":["github","control","plane","repository","orchestration","merge","receipt"],"evidence_weight":0.9,"maturity":"MERGED_EXECUTABLE","read_only":true,"depends_on":["omega-chatgit-capability-registry"]}
+  ]
+}
