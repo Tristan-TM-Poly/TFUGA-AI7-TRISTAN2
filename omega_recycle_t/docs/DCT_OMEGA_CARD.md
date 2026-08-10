@@ -1,48 +1,46 @@
-# DCT-Ω Card — Ω-RECYCLE-T∞ R0.2
+# DCT-Ω Card — Ω-RECYCLE-T∞ R0.3
 
 ```yaml
-id: OMEGA-RECYCLE-T-INF-R0.2
+id: OMEGA-RECYCLE-T-INF-R0.3
 name: Structure-Preserving Recycling and Regeneration
 repo_path: omega_recycle_t/
 status: D
 definition: >
-  A decision-support framework that models end-of-life objects as resource
-  hypergraphs and selects recovery routes that trade recovered value against
-  cost, energy, risk, externalities, quality and destruction of useful structure.
+  OAK-safe decision-support research kernel that represents end-of-life objects
+  as resource hypergraphs, evaluates recovery trajectories, cross-checks a
+  pruned solver against an exhaustive oracle, propagates functional-state
+  uncertainty and exposes explicit baselines and inventory/provenance layers.
 hypotheses:
-  - useful structure can be assigned an explicit preservation prior
-  - route quality and future-cycle value should influence recovery decisions
-  - material mixture entropy is a useful descriptor, not a complete recycling cost model
-  - coupled budgets can change the optimum relative to independent component choices
+  - useful structure can be represented as an explicit, ablatable preservation prior
+  - route quality and future-cycle value can improve decisions on some datasets
+  - constrained search can be pruned without changing the optimum when the upper bound is admissible
+  - functional-state uncertainty can materially change route preference
 equation_or_model: J = V - C - lambda_E E - lambda_R R - X + lambda_P P + lambda_F F
 code_or_calculation: omega_recycle_t/omega_recycle/
 test_path: omega_recycle_t/tests/
-proof_path: null
+proof_path: omega_recycle_t/docs/R03_EVIDENCE.md
 risk_boundary:
   - no hazardous physical-processing instructions
   - no claim of physical law
-  - no lifecycle-assessment certification
-  - no industrial performance claim without baselines and data
+  - LCA inventory interface is not lifecycle impact assessment
+  - Bayesian posterior is not calibrated evidence by itself
+  - branch-and-bound remains exponential in the worst case
 m_minus:
-  - exact coupled optimizer is exponential and limited to small benchmarks
-  - synthetic prices are illustrative
-  - mixture entropy is not thermodynamic entropy of the complete process
-  - greedy symbiosis matching is not globally optimal
+  - current economics and OAKBench inputs are synthetic
+  - preservation prior can be harmful and must be benchmarked
+  - finite search budgets can lose optimality certification
+  - UrbanMine domain adapters are structural, not empirically calibrated
 next_experiment: >
-  add scalable constrained optimization and Bayesian uncertainty, then benchmark
-  on an open provenance-tracked dataset against mass-only and value-only baselines
+  ingest a provenance-tracked public dataset, measure baseline regret, calibrate
+  uncertainty, and add network capacity/transport constraints
 promotion_decision: prototype
 ```
 
-## Claim discipline
-
-The executable result demonstrates that the formal decision rules run deterministically and obey encoded safety constraints. It does not demonstrate that the rules are optimal for a real recycling plant.
-
 ## Falsification targets
 
-1. Find cases where the structure-preservation prior causes a worse economic/environmental route.
-2. Sweep uncertain functional probability and measure route-switch thresholds.
-3. Compare local decisions with the exact coupled oracle.
-4. Compare against mass-recovery-only and value-only baselines.
-5. Measure greedy symbiosis regret against an exact matcher on small cases.
-6. Record counterexamples in M⁻ rather than tuning them away.
+1. Find a small problem where branch-and-bound disagrees with the exhaustive oracle.
+2. Find datasets where no-preservation, mass-only or value-only beats the canonical policy.
+3. Quantify route switches under posterior uncertainty.
+4. Measure empirical calibration error for functional-state probabilities.
+5. Compare UrbanMine estimates with observed recovered quantities.
+6. Keep any counterexample in M⁻ instead of tuning it away.

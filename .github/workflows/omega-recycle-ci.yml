@@ -30,7 +30,19 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pytest
           python -m pip install ./omega_recycle_t
+      - name: Compile package
+        run: python -m compileall -q omega_recycle_t/omega_recycle
       - name: Unit tests
         run: pytest -q omega_recycle_t/tests
-      - name: OAKBench smoke test
-        run: python -m omega_recycle oakbench > /tmp/omega-recycle-oakbench.json
+      - name: OAKBench solver court
+        run: |
+          python -m omega_recycle oakbench > /tmp/omega-recycle-oakbench.json
+          python - <<'PY'
+          from omega_recycle.bench import run_oakbench
+          report = run_oakbench()
+          court = report["solver_crosscheck"]
+          assert court["score_equal"] is True
+          assert court["modes_equal"] is True
+          assert court["optimality_certified"] is True
+          assert report["lca_inventory"]["claim_boundary"] == "inventory_only_no_lifecycle_impact_claim"
+          PY
