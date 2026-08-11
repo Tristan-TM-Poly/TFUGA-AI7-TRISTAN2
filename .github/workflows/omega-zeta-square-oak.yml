@@ -47,6 +47,14 @@ jobs:
               json.loads(path.read_text(encoding="utf-8"))
               print("valid-json", path)
           PY
+      - name: Validate HGFM proof graph semantics
+        run: |
+          python - <<'PY'
+          from omega_zeta_square_t import load_and_validate_proof_graph
+          errors = load_and_validate_proof_graph("specs/omega_zeta_square_t/proof_graph.json")
+          assert not errors, "\n".join(errors)
+          print("proof-graph-oak: PROMOTE")
+          PY
       - name: Run targeted unit tests
         run: python -m unittest tests.test_omega_zeta_square_t
       - name: CLI geometry OAK smoke test
