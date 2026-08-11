@@ -44,6 +44,8 @@ jobs:
           done
       - name: Skill hypergraph catalog
         run: python -m omega_skillgen_t catalog .agents/skills --graph
+      - name: Audit full Generator Discovery atlas
+        run: python scripts/omega-skillgen-benchmark audit-atlas
       - name: Bridge real Generator Discovery atlas
         shell: bash
         run: |
