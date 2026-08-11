@@ -12,6 +12,7 @@ DEFAULT_WRAPPERS = (
     "omega-skillgen-benchmark",
     "omega-skillgen-campaign",
     "omega-skillgen-ops",
+    "omega-skillgen-ultra",
 )
 
 

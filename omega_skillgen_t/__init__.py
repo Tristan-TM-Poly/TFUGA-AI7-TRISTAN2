@@ -1,7 +1,13 @@
 """Ω-SKILLGEN-T∞ — recursive OAK-safe Agent Skill foundry."""
-__version__ = "0.2.0"
-from .core import SkillSpecError, load_json, validate_spec, generate_skill, lint_skill, eval_coverage, evolve_failures
-from .meta import compose_specs, generate_domain_generator, mutate_spec, compare_specs
+
+__version__ = "0.4.0"
+
+from .arena import ArenaCandidate, arena_report, pareto_front, select_diverse
+from .budget import AdaptiveBudget
+from .catalog import build_skill_hypergraph, catalog_skills
+from .core import SkillSpecError, eval_coverage, evolve_failures, generate_skill, lint_skill, load_json, validate_spec
+from .ecology import capability_gap_report, ecology_audit
+from .meta import compare_specs, compose_specs, generate_domain_generator, mutate_spec
 from .mining import mine_workflows, proposals_from_workflows
-from .catalog import catalog_skills, build_skill_hypergraph
+from .synthesis import crossover_specs, fission_spec, novelty_against, synthesize_crossovers
 from .trust import scan_skill_trust
