@@ -1,6 +1,18 @@
 """Ω-ROOTFLOW-T∞ — differential geometry and continuation of polynomial zeros."""
 
 from .adaptive import AdaptiveContinuationResult, AdaptiveContinuationStep, continue_roots_adaptive
+from .basis import (
+    SUPPORTED_BASES,
+    BasisConditionAtlas,
+    BasisConditionRecord,
+    basis_to_monomial,
+    basis_values_at,
+    bernstein_to_monomial,
+    conditioning_atlas,
+    monomial_to_basis,
+    monomial_to_bernstein,
+    native_root_jacobian,
+)
 from .continuation import ContinuationResult, ContinuationStep, continue_roots, match_roots, newton_refine
 from .core import (
     RootCondition,
@@ -17,7 +29,20 @@ from .core import (
     root_velocity,
     roots,
 )
+from .monodromy import (
+    MonodromyResult,
+    PathTrackingStep,
+    quadratic_square_root_loop,
+    track_coefficient_path,
+)
 from .oak import RootFlowAudit, audit_rootflow, finite_difference_root_jacobian
+from .projective import (
+    ProjectiveRoot,
+    ProjectiveSpectrum,
+    chordal_distance,
+    homogeneous_value,
+    projective_roots,
+)
 from .spectral import (
     CompanionCrosscheck,
     InverseDesignResult,
@@ -37,34 +62,52 @@ from .spectral import (
 __all__ = [
     "AdaptiveContinuationResult",
     "AdaptiveContinuationStep",
+    "BasisConditionAtlas",
+    "BasisConditionRecord",
     "CompanionCrosscheck",
     "ContinuationResult",
     "ContinuationStep",
     "InverseDesignResult",
     "InverseDesignStep",
     "LinearizedInverseDesign",
+    "MonodromyResult",
+    "PathTrackingStep",
+    "ProjectiveRoot",
+    "ProjectiveSpectrum",
     "RootCondition",
     "RootFlowAudit",
+    "SUPPORTED_BASES",
     "SpectralGeometry",
     "audit_rootflow",
     "audit_spectral_geometry",
     "basis_root_differential",
+    "basis_to_monomial",
+    "basis_values_at",
+    "bernstein_to_monomial",
+    "chordal_distance",
     "companion_crosscheck",
     "companion_matrix",
+    "conditioning_atlas",
     "continue_roots",
     "continue_roots_adaptive",
     "degree_perturbation_sensitivity",
     "derivative_coefficients",
     "derivative_value",
     "finite_difference_root_jacobian",
+    "homogeneous_value",
     "inverse_design_roots",
     "linearized_inverse_design",
     "log_abs_discriminant",
     "match_roots",
+    "monomial_to_basis",
+    "monomial_to_bernstein",
+    "native_root_jacobian",
     "newton_refine",
     "polynomial_value",
+    "projective_roots",
     "projective_scaling_residual",
     "propagate_root_covariance",
+    "quadratic_square_root_loop",
     "root_conditions",
     "root_differential",
     "root_hessian",
@@ -72,4 +115,5 @@ __all__ = [
     "root_separations",
     "root_velocity",
     "roots",
+    "track_coefficient_path",
 ]
