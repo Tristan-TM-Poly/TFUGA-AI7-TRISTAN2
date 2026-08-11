@@ -32,7 +32,6 @@ def test_projective_degree_flow_tracks_one_branch_to_infinity() -> None:
 def test_projective_flow_compactifies_large_affine_root() -> None:
     path = cubic_degree_collapse_path(65)
     result = track_projective_path(path)
-    # Chordal steps stay bounded even though the affine third root diverges.
     assert 0.0 < result.maximum_branch_step < 1.0
     assert result.final_roots[-1].at_infinity or any(root.at_infinity for root in result.final_roots)
 
@@ -107,7 +106,7 @@ def test_r04_cli_projective_puiseux_group_and_hgfm(tmp_path) -> None:
     puiseux = json.loads(outputs["puiseux"].read_text(encoding="utf-8"))
     group = json.loads(outputs["group"].read_text(encoding="utf-8"))
     hgfm = json.loads(outputs["hgfm"].read_text(encoding="utf-8"))
-    assert pflow["version"] == "R0.4"
+    assert pflow["version"] == "R0.6"
     assert pflow["result"]["degree_transition_count"] == 1
     assert puiseux["result"]["inferred_reciprocal_integer"] == 3
     assert group["group"]["order"] == 2
