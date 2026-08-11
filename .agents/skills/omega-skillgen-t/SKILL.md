@@ -1,6 +1,6 @@
 ---
 name: omega-skillgen-t
-description: Generate, mine, audit, trust-scan, compose, mutate, evaluate, evolve, catalog, benchmark, and package reusable ChatGPT/Codex Agent Skills using SkillSpec, OAK gates, HGFM SkillGraphs, CVCD primitive extraction, Generator Discovery bridges, regression tests, recursive campaigns, and M-minus learning. Use when the user asks to create or improve a skill, convert repeated workflows or existing generators into skills, generate skill families or domain generators, route multiple skills, inherit benchmark contracts, audit skill safety/activation, or build a generator-of-generators.
+description: Generate, mine, audit, trust-scan, compose, mutate, evaluate, evolve, catalog, benchmark, deduplicate, and package reusable ChatGPT/Codex Agent Skills using SkillSpec, OAK gates, HGFM SkillGraphs, SkillGenome, CVCD primitive extraction, Generator Discovery bridges, behavioral telemetry, recursive campaigns, regression tests, and M-plus/M-minus learning. Use when the user asks to create or improve a skill, convert repeated workflows or existing generators into skills, generate skill families or domain generators, route multiple skills, inherit benchmark contracts, detect near-duplicate skills, absorb behavioral eval results, audit skill safety/activation, or build a generator-of-generators.
 ---
 
 # Ω-SKILLGEN-T∞ — Tristan Recursive Skill Foundry
@@ -9,11 +9,11 @@ Treat a Skill as a versioned behavioral program, not a prompt fragment.
 
 ## Canonical loop
 
-`INTENT → MINE/SPECIFY → GENERATE → LINT → TRUST → EVAL → ATTACK → OAK → M- → MUTATE/REPAIR → REGRESSION → PROMOTION CANDIDATE`
+`INTENT → MINE/SPECIFY → GENERATE → LINT → TRUST → EVAL → ATTACK → OAK → M-/M+ → MUTATE/REPAIR → REGRESSION → PROMOTION CANDIDATE`
 
 For existing Tristan generators use the extended loop:
 
-`GENERATOR RECORD → SKILLSPEC → BENCHMARK CONTRACTS → CVCD → SKILL CANDIDATE → OAK/EVAL → CAMPAIGN → PROMOTION LEDGER`
+`GENERATOR RECORD → SKILLSPEC → BENCHMARK CONTRACTS → CVCD/SKILLGENOME → SKILL CANDIDATE → OAK/EVAL → BEHAVIORAL TELEMETRY → M+/M- → CAMPAIGN → PROMOTION LEDGER`
 
 ## Workflow
 
@@ -21,15 +21,16 @@ For existing Tristan generators use the extended loop:
 2. Prefer authorized execution traces or existing Generator Discovery records when they provide stronger provenance than free-form reconstruction.
 3. Build or infer a SkillSpec.
 4. If linked Generator Discovery benchmarks exist, inherit their expected contracts, negative controls, and OAK labels without upgrading synthetic templates into empirical evidence.
-5. Run CVCD primitive extraction before proliferating a large family; share materially common workflow/invariant atoms where appropriate.
+5. Run CVCD primitive extraction and SkillGenome similarity before proliferating a large family; reuse materially common primitives and review near-duplicate candidates.
 6. Generate candidate skills outside this parent bundle.
 7. Lint structure and activation metadata.
 8. Run trust/OAK static review.
 9. Require positive, negative, incomplete, and edge/adversarial eval coverage.
 10. Preserve failures as M- and turn them into regression cases.
 11. Compose only the smallest sufficient skill set and preserve the strictest overlapping invariant.
-12. For self-improvement, generate multiple successor candidates and compare static evidence; never auto-promote the top heuristic score.
-13. Advance promotion states one evidence gate at a time; preserve rollback provenance.
+12. When actual behavioral/model eval results are supplied with usable provenance, summarize them, block behavioral promotion on must-pass failures, and split successes/failures into M+ and M- ledgers.
+13. For self-improvement, generate multiple successor candidates and compare static evidence; never auto-promote the top heuristic score.
+14. Advance promotion states one evidence gate at a time; preserve rollback provenance.
 
 ## Operational commands
 
@@ -61,6 +62,13 @@ Recursive successor campaign:
 
 - `python scripts/omega-skillgen-campaign SPEC OUT`
 
+SkillGenome / behavioral telemetry:
+
+- `python scripts/omega-skillgen-ops genome SPEC`
+- `python scripts/omega-skillgen-ops dedup SPEC... --threshold X`
+- `python scripts/omega-skillgen-ops telemetry RESULTS.json`
+- `python scripts/omega-skillgen-ops memory RESULTS.json OUT`
+
 ## OAK invariants
 
 - Generated skills are candidates, not automatically promoted truth/capability.
@@ -72,12 +80,15 @@ Recursive successor campaign:
 - Catalog membership is not scientific proof.
 - A linked benchmark id is not a benchmark PASS.
 - Synthetic benchmark templates are not empirical evidence.
+- SkillGenome similarity is a deduplication review signal, not proof of semantic equivalence.
+- `behavioral_eval_pass` summarizes supplied results only; provenance/authenticity of those results must be established separately.
+- Any failed `must_pass` behavioral case blocks behavioral promotion.
 - Prefer CVCD compression over near-duplicate skill proliferation.
 - Generated child skills live outside the parent upload bundle.
 - Preserve the strictest safety, approval, privacy, and epistemic invariant during composition.
 - Recursive campaigns may rank candidates heuristically but `auto_promotion` remains false.
 - Promotion states may not skip evidence gates; backward transitions require an explicit rollback reason.
-- Preserve provenance from workflow traces or GeneratorRecord/BenchmarkRecord through generated SkillSpec, evals, mutations, and promotion decisions.
+- Preserve provenance from workflow traces or GeneratorRecord/BenchmarkRecord through generated SkillSpec, evals, mutations, telemetry, memories, and promotion decisions.
 
 ## Fractal SkillGraph
 
@@ -100,4 +111,4 @@ The seed ecology is composed of:
 - `omega-skill-router-t`
 - `omega-generator-of-skill-generators-t`
 
-Use the parent foundry to regenerate or extend this ecology only through the same OAK, trust, regression, provenance, and promotion rules.
+Use the parent foundry to regenerate or extend this ecology only through the same OAK, trust, regression, provenance, deduplication, telemetry, and promotion rules.
