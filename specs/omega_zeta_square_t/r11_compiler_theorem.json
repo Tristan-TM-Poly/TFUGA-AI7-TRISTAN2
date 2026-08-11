@@ -1,0 +1,47 @@
+{
+  "schema": "omega-zeta-square-theorem-spec/1",
+  "id": "R11_TENSORLIFT_HANKEL_COMPILER",
+  "status": "PROVED_TRANSFORM_IDENTITY",
+  "solution_claimed": false,
+  "novelty_claimed": false,
+  "statement": "For every finite Hankel size and shift, its determinant is an exact polynomial in the normalized Theta coefficients a_j and therefore a linear functional of the corresponding monomial TensorProdLift features.",
+  "definitions": {
+    "A": "Theta(u)/Theta(0)=1+sum_{j>=1} a_j u^j",
+    "a_j": "xi^(2j)(1/2)/((2j)! xi(1/2))",
+    "power_sums": "p_k=sum lambda_n^k obtained from a_j by Newton identities",
+    "moments": "m_k=p_(k+1)",
+    "hankel": "H_N^(s)=(m_(i+j+s))",
+    "tensor_lift": "Phi contains monomials a^alpha occurring in det H_N^(s)"
+  },
+  "proved_examples": [
+    {
+      "constraint": "det H_1^(0)",
+      "polynomial": "a1"
+    },
+    {
+      "constraint": "det H_1^(1)",
+      "polynomial": "a1^2-2a2"
+    },
+    {
+      "constraint": "det H_2^(0)",
+      "polynomial": "a1^2*a2+3*a1*a3-4*a2^2"
+    },
+    {
+      "constraint": "det H_2^(1)",
+      "polynomial": "-2*a1^3*a3+a1^2*a2^2-4*a1^2*a4+10*a1*a2*a3-4*a2^3+8*a2*a4-9*a3^2"
+    }
+  ],
+  "xi_derivative_example": {
+    "constraint": "det H_2^(0)>=0",
+    "cleared_numerator": "3*d0*d2*d6-10*d0*d4^2+15*d2^2*d4",
+    "positive_denominator": "1440*d0^3",
+    "d_2j": "xi^(2j)(1/2)"
+  },
+  "oak_nonclaims": [
+    "compiling a finite constraint does not prove that it is nonnegative",
+    "a finite collection of compiled constraints does not establish all-orders R10 positivity",
+    "the current dependency-free implementation cap at size 5 is computational, not mathematical",
+    "R11 does not solve RH"
+  ],
+  "canonical_proof_document": "docs/omega_zeta_square_t/R11_TENSORLIFT_HANKEL_CONSTRAINTS.md"
+}
