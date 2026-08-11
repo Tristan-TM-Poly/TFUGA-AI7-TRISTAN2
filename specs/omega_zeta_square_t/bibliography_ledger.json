@@ -1,5 +1,5 @@
 {
-  "schema": "omega-zeta-square-bibliography/1",
+  "schema": "omega-zeta-square-bibliography/2",
   "retrieved_utc_date": "2026-08-11",
   "policy": {
     "known_result_requires_primary_source": true,
@@ -9,7 +9,7 @@
   "sources": [
     {
       "id": "osullivan-2020-2007.13582",
-      "type": "primary_preprint",
+      "type": "primary_preprint_and_peer_reviewed_article",
       "title": "Zeros of Jensen polynomials and asymptotics for the Riemann xi function",
       "author": "Cormac O'Sullivan",
       "arxiv": "2007.13582",
@@ -25,13 +25,27 @@
       "status": "PRIMARY_SOURCE_VERIFIED"
     },
     {
+      "id": "belton-guillot-khare-putinar-2016-1610.05740",
+      "type": "primary_research_preprint",
+      "title": "Moment-sequence transforms",
+      "authors": ["Alexander Belton", "Dominique Guillot", "Apoorva Khare", "Mihai Putinar"],
+      "arxiv": "1610.05740",
+      "claims_verified": [
+        "Theorem 2.2 restates the classical Hamburger-Stieltjes-Hausdorff correspondence",
+        "a real sequence is a moment sequence on R iff its Hankel matrix is positive semidefinite",
+        "for support on [0,infinity), positivity of the Hankel matrix together with the shifted/truncated Hankel positivity characterizes the Stieltjes moment case"
+      ],
+      "locator": "Section 2, Theorem 2.2",
+      "status": "PRIMARY_SOURCE_VERIFIED"
+    },
+    {
       "id": "griffin-ono-rolen-thorner-tripp-wagner-2019-1910.01227",
       "type": "primary_preprint",
       "title": "Jensen Polynomials for the Riemann Xi Function",
       "authors": ["Michael Griffin", "Ken Ono", "Larry Rolen", "Jesse Thorner", "Zachary Tripp", "Ian Wagner"],
       "arxiv": "1910.01227",
       "claims_verified": [
-        "Pólya's Jensen-polynomial hyperbolicity criterion is equivalent to RH",
+        "Polya's Jensen-polynomial hyperbolicity criterion is equivalent to RH",
         "large families of Jensen polynomials are proved hyperbolic in explicit/asymptotic regimes"
       ],
       "status": "PRIMARY_SOURCE_ABSTRACT_VERIFIED"
@@ -59,11 +73,16 @@
       "graph_node": "theta_negative_zeros",
       "source_id": "osullivan-2020-2007.13582",
       "status": "BOUND_TO_PRIMARY_SOURCE"
+    },
+    {
+      "graph_node": "stieltjes_moment_theorem",
+      "source_id": "belton-guillot-khare-putinar-2016-1610.05740",
+      "status": "BOUND_TO_PRIMARY_SOURCE"
     }
   ],
   "unresolved_bibliographic_obligations": [
-    "source exact Stieltjes/log-derivative equivalence before promoting it beyond SYMBOLICALLY_DERIVED",
-    "source any moment-problem equivalence used as a known theorem",
+    "source or fully derive the genus-zero product/log-derivative expansion used for Theta",
+    "verify whether the exact centered-square Stieltjes-Hankel criterion has appeared previously before any novelty claim",
     "source any Hilbert-Polya determinant identity before labeling it known rather than a target"
   ]
 }
