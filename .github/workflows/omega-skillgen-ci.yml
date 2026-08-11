@@ -33,6 +33,7 @@ jobs:
           python scripts/omega-skillgen --help >/dev/null
           python scripts/omega-skillgen-bridge --help >/dev/null
           python scripts/omega-skillgen-benchmark --help >/dev/null
+          python scripts/omega-skillgen-campaign --help >/dev/null
       - name: Audit recursive Omega skill ecology
         shell: bash
         run: |
@@ -69,7 +70,7 @@ jobs:
               assert spec['invariants']
           print('Generator Discovery bridge smoke PASS')
           PY
-      - name: Compile smoke candidate through wrapper
+      - name: Compile and recursively evolve smoke candidate through wrappers
         run: |
           python - <<'PY'
           import json
@@ -93,7 +94,17 @@ jobs:
           }
           Path('/tmp/skill.json').write_text(json.dumps(spec), encoding='utf-8')
           PY
-          rm -rf /tmp/omega-skillgen
+          rm -rf /tmp/omega-skillgen /tmp/omega-campaign
           python scripts/omega-skillgen generate /tmp/skill.json /tmp/omega-skillgen
           python scripts/omega-skillgen lint /tmp/omega-skillgen/ci-smoke-skill
           python scripts/omega-skillgen eval /tmp/omega-skillgen/ci-smoke-skill
+          python scripts/omega-skillgen-campaign /tmp/skill.json /tmp/omega-campaign >/tmp/campaign.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('/tmp/campaign.json').read_text())
+          assert report['campaign_status']=='STATIC_ONLY'
+          assert report['auto_promotion'] is False
+          assert len(report['results'])==5
+          print('Recursive campaign smoke PASS')
+          PY
