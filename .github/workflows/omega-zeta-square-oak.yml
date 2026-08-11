@@ -33,8 +33,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Compile package and targeted tests
-        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py tests/test_omega_zeta_square_r4.py tests/test_omega_zeta_square_bibliography.py tests/test_omega_zeta_square_adversary.py tests/test_omega_zeta_square_vandermonde.py tests/test_omega_zeta_square_materialize.py
+      - name: Compile package and zeta-square tests
+        run: python -m compileall -q omega_zeta_square_t tests
       - name: Validate machine-readable contracts
         run: |
           python - <<'PY'
@@ -64,8 +64,8 @@ jobs:
           print("proof-graph-oak: PROMOTE")
           print("bibliography-oak: PROMOTE")
           PY
-      - name: Run targeted unit tests
-        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals tests.test_omega_zeta_square_r4 tests.test_omega_zeta_square_bibliography tests.test_omega_zeta_square_adversary tests.test_omega_zeta_square_vandermonde tests.test_omega_zeta_square_materialize
+      - name: Run full zeta-square unit-test family
+        run: python -m unittest discover -s tests -p 'test_omega_zeta_square*.py'
       - name: R4 provenance CVCD obligation smoke
         run: |
           python - <<'PY'
@@ -89,13 +89,14 @@ jobs:
           assert verdict.analytically_certified_inputs is False
           assert verdict.proves_rh is False
           PY
-      - name: R5 R6 exact off-line pair smoke
+      - name: R5 R6 R8 exact off-line finite-model smoke
         run: |
           python - <<'PY'
           from fractions import Fraction
           from omega_zeta_square_t import (
               centered_pair_hankel2_determinant,
               conjugate_pair_inverse_moments,
+              finite_atomic_inertia_certificate,
               first_exact_stieltjes_violation,
               mixed_inverse_moments,
               one_pair_full_hankel_certificate,
@@ -107,7 +108,9 @@ jobs:
           assert first_exact_stieltjes_violation(masked, 3).first_hankel_size == 3
           full = one_pair_full_hankel_certificate([5], 1, 1)
           assert full.determinant == -11560 and full.guaranteed_negative
-          assert full.proves_rh is False
+          inertia = finite_atomic_inertia_certificate(3, 2)
+          assert (inertia.positive_directions, inertia.negative_directions) == (5, 2)
+          assert inertia.proves_rh is False
           PY
       - name: CLI structural and materialization OAK smoke tests
         run: |
