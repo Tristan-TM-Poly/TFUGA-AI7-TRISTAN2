@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile package and targeted tests
-        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py tests/test_omega_zeta_square_r4.py tests/test_omega_zeta_square_bibliography.py tests/test_omega_zeta_square_adversary.py
+        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py tests/test_omega_zeta_square_r4.py tests/test_omega_zeta_square_bibliography.py tests/test_omega_zeta_square_adversary.py tests/test_omega_zeta_square_vandermonde.py
       - name: Validate machine-readable contracts
         run: |
           python - <<'PY'
@@ -65,7 +65,7 @@ jobs:
           print("bibliography-oak: PROMOTE")
           PY
       - name: Run targeted unit tests
-        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals tests.test_omega_zeta_square_r4 tests.test_omega_zeta_square_bibliography tests.test_omega_zeta_square_adversary
+        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals tests.test_omega_zeta_square_r4 tests.test_omega_zeta_square_bibliography tests.test_omega_zeta_square_adversary tests.test_omega_zeta_square_vandermonde
       - name: R4 provenance CVCD obligation smoke
         run: |
           python - <<'PY'
@@ -98,12 +98,16 @@ jobs:
               conjugate_pair_inverse_moments,
               first_exact_stieltjes_violation,
               mixed_inverse_moments,
+              one_pair_full_hankel_certificate,
           )
           assert centered_pair_hankel2_determinant(Fraction(3,5), 2) < 0
           pure = conjugate_pair_inverse_moments(1, 1, 6)
           assert first_exact_stieltjes_violation(pure, 3).first_hankel_size == 2
           masked = mixed_inverse_moments([5], 1, 1, 6)
           assert first_exact_stieltjes_violation(masked, 3).first_hankel_size == 3
+          full = one_pair_full_hankel_certificate([5], 1, 1)
+          assert full.determinant == -11560 and full.guaranteed_negative
+          assert full.proves_rh is False
           PY
       - name: CLI structural OAK smoke tests
         run: |
