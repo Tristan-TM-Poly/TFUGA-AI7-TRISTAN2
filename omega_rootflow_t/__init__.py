@@ -18,5 +18,6 @@ from .puiseux import PuiseuxFit, PuiseuxSample, canonical_collision_family, cano
 from .resultant import CollisionCandidate, DiscriminantAudit, SingleCoefficientCollisionAtlas, audit_discriminant, discriminant_from_resultant, discriminant_from_roots, polynomial_resultant, single_coefficient_collision_atlas, sylvester_matrix
 from .spectral import CompanionCrosscheck, InverseDesignResult, InverseDesignStep, LinearizedInverseDesign, SpectralGeometry, audit_spectral_geometry, companion_crosscheck, companion_matrix, inverse_design_roots, linearized_inverse_design, log_abs_discriminant, propagate_root_covariance, root_separations
 from .spectral_hgfm import SpectralHGFM, build_spectral_hgfm, compile_projective_flow_hgfm
+from .versal import LocalUnfoldingMap, RealifiedTangentSpace, UnfoldingDirection, analyze_unfolding_direction, complex_parameter_realification, local_unfolding_map, local_unfolding_roots, real_parameter_constraint_matrix, real_parameter_tangent_space
 
 __all__ = [name for name in globals() if not name.startswith("_")]
