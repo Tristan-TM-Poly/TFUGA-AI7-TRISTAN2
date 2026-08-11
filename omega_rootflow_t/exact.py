@@ -1,7 +1,7 @@
 """Exact rational algebra for Ω-ROOTFLOW-T∞ R0.6.
 
 This module deliberately accepts integers/Fractions/rational strings and rejects
-binary floating-point inputs.  It is intended for exact OAK fixtures, not as a
+binary floating-point inputs. It is intended for exact OAK fixtures, not as a
 symbolic computer algebra system.
 
 Implemented exactly over ``fractions.Fraction``:
@@ -44,14 +44,18 @@ def _fraction(value: ExactScalar) -> Fraction:
     )
 
 
-def exact_coefficients(values: Iterable[ExactScalar]) -> ExactPolynomial:
+def _coerce_polynomial(values: Iterable[ExactScalar]) -> ExactPolynomial:
     coeffs = tuple(_fraction(value) for value in values)
-    if len(coeffs) < 2:
-        raise ValueError("coefficients must contain at least two entries")
+    if not coeffs:
+        raise ValueError("polynomial coefficients must be non-empty")
     last = len(coeffs) - 1
     while last > 0 and coeffs[last] == 0:
         last -= 1
-    coeffs = coeffs[: last + 1]
+    return coeffs[: last + 1]
+
+
+def exact_coefficients(values: Iterable[ExactScalar]) -> ExactPolynomial:
+    coeffs = _coerce_polynomial(values)
     if len(coeffs) < 2:
         raise ValueError("polynomial degree must be at least one")
     return coeffs
@@ -69,8 +73,6 @@ def _trim(values: Sequence[Fraction]) -> ExactPolynomial:
 
 def exact_derivative(coefficients: Iterable[ExactScalar]) -> ExactPolynomial:
     coeffs = exact_coefficients(coefficients)
-    if len(coeffs) <= 1:
-        return (Fraction(0),)
     return tuple(Fraction(index) * coeffs[index] for index in range(1, len(coeffs)))
 
 
@@ -175,8 +177,13 @@ def exact_resultant(
     first_coefficients: Iterable[ExactScalar],
     second_coefficients: Iterable[ExactScalar],
 ) -> Fraction:
-    first = exact_coefficients(first_coefficients)
-    second = exact_coefficients(second_coefficients)
+    """Exact resultant; either operand may be a non-zero constant polynomial."""
+    first = _coerce_polynomial(first_coefficients)
+    second = _coerce_polynomial(second_coefficients)
+    if len(first) == 1 and first[0] == 0:
+        raise ValueError("resultant with the zero polynomial is undefined here")
+    if len(second) == 1 and second[0] == 0:
+        raise ValueError("resultant with the zero polynomial is undefined here")
     degree_first = len(first) - 1
     degree_second = len(second) - 1
     if degree_first == 0:
