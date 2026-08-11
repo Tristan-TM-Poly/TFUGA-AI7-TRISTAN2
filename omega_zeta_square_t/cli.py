@@ -6,12 +6,20 @@ import argparse
 import json
 from dataclasses import asdict, is_dataclass
 from fractions import Fraction
+from pathlib import Path
 
+from .bibliography import validate_bibliography_ledger
 from .certificates import exact_stieltjes_certificate
 from .core import nontrivial_zero_image, rh_defect
+from .cvcd import cvcd_support_report
 from .jacobi import jacobi_characteristic_polynomial, jacobi_recurrence_from_inverse_moments
 from .moments import finite_stieltjes_report
+from .obligations import export_obligation_bundle, obligations_from_proof_graph
 from .pade import stieltjes_pade_from_inverse_moments
+
+
+DEFAULT_GRAPH = "specs/omega_zeta_square_t/proof_graph.json"
+DEFAULT_BIBLIOGRAPHY = "specs/omega_zeta_square_t/bibliography_ledger.json"
 
 
 def _fraction(text: str) -> Fraction:
@@ -35,6 +43,10 @@ def _jsonable(value):
     if isinstance(value, (list, tuple)):
         return [_jsonable(v) for v in value]
     return value
+
+
+def _load_json(path: str):
+    return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -63,6 +75,17 @@ def _parser() -> argparse.ArgumentParser:
     jacobi = sub.add_parser("jacobi", help="exact finite Jacobi recurrence reconstruction")
     jacobi.add_argument("inverse_moments", nargs="+", type=_fraction)
     jacobi.add_argument("--size", type=int, default=2)
+
+    cvcd = sub.add_parser("cvcd", help="minimal structural dependency supports; never a proof")
+    cvcd.add_argument("target")
+    cvcd.add_argument("--graph", default=DEFAULT_GRAPH)
+
+    obligations = sub.add_parser("obligations", help="export unresolved HGFM proof obligations")
+    obligations.add_argument("--graph", default=DEFAULT_GRAPH)
+
+    bibliography = sub.add_parser("bibliography-check", help="validate KNOWN_THEOREM source bindings")
+    bibliography.add_argument("--graph", default=DEFAULT_GRAPH)
+    bibliography.add_argument("--ledger", default=DEFAULT_BIBLIOGRAPHY)
 
     return parser
 
@@ -112,7 +135,7 @@ def main(argv=None) -> int:
             "approximant": approx,
             "proves_rh": False,
         }
-    else:
+    elif args.command == "jacobi":
         recurrence = jacobi_recurrence_from_inverse_moments(
             args.inverse_moments, size=args.size
         )
@@ -124,6 +147,21 @@ def main(argv=None) -> int:
                 "promotion": "FINITE_FORMAL_RECONSTRUCTION_ONLY",
                 "forbidden": ["preloaded_moments_to_independent_hilbert_polya_operator"],
             },
+            "proves_rh": False,
+        }
+    elif args.command == "cvcd":
+        payload = cvcd_support_report(_load_json(args.graph), args.target)
+    elif args.command == "obligations":
+        graph = _load_json(args.graph)
+        payload = export_obligation_bundle(obligations_from_proof_graph(graph))
+    else:
+        graph = _load_json(args.graph)
+        ledger = _load_json(args.ledger)
+        errors = validate_bibliography_ledger(graph, ledger)
+        payload = {
+            "schema": "omega-zeta-square-bibliography-check/1",
+            "promotion": "PROMOTE" if not errors else "BLOCK",
+            "errors": errors,
             "proves_rh": False,
         }
     print(json.dumps(_jsonable(payload), indent=2, sort_keys=True))
