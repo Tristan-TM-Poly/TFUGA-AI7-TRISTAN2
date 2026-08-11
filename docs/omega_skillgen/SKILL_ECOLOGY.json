@@ -1,0 +1,36 @@
+{
+  "system": "omega-skillgen-t",
+  "version": "0.2.0",
+  "status": "GENERATED_CANDIDATE_ECOLOGY",
+  "oak": {
+    "static_status": "PASS",
+    "behavioral_runtime_status": "NOT_RUN",
+    "invariant": "STATIC_PASS != BEHAVIORAL_PASS"
+  },
+  "levels": {
+    "L1": [
+      "omega-workflow-miner-t",
+      "omega-skill-evaluator-t",
+      "omega-skill-evolver-t",
+      "omega-skill-router-t",
+      "omega-generator-of-skill-generators-t"
+    ],
+    "L2": "omega-skillgen-core-family",
+    "L3": "omega-skill-router-t",
+    "L4": "domain-specific skill generators",
+    "L5": "omega-generator-of-skill-generators-t"
+  },
+  "children": [
+    {"name":"omega-workflow-miner-t","role":"mine authorized repeated workflows into SkillSpec candidates","lint":"PASS","eval_coverage":"PASS","trust":"PASS"},
+    {"name":"omega-skill-evaluator-t","role":"evaluate activation and evidence gates","lint":"PASS","eval_coverage":"PASS","trust":"PASS"},
+    {"name":"omega-skill-evolver-t","role":"convert failures into M-minus, repairs and regressions","lint":"PASS","eval_coverage":"PASS","trust":"PASS_WITH_FINDINGS"},
+    {"name":"omega-skill-router-t","role":"compose the smallest sufficient skill set with strictest-invariant semantics","lint":"PASS","eval_coverage":"PASS","trust":"PASS"},
+    {"name":"omega-generator-of-skill-generators-t","role":"generate domain-specific skill generators and seed families","lint":"PASS","eval_coverage":"PASS","trust":"PASS"}
+  ],
+  "hyperedges": [
+    {"type":"generated_by","generator":"omega-skillgen-t","members":["omega-workflow-miner-t","omega-skill-evaluator-t","omega-skill-evolver-t","omega-skill-router-t","omega-generator-of-skill-generators-t"]},
+    {"type":"feedback_loop","members":["omega-workflow-miner-t","omega-skill-evaluator-t","omega-skill-evolver-t"]},
+    {"type":"composition_control","members":["omega-skill-router-t","omega-skill-evaluator-t"]},
+    {"type":"generator_discovery_bridge","members":["omega-generator-of-skill-generators-t","omega_generator_discovery_t"]}
+  ]
+}
