@@ -1,13 +1,15 @@
 {
-  "schema": "omega-zeta-square-research-contract/2",
+  "schema": "omega-zeta-square-research-contract/5",
   "system": "Omega-ZETA-SQUARE-T-infinity",
+  "proof_os": "Omega-RH-PROOF-OS-T-infinity",
   "parent_problem": "riemann",
-  "status": "research-toolkit-r2",
+  "status": "research-toolkit",
   "solution_claimed": false,
   "canonical_coordinate": {
     "center": "1/2",
     "w": "s-1/2",
-    "u": "w^2"
+    "u": "w^2",
+    "reciprocal_spectral_coordinate": "lambda=-1/u"
   },
   "exact_identities": [
     "u=(beta-1/2)^2-gamma^2+2i(beta-1/2)gamma",
@@ -15,132 +17,130 @@
     "H(u)=(|u|-Re(u))/2=gamma^2",
     "critical_strip_image: Re(u)<=1/4-Im(u)^2",
     "trivial_zero_image(n)=(2n+1/2)^2",
-    "Theta(u)/Theta(0)=sum_m xi^(2m)(1/2)u^m/((2m)!xi(1/2))",
-    "Theta'/Theta=p1-p2*u+p3*u^2-... as a formal coefficient identity"
+    "isolated_conjugate_pair_H2_det=-4*b^2*(a^2+b^2)",
+    "centered_isolated_pair_H2_det=-16*delta^2*gamma^2/(delta^2+gamma^2)^6"
   ],
-  "known_criteria_to_source": [
+  "proved_finite_atomic_results": [
     {
-      "claim": "Theta(u)=xi(1/2+sqrt(u)) is entire and RH is equivalent to all its zeros being real negative",
-      "status": "KNOWN_THEOREM_OR_KNOWN_CRITERION",
-      "bibliography_required": true
+      "id": "r5.isolated_pair_hankel",
+      "statement": "an isolated non-real reciprocal conjugate pair forces a negative size-2 Hankel determinant",
+      "scope": "isolated finite pair only"
+    },
+    {
+      "id": "r6.one_pair_vandermonde",
+      "statement": "q distinct positive real reciprocal atoms plus one non-real conjugate pair force a negative full-support Hankel determinant at size q+2 for every nonnegative shift",
+      "scope": "finite atomic support with one non-real pair"
     }
   ],
-  "delivered_r2": [
-    "PSD-aware LDLT finite Hankel diagnostic",
-    "exact all-principal-minor PSD certificate for supplied rational data",
-    "explicit M-minus witness showing leading-principal-minor-only PSD logic is insufficient",
-    "exact [n-1/n] Pade reconstruction from inverse moments",
-    "exact monic Jacobi recurrence reconstruction from inverse moments",
-    "exact Jacobi characteristic polynomial reconstruction",
-    "CLI exact-cert/pade/jacobi surfaces with proves_rh=false",
-    "multi-Python CI smoke coverage for exact reconstruction"
+  "known_results_with_primary_bindings": [
+    {
+      "graph_node": "theta_entire",
+      "claim": "Theta(u)=xi(1/2+sqrt(u)) is entire of order 1/2"
+    },
+    {
+      "graph_node": "theta_negative_zeros",
+      "claim": "RH is equivalent to all zeros of Theta being negative real"
+    },
+    {
+      "graph_node": "stieltjes_moment_theorem",
+      "claim": "all-orders basic and shifted Hankel positivity characterizes Stieltjes moment sequences"
+    }
   ],
-  "epistemic_boundaries": {
-    "exact_rational_certificate": "exact only for the supplied rational values; it does not certify that approximate xi-derived numbers equal those rationals",
-    "finite_hankel": "finite PSD constraints never imply all-order Stieltjes positivity by themselves",
-    "pade": "formal/finite reconstruction does not imply global Stieltjes structure",
-    "jacobi": "a finite Jacobi matrix reconstructed from moments is not an independent Hilbert-Polya operator",
-    "numerical_zero_data": "known ordinates may test code but cannot serve as circular proof input"
-  },
-  "tristan_research_combinations": [
-    "centered-square parabolic tomography",
-    "D_RH exact defect as an OAK observable",
-    "HGFM criterion graph",
-    "CVCD minimal-criterion compression",
+  "unproved_high_value_bridges": [
+    {
+      "id": "r7.stieltjes_rh_bridge",
+      "goal": "prove RH iff the reciprocal-zero moment sequence is Stieltjes at all orders",
+      "status": "CONJECTURE_UNDER_OAK_REVIEW",
+      "key_obligations": [
+        "genus-zero product and log-derivative expansion",
+        "absolute convergence of reciprocal-zero power sums",
+        "multiplicity accounting after square quotient",
+        "compact-support deduction from exponential moment growth",
+        "analytic-continuation argument excluding non-real poles",
+        "independent novelty/bibliography audit"
+      ]
+    },
+    {
+      "id": "global.finite_negative_certificate",
+      "goal": "off-critical zero implies some finite basic or shifted Hankel matrix is not PSD",
+      "status": "CONJECTURE",
+      "routes": ["prove R7 and take contrapositive", "derive explicit finite-tail stability bound"]
+    }
+  ],
+  "tristan_system_integrations": [
+    "HGFM proof/criterion graph",
+    "CVCD minimal structural support compression",
     "LOG/EXP zero-moment-operator translations",
-    "TensorProdLift of polynomial positivity constraints",
-    "Bayes-Tristan fertility ranking",
-    "UNC2 epistemic uncertainty ledger",
-    "M-minus false-proof anti-dataset",
-    "AIT/SAGE bounded lemma synthesis"
+    "TensorProdLift polynomial positivity constraints",
+    "Bayes-Tristan research-path ranking",
+    "UNC2 uncertainty/provenance tracking",
+    "M-minus adversarial false-proof memory",
+    "AIT/SAGE bounded proof-obligation synthesis",
+    "OAK epistemic promotion gates"
   ],
   "forbidden_promotions": [
     "finite_to_infinite",
     "numeric_to_exact",
     "supplied_rational_to_true_xi_value",
+    "supplied_interval_to_certified_analytic_xi_interval",
     "leading_principal_minors_to_psd",
+    "finite_atomic_vandermonde_to_infinite_riemann_spectrum",
     "equivalent_reformulation_to_solution",
+    "structural_cvcd_support_to_proof",
+    "lean_comment_stub_to_formal_proof",
     "known_zeros_to_independent_operator",
-    "finite_jacobi_to_hilbert_polya",
     "pattern_to_theorem",
     "conjectural_leaf_to_proved_claim",
     "branch_numerics_to_analytic_continuation",
     "missing_equivalence_direction"
   ],
-  "proof_grade_leaf_statuses": [
-    "PROVED",
-    "KNOWN_THEOREM"
+  "proof_grade_leaf_statuses": ["PROVED", "KNOWN_THEOREM"],
+  "machine_gates": [
+    "proof_graph_semantic_validation",
+    "known_theorem_primary_source_binding",
+    "interval_input_provenance",
+    "finite_vs_infinite_promotion_boundary",
+    "deterministic_bundle_hashing"
+  ],
+  "executable_surfaces": [
+    "geometry",
+    "moments",
+    "exact-cert",
+    "pade",
+    "jacobi",
+    "cvcd",
+    "obligations",
+    "bibliography-check",
+    "materialize"
   ],
   "research_axes": [
-    {
-      "id": "square.axis.geometry",
-      "goal": "derive and test quotient/parabolic geometry",
-      "priority": 1
-    },
-    {
-      "id": "square.axis.stieltjes",
-      "goal": "characterize Theta'/Theta by positive-measure/Stieltjes structure",
-      "priority": 1
-    },
-    {
-      "id": "square.axis.moments",
-      "goal": "derive central-derivative to inverse-moment identities",
-      "priority": 1
-    },
-    {
-      "id": "square.axis.hankel",
-      "goal": "replace weak finite positivity heuristics by exact/certified constraints and search finite negative witnesses",
-      "priority": 1
-    },
-    {
-      "id": "square.axis.pade",
-      "goal": "study Pade/Stieltjes pole and residue constraints from independently computed central data",
-      "priority": 1
-    },
-    {
-      "id": "square.axis.jacobi",
-      "goal": "reconstruct finite Jacobi approximants from independently computed moments and quantify convergence",
-      "priority": 1
-    },
-    {
-      "id": "square.axis.operator",
-      "goal": "seek a natural self-adjoint operator independent of preloaded Riemann zeros",
-      "priority": 2
-    },
-    {
-      "id": "square.axis.cvcd",
-      "goal": "compress known/equivalent criteria to minimal forcing invariants",
-      "priority": 1
-    },
-    {
-      "id": "square.axis.mminus",
-      "goal": "generate and retain adversarial counterexamples to false proof patterns",
-      "priority": 1
-    }
-  ],
-  "next_r3": [
-    "interval-certified central xi derivative evaluation",
-    "interval propagation from central derivatives to inverse moments",
-    "certified-sign Hankel determinants with uncertainty intervals",
-    "Pade pole/residue reality and positivity diagnostics",
-    "Jacobi convergence diagnostics across truncation orders",
-    "CVCD search for minimal forcing sets in the HGFM criterion graph",
-    "bibliography/provenance ledger for every known criterion",
-    "formal proof obligations export for Lean-compatible verification"
+    {"id": "square.axis.geometry", "priority": 1},
+    {"id": "square.axis.stieltjes", "priority": 1},
+    {"id": "square.axis.moments", "priority": 1},
+    {"id": "square.axis.hankel", "priority": 1},
+    {"id": "square.axis.finite-vandermonde", "priority": 1},
+    {"id": "square.axis.r7-global-bridge", "priority": 1},
+    {"id": "square.axis.certified-xi-intervals", "priority": 1},
+    {"id": "square.axis.jacobi", "priority": 2},
+    {"id": "square.axis.operator", "priority": 2},
+    {"id": "square.axis.cvcd", "priority": 1},
+    {"id": "square.axis.mminus", "priority": 1}
   ],
   "success_conditions": {
     "research_increment": [
-      "new exact identity with proof",
-      "new equivalence with both directions proved",
+      "new exact identity with checked proof",
+      "new equivalence with both directions discharged",
       "new finite certificate theorem",
+      "new certified analytic enclosure",
       "new independently constructed spectral object with proved determinant relation",
       "refutation of a plausible pathway with reusable M-minus evidence"
     ],
     "rh_solution": [
       "all universal quantifiers discharged",
       "all proof leaves proof-grade",
+      "all known dependencies source-bound",
       "no circular use of RH or preloaded zero reality",
-      "independent expert/formal verification"
+      "formal or independent expert verification"
     ]
   }
 }
