@@ -81,6 +81,14 @@ from .series import (
     log_derivative_coefficients,
     normalized_theta_coeffs_from_xi_even_derivatives,
 )
+from .symbolic_hankel import (
+    HankelPolynomialConstraint,
+    TensorLiftTerm,
+    evaluate_polynomial,
+    hankel_determinant_polynomial,
+    newton_power_sum_polynomials,
+    tensor_lift_constraint,
+)
 from .tail import (
     TailStabilityCertificate,
     exact_quadratic_form,
@@ -167,6 +175,12 @@ __all__ = [
     "polynomial_abs_bound",
     "tail_stability_certificate",
     "negative_witness_from_indefinite_2x2",
+    "HankelPolynomialConstraint",
+    "TensorLiftTerm",
+    "newton_power_sum_polynomials",
+    "hankel_determinant_polynomial",
+    "tensor_lift_constraint",
+    "evaluate_polynomial",
     "materialize_research_bundle",
     "materialize_from_files",
 ]
