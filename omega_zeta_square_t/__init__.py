@@ -3,6 +3,7 @@
 This package is a research/verification toolkit. It does not claim a proof of RH.
 """
 
+from .bibliography import validate_bibliography_ledger
 from .certificates import (
     ExactPSDReport,
     ExactStieltjesCertificate,
@@ -124,4 +125,5 @@ __all__ = [
     "MinimalSupport",
     "minimal_dependency_supports",
     "cvcd_support_report",
+    "validate_bibliography_ledger",
 ]
