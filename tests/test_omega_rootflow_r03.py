@@ -92,7 +92,7 @@ def test_r03_cli_basis_projective_and_monodromy_commands(tmp_path) -> None:
     basis_output = tmp_path / "basis.json"
     assert main(["basis-atlas", "--coeffs", "0.3,-1.2,0.4,1", "--output", str(basis_output)]) == 0
     basis_payload = json.loads(basis_output.read_text(encoding="utf-8"))
-    assert basis_payload["version"] == "R0.4"
+    assert basis_payload["version"] == "R0.5"
     assert len(basis_payload["atlas"]["records"]) == 4
 
     projective_output = tmp_path / "projective.json"
