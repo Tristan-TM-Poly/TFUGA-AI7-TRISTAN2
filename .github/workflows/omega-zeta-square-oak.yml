@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile package and targeted tests
-        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py tests/test_omega_zeta_square_r4.py
+        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py tests/test_omega_zeta_square_r4.py tests/test_omega_zeta_square_bibliography.py
       - name: Validate machine-readable contracts
         run: |
           python - <<'PY'
@@ -43,20 +43,29 @@ jobs:
           for path in [
               Path("specs/omega_zeta_square_t/research_contract.json"),
               Path("specs/omega_zeta_square_t/proof_graph.json"),
+              Path("specs/omega_zeta_square_t/bibliography_ledger.json"),
           ]:
               json.loads(path.read_text(encoding="utf-8"))
               print("valid-json", path)
           PY
-      - name: Validate HGFM proof graph semantics
+      - name: Validate HGFM and bibliography semantics
         run: |
           python - <<'PY'
-          from omega_zeta_square_t import load_and_validate_proof_graph
-          errors = load_and_validate_proof_graph("specs/omega_zeta_square_t/proof_graph.json")
+          import json
+          from pathlib import Path
+          from omega_zeta_square_t import load_and_validate_proof_graph, validate_bibliography_ledger
+          graph_path = Path("specs/omega_zeta_square_t/proof_graph.json")
+          graph = json.loads(graph_path.read_text(encoding="utf-8"))
+          errors = load_and_validate_proof_graph(graph_path)
           assert not errors, "\n".join(errors)
+          ledger = json.loads(Path("specs/omega_zeta_square_t/bibliography_ledger.json").read_text(encoding="utf-8"))
+          bib_errors = validate_bibliography_ledger(graph, ledger)
+          assert not bib_errors, "\n".join(bib_errors)
           print("proof-graph-oak: PROMOTE")
+          print("bibliography-oak: PROMOTE")
           PY
       - name: Run targeted unit tests
-        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals tests.test_omega_zeta_square_r4
+        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals tests.test_omega_zeta_square_r4 tests.test_omega_zeta_square_bibliography
       - name: R4 provenance CVCD obligation smoke
         run: |
           python - <<'PY'
