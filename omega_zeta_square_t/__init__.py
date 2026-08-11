@@ -81,6 +81,13 @@ from .series import (
     log_derivative_coefficients,
     normalized_theta_coeffs_from_xi_even_derivatives,
 )
+from .tail import (
+    TailStabilityCertificate,
+    exact_quadratic_form,
+    negative_witness_from_indefinite_2x2,
+    polynomial_abs_bound,
+    tail_stability_certificate,
+)
 
 __all__ = [
     "SquareCoordinate",
@@ -155,6 +162,11 @@ __all__ = [
     "first_exact_stieltjes_violation",
     "one_pair_full_hankel_determinant",
     "one_pair_full_hankel_certificate",
+    "TailStabilityCertificate",
+    "exact_quadratic_form",
+    "polynomial_abs_bound",
+    "tail_stability_certificate",
+    "negative_witness_from_indefinite_2x2",
     "materialize_research_bundle",
     "materialize_from_files",
 ]
