@@ -19,6 +19,8 @@ class FiniteStieltjesReport:
     moments: tuple[float, ...]
     hankel0_minors: tuple[float, ...]
     hankel1_minors: tuple[float, ...]
+    hankel0_psd: bool
+    hankel1_psd: bool
     finite_positive: bool
     epistemic_status: str = "NUMERICALLY_VERIFIED_FINITE_ONLY"
     proves_rh: bool = False
@@ -55,10 +57,7 @@ def hankel_matrix(moments: Sequence[float], size: int, shift: int = 0) -> List[L
     needed = 2 * size - 1 + shift
     if len(moments) < needed:
         raise ValueError(f"need at least {needed} moments for size={size}, shift={shift}")
-    return [
-        [float(moments[i + j + shift]) for j in range(size)]
-        for i in range(size)
-    ]
+    return [[float(moments[i + j + shift]) for j in range(size)] for i in range(size)]
 
 
 def determinant(matrix: Sequence[Sequence[float]]) -> float:
@@ -87,7 +86,11 @@ def determinant(matrix: Sequence[Sequence[float]]) -> float:
 
 
 def leading_principal_minors(matrix: Sequence[Sequence[float]]) -> List[float]:
-    """Return determinants of the 1x1 ... nxn leading principal blocks."""
+    """Return determinants of the 1x1 ... nxn leading principal blocks.
+
+    These are retained as diagnostics only. Nonnegative leading principal
+    minors alone do *not* certify positive semidefiniteness.
+    """
 
     n = len(matrix)
     if n == 0 or any(len(row) != n for row in matrix):
@@ -95,12 +98,57 @@ def leading_principal_minors(matrix: Sequence[Sequence[float]]) -> List[float]:
     return [determinant([row[:k] for row in matrix[:k]]) for k in range(1, n + 1)]
 
 
+def ldlt_psd(matrix: Sequence[Sequence[float]], rel_tol: float = 1e-12) -> bool:
+    """Numerically test symmetric PSD structure with an LDL^T recursion.
+
+    A zero pivot is admissible only when the corresponding residual column is
+    also zero within tolerance. This catches false positives that a
+    leading-principal-minor-only check can miss. It remains a finite numerical
+    diagnostic, not a proof certificate.
+    """
+
+    n = len(matrix)
+    if n == 0 or any(len(row) != n for row in matrix):
+        raise ValueError("matrix must be non-empty and square")
+    a = [[float(x) for x in row] for row in matrix]
+    scale = max(1.0, max(abs(x) for row in a for x in row))
+    tol = rel_tol * scale
+    for i in range(n):
+        for j in range(i + 1, n):
+            if abs(a[i][j] - a[j][i]) > tol:
+                return False
+
+    l = [[0.0] * n for _ in range(n)]
+    d = [0.0] * n
+    for i in range(n):
+        l[i][i] = 1.0
+
+    for k in range(n):
+        pivot = a[k][k] - sum(l[k][s] * l[k][s] * d[s] for s in range(k))
+        if pivot < -tol:
+            return False
+        residuals = [
+            a[i][k] - sum(l[i][s] * l[k][s] * d[s] for s in range(k))
+            for i in range(k + 1, n)
+        ]
+        if abs(pivot) <= tol:
+            d[k] = 0.0
+            if any(abs(r) > tol for r in residuals):
+                return False
+            continue
+        d[k] = pivot
+        for offset, i in enumerate(range(k + 1, n)):
+            l[i][k] = residuals[offset] / pivot
+    return True
+
+
 def finite_stieltjes_report(gammas: Iterable[float], hankel_size: int = 3) -> FiniteStieltjesReport:
     """Run finite Stieltjes/Hankel checks on supplied positive ordinates.
 
     We use m_k = sum gamma^(-2(k+1)). The two standard finite Hankel families
-    H^(0)=[m_{i+j}] and H^(1)=[m_{i+j+1}] are checked by leading principal
-    minors. Passing is evidence about the finite supplied atomic measure only.
+    H^(0)=[m_{i+j}] and H^(1)=[m_{i+j+1}] are tested by a PSD-aware LDL^T
+    recursion. Leading principal minors are still reported for observability,
+    but are not used as the sole PSD criterion.
     """
 
     values = _validated_gammas(gammas)
@@ -112,9 +160,8 @@ def finite_stieltjes_report(gammas: Iterable[float], hankel_size: int = 3) -> Fi
     h1 = hankel_matrix(moments, hankel_size, shift=1)
     minors0 = leading_principal_minors(h0)
     minors1 = leading_principal_minors(h1)
-    scale = max(1.0, *(abs(x) for x in moments))
-    tol = 1e-12 * scale
-    finite_positive = all(x >= -tol for x in (*minors0, *minors1))
+    h0_psd = ldlt_psd(h0)
+    h1_psd = ldlt_psd(h1)
     return FiniteStieltjesReport(
         gammas_checked=len(values),
         max_moment_order=needed,
@@ -122,5 +169,7 @@ def finite_stieltjes_report(gammas: Iterable[float], hankel_size: int = 3) -> Fi
         moments=tuple(moments),
         hankel0_minors=tuple(minors0),
         hankel1_minors=tuple(minors1),
-        finite_positive=finite_positive,
+        hankel0_psd=h0_psd,
+        hankel1_psd=h1_psd,
+        finite_positive=h0_psd and h1_psd,
     )
