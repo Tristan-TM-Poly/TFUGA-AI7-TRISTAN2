@@ -28,6 +28,11 @@ jobs:
           python-version: "3.11"
       - name: Unit and regression tests
         run: python -m unittest discover -s tests -p 'test_omega_skillgen*.py' -v
+      - name: Repository wrapper import regression
+        run: |
+          python scripts/omega-skillgen --help >/dev/null
+          python scripts/omega-skillgen-bridge --help >/dev/null
+          python scripts/omega-skillgen-benchmark --help >/dev/null
       - name: Audit recursive Omega skill ecology
         shell: bash
         run: |
@@ -36,14 +41,14 @@ jobs:
           test "${#skills[@]}" -ge 1
           for skill in "${skills[@]}"; do
             echo "=== $skill ==="
-            python -m omega_skillgen_t lint "$skill"
+            python scripts/omega-skillgen lint "$skill"
             if [[ -f "$skill/evals/cases.jsonl" ]]; then
-              python -m omega_skillgen_t eval "$skill"
+              python scripts/omega-skillgen eval "$skill"
             fi
-            python -m omega_skillgen_t trust "$skill"
+            python scripts/omega-skillgen trust "$skill"
           done
       - name: Skill hypergraph catalog
-        run: python -m omega_skillgen_t catalog .agents/skills --graph
+        run: python scripts/omega-skillgen catalog .agents/skills --graph
       - name: Audit full Generator Discovery atlas
         run: python scripts/omega-skillgen-benchmark audit-atlas
       - name: Bridge real Generator Discovery atlas
@@ -64,7 +69,7 @@ jobs:
               assert spec['invariants']
           print('Generator Discovery bridge smoke PASS')
           PY
-      - name: Compile smoke candidate
+      - name: Compile smoke candidate through wrapper
         run: |
           python - <<'PY'
           import json
@@ -89,6 +94,6 @@ jobs:
           Path('/tmp/skill.json').write_text(json.dumps(spec), encoding='utf-8')
           PY
           rm -rf /tmp/omega-skillgen
-          python -m omega_skillgen_t generate /tmp/skill.json /tmp/omega-skillgen
-          python -m omega_skillgen_t lint /tmp/omega-skillgen/ci-smoke-skill
-          python -m omega_skillgen_t eval /tmp/omega-skillgen/ci-smoke-skill
+          python scripts/omega-skillgen generate /tmp/skill.json /tmp/omega-skillgen
+          python scripts/omega-skillgen lint /tmp/omega-skillgen/ci-smoke-skill
+          python scripts/omega-skillgen eval /tmp/omega-skillgen/ci-smoke-skill
