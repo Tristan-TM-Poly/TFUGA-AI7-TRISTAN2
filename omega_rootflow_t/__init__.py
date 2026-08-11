@@ -8,6 +8,7 @@ from .core import RootCondition, basis_root_differential, degree_perturbation_se
 from .exact import ExactAlgebraAudit, audit_exact_algebra, exact_coefficients, exact_derivative, exact_determinant, exact_discriminant, exact_monic_gcd, exact_newton_power_sums, exact_polydivmod, exact_resultant
 from .exact_hermite import ExactHermiteDesign, ExactMultiClusterTangent, ExactRootCluster, exact_affine_solve, exact_confluent_evaluation, exact_fixed_hermite_matrix, exact_hermite_design, exact_mobile_cluster_matrix, exact_multi_cluster_tangent, exact_nullspace, exact_rank, exact_rref
 from .invariants import InvariantAudit, audit_invariants, elementary_symmetric_from_coefficients, elementary_symmetric_from_roots, newton_power_sums, power_sum_jacobian, power_sums_from_roots, residue_moments, triangular_power_sum_sensitivity, vieta_jacobian
+from .joint_unfolding import ClusterSplitSignature, JointDirectionAnalysis, JointUnfoldingBlock, JointUnfoldingDesign, JointUnfoldingMap, analyze_joint_direction, design_joint_unfolding, joint_unfolding_map
 from .kinematics import RootKinematicState, RootKinematics, parameter_root_kinematics, taylor_predict_roots
 from .monodromy import MonodromyResult, PathTrackingStep, quadratic_square_root_loop, track_coefficient_path
 from .monodromy_group import MonodromyGroup, compose_permutations, generate_monodromy_group, identity_permutation, inverse_permutation, permutation_cycles, validate_permutation
