@@ -147,3 +147,33 @@ jobs:
           assert receipt.sources == ("https://github.com/example/repo/pull/417",), receipt
           print(receipt.to_dict())
           PY
+      - name: R0.6 connector schema drift laboratory
+        run: |
+          python -m omega_capability_os_t.drift \
+            examples/capability_os_r06_fixture_corpus.json \
+            > /tmp/capability-drift-r06.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("/tmp/capability-drift-r06.json").read_text())
+          assert report["status"] == "PASS", report["classification_mismatches"]
+          assert report["fixture_count"] == 6, report
+          assert report["captured_sanitized_fixture_count"] == 3, report
+          assert report["contract_synthetic_fixture_count"] == 3, report
+          assert report["case_count"] == 115, report
+          assert report["mismatch_count"] == 0, report
+          assert report["classification_accuracy"] == 1.0, report
+          assert report["breaking_detection_rate"] == 1.0, report
+          assert set(report["providers"]) == {
+              "github", "files", "drive", "gmail", "calendar", "web"
+          }, report
+          print(json.dumps({
+              "status": report["status"],
+              "fixture_count": report["fixture_count"],
+              "case_count": report["case_count"],
+              "classification_accuracy": report["classification_accuracy"],
+              "breaking_detection_rate": report["breaking_detection_rate"],
+              "providers": report["providers"],
+          }, indent=2, sort_keys=True))
+          PY

@@ -10,7 +10,25 @@ from .chatmem import (
     checkpoint_gate_handler,
     default_chatmem_bootstrap_values,
 )
-from .core import Capability, Intent, make_evidence_receipt, outcome_record, plan, suggest_fallback, validate_registry
+from .core import (
+    Capability,
+    Intent,
+    make_evidence_receipt,
+    outcome_record,
+    plan,
+    suggest_fallback,
+    validate_registry,
+)
+from .drift import (
+    DRIFT_SCHEMA_VERSION,
+    DriftCase,
+    DriftFixture,
+    benchmark_fixture,
+    benchmark_fixture_corpus,
+    generate_drift_cases,
+    load_fixture_corpus,
+    load_fixture_corpus_file,
+)
 from .external import (
     ExternalActionReceipt,
     ExternalActionRequest,
@@ -68,6 +86,14 @@ __all__ = [
     "normalize_gmail_response",
     "normalize_calendar_response",
     "normalize_web_response",
+    "DRIFT_SCHEMA_VERSION",
+    "DriftCase",
+    "DriftFixture",
+    "generate_drift_cases",
+    "benchmark_fixture",
+    "benchmark_fixture_corpus",
+    "load_fixture_corpus",
+    "load_fixture_corpus_file",
     "ChatMemCheckpointManifest",
     "chatmem_capabilities",
     "chatmem_external_bindings",
@@ -76,4 +102,4 @@ __all__ = [
     "checkpoint_gate_handler",
     "default_chatmem_bootstrap_values",
 ]
-__version__ = "0.5.0"
+__version__ = "0.6.0"

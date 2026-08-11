@@ -1,0 +1,288 @@
+{
+  "schema": "omega-capability-r06-fixture-corpus/v1",
+  "version": "0.6.0",
+  "sanitization_policy": {
+    "raw_private_content_committed": false,
+    "real_user_identifiers_committed": false,
+    "real_message_or_event_ids_committed": false,
+    "notes": [
+      "Captured fixtures preserve only the minimum response shape required for compatibility testing.",
+      "Identifiers, URLs, titles and content are replaced by inert placeholders unless already public-safe.",
+      "Synthetic fixtures are labeled contract_synthetic and are not represented as live provider evidence."
+    ]
+  },
+  "fixtures": [
+    {
+      "fixture_id": "github.fetch_pr.captured-sanitized.v1",
+      "provider": "github",
+      "source_kind": "captured_sanitized",
+      "source_fidelity": "live_connector_shape_sanitized",
+      "provenance": {
+        "captured_at": "2026-08-11T00:47:00Z",
+        "connector": "GitHub",
+        "action": "fetch_pr",
+        "basis": "live PR #417 metadata response",
+        "sanitization": "repository-independent inert identifiers and URL"
+      },
+      "request": {
+        "request_id": "FIX-GITHUB-R06",
+        "capability_id": "github.fetch_pr",
+        "connector": "GitHub",
+        "action": "fetch_pr",
+        "authority": "read",
+        "external_authority": "read",
+        "arguments": {},
+        "expected_outputs": [
+          "pr_metadata",
+          "commit_sha"
+        ],
+        "candidate_sha": "1111111111111111111111111111111111111111"
+      },
+      "contract": {
+        "output_paths": {
+          "pr_metadata": "pull_request",
+          "commit_sha": "pull_request.head_sha"
+        },
+        "candidate_sha_paths": [
+          "pull_request.head_sha"
+        ],
+        "source_paths": [
+          "pull_request.url"
+        ],
+        "require_candidate_sha": true
+      },
+      "raw_response": {
+        "connector_name": "GitHub",
+        "action_name": "fetch_pr",
+        "pull_request": {
+          "number": 417,
+          "state": "open",
+          "draft": true,
+          "head_sha": "1111111111111111111111111111111111111111",
+          "url": "https://github.invalid/example/repository/pull/417"
+        }
+      }
+    },
+    {
+      "fixture_id": "files.search.captured-sanitized.v1",
+      "provider": "files",
+      "source_kind": "captured_sanitized",
+      "source_fidelity": "live_rendered_shape_reconstructed_and_sanitized",
+      "provenance": {
+        "captured_at": "2026-08-11T00:47:00Z",
+        "connector": "Files",
+        "action": "search",
+        "basis": "live Library search for ChatMem global pointer",
+        "sanitization": "file identifiers and content replaced"
+      },
+      "request": {
+        "request_id": "FIX-FILES-R06",
+        "capability_id": "files.search",
+        "connector": "Files",
+        "action": "search",
+        "authority": "read",
+        "external_authority": "read",
+        "arguments": {},
+        "expected_outputs": [
+          "search_hit",
+          "file_id"
+        ]
+      },
+      "contract": {
+        "output_paths": {
+          "search_hit": "matches.0",
+          "file_id": "matches.0.file_id"
+        },
+        "require_candidate_sha": false
+      },
+      "raw_response": {
+        "connector_name": "Files",
+        "action_name": "search",
+        "matches": [
+          {
+            "name": "SANITIZED_POINTER.json",
+            "file_id": "file_fixture_r06",
+            "surface": "library",
+            "score": 0.019
+          }
+        ]
+      }
+    },
+    {
+      "fixture_id": "drive.search.captured-sanitized.v1",
+      "provider": "drive",
+      "source_kind": "captured_sanitized",
+      "source_fidelity": "live_rendered_shape_reconstructed_and_sanitized",
+      "provenance": {
+        "captured_at": "2026-08-11T00:47:00Z",
+        "connector": "Google Drive",
+        "action": "search",
+        "basis": "live metadata-only Drive search",
+        "sanitization": "file title, id and URL replaced"
+      },
+      "request": {
+        "request_id": "FIX-DRIVE-R06",
+        "capability_id": "drive.search",
+        "connector": "Google Drive",
+        "action": "search",
+        "authority": "read",
+        "external_authority": "read",
+        "arguments": {},
+        "expected_outputs": [
+          "file_metadata",
+          "file_id"
+        ]
+      },
+      "contract": {
+        "output_paths": {
+          "file_metadata": "items.0",
+          "file_id": "items.0.id"
+        },
+        "source_paths": [
+          "items.0.url"
+        ],
+        "require_candidate_sha": false
+      },
+      "raw_response": {
+        "connector_name": "Google Drive",
+        "action_name": "search",
+        "items": [
+          {
+            "title": "sanitized_fixture.md",
+            "id": "drive_fixture_r06",
+            "url": "https://drive.invalid/file/fixture"
+          }
+        ]
+      }
+    },
+    {
+      "fixture_id": "gmail.search.contract-synthetic.v1",
+      "provider": "gmail",
+      "source_kind": "contract_synthetic",
+      "source_fidelity": "synthetic_contract_only",
+      "provenance": {
+        "connector": "Gmail",
+        "action": "search_emails",
+        "basis": "synthetic provider contract; no mailbox data captured"
+      },
+      "request": {
+        "request_id": "FIX-GMAIL-R06",
+        "capability_id": "gmail.search_emails",
+        "connector": "Gmail",
+        "action": "search_emails",
+        "authority": "read",
+        "external_authority": "read",
+        "arguments": {},
+        "expected_outputs": [
+          "message_summary",
+          "message_id"
+        ]
+      },
+      "contract": {
+        "output_paths": {
+          "message_summary": "messages.0",
+          "message_id": "messages.0.id"
+        },
+        "require_candidate_sha": false
+      },
+      "raw_response": {
+        "connector_name": "Gmail",
+        "action_name": "search_emails",
+        "messages": [
+          {
+            "subject": "Synthetic fixture",
+            "id": "message_fixture_r06",
+            "thread_id": "thread_fixture_r06"
+          }
+        ]
+      }
+    },
+    {
+      "fixture_id": "calendar.search.contract-synthetic.v1",
+      "provider": "calendar",
+      "source_kind": "contract_synthetic",
+      "source_fidelity": "synthetic_contract_only",
+      "provenance": {
+        "connector": "Google Calendar",
+        "action": "search_events",
+        "basis": "synthetic provider contract; no calendar data captured"
+      },
+      "request": {
+        "request_id": "FIX-CALENDAR-R06",
+        "capability_id": "calendar.search_events",
+        "connector": "Google Calendar",
+        "action": "search_events",
+        "authority": "read",
+        "external_authority": "read",
+        "arguments": {},
+        "expected_outputs": [
+          "event_metadata",
+          "event_id"
+        ]
+      },
+      "contract": {
+        "output_paths": {
+          "event_metadata": "events.0",
+          "event_id": "events.0.id"
+        },
+        "require_candidate_sha": false
+      },
+      "raw_response": {
+        "connector_name": "Google Calendar",
+        "action_name": "search_events",
+        "events": [
+          {
+            "summary": "Synthetic fixture",
+            "id": "event_fixture_r06",
+            "htmlLink": "https://calendar.invalid/event/fixture"
+          }
+        ]
+      }
+    },
+    {
+      "fixture_id": "web.search.contract-synthetic.v1",
+      "provider": "web",
+      "source_kind": "contract_synthetic",
+      "source_fidelity": "synthetic_contract_only",
+      "provenance": {
+        "connector": "Web",
+        "action": "system1_search_query",
+        "basis": "synthetic provider contract; no browsing payload captured"
+      },
+      "request": {
+        "request_id": "FIX-WEB-R06",
+        "capability_id": "web.search",
+        "connector": "Web",
+        "action": "system1_search_query",
+        "authority": "read",
+        "external_authority": "read",
+        "arguments": {},
+        "expected_outputs": [
+          "search_result",
+          "result_url"
+        ]
+      },
+      "contract": {
+        "output_paths": {
+          "search_result": "results.0",
+          "result_url": "results.0.url"
+        },
+        "source_paths": [
+          "results.0.url"
+        ],
+        "require_candidate_sha": false
+      },
+      "raw_response": {
+        "connector_name": "Web",
+        "action_name": "system1_search_query",
+        "results": [
+          {
+            "title": "Synthetic fixture",
+            "url": "https://example.invalid/fixture",
+            "snippet": "Synthetic public-web response shape."
+          }
+        ]
+      }
+    }
+  ]
+}
