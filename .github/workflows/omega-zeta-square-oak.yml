@@ -4,8 +4,7 @@ on:
   pull_request:
     paths:
       - "omega_zeta_square_t/**"
-      - "tests/test_omega_zeta_square_t.py"
-      - "tests/test_omega_zeta_square_intervals.py"
+      - "tests/test_omega_zeta_square*.py"
       - "specs/omega_zeta_square_t/**"
       - "docs/omega_zeta_square_t/**"
       - "docs/omega_millennium_t/r02/problems/riemann.md"
@@ -15,8 +14,7 @@ on:
       - main
     paths:
       - "omega_zeta_square_t/**"
-      - "tests/test_omega_zeta_square_t.py"
-      - "tests/test_omega_zeta_square_intervals.py"
+      - "tests/test_omega_zeta_square*.py"
       - "specs/omega_zeta_square_t/**"
       - ".github/workflows/omega-zeta-square-oak.yml"
 
@@ -36,7 +34,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile package and targeted tests
-        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py
+        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py tests/test_omega_zeta_square_r4.py
       - name: Validate machine-readable contracts
         run: |
           python - <<'PY'
@@ -58,7 +56,30 @@ jobs:
           print("proof-graph-oak: PROMOTE")
           PY
       - name: Run targeted unit tests
-        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals
+        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals tests.test_omega_zeta_square_r4
+      - name: R4 provenance CVCD obligation smoke
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from fractions import Fraction
+          from omega_zeta_square_t import (
+              EvidenceKind, IntervalEvidence, RationalInterval,
+              cvcd_support_report, export_obligation_bundle,
+              obligations_from_proof_graph, validate_interval_evidence,
+          )
+          graph = json.loads(Path("specs/omega_zeta_square_t/proof_graph.json").read_text())
+          cvcd = cvcd_support_report(graph, "rh")
+          assert cvcd["proves_target"] is False
+          obligations = export_obligation_bundle(obligations_from_proof_graph(graph))
+          assert obligations["solution_claimed"] is False
+          evidence = IntervalEvidence(
+              "xi(1/2)", RationalInterval(Fraction(49,100), Fraction(51,100)), EvidenceKind.SUPPLIED
+          )
+          verdict = validate_interval_evidence([evidence])
+          assert verdict.analytically_certified_inputs is False
+          assert verdict.proves_rh is False
+          PY
       - name: CLI geometry OAK smoke test
         run: |
           python -m omega_zeta_square_t geometry 0.5 14.134725141734693 > /tmp/zeta-square-geometry.json
