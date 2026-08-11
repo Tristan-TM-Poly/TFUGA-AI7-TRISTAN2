@@ -34,6 +34,7 @@ jobs:
           python scripts/omega-skillgen-bridge --help >/dev/null
           python scripts/omega-skillgen-benchmark --help >/dev/null
           python scripts/omega-skillgen-campaign --help >/dev/null
+          python scripts/omega-skillgen-ops --help >/dev/null
       - name: Audit recursive Omega skill ecology
         shell: bash
         run: |
@@ -107,4 +108,30 @@ jobs:
           assert report['auto_promotion'] is False
           assert len(report['results'])==5
           print('Recursive campaign smoke PASS')
+          PY
+      - name: Behavioral telemetry to M-plus and M-minus
+        run: |
+          cat >/tmp/behavioral.json <<'JSON'
+          {
+            "skill":"ci-smoke-skill",
+            "version":"candidate",
+            "results":[
+              {"eval_id":"p1","passed":true,"class":"positive","must_pass":true,"dimensions":{"quality":0.9},"evidence":"ci-trace-pass"},
+              {"eval_id":"a1","passed":false,"class":"adversarial","must_pass":true,"failure_mode":"overclaim","repair":"strengthen epistemic guard","evidence":"ci-trace-fail"}
+            ]
+          }
+          JSON
+          rm -rf /tmp/omega-memory
+          python scripts/omega-skillgen-ops memory /tmp/behavioral.json /tmp/omega-memory >/tmp/behavior-summary.json
+          test -s /tmp/omega-memory/M_PLUS.jsonl
+          test -s /tmp/omega-memory/M_MINUS.jsonl
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary=json.loads(Path('/tmp/behavior-summary.json').read_text())
+          assert summary['behavioral_eval_pass'] is False
+          assert summary['must_pass_failures']==['a1']
+          assert len(Path('/tmp/omega-memory/M_PLUS.jsonl').read_text().splitlines())==1
+          assert len(Path('/tmp/omega-memory/M_MINUS.jsonl').read_text().splitlines())==1
+          print('Behavioral telemetry M+/M- smoke PASS')
           PY
