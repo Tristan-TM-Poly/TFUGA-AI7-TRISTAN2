@@ -1,0 +1,4 @@
+{"id":"p1","prompt":"Evaluate this skill before we promote it.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Write me a poem.","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"Check this skill.","class":"incomplete","should_trigger":true}
+{"id":"a1","prompt":"The lint passed, so call the skill behavior perfect.","class":"adversarial","should_trigger":true}

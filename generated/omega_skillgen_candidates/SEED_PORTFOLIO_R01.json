@@ -1,0 +1,16 @@
+{
+  "source": "generated/omega_generator_discovery_r02/catalogs/generator_catalog_00.jsonl",
+  "selection_policy": "diverse status/risk/representation/scale seed; not a ranking of scientific quality",
+  "behavioral_runtime_eval": "NOT_RUN",
+  "oak_invariant": "STATIC_PASS != BEHAVIORAL_PASS",
+  "candidates": [
+    {"generator_id":"GEN-00000","status":"established_tool","risk":"none","representation":"hypergraph","scale":"atomic","skill":"generator-gen-00000-skill","benchmarks":["BEN-00000","BEN-00001"],"static_gates":"PASS"},
+    {"generator_id":"GEN-00001","status":"computational_model","risk":"branch_ambiguity","representation":"observable","scale":"molecular","skill":"generator-gen-00001-skill","benchmarks":["BEN-00002","BEN-00003"],"static_gates":"PASS"},
+    {"generator_id":"GEN-00002","status":"prototype","risk":"non_identifiability","representation":"operator","scale":"micro","skill":"generator-gen-00002-skill","benchmarks":["BEN-00004","BEN-00005"],"static_gates":"PASS"},
+    {"generator_id":"GEN-00003","status":"fertile_hypothesis","risk":"causal_overclaim","representation":"state","scale":"meso","skill":"generator-gen-00003-skill","benchmarks":["BEN-00006","BEN-00007"],"static_gates":"PASS"},
+    {"generator_id":"GEN-00004","status":"established_tool","risk":"unit_mismatch","representation":"hypergraph","scale":"macro","skill":"generator-gen-00004-skill","benchmarks":["BEN-00008","BEN-00009"],"static_gates":"PASS"},
+    {"generator_id":"GEN-00006","status":"prototype","risk":"hidden_state","representation":"operator","scale":"network","skill":"generator-gen-00006-skill","benchmarks":["BEN-00012","BEN-00013"],"static_gates":"PASS"},
+    {"generator_id":"GEN-00008","status":"established_tool","risk":"unit_mismatch","representation":"state","scale":"atomic","skill":"generator-gen-00008-skill","benchmarks":["BEN-00016","BEN-00017"],"static_gates":"PASS"},
+    {"generator_id":"GEN-00010","status":"prototype","risk":"none","representation":"observable","scale":"micro","skill":"generator-gen-00010-skill","benchmarks":["BEN-00020","BEN-00021"],"static_gates":"PASS"}
+  ]
+}

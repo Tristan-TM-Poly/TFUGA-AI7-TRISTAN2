@@ -106,6 +106,15 @@ omega-actions-cache = "omega_actions_t.cache_tensor:main"
 omega-actions-compile = "omega_actions_t.compiler:main"
 omega-intent = "omega_intent_t.cli:main"
 omega-intent-r02 = "omega_intent_t.r02.cli:main"
+omega-skillgen = "omega_skillgen_t.cli:main"
+omega-skillgen-bridge = "omega_skillgen_t.bridge_cli:main"
+omega-skillgen-benchmark = "omega_skillgen_t.benchmark_cli:main"
+omega-skillgen-campaign = "omega_skillgen_t.campaign_cli:main"
+omega-skillgen-ops = "omega_skillgen_t.ops_cli:main"
+omega-skillgen-package = "omega_skillgen_t.package_cli:main"
+omega-skillgen-ultra = "omega_skillgen_t.ultra_cli:main"
+omega-skillgen-evolution = "omega_skillgen_t.evolution_cli:main"
+omega-skillgen-civilization = "omega_skillgen_t.civilization_cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

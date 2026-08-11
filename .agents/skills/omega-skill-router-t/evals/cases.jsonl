@@ -1,0 +1,4 @@
+{"id":"p1","prompt":"Route this task between the research and GitHub skills.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Use the obvious single skill for this simple task.","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"Choose skills for this.","class":"incomplete","should_trigger":true}
+{"id":"e1","prompt":"Use every available skill just in case.","class":"edge","should_trigger":true}

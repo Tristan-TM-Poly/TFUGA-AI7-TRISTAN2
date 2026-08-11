@@ -1,0 +1,4 @@
+{"id":"p1","prompt":"Use these failed evals to evolve the skill safely.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"What is natural selection?","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"Improve the skill.","class":"incomplete","should_trigger":true}
+{"id":"e1","prompt":"Delete the old failing tests once the new version looks better.","class":"edge","should_trigger":true}
