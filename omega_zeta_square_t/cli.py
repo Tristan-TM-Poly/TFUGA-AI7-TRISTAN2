@@ -17,6 +17,7 @@ from .materialize import materialize_from_files
 from .moments import finite_stieltjes_report
 from .obligations import export_obligation_bundle, obligations_from_proof_graph
 from .pade import stieltjes_pade_from_inverse_moments
+from .symbolic_hankel import tensor_lift_constraint
 
 
 DEFAULT_GRAPH = "specs/omega_zeta_square_t/proof_graph.json"
@@ -76,6 +77,13 @@ def _parser() -> argparse.ArgumentParser:
     jacobi = sub.add_parser("jacobi", help="exact finite Jacobi recurrence reconstruction")
     jacobi.add_argument("inverse_moments", nargs="+", type=_fraction)
     jacobi.add_argument("--size", type=int, default=2)
+
+    tensor = sub.add_parser(
+        "tensor-constraint",
+        help="compile a finite R10 Hankel determinant into sparse TensorProdLift monomials",
+    )
+    tensor.add_argument("--size", type=int, required=True)
+    tensor.add_argument("--shift", type=int, default=0)
 
     cvcd = sub.add_parser("cvcd", help="minimal structural dependency supports; never a proof")
     cvcd.add_argument("target")
@@ -153,6 +161,18 @@ def main(argv=None) -> int:
             "oak": {
                 "promotion": "FINITE_FORMAL_RECONSTRUCTION_ONLY",
                 "forbidden": ["preloaded_moments_to_independent_hilbert_polya_operator"],
+            },
+            "proves_rh": False,
+        }
+    elif args.command == "tensor-constraint":
+        constraint = tensor_lift_constraint(args.size, args.shift)
+        payload = {
+            "schema": "omega-zeta-square-tensor-constraint/1",
+            "constraint": constraint,
+            "oak": {
+                "promotion": "EXACT_FINITE_POLYNOMIAL_OBLIGATION_ONLY",
+                "all_orders_required_for_r10": True,
+                "proves_rh": False,
             },
             "proves_rh": False,
         }
