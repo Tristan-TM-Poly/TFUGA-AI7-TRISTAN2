@@ -24,6 +24,17 @@ from .core import (
     strip_boundary,
     trivial_zero_image,
 )
+from .intervals import (
+    IntervalPSDReport,
+    IntervalStieltjesCertificate,
+    RationalInterval,
+    interval_determinant,
+    interval_psd_report,
+    interval_stieltjes_certificate,
+    inverse_moment_intervals_from_theta_coeffs,
+    inverse_moment_intervals_from_xi_even_derivatives,
+    normalized_theta_intervals_from_xi_even_derivatives,
+)
 from .jacobi import (
     JacobiRecurrence,
     jacobi_characteristic_polynomial,
@@ -74,6 +85,15 @@ __all__ = [
     "exact_psd_report",
     "exact_stieltjes_certificate",
     "leading_only_false_positive_hankel",
+    "RationalInterval",
+    "IntervalPSDReport",
+    "IntervalStieltjesCertificate",
+    "normalized_theta_intervals_from_xi_even_derivatives",
+    "inverse_moment_intervals_from_theta_coeffs",
+    "inverse_moment_intervals_from_xi_even_derivatives",
+    "interval_determinant",
+    "interval_psd_report",
+    "interval_stieltjes_certificate",
     "PadeApproximant",
     "pade_from_series",
     "stieltjes_series_from_inverse_moments",
