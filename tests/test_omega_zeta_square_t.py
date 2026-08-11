@@ -1,4 +1,4 @@
-import math
+from fractions import Fraction
 import unittest
 
 from omega_zeta_square_t import (
@@ -8,11 +8,15 @@ from omega_zeta_square_t import (
     decode_square,
     finite_stieltjes_report,
     in_centered_critical_strip,
+    inverse_moments_from_theta_coeffs,
+    inverse_moments_from_xi_even_derivatives,
     nontrivial_zero_image,
+    normalized_theta_coeffs_from_xi_even_derivatives,
     rh_defect,
     strip_boundary,
     trivial_zero_image,
     validate_claim,
+    validate_proof_graph,
 )
 from omega_zeta_square_t.core import parabolic_tomography, parabolic_vertex_from_beta
 
@@ -92,6 +96,52 @@ class TestFiniteMomentDiagnostics(unittest.TestCase):
     def test_invalid_gamma_rejected(self):
         with self.assertRaises(ValueError):
             finite_stieltjes_report([14.0, 0.0], hankel_size=2)
+
+
+class TestFormalSeriesBridge(unittest.TestCase):
+    def test_exact_two_atom_product_recovers_inverse_moments(self):
+        # A(u)=(1+u/4)(1+u/9). Exact Fraction arithmetic avoids roundoff.
+        a1 = Fraction(1, 4) + Fraction(1, 9)
+        a2 = Fraction(1, 36)
+        moments = inverse_moments_from_theta_coeffs([Fraction(1), a1, a2])
+        self.assertEqual(moments[0], Fraction(1, 4) + Fraction(1, 9))
+        self.assertEqual(moments[1], Fraction(1, 16) + Fraction(1, 81))
+
+    def test_xi_even_derivative_normalization(self):
+        # Synthetic derivatives chosen so normalized A(u)=1+u+u^2.
+        derivs = [Fraction(2), Fraction(4), Fraction(48)]
+        coeffs = normalized_theta_coeffs_from_xi_even_derivatives(derivs)
+        self.assertEqual(coeffs, [Fraction(1), Fraction(1), Fraction(1)])
+        moments = inverse_moments_from_xi_even_derivatives(derivs)
+        self.assertEqual(moments, [Fraction(1), Fraction(-1)])
+
+
+class TestProofGraphOak(unittest.TestCase):
+    def test_valid_small_proof_graph(self):
+        graph = {
+            "nodes": [
+                {"id": "a", "status": "KNOWN_THEOREM"},
+                {"id": "b", "status": "PROVED"},
+            ],
+            "hyperedges": [
+                {"id": "e", "sources": ["a"], "target": "b", "relation": "implies"}
+            ],
+        }
+        self.assertEqual(validate_proof_graph(graph), [])
+
+    def test_conjectural_leaf_cannot_feed_proved_target(self):
+        graph = {
+            "nodes": [
+                {"id": "a", "status": "CONJECTURE"},
+                {"id": "b", "status": "PROVED"},
+            ],
+            "hyperedges": [
+                {"id": "e", "sources": ["a"], "target": "b", "relation": "implies"}
+            ],
+        }
+        errors = validate_proof_graph(graph)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("non-proof-grade", errors[0])
 
 
 class TestOakGate(unittest.TestCase):
