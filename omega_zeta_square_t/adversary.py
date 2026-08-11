@@ -7,7 +7,7 @@ square quotient.
 
 The identities below are exact for isolated/finite atomic models. They are not
 theorems about the full infinite Riemann zero set until the infinite tail is
-controlled rigorously.
+controlled rigorously or the all-orders Stieltjes bridge is proved.
 """
 
 from __future__ import annotations
@@ -15,11 +15,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from fractions import Fraction
 from math import prod
-from typing import Iterable
+from typing import Iterable, Sequence
 
 from .certificates import exact_stieltjes_certificate
 
 Rational = int | Fraction
+PairInput = tuple[Rational, Rational]
 
 
 def _q(value: Rational) -> Fraction:
@@ -94,14 +95,31 @@ def mixed_inverse_moments(
 ) -> list[Fraction]:
     """Add positive-real background atoms to one conjugate-pair model."""
 
-    pair = conjugate_pair_inverse_moments(pair_a, pair_b, max_k)
+    return finite_atomic_inverse_moments(
+        positive_real_lambdas, [(pair_a, pair_b)], max_k
+    )
+
+
+def finite_atomic_inverse_moments(
+    positive_real_lambdas: Iterable[Rational],
+    conjugate_pairs: Iterable[PairInput],
+    max_k: int,
+) -> list[Fraction]:
+    """Exact moments for positive real atoms plus non-real conjugate pairs."""
+
+    if not isinstance(max_k, int) or max_k < 1:
+        raise ValueError("max_k must be positive")
     reals = tuple(_q(value) for value in positive_real_lambdas)
     if any(value <= 0 for value in reals):
         raise ValueError("background lambda atoms must be positive")
-    return [
-        pair[k - 1] + sum(value**k for value in reals)
-        for k in range(1, max_k + 1)
-    ]
+    pairs = tuple((_q(a), _q(b)) for a, b in conjugate_pairs)
+    if any(b == 0 for _, b in pairs):
+        raise ValueError("conjugate-pair imaginary part must be nonzero")
+    values = [sum(value**k for value in reals) for k in range(1, max_k + 1)]
+    for a, b in pairs:
+        pair = conjugate_pair_inverse_moments(a, b, max_k)
+        values = [x + y for x, y in zip(values, pair)]
+    return values
 
 
 def _validated_distinct_positive_atoms(values: Iterable[Rational]) -> tuple[Fraction, ...]:
@@ -173,6 +191,47 @@ def one_pair_full_hankel_certificate(
         hankel_shift=shift,
         determinant=determinant,
         guaranteed_negative=determinant < 0,
+    )
+
+
+@dataclass(frozen=True)
+class FiniteInertiaCertificate:
+    positive_real_atoms: int
+    conjugate_pairs: int
+    support_size: int
+    positive_directions: int
+    negative_directions: int
+    zero_directions: int
+    determinant_sign: int
+    finite_atomic_model_only: bool = True
+    epistemic_status: str = "PROVED_FINITE_ATOMIC_INERTIA_BY_REAL_EVALUATION_CONGRUENCE"
+    proves_rh: bool = False
+
+
+def finite_atomic_inertia_certificate(
+    positive_real_atoms: int, conjugate_pairs: int
+) -> FiniteInertiaCertificate:
+    """Return the exact inertia predicted by the finite evaluation theorem.
+
+    For q distinct positive real support atoms and m distinct non-real conjugate
+    pairs, the full-support real Hankel quadratic form is congruent to q positive
+    1x1 blocks and m blocks 2[[a,-b],[-b,-a]], each of inertia (1,1).
+    """
+
+    if not isinstance(positive_real_atoms, int) or positive_real_atoms < 0:
+        raise ValueError("positive_real_atoms must be a non-negative integer")
+    if not isinstance(conjugate_pairs, int) or conjugate_pairs < 0:
+        raise ValueError("conjugate_pairs must be a non-negative integer")
+    q, m = positive_real_atoms, conjugate_pairs
+    sign = -1 if m % 2 else 1
+    return FiniteInertiaCertificate(
+        positive_real_atoms=q,
+        conjugate_pairs=m,
+        support_size=q + 2 * m,
+        positive_directions=q + m,
+        negative_directions=m,
+        zero_directions=0,
+        determinant_sign=sign,
     )
 
 
