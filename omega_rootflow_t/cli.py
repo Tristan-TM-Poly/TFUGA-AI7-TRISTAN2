@@ -20,6 +20,7 @@ from .invariants import audit_invariants
 from .kinematics import parameter_root_kinematics, taylor_predict_roots
 from .monodromy import quadratic_square_root_loop, track_coefficient_path
 from .monodromy_group import generate_monodromy_group
+from .multiplicity_atlas import build_partition_lattice, exact_multiplicity_atlas
 from .multiplicity_strata import audit_multiplicity_prediction, exact_root_multiplicity, multiplicity_tangent_space
 from .oak import audit_rootflow
 from .projective import projective_roots
@@ -30,13 +31,15 @@ from .spectral import audit_spectral_geometry, inverse_design_roots
 from .spectral_hgfm import build_spectral_hgfm
 from .versal import analyze_unfolding_direction, local_unfolding_map, local_unfolding_roots, real_parameter_tangent_space
 
-VERSION = "R0.8"
+VERSION = "R0.9"
 LEGACY_PAYLOAD_VERSION = "R0.6"
 NATIVE_MODE_VERSIONS = {
     "exact-rational-root-multiplicity": "R0.7",
     "multiplicity-tangent-stratum": "R0.7",
     "real-parameter-multiplicity-tangent": "R0.8",
     "local-versal-unfolding": "R0.8",
+    "exact-global-multiplicity-atlas": "R0.9",
+    "multiplicity-partition-lattice": "R0.9",
 }
 
 
@@ -115,6 +118,20 @@ def exact_audit_payload(coefficients: tuple[str, ...]) -> dict[str, object]:
 
 def exact_multiplicity_payload(coefficients: tuple[str, ...], root: str) -> dict[str, object]:
     payload = _base("exact-rational-root-multiplicity"); payload.update({"root": root, "multiplicity": exact_root_multiplicity(coefficients, root), "claims": {"theorem_claimed": False, "scientific_validation_claimed": False}}); return payload
+
+
+def exact_global_atlas_payload(coefficients: tuple[str, ...]) -> dict[str, object]:
+    payload = _base("exact-global-multiplicity-atlas")
+    payload["atlas"] = exact_multiplicity_atlas(coefficients).to_dict()
+    payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "exact rational derivative-gcd tower and square-free multiplicity decomposition"}
+    return payload
+
+
+def partition_lattice_payload(degree: int, maximum_nodes: int | None) -> dict[str, object]:
+    payload = _base("multiplicity-partition-lattice")
+    payload["lattice"] = build_partition_lattice(degree, maximum_nodes=maximum_nodes).to_dict()
+    payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "combinatorial multiplicity-partition adjacency"}
+    return payload
 
 
 def collision_tangent_payload(coefficients: np.ndarray, critical_root: complex, degrees: tuple[int, ...], epsilon: float) -> dict[str, object]:
@@ -220,6 +237,8 @@ def build_parser() -> argparse.ArgumentParser:
     p=command("analyze","root differential audit"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--output")
     p=command("exact-audit","exact rational algebra audit"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--output")
     p=command("exact-multiplicity","exact multiplicity of a rational root"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--root",required=True); p.add_argument("--output")
+    p=command("multiplicity-atlas","exact global multiplicity atlas over Q"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--output")
+    p=command("partition-lattice","complex multiplicity partition lattice"); p.add_argument("--degree",required=True,type=int); p.add_argument("--max-nodes",type=int); p.add_argument("--output")
     p=command("collision-tangent","generic double-root tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
     p=command("multiplicity-tangent","arbitrary multiplicity root stratum tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--multiplicity",required=True,type=int); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
     p=command("real-tangent","real-parameter tangent geometry of a multiplicity stratum"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--multiplicity",required=True,type=int); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--output")
@@ -245,6 +264,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command=="analyze": payload=analyze_payload(args.coeffs)
     elif args.command=="exact-audit": payload=exact_audit_payload(args.coeffs)
     elif args.command=="exact-multiplicity": payload=exact_multiplicity_payload(args.coeffs,args.root)
+    elif args.command=="multiplicity-atlas": payload=exact_global_atlas_payload(args.coeffs)
+    elif args.command=="partition-lattice": payload=partition_lattice_payload(args.degree,args.max_nodes)
     elif args.command=="collision-tangent": payload=collision_tangent_payload(args.coeffs,args.critical_root,args.degrees,args.epsilon)
     elif args.command=="multiplicity-tangent": payload=multiplicity_tangent_payload(args.coeffs,args.critical_root,args.multiplicity,args.degrees,args.epsilon)
     elif args.command=="real-tangent": payload=real_tangent_payload(args.coeffs,args.critical_root,args.multiplicity,args.degrees)
