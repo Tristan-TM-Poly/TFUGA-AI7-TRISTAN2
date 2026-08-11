@@ -112,7 +112,7 @@ def test_r02_cli_inverse_design_and_spectral_commands(tmp_path) -> None:
         ]
     ) == 0
     inverse = json.loads(inverse_output.read_text(encoding="utf-8"))
-    assert inverse["version"] == "R0.4"
+    assert inverse["version"] == "R0.5"
     assert inverse["converged"] is True
     assert inverse["claims"]["theorem_claimed"] is False
 
