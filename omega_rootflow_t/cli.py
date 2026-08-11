@@ -28,10 +28,16 @@ from .puiseux import canonical_puiseux_fit
 from .resultant import audit_discriminant, single_coefficient_collision_atlas
 from .spectral import audit_spectral_geometry, inverse_design_roots
 from .spectral_hgfm import build_spectral_hgfm
+from .versal import analyze_unfolding_direction, local_unfolding_map, local_unfolding_roots, real_parameter_tangent_space
 
-VERSION = "R0.7"
+VERSION = "R0.8"
 LEGACY_PAYLOAD_VERSION = "R0.6"
-R07_MODES = {"exact-rational-root-multiplicity", "multiplicity-tangent-stratum"}
+NATIVE_MODE_VERSIONS = {
+    "exact-rational-root-multiplicity": "R0.7",
+    "multiplicity-tangent-stratum": "R0.7",
+    "real-parameter-multiplicity-tangent": "R0.8",
+    "local-versal-unfolding": "R0.8",
+}
 
 
 def _parse_complex_vector(text: str, *, minimum: int = 1) -> np.ndarray:
@@ -83,7 +89,7 @@ def _complex_vector(values: np.ndarray) -> list[dict[str, float]]:
 
 
 def _base(mode: str) -> dict[str, object]:
-    payload_version = VERSION if mode in R07_MODES else LEGACY_PAYLOAD_VERSION
+    payload_version = NATIVE_MODE_VERSIONS.get(mode, LEGACY_PAYLOAD_VERSION)
     return {"system": "Ω-ROOTFLOW-T∞", "version": payload_version, "engine_version": VERSION, "mode": mode}
 
 
@@ -117,6 +123,29 @@ def collision_tangent_payload(coefficients: np.ndarray, critical_root: complex, 
 
 def multiplicity_tangent_payload(coefficients: np.ndarray, critical_root: complex, multiplicity: int, degrees: tuple[int, ...], epsilon: float) -> dict[str, object]:
     stratum = multiplicity_tangent_space(coefficients, critical_root, multiplicity, degrees); payload = _base("multiplicity-tangent-stratum"); payload["stratum"] = stratum.to_dict(); payload["prediction_audit"] = audit_multiplicity_prediction(coefficients, stratum, epsilon=epsilon).to_dict() if stratum.status == "OAK_PASS_MULTIPLICITY_TANGENT_SPACE" else None; return payload
+
+
+def real_tangent_payload(coefficients: np.ndarray, critical_root: complex, multiplicity: int, degrees: tuple[int, ...]) -> dict[str, object]:
+    real = real_parameter_tangent_space(coefficients, critical_root, multiplicity, degrees)
+    payload = _base("real-parameter-multiplicity-tangent")
+    payload["real_tangent"] = real.to_dict()
+    payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "realification of local complex multiplicity constraints"}
+    return payload
+
+
+def unfolding_payload(coefficients: np.ndarray, critical_root: complex, multiplicity: int, degrees: tuple[int, ...], direction: np.ndarray, epsilon: float) -> dict[str, object]:
+    unfolding = local_unfolding_map(coefficients, critical_root, multiplicity, degrees)
+    analysis = analyze_unfolding_direction(unfolding, direction)
+    local_roots = local_unfolding_roots(unfolding, direction, epsilon)
+    payload = _base("local-versal-unfolding")
+    payload.update({
+        "unfolding": unfolding.to_dict(),
+        "direction_analysis": analysis.to_dict(),
+        "epsilon": float(epsilon),
+        "local_model_roots": _complex_vector(local_roots),
+        "claims": {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "translation-normalized first-order local unfolding and truncated-model roots"},
+    })
+    return payload
 
 
 def invariant_payload(coefficients: np.ndarray) -> dict[str, object]:
@@ -193,6 +222,8 @@ def build_parser() -> argparse.ArgumentParser:
     p=command("exact-multiplicity","exact multiplicity of a rational root"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--root",required=True); p.add_argument("--output")
     p=command("collision-tangent","generic double-root tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
     p=command("multiplicity-tangent","arbitrary multiplicity root stratum tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--multiplicity",required=True,type=int); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
+    p=command("real-tangent","real-parameter tangent geometry of a multiplicity stratum"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--multiplicity",required=True,type=int); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--output")
+    p=command("unfolding","translation-normalized local versal unfolding"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--multiplicity",required=True,type=int); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--direction",required=True,type=_parse_complex_vector); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
     p=command("invariants","Vieta/Newton/residue audit"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--output")
     p=command("discriminant","resultant discriminant audit"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--output")
     p=command("collisions","single coefficient collision atlas"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--coefficient-degree",required=True,type=int); p.add_argument("--output")
@@ -216,6 +247,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     elif args.command=="exact-multiplicity": payload=exact_multiplicity_payload(args.coeffs,args.root)
     elif args.command=="collision-tangent": payload=collision_tangent_payload(args.coeffs,args.critical_root,args.degrees,args.epsilon)
     elif args.command=="multiplicity-tangent": payload=multiplicity_tangent_payload(args.coeffs,args.critical_root,args.multiplicity,args.degrees,args.epsilon)
+    elif args.command=="real-tangent": payload=real_tangent_payload(args.coeffs,args.critical_root,args.multiplicity,args.degrees)
+    elif args.command=="unfolding": payload=unfolding_payload(args.coeffs,args.critical_root,args.multiplicity,args.degrees,args.direction,args.epsilon)
     elif args.command=="invariants": payload=invariant_payload(args.coeffs)
     elif args.command=="discriminant": payload=discriminant_payload(args.coeffs)
     elif args.command=="collisions": payload=collisions_payload(args.coeffs,args.coefficient_degree)
