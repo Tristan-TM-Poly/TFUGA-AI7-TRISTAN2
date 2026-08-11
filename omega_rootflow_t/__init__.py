@@ -6,6 +6,7 @@ from .collision_manifold import CollisionTangentSpace, TangentPredictionAudit, a
 from .continuation import ContinuationResult, ContinuationStep, continue_roots, match_roots, newton_refine
 from .core import RootCondition, basis_root_differential, degree_perturbation_sensitivity, derivative_coefficients, derivative_value, polynomial_value, projective_scaling_residual, root_conditions, root_differential, root_hessian, root_jacobian, root_velocity, roots
 from .exact import ExactAlgebraAudit, audit_exact_algebra, exact_coefficients, exact_derivative, exact_determinant, exact_discriminant, exact_monic_gcd, exact_newton_power_sums, exact_polydivmod, exact_resultant
+from .exact_hermite import ExactHermiteDesign, ExactMultiClusterTangent, ExactRootCluster, exact_affine_solve, exact_confluent_evaluation, exact_fixed_hermite_matrix, exact_hermite_design, exact_mobile_cluster_matrix, exact_multi_cluster_tangent, exact_nullspace, exact_rank, exact_rref
 from .invariants import InvariantAudit, audit_invariants, elementary_symmetric_from_coefficients, elementary_symmetric_from_roots, newton_power_sums, power_sum_jacobian, power_sums_from_roots, residue_moments, triangular_power_sum_sensitivity, vieta_jacobian
 from .kinematics import RootKinematicState, RootKinematics, parameter_root_kinematics, taylor_predict_roots
 from .monodromy import MonodromyResult, PathTrackingStep, quadratic_square_root_loop, track_coefficient_path
