@@ -74,8 +74,8 @@ def newton_power_sum_polynomials(max_k: int) -> list[Polynomial]:
 
     For A(u)=prod_j(1+lambda_j u)=sum e_k u^k, a_k=e_k and
 
-      p_k - a1 p_(k-1) + a2 p_(k-2) - ...
-          + (-1)^(k-1) a_(k-1) p1 + (-1)^k k a_k = 0.
+      p_k = a1 p_(k-1) - a2 p_(k-2) + ...
+            + (-1)^k a_(k-1) p1 + (-1)^(k-1) k a_k.
     """
     if not isinstance(max_k, int) or max_k < 1:
         raise ValueError("max_k must be a positive integer")
@@ -85,10 +85,8 @@ def newton_power_sum_polynomials(max_k: int) -> list[Polynomial]:
     for k in range(1, max_k + 1):
         value: Polynomial = {}
         for j in range(1, k):
-            # + (-1)^(j-1) a_j p_(k-j)
             term = multiply(a[j - 1], p[k - j - 1])
             value = add(value, scale(term, 1 if j % 2 else -1))
-        # + (-1)^(k-1) k a_k
         value = add(value, scale(a[k - 1], k if k % 2 else -k))
         p.append(value)
     return p
@@ -110,7 +108,10 @@ def determinant_polynomial(matrix: list[list[Polynomial]]) -> Polynomial:
         raise ValueError("matrix must be non-empty and square")
     if n > 5:
         raise ValueError("symbolic determinant capped at size 5 to control combinatorial growth")
-    nvars = len(next(iter(next(poly for row in matrix for poly in row if poly)), _zero(1)))) if any(poly for row in matrix for poly in row) else 1
+    first_nonzero = next((poly for row in matrix for poly in row if poly), None)
+    if first_nonzero is None:
+        return {}
+    nvars = len(next(iter(first_nonzero)))
     total: Polynomial = {}
     for perm in permutations(range(n)):
         term = constant(1, nvars)
