@@ -20,6 +20,7 @@ from .invariants import audit_invariants
 from .kinematics import parameter_root_kinematics, taylor_predict_roots
 from .monodromy import quadratic_square_root_loop, track_coefficient_path
 from .monodromy_group import generate_monodromy_group
+from .multiplicity_strata import audit_multiplicity_prediction, exact_root_multiplicity, multiplicity_tangent_space
 from .oak import audit_rootflow
 from .projective import projective_roots
 from .projective_flow import cubic_degree_collapse_path, track_projective_path
@@ -28,7 +29,9 @@ from .resultant import audit_discriminant, single_coefficient_collision_atlas
 from .spectral import audit_spectral_geometry, inverse_design_roots
 from .spectral_hgfm import build_spectral_hgfm
 
-VERSION = "R0.6"
+VERSION = "R0.7"
+LEGACY_PAYLOAD_VERSION = "R0.6"
+R07_MODES = {"exact-rational-root-multiplicity", "multiplicity-tangent-stratum"}
 
 
 def _parse_complex_vector(text: str, *, minimum: int = 1) -> np.ndarray:
@@ -37,9 +40,7 @@ def _parse_complex_vector(text: str, *, minimum: int = 1) -> np.ndarray:
     except ValueError as exc:
         raise argparse.ArgumentTypeError(f"invalid complex value: {exc}") from exc
     if len(values) < minimum:
-        raise argparse.ArgumentTypeError(
-            f"provide at least {minimum} comma-separated value{'s' if minimum != 1 else ''}"
-        )
+        raise argparse.ArgumentTypeError(f"provide at least {minimum} comma-separated values")
     return np.asarray(values, dtype=np.complex128)
 
 
@@ -48,11 +49,7 @@ def _parse_coefficients(text: str) -> np.ndarray:
 
 
 def _parse_roots(text: str) -> np.ndarray:
-    return _parse_complex_vector(text, minimum=1)
-
-
-def _parse_parameter_vector(text: str) -> np.ndarray:
-    return _parse_complex_vector(text, minimum=1)
+    return _parse_complex_vector(text)
 
 
 def _parse_exact_coefficients(text: str) -> tuple[str, ...]:
@@ -85,493 +82,157 @@ def _complex_vector(values: np.ndarray) -> list[dict[str, float]]:
     return [_complex(complex(value)) for value in values]
 
 
+def _base(mode: str) -> dict[str, object]:
+    payload_version = VERSION if mode in R07_MODES else LEGACY_PAYLOAD_VERSION
+    return {"system": "Ω-ROOTFLOW-T∞", "version": payload_version, "engine_version": VERSION, "mode": mode}
+
+
 def analyze_payload(coefficients: np.ndarray) -> dict[str, object]:
     rr = roots(coefficients)
-    jac = root_jacobian(coefficients, rr)
-    conditions = root_conditions(coefficients, rr)
-    audit = audit_rootflow(coefficients)
-    spectral = audit_spectral_geometry(coefficients)
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
+    payload = _base("analyze")
+    payload.update({
         "coefficient_order": "ascending [a0,...,an]",
         "degree": int(coefficients.size - 1),
         "roots": _complex_vector(rr),
-        "conditions": [
-            {
-                "root": _complex(item.root),
-                "derivative_magnitude": item.derivative_magnitude,
-                "reciprocal_derivative": item.reciprocal_derivative,
-                "residual": item.residual,
-                "near_singular": item.near_singular,
-            }
-            for item in conditions
-        ],
-        "root_jacobian": [[_complex(complex(value)) for value in row] for row in jac],
-        "audit": audit.to_dict(),
-        "spectral_audit": spectral.to_dict(),
-        "claims": {
-            "theorem_claimed": False,
-            "scientific_validation_claimed": False,
-            "scope": "analytic simple-root identities plus numerical software cross-checks",
-        },
-    }
-
-
-def exact_audit_payload(coefficients: tuple[str, ...]) -> dict[str, object]:
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "exact-rational-algebra-audit",
-        "audit": audit_exact_algebra(coefficients).to_dict(),
-    }
-
-
-def collision_tangent_payload(
-    coefficients: np.ndarray,
-    critical_root: complex,
-    degrees: tuple[int, ...],
-    epsilon: float,
-) -> dict[str, object]:
-    tangent = collision_tangent_space(coefficients, critical_root, degrees)
-    payload: dict[str, object] = {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "collision-tangent-space",
-        "tangent": tangent.to_dict(),
-    }
-    if tangent.status.startswith("OAK_PASS"):
-        payload["prediction_audit"] = audit_tangent_prediction(
-            coefficients,
-            tangent,
-            epsilon=epsilon,
-        ).to_dict()
-    else:
-        payload["prediction_audit"] = None
+        "conditions": [{"root": _complex(item.root), "derivative_magnitude": item.derivative_magnitude, "reciprocal_derivative": item.reciprocal_derivative, "residual": item.residual, "near_singular": item.near_singular} for item in root_conditions(coefficients, rr)],
+        "root_jacobian": [[_complex(complex(value)) for value in row] for row in root_jacobian(coefficients, rr)],
+        "audit": audit_rootflow(coefficients).to_dict(),
+        "spectral_audit": audit_spectral_geometry(coefficients).to_dict(),
+        "claims": {"theorem_claimed": False, "scientific_validation_claimed": False},
+    })
     return payload
 
 
+def exact_audit_payload(coefficients: tuple[str, ...]) -> dict[str, object]:
+    payload = _base("exact-rational-algebra-audit"); payload["audit"] = audit_exact_algebra(coefficients).to_dict(); return payload
+
+
+def exact_multiplicity_payload(coefficients: tuple[str, ...], root: str) -> dict[str, object]:
+    payload = _base("exact-rational-root-multiplicity"); payload.update({"root": root, "multiplicity": exact_root_multiplicity(coefficients, root), "claims": {"theorem_claimed": False, "scientific_validation_claimed": False}}); return payload
+
+
+def collision_tangent_payload(coefficients: np.ndarray, critical_root: complex, degrees: tuple[int, ...], epsilon: float) -> dict[str, object]:
+    tangent = collision_tangent_space(coefficients, critical_root, degrees); payload = _base("collision-tangent-space"); payload["tangent"] = tangent.to_dict(); payload["prediction_audit"] = audit_tangent_prediction(coefficients, tangent, epsilon=epsilon).to_dict() if tangent.status.startswith("OAK_PASS") else None; return payload
+
+
+def multiplicity_tangent_payload(coefficients: np.ndarray, critical_root: complex, multiplicity: int, degrees: tuple[int, ...], epsilon: float) -> dict[str, object]:
+    stratum = multiplicity_tangent_space(coefficients, critical_root, multiplicity, degrees); payload = _base("multiplicity-tangent-stratum"); payload["stratum"] = stratum.to_dict(); payload["prediction_audit"] = audit_multiplicity_prediction(coefficients, stratum, epsilon=epsilon).to_dict() if stratum.status == "OAK_PASS_MULTIPLICITY_TANGENT_SPACE" else None; return payload
+
+
 def invariant_payload(coefficients: np.ndarray) -> dict[str, object]:
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "vieta-newton-residue-invariants",
-        "audit": audit_invariants(coefficients).to_dict(),
-    }
+    payload = _base("vieta-newton-residue-invariants"); payload["audit"] = audit_invariants(coefficients).to_dict(); return payload
 
 
 def discriminant_payload(coefficients: np.ndarray) -> dict[str, object]:
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "resultant-discriminant-crosscheck",
-        "audit": audit_discriminant(coefficients).to_dict(),
-    }
+    payload = _base("resultant-discriminant-crosscheck"); payload["audit"] = audit_discriminant(coefficients).to_dict(); return payload
 
 
 def collisions_payload(coefficients: np.ndarray, coefficient_degree: int) -> dict[str, object]:
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "single-coefficient-collision-atlas",
-        "atlas": single_coefficient_collision_atlas(
-            coefficients,
-            coefficient_degree,
-        ).to_dict(),
-    }
+    payload = _base("single-coefficient-collision-atlas"); payload["atlas"] = single_coefficient_collision_atlas(coefficients, coefficient_degree).to_dict(); return payload
 
 
-def kinematics_payload(
-    coefficients: np.ndarray,
-    velocity: np.ndarray,
-    acceleration: np.ndarray | None,
-    delta: complex,
-) -> dict[str, object]:
-    state = parameter_root_kinematics(coefficients, velocity, acceleration)
-    first = taylor_predict_roots(state, delta, order=1)
-    second = taylor_predict_roots(state, delta, order=2)
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "parameter-root-kinematics",
-        "kinematics": state.to_dict(),
-        "delta_parameter": _complex(delta),
-        "first_order_prediction": _complex_vector(first),
-        "second_order_prediction": _complex_vector(second),
-        "claims": {
-            "theorem_claimed": False,
-            "scientific_validation_claimed": False,
-            "scope": "exact local simple-root derivatives plus local Taylor predictions",
-        },
-    }
-
-
-def continuation_payload(start: np.ndarray, end: np.ndarray, steps: int) -> dict[str, object]:
-    result = continue_roots(start, end, steps=steps)
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "fixed-step",
-        "steps": [
-            {
-                "t": item.parameter,
-                "roots": _complex_vector(item.roots),
-                "predictor_residual": item.predictor_residual,
-                "corrected_residual": item.corrected_residual,
-                "minimum_derivative": item.minimum_derivative,
-            }
-            for item in result.steps
-        ],
-    }
-
-
-def adaptive_continuation_payload(
-    start: np.ndarray,
-    end: np.ndarray,
-    *,
-    initial_step: float,
-    minimum_step: float,
-    maximum_step: float,
-    predictor_tolerance: float,
-) -> dict[str, object]:
-    result = continue_roots_adaptive(
-        start,
-        end,
-        initial_step=initial_step,
-        minimum_step=minimum_step,
-        maximum_step=maximum_step,
-        predictor_tolerance=predictor_tolerance,
-    )
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "adaptive",
-        "status": result.status,
-        "rejected_attempts": result.rejected_attempts,
-        "minimum_step_size": result.minimum_step_size,
-        "steps": [
-            {
-                "t": item.parameter,
-                "step_size": item.step_size,
-                "attempts": item.attempts,
-                "roots": _complex_vector(item.roots),
-                "predictor_residual": item.predictor_residual,
-                "corrected_residual": item.corrected_residual,
-                "minimum_derivative": item.minimum_derivative,
-            }
-            for item in result.steps
-        ],
-        "claims": {
-            "theorem_claimed": result.theorem_claimed,
-            "scientific_validation_claimed": result.scientific_validation_claimed,
-        },
-    }
+def kinematics_payload(coefficients: np.ndarray, velocity: np.ndarray, acceleration: np.ndarray | None, delta: complex) -> dict[str, object]:
+    state = parameter_root_kinematics(coefficients, velocity, acceleration); payload = _base("parameter-root-kinematics"); payload.update({"kinematics": state.to_dict(), "delta_parameter": _complex(delta), "first_order_prediction": _complex_vector(taylor_predict_roots(state, delta, order=1)), "second_order_prediction": _complex_vector(taylor_predict_roots(state, delta, order=2)), "claims": {"theorem_claimed": False, "scientific_validation_claimed": False}}); return payload
 
 
 def spectral_payload(coefficients: np.ndarray) -> dict[str, object]:
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "spectral-crosscheck",
-        "audit": audit_spectral_geometry(coefficients).to_dict(),
-    }
+    payload = _base("spectral-crosscheck"); payload["audit"] = audit_spectral_geometry(coefficients).to_dict(); return payload
 
 
 def basis_atlas_payload(coefficients: np.ndarray) -> dict[str, object]:
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "basis-conditioning-atlas",
-        "atlas": conditioning_atlas(coefficients).to_dict(),
-    }
+    payload = _base("basis-conditioning-atlas"); payload["atlas"] = conditioning_atlas(coefficients).to_dict(); return payload
 
 
 def projective_payload(coefficients: np.ndarray) -> dict[str, object]:
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "projective-spectrum",
-        "spectrum": projective_roots(coefficients).to_dict(),
-    }
+    payload = _base("projective-spectrum"); payload["spectrum"] = projective_roots(coefficients).to_dict(); return payload
 
 
 def projective_flow_demo_payload(samples: int) -> dict[str, object]:
-    result = track_projective_path(cubic_degree_collapse_path(samples))
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "projective-degree-flow-demo",
-        "result": result.to_dict(),
-    }
+    payload = _base("projective-degree-flow-demo"); payload["result"] = track_projective_path(cubic_degree_collapse_path(samples)).to_dict(); return payload
 
 
 def puiseux_demo_payload(multiplicity: int) -> dict[str, object]:
-    result = canonical_puiseux_fit(multiplicity)
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "puiseux-canonical-demo",
-        "result": result.to_dict(),
-    }
+    payload = _base("puiseux-canonical-demo"); payload["result"] = canonical_puiseux_fit(multiplicity).to_dict(); return payload
 
 
 def monodromy_demo_payload(samples: int, subdivisions: int) -> dict[str, object]:
-    path = quadratic_square_root_loop(samples)
-    result = track_coefficient_path(path, subdivisions=subdivisions)
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "monodromy-demo-z2-minus-t",
-        "result": result.to_dict(),
-    }
+    payload = _base("monodromy-demo-z2-minus-t"); payload["result"] = track_coefficient_path(quadratic_square_root_loop(samples), subdivisions=subdivisions).to_dict(); return payload
 
 
 def monodromy_group_demo_payload() -> dict[str, object]:
-    group = generate_monodromy_group([(1, 0)])
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "monodromy-group-demo",
-        "group": group.to_dict(),
-    }
+    payload = _base("monodromy-group-demo"); payload["group"] = generate_monodromy_group([(1, 0)]).to_dict(); return payload
 
 
 def hgfm_demo_payload(samples: int) -> dict[str, object]:
-    graph = build_spectral_hgfm(cubic_degree_collapse_path(samples))
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "spectral-hgfm-demo",
-        "graph": graph.to_dict(),
-    }
+    payload = _base("spectral-hgfm-demo"); payload["graph"] = build_spectral_hgfm(cubic_degree_collapse_path(samples)).to_dict(); return payload
 
 
-def inverse_design_payload(
-    coefficients: np.ndarray,
-    target_roots: np.ndarray,
-    *,
-    real_coefficients: bool,
-    max_iterations: int,
-    tolerance: float,
-) -> dict[str, object]:
-    result = inverse_design_roots(
-        coefficients,
-        target_roots,
-        real_coefficients=real_coefficients,
-        max_iterations=max_iterations,
-        tolerance=tolerance,
-    )
-    return {
-        "system": "Ω-ROOTFLOW-T∞",
-        "version": VERSION,
-        "mode": "inverse-design",
-        "status": result.status,
-        "converged": result.converged,
-        "root_error_norm": result.root_error_norm,
-        "coefficients": _complex_vector(result.coefficients),
-        "roots": _complex_vector(result.roots),
-        "target_roots": _complex_vector(result.target_roots),
-        "iterations": [
-            {
-                "iteration": item.iteration,
-                "root_error_norm": item.root_error_norm,
-                "update_norm": item.update_norm,
-                "accepted_scale": item.accepted_scale,
-                "linear_rank": item.linear_rank,
-                "linear_condition_number": item.linear_condition_number,
-                "max_root_residual": item.max_root_residual,
-            }
-            for item in result.steps
-        ],
-        "claims": {
-            "theorem_claimed": result.theorem_claimed,
-            "scientific_validation_claimed": result.scientific_validation_claimed,
-        },
-    }
+def continuation_payload(start: np.ndarray, end: np.ndarray, steps: int) -> dict[str, object]:
+    result = continue_roots(start, end, steps=steps); payload = _base("fixed-step"); payload["steps"] = [{"t": item.parameter, "roots": _complex_vector(item.roots), "predictor_residual": item.predictor_residual, "corrected_residual": item.corrected_residual, "minimum_derivative": item.minimum_derivative} for item in result.steps]; return payload
+
+
+def adaptive_continuation_payload(start: np.ndarray, end: np.ndarray, initial_step: float, minimum_step: float, maximum_step: float, predictor_tolerance: float) -> dict[str, object]:
+    result = continue_roots_adaptive(start, end, initial_step=initial_step, minimum_step=minimum_step, maximum_step=maximum_step, predictor_tolerance=predictor_tolerance); payload = _base("adaptive"); payload.update({"status": result.status, "rejected_attempts": result.rejected_attempts, "minimum_step_size": result.minimum_step_size, "steps": [{"t": item.parameter, "step_size": item.step_size, "attempts": item.attempts, "roots": _complex_vector(item.roots), "predictor_residual": item.predictor_residual, "corrected_residual": item.corrected_residual, "minimum_derivative": item.minimum_derivative} for item in result.steps], "claims": {"theorem_claimed": result.theorem_claimed, "scientific_validation_claimed": result.scientific_validation_claimed}}); return payload
+
+
+def inverse_design_payload(coefficients: np.ndarray, target_roots: np.ndarray, real_coefficients: bool, max_iterations: int, tolerance: float) -> dict[str, object]:
+    result = inverse_design_roots(coefficients, target_roots, real_coefficients=real_coefficients, max_iterations=max_iterations, tolerance=tolerance); payload = _base("inverse-design"); payload.update({"status": result.status, "converged": result.converged, "root_error_norm": result.root_error_norm, "coefficients": _complex_vector(result.coefficients), "roots": _complex_vector(result.roots), "target_roots": _complex_vector(result.target_roots), "iterations": [{"iteration": item.iteration, "root_error_norm": item.root_error_norm, "update_norm": item.update_norm, "accepted_scale": item.accepted_scale, "linear_rank": item.linear_rank, "linear_condition_number": item.linear_condition_number, "max_root_residual": item.max_root_residual} for item in result.steps], "claims": {"theorem_claimed": result.theorem_claimed, "scientific_validation_claimed": result.scientific_validation_claimed}}); return payload
 
 
 def _write(payload: dict[str, object], output: str | None) -> None:
     text = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False)
-    if output:
-        Path(output).write_text(text + "\n", encoding="utf-8")
-    else:
-        print(text)
+    if output: Path(output).write_text(text + "\n", encoding="utf-8")
+    else: print(text)
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Ω-ROOTFLOW-T∞ polynomial-root geometry engine")
-    sub = parser.add_subparsers(dest="command", required=True)
-
-    analyze = sub.add_parser("analyze", help="roots, analytic Jacobian, conditioning, OAK checks")
-    analyze.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    analyze.add_argument("--output")
-
-    exact = sub.add_parser("exact-audit", help="exact rational gcd/discriminant/Newton audit")
-    exact.add_argument("--coeffs", required=True, type=_parse_exact_coefficients)
-    exact.add_argument("--output")
-
-    tangent = sub.add_parser("collision-tangent", help="local multi-parameter tangent space at a double root")
-    tangent.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    tangent.add_argument("--critical-root", required=True, type=complex)
-    tangent.add_argument("--degrees", required=True, type=_parse_degrees)
-    tangent.add_argument("--epsilon", type=float, default=1e-4)
-    tangent.add_argument("--output")
-
-    invariants = sub.add_parser("invariants", help="audit Vieta/Newton/residue conservation identities")
-    invariants.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    invariants.add_argument("--output")
-
-    discriminant = sub.add_parser("discriminant", help="cross-check resultant and root-product discriminants")
-    discriminant.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    discriminant.add_argument("--output")
-
-    collisions = sub.add_parser("collisions", help="finite collision atlas for P(z)+t*z^k")
-    collisions.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    collisions.add_argument("--coefficient-degree", required=True, type=int)
-    collisions.add_argument("--output")
-
-    kinematics = sub.add_parser("kinematics", help="first/second parameter derivatives of simple roots")
-    kinematics.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    kinematics.add_argument("--velocity", required=True, type=_parse_parameter_vector)
-    kinematics.add_argument("--acceleration", type=_parse_parameter_vector)
-    kinematics.add_argument("--delta", type=complex, default=0.0)
-    kinematics.add_argument("--output")
-
-    spectral = sub.add_parser("spectral", help="companion-matrix and discriminant cross-check")
-    spectral.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    spectral.add_argument("--output")
-
-    basis = sub.add_parser("basis-atlas", help="compare polynomial coefficient representations")
-    basis.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    basis.add_argument("--output")
-
-    projective = sub.add_parser("projective", help="nominal root divisor including infinity")
-    projective.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    projective.add_argument("--output")
-
-    pflow = sub.add_parser("projective-flow-demo", help="track a cubic root branch into infinity")
-    pflow.add_argument("--samples", type=int, default=33)
-    pflow.add_argument("--output")
-
-    puiseux = sub.add_parser("puiseux-demo", help="fit canonical z^m-t branch exponent")
-    puiseux.add_argument("--multiplicity", type=int, default=2)
-    puiseux.add_argument("--output")
-
-    monodromy = sub.add_parser("monodromy-demo", help="track z^2-t roots around t=0")
-    monodromy.add_argument("--samples", type=int, default=17)
-    monodromy.add_argument("--subdivisions", type=int, default=2)
-    monodromy.add_argument("--output")
-
-    mgroup = sub.add_parser("monodromy-group-demo", help="close the square-root transposition generator")
-    mgroup.add_argument("--output")
-
-    hgfm = sub.add_parser("hgfm-demo", help="compile projective degree flow to spectral HGFM")
-    hgfm.add_argument("--samples", type=int, default=17)
-    hgfm.add_argument("--output")
-
-    cont = sub.add_parser("continue", help="track roots between coefficient vectors")
-    cont.add_argument("--start", required=True, type=_parse_coefficients)
-    cont.add_argument("--end", required=True, type=_parse_coefficients)
-    cont.add_argument("--steps", type=int, default=32)
-    cont.add_argument("--output")
-
-    adaptive = sub.add_parser("adaptive", help="condition-aware adaptive continuation")
-    adaptive.add_argument("--start", required=True, type=_parse_coefficients)
-    adaptive.add_argument("--end", required=True, type=_parse_coefficients)
-    adaptive.add_argument("--initial-step", type=float, default=0.125)
-    adaptive.add_argument("--minimum-step", type=float, default=1e-5)
-    adaptive.add_argument("--maximum-step", type=float, default=0.25)
-    adaptive.add_argument("--predictor-tolerance", type=float, default=1e-3)
-    adaptive.add_argument("--output")
-
-    inverse = sub.add_parser("inverse-design", help="fit coefficients to a target root spectrum")
-    inverse.add_argument("--coeffs", required=True, type=_parse_coefficients)
-    inverse.add_argument("--target-roots", required=True, type=_parse_roots)
-    inverse.add_argument("--complex-coefficients", action="store_false", dest="real_coefficients")
-    inverse.set_defaults(real_coefficients=True)
-    inverse.add_argument("--max-iterations", type=int, default=24)
-    inverse.add_argument("--tolerance", type=float, default=1e-10)
-    inverse.add_argument("--output")
+    parser = argparse.ArgumentParser(description="Ω-ROOTFLOW-T∞ polynomial-root geometry engine"); sub = parser.add_subparsers(dest="command", required=True)
+    def command(name: str, help_text: str): return sub.add_parser(name, help=help_text)
+    p=command("analyze","root differential audit"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--output")
+    p=command("exact-audit","exact rational algebra audit"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--output")
+    p=command("exact-multiplicity","exact multiplicity of a rational root"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--root",required=True); p.add_argument("--output")
+    p=command("collision-tangent","generic double-root tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
+    p=command("multiplicity-tangent","arbitrary multiplicity root stratum tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--multiplicity",required=True,type=int); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
+    p=command("invariants","Vieta/Newton/residue audit"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--output")
+    p=command("discriminant","resultant discriminant audit"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--output")
+    p=command("collisions","single coefficient collision atlas"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--coefficient-degree",required=True,type=int); p.add_argument("--output")
+    p=command("kinematics","root parameter kinematics"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--velocity",required=True,type=_parse_complex_vector); p.add_argument("--acceleration",type=_parse_complex_vector); p.add_argument("--delta",type=complex,default=0.0); p.add_argument("--output")
+    for name,help_text in [("spectral","spectral cross-check"),("basis-atlas","basis conditioning"),("projective","projective roots")]: p=command(name,help_text); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--output")
+    p=command("projective-flow-demo","projective degree flow"); p.add_argument("--samples",type=int,default=33); p.add_argument("--output")
+    p=command("puiseux-demo","canonical Puiseux fit"); p.add_argument("--multiplicity",type=int,default=2); p.add_argument("--output")
+    p=command("monodromy-demo","square-root monodromy"); p.add_argument("--samples",type=int,default=17); p.add_argument("--subdivisions",type=int,default=2); p.add_argument("--output")
+    p=command("monodromy-group-demo","monodromy group closure"); p.add_argument("--output")
+    p=command("hgfm-demo","spectral HGFM"); p.add_argument("--samples",type=int,default=17); p.add_argument("--output")
+    p=command("continue","fixed-step continuation"); p.add_argument("--start",required=True,type=_parse_coefficients); p.add_argument("--end",required=True,type=_parse_coefficients); p.add_argument("--steps",type=int,default=32); p.add_argument("--output")
+    p=command("adaptive","adaptive continuation"); p.add_argument("--start",required=True,type=_parse_coefficients); p.add_argument("--end",required=True,type=_parse_coefficients); p.add_argument("--initial-step",type=float,default=0.125); p.add_argument("--minimum-step",type=float,default=1e-5); p.add_argument("--maximum-step",type=float,default=0.25); p.add_argument("--predictor-tolerance",type=float,default=1e-3); p.add_argument("--output")
+    p=command("inverse-design","fit coefficients to roots"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--target-roots",required=True,type=_parse_roots); p.add_argument("--complex-coefficients",action="store_false",dest="real_coefficients"); p.set_defaults(real_coefficients=True); p.add_argument("--max-iterations",type=int,default=24); p.add_argument("--tolerance",type=float,default=1e-10); p.add_argument("--output")
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
-    if args.command == "analyze":
-        _write(analyze_payload(args.coeffs), args.output)
-    elif args.command == "exact-audit":
-        _write(exact_audit_payload(args.coeffs), args.output)
-    elif args.command == "collision-tangent":
-        _write(
-            collision_tangent_payload(
-                args.coeffs,
-                args.critical_root,
-                args.degrees,
-                args.epsilon,
-            ),
-            args.output,
-        )
-    elif args.command == "invariants":
-        _write(invariant_payload(args.coeffs), args.output)
-    elif args.command == "discriminant":
-        _write(discriminant_payload(args.coeffs), args.output)
-    elif args.command == "collisions":
-        _write(collisions_payload(args.coeffs, args.coefficient_degree), args.output)
-    elif args.command == "kinematics":
-        _write(
-            kinematics_payload(
-                args.coeffs,
-                args.velocity,
-                args.acceleration,
-                args.delta,
-            ),
-            args.output,
-        )
-    elif args.command == "spectral":
-        _write(spectral_payload(args.coeffs), args.output)
-    elif args.command == "basis-atlas":
-        _write(basis_atlas_payload(args.coeffs), args.output)
-    elif args.command == "projective":
-        _write(projective_payload(args.coeffs), args.output)
-    elif args.command == "projective-flow-demo":
-        _write(projective_flow_demo_payload(args.samples), args.output)
-    elif args.command == "puiseux-demo":
-        _write(puiseux_demo_payload(args.multiplicity), args.output)
-    elif args.command == "monodromy-demo":
-        _write(monodromy_demo_payload(args.samples, args.subdivisions), args.output)
-    elif args.command == "monodromy-group-demo":
-        _write(monodromy_group_demo_payload(), args.output)
-    elif args.command == "hgfm-demo":
-        _write(hgfm_demo_payload(args.samples), args.output)
-    elif args.command == "continue":
-        _write(continuation_payload(args.start, args.end, args.steps), args.output)
-    elif args.command == "adaptive":
-        _write(
-            adaptive_continuation_payload(
-                args.start,
-                args.end,
-                initial_step=args.initial_step,
-                minimum_step=args.minimum_step,
-                maximum_step=args.maximum_step,
-                predictor_tolerance=args.predictor_tolerance,
-            ),
-            args.output,
-        )
-    elif args.command == "inverse-design":
-        _write(
-            inverse_design_payload(
-                args.coeffs,
-                args.target_roots,
-                real_coefficients=args.real_coefficients,
-                max_iterations=args.max_iterations,
-                tolerance=args.tolerance,
-            ),
-            args.output,
-        )
-    else:
-        raise AssertionError("unreachable")
-    return 0
+    args=build_parser().parse_args(argv)
+    if args.command=="analyze": payload=analyze_payload(args.coeffs)
+    elif args.command=="exact-audit": payload=exact_audit_payload(args.coeffs)
+    elif args.command=="exact-multiplicity": payload=exact_multiplicity_payload(args.coeffs,args.root)
+    elif args.command=="collision-tangent": payload=collision_tangent_payload(args.coeffs,args.critical_root,args.degrees,args.epsilon)
+    elif args.command=="multiplicity-tangent": payload=multiplicity_tangent_payload(args.coeffs,args.critical_root,args.multiplicity,args.degrees,args.epsilon)
+    elif args.command=="invariants": payload=invariant_payload(args.coeffs)
+    elif args.command=="discriminant": payload=discriminant_payload(args.coeffs)
+    elif args.command=="collisions": payload=collisions_payload(args.coeffs,args.coefficient_degree)
+    elif args.command=="kinematics": payload=kinematics_payload(args.coeffs,args.velocity,args.acceleration,args.delta)
+    elif args.command=="spectral": payload=spectral_payload(args.coeffs)
+    elif args.command=="basis-atlas": payload=basis_atlas_payload(args.coeffs)
+    elif args.command=="projective": payload=projective_payload(args.coeffs)
+    elif args.command=="projective-flow-demo": payload=projective_flow_demo_payload(args.samples)
+    elif args.command=="puiseux-demo": payload=puiseux_demo_payload(args.multiplicity)
+    elif args.command=="monodromy-demo": payload=monodromy_demo_payload(args.samples,args.subdivisions)
+    elif args.command=="monodromy-group-demo": payload=monodromy_group_demo_payload()
+    elif args.command=="hgfm-demo": payload=hgfm_demo_payload(args.samples)
+    elif args.command=="continue": payload=continuation_payload(args.start,args.end,args.steps)
+    elif args.command=="adaptive": payload=adaptive_continuation_payload(args.start,args.end,args.initial_step,args.minimum_step,args.maximum_step,args.predictor_tolerance)
+    elif args.command=="inverse-design": payload=inverse_design_payload(args.coeffs,args.target_roots,args.real_coefficients,args.max_iterations,args.tolerance)
+    else: raise AssertionError("unreachable")
+    _write(payload,args.output); return 0
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+if __name__ == "__main__": raise SystemExit(main())
