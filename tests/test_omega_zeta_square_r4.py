@@ -74,11 +74,14 @@ class TestProofObligations(unittest.TestCase):
     def setUpClass(cls):
         cls.graph = json.loads(GRAPH_PATH.read_text(encoding="utf-8"))
 
-    def test_bundle_exposes_open_and_conjectural_work(self):
+    def test_bundle_exposes_only_current_open_and_conjectural_work(self):
         obligations = obligations_from_proof_graph(self.graph)
         ids = {item.obligation_id for item in obligations}
         self.assertIn("obl.rh", ids)
-        self.assertIn("obl.off_line_finite_certificate", ids)
+        self.assertNotIn("obl.r7_stieltjes_rh_bridge", ids)
+        self.assertNotIn("obl.off_line_finite_certificate", ids)
+        self.assertIn("obl.tail_analytic_bounds", ids)
+        self.assertIn("obl.analytic_xi_interval_source", ids)
         bundle = export_obligation_bundle(obligations)
         self.assertFalse(bundle["solution_claimed"])
         self.assertEqual(bundle["obligation_count"], len(obligations))
