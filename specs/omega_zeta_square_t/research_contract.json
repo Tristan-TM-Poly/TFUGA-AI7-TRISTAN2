@@ -1,0 +1,109 @@
+{
+  "schema": "omega-zeta-square-research-contract/1",
+  "system": "Omega-ZETA-SQUARE-T-infinity",
+  "parent_problem": "riemann",
+  "status": "research-toolkit",
+  "solution_claimed": false,
+  "canonical_coordinate": {
+    "center": "1/2",
+    "w": "s-1/2",
+    "u": "w^2"
+  },
+  "exact_identities": [
+    "u=(beta-1/2)^2-gamma^2+2i(beta-1/2)gamma",
+    "D_RH(u)=(|u|+Re(u))/2=(beta-1/2)^2",
+    "H(u)=(|u|-Re(u))/2=gamma^2",
+    "critical_strip_image: Re(u)<=1/4-Im(u)^2",
+    "trivial_zero_image(n)=(2n+1/2)^2"
+  ],
+  "known_criteria_to_source": [
+    {
+      "claim": "Theta(u)=xi(1/2+sqrt(u)) is entire and RH is equivalent to all its zeros being real negative",
+      "status": "KNOWN_THEOREM_OR_KNOWN_CRITERION",
+      "bibliography_required": true
+    }
+  ],
+  "tristan_research_combinations": [
+    "centered-square parabolic tomography",
+    "D_RH exact defect as an OAK observable",
+    "HGFM criterion graph",
+    "CVCD minimal-criterion compression",
+    "LOG/EXP zero-moment-operator translations",
+    "TensorProdLift of polynomial positivity constraints",
+    "Bayes-Tristan fertility ranking",
+    "UNC2 epistemic uncertainty ledger",
+    "M-minus false-proof anti-dataset",
+    "AIT/SAGE bounded lemma synthesis"
+  ],
+  "forbidden_promotions": [
+    "finite_to_infinite",
+    "numeric_to_exact",
+    "equivalent_reformulation_to_solution",
+    "known_zeros_to_independent_operator",
+    "pattern_to_theorem",
+    "conjectural_leaf_to_proved_claim",
+    "branch_numerics_to_analytic_continuation",
+    "missing_equivalence_direction"
+  ],
+  "proof_grade_leaf_statuses": [
+    "PROVED",
+    "KNOWN_THEOREM"
+  ],
+  "research_axes": [
+    {
+      "id": "square.axis.geometry",
+      "goal": "derive and test quotient/parabolic geometry",
+      "priority": 1
+    },
+    {
+      "id": "square.axis.stieltjes",
+      "goal": "characterize Theta'/Theta by positive-measure/Stieltjes structure",
+      "priority": 1
+    },
+    {
+      "id": "square.axis.moments",
+      "goal": "derive central-derivative to inverse-moment identities",
+      "priority": 1
+    },
+    {
+      "id": "square.axis.hankel",
+      "goal": "search finite negative certificates implied by hypothetical off-line zeros",
+      "priority": 1
+    },
+    {
+      "id": "square.axis.jacobi",
+      "goal": "reconstruct finite Jacobi approximants from independently computed moments",
+      "priority": 2
+    },
+    {
+      "id": "square.axis.operator",
+      "goal": "seek a natural self-adjoint operator independent of preloaded Riemann zeros",
+      "priority": 2
+    },
+    {
+      "id": "square.axis.cvcd",
+      "goal": "compress known/equivalent criteria to minimal forcing invariants",
+      "priority": 1
+    },
+    {
+      "id": "square.axis.mminus",
+      "goal": "generate and retain adversarial counterexamples to false proof patterns",
+      "priority": 1
+    }
+  ],
+  "success_conditions": {
+    "research_increment": [
+      "new exact identity with proof",
+      "new equivalence with both directions proved",
+      "new finite certificate theorem",
+      "new independently constructed spectral object with proved determinant relation",
+      "refutation of a plausible pathway with reusable M-minus evidence"
+    ],
+    "rh_solution": [
+      "all universal quantifiers discharged",
+      "all proof leaves proof-grade",
+      "no circular use of RH or preloaded zero reality",
+      "independent expert/formal verification"
+    ]
+  }
+}
