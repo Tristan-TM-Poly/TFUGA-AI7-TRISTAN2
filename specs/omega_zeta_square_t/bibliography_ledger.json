@@ -1,12 +1,27 @@
 {
-  "schema": "omega-zeta-square-bibliography/2",
+  "schema": "omega-zeta-square-bibliography/3",
   "retrieved_utc_date": "2026-08-11",
   "policy": {
     "known_result_requires_primary_source": true,
     "tristan_combination_must_not_be_labeled_known_theorem_without_source": true,
-    "equivalent_criterion_is_not_a_solution": true
+    "equivalent_criterion_is_not_a_solution": true,
+    "recent_prior_art_must_block_novelty_claim_until_compared": true
   },
   "sources": [
+    {
+      "id": "hadamard-1893-entire-functions",
+      "type": "original_primary_source",
+      "title": "Étude sur les propriétés des fonctions entières et en particulier d'une fonction considérée par Riemann",
+      "author": "Jacques Hadamard",
+      "journal": "Journal de Mathématiques Pures et Appliquées",
+      "year": 1893,
+      "pages": "171-215",
+      "archive": "NUMDAM",
+      "claims_verified": [
+        "Hadamard factorization framework for entire functions of finite order"
+      ],
+      "status": "PRIMARY_SOURCE_VERIFIED"
+    },
     {
       "id": "osullivan-2020-2007.13582",
       "type": "primary_preprint_and_peer_reviewed_article",
@@ -26,17 +41,46 @@
     },
     {
       "id": "belton-guillot-khare-putinar-2016-1610.05740",
-      "type": "primary_research_preprint",
+      "type": "primary_research_preprint_and_peer_reviewed_article",
       "title": "Moment-sequence transforms",
       "authors": ["Alexander Belton", "Dominique Guillot", "Apoorva Khare", "Mihai Putinar"],
       "arxiv": "1610.05740",
+      "journal": "Journal of the European Mathematical Society 24 (2022), 3109-3160",
       "claims_verified": [
         "Theorem 2.2 restates the classical Hamburger-Stieltjes-Hausdorff correspondence",
         "a real sequence is a moment sequence on R iff its Hankel matrix is positive semidefinite",
-        "for support on [0,infinity), positivity of the Hankel matrix together with the shifted/truncated Hankel positivity characterizes the Stieltjes moment case"
+        "for support on [0,infinity), positivity of the Hankel matrix together with shifted/truncated Hankel positivity characterizes the Stieltjes moment case"
       ],
       "locator": "Section 2, Theorem 2.2",
       "status": "PRIMARY_SOURCE_VERIFIED"
+    },
+    {
+      "id": "polson-2026-barnes-beta-riemann-xi",
+      "type": "recent_preprint_prior_art",
+      "title": "Barnes Beta Distributions and the Riemann Xi Function",
+      "author": "Nicholas G. Polson",
+      "date_written": "2026-06-24",
+      "ssrn": "6992163",
+      "claims_observed_in_abstract": [
+        "RH presented through equivalent positivity faces including Hankel and Jacobi positivity of secondary-zeta moments",
+        "folded zero set used as a positive-measure object on RH"
+      ],
+      "status": "RECENT_PRIOR_ART_ABSTRACT_VERIFIED_NOT_USED_AS_PROOF_SOURCE",
+      "oak": "blocks novelty claims for R7/R10 until full comparison"
+    },
+    {
+      "id": "polson-2026-walker-products-xi",
+      "type": "recent_preprint_prior_art",
+      "title": "Walker Products and the Riemann Xi in Lévy Form",
+      "author": "Nicholas G. Polson",
+      "date_written": "2026-06-24",
+      "ssrn": "6992160",
+      "claims_observed_in_abstract": [
+        "candidate Thorin measure built from the folded zero set has positivity equivalent to RH",
+        "secondary-zeta values appear as cumulants in the resulting representation"
+      ],
+      "status": "RECENT_PRIOR_ART_ABSTRACT_VERIFIED_NOT_USED_AS_PROOF_SOURCE",
+      "oak": "close conceptual prior art; requires full-text comparison"
     },
     {
       "id": "griffin-ono-rolen-thorner-tripp-wagner-2019-1910.01227",
@@ -65,6 +109,11 @@
   ],
   "claim_bindings": [
     {
+      "graph_node": "hadamard_factorization",
+      "source_id": "hadamard-1893-entire-functions",
+      "status": "BOUND_TO_PRIMARY_SOURCE"
+    },
+    {
       "graph_node": "theta_entire",
       "source_id": "osullivan-2020-2007.13582",
       "status": "BOUND_TO_PRIMARY_SOURCE"
@@ -81,8 +130,8 @@
     }
   ],
   "unresolved_bibliographic_obligations": [
-    "source or fully derive the genus-zero product/log-derivative expansion used for Theta",
-    "verify whether the exact centered-square Stieltjes-Hankel criterion has appeared previously before any novelty claim",
+    "perform full-text comparison of R7/R10 with Polson 2026 Hankel/Jacobi secondary-zeta formulations before any novelty claim",
+    "search older Voros/secondary-zeta and Matiyasevich Hankel literature for equivalent moment-matrix criteria",
     "source any Hilbert-Polya determinant identity before labeling it known rather than a target"
   ]
 }
