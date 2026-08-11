@@ -20,6 +20,7 @@ from .invariants import audit_invariants
 from .kinematics import parameter_root_kinematics, taylor_predict_roots
 from .monodromy import quadratic_square_root_loop, track_coefficient_path
 from .monodromy_group import generate_monodromy_group
+from .multicluster import RootCluster, audit_multi_cluster_prediction, hermite_inverse_design, multi_cluster_tangent_space
 from .multiplicity_atlas import build_partition_lattice, exact_multiplicity_atlas
 from .multiplicity_strata import audit_multiplicity_prediction, exact_root_multiplicity, multiplicity_tangent_space
 from .oak import audit_rootflow
@@ -31,7 +32,7 @@ from .spectral import audit_spectral_geometry, inverse_design_roots
 from .spectral_hgfm import build_spectral_hgfm
 from .versal import analyze_unfolding_direction, local_unfolding_map, local_unfolding_roots, real_parameter_tangent_space
 
-VERSION = "R0.9"
+VERSION = "R0.10"
 LEGACY_PAYLOAD_VERSION = "R0.6"
 NATIVE_MODE_VERSIONS = {
     "exact-rational-root-multiplicity": "R0.7",
@@ -40,6 +41,8 @@ NATIVE_MODE_VERSIONS = {
     "local-versal-unfolding": "R0.8",
     "exact-global-multiplicity-atlas": "R0.9",
     "multiplicity-partition-lattice": "R0.9",
+    "multi-cluster-mobile-tangent": "R0.10",
+    "fixed-cluster-hermite-inverse-design": "R0.10",
 }
 
 
@@ -83,6 +86,19 @@ def _parse_degrees(text: str) -> tuple[int, ...]:
     return values
 
 
+def _parse_clusters(text: str) -> tuple[RootCluster, ...]:
+    clusters: list[RootCluster] = []
+    try:
+        for token in (part.strip() for part in text.split(",") if part.strip()):
+            root_text, multiplicity_text = token.rsplit(":", 1)
+            clusters.append(RootCluster(complex(root_text.strip()), int(multiplicity_text.strip())))
+    except (ValueError, TypeError) as exc:
+        raise argparse.ArgumentTypeError(f"invalid cluster specification: {exc}") from exc
+    if not clusters:
+        raise argparse.ArgumentTypeError("provide clusters as root:multiplicity pairs")
+    return tuple(clusters)
+
+
 def _complex(value: complex) -> dict[str, float]:
     return {"real": float(value.real), "imag": float(value.imag)}
 
@@ -121,16 +137,27 @@ def exact_multiplicity_payload(coefficients: tuple[str, ...], root: str) -> dict
 
 
 def exact_global_atlas_payload(coefficients: tuple[str, ...]) -> dict[str, object]:
-    payload = _base("exact-global-multiplicity-atlas")
-    payload["atlas"] = exact_multiplicity_atlas(coefficients).to_dict()
-    payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "exact rational derivative-gcd tower and square-free multiplicity decomposition"}
-    return payload
+    payload = _base("exact-global-multiplicity-atlas"); payload["atlas"] = exact_multiplicity_atlas(coefficients).to_dict(); payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "exact rational derivative-gcd tower and square-free multiplicity decomposition"}; return payload
 
 
 def partition_lattice_payload(degree: int, maximum_nodes: int | None) -> dict[str, object]:
-    payload = _base("multiplicity-partition-lattice")
-    payload["lattice"] = build_partition_lattice(degree, maximum_nodes=maximum_nodes).to_dict()
-    payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "combinatorial multiplicity-partition adjacency"}
+    payload = _base("multiplicity-partition-lattice"); payload["lattice"] = build_partition_lattice(degree, maximum_nodes=maximum_nodes).to_dict(); payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "combinatorial multiplicity-partition adjacency"}; return payload
+
+
+def multi_cluster_tangent_payload(coefficients: np.ndarray, clusters: tuple[RootCluster, ...], degrees: tuple[int, ...], epsilon: float) -> dict[str, object]:
+    tangent = multi_cluster_tangent_space(coefficients, clusters, degrees)
+    payload = _base("multi-cluster-mobile-tangent")
+    payload["tangent"] = tangent.to_dict()
+    payload["prediction_audit"] = audit_multi_cluster_prediction(coefficients, tangent, epsilon=epsilon).to_dict() if tangent.status == "OAK_PASS_MULTICLUSTER_TANGENT_SPACE" else None
+    payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "stacked mobile multiplicity constraints and first-order cluster velocities"}
+    return payload
+
+
+def hermite_design_payload(coefficients: np.ndarray, clusters: tuple[RootCluster, ...], free_degrees: tuple[int, ...] | None, real_coefficients: bool) -> dict[str, object]:
+    design = hermite_inverse_design(coefficients, clusters, free_degrees=free_degrees, real_coefficients=real_coefficients)
+    payload = _base("fixed-cluster-hermite-inverse-design")
+    payload["design"] = design.to_dict()
+    payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "linear fixed-location Hermite coefficient design"}
     return payload
 
 
@@ -143,26 +170,11 @@ def multiplicity_tangent_payload(coefficients: np.ndarray, critical_root: comple
 
 
 def real_tangent_payload(coefficients: np.ndarray, critical_root: complex, multiplicity: int, degrees: tuple[int, ...]) -> dict[str, object]:
-    real = real_parameter_tangent_space(coefficients, critical_root, multiplicity, degrees)
-    payload = _base("real-parameter-multiplicity-tangent")
-    payload["real_tangent"] = real.to_dict()
-    payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "realification of local complex multiplicity constraints"}
-    return payload
+    real = real_parameter_tangent_space(coefficients, critical_root, multiplicity, degrees); payload = _base("real-parameter-multiplicity-tangent"); payload["real_tangent"] = real.to_dict(); payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "realification of local complex multiplicity constraints"}; return payload
 
 
 def unfolding_payload(coefficients: np.ndarray, critical_root: complex, multiplicity: int, degrees: tuple[int, ...], direction: np.ndarray, epsilon: float) -> dict[str, object]:
-    unfolding = local_unfolding_map(coefficients, critical_root, multiplicity, degrees)
-    analysis = analyze_unfolding_direction(unfolding, direction)
-    local_roots = local_unfolding_roots(unfolding, direction, epsilon)
-    payload = _base("local-versal-unfolding")
-    payload.update({
-        "unfolding": unfolding.to_dict(),
-        "direction_analysis": analysis.to_dict(),
-        "epsilon": float(epsilon),
-        "local_model_roots": _complex_vector(local_roots),
-        "claims": {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "translation-normalized first-order local unfolding and truncated-model roots"},
-    })
-    return payload
+    unfolding = local_unfolding_map(coefficients, critical_root, multiplicity, degrees); analysis = analyze_unfolding_direction(unfolding, direction); local_roots = local_unfolding_roots(unfolding, direction, epsilon); payload = _base("local-versal-unfolding"); payload.update({"unfolding": unfolding.to_dict(), "direction_analysis": analysis.to_dict(), "epsilon": float(epsilon), "local_model_roots": _complex_vector(local_roots), "claims": {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "translation-normalized first-order local unfolding and truncated-model roots"}}); return payload
 
 
 def invariant_payload(coefficients: np.ndarray) -> dict[str, object]:
@@ -239,6 +251,8 @@ def build_parser() -> argparse.ArgumentParser:
     p=command("exact-multiplicity","exact multiplicity of a rational root"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--root",required=True); p.add_argument("--output")
     p=command("multiplicity-atlas","exact global multiplicity atlas over Q"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--output")
     p=command("partition-lattice","complex multiplicity partition lattice"); p.add_argument("--degree",required=True,type=int); p.add_argument("--max-nodes",type=int); p.add_argument("--output")
+    p=command("multi-cluster-tangent","mobile simultaneous multiplicity-cluster tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--clusters",required=True,type=_parse_clusters); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
+    p=command("hermite-design","fixed-location multiple-root coefficient design"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--clusters",required=True,type=_parse_clusters); p.add_argument("--free-degrees",type=_parse_degrees); p.add_argument("--real-coefficients",action="store_true"); p.add_argument("--output")
     p=command("collision-tangent","generic double-root tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
     p=command("multiplicity-tangent","arbitrary multiplicity root stratum tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--multiplicity",required=True,type=int); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
     p=command("real-tangent","real-parameter tangent geometry of a multiplicity stratum"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--multiplicity",required=True,type=int); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--output")
@@ -266,6 +280,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     elif args.command=="exact-multiplicity": payload=exact_multiplicity_payload(args.coeffs,args.root)
     elif args.command=="multiplicity-atlas": payload=exact_global_atlas_payload(args.coeffs)
     elif args.command=="partition-lattice": payload=partition_lattice_payload(args.degree,args.max_nodes)
+    elif args.command=="multi-cluster-tangent": payload=multi_cluster_tangent_payload(args.coeffs,args.clusters,args.degrees,args.epsilon)
+    elif args.command=="hermite-design": payload=hermite_design_payload(args.coeffs,args.clusters,args.free_degrees,args.real_coefficients)
     elif args.command=="collision-tangent": payload=collision_tangent_payload(args.coeffs,args.critical_root,args.degrees,args.epsilon)
     elif args.command=="multiplicity-tangent": payload=multiplicity_tangent_payload(args.coeffs,args.critical_root,args.multiplicity,args.degrees,args.epsilon)
     elif args.command=="real-tangent": payload=real_tangent_payload(args.coeffs,args.critical_root,args.multiplicity,args.degrees)
