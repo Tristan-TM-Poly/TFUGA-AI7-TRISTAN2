@@ -54,6 +54,7 @@ from .jacobi import (
     jacobi_characteristic_polynomial,
     jacobi_recurrence_from_inverse_moments,
 )
+from .materialize import materialize_from_files, materialize_research_bundle
 from .moments import (
     finite_stieltjes_report,
     hankel_matrix,
@@ -148,4 +149,6 @@ __all__ = [
     "first_exact_stieltjes_violation",
     "one_pair_full_hankel_determinant",
     "one_pair_full_hankel_certificate",
+    "materialize_research_bundle",
+    "materialize_from_files",
 ]
