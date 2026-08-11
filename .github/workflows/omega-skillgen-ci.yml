@@ -36,6 +36,9 @@ jobs:
           python scripts/omega-skillgen-campaign --help >/dev/null
           python scripts/omega-skillgen-ops --help >/dev/null
           python scripts/omega-skillgen-package --help >/dev/null
+          python scripts/omega-skillgen-ultra --help >/dev/null
+          python scripts/omega-skillgen-evolution --help >/dev/null
+          python scripts/omega-skillgen-civilization --help >/dev/null
       - name: Audit recursive Omega skill ecology
         shell: bash
         run: |
@@ -147,12 +150,37 @@ jobs:
           report=json.loads((root/'package-report.json').read_text())
           assert report['status']=='PASS'
           assert report['skill_manifests']==1
+          assert report['pyproject_manifests']==1
+          assert len(report['entrypoints'])==9
           assert (root/'omega-skillgen-t-standalone.zip').is_file()
           with zipfile.ZipFile(root/'omega-skillgen-t-standalone.zip') as z:
               manifests=[name for name in z.namelist() if Path(name).name.lower()=='skill.md']
+              pyprojects=[name for name in z.namelist() if Path(name).name.lower()=='pyproject.toml']
               assert len(manifests)==1
+              assert len(pyprojects)==1
           print('Standalone Skill bundle PASS')
           PY
+      - name: Install standalone bundle in isolated venv
+        shell: bash
+        run: |
+          rm -rf "$RUNNER_TEMP/omega-skillgen-install" "$RUNNER_TEMP/omega-skillgen-venv"
+          mkdir -p "$RUNNER_TEMP/omega-skillgen-install"
+          python - <<'PY'
+          import os, zipfile
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])
+          archive=root/'omega-skillgen-artifacts'/'omega-skillgen-t-standalone.zip'
+          target=root/'omega-skillgen-install'
+          with zipfile.ZipFile(archive) as z:
+              z.extractall(target)
+          print(target/'omega-skillgen-t')
+          PY
+          python -m venv "$RUNNER_TEMP/omega-skillgen-venv"
+          "$RUNNER_TEMP/omega-skillgen-venv/bin/python" -m pip install --disable-pip-version-check "$RUNNER_TEMP/omega-skillgen-install/omega-skillgen-t"
+          for cmd in omega-skillgen omega-skillgen-bridge omega-skillgen-benchmark omega-skillgen-campaign omega-skillgen-ops omega-skillgen-package omega-skillgen-ultra omega-skillgen-evolution omega-skillgen-civilization; do
+            "$RUNNER_TEMP/omega-skillgen-venv/bin/$cmd" --help >/dev/null
+          done
+          echo "Standalone isolated pip install + 9 console entrypoints PASS"
       - name: Upload standalone Skill bundle
         uses: actions/upload-artifact@v4
         with:
