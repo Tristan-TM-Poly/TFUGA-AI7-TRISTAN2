@@ -5,6 +5,7 @@ on:
     paths:
       - "omega_zeta_square_t/**"
       - "tests/test_omega_zeta_square_t.py"
+      - "tests/test_omega_zeta_square_intervals.py"
       - "specs/omega_zeta_square_t/**"
       - "docs/omega_zeta_square_t/**"
       - "docs/omega_millennium_t/r02/problems/riemann.md"
@@ -15,6 +16,7 @@ on:
     paths:
       - "omega_zeta_square_t/**"
       - "tests/test_omega_zeta_square_t.py"
+      - "tests/test_omega_zeta_square_intervals.py"
       - "specs/omega_zeta_square_t/**"
       - ".github/workflows/omega-zeta-square-oak.yml"
 
@@ -34,7 +36,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile package and targeted tests
-        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py
+        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py
       - name: Validate machine-readable contracts
         run: |
           python - <<'PY'
@@ -56,7 +58,7 @@ jobs:
           print("proof-graph-oak: PROMOTE")
           PY
       - name: Run targeted unit tests
-        run: python -m unittest tests.test_omega_zeta_square_t
+        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals
       - name: CLI geometry OAK smoke test
         run: |
           python -m omega_zeta_square_t geometry 0.5 14.134725141734693 > /tmp/zeta-square-geometry.json
