@@ -9,6 +9,7 @@ on:
       - "schemas/omega_skillgen_skillspec.schema.json"
       - "docs/OMEGA_SKILLGEN_T.md"
       - "docs/omega_skillgen/**"
+      - "generated/omega_skillgen_candidates/**"
       - "pyproject.toml"
       - ".github/workflows/omega-skillgen-ci.yml"
   workflow_dispatch:
@@ -43,6 +44,24 @@ jobs:
           done
       - name: Skill hypergraph catalog
         run: python -m omega_skillgen_t catalog .agents/skills --graph
+      - name: Bridge real Generator Discovery atlas
+        shell: bash
+        run: |
+          rm -rf /tmp/omega-generator-bridge
+          python scripts/omega-skillgen-bridge generator-bridge /tmp/omega-generator-bridge --domain spectral --limit 3
+          test "$(find /tmp/omega-generator-bridge -maxdepth 1 -name '*.json' | wc -l)" -eq 3
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          files=sorted(Path('/tmp/omega-generator-bridge').glob('*.json'))
+          assert len(files)==3
+          for path in files:
+              spec=json.loads(path.read_text())
+              assert spec['generator_discovery_provenance']['domain']=='spectral'
+              assert spec['generator_discovery_provenance']['benchmark_ids']
+              assert spec['invariants']
+          print('Generator Discovery bridge smoke PASS')
+          PY
       - name: Compile smoke candidate
         run: |
           python - <<'PY'
