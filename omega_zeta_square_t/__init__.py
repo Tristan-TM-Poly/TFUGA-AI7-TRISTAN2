@@ -3,6 +3,15 @@
 This package is a research/verification toolkit. It does not claim a proof of RH.
 """
 
+from .adversary import (
+    ViolationDepth,
+    centered_pair_hankel2_determinant,
+    conjugate_pair_hankel2_determinant,
+    conjugate_pair_inverse_moments,
+    first_exact_stieltjes_violation,
+    lambda_pair_from_beta_gamma,
+    mixed_inverse_moments,
+)
 from .bibliography import validate_bibliography_ledger
 from .certificates import (
     ExactPSDReport,
@@ -126,4 +135,11 @@ __all__ = [
     "minimal_dependency_supports",
     "cvcd_support_report",
     "validate_bibliography_ledger",
+    "ViolationDepth",
+    "lambda_pair_from_beta_gamma",
+    "conjugate_pair_inverse_moments",
+    "conjugate_pair_hankel2_determinant",
+    "centered_pair_hankel2_determinant",
+    "mixed_inverse_moments",
+    "first_exact_stieltjes_violation",
 ]
