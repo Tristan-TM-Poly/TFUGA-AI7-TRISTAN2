@@ -1,13 +1,40 @@
-"""CLI for Ω-ZETA-SQUARE-T∞ finite research diagnostics."""
+"""CLI for Ω-ZETA-SQUARE-T∞ research diagnostics and exact finite transforms."""
 
 from __future__ import annotations
 
 import argparse
 import json
-from dataclasses import asdict
+from dataclasses import asdict, is_dataclass
+from fractions import Fraction
 
+from .certificates import exact_stieltjes_certificate
 from .core import nontrivial_zero_image, rh_defect
+from .jacobi import jacobi_characteristic_polynomial, jacobi_recurrence_from_inverse_moments
 from .moments import finite_stieltjes_report
+from .pade import stieltjes_pade_from_inverse_moments
+
+
+def _fraction(text: str) -> Fraction:
+    try:
+        return Fraction(text)
+    except (ValueError, ZeroDivisionError) as exc:
+        raise argparse.ArgumentTypeError(f"invalid exact rational: {text}") from exc
+
+
+def _jsonable(value):
+    if isinstance(value, Fraction):
+        return {
+            "exact": str(value),
+            "numerator": value.numerator,
+            "denominator": value.denominator,
+        }
+    if is_dataclass(value):
+        return _jsonable(asdict(value))
+    if isinstance(value, dict):
+        return {str(k): _jsonable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_jsonable(v) for v in value]
+    return value
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -25,6 +52,18 @@ def _parser() -> argparse.ArgumentParser:
     moments.add_argument("gammas", nargs="+", type=float)
     moments.add_argument("--hankel-size", type=int, default=2)
 
+    exact = sub.add_parser("exact-cert", help="exact finite Hankel/Stieltjes certificate")
+    exact.add_argument("inverse_moments", nargs="+", type=_fraction)
+    exact.add_argument("--hankel-size", type=int, default=2)
+
+    pade = sub.add_parser("pade", help="exact [n-1/n] Stieltjes Padé reconstruction")
+    pade.add_argument("inverse_moments", nargs="+", type=_fraction)
+    pade.add_argument("--order", type=int, default=2)
+
+    jacobi = sub.add_parser("jacobi", help="exact finite Jacobi recurrence reconstruction")
+    jacobi.add_argument("inverse_moments", nargs="+", type=_fraction)
+    jacobi.add_argument("--size", type=int, default=2)
+
     return parser
 
 
@@ -41,17 +80,53 @@ def main(argv=None) -> int:
             "epistemic_status": "EXACT_IDENTITY_EVALUATED_NUMERICALLY",
             "proves_rh": False,
         }
-    else:
+    elif args.command == "moments":
         report = finite_stieltjes_report(args.gammas, hankel_size=args.hankel_size)
         payload = {
-            "schema": "omega-zeta-square-oak-receipt/1",
+            "schema": "omega-zeta-square-oak-receipt/2",
             **asdict(report),
             "oak": {
                 "promotion": "FINITE_EVIDENCE_ONLY",
                 "forbidden": ["finite_to_infinite", "numeric_to_exact"],
             },
         }
-    print(json.dumps(payload, indent=2, sort_keys=True))
+    elif args.command == "exact-cert":
+        cert = exact_stieltjes_certificate(
+            args.inverse_moments, hankel_size=args.hankel_size
+        )
+        payload = {
+            "schema": "omega-zeta-square-exact-certificate/1",
+            "certificate": cert,
+            "oak": {
+                "promotion": "EXACT_FOR_SUPPLIED_FINITE_RATIONAL_DATA_ONLY",
+                "forbidden": ["finite_to_infinite", "supplied_data_to_true_xi_values"],
+            },
+            "proves_rh": False,
+        }
+    elif args.command == "pade":
+        approx = stieltjes_pade_from_inverse_moments(
+            args.inverse_moments, order=args.order
+        )
+        payload = {
+            "schema": "omega-zeta-square-pade/1",
+            "approximant": approx,
+            "proves_rh": False,
+        }
+    else:
+        recurrence = jacobi_recurrence_from_inverse_moments(
+            args.inverse_moments, size=args.size
+        )
+        payload = {
+            "schema": "omega-zeta-square-jacobi/1",
+            "recurrence": recurrence,
+            "characteristic_polynomial": jacobi_characteristic_polynomial(recurrence),
+            "oak": {
+                "promotion": "FINITE_FORMAL_RECONSTRUCTION_ONLY",
+                "forbidden": ["preloaded_moments_to_independent_hilbert_polya_operator"],
+            },
+            "proves_rh": False,
+        }
+    print(json.dumps(_jsonable(payload), indent=2, sort_keys=True))
     return 0
 
 
