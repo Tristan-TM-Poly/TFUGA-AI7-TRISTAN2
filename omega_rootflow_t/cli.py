@@ -18,6 +18,7 @@ from .core import root_conditions, root_jacobian, roots
 from .exact import audit_exact_algebra
 from .exact_hermite import ExactRootCluster, exact_hermite_design, exact_multi_cluster_tangent
 from .invariants import audit_invariants
+from .joint_unfolding import analyze_joint_direction, design_joint_unfolding, joint_unfolding_map
 from .kinematics import parameter_root_kinematics, taylor_predict_roots
 from .monodromy import quadratic_square_root_loop, track_coefficient_path
 from .monodromy_group import generate_monodromy_group
@@ -33,7 +34,7 @@ from .spectral import audit_spectral_geometry, inverse_design_roots
 from .spectral_hgfm import build_spectral_hgfm
 from .versal import analyze_unfolding_direction, local_unfolding_map, local_unfolding_roots, real_parameter_tangent_space
 
-VERSION = "R0.11"
+VERSION = "R0.12"
 LEGACY_PAYLOAD_VERSION = "R0.6"
 NATIVE_MODE_VERSIONS = {
     "exact-rational-root-multiplicity": "R0.7",
@@ -46,6 +47,8 @@ NATIVE_MODE_VERSIONS = {
     "fixed-cluster-hermite-inverse-design": "R0.10",
     "exact-multi-cluster-mobile-tangent": "R0.11",
     "exact-fixed-cluster-hermite-design": "R0.11",
+    "joint-multicluster-unfolding": "R0.12",
+    "joint-multicluster-unfolding-design": "R0.12",
 }
 
 
@@ -59,33 +62,23 @@ def _parse_complex_vector(text: str, *, minimum: int = 1) -> np.ndarray:
     return np.asarray(values, dtype=np.complex128)
 
 
-def _parse_coefficients(text: str) -> np.ndarray:
-    return _parse_complex_vector(text, minimum=2)
-
-
-def _parse_roots(text: str) -> np.ndarray:
-    return _parse_complex_vector(text)
+def _parse_coefficients(text: str) -> np.ndarray: return _parse_complex_vector(text, minimum=2)
+def _parse_roots(text: str) -> np.ndarray: return _parse_complex_vector(text)
 
 
 def _parse_exact_coefficients(text: str) -> tuple[str, ...]:
     tokens = tuple(part.strip() for part in text.split(",") if part.strip())
-    if len(tokens) < 2:
-        raise argparse.ArgumentTypeError("provide at least two exact rational coefficients")
+    if len(tokens) < 2: raise argparse.ArgumentTypeError("provide at least two exact rational coefficients")
     try:
-        for token in tokens:
-            Fraction(token)
-    except (ValueError, ZeroDivisionError) as exc:
-        raise argparse.ArgumentTypeError(f"invalid exact rational coefficient: {exc}") from exc
+        for token in tokens: Fraction(token)
+    except (ValueError, ZeroDivisionError) as exc: raise argparse.ArgumentTypeError(f"invalid exact rational coefficient: {exc}") from exc
     return tokens
 
 
 def _parse_degrees(text: str) -> tuple[int, ...]:
-    try:
-        values = tuple(int(part.strip()) for part in text.split(",") if part.strip())
-    except ValueError as exc:
-        raise argparse.ArgumentTypeError(f"invalid coefficient degree: {exc}") from exc
-    if not values:
-        raise argparse.ArgumentTypeError("provide at least one coefficient degree")
+    try: values = tuple(int(part.strip()) for part in text.split(",") if part.strip())
+    except ValueError as exc: raise argparse.ArgumentTypeError(f"invalid coefficient degree: {exc}") from exc
+    if not values: raise argparse.ArgumentTypeError("provide at least one coefficient degree")
     return values
 
 
@@ -93,12 +86,9 @@ def _parse_clusters(text: str) -> tuple[RootCluster, ...]:
     clusters: list[RootCluster] = []
     try:
         for token in (part.strip() for part in text.split(",") if part.strip()):
-            root_text, multiplicity_text = token.rsplit(":", 1)
-            clusters.append(RootCluster(complex(root_text.strip()), int(multiplicity_text.strip())))
-    except (ValueError, TypeError) as exc:
-        raise argparse.ArgumentTypeError(f"invalid cluster specification: {exc}") from exc
-    if not clusters:
-        raise argparse.ArgumentTypeError("provide clusters as root:multiplicity pairs")
+            root_text, multiplicity_text = token.rsplit(":", 1); clusters.append(RootCluster(complex(root_text.strip()), int(multiplicity_text.strip())))
+    except (ValueError, TypeError) as exc: raise argparse.ArgumentTypeError(f"invalid cluster specification: {exc}") from exc
+    if not clusters: raise argparse.ArgumentTypeError("provide clusters as root:multiplicity pairs")
     return tuple(clusters)
 
 
@@ -106,121 +96,65 @@ def _parse_exact_clusters(text: str) -> tuple[ExactRootCluster, ...]:
     clusters: list[ExactRootCluster] = []
     try:
         for token in (part.strip() for part in text.split(",") if part.strip()):
-            root_text, multiplicity_text = token.rsplit(":", 1)
-            clusters.append(ExactRootCluster(Fraction(root_text.strip()), int(multiplicity_text.strip())))
-    except (ValueError, ZeroDivisionError, TypeError) as exc:
-        raise argparse.ArgumentTypeError(f"invalid exact rational cluster specification: {exc}") from exc
-    if not clusters:
-        raise argparse.ArgumentTypeError("provide exact clusters as rational:multiplicity pairs")
+            root_text, multiplicity_text = token.rsplit(":", 1); clusters.append(ExactRootCluster(Fraction(root_text.strip()), int(multiplicity_text.strip())))
+    except (ValueError, ZeroDivisionError, TypeError) as exc: raise argparse.ArgumentTypeError(f"invalid exact rational cluster specification: {exc}") from exc
+    if not clusters: raise argparse.ArgumentTypeError("provide exact clusters as rational:multiplicity pairs")
     return tuple(clusters)
 
 
-def _complex(value: complex) -> dict[str, float]:
-    return {"real": float(value.real), "imag": float(value.imag)}
-
-
-def _complex_vector(values: np.ndarray) -> list[dict[str, float]]:
-    return [_complex(complex(value)) for value in values]
-
-
-def _base(mode: str) -> dict[str, object]:
-    payload_version = NATIVE_MODE_VERSIONS.get(mode, LEGACY_PAYLOAD_VERSION)
-    return {"system": "Ω-ROOTFLOW-T∞", "version": payload_version, "engine_version": VERSION, "mode": mode}
+def _complex(value: complex) -> dict[str, float]: return {"real": float(value.real), "imag": float(value.imag)}
+def _complex_vector(values: np.ndarray) -> list[dict[str, float]]: return [_complex(complex(value)) for value in values]
+def _base(mode: str) -> dict[str, object]: return {"system": "Ω-ROOTFLOW-T∞", "version": NATIVE_MODE_VERSIONS.get(mode, LEGACY_PAYLOAD_VERSION), "engine_version": VERSION, "mode": mode}
 
 
 def analyze_payload(coefficients: np.ndarray) -> dict[str, object]:
-    rr = roots(coefficients); payload = _base("analyze")
-    payload.update({"coefficient_order": "ascending [a0,...,an]", "degree": int(coefficients.size - 1), "roots": _complex_vector(rr), "conditions": [{"root": _complex(item.root), "derivative_magnitude": item.derivative_magnitude, "reciprocal_derivative": item.reciprocal_derivative, "residual": item.residual, "near_singular": item.near_singular} for item in root_conditions(coefficients, rr)], "root_jacobian": [[_complex(complex(value)) for value in row] for row in root_jacobian(coefficients, rr)], "audit": audit_rootflow(coefficients).to_dict(), "spectral_audit": audit_spectral_geometry(coefficients).to_dict(), "claims": {"theorem_claimed": False, "scientific_validation_claimed": False}}); return payload
+    rr=roots(coefficients); payload=_base("analyze"); payload.update({"coefficient_order":"ascending [a0,...,an]","degree":int(coefficients.size-1),"roots":_complex_vector(rr),"conditions":[{"root":_complex(item.root),"derivative_magnitude":item.derivative_magnitude,"reciprocal_derivative":item.reciprocal_derivative,"residual":item.residual,"near_singular":item.near_singular} for item in root_conditions(coefficients,rr)],"root_jacobian":[[_complex(complex(value)) for value in row] for row in root_jacobian(coefficients,rr)],"audit":audit_rootflow(coefficients).to_dict(),"spectral_audit":audit_spectral_geometry(coefficients).to_dict(),"claims":{"theorem_claimed":False,"scientific_validation_claimed":False}}); return payload
 
+def exact_audit_payload(coefficients): payload=_base("exact-rational-algebra-audit"); payload["audit"]=audit_exact_algebra(coefficients).to_dict(); return payload
+def exact_multiplicity_payload(coefficients,root): payload=_base("exact-rational-root-multiplicity"); payload.update({"root":root,"multiplicity":exact_root_multiplicity(coefficients,root),"claims":{"theorem_claimed":False,"scientific_validation_claimed":False}}); return payload
+def exact_global_atlas_payload(coefficients): payload=_base("exact-global-multiplicity-atlas"); payload["atlas"]=exact_multiplicity_atlas(coefficients).to_dict(); return payload
+def partition_lattice_payload(degree,maximum_nodes): payload=_base("multiplicity-partition-lattice"); payload["lattice"]=build_partition_lattice(degree,maximum_nodes=maximum_nodes).to_dict(); return payload
+def exact_multi_cluster_payload(coefficients,clusters,degrees): payload=_base("exact-multi-cluster-mobile-tangent"); payload["tangent"]=exact_multi_cluster_tangent(coefficients,clusters,degrees).to_dict(); return payload
+def exact_hermite_design_payload(coefficients,clusters,free_degrees): payload=_base("exact-fixed-cluster-hermite-design"); payload["design"]=exact_hermite_design(coefficients,clusters,free_degrees=free_degrees).to_dict(); return payload
 
-def exact_audit_payload(coefficients: tuple[str, ...]) -> dict[str, object]:
-    payload = _base("exact-rational-algebra-audit"); payload["audit"] = audit_exact_algebra(coefficients).to_dict(); return payload
+def joint_unfolding_payload(coefficients,clusters,degrees,direction):
+    unfolding=joint_unfolding_map(coefficients,clusters,degrees); analysis=analyze_joint_direction(unfolding,direction); payload=_base("joint-multicluster-unfolding"); payload.update({"unfolding":unfolding.to_dict(),"direction_analysis":analysis.to_dict(),"claims":{"theorem_claimed":False,"scientific_validation_claimed":False,"scope":"coupled local split jets and mobile-stratum kernel alignment"}}); return payload
 
+def joint_unfolding_design_payload(coefficients,clusters,degrees,target_jet,real_coefficients):
+    unfolding=joint_unfolding_map(coefficients,clusters,degrees); design=design_joint_unfolding(unfolding,target_jet,real_coefficients=real_coefficients); payload=_base("joint-multicluster-unfolding-design"); payload.update({"unfolding":unfolding.to_dict(),"design":design.to_dict(),"claims":{"theorem_claimed":False,"scientific_validation_claimed":False,"scope":"linear synthesis of coupled local unfolding jets"}}); return payload
 
-def exact_multiplicity_payload(coefficients: tuple[str, ...], root: str) -> dict[str, object]:
-    payload = _base("exact-rational-root-multiplicity"); payload.update({"root": root, "multiplicity": exact_root_multiplicity(coefficients, root), "claims": {"theorem_claimed": False, "scientific_validation_claimed": False}}); return payload
-
-
-def exact_global_atlas_payload(coefficients: tuple[str, ...]) -> dict[str, object]:
-    payload = _base("exact-global-multiplicity-atlas"); payload["atlas"] = exact_multiplicity_atlas(coefficients).to_dict(); payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "exact rational derivative-gcd tower and square-free multiplicity decomposition"}; return payload
-
-
-def partition_lattice_payload(degree: int, maximum_nodes: int | None) -> dict[str, object]:
-    payload = _base("multiplicity-partition-lattice"); payload["lattice"] = build_partition_lattice(degree, maximum_nodes=maximum_nodes).to_dict(); payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "combinatorial multiplicity-partition adjacency"}; return payload
-
-
-def exact_multi_cluster_payload(coefficients: tuple[str, ...], clusters: tuple[ExactRootCluster, ...], degrees: tuple[int, ...]) -> dict[str, object]:
-    result = exact_multi_cluster_tangent(coefficients, clusters, degrees); payload = _base("exact-multi-cluster-mobile-tangent"); payload["tangent"] = result.to_dict(); payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "exact rational confluent tangent matrix, nullspace and cluster velocities"}; return payload
-
-
-def exact_hermite_design_payload(coefficients: tuple[str, ...], clusters: tuple[ExactRootCluster, ...], free_degrees: tuple[int, ...] | None) -> dict[str, object]:
-    result = exact_hermite_design(coefficients, clusters, free_degrees=free_degrees); payload = _base("exact-fixed-cluster-hermite-design"); payload["design"] = result.to_dict(); payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "exact rational affine Hermite solve with deterministic free-variable gauge"}; return payload
-
-
-def multi_cluster_tangent_payload(coefficients: np.ndarray, clusters: tuple[RootCluster, ...], degrees: tuple[int, ...], epsilon: float) -> dict[str, object]:
-    tangent = multi_cluster_tangent_space(coefficients, clusters, degrees); payload = _base("multi-cluster-mobile-tangent"); payload["tangent"] = tangent.to_dict(); payload["prediction_audit"] = audit_multi_cluster_prediction(coefficients, tangent, epsilon=epsilon).to_dict() if tangent.status == "OAK_PASS_MULTICLUSTER_TANGENT_SPACE" else None; payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "stacked mobile multiplicity constraints and first-order cluster velocities"}; return payload
-
-
-def hermite_design_payload(coefficients: np.ndarray, clusters: tuple[RootCluster, ...], free_degrees: tuple[int, ...] | None, real_coefficients: bool) -> dict[str, object]:
-    design = hermite_inverse_design(coefficients, clusters, free_degrees=free_degrees, real_coefficients=real_coefficients); payload = _base("fixed-cluster-hermite-inverse-design"); payload["design"] = design.to_dict(); payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "linear fixed-location Hermite coefficient design"}; return payload
-
-
-def collision_tangent_payload(coefficients: np.ndarray, critical_root: complex, degrees: tuple[int, ...], epsilon: float) -> dict[str, object]:
-    tangent = collision_tangent_space(coefficients, critical_root, degrees); payload = _base("collision-tangent-space"); payload["tangent"] = tangent.to_dict(); payload["prediction_audit"] = audit_tangent_prediction(coefficients, tangent, epsilon=epsilon).to_dict() if tangent.status.startswith("OAK_PASS") else None; return payload
-
-
-def multiplicity_tangent_payload(coefficients: np.ndarray, critical_root: complex, multiplicity: int, degrees: tuple[int, ...], epsilon: float) -> dict[str, object]:
-    stratum = multiplicity_tangent_space(coefficients, critical_root, multiplicity, degrees); payload = _base("multiplicity-tangent-stratum"); payload["stratum"] = stratum.to_dict(); payload["prediction_audit"] = audit_multiplicity_prediction(coefficients, stratum, epsilon=epsilon).to_dict() if stratum.status == "OAK_PASS_MULTIPLICITY_TANGENT_SPACE" else None; return payload
-
-
-def real_tangent_payload(coefficients: np.ndarray, critical_root: complex, multiplicity: int, degrees: tuple[int, ...]) -> dict[str, object]:
-    real = real_parameter_tangent_space(coefficients, critical_root, multiplicity, degrees); payload = _base("real-parameter-multiplicity-tangent"); payload["real_tangent"] = real.to_dict(); payload["claims"] = {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "realification of local complex multiplicity constraints"}; return payload
-
-
-def unfolding_payload(coefficients: np.ndarray, critical_root: complex, multiplicity: int, degrees: tuple[int, ...], direction: np.ndarray, epsilon: float) -> dict[str, object]:
-    unfolding = local_unfolding_map(coefficients, critical_root, multiplicity, degrees); analysis = analyze_unfolding_direction(unfolding, direction); local_roots = local_unfolding_roots(unfolding, direction, epsilon); payload = _base("local-versal-unfolding"); payload.update({"unfolding": unfolding.to_dict(), "direction_analysis": analysis.to_dict(), "epsilon": float(epsilon), "local_model_roots": _complex_vector(local_roots), "claims": {"theorem_claimed": False, "scientific_validation_claimed": False, "scope": "translation-normalized first-order local unfolding and truncated-model roots"}}); return payload
-
-
-def invariant_payload(coefficients: np.ndarray) -> dict[str, object]: payload = _base("vieta-newton-residue-invariants"); payload["audit"] = audit_invariants(coefficients).to_dict(); return payload
-
-def discriminant_payload(coefficients: np.ndarray) -> dict[str, object]: payload = _base("resultant-discriminant-crosscheck"); payload["audit"] = audit_discriminant(coefficients).to_dict(); return payload
-
-def collisions_payload(coefficients: np.ndarray, coefficient_degree: int) -> dict[str, object]: payload = _base("single-coefficient-collision-atlas"); payload["atlas"] = single_coefficient_collision_atlas(coefficients, coefficient_degree).to_dict(); return payload
-
-def kinematics_payload(coefficients: np.ndarray, velocity: np.ndarray, acceleration: np.ndarray | None, delta: complex) -> dict[str, object]: state = parameter_root_kinematics(coefficients, velocity, acceleration); payload = _base("parameter-root-kinematics"); payload.update({"kinematics": state.to_dict(), "delta_parameter": _complex(delta), "first_order_prediction": _complex_vector(taylor_predict_roots(state, delta, order=1)), "second_order_prediction": _complex_vector(taylor_predict_roots(state, delta, order=2)), "claims": {"theorem_claimed": False, "scientific_validation_claimed": False}}); return payload
-
-def spectral_payload(coefficients: np.ndarray) -> dict[str, object]: payload = _base("spectral-crosscheck"); payload["audit"] = audit_spectral_geometry(coefficients).to_dict(); return payload
-
-def basis_atlas_payload(coefficients: np.ndarray) -> dict[str, object]: payload = _base("basis-conditioning-atlas"); payload["atlas"] = conditioning_atlas(coefficients).to_dict(); return payload
-
-def projective_payload(coefficients: np.ndarray) -> dict[str, object]: payload = _base("projective-spectrum"); payload["spectrum"] = projective_roots(coefficients).to_dict(); return payload
-
-def projective_flow_demo_payload(samples: int) -> dict[str, object]: payload = _base("projective-degree-flow-demo"); payload["result"] = track_projective_path(cubic_degree_collapse_path(samples)).to_dict(); return payload
-
-def puiseux_demo_payload(multiplicity: int) -> dict[str, object]: payload = _base("puiseux-canonical-demo"); payload["result"] = canonical_puiseux_fit(multiplicity).to_dict(); return payload
-
-def monodromy_demo_payload(samples: int, subdivisions: int) -> dict[str, object]: payload = _base("monodromy-demo-z2-minus-t"); payload["result"] = track_coefficient_path(quadratic_square_root_loop(samples), subdivisions=subdivisions).to_dict(); return payload
-
-def monodromy_group_demo_payload() -> dict[str, object]: payload = _base("monodromy-group-demo"); payload["group"] = generate_monodromy_group([(1, 0)]).to_dict(); return payload
-
-def hgfm_demo_payload(samples: int) -> dict[str, object]: payload = _base("spectral-hgfm-demo"); payload["graph"] = build_spectral_hgfm(cubic_degree_collapse_path(samples)).to_dict(); return payload
-
-def continuation_payload(start: np.ndarray, end: np.ndarray, steps: int) -> dict[str, object]: result = continue_roots(start, end, steps=steps); payload = _base("fixed-step"); payload["steps"] = [{"t": item.parameter, "roots": _complex_vector(item.roots), "predictor_residual": item.predictor_residual, "corrected_residual": item.corrected_residual, "minimum_derivative": item.minimum_derivative} for item in result.steps]; return payload
-
-def adaptive_continuation_payload(start: np.ndarray, end: np.ndarray, initial_step: float, minimum_step: float, maximum_step: float, predictor_tolerance: float) -> dict[str, object]: result = continue_roots_adaptive(start, end, initial_step=initial_step, minimum_step=minimum_step, maximum_step=maximum_step, predictor_tolerance=predictor_tolerance); payload = _base("adaptive"); payload.update({"status": result.status, "rejected_attempts": result.rejected_attempts, "minimum_step_size": result.minimum_step_size, "steps": [{"t": item.parameter, "step_size": item.step_size, "attempts": item.attempts, "roots": _complex_vector(item.roots), "predictor_residual": item.predictor_residual, "corrected_residual": item.corrected_residual, "minimum_derivative": item.minimum_derivative} for item in result.steps], "claims": {"theorem_claimed": result.theorem_claimed, "scientific_validation_claimed": result.scientific_validation_claimed}}); return payload
-
-def inverse_design_payload(coefficients: np.ndarray, target_roots: np.ndarray, real_coefficients: bool, max_iterations: int, tolerance: float) -> dict[str, object]: result = inverse_design_roots(coefficients, target_roots, real_coefficients=real_coefficients, max_iterations=max_iterations, tolerance=tolerance); payload = _base("inverse-design"); payload.update({"status": result.status, "converged": result.converged, "root_error_norm": result.root_error_norm, "coefficients": _complex_vector(result.coefficients), "roots": _complex_vector(result.roots), "target_roots": _complex_vector(result.target_roots), "iterations": [{"iteration": item.iteration, "root_error_norm": item.root_error_norm, "update_norm": item.update_norm, "accepted_scale": item.accepted_scale, "linear_rank": item.linear_rank, "linear_condition_number": item.linear_condition_number, "max_root_residual": item.max_root_residual} for item in result.steps], "claims": {"theorem_claimed": result.theorem_claimed, "scientific_validation_claimed": result.scientific_validation_claimed}}); return payload
+def multi_cluster_tangent_payload(coefficients,clusters,degrees,epsilon): tangent=multi_cluster_tangent_space(coefficients,clusters,degrees); payload=_base("multi-cluster-mobile-tangent"); payload["tangent"]=tangent.to_dict(); payload["prediction_audit"]=audit_multi_cluster_prediction(coefficients,tangent,epsilon=epsilon).to_dict() if tangent.status=="OAK_PASS_MULTICLUSTER_TANGENT_SPACE" else None; return payload
+def hermite_design_payload(coefficients,clusters,free_degrees,real_coefficients): payload=_base("fixed-cluster-hermite-inverse-design"); payload["design"]=hermite_inverse_design(coefficients,clusters,free_degrees=free_degrees,real_coefficients=real_coefficients).to_dict(); return payload
+def collision_tangent_payload(coefficients,critical_root,degrees,epsilon): tangent=collision_tangent_space(coefficients,critical_root,degrees); payload=_base("collision-tangent-space"); payload["tangent"]=tangent.to_dict(); payload["prediction_audit"]=audit_tangent_prediction(coefficients,tangent,epsilon=epsilon).to_dict() if tangent.status.startswith("OAK_PASS") else None; return payload
+def multiplicity_tangent_payload(coefficients,critical_root,multiplicity,degrees,epsilon): stratum=multiplicity_tangent_space(coefficients,critical_root,multiplicity,degrees); payload=_base("multiplicity-tangent-stratum"); payload["stratum"]=stratum.to_dict(); payload["prediction_audit"]=audit_multiplicity_prediction(coefficients,stratum,epsilon=epsilon).to_dict() if stratum.status=="OAK_PASS_MULTIPLICITY_TANGENT_SPACE" else None; return payload
+def real_tangent_payload(coefficients,critical_root,multiplicity,degrees): payload=_base("real-parameter-multiplicity-tangent"); payload["real_tangent"]=real_parameter_tangent_space(coefficients,critical_root,multiplicity,degrees).to_dict(); return payload
+def unfolding_payload(coefficients,critical_root,multiplicity,degrees,direction,epsilon): unfolding=local_unfolding_map(coefficients,critical_root,multiplicity,degrees); payload=_base("local-versal-unfolding"); payload.update({"unfolding":unfolding.to_dict(),"direction_analysis":analyze_unfolding_direction(unfolding,direction).to_dict(),"epsilon":float(epsilon),"local_model_roots":_complex_vector(local_unfolding_roots(unfolding,direction,epsilon))}); return payload
+def invariant_payload(coefficients): payload=_base("vieta-newton-residue-invariants"); payload["audit"]=audit_invariants(coefficients).to_dict(); return payload
+def discriminant_payload(coefficients): payload=_base("resultant-discriminant-crosscheck"); payload["audit"]=audit_discriminant(coefficients).to_dict(); return payload
+def collisions_payload(coefficients,coefficient_degree): payload=_base("single-coefficient-collision-atlas"); payload["atlas"]=single_coefficient_collision_atlas(coefficients,coefficient_degree).to_dict(); return payload
+def kinematics_payload(coefficients,velocity,acceleration,delta): state=parameter_root_kinematics(coefficients,velocity,acceleration); payload=_base("parameter-root-kinematics"); payload.update({"kinematics":state.to_dict(),"delta_parameter":_complex(delta),"first_order_prediction":_complex_vector(taylor_predict_roots(state,delta,order=1)),"second_order_prediction":_complex_vector(taylor_predict_roots(state,delta,order=2))}); return payload
+def spectral_payload(coefficients): payload=_base("spectral-crosscheck"); payload["audit"]=audit_spectral_geometry(coefficients).to_dict(); return payload
+def basis_atlas_payload(coefficients): payload=_base("basis-conditioning-atlas"); payload["atlas"]=conditioning_atlas(coefficients).to_dict(); return payload
+def projective_payload(coefficients): payload=_base("projective-spectrum"); payload["spectrum"]=projective_roots(coefficients).to_dict(); return payload
+def projective_flow_demo_payload(samples): payload=_base("projective-degree-flow-demo"); payload["result"]=track_projective_path(cubic_degree_collapse_path(samples)).to_dict(); return payload
+def puiseux_demo_payload(multiplicity): payload=_base("puiseux-canonical-demo"); payload["result"]=canonical_puiseux_fit(multiplicity).to_dict(); return payload
+def monodromy_demo_payload(samples,subdivisions): payload=_base("monodromy-demo-z2-minus-t"); payload["result"]=track_coefficient_path(quadratic_square_root_loop(samples),subdivisions=subdivisions).to_dict(); return payload
+def monodromy_group_demo_payload(): payload=_base("monodromy-group-demo"); payload["group"]=generate_monodromy_group([(1,0)]).to_dict(); return payload
+def hgfm_demo_payload(samples): payload=_base("spectral-hgfm-demo"); payload["graph"]=build_spectral_hgfm(cubic_degree_collapse_path(samples)).to_dict(); return payload
+def continuation_payload(start,end,steps): result=continue_roots(start,end,steps=steps); payload=_base("fixed-step"); payload["steps"]=[{"t":item.parameter,"roots":_complex_vector(item.roots),"predictor_residual":item.predictor_residual,"corrected_residual":item.corrected_residual,"minimum_derivative":item.minimum_derivative} for item in result.steps]; return payload
+def adaptive_continuation_payload(start,end,initial_step,minimum_step,maximum_step,predictor_tolerance): result=continue_roots_adaptive(start,end,initial_step=initial_step,minimum_step=minimum_step,maximum_step=maximum_step,predictor_tolerance=predictor_tolerance); payload=_base("adaptive"); payload.update({"status":result.status,"rejected_attempts":result.rejected_attempts,"minimum_step_size":result.minimum_step_size,"steps":[{"t":item.parameter,"step_size":item.step_size,"attempts":item.attempts,"roots":_complex_vector(item.roots),"predictor_residual":item.predictor_residual,"corrected_residual":item.corrected_residual,"minimum_derivative":item.minimum_derivative} for item in result.steps]}); return payload
+def inverse_design_payload(coefficients,target_roots,real_coefficients,max_iterations,tolerance): result=inverse_design_roots(coefficients,target_roots,real_coefficients=real_coefficients,max_iterations=max_iterations,tolerance=tolerance); payload=_base("inverse-design"); payload.update({"status":result.status,"converged":result.converged,"root_error_norm":result.root_error_norm,"coefficients":_complex_vector(result.coefficients),"roots":_complex_vector(result.roots),"target_roots":_complex_vector(result.target_roots),"iterations":[{"iteration":item.iteration,"root_error_norm":item.root_error_norm,"update_norm":item.update_norm,"accepted_scale":item.accepted_scale,"linear_rank":item.linear_rank,"linear_condition_number":item.linear_condition_number,"max_root_residual":item.max_root_residual} for item in result.steps]}); return payload
 
 
 def _write(payload: dict[str, object], output: str | None) -> None:
-    text = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False)
-    if output: Path(output).write_text(text + "\n", encoding="utf-8")
+    text=json.dumps(payload,indent=2,sort_keys=True,ensure_ascii=False)
+    if output: Path(output).write_text(text+"\n",encoding="utf-8")
     else: print(text)
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Ω-ROOTFLOW-T∞ polynomial-root geometry engine"); sub = parser.add_subparsers(dest="command", required=True)
-    def command(name: str, help_text: str): return sub.add_parser(name, help=help_text)
+    parser=argparse.ArgumentParser(description="Ω-ROOTFLOW-T∞ polynomial-root geometry engine"); sub=parser.add_subparsers(dest="command",required=True)
+    def command(name,help_text): return sub.add_parser(name,help=help_text)
     p=command("analyze","root differential audit"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--output")
     p=command("exact-audit","exact rational algebra audit"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--output")
     p=command("exact-multiplicity","exact multiplicity of a rational root"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--root",required=True); p.add_argument("--output")
@@ -228,6 +162,8 @@ def build_parser() -> argparse.ArgumentParser:
     p=command("partition-lattice","complex multiplicity partition lattice"); p.add_argument("--degree",required=True,type=int); p.add_argument("--max-nodes",type=int); p.add_argument("--output")
     p=command("exact-multi-cluster-tangent","exact rational simultaneous cluster tangent"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--clusters",required=True,type=_parse_exact_clusters); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--output")
     p=command("exact-hermite-design","exact rational fixed-cluster Hermite solve"); p.add_argument("--coeffs",required=True,type=_parse_exact_coefficients); p.add_argument("--clusters",required=True,type=_parse_exact_clusters); p.add_argument("--free-degrees",type=_parse_degrees); p.add_argument("--output")
+    p=command("joint-unfolding","analyze coupled local split jets"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--clusters",required=True,type=_parse_clusters); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--direction",required=True,type=_parse_complex_vector); p.add_argument("--output")
+    p=command("joint-unfolding-design","synthesize coefficient direction for target coupled jets"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--clusters",required=True,type=_parse_clusters); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--target-jet",required=True,type=_parse_complex_vector); p.add_argument("--real-coefficients",action="store_true"); p.add_argument("--output")
     p=command("multi-cluster-tangent","mobile simultaneous multiplicity-cluster tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--clusters",required=True,type=_parse_clusters); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
     p=command("hermite-design","fixed-location multiple-root coefficient design"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--clusters",required=True,type=_parse_clusters); p.add_argument("--free-degrees",type=_parse_degrees); p.add_argument("--real-coefficients",action="store_true"); p.add_argument("--output")
     p=command("collision-tangent","generic double-root tangent space"); p.add_argument("--coeffs",required=True,type=_parse_coefficients); p.add_argument("--critical-root",required=True,type=complex); p.add_argument("--degrees",required=True,type=_parse_degrees); p.add_argument("--epsilon",type=float,default=1e-4); p.add_argument("--output")
@@ -250,7 +186,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(argv: Sequence[str] | None=None) -> int:
     args=build_parser().parse_args(argv)
     if args.command=="analyze": payload=analyze_payload(args.coeffs)
     elif args.command=="exact-audit": payload=exact_audit_payload(args.coeffs)
@@ -259,6 +195,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     elif args.command=="partition-lattice": payload=partition_lattice_payload(args.degree,args.max_nodes)
     elif args.command=="exact-multi-cluster-tangent": payload=exact_multi_cluster_payload(args.coeffs,args.clusters,args.degrees)
     elif args.command=="exact-hermite-design": payload=exact_hermite_design_payload(args.coeffs,args.clusters,args.free_degrees)
+    elif args.command=="joint-unfolding": payload=joint_unfolding_payload(args.coeffs,args.clusters,args.degrees,args.direction)
+    elif args.command=="joint-unfolding-design": payload=joint_unfolding_design_payload(args.coeffs,args.clusters,args.degrees,args.target_jet,args.real_coefficients)
     elif args.command=="multi-cluster-tangent": payload=multi_cluster_tangent_payload(args.coeffs,args.clusters,args.degrees,args.epsilon)
     elif args.command=="hermite-design": payload=hermite_design_payload(args.coeffs,args.clusters,args.free_degrees,args.real_coefficients)
     elif args.command=="collision-tangent": payload=collision_tangent_payload(args.coeffs,args.critical_root,args.degrees,args.epsilon)
@@ -284,4 +222,4 @@ def main(argv: Sequence[str] | None = None) -> int:
     _write(payload,args.output); return 0
 
 
-if __name__ == "__main__": raise SystemExit(main())
+if __name__=="__main__": raise SystemExit(main())
