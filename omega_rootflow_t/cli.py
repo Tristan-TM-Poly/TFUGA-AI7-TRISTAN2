@@ -13,16 +13,19 @@ from .adaptive import continue_roots_adaptive
 from .basis import conditioning_atlas
 from .continuation import continue_roots
 from .core import root_conditions, root_jacobian, roots
+from .invariants import audit_invariants
+from .kinematics import parameter_root_kinematics, taylor_predict_roots
 from .monodromy import quadratic_square_root_loop, track_coefficient_path
 from .monodromy_group import generate_monodromy_group
 from .oak import audit_rootflow
 from .projective import projective_roots
 from .projective_flow import cubic_degree_collapse_path, track_projective_path
 from .puiseux import canonical_puiseux_fit
+from .resultant import audit_discriminant, single_coefficient_collision_atlas
 from .spectral import audit_spectral_geometry, inverse_design_roots
 from .spectral_hgfm import build_spectral_hgfm
 
-VERSION = "R0.4"
+VERSION = "R0.5"
 
 
 def _parse_complex_vector(text: str, *, minimum: int = 1) -> np.ndarray:
@@ -42,6 +45,10 @@ def _parse_coefficients(text: str) -> np.ndarray:
 
 
 def _parse_roots(text: str) -> np.ndarray:
+    return _parse_complex_vector(text, minimum=1)
+
+
+def _parse_parameter_vector(text: str) -> np.ndarray:
     return _parse_complex_vector(text, minimum=1)
 
 
@@ -82,6 +89,61 @@ def analyze_payload(coefficients: np.ndarray) -> dict[str, object]:
             "theorem_claimed": False,
             "scientific_validation_claimed": False,
             "scope": "analytic simple-root identities plus numerical software cross-checks",
+        },
+    }
+
+
+def invariant_payload(coefficients: np.ndarray) -> dict[str, object]:
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "vieta-newton-residue-invariants",
+        "audit": audit_invariants(coefficients).to_dict(),
+    }
+
+
+def discriminant_payload(coefficients: np.ndarray) -> dict[str, object]:
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "resultant-discriminant-crosscheck",
+        "audit": audit_discriminant(coefficients).to_dict(),
+    }
+
+
+def collisions_payload(coefficients: np.ndarray, coefficient_degree: int) -> dict[str, object]:
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "single-coefficient-collision-atlas",
+        "atlas": single_coefficient_collision_atlas(
+            coefficients,
+            coefficient_degree,
+        ).to_dict(),
+    }
+
+
+def kinematics_payload(
+    coefficients: np.ndarray,
+    velocity: np.ndarray,
+    acceleration: np.ndarray | None,
+    delta: complex,
+) -> dict[str, object]:
+    state = parameter_root_kinematics(coefficients, velocity, acceleration)
+    first = taylor_predict_roots(state, delta, order=1)
+    second = taylor_predict_roots(state, delta, order=2)
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "parameter-root-kinematics",
+        "kinematics": state.to_dict(),
+        "delta_parameter": _complex(delta),
+        "first_order_prediction": _complex_vector(first),
+        "second_order_prediction": _complex_vector(second),
+        "claims": {
+            "theorem_claimed": False,
+            "scientific_validation_claimed": False,
+            "scope": "exact local simple-root derivatives plus local Taylor predictions",
         },
     }
 
@@ -286,6 +348,26 @@ def build_parser() -> argparse.ArgumentParser:
     analyze.add_argument("--coeffs", required=True, type=_parse_coefficients)
     analyze.add_argument("--output")
 
+    invariants = sub.add_parser("invariants", help="audit Vieta/Newton/residue conservation identities")
+    invariants.add_argument("--coeffs", required=True, type=_parse_coefficients)
+    invariants.add_argument("--output")
+
+    discriminant = sub.add_parser("discriminant", help="cross-check resultant and root-product discriminants")
+    discriminant.add_argument("--coeffs", required=True, type=_parse_coefficients)
+    discriminant.add_argument("--output")
+
+    collisions = sub.add_parser("collisions", help="finite collision atlas for P(z)+t*z^k")
+    collisions.add_argument("--coeffs", required=True, type=_parse_coefficients)
+    collisions.add_argument("--coefficient-degree", required=True, type=int)
+    collisions.add_argument("--output")
+
+    kinematics = sub.add_parser("kinematics", help="first/second parameter derivatives of simple roots")
+    kinematics.add_argument("--coeffs", required=True, type=_parse_coefficients)
+    kinematics.add_argument("--velocity", required=True, type=_parse_parameter_vector)
+    kinematics.add_argument("--acceleration", type=_parse_parameter_vector)
+    kinematics.add_argument("--delta", type=complex, default=0.0)
+    kinematics.add_argument("--output")
+
     spectral = sub.add_parser("spectral", help="companion-matrix and discriminant cross-check")
     spectral.add_argument("--coeffs", required=True, type=_parse_coefficients)
     spectral.add_argument("--output")
@@ -348,6 +430,22 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "analyze":
         _write(analyze_payload(args.coeffs), args.output)
+    elif args.command == "invariants":
+        _write(invariant_payload(args.coeffs), args.output)
+    elif args.command == "discriminant":
+        _write(discriminant_payload(args.coeffs), args.output)
+    elif args.command == "collisions":
+        _write(collisions_payload(args.coeffs, args.coefficient_degree), args.output)
+    elif args.command == "kinematics":
+        _write(
+            kinematics_payload(
+                args.coeffs,
+                args.velocity,
+                args.acceleration,
+                args.delta,
+            ),
+            args.output,
+        )
     elif args.command == "spectral":
         _write(spectral_payload(args.coeffs), args.output)
     elif args.command == "basis-atlas":
