@@ -157,11 +157,12 @@ The score is a **routing heuristic only**. It is never a posterior probability t
 `compile_problem_cells()` emits R0.10-compatible cells with:
 
 - stable deterministic IDs;
-- `problem_id = riemann-hypothesis`;
+- `schema = omega-problem-stream-cell/10`;
+- canonical `problem_id = riemann`;
 - fronts for barrier, representation, research route and M−;
 - explicit `proof_claimed=false` / `rh_solved_claimed=false` fields.
 
-This lets the existing streaming/Merkle/quarantine machinery scale a zeta campaign without weakening mathematical claim boundaries.
+The focused court feeds every emitted cell through the existing R0.10 `CellRecord.from_dict()` parser. This lets the streaming/Merkle/quarantine machinery scale a zeta campaign without relying on a merely similar JSON shape.
 
 ## Relation to Ω-ZETA-MANDEL-T
 

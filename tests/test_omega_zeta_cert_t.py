@@ -2,6 +2,7 @@ import json
 
 import pytest
 
+from omega_millennium_t.r10.model import CELL_SCHEMA, CellRecord
 from omega_zeta_cert_t.core import (
     classify_frontier,
     compile_problem_cells,
@@ -66,7 +67,9 @@ def test_problem_cells_are_deterministic_and_oak_safe():
     b = compile_problem_cells(bundle)
     assert a == b
     assert len({row["cell_id"] for row in a}) == len(a)
-    assert {row["problem_id"] for row in a} == {"riemann-hypothesis"}
+    assert {row["problem_id"] for row in a} == {"riemann"}
+    assert {row["schema"] for row in a} == {CELL_SCHEMA}
+    assert all(CellRecord.from_dict(row).to_dict() == row for row in a)
     serialized = json.dumps(a).lower()
     assert '"proof_claimed": true' not in serialized
     assert '"rh_solved_claimed": true' not in serialized

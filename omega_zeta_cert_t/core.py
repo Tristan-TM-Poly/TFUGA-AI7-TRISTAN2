@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import asdict
 
+R10_CELL_SCHEMA = "omega-problem-stream-cell/10"
+
 from .model import (
     BarrierClass,
     CertificateFamily,
@@ -95,8 +97,9 @@ def compile_problem_cells(bundle: ResearchBundle) -> list[dict]:
     }
     cells.append(
         {
+            "schema": R10_CELL_SCHEMA,
             "cell_id": stable_cell_id((bundle.family.family_id, "frontier", f"{bundle.target_bound:.12g}")),
-            "problem_id": "riemann-hypothesis",
+            "problem_id": "riemann",
             "target_id": "spectral-certificate-frontier",
             "front": "barrier",
             "method": "omega-zeta-cert-frontier",
@@ -111,8 +114,9 @@ def compile_problem_cells(bundle: ResearchBundle) -> list[dict]:
         spec.validate()
         cells.append(
             {
+                "schema": R10_CELL_SCHEMA,
                 "cell_id": stable_cell_id((bundle.family.family_id, "moments", str(spec.max_order), str(spec.window_count))),
-                "problem_id": "riemann-hypothesis",
+                "problem_id": "riemann",
                 "target_id": "spectral-moment-lift",
                 "front": "representation",
                 "method": "omega-zeta-cert-moment-tensor",
@@ -133,8 +137,9 @@ def compile_problem_cells(bundle: ResearchBundle) -> list[dict]:
     for rank, route in enumerate(rank_routes(bundle.routes), start=1):
         cells.append(
             {
+                "schema": R10_CELL_SCHEMA,
                 "cell_id": stable_cell_id((bundle.family.family_id, "route", route.route_id)),
-                "problem_id": "riemann-hypothesis",
+                "problem_id": "riemann",
                 "target_id": route.route_id,
                 "front": "research-route",
                 "method": "bayes-tristan-voi",
@@ -153,8 +158,9 @@ def compile_problem_cells(bundle: ResearchBundle) -> list[dict]:
     for item in bundle.mminus:
         cells.append(
             {
+                "schema": R10_CELL_SCHEMA,
                 "cell_id": stable_cell_id((bundle.family.family_id, "mminus", item.record_id)),
-                "problem_id": "riemann-hypothesis",
+                "problem_id": "riemann",
                 "target_id": item.record_id,
                 "front": "m-minus",
                 "method": "negative-memory",
