@@ -1,0 +1,49 @@
+id: omega-det-adj-kramer-compiler-t-r0.3
+name: "Ω-DET-ADJ-KRAMER-COMPILER-T∞ R0.3"
+repo_path: "scripts/omega_kramer_tristan_r03.py"
+status: D
+definition: >-
+  Exact matrix-expression compiler layer adding a polynomial-growth division-free
+  Berkowitz-style characteristic/determinant circuit, reverse-AD adjugate,
+  multilinear determinantal derivatives, mixed-discriminant probes,
+  higher-adjugate/compound duality audits, proof-carrying structural rewrites,
+  and an exact characteristic-polynomial handoff to Ω-ROOTFLOW-T∞.
+hypotheses:
+  - >-
+    A portfolio combining polynomial determinant circuits, structural rewrites
+    and reverse AD can reduce duplicated symbolic work and expression size on
+    bounded matrix families relative to isolated cofactor/Cramer construction.
+  - >-
+    Guard-preserving rewrite selection can improve compactness without losing
+    the original singularity/domain semantics.
+  - >-
+    Exact characteristic-polynomial handoff plus ROOTFLOW can form a useful
+    auditable mode-flow engine for parameterized matrix models.
+equation_or_model: >-
+  p_A(lambda)=det(lambda I-A); det(A)=(-1)^n c_n;
+  grad_A det(A)=adj(A)^T;
+  D^k det(A)[H1,...,Hk]=polarization(Q_k);
+  det(I+UV)=det(I+VU);
+  det(A tensor B)=det(A)^m det(B)^n.
+code_or_calculation: "scripts/omega_kramer_tristan_r03.py"
+test_path: "tests/test_omega_kramer_tristan_r03.py"
+proof_path: null
+risk_boundary:
+  - "Berkowitz operation-node compression is not a wall-clock speed claim."
+  - "Mixed-jet polarization is exponential in derivative order."
+  - "Schur and other rational rewrites require preserved guards."
+  - "Structural rank must never replace exact rank."
+  - "ROOTFLOW bridge certifies polynomial coefficients, not eigenvalue continuation."
+  - "Classical determinant/adjugate/mixed-discriminant/rewrite identities are not claimed as new mathematics."
+m_minus:
+  - "Never infer universal solver superiority from one circuit-size metric."
+  - "Never apply Schur when det(pivot block)=0 or the guard is unknown."
+  - "Never erase rewrite guards during simplification or equality saturation."
+  - "Never materialize an exponentially large mixed-derivative tensor without a bounded need."
+  - "Never promote ROOTFLOW numerical mode tracking from coefficient agreement alone."
+next_experiment: >-
+  Build R0.4 OAKBench with timing/memory/expression-swell campaigns, sparse
+  separator and DM/treewidth structure mining, multivariate Domain Ledger,
+  equality-saturation rewrite search, rank-k polynomial updates and direct
+  KRAMER×ROOTFLOW parameter-mode sensitivity cross-checks.
+promotion_decision: prototype
