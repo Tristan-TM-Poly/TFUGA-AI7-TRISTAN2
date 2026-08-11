@@ -6,13 +6,20 @@ from omega_zeta_square_t import (
     OakClaim,
     centered_square,
     decode_square,
+    exact_determinant,
+    exact_psd_report,
+    exact_stieltjes_certificate,
     finite_stieltjes_report,
     in_centered_critical_strip,
     inverse_moments_from_theta_coeffs,
     inverse_moments_from_xi_even_derivatives,
+    jacobi_characteristic_polynomial,
+    jacobi_recurrence_from_inverse_moments,
+    leading_only_false_positive_hankel,
     nontrivial_zero_image,
     normalized_theta_coeffs_from_xi_even_derivatives,
     rh_defect,
+    stieltjes_pade_from_inverse_moments,
     strip_boundary,
     trivial_zero_image,
     validate_claim,
@@ -78,7 +85,6 @@ class TestCenteredSquareGeometry(unittest.TestCase):
 
 class TestFiniteMomentDiagnostics(unittest.TestCase):
     def test_finite_atomic_measure_passes_hankel_checks(self):
-        # First several known ordinates, used only as finite numerical sample data.
         gammas = [
             14.134725141734693,
             21.022039638771555,
@@ -89,6 +95,8 @@ class TestFiniteMomentDiagnostics(unittest.TestCase):
         ]
         report = finite_stieltjes_report(gammas, hankel_size=2)
         self.assertTrue(report.finite_positive)
+        self.assertTrue(report.hankel0_psd)
+        self.assertTrue(report.hankel1_psd)
         self.assertFalse(report.proves_rh)
         self.assertEqual(report.epistemic_status, "NUMERICALLY_VERIFIED_FINITE_ONLY")
         self.assertEqual(report.gammas_checked, len(gammas))
@@ -98,9 +106,32 @@ class TestFiniteMomentDiagnostics(unittest.TestCase):
             finite_stieltjes_report([14.0, 0.0], hankel_size=2)
 
 
+class TestExactCertificatesAndNegativeMemory(unittest.TestCase):
+    def test_exact_two_atom_stieltjes_certificate(self):
+        l1, l2 = Fraction(1, 4), Fraction(1, 9)
+        inverse_moments = [l1**k + l2**k for k in range(1, 5)]
+        cert = exact_stieltjes_certificate(inverse_moments, hankel_size=2)
+        self.assertTrue(cert.finite_positive)
+        self.assertFalse(cert.proves_rh)
+        self.assertEqual(cert.epistemic_status, "EXACT_FINITE_MOMENT_CERTIFICATE_ONLY")
+
+    def test_leading_minor_only_rule_has_concrete_false_positive(self):
+        h = leading_only_false_positive_hankel()
+        leading = [exact_determinant([row[:k] for row in h[:k]]) for k in range(1, 4)]
+        self.assertTrue(all(x >= 0 for x in leading))
+        self.assertEqual(leading, [Fraction(0), Fraction(0), Fraction(27)])
+        report = exact_psd_report(h)
+        self.assertFalse(report.all_principal_minors_nonnegative)
+        bad = {m.indices: m.determinant for m in report.minors if m.determinant < 0}
+        self.assertEqual(bad[(0, 2)], Fraction(-9))
+
+    def test_exact_mode_rejects_float_as_uncertified_input(self):
+        with self.assertRaises(TypeError):
+            exact_stieltjes_certificate([0.1, 0.01, 0.001, 0.0001], hankel_size=2)
+
+
 class TestFormalSeriesBridge(unittest.TestCase):
     def test_exact_two_atom_product_recovers_inverse_moments(self):
-        # A(u)=(1+u/4)(1+u/9). Exact Fraction arithmetic avoids roundoff.
         a1 = Fraction(1, 4) + Fraction(1, 9)
         a2 = Fraction(1, 36)
         moments = inverse_moments_from_theta_coeffs([Fraction(1), a1, a2])
@@ -108,12 +139,36 @@ class TestFormalSeriesBridge(unittest.TestCase):
         self.assertEqual(moments[1], Fraction(1, 16) + Fraction(1, 81))
 
     def test_xi_even_derivative_normalization(self):
-        # Synthetic derivatives chosen so normalized A(u)=1+u+u^2.
         derivs = [Fraction(2), Fraction(4), Fraction(48)]
         coeffs = normalized_theta_coeffs_from_xi_even_derivatives(derivs)
         self.assertEqual(coeffs, [Fraction(1), Fraction(1), Fraction(1)])
         moments = inverse_moments_from_xi_even_derivatives(derivs)
         self.assertEqual(moments, [Fraction(1), Fraction(-1)])
+
+
+class TestPadeAndJacobiReconstruction(unittest.TestCase):
+    def test_two_atom_pade_recovers_exact_denominator(self):
+        l1, l2 = Fraction(1, 4), Fraction(1, 9)
+        p = [l1**k + l2**k for k in range(1, 5)]
+        approx = stieltjes_pade_from_inverse_moments(p, order=2)
+        self.assertEqual(
+            approx.denominator,
+            (Fraction(1), l1 + l2, l1 * l2),
+        )
+        self.assertEqual(
+            approx.numerator,
+            (l1 + l2, 2 * l1 * l2),
+        )
+        self.assertFalse(approx.proves_rh)
+
+    def test_two_atom_jacobi_characteristic_polynomial_recovers_nodes(self):
+        l1, l2 = Fraction(1, 4), Fraction(1, 9)
+        p = [l1**k + l2**k for k in range(1, 5)]
+        recurrence = jacobi_recurrence_from_inverse_moments(p, size=2)
+        characteristic = jacobi_characteristic_polynomial(recurrence)
+        self.assertEqual(characteristic, (l1 * l2, -(l1 + l2), Fraction(1)))
+        self.assertTrue(all(beta > 0 for beta in recurrence.beta))
+        self.assertFalse(recurrence.proves_rh)
 
 
 class TestProofGraphOak(unittest.TestCase):
