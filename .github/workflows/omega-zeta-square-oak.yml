@@ -35,20 +35,18 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Compile package and zeta-square tests
         run: python -m compileall -q omega_zeta_square_t tests
-      - name: Validate machine-readable contracts
+      - name: Validate all machine-readable specs
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          for path in [
-              Path("specs/omega_zeta_square_t/research_contract.json"),
-              Path("specs/omega_zeta_square_t/proof_graph.json"),
-              Path("specs/omega_zeta_square_t/bibliography_ledger.json"),
-          ]:
+          paths = sorted(Path("specs/omega_zeta_square_t").glob("*.json"))
+          assert paths
+          for path in paths:
               json.loads(path.read_text(encoding="utf-8"))
               print("valid-json", path)
           PY
-      - name: Validate HGFM and bibliography semantics
+      - name: Validate HGFM bibliography and R10 status semantics
         run: |
           python - <<'PY'
           import json
@@ -61,8 +59,17 @@ jobs:
           ledger = json.loads(Path("specs/omega_zeta_square_t/bibliography_ledger.json").read_text(encoding="utf-8"))
           bib_errors = validate_bibliography_ledger(graph, ledger)
           assert not bib_errors, "\n".join(bib_errors)
+          theorem = json.loads(Path("specs/omega_zeta_square_t/r10_theorem.json").read_text(encoding="utf-8"))
+          nodes = {n["id"]: n for n in graph["nodes"]}
+          assert theorem["status"] == "PROVED_DERIVED_EQUIVALENCE"
+          assert theorem["solution_claimed"] is False
+          assert theorem["novelty_claimed"] is False
+          assert nodes["r7_stieltjes_rh_bridge"]["status"] == "PROVED"
+          assert nodes["off_line_finite_certificate"]["status"] == "PROVED"
+          assert nodes["rh"]["status"] == "OPEN"
           print("proof-graph-oak: PROMOTE")
           print("bibliography-oak: PROMOTE")
+          print("R10-derived-equivalence-oak: PROMOTE_WITHOUT_RH_SOLUTION")
           PY
       - name: Run full zeta-square unit-test family
         run: python -m unittest discover -s tests -p 'test_omega_zeta_square*.py'
@@ -82,6 +89,10 @@ jobs:
           assert cvcd["proves_target"] is False
           obligations = export_obligation_bundle(obligations_from_proof_graph(graph))
           assert obligations["solution_claimed"] is False
+          ids = {item["obligation_id"] for item in obligations["obligations"]}
+          assert "obl.r7_stieltjes_rh_bridge" not in ids
+          assert "obl.off_line_finite_certificate" not in ids
+          assert "obl.rh" in ids
           evidence = IntervalEvidence(
               "xi(1/2)", RationalInterval(Fraction(49,100), Fraction(51,100)), EvidenceKind.SUPPLIED
           )
@@ -89,7 +100,7 @@ jobs:
           assert verdict.analytically_certified_inputs is False
           assert verdict.proves_rh is False
           PY
-      - name: R5 R6 R8 exact off-line finite-model smoke
+      - name: R5 R6 R8 R9 exact finite and tail smoke
         run: |
           python - <<'PY'
           from fractions import Fraction
@@ -100,6 +111,7 @@ jobs:
               first_exact_stieltjes_violation,
               mixed_inverse_moments,
               one_pair_full_hankel_certificate,
+              tail_stability_certificate,
           )
           assert centered_pair_hankel2_determinant(Fraction(3,5), 2) < 0
           pure = conjugate_pair_inverse_moments(1, 1, 6)
@@ -110,7 +122,9 @@ jobs:
           assert full.determinant == -11560 and full.guaranteed_negative
           inertia = finite_atomic_inertia_certificate(3, 2)
           assert (inertia.positive_directions, inertia.negative_directions) == (5, 2)
-          assert inertia.proves_rh is False
+          tail = tail_stability_certificate([[2,0],[0,-4]],[0,1],tail_radius_upper=Fraction(1,10),tail_abs_mass_upper=Fraction(1,20))
+          assert tail.certified_indefinite_after_tail
+          assert tail.proves_rh is False
           PY
       - name: CLI structural and materialization OAK smoke tests
         run: |
