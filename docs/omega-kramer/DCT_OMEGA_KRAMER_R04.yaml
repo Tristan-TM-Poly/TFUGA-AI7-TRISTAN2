@@ -1,0 +1,53 @@
+id: omega-det-adj-kramer-compiler-t-r0.4
+name: "Ω-DET-ADJ-KRAMER-COMPILER-T∞ R0.4"
+repo_path: "scripts/omega_kramer_tristan_r04.py"
+status: D
+definition: >-
+  Exact matrix-expression compiler layer adding bounded empirical OAKBench
+  telemetry, intermediate rational-swell metrics, DM-inspired sparse structural
+  decomposition, min-fill elimination-width routing features, multivariate
+  proof-carrying domain cancellation, singular-safe rank-k determinant update
+  polynomials, characteristic-parameter derivatives, ROOTFLOW-compatible simple
+  mode velocities, and a bounded verified rewrite portfolio with M-minus refusals.
+hypotheses:
+  - >-
+    Separating static circuit size, evaluated rational swell, memory telemetry
+    and timing telemetry yields more reliable backend evidence than collapsing
+    them into one performance score.
+  - >-
+    Sparse matching/separator features plus exact guards can improve bounded
+    representation selection on structured matrix families.
+  - >-
+    Exact characteristic-coefficient derivatives provide an auditable bridge
+    from parameterized matrix models to ROOTFLOW simple-mode sensitivity.
+equation_or_model: >-
+  P(t)=det(A+tUV), deg(P)<=rank(UV);
+  p(lambda,theta)=det(lambda I-(A+theta H));
+  cdot_k=sum_ij (partial c_k/partial a_ij) H_ij;
+  lambda_dot=-p_theta/p_lambda for a simple exact eigenvalue.
+code_or_calculation: "scripts/omega_kramer_tristan_r04.py"
+test_path: "tests/test_omega_kramer_tristan_r04.py"
+proof_path: null
+risk_boundary:
+  - "CI timings and traced memory are observations, not deterministic algorithm rankings."
+  - "The DM-inspired alternating-path partition is not claimed as a complete canonical Dulmage-Mendelsohn implementation."
+  - "Min-fill elimination width is a heuristic upper bound, not exact treewidth."
+  - "Evaluated rational bit length is not symbolic expression-tree size."
+  - "Multivariate cancellation is accepted only when exact single-divisor polynomial division succeeds in numerator and denominator."
+  - "Simple-mode velocity is refused when p_lambda=0 or the supplied value is not an exact eigenvalue."
+  - "Classical determinant, low-rank, characteristic and implicit-root identities are not claimed as new mathematics."
+m_minus:
+  - "Never gate CI on one backend being faster than another."
+  - "Never infer exact algebraic rank from structural rank."
+  - "Never call a heuristic elimination width exact treewidth."
+  - "Never cancel a proposed multivariate factor with a nonzero remainder."
+  - "Never use inverse-based low-rank determinant formulas when a global singular-safe polynomial representation is required."
+  - "Never route repeated eigenvalues through simple-root sensitivity coordinates."
+  - "Never discard guard failures or bounded-out rewrite candidates from the refusal ledger."
+next_experiment: >-
+  Build R0.5 with certified Dulmage-Mendelsohn permutations, sparse separator
+  recursion, bounded-treewidth exact determinant DP, richer multivariate
+  factor/domain algebra, proof-traced equality saturation, higher-adjugate
+  formulas for rank-k update coefficients, left/right eigenvector sensitivity
+  cross-checks, and routing of repeated modes into ROOTFLOW R0.7 multiplicity strata.
+promotion_decision: prototype

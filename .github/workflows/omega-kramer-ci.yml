@@ -6,9 +6,11 @@ on:
       - "scripts/omega_kramer_tristan.py"
       - "scripts/omega_kramer_tristan_r02.py"
       - "scripts/omega_kramer_tristan_r03.py"
+      - "scripts/omega_kramer_tristan_r04.py"
       - "tests/test_omega_kramer_tristan.py"
       - "tests/test_omega_kramer_tristan_r02.py"
       - "tests/test_omega_kramer_tristan_r03.py"
+      - "tests/test_omega_kramer_tristan_r04.py"
       - "docs/omega-kramer/**"
       - ".github/workflows/omega-kramer-ci.yml"
   push:
@@ -18,9 +20,11 @@ on:
       - "scripts/omega_kramer_tristan.py"
       - "scripts/omega_kramer_tristan_r02.py"
       - "scripts/omega_kramer_tristan_r03.py"
+      - "scripts/omega_kramer_tristan_r04.py"
       - "tests/test_omega_kramer_tristan.py"
       - "tests/test_omega_kramer_tristan_r02.py"
       - "tests/test_omega_kramer_tristan_r03.py"
+      - "tests/test_omega_kramer_tristan_r04.py"
       - "docs/omega-kramer/**"
       - ".github/workflows/omega-kramer-ci.yml"
 
@@ -44,15 +48,21 @@ jobs:
         run: python -m unittest tests.test_omega_kramer_tristan_r02 -v
       - name: R0.3 polynomial circuit mixed jet rewrite tests
         run: python -m unittest tests.test_omega_kramer_tristan_r03 -v
+      - name: R0.4 OAKBench sparse domain mode-flow tests
+        run: python -m unittest tests.test_omega_kramer_tristan_r04 -v
       - name: R0.1 deterministic CLI smoke
         run: python scripts/omega_kramer_tristan.py demo > /tmp/omega-kramer-r01.json
       - name: R0.2 deterministic CLI smoke
         run: python scripts/omega_kramer_tristan_r02.py demo > /tmp/omega-kramer-r02.json
       - name: R0.3 deterministic CLI smoke
         run: python scripts/omega_kramer_tristan_r03.py demo > /tmp/omega-kramer-r03.json
+      - name: R0.4 evidence CLI smoke
+        run: python scripts/omega_kramer_tristan_r04.py demo > /tmp/omega-kramer-r04.json
       - name: Verify R0.1 certificate
         run: python -c 'import json; d=json.load(open("/tmp/omega-kramer-r01.json")); assert d["certificate_exact"] is True; assert d["bordered_probe_residual"] == "0"'
       - name: Verify R0.2 evidence flags
         run: python -c 'import json; d=json.load(open("/tmp/omega-kramer-r02.json")); assert d["division_free"]["bareiss_exact"] is True; assert d["division_free"]["cofactor_crosscheck_exact"] is True; assert d["directional_jet"]["validation_residual"] == "0"; assert d["singularity_ladder"]["rank_order_identity_exact"] is True; assert d["guarded_simplification"]["ledger"]["cancellation_preserved"] is True'
       - name: Verify R0.3 evidence flags
         run: python -c 'import json; d=json.load(open("/tmp/omega-kramer-r03.json")); assert d["berkowitz"]["determinant_exact"] is True; assert d["berkowitz"]["adjugate_exact"] is True; assert d["berkowitz"]["characteristic_probe_exact"] is True; assert d["higher_adjugate_tower"]["all_dualities_exact"] is True; assert d["rootflow_bridge"]["probe_exact"] is True; assert d["mixed_symmetry_exact"] is True; assert d["singular_rank_one_update"]["exact"] is True; assert d["sylvester"]["exact"] is True; assert d["kronecker"]["exact"] is True; assert d["schur"]["exact"] is True'
+      - name: Verify R0.4 evidence flags
+        run: python -c 'import json; d=json.load(open("/tmp/omega-kramer-r04.json")); assert d["oakbench_small"]["all_exact"] is True; assert d["rank_k_update"]["degree_bound_exact"] is True; assert d["rank_k_update"]["probe_exact"] is True; assert d["characteristic_parameter_derivative"]["reverse_ad_crosscheck_exact"] is True; assert d["mode_velocity"]["accepted"] is True; assert d["mode_velocity"]["velocity_exact"] == "5"; assert d["multivariate_guarded_cancel"]["exact"] is True; assert d["multivariate_guarded_cancel"]["ledger"]["preserved"] is True; assert d["rewrite_portfolio"]["cvcd_agreement_exact"] is True; assert d["dm_inspired"]["vertex_cover_exact"] is True'
