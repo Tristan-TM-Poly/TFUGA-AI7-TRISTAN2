@@ -6,7 +6,7 @@ on:
       - "omega_capability_os_t/**"
       - "tests/test_omega_capability_os*.py"
       - "examples/capability_os_*.json"
-      - "docs/OMEGA_CAPABILITY_OS_T.md"
+      - "docs/OMEGA_CAPABILITY_OS*.md"
       - ".agents/skills/capability-os/**"
       - ".github/workflows/capability-os-ci.yml"
   workflow_dispatch:
@@ -98,4 +98,52 @@ jobs:
           execution_request = resolver.pending_requests(include_arguments=True)[0]
           assert execution_request["arguments"]["pr_number"] == 417, execution_request
           print(json.dumps({"binding_validation": validation, "request": audit_request}, indent=2))
+          PY
+      - name: R0.5 provider normalizer smoke
+        run: |
+          python - <<'PY'
+          from omega_capability_os_t.core import Capability
+          from omega_capability_os_t.external import ExternalBinding, make_external_request
+          from omega_capability_os_t.normalizers import normalize_github_response
+
+          capability = Capability(
+              capability_id="ci.github.fetch_pr",
+              domains=("github",),
+              consumes=("repo", "pr_number"),
+              produces=("pr_metadata", "commit_sha"),
+              authority="read",
+          )
+          binding = ExternalBinding(
+              capability_id=capability.capability_id,
+              connector="GitHub",
+              action="fetch_pr",
+              argument_template={"repo_full_name": "$repo", "pr_number": "$pr_number"},
+          )
+          request = make_external_request(
+              capability,
+              binding,
+              {"repo": "example/repo", "pr_number": 417},
+              candidate_sha="ci-sha",
+          )
+          raw = {
+              "connector_name": "GitHub",
+              "action_name": "fetch_pr",
+              "result": {
+                  "pull_request": {"number": 417, "head_sha": "ci-sha"},
+                  "url": "https://github.com/example/repo/pull/417",
+              },
+          }
+          receipt = normalize_github_response(
+              request,
+              raw,
+              output_paths={
+                  "pr_metadata": "pull_request",
+                  "commit_sha": "pull_request.head_sha",
+              },
+          )
+          assert receipt.status == "SUCCESS", receipt
+          assert receipt.observed_candidate_sha == "ci-sha", receipt
+          assert receipt.outputs["commit_sha"] == "ci-sha", receipt
+          assert receipt.sources == ("https://github.com/example/repo/pull/417",), receipt
+          print(receipt.to_dict())
           PY

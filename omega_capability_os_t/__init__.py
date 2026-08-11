@@ -21,6 +21,18 @@ from .external import (
     validate_external_bindings,
     validate_external_receipt,
 )
+from .normalizers import (
+    NORMALIZER_SCHEMA_VERSION,
+    ProviderResponseNormalizationError,
+    ResponseContract,
+    normalize_calendar_response,
+    normalize_drive_response,
+    normalize_files_response,
+    normalize_github_response,
+    normalize_gmail_response,
+    normalize_provider_response,
+    normalize_web_response,
+)
 from .runtime import ActionRequired, CapabilityRuntime, HandlerResult, learn_health
 
 __all__ = [
@@ -46,6 +58,16 @@ __all__ = [
     "make_external_request",
     "validate_external_bindings",
     "validate_external_receipt",
+    "NORMALIZER_SCHEMA_VERSION",
+    "ProviderResponseNormalizationError",
+    "ResponseContract",
+    "normalize_provider_response",
+    "normalize_github_response",
+    "normalize_files_response",
+    "normalize_drive_response",
+    "normalize_gmail_response",
+    "normalize_calendar_response",
+    "normalize_web_response",
     "ChatMemCheckpointManifest",
     "chatmem_capabilities",
     "chatmem_external_bindings",
@@ -54,4 +76,4 @@ __all__ = [
     "checkpoint_gate_handler",
     "default_chatmem_bootstrap_values",
 ]
-__version__ = "0.4.0"
+__version__ = "0.5.0"
