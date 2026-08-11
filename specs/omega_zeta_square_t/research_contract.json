@@ -1,8 +1,8 @@
 {
-  "schema": "omega-zeta-square-research-contract/1",
+  "schema": "omega-zeta-square-research-contract/2",
   "system": "Omega-ZETA-SQUARE-T-infinity",
   "parent_problem": "riemann",
-  "status": "research-toolkit",
+  "status": "research-toolkit-r2",
   "solution_claimed": false,
   "canonical_coordinate": {
     "center": "1/2",
@@ -14,7 +14,9 @@
     "D_RH(u)=(|u|+Re(u))/2=(beta-1/2)^2",
     "H(u)=(|u|-Re(u))/2=gamma^2",
     "critical_strip_image: Re(u)<=1/4-Im(u)^2",
-    "trivial_zero_image(n)=(2n+1/2)^2"
+    "trivial_zero_image(n)=(2n+1/2)^2",
+    "Theta(u)/Theta(0)=sum_m xi^(2m)(1/2)u^m/((2m)!xi(1/2))",
+    "Theta'/Theta=p1-p2*u+p3*u^2-... as a formal coefficient identity"
   ],
   "known_criteria_to_source": [
     {
@@ -23,6 +25,23 @@
       "bibliography_required": true
     }
   ],
+  "delivered_r2": [
+    "PSD-aware LDLT finite Hankel diagnostic",
+    "exact all-principal-minor PSD certificate for supplied rational data",
+    "explicit M-minus witness showing leading-principal-minor-only PSD logic is insufficient",
+    "exact [n-1/n] Pade reconstruction from inverse moments",
+    "exact monic Jacobi recurrence reconstruction from inverse moments",
+    "exact Jacobi characteristic polynomial reconstruction",
+    "CLI exact-cert/pade/jacobi surfaces with proves_rh=false",
+    "multi-Python CI smoke coverage for exact reconstruction"
+  ],
+  "epistemic_boundaries": {
+    "exact_rational_certificate": "exact only for the supplied rational values; it does not certify that approximate xi-derived numbers equal those rationals",
+    "finite_hankel": "finite PSD constraints never imply all-order Stieltjes positivity by themselves",
+    "pade": "formal/finite reconstruction does not imply global Stieltjes structure",
+    "jacobi": "a finite Jacobi matrix reconstructed from moments is not an independent Hilbert-Polya operator",
+    "numerical_zero_data": "known ordinates may test code but cannot serve as circular proof input"
+  },
   "tristan_research_combinations": [
     "centered-square parabolic tomography",
     "D_RH exact defect as an OAK observable",
@@ -38,8 +57,11 @@
   "forbidden_promotions": [
     "finite_to_infinite",
     "numeric_to_exact",
+    "supplied_rational_to_true_xi_value",
+    "leading_principal_minors_to_psd",
     "equivalent_reformulation_to_solution",
     "known_zeros_to_independent_operator",
+    "finite_jacobi_to_hilbert_polya",
     "pattern_to_theorem",
     "conjectural_leaf_to_proved_claim",
     "branch_numerics_to_analytic_continuation",
@@ -67,13 +89,18 @@
     },
     {
       "id": "square.axis.hankel",
-      "goal": "search finite negative certificates implied by hypothetical off-line zeros",
+      "goal": "replace weak finite positivity heuristics by exact/certified constraints and search finite negative witnesses",
+      "priority": 1
+    },
+    {
+      "id": "square.axis.pade",
+      "goal": "study Pade/Stieltjes pole and residue constraints from independently computed central data",
       "priority": 1
     },
     {
       "id": "square.axis.jacobi",
-      "goal": "reconstruct finite Jacobi approximants from independently computed moments",
-      "priority": 2
+      "goal": "reconstruct finite Jacobi approximants from independently computed moments and quantify convergence",
+      "priority": 1
     },
     {
       "id": "square.axis.operator",
@@ -90,6 +117,16 @@
       "goal": "generate and retain adversarial counterexamples to false proof patterns",
       "priority": 1
     }
+  ],
+  "next_r3": [
+    "interval-certified central xi derivative evaluation",
+    "interval propagation from central derivatives to inverse moments",
+    "certified-sign Hankel determinants with uncertainty intervals",
+    "Pade pole/residue reality and positivity diagnostics",
+    "Jacobi convergence diagnostics across truncation orders",
+    "CVCD search for minimal forcing sets in the HGFM criterion graph",
+    "bibliography/provenance ledger for every known criterion",
+    "formal proof obligations export for Lean-compatible verification"
   ],
   "success_conditions": {
     "research_increment": [
