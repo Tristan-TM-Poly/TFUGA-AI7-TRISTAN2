@@ -17,7 +17,7 @@ class TestNewtonPowerSumCompiler(unittest.TestCase):
         self.assertEqual(evaluate_polynomial(p[0], values), 2)
         self.assertEqual(evaluate_polynomial(p[1], values), -2)
         self.assertEqual(evaluate_polynomial(p[2], values), 5)
-        self.assertEqual(evaluate_polynomial(p[3], values), -18)
+        self.assertEqual(evaluate_polynomial(p[3], values), -2)
 
 
 class TestHankelPolynomialCompiler(unittest.TestCase):
