@@ -14,6 +14,7 @@ DEFAULT_WRAPPERS = (
     "omega-skillgen-ops",
     "omega-skillgen-ultra",
     "omega-skillgen-evolution",
+    "omega-skillgen-civilization",
 )
 
 
