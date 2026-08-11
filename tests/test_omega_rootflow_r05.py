@@ -39,7 +39,6 @@ def test_vieta_jacobian_has_exact_projective_null_direction() -> None:
     jac = vieta_jacobian(coeffs)
     assert jac.shape == (3, 4)
     assert np.max(np.abs(jac @ coeffs)) < 1e-12
-    # e1 = -a2/a3, so d e1 / d a2 = -1/a3.
     assert np.isclose(jac[0, 2], -1.0)
 
 
@@ -57,7 +56,6 @@ def test_residue_moment_identity_and_triangular_sensitivity_are_exact() -> None:
     residues = residue_moments(coeffs, 2)
     assert np.allclose(residues[:2], 0.0, atol=1e-12)
     assert np.isclose(residues[2], 1.0, atol=1e-12)
-
     observed = power_sum_jacobian(coeffs, 3)[:, :3]
     expected = triangular_power_sum_sensitivity(coeffs)
     mask = np.isfinite(expected.real)
@@ -70,7 +68,6 @@ def test_constant_coefficient_first_changes_cubic_power_sum_at_order_three() -> 
     assert abs(jac[0, 0]) < 1e-11
     assert abs(jac[1, 0]) < 1e-11
     assert np.isclose(jac[2, 0], -3.0, atol=1e-10)
-
     epsilon = 1e-7
     plus = coeffs.copy()
     minus = coeffs.copy()
@@ -95,7 +92,6 @@ def test_full_invariant_audit_passes_well_separated_cubic() -> None:
 
 
 def test_resultant_discriminant_matches_quadratic_closed_form() -> None:
-    # 4 z^2 + 3 z + 2 -> b^2 - 4ac = 9 - 32 = -23.
     coeffs = np.array([2.0, 3.0, 4.0])
     discriminant = discriminant_from_resultant(coeffs)
     assert np.isclose(discriminant, -23.0, atol=1e-12)
@@ -133,14 +129,12 @@ def test_leading_coefficient_shift_reports_projective_infinity_transition() -> N
 
 
 def test_second_order_root_kinematics_improves_sqrt_parameter_prediction() -> None:
-    # P(z,t)=z^2-t at t=1: r=sqrt(t), r'=1/(2r), r''=-1/(4r^3).
     coeffs = np.array([-1.0, 0.0, 1.0])
     coefficient_velocity = np.array([-1.0, 0.0, 0.0])
     state = parameter_root_kinematics(coeffs, coefficient_velocity)
     positive_index = int(np.argmin(np.abs(state.roots - 1.0)))
     assert np.isclose(state.velocities[positive_index], 0.5, atol=1e-12)
     assert np.isclose(state.accelerations[positive_index], -0.25, atol=1e-12)
-
     delta = 0.1
     first = taylor_predict_roots(state, delta, order=1)
     second = taylor_predict_roots(state, delta, order=2)
@@ -161,34 +155,13 @@ def test_r05_cli_invariants_discriminant_collisions_and_kinematics(tmp_path) -> 
     }
     assert main(["invariants", "--coeffs", "6,-5,-2,1", "--output", str(paths["invariants"])]) == 0
     assert main(["discriminant", "--coeffs", "2,3,4", "--output", str(paths["discriminant"])]) == 0
-    assert main(
-        [
-            "collisions",
-            "--coeffs",
-            "0,-5,0,0,0,1",
-            "--coefficient-degree",
-            "0",
-            "--output",
-            str(paths["collisions"]),
-        ]
-    ) == 0
-    assert main(
-        [
-            "kinematics",
-            "--coeffs=-1,0,1",
-            "--velocity=-1,0,0",
-            "--delta",
-            "0.1",
-            "--output",
-            str(paths["kinematics"]),
-        ]
-    ) == 0
-
+    assert main(["collisions", "--coeffs", "0,-5,0,0,0,1", "--coefficient-degree", "0", "--output", str(paths["collisions"])]) == 0
+    assert main(["kinematics", "--coeffs=-1,0,1", "--velocity=-1,0,0", "--delta", "0.1", "--output", str(paths["kinematics"])]) == 0
     invariants = json.loads(paths["invariants"].read_text(encoding="utf-8"))
     discriminant = json.loads(paths["discriminant"].read_text(encoding="utf-8"))
     collisions = json.loads(paths["collisions"].read_text(encoding="utf-8"))
     kinematics = json.loads(paths["kinematics"].read_text(encoding="utf-8"))
-    assert invariants["version"] == "R0.5"
+    assert invariants["version"] == "R0.6"
     assert invariants["audit"]["status"] == "OAK_PASS_VIETA_NEWTON_RESIDUE"
     assert discriminant["audit"]["status"] == "OAK_PASS_DISCRIMINANT_CROSSCHECK"
     assert len(collisions["atlas"]["candidates"]) == 4

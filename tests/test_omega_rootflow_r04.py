@@ -106,7 +106,7 @@ def test_r04_cli_projective_puiseux_group_and_hgfm(tmp_path) -> None:
     puiseux = json.loads(outputs["puiseux"].read_text(encoding="utf-8"))
     group = json.loads(outputs["group"].read_text(encoding="utf-8"))
     hgfm = json.loads(outputs["hgfm"].read_text(encoding="utf-8"))
-    assert pflow["version"] == "R0.5"
+    assert pflow["version"] == "R0.6"
     assert pflow["result"]["degree_transition_count"] == 1
     assert puiseux["result"]["inferred_reciprocal_integer"] == 3
     assert group["group"]["order"] == 2
