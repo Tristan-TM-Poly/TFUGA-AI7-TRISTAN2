@@ -21,6 +21,13 @@ from .moments import (
     leading_principal_minors,
 )
 from .oak import ClaimStatus, OakClaim, validate_claim
+from .proof_graph import load_and_validate_proof_graph, validate_proof_graph
+from .series import (
+    inverse_moments_from_theta_coeffs,
+    inverse_moments_from_xi_even_derivatives,
+    log_derivative_coefficients,
+    normalized_theta_coeffs_from_xi_even_derivatives,
+)
 
 __all__ = [
     "SquareCoordinate",
@@ -39,4 +46,10 @@ __all__ = [
     "ClaimStatus",
     "OakClaim",
     "validate_claim",
+    "normalized_theta_coeffs_from_xi_even_derivatives",
+    "log_derivative_coefficients",
+    "inverse_moments_from_theta_coeffs",
+    "inverse_moments_from_xi_even_derivatives",
+    "validate_proof_graph",
+    "load_and_validate_proof_graph",
 ]
