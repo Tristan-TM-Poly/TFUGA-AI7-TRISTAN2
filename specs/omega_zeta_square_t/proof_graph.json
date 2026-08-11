@@ -1,5 +1,5 @@
 {
-  "schema": "hgfm-proof-graph/1",
+  "schema": "hgfm-proof-graph/2",
   "system": "Omega-RH-PROOF-OS-T-infinity",
   "nodes": [
     {"id": "rh", "kind": "problem", "status": "OPEN"},
@@ -11,6 +11,9 @@
     {"id": "inverse_moments", "kind": "representation", "status": "SYMBOLICALLY_DERIVED"},
     {"id": "hankel_all_orders", "kind": "criterion_candidate", "status": "CONJECTURE"},
     {"id": "finite_hankel", "kind": "numeric_test", "status": "NUMERICALLY_VERIFIED"},
+    {"id": "exact_finite_hankel", "kind": "finite_certificate", "status": "PROVED"},
+    {"id": "pade_finite", "kind": "formal_reconstruction", "status": "PROVED"},
+    {"id": "jacobi_finite", "kind": "formal_reconstruction", "status": "PROVED"},
     {"id": "jacobi_limit", "kind": "operator_candidate", "status": "CONJECTURE"},
     {"id": "independent_hilbert_polya", "kind": "operator_goal", "status": "CONJECTURE"},
     {"id": "off_line_finite_certificate", "kind": "lemma_goal", "status": "CONJECTURE"},
@@ -49,17 +52,37 @@
       "relation": "motivates_positive_moment_constraints"
     },
     {
+      "id": "e.finite.exact",
+      "sources": ["inverse_moments"],
+      "target": "exact_finite_hankel",
+      "relation": "finite_exact_transform",
+      "oak": "exact only for supplied rational moment values"
+    },
+    {
       "id": "e.finite.not_global",
-      "sources": ["finite_hankel"],
+      "sources": ["finite_hankel", "exact_finite_hankel"],
       "target": "hankel_all_orders",
       "relation": "does_not_prove",
       "oak": "finite_to_infinite forbidden"
     },
     {
-      "id": "e.moments.jacobi",
+      "id": "e.moments.pade",
       "sources": ["inverse_moments"],
+      "target": "pade_finite",
+      "relation": "finite_exact_transform"
+    },
+    {
+      "id": "e.moments.jacobi.finite",
+      "sources": ["inverse_moments"],
+      "target": "jacobi_finite",
+      "relation": "finite_exact_transform"
+    },
+    {
+      "id": "e.jacobi.limit",
+      "sources": ["jacobi_finite"],
       "target": "jacobi_limit",
-      "relation": "reconstructs_finite_approximants"
+      "relation": "research_path_only",
+      "oak": "finite approximants do not establish a convergent infinite operator"
     },
     {
       "id": "e.jacobi.operator",
@@ -83,8 +106,11 @@
   ],
   "negative_memory": [
     {"id": "mminus.finite_to_infinite", "rule": "finite zero/Hankel checks never prove RH"},
+    {"id": "mminus.leading_minor_psd", "rule": "nonnegative leading principal minors alone do not certify positive semidefiniteness; use an actual PSD test or all principal minors"},
+    {"id": "mminus.supplied_rational", "rule": "exact algebra on supplied rational approximations does not certify them as exact xi/zeta values"},
     {"id": "mminus.reformulation", "rule": "an equivalent criterion is not a solution"},
     {"id": "mminus.circular_operator", "rule": "an operator constructed from known gamma_n is not an independent Hilbert-Polya construction"},
+    {"id": "mminus.finite_jacobi", "rule": "finite Jacobi reconstruction does not establish an infinite self-adjoint Hilbert-Polya operator"},
     {"id": "mminus.pattern", "rule": "FFWT/fractal/Jensen-like patterns require analytic proof before promotion"},
     {"id": "mminus.branch", "rule": "direct sqrt numerics do not substitute for branch-independent analytic continuation"}
   ]
