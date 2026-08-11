@@ -1,0 +1,71 @@
+name: Omega Zeta Square OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_zeta_square_t/**"
+      - "tests/test_omega_zeta_square_t.py"
+      - "specs/omega_zeta_square_t/**"
+      - "docs/omega_zeta_square_t/**"
+      - "docs/omega_millennium_t/r02/problems/riemann.md"
+      - ".github/workflows/omega-zeta-square-oak.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "omega_zeta_square_t/**"
+      - "tests/test_omega_zeta_square_t.py"
+      - "specs/omega_zeta_square_t/**"
+      - ".github/workflows/omega-zeta-square-oak.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile package and targeted tests
+        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py
+      - name: Validate machine-readable contracts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in [
+              Path("specs/omega_zeta_square_t/research_contract.json"),
+              Path("specs/omega_zeta_square_t/proof_graph.json"),
+          ]:
+              json.loads(path.read_text(encoding="utf-8"))
+              print("valid-json", path)
+          PY
+      - name: Run targeted unit tests
+        run: python -m unittest tests.test_omega_zeta_square_t
+      - name: CLI geometry OAK smoke test
+        run: |
+          python -m omega_zeta_square_t geometry 0.5 14.134725141734693 > /tmp/zeta-square-geometry.json
+          python - <<'PY'
+          import json
+          p = json.load(open("/tmp/zeta-square-geometry.json", encoding="utf-8"))
+          assert p["proves_rh"] is False
+          assert abs(p["D_RH"]) < 1e-12
+          assert p["u"]["real"] < 0
+          PY
+      - name: CLI finite-moment OAK smoke test
+        run: |
+          python -m omega_zeta_square_t moments --hankel-size 2 14.134725141734693 21.022039638771555 25.01085758014569 > /tmp/zeta-square-moments.json
+          python - <<'PY'
+          import json
+          p = json.load(open("/tmp/zeta-square-moments.json", encoding="utf-8"))
+          assert p["proves_rh"] is False
+          assert p["epistemic_status"] == "NUMERICALLY_VERIFIED_FINITE_ONLY"
+          assert p["oak"]["promotion"] == "FINITE_EVIDENCE_ONLY"
+          PY
