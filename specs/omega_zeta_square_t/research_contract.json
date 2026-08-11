@@ -1,5 +1,5 @@
 {
-  "schema": "omega-zeta-square-research-contract/5",
+  "schema": "omega-zeta-square-research-contract/6",
   "system": "Omega-ZETA-SQUARE-T-infinity",
   "proof_os": "Omega-RH-PROOF-OS-T-infinity",
   "parent_problem": "riemann",
@@ -20,31 +20,32 @@
     "isolated_conjugate_pair_H2_det=-4*b^2*(a^2+b^2)",
     "centered_isolated_pair_H2_det=-16*delta^2*gamma^2/(delta^2+gamma^2)^6"
   ],
-  "proved_finite_atomic_results": [
+  "proved_finite_or_conditional_results": [
     {
       "id": "r5.isolated_pair_hankel",
       "statement": "an isolated non-real reciprocal conjugate pair forces a negative size-2 Hankel determinant",
-      "scope": "isolated finite pair only"
+      "scope": "isolated finite pair"
     },
     {
       "id": "r6.one_pair_vandermonde",
       "statement": "q distinct positive real reciprocal atoms plus one non-real conjugate pair force a negative full-support Hankel determinant at size q+2 for every nonnegative shift",
       "scope": "finite atomic support with one non-real pair"
+    },
+    {
+      "id": "r8.finite_atomic_inertia",
+      "statement": "q positive real atoms and m non-real conjugate pairs yield full-support inertia (q+m,m,0)",
+      "scope": "finite distinct atomic support"
+    },
+    {
+      "id": "r9.tail_stability",
+      "statement": "a finite negative polynomial witness survives an arbitrary conjugation-symmetric tail when M*(sum |v_i|R^i)^2 is smaller than its negative margin",
+      "scope": "rigorous conditional theorem requiring certified tail radius R and absolute mass M"
     }
   ],
   "known_results_with_primary_bindings": [
-    {
-      "graph_node": "theta_entire",
-      "claim": "Theta(u)=xi(1/2+sqrt(u)) is entire of order 1/2"
-    },
-    {
-      "graph_node": "theta_negative_zeros",
-      "claim": "RH is equivalent to all zeros of Theta being negative real"
-    },
-    {
-      "graph_node": "stieltjes_moment_theorem",
-      "claim": "all-orders basic and shifted Hankel positivity characterizes Stieltjes moment sequences"
-    }
+    {"graph_node": "theta_entire", "claim": "Theta(u)=xi(1/2+sqrt(u)) is entire of order 1/2"},
+    {"graph_node": "theta_negative_zeros", "claim": "RH is equivalent to all zeros of Theta being negative real"},
+    {"graph_node": "stieltjes_moment_theorem", "claim": "all-orders basic and shifted Hankel positivity characterizes Stieltjes moment sequences"}
   ],
   "unproved_high_value_bridges": [
     {
@@ -64,7 +65,15 @@
       "id": "global.finite_negative_certificate",
       "goal": "off-critical zero implies some finite basic or shifted Hankel matrix is not PSD",
       "status": "CONJECTURE",
-      "routes": ["prove R7 and take contrapositive", "derive explicit finite-tail stability bound"]
+      "routes": [
+        "prove R7 and take contrapositive",
+        "construct finite R8 witness and certify R9 tail bounds"
+      ]
+    },
+    {
+      "id": "tail.analytic.bounds",
+      "goal": "derive unconditional explicit upper bounds for reciprocal-zero tail radius and sum of absolute reciprocal masses",
+      "status": "CONJECTURE_ANALYTIC_BOUND_GOAL"
     }
   ],
   "tristan_system_integrations": [
@@ -85,6 +94,8 @@
     "supplied_interval_to_certified_analytic_xi_interval",
     "leading_principal_minors_to_psd",
     "finite_atomic_vandermonde_to_infinite_riemann_spectrum",
+    "finite_inertia_to_infinite_inertia_without_tail_control",
+    "conditional_tail_bound_with_uncertified_inputs_to_unconditional_result",
     "equivalent_reformulation_to_solution",
     "structural_cvcd_support_to_proof",
     "lean_comment_stub_to_formal_proof",
@@ -100,6 +111,7 @@
     "known_theorem_primary_source_binding",
     "interval_input_provenance",
     "finite_vs_infinite_promotion_boundary",
+    "tail_bound_provenance",
     "deterministic_bundle_hashing"
   ],
   "executable_surfaces": [
@@ -119,6 +131,8 @@
     {"id": "square.axis.moments", "priority": 1},
     {"id": "square.axis.hankel", "priority": 1},
     {"id": "square.axis.finite-vandermonde", "priority": 1},
+    {"id": "square.axis.finite-inertia", "priority": 1},
+    {"id": "square.axis.tail-stability", "priority": 1},
     {"id": "square.axis.r7-global-bridge", "priority": 1},
     {"id": "square.axis.certified-xi-intervals", "priority": 1},
     {"id": "square.axis.jacobi", "priority": 2},
@@ -131,7 +145,7 @@
       "new exact identity with checked proof",
       "new equivalence with both directions discharged",
       "new finite certificate theorem",
-      "new certified analytic enclosure",
+      "new certified analytic enclosure or tail bound",
       "new independently constructed spectral object with proved determinant relation",
       "refutation of a plausible pathway with reusable M-minus evidence"
     ],
@@ -139,6 +153,7 @@
       "all universal quantifiers discharged",
       "all proof leaves proof-grade",
       "all known dependencies source-bound",
+      "all conditional analytic inputs certified independently",
       "no circular use of RH or preloaded zero reality",
       "formal or independent expert verification"
     ]
