@@ -1,4 +1,4 @@
-"""Ω-ROOTFLOW-T∞ — differential geometry and continuation of polynomial zeros."""
+"""Ω-ROOTFLOW-T∞ — differential, spectral and global geometry of polynomial zeros."""
 
 from .adaptive import AdaptiveContinuationResult, AdaptiveContinuationStep, continue_roots_adaptive
 from .basis import (
@@ -29,19 +29,31 @@ from .core import (
     root_velocity,
     roots,
 )
-from .monodromy import (
-    MonodromyResult,
-    PathTrackingStep,
-    quadratic_square_root_loop,
-    track_coefficient_path,
+from .monodromy import MonodromyResult, PathTrackingStep, quadratic_square_root_loop, track_coefficient_path
+from .monodromy_group import (
+    MonodromyGroup,
+    compose_permutations,
+    generate_monodromy_group,
+    identity_permutation,
+    inverse_permutation,
+    permutation_cycles,
+    validate_permutation,
 )
 from .oak import RootFlowAudit, audit_rootflow, finite_difference_root_jacobian
-from .projective import (
-    ProjectiveRoot,
-    ProjectiveSpectrum,
-    chordal_distance,
-    homogeneous_value,
-    projective_roots,
+from .projective import ProjectiveRoot, ProjectiveSpectrum, chordal_distance, homogeneous_value, projective_roots
+from .projective_flow import (
+    ProjectiveFlowResult,
+    ProjectiveFlowStep,
+    cubic_degree_collapse_path,
+    match_projective_roots,
+    track_projective_path,
+)
+from .puiseux import (
+    PuiseuxFit,
+    PuiseuxSample,
+    canonical_collision_family,
+    canonical_puiseux_fit,
+    estimate_puiseux_exponent,
 )
 from .spectral import (
     CompanionCrosscheck,
@@ -58,6 +70,7 @@ from .spectral import (
     propagate_root_covariance,
     root_separations,
 )
+from .spectral_hgfm import SpectralHGFM, build_spectral_hgfm, compile_projective_flow_hgfm
 
 __all__ = [
     "AdaptiveContinuationResult",
@@ -70,39 +83,57 @@ __all__ = [
     "InverseDesignResult",
     "InverseDesignStep",
     "LinearizedInverseDesign",
+    "MonodromyGroup",
     "MonodromyResult",
     "PathTrackingStep",
+    "ProjectiveFlowResult",
+    "ProjectiveFlowStep",
     "ProjectiveRoot",
     "ProjectiveSpectrum",
+    "PuiseuxFit",
+    "PuiseuxSample",
     "RootCondition",
     "RootFlowAudit",
     "SUPPORTED_BASES",
     "SpectralGeometry",
+    "SpectralHGFM",
     "audit_rootflow",
     "audit_spectral_geometry",
     "basis_root_differential",
     "basis_to_monomial",
     "basis_values_at",
     "bernstein_to_monomial",
+    "build_spectral_hgfm",
+    "canonical_collision_family",
+    "canonical_puiseux_fit",
     "chordal_distance",
     "companion_crosscheck",
     "companion_matrix",
+    "compile_projective_flow_hgfm",
+    "compose_permutations",
     "conditioning_atlas",
     "continue_roots",
     "continue_roots_adaptive",
+    "cubic_degree_collapse_path",
     "degree_perturbation_sensitivity",
     "derivative_coefficients",
     "derivative_value",
+    "estimate_puiseux_exponent",
     "finite_difference_root_jacobian",
+    "generate_monodromy_group",
     "homogeneous_value",
+    "identity_permutation",
     "inverse_design_roots",
+    "inverse_permutation",
     "linearized_inverse_design",
     "log_abs_discriminant",
+    "match_projective_roots",
     "match_roots",
     "monomial_to_basis",
     "monomial_to_bernstein",
     "native_root_jacobian",
     "newton_refine",
+    "permutation_cycles",
     "polynomial_value",
     "projective_roots",
     "projective_scaling_residual",
@@ -116,4 +147,6 @@ __all__ = [
     "root_velocity",
     "roots",
     "track_coefficient_path",
+    "track_projective_path",
+    "validate_permutation",
 ]

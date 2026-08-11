@@ -14,11 +14,15 @@ from .basis import conditioning_atlas
 from .continuation import continue_roots
 from .core import root_conditions, root_jacobian, roots
 from .monodromy import quadratic_square_root_loop, track_coefficient_path
+from .monodromy_group import generate_monodromy_group
 from .oak import audit_rootflow
 from .projective import projective_roots
+from .projective_flow import cubic_degree_collapse_path, track_projective_path
+from .puiseux import canonical_puiseux_fit
 from .spectral import audit_spectral_geometry, inverse_design_roots
+from .spectral_hgfm import build_spectral_hgfm
 
-VERSION = "R0.3"
+VERSION = "R0.4"
 
 
 def _parse_complex_vector(text: str, *, minimum: int = 1) -> np.ndarray:
@@ -145,32 +149,49 @@ def adaptive_continuation_payload(
 
 
 def spectral_payload(coefficients: np.ndarray) -> dict[str, object]:
-    audit = audit_spectral_geometry(coefficients)
     return {
         "system": "Ω-ROOTFLOW-T∞",
         "version": VERSION,
         "mode": "spectral-crosscheck",
-        "audit": audit.to_dict(),
+        "audit": audit_spectral_geometry(coefficients).to_dict(),
     }
 
 
 def basis_atlas_payload(coefficients: np.ndarray) -> dict[str, object]:
-    atlas = conditioning_atlas(coefficients)
     return {
         "system": "Ω-ROOTFLOW-T∞",
         "version": VERSION,
         "mode": "basis-conditioning-atlas",
-        "atlas": atlas.to_dict(),
+        "atlas": conditioning_atlas(coefficients).to_dict(),
     }
 
 
 def projective_payload(coefficients: np.ndarray) -> dict[str, object]:
-    spectrum = projective_roots(coefficients)
     return {
         "system": "Ω-ROOTFLOW-T∞",
         "version": VERSION,
         "mode": "projective-spectrum",
-        "spectrum": spectrum.to_dict(),
+        "spectrum": projective_roots(coefficients).to_dict(),
+    }
+
+
+def projective_flow_demo_payload(samples: int) -> dict[str, object]:
+    result = track_projective_path(cubic_degree_collapse_path(samples))
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "projective-degree-flow-demo",
+        "result": result.to_dict(),
+    }
+
+
+def puiseux_demo_payload(multiplicity: int) -> dict[str, object]:
+    result = canonical_puiseux_fit(multiplicity)
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "puiseux-canonical-demo",
+        "result": result.to_dict(),
     }
 
 
@@ -182,6 +203,26 @@ def monodromy_demo_payload(samples: int, subdivisions: int) -> dict[str, object]
         "version": VERSION,
         "mode": "monodromy-demo-z2-minus-t",
         "result": result.to_dict(),
+    }
+
+
+def monodromy_group_demo_payload() -> dict[str, object]:
+    group = generate_monodromy_group([(1, 0)])
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "monodromy-group-demo",
+        "group": group.to_dict(),
+    }
+
+
+def hgfm_demo_payload(samples: int) -> dict[str, object]:
+    graph = build_spectral_hgfm(cubic_degree_collapse_path(samples))
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "spectral-hgfm-demo",
+        "graph": graph.to_dict(),
     }
 
 
@@ -238,37 +279,52 @@ def _write(payload: dict[str, object], output: str | None) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Ω-ROOTFLOW-T∞ differential polynomial-root engine")
+    parser = argparse.ArgumentParser(description="Ω-ROOTFLOW-T∞ polynomial-root geometry engine")
     sub = parser.add_subparsers(dest="command", required=True)
 
     analyze = sub.add_parser("analyze", help="roots, analytic Jacobian, conditioning, OAK checks")
-    analyze.add_argument("--coeffs", required=True, type=_parse_coefficients, help="ascending a0,a1,...,an")
+    analyze.add_argument("--coeffs", required=True, type=_parse_coefficients)
     analyze.add_argument("--output")
 
-    spectral = sub.add_parser("spectral", help="companion-matrix and discriminant geometry cross-check")
+    spectral = sub.add_parser("spectral", help="companion-matrix and discriminant cross-check")
     spectral.add_argument("--coeffs", required=True, type=_parse_coefficients)
     spectral.add_argument("--output")
 
-    basis = sub.add_parser("basis-atlas", help="compare monomial/Chebyshev/Legendre/Bernstein conditioning")
+    basis = sub.add_parser("basis-atlas", help="compare polynomial coefficient representations")
     basis.add_argument("--coeffs", required=True, type=_parse_coefficients)
     basis.add_argument("--output")
 
-    projective = sub.add_parser("projective", help="represent the nominal root divisor including infinity")
+    projective = sub.add_parser("projective", help="nominal root divisor including infinity")
     projective.add_argument("--coeffs", required=True, type=_parse_coefficients)
     projective.add_argument("--output")
 
-    monodromy = sub.add_parser("monodromy-demo", help="track z^2-t roots around one loop enclosing t=0")
+    pflow = sub.add_parser("projective-flow-demo", help="track a cubic root branch into infinity")
+    pflow.add_argument("--samples", type=int, default=33)
+    pflow.add_argument("--output")
+
+    puiseux = sub.add_parser("puiseux-demo", help="fit canonical z^m-t branch exponent")
+    puiseux.add_argument("--multiplicity", type=int, default=2)
+    puiseux.add_argument("--output")
+
+    monodromy = sub.add_parser("monodromy-demo", help="track z^2-t roots around t=0")
     monodromy.add_argument("--samples", type=int, default=17)
     monodromy.add_argument("--subdivisions", type=int, default=2)
     monodromy.add_argument("--output")
 
-    cont = sub.add_parser("continue", help="track roots between two coefficient vectors")
+    mgroup = sub.add_parser("monodromy-group-demo", help="close the square-root transposition generator")
+    mgroup.add_argument("--output")
+
+    hgfm = sub.add_parser("hgfm-demo", help="compile projective degree flow to spectral HGFM")
+    hgfm.add_argument("--samples", type=int, default=17)
+    hgfm.add_argument("--output")
+
+    cont = sub.add_parser("continue", help="track roots between coefficient vectors")
     cont.add_argument("--start", required=True, type=_parse_coefficients)
     cont.add_argument("--end", required=True, type=_parse_coefficients)
     cont.add_argument("--steps", type=int, default=32)
     cont.add_argument("--output")
 
-    adaptive = sub.add_parser("adaptive", help="condition-aware adaptive root continuation")
+    adaptive = sub.add_parser("adaptive", help="condition-aware adaptive continuation")
     adaptive.add_argument("--start", required=True, type=_parse_coefficients)
     adaptive.add_argument("--end", required=True, type=_parse_coefficients)
     adaptive.add_argument("--initial-step", type=float, default=0.125)
@@ -277,7 +333,7 @@ def build_parser() -> argparse.ArgumentParser:
     adaptive.add_argument("--predictor-tolerance", type=float, default=1e-3)
     adaptive.add_argument("--output")
 
-    inverse = sub.add_parser("inverse-design", help="iteratively fit coefficients to a target root spectrum")
+    inverse = sub.add_parser("inverse-design", help="fit coefficients to a target root spectrum")
     inverse.add_argument("--coeffs", required=True, type=_parse_coefficients)
     inverse.add_argument("--target-roots", required=True, type=_parse_roots)
     inverse.add_argument("--complex-coefficients", action="store_false", dest="real_coefficients")
@@ -292,23 +348,25 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "analyze":
         _write(analyze_payload(args.coeffs), args.output)
-        return 0
-    if args.command == "spectral":
+    elif args.command == "spectral":
         _write(spectral_payload(args.coeffs), args.output)
-        return 0
-    if args.command == "basis-atlas":
+    elif args.command == "basis-atlas":
         _write(basis_atlas_payload(args.coeffs), args.output)
-        return 0
-    if args.command == "projective":
+    elif args.command == "projective":
         _write(projective_payload(args.coeffs), args.output)
-        return 0
-    if args.command == "monodromy-demo":
+    elif args.command == "projective-flow-demo":
+        _write(projective_flow_demo_payload(args.samples), args.output)
+    elif args.command == "puiseux-demo":
+        _write(puiseux_demo_payload(args.multiplicity), args.output)
+    elif args.command == "monodromy-demo":
         _write(monodromy_demo_payload(args.samples, args.subdivisions), args.output)
-        return 0
-    if args.command == "continue":
+    elif args.command == "monodromy-group-demo":
+        _write(monodromy_group_demo_payload(), args.output)
+    elif args.command == "hgfm-demo":
+        _write(hgfm_demo_payload(args.samples), args.output)
+    elif args.command == "continue":
         _write(continuation_payload(args.start, args.end, args.steps), args.output)
-        return 0
-    if args.command == "adaptive":
+    elif args.command == "adaptive":
         _write(
             adaptive_continuation_payload(
                 args.start,
@@ -320,8 +378,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             ),
             args.output,
         )
-        return 0
-    if args.command == "inverse-design":
+    elif args.command == "inverse-design":
         _write(
             inverse_design_payload(
                 args.coeffs,
@@ -332,8 +389,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             ),
             args.output,
         )
-        return 0
-    raise AssertionError("unreachable")
+    else:
+        raise AssertionError("unreachable")
+    return 0
 
 
 if __name__ == "__main__":

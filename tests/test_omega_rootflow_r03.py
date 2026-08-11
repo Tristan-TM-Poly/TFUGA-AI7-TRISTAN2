@@ -37,7 +37,6 @@ def test_native_chebyshev_root_jacobian_matches_finite_coefficient_difference() 
     minus[0] -= epsilon
     plus_roots = roots(basis_to_monomial(plus, "chebyshev"))
     minus_roots = roots(basis_to_monomial(minus, "chebyshev"))
-    # Quadratic roots remain naturally ordered for this tiny constant perturbation.
     numeric = (plus_roots - minus_roots) / (2.0 * epsilon)
     assert np.allclose(jac[:, 0], numeric, rtol=2e-6, atol=2e-7)
 
@@ -93,7 +92,7 @@ def test_r03_cli_basis_projective_and_monodromy_commands(tmp_path) -> None:
     basis_output = tmp_path / "basis.json"
     assert main(["basis-atlas", "--coeffs", "0.3,-1.2,0.4,1", "--output", str(basis_output)]) == 0
     basis_payload = json.loads(basis_output.read_text(encoding="utf-8"))
-    assert basis_payload["version"] == "R0.3"
+    assert basis_payload["version"] == "R0.4"
     assert len(basis_payload["atlas"]["records"]) == 4
 
     projective_output = tmp_path / "projective.json"
