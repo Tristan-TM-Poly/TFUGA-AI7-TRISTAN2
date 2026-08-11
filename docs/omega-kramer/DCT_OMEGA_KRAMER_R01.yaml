@@ -1,0 +1,37 @@
+id: omega-det-adj-kramer-compiler-t-r0.1
+name: "Ω-DET-ADJ-KRAMER-COMPILER-T∞ R0.1"
+repo_path: "scripts/omega_kramer_tristan.py"
+status: D
+definition: >-
+  Exact stdlib-only determinant/adjugate/Kramer research compiler using a
+  subset-mask determinant DAG, reverse-mode differentiation, shared adjugate
+  reuse, bordered-generator checks, singular classification, compound minors,
+  and exact OAK certificates.
+hypotheses:
+  - >-
+    Shared determinant circuits plus reverse AD can reduce duplicated symbolic
+    work relative to separately constructing every cofactor for selected
+    structured matrix families.
+  - >-
+    Structure-aware backend routing can outperform any single determinant or
+    solve representation on a heterogeneous benchmark atlas.
+equation_or_model: >-
+  D=det(A); adj(A)^T=grad_A det(A); N=adj(A)b; AN=Db;
+  det([[A,b],[z^T,alpha]])=alpha*D-z^T*N.
+code_or_calculation: "scripts/omega_kramer_tristan.py"
+test_path: "tests/test_omega_kramer_tristan.py"
+proof_path: null
+risk_boundary:
+  - "Subset-DAG backend is exponential: 2^n states and n*2^(n-1) transitions."
+  - "No universal speed superiority over LU/QR/Bareiss is claimed."
+  - "Classical determinant, adjugate, Cramer and compound identities are not claimed as new mathematics."
+  - "Future symbolic cancellation must preserve the original singularity/domain ledger."
+m_minus:
+  - "Never compare n! explicit Leibniz expansion against the DAG and call that proof of optimality."
+  - "Never divide by det(A) when det(A)=0."
+  - "Never interpret exact algebraic certification as numerical conditioning superiority."
+next_experiment: >-
+  Add hash-consed symbolic circuit nodes, Bareiss/Berkowitz/Schur/low-rank
+  backends and a benchmark atlas measuring runtime, DAG nodes, expression swell,
+  memory, certificate residual and domain preservation by matrix family.
+promotion_decision: prototype
