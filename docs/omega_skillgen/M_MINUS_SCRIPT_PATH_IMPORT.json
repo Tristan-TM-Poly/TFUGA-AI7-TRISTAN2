@@ -1,0 +1,11 @@
+{
+  "skill": "omega-skillgen-t",
+  "version": "0.2-bridge-bootstrap",
+  "failure_mode": "script_directory_import_shadowing",
+  "observed_in": "GitHub Actions run 31512911101",
+  "evidence": "python scripts/omega-skillgen-benchmark audit-atlas raised ModuleNotFoundError: omega_skillgen_t while python -m omega_skillgen_t tests passed",
+  "cause_hypothesis": "Executing a file under scripts/ places scripts/ on sys.path without guaranteeing repository root is importable",
+  "repair": "Every repository wrapper resolves Path(__file__).parents[1] and prepends repository root to sys.path before importing omega_skillgen_t",
+  "regression": "CI must execute omega-skillgen, omega-skillgen-bridge, and omega-skillgen-benchmark through their scripts/ wrappers",
+  "status": "FIXED_CANDIDATE_PENDING_CI"
+}
