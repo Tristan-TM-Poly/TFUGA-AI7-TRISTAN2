@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-skillgen/skillspec.schema.json",
+  "title": "Omega SkillSpec v0.2",
+  "type": "object",
+  "required": ["name", "description", "purpose", "use_when", "workflow", "invariants", "outputs", "eval_cases"],
+  "properties": {
+    "name": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "description": {"type": "string", "minLength": 10},
+    "purpose": {"type": "string", "minLength": 1},
+    "use_when": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "do_not_use_when": {"type": "array", "items": {"type": "string"}},
+    "workflow": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "invariants": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "tool_policy": {"type": "array", "items": {"type": "string"}},
+    "outputs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "definition_of_done": {"type": "array", "items": {"type": "string"}},
+    "eval_cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "prompt", "class"],
+        "properties": {
+          "id": {"type": "string"},
+          "prompt": {"type": "string"},
+          "class": {"enum": ["positive", "negative", "incomplete", "edge", "adversarial"]},
+          "must": {"type": "array", "items": {"type": "string"}},
+          "must_not": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}
