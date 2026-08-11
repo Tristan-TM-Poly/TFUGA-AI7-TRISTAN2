@@ -4,6 +4,7 @@ from dataclasses import dataclass, field, asdict
 from enum import Enum
 from hashlib import sha256
 import json
+from math import comb
 from typing import Iterable
 
 
@@ -22,6 +23,32 @@ class BarrierClass(str, Enum):
     HIDDEN_ASSUMPTION = "hidden_assumption"
     COUNTERMODEL_FAILURE = "countermodel_failure"
     NUMERICAL_ONLY = "numerical_only"
+    SUPPORT_BUDGET = "support_budget_debt"
+    NONCOMMUTATIVE_COMPRESSION = "noncommutative_compression_debt"
+
+
+class MomentWordMode(str, Enum):
+    """Equivalence relation used to compress operator words."""
+    DIAGONAL = "diagonal_only"
+    SYMMETRIC = "fully_symmetrized"
+    CYCLIC = "cyclic_trace_words"
+    FULL = "full_noncommutative_words"
+
+
+def math_gcd(a: int, b: int) -> int:
+    while b:
+        a, b = b, a % b
+    return a
+
+
+def necklace_count(alphabet_size: int, word_length: int) -> int:
+    """Number of cyclic words (necklaces) of a fixed length."""
+    if alphabet_size < 1 or word_length < 1:
+        raise ValueError("alphabet_size and word_length must be positive")
+    return sum(
+        alphabet_size ** math_gcd(word_length, shift)
+        for shift in range(word_length)
+    ) // word_length
 
 
 @dataclass(frozen=True)
@@ -61,6 +88,7 @@ class MomentTensorSpec:
     window_count: int
     base_support_radius: float
     include_cross_moments: bool = True
+    word_mode: MomentWordMode = MomentWordMode.SYMMETRIC
 
     def validate(self) -> None:
         if self.max_order < 1:
@@ -70,32 +98,39 @@ class MomentTensorSpec:
         if self.base_support_radius <= 0:
             raise ValueError("base_support_radius must be positive")
 
+    def count_at_order(self, order: int) -> int:
+        if order < 1 or order > self.max_order:
+            raise ValueError("order must lie in [1, max_order]")
+        self.validate()
+        mode = self.word_mode
+        if not self.include_cross_moments or mode is MomentWordMode.DIAGONAL:
+            return self.window_count
+        if mode is MomentWordMode.SYMMETRIC:
+            return comb(self.window_count + order - 1, order)
+        if mode is MomentWordMode.CYCLIC:
+            return necklace_count(self.window_count, order)
+        if mode is MomentWordMode.FULL:
+            return self.window_count ** order
+        raise AssertionError(f"unsupported word mode {mode}")
+
     @property
     def conservative_support_radius(self) -> float:
-        """Worst-case convolution support radius for order-k products.
+        """Worst-case support-bookkeeping radius for order-k products.
 
-        This is a bookkeeping bound, not a theorem about zeta correlations.
+        This is deliberately a conservative Minkowski-sum upper bound, not a
+        theorem asserting that the corresponding zeta correlation is known.
         """
         self.validate()
         return self.max_order * self.base_support_radius
 
     @property
     def observable_count(self) -> int:
-        """Count symmetric moment coordinates up to max_order.
-
-        For cross-moments, order-k symmetric coordinates equal combinations
-        with repetition C(n+k-1, k). Without cross moments we keep one moment
-        per window per order.
-        """
-        from math import comb
-
         self.validate()
-        if not self.include_cross_moments:
-            return self.max_order * self.window_count
-        return sum(
-            comb(self.window_count + order - 1, order)
-            for order in range(1, self.max_order + 1)
-        )
+        return sum(self.count_at_order(order) for order in range(1, self.max_order + 1))
+
+    @property
+    def order_counts(self) -> tuple[int, ...]:
+        return tuple(self.count_at_order(order) for order in range(1, self.max_order + 1))
 
 
 @dataclass(frozen=True)
@@ -135,7 +170,6 @@ class ResearchRoute:
 
     @property
     def voi_score(self) -> float:
-        """Bounded value-of-information score, intentionally heuristic."""
         self.validate()
         benefit = (
             0.45 * self.expected_information_gain

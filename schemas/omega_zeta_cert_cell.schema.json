@@ -1,8 +1,50 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/schemas/omega_zeta_cert_cell.schema.json",
-  "title": "Omega Zeta Certificate Problem Cell",
-  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cell_id": {
+      "pattern": "^zeta-cert-[0-9a-f]{20}$",
+      "type": "string"
+    },
+    "front": {
+      "enum": [
+        "barrier",
+        "representation",
+        "support-debt",
+        "theorem-debt",
+        "countermodel",
+        "verification-fixture",
+        "formal-obligation",
+        "research-route",
+        "m-minus"
+      ]
+    },
+    "method": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "problem_id": {
+      "const": "riemann"
+    },
+    "schema": {
+      "const": "omega-problem-stream-cell/10"
+    },
+    "source_ref": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "target_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
   "required": [
     "schema",
     "cell_id",
@@ -14,43 +56,6 @@
     "source_ref",
     "payload"
   ],
-  "additionalProperties": false,
-  "properties": {
-    "schema": {
-      "const": "omega-problem-stream-cell/10"
-    },
-    "cell_id": {
-      "type": "string",
-      "pattern": "^zeta-cert-[0-9a-f]{20}$"
-    },
-    "problem_id": {
-      "const": "riemann"
-    },
-    "target_id": {
-      "type": "string",
-      "minLength": 1
-    },
-    "front": {
-      "enum": [
-        "barrier",
-        "representation",
-        "research-route",
-        "m-minus"
-      ]
-    },
-    "method": {
-      "type": "string",
-      "minLength": 1
-    },
-    "priority": {
-      "type": "integer"
-    },
-    "source_ref": {
-      "type": "string",
-      "minLength": 1
-    },
-    "payload": {
-      "type": "object"
-    }
-  }
+  "title": "Omega Zeta Certificate Problem Cell R0.2",
+  "type": "object"
 }

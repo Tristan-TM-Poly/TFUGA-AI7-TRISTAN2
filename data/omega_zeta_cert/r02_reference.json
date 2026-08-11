@@ -1,0 +1,43 @@
+{
+  "bundle_digest": "fdf41a6cc6e66cfb6ecc221bdae1f0bfd692e8b15a083b4aeef65dbf2270a682",
+  "cell_count": 21,
+  "countermodel": {
+    "arbitrary_permutation_invariance_fails": true,
+    "cyclic_invariance_holds": true,
+    "proof_claimed": false,
+    "tr_abc": 1,
+    "tr_acb": 0,
+    "tr_bca": 1,
+    "tr_cab": 1
+  },
+  "dual_fixture": {
+    "certificate_scope": "finite_exact_moment_problem_under_supplied_proven_spectral_domain",
+    "certified_lower_bound": "1/3",
+    "zeta_theorem_claimed": false
+  },
+  "family_id": "anthropic-weil-bandwidth-one-2026",
+  "front_counts": {
+    "barrier": 1,
+    "countermodel": 1,
+    "formal-obligation": 1,
+    "m-minus": 3,
+    "representation": 1,
+    "research-route": 5,
+    "support-debt": 4,
+    "theorem-debt": 4,
+    "verification-fixture": 1
+  },
+  "frontier_barrier": "new_arithmetic_information_required",
+  "moment_observable_count": 44,
+  "moment_order_counts": [
+    3,
+    6,
+    11,
+    24
+  ],
+  "moment_word_mode": "cyclic_trace_words",
+  "proof_claimed": false,
+  "rh_solved_claimed": false,
+  "schema": "omega-zeta-cert-r02-reference/1",
+  "target_bound": 0.7
+}
