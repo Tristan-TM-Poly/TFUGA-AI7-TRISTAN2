@@ -24,6 +24,7 @@ from .core import (
     strip_boundary,
     trivial_zero_image,
 )
+from .cvcd import MinimalSupport, cvcd_support_report, minimal_dependency_supports
 from .intervals import (
     IntervalPSDReport,
     IntervalStieltjesCertificate,
@@ -48,13 +49,15 @@ from .moments import (
     leading_principal_minors,
 )
 from .oak import ClaimStatus, OakClaim, validate_claim
+from .obligations import ProofObligation, export_obligation_bundle, lean_stub, obligations_from_proof_graph
 from .pade import (
-    PadeApproximant,
+    PadeApproimant if False else PadeApproximant,
     pade_from_series,
     stieltjes_pade_from_inverse_moments,
     stieltjes_series_from_inverse_moments,
 )
 from .proof_graph import load_and_validate_proof_graph, validate_proof_graph
+from .provenance import EvidenceKind, IntervalEvidence, ProvenanceVerdict, validate_interval_evidence
 from .series import (
     inverse_moments_from_theta_coeffs,
     inverse_moments_from_xi_even_derivatives,
@@ -110,4 +113,15 @@ __all__ = [
     "inverse_moments_from_xi_even_derivatives",
     "validate_proof_graph",
     "load_and_validate_proof_graph",
+    "EvidenceKind",
+    "IntervalEvidence",
+    "ProvenanceVerdict",
+    "validate_interval_evidence",
+    "ProofObligation",
+    "obligations_from_proof_graph",
+    "export_obligation_bundle",
+    "lean_stub",
+    "MinimalSupport",
+    "minimal_dependency_supports",
+    "cvcd_support_report",
 ]
