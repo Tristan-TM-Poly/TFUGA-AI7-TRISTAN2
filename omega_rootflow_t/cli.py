@@ -10,10 +10,15 @@ from typing import Sequence
 import numpy as np
 
 from .adaptive import continue_roots_adaptive
+from .basis import conditioning_atlas
 from .continuation import continue_roots
 from .core import root_conditions, root_jacobian, roots
+from .monodromy import quadratic_square_root_loop, track_coefficient_path
 from .oak import audit_rootflow
+from .projective import projective_roots
 from .spectral import audit_spectral_geometry, inverse_design_roots
+
+VERSION = "R0.3"
 
 
 def _parse_complex_vector(text: str, *, minimum: int = 1) -> np.ndarray:
@@ -52,7 +57,7 @@ def analyze_payload(coefficients: np.ndarray) -> dict[str, object]:
     spectral = audit_spectral_geometry(coefficients)
     return {
         "system": "Ω-ROOTFLOW-T∞",
-        "version": "R0.2",
+        "version": VERSION,
         "coefficient_order": "ascending [a0,...,an]",
         "degree": int(coefficients.size - 1),
         "roots": _complex_vector(rr),
@@ -81,7 +86,7 @@ def continuation_payload(start: np.ndarray, end: np.ndarray, steps: int) -> dict
     result = continue_roots(start, end, steps=steps)
     return {
         "system": "Ω-ROOTFLOW-T∞",
-        "version": "R0.2",
+        "version": VERSION,
         "mode": "fixed-step",
         "steps": [
             {
@@ -115,7 +120,7 @@ def adaptive_continuation_payload(
     )
     return {
         "system": "Ω-ROOTFLOW-T∞",
-        "version": "R0.2",
+        "version": VERSION,
         "mode": "adaptive",
         "status": result.status,
         "rejected_attempts": result.rejected_attempts,
@@ -143,9 +148,40 @@ def spectral_payload(coefficients: np.ndarray) -> dict[str, object]:
     audit = audit_spectral_geometry(coefficients)
     return {
         "system": "Ω-ROOTFLOW-T∞",
-        "version": "R0.2",
+        "version": VERSION,
         "mode": "spectral-crosscheck",
         "audit": audit.to_dict(),
+    }
+
+
+def basis_atlas_payload(coefficients: np.ndarray) -> dict[str, object]:
+    atlas = conditioning_atlas(coefficients)
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "basis-conditioning-atlas",
+        "atlas": atlas.to_dict(),
+    }
+
+
+def projective_payload(coefficients: np.ndarray) -> dict[str, object]:
+    spectrum = projective_roots(coefficients)
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "projective-spectrum",
+        "spectrum": spectrum.to_dict(),
+    }
+
+
+def monodromy_demo_payload(samples: int, subdivisions: int) -> dict[str, object]:
+    path = quadratic_square_root_loop(samples)
+    result = track_coefficient_path(path, subdivisions=subdivisions)
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "monodromy-demo-z2-minus-t",
+        "result": result.to_dict(),
     }
 
 
@@ -166,7 +202,7 @@ def inverse_design_payload(
     )
     return {
         "system": "Ω-ROOTFLOW-T∞",
-        "version": "R0.2",
+        "version": VERSION,
         "mode": "inverse-design",
         "status": result.status,
         "converged": result.converged,
@@ -213,6 +249,19 @@ def build_parser() -> argparse.ArgumentParser:
     spectral.add_argument("--coeffs", required=True, type=_parse_coefficients)
     spectral.add_argument("--output")
 
+    basis = sub.add_parser("basis-atlas", help="compare monomial/Chebyshev/Legendre/Bernstein conditioning")
+    basis.add_argument("--coeffs", required=True, type=_parse_coefficients)
+    basis.add_argument("--output")
+
+    projective = sub.add_parser("projective", help="represent the nominal root divisor including infinity")
+    projective.add_argument("--coeffs", required=True, type=_parse_coefficients)
+    projective.add_argument("--output")
+
+    monodromy = sub.add_parser("monodromy-demo", help="track z^2-t roots around one loop enclosing t=0")
+    monodromy.add_argument("--samples", type=int, default=17)
+    monodromy.add_argument("--subdivisions", type=int, default=2)
+    monodromy.add_argument("--output")
+
     cont = sub.add_parser("continue", help="track roots between two coefficient vectors")
     cont.add_argument("--start", required=True, type=_parse_coefficients)
     cont.add_argument("--end", required=True, type=_parse_coefficients)
@@ -246,6 +295,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args.command == "spectral":
         _write(spectral_payload(args.coeffs), args.output)
+        return 0
+    if args.command == "basis-atlas":
+        _write(basis_atlas_payload(args.coeffs), args.output)
+        return 0
+    if args.command == "projective":
+        _write(projective_payload(args.coeffs), args.output)
+        return 0
+    if args.command == "monodromy-demo":
+        _write(monodromy_demo_payload(args.samples, args.subdivisions), args.output)
         return 0
     if args.command == "continue":
         _write(continuation_payload(args.start, args.end, args.steps), args.output)
