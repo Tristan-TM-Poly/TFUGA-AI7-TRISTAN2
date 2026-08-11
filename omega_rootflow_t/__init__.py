@@ -10,6 +10,7 @@ from .invariants import InvariantAudit, audit_invariants, elementary_symmetric_f
 from .kinematics import RootKinematicState, RootKinematics, parameter_root_kinematics, taylor_predict_roots
 from .monodromy import MonodromyResult, PathTrackingStep, quadratic_square_root_loop, track_coefficient_path
 from .monodromy_group import MonodromyGroup, compose_permutations, generate_monodromy_group, identity_permutation, inverse_permutation, permutation_cycles, validate_permutation
+from .multiplicity_atlas import ExactMultiplicityAtlas, PartitionLattice, PartitionNeighborhood, SquareFreeFactor, build_partition_lattice, derivative_gcd_tower, exact_multiplicity_atlas, immediate_less_singular, immediate_more_singular, integer_partitions, partition_neighborhood, square_free_decomposition
 from .multiplicity_strata import MultiplicityPredictionAudit, MultiplicityTangentSpace, audit_multiplicity_prediction, exact_root_multiplicity, falling_factorial, multiplicity_tangent_space
 from .oak import RootFlowAudit, audit_rootflow, finite_difference_root_jacobian
 from .projective import ProjectiveRoot, ProjectiveSpectrum, chordal_distance, homogeneous_value, projective_roots
