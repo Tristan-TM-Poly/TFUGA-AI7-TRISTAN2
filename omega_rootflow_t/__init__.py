@@ -1,5 +1,6 @@
 """Ω-ROOTFLOW-T∞ — differential geometry and continuation of polynomial zeros."""
 
+from .adaptive import AdaptiveContinuationResult, AdaptiveContinuationStep, continue_roots_adaptive
 from .continuation import ContinuationResult, ContinuationStep, continue_roots, match_roots, newton_refine
 from .core import (
     RootCondition,
@@ -17,27 +18,58 @@ from .core import (
     roots,
 )
 from .oak import RootFlowAudit, audit_rootflow, finite_difference_root_jacobian
+from .spectral import (
+    CompanionCrosscheck,
+    InverseDesignResult,
+    InverseDesignStep,
+    LinearizedInverseDesign,
+    SpectralGeometry,
+    audit_spectral_geometry,
+    companion_crosscheck,
+    companion_matrix,
+    inverse_design_roots,
+    linearized_inverse_design,
+    log_abs_discriminant,
+    propagate_root_covariance,
+    root_separations,
+)
 
 __all__ = [
+    "AdaptiveContinuationResult",
+    "AdaptiveContinuationStep",
+    "CompanionCrosscheck",
     "ContinuationResult",
     "ContinuationStep",
+    "InverseDesignResult",
+    "InverseDesignStep",
+    "LinearizedInverseDesign",
     "RootCondition",
     "RootFlowAudit",
+    "SpectralGeometry",
     "audit_rootflow",
+    "audit_spectral_geometry",
     "basis_root_differential",
+    "companion_crosscheck",
+    "companion_matrix",
     "continue_roots",
+    "continue_roots_adaptive",
     "degree_perturbation_sensitivity",
     "derivative_coefficients",
     "derivative_value",
     "finite_difference_root_jacobian",
+    "inverse_design_roots",
+    "linearized_inverse_design",
+    "log_abs_discriminant",
     "match_roots",
     "newton_refine",
     "polynomial_value",
     "projective_scaling_residual",
+    "propagate_root_covariance",
     "root_conditions",
     "root_differential",
     "root_hessian",
     "root_jacobian",
+    "root_separations",
     "root_velocity",
     "roots",
 ]
