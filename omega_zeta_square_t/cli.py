@@ -13,6 +13,7 @@ from .certificates import exact_stieltjes_certificate
 from .core import nontrivial_zero_image, rh_defect
 from .cvcd import cvcd_support_report
 from .jacobi import jacobi_characteristic_polynomial, jacobi_recurrence_from_inverse_moments
+from .materialize import materialize_from_files
 from .moments import finite_stieltjes_report
 from .obligations import export_obligation_bundle, obligations_from_proof_graph
 from .pade import stieltjes_pade_from_inverse_moments
@@ -87,6 +88,12 @@ def _parser() -> argparse.ArgumentParser:
     bibliography.add_argument("--graph", default=DEFAULT_GRAPH)
     bibliography.add_argument("--ledger", default=DEFAULT_BIBLIOGRAPHY)
 
+    materialize = sub.add_parser("materialize", help="write deterministic OAK research bundle")
+    materialize.add_argument("output_dir")
+    materialize.add_argument("--graph", default=DEFAULT_GRAPH)
+    materialize.add_argument("--ledger", default=DEFAULT_BIBLIOGRAPHY)
+    materialize.add_argument("--target", default="rh")
+
     return parser
 
 
@@ -154,7 +161,7 @@ def main(argv=None) -> int:
     elif args.command == "obligations":
         graph = _load_json(args.graph)
         payload = export_obligation_bundle(obligations_from_proof_graph(graph))
-    else:
+    elif args.command == "bibliography-check":
         graph = _load_json(args.graph)
         ledger = _load_json(args.ledger)
         errors = validate_bibliography_ledger(graph, ledger)
@@ -164,6 +171,13 @@ def main(argv=None) -> int:
             "errors": errors,
             "proves_rh": False,
         }
+    else:
+        payload = materialize_from_files(
+            args.graph,
+            args.ledger,
+            args.output_dir,
+            cvcd_target=args.target,
+        )
     print(json.dumps(_jsonable(payload), indent=2, sort_keys=True))
     return 0
 
