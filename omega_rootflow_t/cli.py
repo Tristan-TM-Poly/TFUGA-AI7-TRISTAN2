@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from fractions import Fraction
 from pathlib import Path
 from typing import Sequence
 
@@ -11,8 +12,10 @@ import numpy as np
 
 from .adaptive import continue_roots_adaptive
 from .basis import conditioning_atlas
+from .collision_manifold import audit_tangent_prediction, collision_tangent_space
 from .continuation import continue_roots
 from .core import root_conditions, root_jacobian, roots
+from .exact import audit_exact_algebra
 from .invariants import audit_invariants
 from .kinematics import parameter_root_kinematics, taylor_predict_roots
 from .monodromy import quadratic_square_root_loop, track_coefficient_path
@@ -25,7 +28,7 @@ from .resultant import audit_discriminant, single_coefficient_collision_atlas
 from .spectral import audit_spectral_geometry, inverse_design_roots
 from .spectral_hgfm import build_spectral_hgfm
 
-VERSION = "R0.5"
+VERSION = "R0.6"
 
 
 def _parse_complex_vector(text: str, *, minimum: int = 1) -> np.ndarray:
@@ -50,6 +53,28 @@ def _parse_roots(text: str) -> np.ndarray:
 
 def _parse_parameter_vector(text: str) -> np.ndarray:
     return _parse_complex_vector(text, minimum=1)
+
+
+def _parse_exact_coefficients(text: str) -> tuple[str, ...]:
+    tokens = tuple(part.strip() for part in text.split(",") if part.strip())
+    if len(tokens) < 2:
+        raise argparse.ArgumentTypeError("provide at least two exact rational coefficients")
+    try:
+        for token in tokens:
+            Fraction(token)
+    except (ValueError, ZeroDivisionError) as exc:
+        raise argparse.ArgumentTypeError(f"invalid exact rational coefficient: {exc}") from exc
+    return tokens
+
+
+def _parse_degrees(text: str) -> tuple[int, ...]:
+    try:
+        values = tuple(int(part.strip()) for part in text.split(",") if part.strip())
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(f"invalid coefficient degree: {exc}") from exc
+    if not values:
+        raise argparse.ArgumentTypeError("provide at least one coefficient degree")
+    return values
 
 
 def _complex(value: complex) -> dict[str, float]:
@@ -91,6 +116,39 @@ def analyze_payload(coefficients: np.ndarray) -> dict[str, object]:
             "scope": "analytic simple-root identities plus numerical software cross-checks",
         },
     }
+
+
+def exact_audit_payload(coefficients: tuple[str, ...]) -> dict[str, object]:
+    return {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "exact-rational-algebra-audit",
+        "audit": audit_exact_algebra(coefficients).to_dict(),
+    }
+
+
+def collision_tangent_payload(
+    coefficients: np.ndarray,
+    critical_root: complex,
+    degrees: tuple[int, ...],
+    epsilon: float,
+) -> dict[str, object]:
+    tangent = collision_tangent_space(coefficients, critical_root, degrees)
+    payload: dict[str, object] = {
+        "system": "Ω-ROOTFLOW-T∞",
+        "version": VERSION,
+        "mode": "collision-tangent-space",
+        "tangent": tangent.to_dict(),
+    }
+    if tangent.status.startswith("OAK_PASS"):
+        payload["prediction_audit"] = audit_tangent_prediction(
+            coefficients,
+            tangent,
+            epsilon=epsilon,
+        ).to_dict()
+    else:
+        payload["prediction_audit"] = None
+    return payload
 
 
 def invariant_payload(coefficients: np.ndarray) -> dict[str, object]:
@@ -348,6 +406,17 @@ def build_parser() -> argparse.ArgumentParser:
     analyze.add_argument("--coeffs", required=True, type=_parse_coefficients)
     analyze.add_argument("--output")
 
+    exact = sub.add_parser("exact-audit", help="exact rational gcd/discriminant/Newton audit")
+    exact.add_argument("--coeffs", required=True, type=_parse_exact_coefficients)
+    exact.add_argument("--output")
+
+    tangent = sub.add_parser("collision-tangent", help="local multi-parameter tangent space at a double root")
+    tangent.add_argument("--coeffs", required=True, type=_parse_coefficients)
+    tangent.add_argument("--critical-root", required=True, type=complex)
+    tangent.add_argument("--degrees", required=True, type=_parse_degrees)
+    tangent.add_argument("--epsilon", type=float, default=1e-4)
+    tangent.add_argument("--output")
+
     invariants = sub.add_parser("invariants", help="audit Vieta/Newton/residue conservation identities")
     invariants.add_argument("--coeffs", required=True, type=_parse_coefficients)
     invariants.add_argument("--output")
@@ -430,6 +499,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "analyze":
         _write(analyze_payload(args.coeffs), args.output)
+    elif args.command == "exact-audit":
+        _write(exact_audit_payload(args.coeffs), args.output)
+    elif args.command == "collision-tangent":
+        _write(
+            collision_tangent_payload(
+                args.coeffs,
+                args.critical_root,
+                args.degrees,
+                args.epsilon,
+            ),
+            args.output,
+        )
     elif args.command == "invariants":
         _write(invariant_payload(args.coeffs), args.output)
     elif args.command == "discriminant":
