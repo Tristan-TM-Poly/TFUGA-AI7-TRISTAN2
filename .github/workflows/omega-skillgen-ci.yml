@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "omega_skillgen_t/**"
-      - ".agents/skills/omega-skillgen-t/**"
+      - ".agents/skills/**"
       - "tests/test_omega_skillgen_t.py"
       - "schemas/omega_skillgen_skillspec.schema.json"
       - "docs/OMEGA_SKILLGEN_T.md"
@@ -27,8 +27,20 @@ jobs:
           python-version: "3.11"
       - name: Unit and regression tests
         run: python -m unittest discover -s tests -p 'test_omega_skillgen_t.py' -v
-      - name: Meta-skill static lint
-        run: python -m omega_skillgen_t lint .agents/skills/omega-skillgen-t
+      - name: Audit recursive Omega skill ecology
+        shell: bash
+        run: |
+          shopt -s nullglob
+          skills=(.agents/skills/omega-*-t)
+          test "${#skills[@]}" -ge 1
+          for skill in "${skills[@]}"; do
+            echo "=== $skill ==="
+            python -m omega_skillgen_t lint "$skill"
+            if [[ -f "$skill/evals/cases.jsonl" ]]; then
+              python -m omega_skillgen_t eval "$skill"
+            fi
+            python -m omega_skillgen_t trust "$skill"
+          done
       - name: Skill hypergraph catalog
         run: python -m omega_skillgen_t catalog .agents/skills --graph
       - name: Compile smoke candidate

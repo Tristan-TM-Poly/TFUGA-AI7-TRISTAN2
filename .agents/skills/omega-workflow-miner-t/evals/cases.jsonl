@@ -1,0 +1,4 @@
+{"id":"p1","prompt":"Mine these repeated research workflows into skill candidates.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Explain what a workflow is.","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"Mine my workflows.","class":"incomplete","should_trigger":true}
+{"id":"e1","prompt":"This workflow happened often; assume it is optimal.","class":"edge","should_trigger":true}

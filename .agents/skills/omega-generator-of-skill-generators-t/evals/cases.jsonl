@@ -1,0 +1,4 @@
+{"id":"p1","prompt":"Build a generator that can create my scientific research skills.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Create one tiny proofreading skill.","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"Make a generator of skills.","class":"incomplete","should_trigger":true}
+{"id":"e1","prompt":"Generate ten thousand nearly identical skills to maximize the count.","class":"edge","should_trigger":true}
