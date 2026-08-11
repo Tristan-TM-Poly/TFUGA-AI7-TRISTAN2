@@ -1,5 +1,5 @@
 {
-  "schema": "hgfm-proof-graph/2",
+  "schema": "hgfm-proof-graph/3",
   "system": "Omega-RH-PROOF-OS-T-infinity",
   "nodes": [
     {"id": "rh", "kind": "problem", "status": "OPEN"},
@@ -12,12 +12,18 @@
     {"id": "hankel_all_orders", "kind": "criterion_candidate", "status": "CONJECTURE"},
     {"id": "finite_hankel", "kind": "numeric_test", "status": "NUMERICALLY_VERIFIED"},
     {"id": "exact_finite_hankel", "kind": "finite_certificate", "status": "SYMBOLICALLY_DERIVED"},
+    {"id": "interval_finite_hankel", "kind": "finite_interval_certificate", "status": "SYMBOLICALLY_DERIVED"},
+    {"id": "analytic_xi_interval_source", "kind": "source_certification_goal", "status": "CONJECTURE"},
+    {"id": "interval_provenance_gate", "kind": "epistemic_gate", "status": "SYMBOLICALLY_DERIVED"},
     {"id": "pade_finite", "kind": "formal_reconstruction", "status": "SYMBOLICALLY_DERIVED"},
     {"id": "jacobi_finite", "kind": "formal_reconstruction", "status": "SYMBOLICALLY_DERIVED"},
     {"id": "jacobi_limit", "kind": "operator_candidate", "status": "CONJECTURE"},
     {"id": "independent_hilbert_polya", "kind": "operator_goal", "status": "CONJECTURE"},
     {"id": "off_line_finite_certificate", "kind": "lemma_goal", "status": "CONJECTURE"},
-    {"id": "cvcd_minimal_forcing_set", "kind": "meta_goal", "status": "CONJECTURE"}
+    {"id": "cvcd_minimal_forcing_set", "kind": "meta_goal", "status": "CONJECTURE"},
+    {"id": "cvcd_structural_support", "kind": "structural_compression", "status": "SYMBOLICALLY_DERIVED"},
+    {"id": "proof_obligation_bundle", "kind": "proof_engineering", "status": "SYMBOLICALLY_DERIVED"},
+    {"id": "bibliography_gate", "kind": "provenance_gate", "status": "SYMBOLICALLY_DERIVED"}
   ],
   "hyperedges": [
     {"id": "e.square.defect", "sources": ["square_coordinate"], "target": "rh_defect", "relation": "derives_exactly"},
@@ -26,18 +32,25 @@
     {"id": "e.stieltjes.moments", "sources": ["log_derivative_stieltjes"], "target": "inverse_moments", "relation": "expands_to"},
     {"id": "e.moments.hankel", "sources": ["inverse_moments"], "target": "hankel_all_orders", "relation": "motivates_positive_moment_constraints"},
     {"id": "e.finite.exact", "sources": ["inverse_moments"], "target": "exact_finite_hankel", "relation": "finite_exact_transform", "oak": "exact only for supplied rational moment values"},
-    {"id": "e.finite.not_global", "sources": ["finite_hankel", "exact_finite_hankel"], "target": "hankel_all_orders", "relation": "does_not_prove", "oak": "finite_to_infinite forbidden"},
+    {"id": "e.interval.source", "sources": ["analytic_xi_interval_source", "interval_provenance_gate"], "target": "interval_finite_hankel", "relation": "research_path_only", "oak": "rigorous propagation requires certified analytic input enclosures before source-level promotion"},
+    {"id": "e.finite.not_global", "sources": ["finite_hankel", "exact_finite_hankel", "interval_finite_hankel"], "target": "hankel_all_orders", "relation": "does_not_prove", "oak": "finite_to_infinite forbidden"},
     {"id": "e.moments.pade", "sources": ["inverse_moments"], "target": "pade_finite", "relation": "finite_exact_transform"},
     {"id": "e.moments.jacobi.finite", "sources": ["inverse_moments"], "target": "jacobi_finite", "relation": "finite_exact_transform"},
     {"id": "e.jacobi.limit", "sources": ["jacobi_finite"], "target": "jacobi_limit", "relation": "research_path_only", "oak": "finite approximants do not establish a convergent infinite operator"},
     {"id": "e.jacobi.operator", "sources": ["jacobi_limit"], "target": "independent_hilbert_polya", "relation": "research_path_only", "oak": "must not preload gamma_n as proof input"},
     {"id": "e.offline.certificate", "sources": ["rh_defect", "hankel_all_orders"], "target": "off_line_finite_certificate", "relation": "target_theorem"},
-    {"id": "e.cvcd", "sources": ["theta_negative_zeros", "log_derivative_stieltjes", "hankel_all_orders", "off_line_finite_certificate"], "target": "cvcd_minimal_forcing_set", "relation": "compress_candidates"}
+    {"id": "e.cvcd", "sources": ["theta_negative_zeros", "log_derivative_stieltjes", "hankel_all_orders", "off_line_finite_certificate"], "target": "cvcd_minimal_forcing_set", "relation": "compress_candidates"},
+    {"id": "e.cvcd.structural", "sources": ["cvcd_minimal_forcing_set"], "target": "cvcd_structural_support", "relation": "research_path_only", "oak": "minimal graph support is structural only and never proves the target"},
+    {"id": "e.obligations", "sources": ["rh", "off_line_finite_certificate", "analytic_xi_interval_source"], "target": "proof_obligation_bundle", "relation": "research_path_only"},
+    {"id": "e.bibliography", "sources": ["theta_entire", "theta_negative_zeros"], "target": "bibliography_gate", "relation": "research_path_only", "oak": "software gate verifies source bindings, not theorem truth"}
   ],
   "negative_memory": [
     {"id": "mminus.finite_to_infinite", "rule": "finite zero/Hankel checks never prove RH"},
     {"id": "mminus.leading_minor_psd", "rule": "nonnegative leading principal minors alone do not certify positive semidefiniteness; use an actual PSD test or all principal minors"},
     {"id": "mminus.supplied_rational", "rule": "exact algebra on supplied rational approximations does not certify them as exact xi/zeta values"},
+    {"id": "mminus.supplied_interval", "rule": "rigorous propagation of a supplied interval does not certify that the supplied interval encloses the true analytic xi quantity"},
+    {"id": "mminus.cvcd_support", "rule": "minimal dependency support in an HGFM is not a proof and can contain a criterion equivalent to the target"},
+    {"id": "mminus.formal_stub", "rule": "a Lean-compatible comment or proof-obligation stub is documentation, not a formal proof"},
     {"id": "mminus.reformulation", "rule": "an equivalent criterion is not a solution"},
     {"id": "mminus.circular_operator", "rule": "an operator constructed from known gamma_n is not an independent Hilbert-Polya construction"},
     {"id": "mminus.finite_jacobi", "rule": "finite Jacobi reconstruction does not establish an infinite self-adjoint Hilbert-Polya operator"},
