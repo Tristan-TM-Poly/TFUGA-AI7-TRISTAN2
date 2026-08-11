@@ -1,0 +1,30 @@
+id: OMEGA-INVERSE-PROBLEM-T-R0-1
+name: Ω-INVERSE-PROBLEM-T∞
+repo_path: omega_inverse_problem_t/
+status: X
+definition: >-
+  General inverse-problem router and OAKBench kernel that analyzes forward-map
+  geometry before selecting Moore-Penrose, regularized, nonlinear local, or
+  Bayesian reconstruction representations.
+hypotheses:
+  - Rank, nullity and conditioning diagnostics can prevent false uniqueness claims.
+  - Forward-check residuals should accompany every numerical reconstruction.
+  - Regularization and priors must be represented as assumptions rather than hidden evidence.
+equation_or_model: y = F(x;theta) + epsilon
+code_or_calculation: omega_inverse_problem_t/core.py
+test_path: tests/test_omega_inverse_problem_t.py
+proof_path: null
+risk_boundary:
+  - local convergence is not global uniqueness
+  - minimum-norm representative is not necessarily the physical state
+  - numerical rank depends on tolerance and scaling
+  - regularization can bias the reconstruction
+  - posterior probability depends on model and prior
+m_minus:
+  - do not infer identifiability from low residual alone
+  - do not interpret null-space collapse as recovered information
+  - do not use the stdlib Jacobi kernel as a production large-scale SVD claim
+next_experiment: >-
+  Compare R0.1 against NumPy/SciPy Moore-Penrose and least-squares baselines across
+  well-conditioned, ill-conditioned, rank-deficient and noisy matrix families.
+promotion_decision: prototype
