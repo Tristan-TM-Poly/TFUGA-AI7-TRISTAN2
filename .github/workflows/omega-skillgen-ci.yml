@@ -5,7 +5,7 @@ on:
     paths:
       - "omega_skillgen_t/**"
       - ".agents/skills/**"
-      - "tests/test_omega_skillgen_t.py"
+      - "tests/test_omega_skillgen*.py"
       - "schemas/omega_skillgen_skillspec.schema.json"
       - "docs/OMEGA_SKILLGEN_T.md"
       - "docs/omega_skillgen/**"
@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Unit and regression tests
-        run: python -m unittest discover -s tests -p 'test_omega_skillgen_t.py' -v
+        run: python -m unittest discover -s tests -p 'test_omega_skillgen*.py' -v
       - name: Audit recursive Omega skill ecology
         shell: bash
         run: |
