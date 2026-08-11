@@ -35,6 +35,7 @@ jobs:
           python scripts/omega-skillgen-benchmark --help >/dev/null
           python scripts/omega-skillgen-campaign --help >/dev/null
           python scripts/omega-skillgen-ops --help >/dev/null
+          python scripts/omega-skillgen-package --help >/dev/null
       - name: Audit recursive Omega skill ecology
         shell: bash
         run: |
@@ -135,3 +136,29 @@ jobs:
           assert len(Path('/tmp/omega-memory/M_MINUS.jsonl').read_text().splitlines())==1
           print('Behavioral telemetry M+/M- smoke PASS')
           PY
+      - name: Build standalone self-contained Skill bundle
+        run: |
+          mkdir -p "$RUNNER_TEMP/omega-skillgen-artifacts"
+          python scripts/omega-skillgen-package . "$RUNNER_TEMP/omega-skillgen-artifacts/omega-skillgen-t-standalone.zip" > "$RUNNER_TEMP/omega-skillgen-artifacts/package-report.json"
+          python - <<'PY'
+          import json, os, zipfile
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'omega-skillgen-artifacts'
+          report=json.loads((root/'package-report.json').read_text())
+          assert report['status']=='PASS'
+          assert report['skill_manifests']==1
+          assert (root/'omega-skillgen-t-standalone.zip').is_file()
+          with zipfile.ZipFile(root/'omega-skillgen-t-standalone.zip') as z:
+              manifests=[name for name in z.namelist() if Path(name).name.lower()=='skill.md']
+              assert len(manifests)==1
+          print('Standalone Skill bundle PASS')
+          PY
+      - name: Upload standalone Skill bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-skillgen-t-standalone
+          path: |
+            ${{ runner.temp }}/omega-skillgen-artifacts/omega-skillgen-t-standalone.zip
+            ${{ runner.temp }}/omega-skillgen-artifacts/package-report.json
+          if-no-files-found: error
+          retention-days: 14
