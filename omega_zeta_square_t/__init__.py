@@ -51,7 +51,7 @@ from .moments import (
 from .oak import ClaimStatus, OakClaim, validate_claim
 from .obligations import ProofObligation, export_obligation_bundle, lean_stub, obligations_from_proof_graph
 from .pade import (
-    PadeApproimant if False else PadeApproximant,
+    PadeApproximant,
     pade_from_series,
     stieltjes_pade_from_inverse_moments,
     stieltjes_series_from_inverse_moments,
