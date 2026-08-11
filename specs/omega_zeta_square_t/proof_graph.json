@@ -11,98 +11,28 @@
     {"id": "inverse_moments", "kind": "representation", "status": "SYMBOLICALLY_DERIVED"},
     {"id": "hankel_all_orders", "kind": "criterion_candidate", "status": "CONJECTURE"},
     {"id": "finite_hankel", "kind": "numeric_test", "status": "NUMERICALLY_VERIFIED"},
-    {"id": "exact_finite_hankel", "kind": "finite_certificate", "status": "PROVED"},
-    {"id": "pade_finite", "kind": "formal_reconstruction", "status": "PROVED"},
-    {"id": "jacobi_finite", "kind": "formal_reconstruction", "status": "PROVED"},
+    {"id": "exact_finite_hankel", "kind": "finite_certificate", "status": "SYMBOLICALLY_DERIVED"},
+    {"id": "pade_finite", "kind": "formal_reconstruction", "status": "SYMBOLICALLY_DERIVED"},
+    {"id": "jacobi_finite", "kind": "formal_reconstruction", "status": "SYMBOLICALLY_DERIVED"},
     {"id": "jacobi_limit", "kind": "operator_candidate", "status": "CONJECTURE"},
     {"id": "independent_hilbert_polya", "kind": "operator_goal", "status": "CONJECTURE"},
     {"id": "off_line_finite_certificate", "kind": "lemma_goal", "status": "CONJECTURE"},
     {"id": "cvcd_minimal_forcing_set", "kind": "meta_goal", "status": "CONJECTURE"}
   ],
   "hyperedges": [
-    {
-      "id": "e.square.defect",
-      "sources": ["square_coordinate"],
-      "target": "rh_defect",
-      "relation": "derives_exactly"
-    },
-    {
-      "id": "e.theta.rh",
-      "sources": ["theta_entire", "theta_negative_zeros"],
-      "target": "rh",
-      "relation": "equivalent_when_both_directions_proved",
-      "oak": "known criterion; source required"
-    },
-    {
-      "id": "e.theta.stieltjes",
-      "sources": ["theta_negative_zeros"],
-      "target": "log_derivative_stieltjes",
-      "relation": "implies"
-    },
-    {
-      "id": "e.stieltjes.moments",
-      "sources": ["log_derivative_stieltjes"],
-      "target": "inverse_moments",
-      "relation": "expands_to"
-    },
-    {
-      "id": "e.moments.hankel",
-      "sources": ["inverse_moments"],
-      "target": "hankel_all_orders",
-      "relation": "motivates_positive_moment_constraints"
-    },
-    {
-      "id": "e.finite.exact",
-      "sources": ["inverse_moments"],
-      "target": "exact_finite_hankel",
-      "relation": "finite_exact_transform",
-      "oak": "exact only for supplied rational moment values"
-    },
-    {
-      "id": "e.finite.not_global",
-      "sources": ["finite_hankel", "exact_finite_hankel"],
-      "target": "hankel_all_orders",
-      "relation": "does_not_prove",
-      "oak": "finite_to_infinite forbidden"
-    },
-    {
-      "id": "e.moments.pade",
-      "sources": ["inverse_moments"],
-      "target": "pade_finite",
-      "relation": "finite_exact_transform"
-    },
-    {
-      "id": "e.moments.jacobi.finite",
-      "sources": ["inverse_moments"],
-      "target": "jacobi_finite",
-      "relation": "finite_exact_transform"
-    },
-    {
-      "id": "e.jacobi.limit",
-      "sources": ["jacobi_finite"],
-      "target": "jacobi_limit",
-      "relation": "research_path_only",
-      "oak": "finite approximants do not establish a convergent infinite operator"
-    },
-    {
-      "id": "e.jacobi.operator",
-      "sources": ["jacobi_limit"],
-      "target": "independent_hilbert_polya",
-      "relation": "research_path_only",
-      "oak": "must not preload gamma_n as proof input"
-    },
-    {
-      "id": "e.offline.certificate",
-      "sources": ["rh_defect", "hankel_all_orders"],
-      "target": "off_line_finite_certificate",
-      "relation": "target_theorem"
-    },
-    {
-      "id": "e.cvcd",
-      "sources": ["theta_negative_zeros", "log_derivative_stieltjes", "hankel_all_orders", "off_line_finite_certificate"],
-      "target": "cvcd_minimal_forcing_set",
-      "relation": "compress_candidates"
-    }
+    {"id": "e.square.defect", "sources": ["square_coordinate"], "target": "rh_defect", "relation": "derives_exactly"},
+    {"id": "e.theta.rh", "sources": ["theta_entire", "theta_negative_zeros"], "target": "rh", "relation": "equivalent_when_both_directions_proved", "oak": "known criterion; source required"},
+    {"id": "e.theta.stieltjes", "sources": ["theta_negative_zeros"], "target": "log_derivative_stieltjes", "relation": "implies"},
+    {"id": "e.stieltjes.moments", "sources": ["log_derivative_stieltjes"], "target": "inverse_moments", "relation": "expands_to"},
+    {"id": "e.moments.hankel", "sources": ["inverse_moments"], "target": "hankel_all_orders", "relation": "motivates_positive_moment_constraints"},
+    {"id": "e.finite.exact", "sources": ["inverse_moments"], "target": "exact_finite_hankel", "relation": "finite_exact_transform", "oak": "exact only for supplied rational moment values"},
+    {"id": "e.finite.not_global", "sources": ["finite_hankel", "exact_finite_hankel"], "target": "hankel_all_orders", "relation": "does_not_prove", "oak": "finite_to_infinite forbidden"},
+    {"id": "e.moments.pade", "sources": ["inverse_moments"], "target": "pade_finite", "relation": "finite_exact_transform"},
+    {"id": "e.moments.jacobi.finite", "sources": ["inverse_moments"], "target": "jacobi_finite", "relation": "finite_exact_transform"},
+    {"id": "e.jacobi.limit", "sources": ["jacobi_finite"], "target": "jacobi_limit", "relation": "research_path_only", "oak": "finite approximants do not establish a convergent infinite operator"},
+    {"id": "e.jacobi.operator", "sources": ["jacobi_limit"], "target": "independent_hilbert_polya", "relation": "research_path_only", "oak": "must not preload gamma_n as proof input"},
+    {"id": "e.offline.certificate", "sources": ["rh_defect", "hankel_all_orders"], "target": "off_line_finite_certificate", "relation": "target_theorem"},
+    {"id": "e.cvcd", "sources": ["theta_negative_zeros", "log_derivative_stieltjes", "hankel_all_orders", "off_line_finite_certificate"], "target": "cvcd_minimal_forcing_set", "relation": "compress_candidates"}
   ],
   "negative_memory": [
     {"id": "mminus.finite_to_infinite", "rule": "finite zero/Hankel checks never prove RH"},
