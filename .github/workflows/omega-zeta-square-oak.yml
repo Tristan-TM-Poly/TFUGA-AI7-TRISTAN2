@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Compile package and targeted tests
-        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py tests/test_omega_zeta_square_r4.py tests/test_omega_zeta_square_bibliography.py
+        run: python -m compileall -q omega_zeta_square_t tests/test_omega_zeta_square_t.py tests/test_omega_zeta_square_intervals.py tests/test_omega_zeta_square_r4.py tests/test_omega_zeta_square_bibliography.py tests/test_omega_zeta_square_adversary.py
       - name: Validate machine-readable contracts
         run: |
           python - <<'PY'
@@ -65,7 +65,7 @@ jobs:
           print("bibliography-oak: PROMOTE")
           PY
       - name: Run targeted unit tests
-        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals tests.test_omega_zeta_square_r4 tests.test_omega_zeta_square_bibliography
+        run: python -m unittest tests.test_omega_zeta_square_t tests.test_omega_zeta_square_intervals tests.test_omega_zeta_square_r4 tests.test_omega_zeta_square_bibliography tests.test_omega_zeta_square_adversary
       - name: R4 provenance CVCD obligation smoke
         run: |
           python - <<'PY'
@@ -88,6 +88,37 @@ jobs:
           verdict = validate_interval_evidence([evidence])
           assert verdict.analytically_certified_inputs is False
           assert verdict.proves_rh is False
+          PY
+      - name: R5 exact off-line pair identity smoke
+        run: |
+          python - <<'PY'
+          from fractions import Fraction
+          from omega_zeta_square_t import (
+              centered_pair_hankel2_determinant,
+              conjugate_pair_inverse_moments,
+              first_exact_stieltjes_violation,
+              mixed_inverse_moments,
+          )
+          assert centered_pair_hankel2_determinant(Fraction(3,5), 2) < 0
+          pure = conjugate_pair_inverse_moments(1, 1, 6)
+          assert first_exact_stieltjes_violation(pure, 3).first_hankel_size == 2
+          masked = mixed_inverse_moments([5], 1, 1, 6)
+          assert first_exact_stieltjes_violation(masked, 3).first_hankel_size == 3
+          PY
+      - name: CLI structural OAK smoke tests
+        run: |
+          python -m omega_zeta_square_t cvcd rh > /tmp/zeta-square-cvcd.json
+          python -m omega_zeta_square_t obligations > /tmp/zeta-square-obligations.json
+          python -m omega_zeta_square_t bibliography-check > /tmp/zeta-square-bibliography.json
+          python - <<'PY'
+          import json
+          cvcd = json.load(open("/tmp/zeta-square-cvcd.json", encoding="utf-8"))
+          obligations = json.load(open("/tmp/zeta-square-obligations.json", encoding="utf-8"))
+          bibliography = json.load(open("/tmp/zeta-square-bibliography.json", encoding="utf-8"))
+          assert cvcd["proves_target"] is False
+          assert obligations["solution_claimed"] is False
+          assert bibliography["promotion"] == "PROMOTE"
+          assert bibliography["proves_rh"] is False
           PY
       - name: CLI geometry OAK smoke test
         run: |
