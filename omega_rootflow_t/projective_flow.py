@@ -1,15 +1,14 @@
 """Projective root continuation across polynomial degree transitions.
 
 R0.1-R0.3 treat finite simple-root differentials and projective spectra as
-separate layers.  This module bridges them numerically by matching root divisors
-in CP^1 with chordal distance.  It can therefore keep a branch finite when
-appropriate and let another branch converge continuously to [1:0] as a leading
-coefficient vanishes.
+separate layers. This module bridges them numerically by matching root divisors
+in CP^1 with chordal distance. It can therefore keep finite branches finite and
+let another branch converge continuously to [1:0] as a leading coefficient
+vanishes.
 
-The matcher is deliberately metric/numerical: it does not claim analytic
-continuation through a singular discriminant.  It compactifies infinity and
-makes degree transitions observable without floating-point overflow being the
-representation itself.
+The matcher is metric/numerical: it does not claim analytic continuation
+through a singular discriminant. It compactifies infinity and makes degree
+transitions observable without floating-point overflow being the representation.
 """
 
 from __future__ import annotations
@@ -116,12 +115,7 @@ def track_projective_path(
     *,
     coefficient_tolerance: float = 0.0,
 ) -> ProjectiveFlowResult:
-    """Track a fixed nominal-degree root divisor along supplied coefficient samples.
-
-    Each row of ``coefficient_path`` has the same nominal degree.  Leading
-    coefficients may become exactly zero, in which case projective roots at
-    infinity appear instead of changing the divisor cardinality.
-    """
+    """Track a fixed nominal-degree root divisor along supplied coefficient samples."""
     path = np.asarray(coefficient_path, dtype=np.complex128)
     if path.ndim != 2 or path.shape[0] < 2 or path.shape[1] < 2:
         raise ValueError("coefficient_path must be a 2D array with >=2 samples and >=2 coefficients")
@@ -173,11 +167,7 @@ def track_projective_path(
             )
         )
 
-    status = (
-        "OAK_PASS_PROJECTIVE_DEGREE_FLOW"
-        if transitions > 0
-        else "OAK_PASS_PROJECTIVE_FLOW"
-    )
+    status = "OAK_PASS_PROJECTIVE_DEGREE_FLOW" if transitions else "OAK_PASS_PROJECTIVE_FLOW"
     return ProjectiveFlowResult(
         steps=tuple(records),
         maximum_branch_step=global_maximum,
@@ -187,15 +177,20 @@ def track_projective_path(
 
 
 def cubic_degree_collapse_path(samples: int = 33) -> ComplexArray:
-    """Fixture ``epsilon*z^3 + z^2 - 1`` with epsilon -> 0.
+    """Collision-free fixture ``(z^2-1)(1+epsilon*z)``, epsilon -> 0.
 
-    Two roots remain near ±1 while the third branch moves to projective infinity.
-    The endpoint keeps nominal degree three with a zero cubic coefficient.
+    In ascending coefficients,
+
+        P_epsilon(z) = -1 - epsilon*z + z^2 + epsilon*z^3.
+
+    For 0 < epsilon <= 1/2 the roots are exactly -1, +1 and -1/epsilon.
+    Thus the finite branches stay fixed while the third branch tends to
+    projective infinity as epsilon -> 0, without a finite-root collision.
     """
     if samples < 3:
         raise ValueError("samples must be >= 3")
-    epsilon = np.linspace(1.0, 0.0, samples)
+    epsilon = np.linspace(0.5, 0.0, samples)
     return np.asarray(
-        [[-1.0 + 0j, 0j, 1.0 + 0j, complex(value)] for value in epsilon],
+        [[-1.0 + 0j, -complex(value), 1.0 + 0j, complex(value)] for value in epsilon],
         dtype=np.complex128,
     )
