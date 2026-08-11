@@ -4,6 +4,7 @@ This package is a research/verification toolkit. It does not claim a proof of RH
 """
 
 from .adversary import (
+    OnePairFiniteCertificate,
     ViolationDepth,
     centered_pair_hankel2_determinant,
     conjugate_pair_hankel2_determinant,
@@ -11,6 +12,8 @@ from .adversary import (
     first_exact_stieltjes_violation,
     lambda_pair_from_beta_gamma,
     mixed_inverse_moments,
+    one_pair_full_hankel_certificate,
+    one_pair_full_hankel_determinant,
 )
 from .bibliography import validate_bibliography_ledger
 from .certificates import (
@@ -136,10 +139,13 @@ __all__ = [
     "cvcd_support_report",
     "validate_bibliography_ledger",
     "ViolationDepth",
+    "OnePairFiniteCertificate",
     "lambda_pair_from_beta_gamma",
     "conjugate_pair_inverse_moments",
     "conjugate_pair_hankel2_determinant",
     "centered_pair_hankel2_determinant",
     "mixed_inverse_moments",
     "first_exact_stieltjes_violation",
+    "one_pair_full_hankel_determinant",
+    "one_pair_full_hankel_certificate",
 ]
