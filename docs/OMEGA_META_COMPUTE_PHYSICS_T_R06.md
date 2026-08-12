@@ -2,9 +2,7 @@
 
 Status: **D-MVP candidate / R0.6**. Commit-addressed, static-first fleet intelligence with evidence-aware revalidation and optimization planning. No arbitrary target-code execution.
 
-## 1. Mother pipeline
-
-R0.6 turns the R0.5 fleet infrastructure into a provenance-preserving computational map:
+## Mother pipeline
 
 ```text
 repository@commit
@@ -29,173 +27,102 @@ repository@commit
 
 Every future performance claim can therefore be traced to an exact repository revision and a reviewable evidence chain.
 
-## 2. Snapshot Ledger
+## Snapshot Ledger
 
-`omega_compute_physics_t/snapshot_ledger.py`
-
-A `RepositorySnapshot` records repository identity, pinned commit SHA, file path, byte size, content identity, extension counts and total inventoried bytes. Git-tree records can retain Git blob identities; local read-only checkouts use SHA-256.
-
-`compare_snapshots(old, new)` classifies added, removed, changed and unchanged files.
-
-OAK invariant:
+`omega_compute_physics_t/snapshot_ledger.py` records repository identity, pinned commit SHA, file path, byte size, content identity, extension counts and total bytes. Git-tree records can retain Git blob identities; local read-only checkouts use SHA-256. `compare_snapshots` classifies added, removed, changed and unchanged files.
 
 ```text
 changed blob != semantic regression != performance regression
 ```
 
-A changed blob is a trigger for re-analysis, not a performance conclusion.
+## Complexity-IR and Call Graph
 
-## 3. Complexity-IR and Static Call Graph
+`complexity_ir.py` converts Python syntax into a hardware-independent inventory (`LOAD`, `STORE`, `ARITH`, `COMPARE`, `INDEX`, `CALL`, `LOOP`, `BRANCH`, `ALLOC`, `COMPREHENSION`, `AWAIT`, `YIELD`). `call_graph.py` adds resolved/unresolved calls, fan-in/fan-out, strongly connected components and recursive components.
 
-`omega_compute_physics_t/complexity_ir.py` converts Python syntax into a hardware-independent operation inventory such as `LOAD`, `STORE`, `ARITH`, `COMPARE`, `INDEX`, `CALL`, `LOOP`, `BRANCH`, `ALLOC`, `COMPREHENSION`, `AWAIT` and `YIELD`.
+The graph is conservative: dynamic dispatch, reflection, imports, monkey patching and decorators can make runtime behavior different.
 
-`omega_compute_physics_t/call_graph.py` links `FunctionIR` objects using conservative name resolution and reports resolved call edges, unresolved call targets, fan-in/fan-out, strongly connected components and recursive components.
+## Change-Impact Propagation
 
-OAK invariant: Python dynamic dispatch, reflection, imports, monkey patching and decorators can make the runtime graph differ from the static graph.
-
-## 4. Change-Impact Propagation
-
-`omega_compute_physics_t/change_impact.py`
-
-A `SnapshotDiff` can be propagated through the reverse static call graph:
-
-```text
-changed file
--> directly affected functions
--> callers at distance 1
--> callers at distance 2
--> ... bounded max_hops
-```
-
-Impact decays with graph distance and can be lightly weighted by fan-in. Changed files absent from the resolved graph remain explicit `unresolved_changed_files` rather than disappearing.
-
-OAK invariant:
+`change_impact.py` propagates a `SnapshotDiff` through the reverse static call graph. Directly changed modules get distance 0; callers receive decaying bounded impact. Changed files absent from the graph stay explicit as unresolved impact.
 
 ```text
 static impact score != semantic impact != measured performance impact
 ```
 
-## 5. Deterministic Fixture Registry
+## Fixture Registry and Contract Planner
 
-`omega_compute_physics_t/fixture_registry.py`
+`fixture_registry.py` records deterministic, pure-data input metadata and rejects network-backed/nondeterministic automatic fixtures. `contract_planner.py` binds a Stage A benchmark seed, pinned commit, fixture, explicit axis values and static risk evidence into a `BenchmarkContract` candidate.
 
-A `FixtureSpec` records fixture id, input schema, benchmark axes, determinism, pure-data status and file/network requirements. Automatic planning rejects nondeterministic, non-pure or network-backed fixtures. R0.6 ships only metadata specifications; a trusted external adapter must implement and validate actual target inputs.
+Generated contracts deliberately remain `trusted_checkout=False`: contract generation is planning, not authorization.
 
-## 6. Static Risk Preflight
+## Static Risk Preflight
 
-`omega_compute_physics_t/risk_preflight.py`
-
-The preflight deliberately over-approximates potential benchmark risk. It looks for indicators of network access, credentials/secrets, mutating filesystem operations, subprocess/external side effects and privileged/system operations.
-
-It emits source-located `RiskFinding` evidence and maps it to the R0.5 `BenchmarkRisk` vector.
-
-OAK invariant:
+`risk_preflight.py` over-approximates indicators of network access, credentials/secrets, mutating filesystem operations, subprocess/external effects and privileged operations, retaining line-located evidence.
 
 ```text
 no static risk flag != safe code
 ```
 
-A clean risk report is never a sandbox certification.
+A clean report is never a sandbox certification.
 
-## 7. Benchmark Contract Planner
+## Regression Ledger
 
-`omega_compute_physics_t/contract_planner.py`
-
-`plan_contract(...)` binds:
-
-```text
-Stage A seed
-+ pinned commit
-+ deterministic fixture spec
-+ explicit axis values
-+ static risk report
--> BenchmarkContract candidate
-```
-
-Generated contracts deliberately retain `trusted_checkout=False`. Therefore they remain non-executable until an explicitly reviewed external infrastructure layer approves the checkout and invocation semantics.
-
-## 8. Regression Ledger
-
-`omega_compute_physics_t/regression_ledger.py`
-
-A `ComplexityDiffReport` can become a `RegressionEvent` containing old/new commit, target resource, regression fraction, maximum relative increase, mean relative change, minimum certified-domain overlap, severity and rebenchmark decision.
-
-OAK invariant:
+`regression_ledger.py` converts finite-domain `ComplexityDiffReport` evidence into commit-addressed regression events with severity and rebenchmark decisions.
 
 ```text
 finite-domain resource regression != asymptotic complexity-class regression
 ```
 
-## 9. Confidence Debt and Benchmark Half-Life
+## Confidence Debt
 
-`omega_compute_physics_t/confidence_debt.py`
-
-Freshness follows a configurable half-life proxy:
+`confidence_debt.py` models evidence freshness with configurable half-life:
 
 ```text
 freshness = 2^(-age_days / half_life_days)
 ```
 
-Confidence debt combines staleness, calibration gap, certified-domain mismatch, code change and machine change. The result routes evidence into `fresh-enough`, `schedule-revalidation`, `high-revalidate` or `critical-revalidate`.
+Debt combines staleness, calibration gap, certified-domain mismatch, code change and machine change. It routes evidence into `fresh-enough`, `schedule-revalidation`, `high-revalidate` or `critical-revalidate`.
 
-OAK invariant: confidence debt is a scheduling heuristic, not a posterior probability that a claim is false.
+Confidence debt is a scheduling heuristic, not a posterior probability of falsehood.
 
-## 10. Evidence-aware Optimization ROI
+## Evidence-aware Optimization ROI
 
-`omega_compute_physics_t/optimization_roi.py`
-
-Optimization priority is separated from remeasurement priority. A dimensionless value proxy combines:
+`optimization_roi.py` separates optimization priority from measurement priority. Its dimensionless gross-value proxy is:
 
 ```text
-gross value
-= impact_score
-  * estimated_relative_savings
-  * usage_weight
-  * regression_weight
+impact_score
+* estimated_relative_savings
+* usage_weight
+* regression_weight
 ```
 
-and discounts it using evidence freshness before dividing by estimated engineering effort. If confidence debt is high, the system returns `remeasure-before-optimization` rather than pretending an old prediction justifies engineering work.
+The score is discounted by evidence debt and divided by estimated engineering effort. High debt produces `remeasure-before-optimization`.
 
-OAK invariant: `roi_proxy` is not realized money, guaranteed savings or proof that an optimization is feasible.
+The ROI proxy is not realized money, guaranteed savings or proof that an optimization is feasible.
 
-## 11. Multi-language Source Genomes
+## Multi-language Source Genomes
 
-`omega_compute_physics_t/language_adapters.py`
+`language_adapters.py` uses AST + Complexity-IR for Python (`syntax-aware`). It recognizes C, C++, JavaScript, TypeScript, Rust, Go, Java, C#, Julia, R and shell using bounded lexical fingerprints so non-Python code becomes visible immediately. Those adapters remain explicitly `heuristic`; exact parsers should replace them selectively when evidence shows value.
 
-Python uses AST + Complexity-IR and is marked `syntax-aware`.
+## Universal Fleet Scan
 
-R0.6 also recognizes common extensions for C, C++, JavaScript, TypeScript, Rust, Go, Java, C#, Julia, R and shell. These non-Python adapters currently use bounded lexical fingerprints: LOC, function-like blocks, loop tokens, branch tokens, call-like tokens, allocation tokens and brace depth.
-
-They make non-Python code visible immediately, but remain explicitly `heuristic`. Exact parser/compiler/Tree-sitter adapters should replace them where fleet evidence shows sufficient value.
-
-## 12. Universal Fleet Scan
-
-`omega_compute_physics_t/universal_fleet.py`
-
-For every pinned local checkout:
+`universal_fleet.py` statically combines, per pinned checkout:
 
 ```text
 files
--> SHA-256 static snapshot
+-> SHA-256 snapshot
 -> language detection
--> SourceGenome per supported source file
+-> SourceGenome
 -> Python Complexity-IR
 -> Python CallGraph
 -> UniversalRepositoryReport
 ```
 
-Across repositories:
+Multiple reports become `UniversalFleetReport` with language counts, source counts, Python IR functions, dependencies, unsupported files and parse errors. No target module is imported or executed.
 
-```text
-UniversalRepositoryReport[]
--> UniversalFleetReport
-```
+## CLI
 
-The report includes source-file counts, language counts, Python IR function counts, call dependencies, unsupported files and parse errors. No repository module is imported or executed.
-
-## 13. Static CLI
-
-R0.6 is installable as:
+R0.6 is installable as `omega-compute-r06`:
 
 ```bash
 omega-compute-r06 snapshot ./repo --repository Tristan-TM-Poly/example --commit <sha>
@@ -206,17 +133,15 @@ omega-compute-r06 universal-fleet \
   --repo B=/checkouts/B --commit B=<shaB>
 ```
 
-The equivalent module entry point is `python -m omega_compute_physics_t.r06_cli`. All R0.6 CLI operations are static.
+Equivalent module entry point: `python -m omega_compute_physics_t.r06_cli`. All R0.6 CLI operations are static.
 
-## 14. Evidence Schema v0.6
+## Evidence Schema
 
-`complexity_atlas/evidence_schema_v0_6.json`
+`complexity_atlas/evidence_schema_v0_6.json` supports repository snapshots/diffs, call graphs, fixture registries, risk preflights, benchmark contract plans, regression ledgers, change-impact reports, confidence-debt reports, optimization-ROI proxies, source genomes and universal repository/fleet reports.
 
-Machine-readable evidence kinds include repository snapshots and diffs, call graphs, fixture registries, risk preflights, benchmark contract plans, regression ledgers, change-impact reports, confidence-debt reports, optimization-ROI proxies, source genomes and universal repository/fleet reports.
+Schema validity is not scientific truth, runtime safety or realized value.
 
-Schema validity is not evidence of scientific truth, runtime safety or realized value.
-
-## 15. Fleet-wide operating loop
+## Fleet-wide loop
 
 ```text
 PIN
@@ -233,19 +158,17 @@ PIN
 -> FIT / VALIDATE
 -> DIFF RESOURCES
 -> LEDGER
--> COMPUTE CONFIDENCE DEBT
+-> CONFIDENCE DEBT
 -> RANK REMEASUREMENT
 -> RANK OPTIMIZATION ROI
 -> REPEAT
 ```
 
-This is a living computational atlas rather than a collection of isolated benchmark numbers.
+## OAK promotion ladder
 
-## 16. OAK promotion ladder
+Static evidence includes changed blobs, source/IR/call-graph differences, risk indicators and impact propagation. Empirical resource changes require controlled measurements. Mechanistic claims require interventions/counters/independent evidence. Asymptotic claims require algorithmic or formal proof. No layer promotes itself automatically.
 
-Static evidence includes changed blobs, SourceGenome/Complexity-IR/call-graph differences, risk indicators and impact propagation. Empirical resource changes require controlled measurements. Mechanistic claims require interventions/counters/independent evidence. Asymptotic mathematical claims require algorithmic or formal proof. No layer is automatically promoted to the next.
-
-## 17. HGFM fleet representation
+## HGFM fleet representation
 
 ```text
 owner
@@ -266,31 +189,27 @@ owner
 -> optimization opportunity
 ```
 
-This hierarchy can become a temporal HGFM where each commit is a new fleet state and measured differences are provenance-preserving edges between states.
+This can become a temporal HGFM: commits are fleet states and validated differences are provenance-preserving edges.
 
-## 18. Six-repository rollout
+## Six-repository rollout
 
-`complexity_atlas/fleet_rollout_manifest_v0_1.json` pins the six currently accessible repositories to exact commit SHAs. Future evidence can therefore be addressed as `repository@commit` rather than a moving branch name.
+`complexity_atlas/fleet_rollout_manifest_v0_1.json` pins the six currently accessible repositories to exact commit SHAs. Evidence can therefore be addressed as `repository@commit`, not a moving branch. Complete remote-tree ingestion remains a rollout step; R0.6 does not claim exhaustive analysis of every repository byte yet.
 
-At R0.6, complete remote-tree ingestion is still a rollout step rather than a claim of completed exhaustive analysis of all repository bytes.
+## R0.7 frontier
 
-## 19. R0.7 frontier
-
-Highest-value next steps:
-
-1. ingest complete Git trees for every pinned repository into portable Snapshot Ledgers;
-2. identify which non-Python languages actually occur and upgrade only valuable adapters to exact parsers;
-3. resolve Python imports and qualified call targets across modules/packages;
-4. combine snapshot impact, call-graph centrality, empirical regressions and confidence debt into fleet-wide experiment scheduling;
-5. synthesize fixture requirements from signatures/type hints without inventing semantics;
+1. ingest complete pinned Git trees for every fleet repository;
+2. inventory actual language distribution and upgrade only valuable lexical adapters to exact parsers;
+3. resolve qualified Python imports/calls across packages;
+4. unify snapshot impact, call-graph centrality, empirical regressions and confidence debt into experiment scheduling;
+5. infer fixture requirements from type/signature evidence without inventing semantics;
 6. connect an explicitly authorized execution/sandbox adapter;
 7. run Stage B only for deterministic low-risk kernels;
-8. store measured cross-commit evidence as temporal HGFM;
-9. learn benchmark half-lives per workload family instead of using one configured value;
-10. estimate realized optimization value from before/after measurements and compare it with the ROI proxy.
+8. store cross-commit measured evidence as temporal HGFM;
+9. learn benchmark half-lives per workload family;
+10. compare predicted Optimization ROI against measured before/after savings.
 
-## 20. Hard boundaries
+## Hard boundaries
 
-R0.6 does **not** claim complete static call resolution, semantic equivalence across languages, runtime complexity from lexical tokens, security from static risk scanning, executable correctness from fixture metadata, performance regression from changed source alone, realized financial ROI from a planning score, or asymptotic complexity from empirical resource measurements.
+R0.6 does **not** claim complete call resolution, semantic equivalence across languages, runtime complexity from lexical tokens, security from static risk scans, executable correctness from fixture metadata, performance regression from changed source alone, realized financial ROI from planning scores, or asymptotic complexity from empirical measurements.
 
-These boundaries are architectural invariants, not missing disclaimers.
+These boundaries are architectural invariants.
