@@ -32,15 +32,18 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install test runner
         run: python -m pip install --disable-pip-version-check pytest
-      - name: Run MetaScienceBench R0.1-R0.3 tests
+      - name: Run MetaScienceBench R0.1-R0.4 tests
         run: >-
           python -m pytest -q
           tests/test_omega_meta_science_t.py
           tests/test_omega_meta_science_discovery.py
           tests/test_omega_meta_science_geometry.py
+          tests/test_omega_meta_science_operating_system.py
       - name: Replay MetaScienceBench JSON
         run: python -m omega_meta_science_t --compact > /tmp/meta_science_report.json
       - name: Replay Discovery Dynamics JSON
         run: python -m omega_meta_science_t.discovery_cli --compact > /tmp/discovery_dynamics_report.json
       - name: Replay Discovery Geometry Algebra JSON
         run: python -m omega_meta_science_t.geometry_cli --compact > /tmp/discovery_geometry_algebra_report.json
+      - name: Replay Discovery OS R0.4 JSON
+        run: python -m omega_meta_science_t.operating_system_cli --compact > /tmp/discovery_os_r0_4_report.json
