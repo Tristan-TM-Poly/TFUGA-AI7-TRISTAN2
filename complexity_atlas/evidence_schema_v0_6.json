@@ -14,6 +14,9 @@
         "risk-preflight",
         "benchmark-contract-plan",
         "regression-ledger",
+        "change-impact",
+        "confidence-debt",
+        "optimization-roi",
         "source-genome",
         "universal-repository-report",
         "universal-fleet-report"
@@ -26,5 +29,5 @@
     "payload": {"type": "object"}
   },
   "additionalProperties": true,
-  "description": "Machine-readable envelope for R0.6 static fleet evidence. Schema validity does not imply runtime safety, semantic equivalence, causal identification, benchmark validity or asymptotic proof."
+  "description": "Machine-readable envelope for R0.6 static fleet evidence and evidence-aware prioritization. Schema validity does not imply runtime safety, semantic equivalence, causal identification, benchmark validity, realized ROI or asymptotic proof."
 }
