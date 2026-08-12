@@ -115,6 +115,7 @@ omega-skillgen-package = "omega_skillgen_t.package_cli:main"
 omega-skillgen-ultra = "omega_skillgen_t.ultra_cli:main"
 omega-skillgen-evolution = "omega_skillgen_t.evolution_cli:main"
 omega-skillgen-civilization = "omega_skillgen_t.civilization_cli:main"
+omega-compute-r06 = "omega_compute_physics_t.r06_cli:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
