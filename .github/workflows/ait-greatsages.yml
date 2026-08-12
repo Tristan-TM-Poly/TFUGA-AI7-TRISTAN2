@@ -6,10 +6,12 @@ on:
       - "sage_tristan/greatsages.py"
       - "sage_tristan/greatsages_time_machine.py"
       - "sage_tristan/greatsages_bench.py"
+      - "sage_tristan/greatsages_blind.py"
       - "sage_tristan/ait_pantheon.py"
       - "omega_histosci_hg_t/**"
       - "tests/test_ait_greatsages.py"
       - "tests/test_ait_greatsages_r02.py"
+      - "tests/test_ait_greatsages_blind.py"
       - "docs/canon/AIT-GREATSAGES-GAUSS-R01.md"
       - "docs/canon/AIT-GREATSAGES-TIME-MACHINE-R02.md"
       - "pyproject.toml"
@@ -20,10 +22,12 @@ on:
       - "sage_tristan/greatsages.py"
       - "sage_tristan/greatsages_time_machine.py"
       - "sage_tristan/greatsages_bench.py"
+      - "sage_tristan/greatsages_blind.py"
       - "sage_tristan/ait_pantheon.py"
       - "omega_histosci_hg_t/**"
       - "tests/test_ait_greatsages.py"
       - "tests/test_ait_greatsages_r02.py"
+      - "tests/test_ait_greatsages_blind.py"
       - "docs/canon/AIT-GREATSAGES-GAUSS-R01.md"
       - "docs/canon/AIT-GREATSAGES-TIME-MACHINE-R02.md"
       - "pyproject.toml"
@@ -54,10 +58,12 @@ jobs:
           sage_tristan/greatsages.py
           sage_tristan/greatsages_time_machine.py
           sage_tristan/greatsages_bench.py
+          sage_tristan/greatsages_blind.py
           tests/test_ait_greatsages.py
           tests/test_ait_greatsages_r02.py
+          tests/test_ait_greatsages_blind.py
       - name: Targeted tests
-        run: pytest -q tests/test_ait_greatsages.py tests/test_ait_greatsages_r02.py
+        run: pytest -q tests/test_ait_greatsages.py tests/test_ait_greatsages_r02.py tests/test_ait_greatsages_blind.py
       - name: R0.1 deterministic chronological OAK gates
         run: |
           python -m sage_tristan.greatsages --sage gauss --year 1795 > /tmp/gauss-1795.json
@@ -111,4 +117,24 @@ jobs:
           assert bench['historical_truth_certified'] is False
           assert bench['novelty_claimed_for_white_space'] is False
           print('PROMOTE R0.2: software time-machine/bench gates only')
+          PY
+      - name: Blind contestant metadata leakage gate
+        run: |
+          python -m sage_tristan.greatsages_blind --sage gauss --discovery gauss_1801_ceres > /tmp/contestant.json
+          python -m sage_tristan.greatsages_blind --sage gauss --discovery gauss_1801_ceres --evaluator > /tmp/evaluator.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          contestant_text = Path('/tmp/contestant.json').read_text()
+          contestant = json.loads(contestant_text)
+          evaluator = json.loads(Path('/tmp/evaluator.json').read_text())
+          assert contestant['metadata_leakage_detected'] is False
+          assert 'gauss_1801_ceres' not in contestant_text
+          assert 'Orbit reconstruction for Ceres' not in contestant_text
+          assert contestant['target_content_withheld'] is True
+          assert contestant['descendant_content_withheld'] is True
+          assert evaluator['target_discovery_id'] == 'gauss_1801_ceres'
+          assert contestant['tournament_id'] == evaluator['tournament_id']
+          print('PROMOTE BLIND PACK: contestant/evaluator separation gate passed')
           PY
