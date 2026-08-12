@@ -1,0 +1,59 @@
+{
+  "schema": "omega-meta-compute/fleet-rollout/v0.1",
+  "generated_date": "2026-08-12",
+  "owner": "Tristan-TM-Poly",
+  "status": "static-scan-planned",
+  "policy": {
+    "stage_a": "zero-execution static scan",
+    "dynamic_execution": "requires typed benchmark contract and bounded fixture",
+    "network_or_credentials": "quarantine until explicit adapter",
+    "destructive_io": "forbidden by default",
+    "empirical_to_proof_promotion": "forbidden",
+    "cross_repo_transfer": "prior only; held-out validation required in destination repo"
+  },
+  "repositories": [
+    {
+      "repository": "Tristan-TM-Poly/PEFA-FractalEnergySystem",
+      "default_branch": "main",
+      "visibility": "private",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources available at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+      "default_branch": "main",
+      "visibility": "public",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources available at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG",
+      "default_branch": "main",
+      "visibility": "public",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources available at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/TFACC",
+      "default_branch": "main",
+      "visibility": "private",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources available at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "default_branch": "main",
+      "visibility": "public",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources available at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2",
+      "default_branch": "main",
+      "visibility": "public",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources available at pinned commit"
+    }
+  ],
+  "next_gate": "After R0.4 CI is green, run Stage A scans repo-by-repo, merge Repository Genomes into Fleet Atlas, then generate bounded benchmark contracts for top-priority functions."
+}
