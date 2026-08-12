@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-meta-compute/evidence-v0.4.schema.json",
+  "title": "Omega Meta Compute Evidence v0.4",
+  "type": "object",
+  "required": ["schema", "kind", "status", "oak_warning", "payload"],
+  "properties": {
+    "schema": {"const": "omega-meta-compute/evidence/v0.4"},
+    "kind": {
+      "enum": [
+        "representation-search",
+        "residual-report",
+        "theory-ecology",
+        "falsification-plan",
+        "meta-oak-report",
+        "repository-genome",
+        "fleet-atlas"
+      ]
+    },
+    "status": {"type": "string"},
+    "repository": {"type": ["string", "null"]},
+    "commit": {"type": ["string", "null"]},
+    "generated_at": {"type": ["string", "null"]},
+    "oak_warning": {"type": "string", "minLength": 1},
+    "payload": {"type": "object"}
+  },
+  "additionalProperties": false
+}
