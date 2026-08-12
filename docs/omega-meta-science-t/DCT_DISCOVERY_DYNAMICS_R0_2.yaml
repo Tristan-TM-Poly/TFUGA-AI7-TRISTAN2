@@ -1,0 +1,34 @@
+id: omega-discovery-dynamics-t-r0-2
+name: Omega Discovery Dynamics T R0.2
+repo_path: omega_meta_science_t/discovery.py
+status: D
+definition: >-
+  Reusable deterministic kernel for Scientific IR, Discovery ABI, local
+  disagreement sensitivity, residual feature extraction, finite counterexample
+  search, fidelity-gated representation arbitrage, heuristic unknown-unknown
+  candidate ranking and explicit invariant transport.
+hypotheses:
+  - Structured residual summaries can improve downstream theory-revision search.
+  - Fidelity-gated representation changes can reduce solution cost without silently losing declared invariants.
+  - Coincident disagreement, residual, instability and coverage signals can prioritize useful exploration regions.
+equation_or_model: >-
+  J_E(x) ~= [D(x+h)-D(x-h)]/(2h), where D is explicitly the prediction-disagreement surrogate; route selection minimizes declared cost only after fidelity gates.
+code_or_calculation: omega_meta_science_t/discovery.py
+test_path: tests/test_omega_meta_science_discovery.py
+proof_path: null
+risk_boundary:
+  - Epistemic Jacobian is not a gradient of truth or scientific value.
+  - Unknown-unknown radar ranks heuristic candidate signals only.
+  - Residual signatures do not identify causal mechanisms.
+  - Finite counterexample search is not a global proof.
+  - Invariant transport is certified only relative to an explicit declared map.
+  - Scientific IR validates structure, not translation fidelity.
+m_minus:
+  - Do not promote attractive names into claims of historical novelty.
+  - Do not select cheap representations before round-trip and invariant gates.
+  - Do not infer unknown unknowns directly from a scalar score.
+next_experiment: >-
+  Add noisy calibrated observations, Bayesian information-gain baselines,
+  real round-trip representation transforms, learned validity regions and
+  ablation studies under equal budgets.
+promotion_decision: prototype
