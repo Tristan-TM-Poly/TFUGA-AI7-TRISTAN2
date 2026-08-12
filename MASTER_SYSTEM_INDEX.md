@@ -14,7 +14,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 ## OAK status ladder
 
 | Status | Meaning | Promotion requirement |
-|---|---|---|
+|---:|---|---|
 | S | speculative | definition and risk boundary |
 | E | exploratory | minimal DCT-Ω packet |
 | X | crystallizable | examples, assumptions, tests or proof path |
@@ -42,7 +42,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | 14 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
 | 15 | Ω-NEURO-CELL-SYN-NET-T∞ | `omega_neuro_t/`, `docs/omega-neuro/` | X/D-MVP | Turns neuron→dendrite→synapse→hypernetwork ideas into typed executable models with falsifiable P1–P7 hypotheses, synthetic evidence harnesses, provenance gates and complexity-aware OAKBench. | Connect provenance-reviewed empirical datasets and rerun P1–P3 baseline, ablation and negative-control campaigns while keeping biological promotion explicitly gated. |
 | 16 | Ω-INVERSE-T∞ | `scripts/omega_inverse_compiler.py`, `scripts/omega_inverse_lagrange.py`, `docs/omega-inverse/` | X/D candidate | Turns local Taylor jets into inverse jets with three exact finite-order reversion oracles, two-sided formal validation, critical/Puiseux routing, Padé and conservative reconstruction candidates. | Benchmark high-order scaling, then add Bell/Faà di Bruno, certified branch continuation and multivariate inverse jets without promoting finite pattern matches to global proof. |
-| 17 | Ω-META-COMPUTE-PHYSICS-T∞ / Ω-COMPLEXITY-ATLAS-T∞ | `omega_compute_physics_t/`, `docs/OMEGA_COMPUTE_PHYSICS_T_R01.md`, `docs/OMEGA_COMPUTE_PHYSICS_T_R02_R03.md`, `docs/OMEGA_META_COMPUTE_PHYSICS_T_R04.md` | D-MVP candidate / R0.4 | Extends measured resource geometry into representation generation, residual intelligence, missing-variable candidates, theory ecology, self-falsification planning, Meta-OAK, static Repository Genomes and a cross-repository Fleet Atlas for reusable benchmark planning. | Keep R0.1–R0.4 green; then add typed Benchmark Contracts, measured MachineGenome, Complexity-IR, DAG/liveness composition and controlled fleet campaigns across repositories before cross-hardware or universality claims. |
+| 17 | Ω-META-COMPUTE-PHYSICS-T∞ / Ω-COMPLEXITY-ATLAS-T∞ | `omega_compute_physics_t/`, `docs/OMEGA_COMPUTE_PHYSICS_T_R01.md`, `docs/OMEGA_COMPUTE_PHYSICS_T_R02_R03.md`, `docs/OMEGA_META_COMPUTE_PHYSICS_T_R04.md`, `docs/OMEGA_META_COMPUTE_PHYSICS_T_R05.md` | D-MVP candidate / R0.5 | Extends resource geometry and meta-discovery with typed bounded Benchmark Contracts, static Complexity-IR, empirical MachineGenome calibration, DAG critical-path/liveness composition, tropical multivariate dominance geometry, pinned six-repository fleet rollout and a static Stage A orchestrator. | Keep R0.1–R0.5 green; materialize pinned read-only checkouts for all six repos, run Stage A completely, then benchmark only deterministic low-risk functions through explicit contracts before any cross-repo portability/universality claim. |
 
 ## Merge and promotion rules
 
