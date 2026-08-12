@@ -14,7 +14,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 ## OAK status ladder
 
 | Status | Meaning | Promotion requirement |
-|---|---|---|
+|---:|---|---|
 | S | speculative | definition and risk boundary |
 | E | exploratory | minimal DCT-Ω packet |
 | X | crystallizable | examples, assumptions, tests or proof path |
