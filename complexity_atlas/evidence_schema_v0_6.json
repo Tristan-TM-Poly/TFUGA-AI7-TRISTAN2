@@ -6,21 +6,7 @@
   "required": ["kind", "status"],
   "properties": {
     "kind": {
-      "enum": [
-        "repository-snapshot",
-        "snapshot-diff",
-        "call-graph",
-        "fixture-registry",
-        "risk-preflight",
-        "benchmark-contract-plan",
-        "regression-ledger",
-        "change-impact",
-        "confidence-debt",
-        "optimization-roi",
-        "source-genome",
-        "universal-repository-report",
-        "universal-fleet-report"
-      ]
+      "enum": ["repository-snapshot","snapshot-diff","call-graph","fixture-registry","risk-preflight","benchmark-contract-plan","regression-ledger","change-impact","confidence-debt","optimization-roi","source-genome","universal-repository-report","universal-fleet-report"]
     },
     "status": {"type": "string"},
     "repository": {"type": "string"},
