@@ -14,8 +14,10 @@ from .atlas import ComplexityAtlas, EmpiricalResourceModel, ResourceSample
 from .benchmark_contract import BenchmarkContract, BenchmarkRisk, InputAxis, gate_contract, load_contract
 from .budget import BudgetCompileReport, CandidateEvaluation, ResourceConstraint, compile_budget, pareto_front, quality_per_cost
 from .call_graph import CallEdge, CallGraphReport, build_call_graph
+from .change_impact import ChangeImpactReport, ImpactedNode, propagate_change_impact
 from .complexity_diff import ComplexityDiffReport, compare_models, geometric_sweep
 from .complexity_ir import FunctionIR, IROp, compile_source_ir
+from .confidence_debt import ConfidenceDebtReport, confidence_debt
 from .contract_planner import ContractPlan, plan_contract
 from .dag_resources import DAGEdge, DAGNode, DAGResourceReport, compose_dag
 from .fixture_registry import FixtureRegistry, FixtureSpec, conservative_default_registry
@@ -64,6 +66,8 @@ __all__ = [
     "RegressionEvent", "RegressionLedger", "event_from_diff",
     "SourceGenome", "PythonAdapter", "LexicalCodeAdapter", "LanguageAdapterRegistry", "default_language_registry",
     "UniversalRepositoryReport", "UniversalFleetReport", "scan_universal_checkout", "scan_universal_fleet",
+    "ImpactedNode", "ChangeImpactReport", "propagate_change_impact",
+    "ConfidenceDebtReport", "confidence_debt",
 ]
 
 __version__ = "0.6.0"
