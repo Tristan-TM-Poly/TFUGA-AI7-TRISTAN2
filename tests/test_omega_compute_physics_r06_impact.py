@@ -12,19 +12,9 @@ from omega_compute_physics_t.snapshot_ledger import SnapshotDiff
 class TestChangeImpact(unittest.TestCase):
     def test_propagates_to_callers_with_decay(self) -> None:
         ir = []
-        ir.extend(compile_source_ir(
-            """
-def leaf(n):
-    return n + 1
-
-def middle(n):
-    return leaf(n)
-
-def top(n):
-    return middle(n)
-""",
-            module="pkg/core.py",
-        ))
+        ir.extend(compile_source_ir("def leaf(n):\n    return n + 1\n", module="pkg/leaf.py"))
+        ir.extend(compile_source_ir("def middle(n):\n    return leaf(n)\n", module="pkg/middle.py"))
+        ir.extend(compile_source_ir("def top(n):\n    return middle(n)\n", module="pkg/top.py"))
         graph = build_call_graph(ir)
         diff = SnapshotDiff(
             repository="org/repo",
@@ -32,17 +22,16 @@ def top(n):
             new_commit="b" * 40,
             added=(),
             removed=(),
-            changed=("pkg/core.py",),
+            changed=("pkg/leaf.py",),
             unchanged=10,
         )
         report = propagate_change_impact(diff, graph, max_hops=3, decay=0.5)
         by_node = {row.node: row for row in report.impacted_nodes}
-        self.assertIn("pkg/core.py:leaf", by_node)
-        self.assertIn("pkg/core.py:middle", by_node)
-        self.assertIn("pkg/core.py:top", by_node)
-        self.assertEqual(by_node["pkg/core.py:leaf"].distance, 0)
-        self.assertEqual(by_node["pkg/core.py:middle"].distance, 0)
-        self.assertEqual(by_node["pkg/core.py:top"].distance, 0)
+        self.assertEqual(by_node["pkg/leaf.py:leaf"].distance, 0)
+        self.assertEqual(by_node["pkg/middle.py:middle"].distance, 1)
+        self.assertEqual(by_node["pkg/top.py:top"].distance, 2)
+        self.assertGreater(by_node["pkg/leaf.py:leaf"].impact_score, by_node["pkg/middle.py:middle"].impact_score)
+        self.assertGreater(by_node["pkg/middle.py:middle"].impact_score, by_node["pkg/top.py:top"].impact_score)
 
     def test_tracks_changed_files_outside_call_graph(self) -> None:
         graph = build_call_graph(compile_source_ir("def f(): return 1", module="a.py"))
