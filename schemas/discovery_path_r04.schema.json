@@ -20,7 +20,7 @@
     "target_discovery_id": {"type": "string", "minLength": 1},
     "claim_class": {
       "type": "string",
-      "enum": ["source_reported", "historical_fact", "reconstruction", "counterfactual", "fertile_hypothesis"]
+      "enum": ["established", "source_reported", "reconstruction", "counterfactual", "fertile_hypothesis"]
     },
     "states": {
       "type": "array",
