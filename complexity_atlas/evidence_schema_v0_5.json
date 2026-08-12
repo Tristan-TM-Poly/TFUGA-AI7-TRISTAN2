@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-compute-physics/evidence-v0.5.schema.json",
+  "title": "Omega Meta Compute Physics Evidence v0.5",
+  "type": "object",
+  "required": ["kind", "status"],
+  "properties": {
+    "kind": {
+      "enum": [
+        "benchmark-contract",
+        "benchmark-gate",
+        "machine-genome",
+        "complexity-ir",
+        "dag-resource-report",
+        "fleet-stage-a",
+        "tropical-dominance"
+      ]
+    },
+    "status": {"type": "string"},
+    "repository": {"type": "string"},
+    "commit_sha": {"type": "string"},
+    "oak_warning": {"type": "string"},
+    "payload": {"type": "object"}
+  },
+  "additionalProperties": true
+}
