@@ -26,6 +26,7 @@ from .fleet_stage_a import FleetStageAReport, StageABenchmarkSeed, StageAReposit
 from .language_adapters import LanguageAdapterRegistry, LexicalCodeAdapter, PythonAdapter, SourceGenome, default_language_registry
 from .machine_genome import MachineGenome, calibrate_machine, fingerprint_machine
 from .meta_oak import MetaOAKCheck, MetaOAKReport, audit_representation_candidate, audit_residual_interpretation, audit_theory_ecology, audit_validated_model
+from .optimization_roi import OptimizationOpportunity, OptimizationROIRow, rank_optimization_roi, score_opportunity
 from .profiler import ProfileResult, profile_call, profile_pipeline
 from .regression_ledger import RegressionEvent, RegressionLedger, event_from_diff
 from .representation import DerivedCoordinate, RepresentationScore, best_representation, generate_coordinate_candidates, search_representations, transform_samples
@@ -68,6 +69,7 @@ __all__ = [
     "UniversalRepositoryReport", "UniversalFleetReport", "scan_universal_checkout", "scan_universal_fleet",
     "ImpactedNode", "ChangeImpactReport", "propagate_change_impact",
     "ConfidenceDebtReport", "confidence_debt",
+    "OptimizationOpportunity", "OptimizationROIRow", "score_opportunity", "rank_optimization_roi",
 ]
 
 __version__ = "0.6.0"
