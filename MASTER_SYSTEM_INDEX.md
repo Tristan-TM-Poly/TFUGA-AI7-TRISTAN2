@@ -1,6 +1,6 @@
 # MASTER SYSTEM INDEX — TFUGA-AI7-TRISTAN2
 
-Date: 2026-08-10  
+Date: 2026-08-12  
 Status: OAK-safe navigation layer. This file is an index, not a proof, legal opinion, revenue guarantee, or scientific certification.
 
 ## Purpose
@@ -42,6 +42,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | 14 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
 | 15 | Ω-NEURO-CELL-SYN-NET-T∞ | `omega_neuro_t/`, `docs/omega-neuro/` | X/D-MVP | Turns neuron→dendrite→synapse→hypernetwork ideas into typed executable models with falsifiable P1–P7 hypotheses, synthetic evidence harnesses, provenance gates and complexity-aware OAKBench. | Connect provenance-reviewed empirical datasets and rerun P1–P3 baseline, ablation and negative-control campaigns while keeping biological promotion explicitly gated. |
 | 16 | Ω-INVERSE-T∞ | `scripts/omega_inverse_compiler.py`, `scripts/omega_inverse_lagrange.py`, `docs/omega-inverse/` | X/D candidate | Turns local Taylor jets into inverse jets with three exact finite-order reversion oracles, two-sided formal validation, critical/Puiseux routing, Padé and conservative reconstruction candidates. | Benchmark high-order scaling, then add Bell/Faà di Bruno, certified branch continuation and multivariate inverse jets without promoting finite pattern matches to global proof. |
+| 17 | Ω-COMPUTE-PHYSICS-T∞ / Ω-COMPLEXITY-ATLAS-T∞ | `omega_compute_physics_t/`, `docs/OMEGA_COMPUTE_PHYSICS_T_R01.md` | D-MVP candidate / R0.1 | Turns functions and pipelines into measured multivariate resource surfaces with OAK certificates, local scaling fields, interaction geometry, empirical regime candidates, resource contracts and an Atlas JSON suitable for future CI/agent planning. | Run repository CI and independent benchmark campaigns; then add held-out validation, uncertainty, Complexity Diff, active benchmarking and machine adapters before cross-hardware or asymptotic claims. |
 
 ## Merge and promotion rules
 
