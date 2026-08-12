@@ -1,0 +1,27 @@
+id: omega-meta-science-foundry-t-r0.1
+name: "Ω-META-SCIENCE-FOUNDRY-T∞² / MetaScienceBench-T v0.1"
+repo_path: omega_meta_science_t/
+status: X
+definition: >-
+  Executable toy benchmark for comparing a fixed scientific-search policy with an
+  adaptive disagreement-mining policy under an OAK/Meta-OAK promotion gate.
+hypotheses:
+  - "On the canonical two-theory fixture, disagreement mining selects the only discriminating experiment."
+  - "Declared epistemic fault injections are detected by the fail-closed OAK gate."
+  - "A strategy may be promoted only when verified knowledge gain is positive and the Meta-OAK mutation score is complete."
+equation_or_model: "verified_gain_per_cost = (log2(N_before)-log2(N_after))/cost, gated by OAK"
+code_or_calculation: "python -m omega_meta_science_t"
+test_path: tests/test_omega_meta_science_t.py
+proof_path: null
+risk_boundary:
+  - "Toy benchmark is not evidence of general scientific superiority."
+  - "Individual concepts may have substantial prior art; novelty requires literature review."
+  - "No autonomous external experiment, self-modification, publication, or irreversible action is performed."
+  - "Promotion beyond D-MVP requires external baselines, noise, repeated trials, calibration, and independent validation."
+m_minus:
+  - "A fixed experiment at x=1 leaves both fixture theories alive."
+  - "Mutation testing is bounded to the explicitly enumerated R0.1 fault classes."
+next_experiment: >-
+  Add noisy observations and equal-budget random/fixed/variance/information-gain baselines,
+  then measure calibration, false-discovery rate, mutation score and verified gain per cost over repeated seeds.
+promotion_decision: prototype
