@@ -1,0 +1,43 @@
+id: omega-discovery-geometry-algebra-t-r0-3
+name: Omega Discovery Geometry Algebra T R0.3
+repo_path: omega_meta_science_t/geometry.py
+status: D
+definition: >-
+  Reusable deterministic kernel for empirical theory quotienting,
+  anchor-preserving adversarial twins, evidence-dependence discounting,
+  finite-difference Hessians of declared utilities, finite claim UNSAT cores,
+  proof-carrying transform certification, and OAK-first finite scientific
+  program superoptimization.
+hypotheses:
+  - Empirical quotienting can reduce duplicate candidate theories without hiding the dependence on probe coverage.
+  - Anchor-preserving rivals can reveal underdetermination that ordinary confirmation misses.
+  - Explicit evidence dependence can reduce false confidence from duplicated support.
+  - Second-order utility sensitivity can expose local complementarity or interference between research actions.
+  - Minimal contradiction cores can make large claim graphs easier to debug.
+  - Transform certificates can make representation changes auditable.
+  - Constraint-first program optimization can reduce cost without sacrificing declared verified gain or invariants.
+equation_or_model: >-
+  empirical quotient T/~_P on declared probes P; H_ij ~= d2U/(da_i da_j);
+  N_eff surrogate = N^2/sum_ij C_ij; finite superoptimizer minimizes cost only
+  after OAK, gain, and invariant gates.
+code_or_calculation: omega_meta_science_t/geometry.py
+test_path: tests/test_omega_meta_science_geometry.py
+proof_path: null
+risk_boundary:
+  - Theory quotient classes are empirical on a finite declared probe set only.
+  - Adversarial twins are selected from one finite declared perturbation family.
+  - Evidence effective count is a redundancy surrogate, not a universal statistical theorem.
+  - Epistemic Hessian is curvature of a declared utility surrogate, not truth or knowledge.
+  - UNSAT core is minimal only inside the declared finite world model.
+  - Transform certification verifies declared invariants/error bounds only.
+  - Scientific superoptimization is finite candidate selection, not global optimization.
+  - No historical novelty or general superiority claim is made.
+m_minus:
+  - Two theories may collapse into one quotient class solely because the probe set is too weak.
+  - Cheap programs must never bypass OAK or invariant gates.
+  - Multiple evidence items must not be counted as independent when provenance indicates strong dependence.
+next_experiment: >-
+  Replace toy declarations with recognized benchmark model families, provenance-derived
+  evidence dependence, held-out adversarial twins, SAT/SMT-backed claim cores,
+  real proof-carrying representation round trips, and equal-budget program ablations.
+promotion_decision: prototype
