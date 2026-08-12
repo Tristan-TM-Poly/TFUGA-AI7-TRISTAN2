@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-compute-physics/evidence-v0.2.schema.json",
+  "title": "Omega Compute Physics Evidence v0.2",
+  "type": "object",
+  "required": [
+    "schema",
+    "kind"
+  ],
+  "properties": {
+    "schema": {
+      "const": "omega-compute-physics-evidence/v0.2"
+    },
+    "kind": {
+      "enum": [
+        "validated-resource-model",
+        "complexity-diff",
+        "drift-report"
+      ]
+    },
+    "model": {
+      "type": "object"
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "target",
+        "selected_candidate",
+        "selection_criterion",
+        "n_total",
+        "n_development",
+        "n_calibration",
+        "scores",
+        "calibration_rmse",
+        "calibration_mae",
+        "calibration_r2",
+        "interval",
+        "epistemic_level",
+        "oak_warning"
+      ],
+      "properties": {
+        "target": {
+          "type": "string"
+        },
+        "selected_candidate": {
+          "type": "string"
+        },
+        "selection_criterion": {
+          "enum": [
+            "cv_rmse",
+            "aic_proxy",
+            "bic_proxy",
+            "mdl_proxy"
+          ]
+        },
+        "n_total": {
+          "type": "integer",
+          "minimum": 8
+        },
+        "n_development": {
+          "type": "integer",
+          "minimum": 4
+        },
+        "n_calibration": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "k_folds": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "scores": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "calibration_rmse": {
+          "type": "number",
+          "minimum": 0
+        },
+        "calibration_mae": {
+          "type": "number",
+          "minimum": 0
+        },
+        "calibration_r2": {
+          "type": "number"
+        },
+        "interval": {
+          "type": "object",
+          "required": [
+            "alpha",
+            "radius",
+            "n_calibration",
+            "empirical_calibration_coverage"
+          ],
+          "properties": {
+            "alpha": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            },
+            "radius": {
+              "type": "number",
+              "minimum": 0
+            },
+            "n_calibration": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "empirical_calibration_coverage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "epistemic_level": {
+          "type": "string"
+        },
+        "oak_warning": {
+          "type": "string"
+        }
+      }
+    },
+    "report": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "validated-resource-model"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "model",
+          "validation"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "complexity-diff"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "report"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "drift-report"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "report"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}
