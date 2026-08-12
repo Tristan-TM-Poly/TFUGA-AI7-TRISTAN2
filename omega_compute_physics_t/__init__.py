@@ -6,7 +6,22 @@ Important epistemic rule: fitted finite-domain scaling is empirical evidence, no
 mathematical proof of asymptotic Big-O/Theta complexity.
 """
 
+from .active import (
+    ExperimentCandidate,
+    discriminating_experiment,
+    geometric_design_space,
+    rank_experiments,
+    select_next_experiments,
+)
 from .atlas import ComplexityAtlas, EmpiricalResourceModel, ResourceSample
+from .budget import (
+    BudgetCompileReport,
+    CandidateEvaluation,
+    ResourceConstraint,
+    compile_budget,
+    pareto_front,
+    quality_per_cost,
+)
 from .complexity_diff import ComplexityDiffReport, compare_models, geometric_sweep
 from .profiler import ProfileResult, profile_call, profile_pipeline
 from .validation import (
@@ -34,6 +49,17 @@ __all__ = [
     "ComplexityDiffReport",
     "compare_models",
     "geometric_sweep",
+    "ExperimentCandidate",
+    "geometric_design_space",
+    "rank_experiments",
+    "select_next_experiments",
+    "discriminating_experiment",
+    "ResourceConstraint",
+    "CandidateEvaluation",
+    "BudgetCompileReport",
+    "compile_budget",
+    "pareto_front",
+    "quality_per_cost",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
