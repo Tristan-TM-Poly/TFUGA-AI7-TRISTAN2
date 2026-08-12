@@ -29,5 +29,5 @@
     "payload": {"type": "object"}
   },
   "additionalProperties": true,
-  "description": "Machine-readable envelope for R0.6 static fleet evidence and evidence-aware prioritization. Schema validity does not imply runtime safety, semantic equivalence, causal identification, benchmark validity, realized ROI or asymptotic proof."
+  "description": "Machine-readable envelope for R0.6 static fleet evidence and evidence-aware prioritization. Schema validity does not imply runtime safety, semantic equivalence, causal identification, benchmark validity, realized financial ROI or asymptotic proof."
 }
