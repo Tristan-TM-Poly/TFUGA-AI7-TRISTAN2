@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-compute/evidence-v0.6.schema.json",
+  "title": "Omega Meta Compute Physics Evidence v0.6",
+  "type": "object",
+  "required": ["kind", "status"],
+  "properties": {
+    "kind": {
+      "enum": [
+        "repository-snapshot",
+        "snapshot-diff",
+        "call-graph",
+        "fixture-registry",
+        "risk-preflight",
+        "benchmark-contract-plan",
+        "regression-ledger",
+        "source-genome",
+        "universal-repository-report",
+        "universal-fleet-report"
+      ]
+    },
+    "status": {"type": "string"},
+    "repository": {"type": "string"},
+    "commit_sha": {"type": "string", "minLength": 7},
+    "oak_warning": {"type": "string"},
+    "payload": {"type": "object"}
+  },
+  "additionalProperties": true,
+  "description": "Machine-readable envelope for R0.6 static fleet evidence. Schema validity does not imply runtime safety, semantic equivalence, causal identification, benchmark validity or asymptotic proof."
+}
