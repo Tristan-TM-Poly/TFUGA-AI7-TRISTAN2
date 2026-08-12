@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import re
-from typing import Any, Mapping, Protocol, Sequence
+from typing import Any, Protocol, Sequence
 
 from .complexity_ir import compile_source_ir
 
@@ -119,8 +119,12 @@ class LanguageAdapterRegistry:
         self._by_extension: dict[str, SourceAdapter] = {}
 
     def register(self, adapter: SourceAdapter) -> None:
+        seen: set[str] = set()
         for extension in adapter.extensions:
             key = extension.lower()
+            if key in seen:
+                continue
+            seen.add(key)
             if key in self._by_extension:
                 raise ValueError(f"adapter already registered for {key}")
             self._by_extension[key] = adapter
@@ -152,6 +156,6 @@ def default_language_registry() -> LanguageAdapterRegistry:
     registry.register(LexicalCodeAdapter("java", (".java",)))
     registry.register(LexicalCodeAdapter("csharp", (".cs",)))
     registry.register(LexicalCodeAdapter("julia", (".jl",)))
-    registry.register(LexicalCodeAdapter("r", (".r", ".R")))
+    registry.register(LexicalCodeAdapter("r", (".r",)))
     registry.register(LexicalCodeAdapter("shell", (".sh", ".bash")))
     return registry
