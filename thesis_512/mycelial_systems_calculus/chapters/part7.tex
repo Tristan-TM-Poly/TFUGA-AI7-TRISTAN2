@@ -1,20 +1,133 @@
 \part{Synthèse et conclusion}
 
 \chapter{Synthèse des résultats}
+
 \section{Résultats soutenus}
+
+Cette monographie distingue les résultats structurels déjà soutenus des résultats scientifiques qui nécessitent encore un tribunal expérimental ou bibliographique. La première famille comprend des propriétés de construction directement vérifiables dans le corpus et le code.
+
+Premièrement, le moteur de thèse réutilisé construit une frontière de $2^n$ PageNodes à profondeur $n$. À $n=9$,
+\[
+2^9=512,
+\]
+et la frontière se décompose en $256$ paires fraternelles LOG/EXP. Ce résultat est une propriété déterministe de l'implémentation et de ses tests. Il fournit une architecture de planification; il ne prouve ni que le PDF final possède 512 pages ni que les 512 unités sont scientifiquement valables.
+
+Deuxièmement, le document source définit explicitement plusieurs objets qui ont été transformés en cartes formelles et en claims traçables : CapabilityCell, Capability IR, graphe dynamique dépendant de l'intention, hyperarête exécutable, Proof-Carrying Repository, Semantic/Scientific CI, compilation Theory-to-Repo, compilation Repo-to-Theory, semantic diff, Constitution Kernel, Meta-OAK, fixed-point reconstruction et Residual-to-Theory. Le fait que ces objets soient présents dans la source est supporté; leur nouveauté ou leur efficacité n'en découle pas.
+
+Troisièmement, la thèse possède maintenant une chaîne de build reproductible qui compile le manuscrit, exécute biber, produit un PDF, mesure le nombre réel de pages et conserve les diagnostics sur échec. Cette chaîne a elle-même produit plusieurs M$^-$ avant son premier PASS : dépendances de police, paquet bibliographique absent, incompatibilité de microtypographie, symbole Unicode non déclaré et notation mathématique non définie. La conservation de ces défauts constitue une preuve opérationnelle que la mémoire négative n'est pas seulement décrite; elle est utilisée dans le processus de construction.
+
+Quatrièmement, la traçabilité entre source, GitHub, claims et expériences est matérialisée par des ledgers distincts. Cette séparation permet de soutenir un claim d'implémentation sans promouvoir simultanément un claim de nouveauté ou de supériorité.
+
 \section{Résultats partiels}
+
+Plusieurs constructions sont plus avancées qu'une simple idée mais ne disposent pas encore du niveau d'evidence nécessaire à une conclusion générale.
+
+La Capability IR est suffisamment définie pour produire des contrats de substitution et un vecteur $\Delta_{sub}$, mais l'avantage réel sur des interfaces ou workflows existants doit être mesuré. Les compilateurs Theory-to-Repo et Repo-to-Theory possèdent une sémantique de travail et une matrice de traçabilité, mais la qualité de reconstruction d'une théorie implicite reste à benchmarker sur des cas où une spécification de référence est disponible.
+
+Scientific CI est également partiel. Les obligations de baseline, contrôle négatif, unités, incertitude, provenance, statistique et reproductibilité sont explicites, mais l'utilité marginale des gates supplémentaires ne peut être déduite de leur présence. EXP-003 doit mesurer le gain de détection et le coût de faux positifs contre des baselines plus simples.
+
+Le corpus inter-repos fournit enfin des architectures Living Factory, Capability OS et Research Self-Model qui implémentent déjà plusieurs motifs voisins : WorkUnits typés, evidence receipts, autorité bornée, M$^-$, réputation locale, replay historique et séparation entre association et causalité. Ils constituent une evidence d'intégration interne et un terrain d'étude, mais pas une réplication externe.
+
 \section{Résultats réfutés ou non établis}
 
+Aucun résultat de cette version ne permet d'affirmer que le système mycélien est globalement supérieur à un monorepo, un service registry, un workflow engine ou une architecture classique. Cette phrase est une conclusion méthodologique importante : le système possède des mécanismes et un programme de falsification, mais le programme expérimental doit encore produire les comparaisons nécessaires.
+
+De même, aucun claim de nouveauté scientifique globale n'est établi. Le Literature Court a déjà identifié des voisins significatifs : architecture logicielle, intermediate representations, Proof-Carrying Code, runtime models, workflows scientifiques, provenance standardisée et research-object packaging. Les différences candidates sont maintenant mieux localisées, mais le statut demeure HOLD tant que les familles voisines restantes ne sont pas examinées et que les différences ne sont pas reliées à un discriminant exécutable.
+
+L'auto-hébergement ne constitue pas non plus une preuve d'intelligence autonome. Le fixed-point test mesure uniquement la capacité de reconstruire un sous-système à partir d'une description canonique et de compilers déclarés. Une reconstruction parfaite d'une théorie erronée resterait parfaitement reproductible et erronée.
+
+Enfin, un faible semantic residual $\Delta_T$ ne prouve pas la vérité d'une théorie. Il indique seulement que théorie, code et evidence enregistrée sont cohérents sous une métrique donnée. Cette distinction reste obligatoire dans l'interprétation d'EXP-007.
+
 \chapter{Limites et menaces à la validité}
+
 \section{Validité interne}
+
+La première menace est la co-construction du système et de son tribunal. Lorsque les mêmes hypothèses influencent l'architecture, les tests et les critères de succès, le risque de validation circulaire augmente. Les protocoles expérimentaux introduisent donc des contrôles négatifs, des baselines simples et, lorsque possible, des générateurs de défauts dont les labels sont cachés aux détecteurs jusqu'au gel des receipts.
+
+La deuxième menace est la sélection du corpus. Les dépôts Tristan fournissent une riche continuité historique mais ne constituent pas un échantillon indépendant. Une réussite de réutilisation ou de routage dans cet écosystème peut refléter des conventions communes, des noms partagés ou une connaissance implicite de l'auteur. Les expériences de substitution et de reconstruction doivent donc inclure des variantes qui cassent volontairement ces raccourcis.
+
+La troisième menace concerne les métriques. Une réduction du nombre d'arêtes, de fichiers ou de lignes n'est pas nécessairement une réduction de la charge cognitive. Les métriques de coordination incorporent donc interventions humaines, erreurs, temps de reprise et maintenance, et doivent rapporter les composantes séparément avant toute scalarisation.
+
+La quatrième menace est l'évolution du système pendant l'étude. Les claims et tests sont liés à des commits précis afin qu'une evidence ancienne ne soit pas automatiquement transférée à une version nouvelle.
+
 \section{Validité externe}
+
+Même si les expériences internes devenaient positives, leur transfert à d'autres organisations, domaines ou échelles resterait une question ouverte. Un laboratoire individuel de recherche n'a pas les mêmes contraintes qu'une entreprise à milliers d'ingénieurs, un consortium scientifique réglementé ou une infrastructure critique.
+
+L'interchangeabilité de providers peut également dépendre fortement de la nature des tâches. Des transformations purement syntaxiques sont plus faciles à normaliser que des simulations scientifiques ayant des conventions cachées ou des tolérances numériques complexes. Les claims de substitution doivent donc rester indexés par famille de capacités.
+
+L'utilisation de GitHub comme substrat ne doit enfin pas être confondue avec la définition mathématique du système. Le calcul proposé devrait pouvoir être instancié sur d'autres systèmes de versionnement ou de stockage si ses abstractions sont réellement générales.
+
+\section{Validité de construct}
+
+Les termes \emph{mycélien}, \emph{mitose}, \emph{dormance}, \emph{métabolisme} ou \emph{fixed point} peuvent suggérer davantage que ce qui est formalisé. La thèse impose donc une traduction opérationnelle pour chaque métaphore. Une mitose est une transformation de spécialisation d'un composant; elle n'implique aucun mécanisme biologique. Un fixed point est une relation de reconstruction approximative; il n'implique aucune identité ontologique entre logiciel et organisme vivant.
+
+La notion d'evidence est elle-même polysémique. Une preuve formelle, un test logiciel, une mesure instrumentale, un benchmark et une citation n'ont pas la même force. Le Claim-Evidence Graph doit conserver le type d'evidence et son domaine plutôt que tout convertir en un score unique.
+
 \section{Dette de preuve}
 
+La dette principale est aujourd'hui concentrée dans cinq zones. Premièrement, les propriétés algébriques des opérateurs de système doivent être formalisées avec hypothèses et contre-exemples. Deuxièmement, les compilateurs bidirectionnels exigent un benchmark de fidélité sémantique. Troisièmement, les sept campagnes expérimentales doivent être exécutées au-delà des fixtures mécaniques. Quatrièmement, le Literature Court doit couvrir les familles voisines restantes. Cinquièmement, la reproductibilité inter-environnement et indépendante doit dépasser le seul CI GitHub.
+
+Cette dette n'est pas un défaut caché du manuscrit; elle constitue son programme de recherche explicite.
+
 \chapter{Programme de recherche futur}
+
 \section{Formalisation}
+
+La priorité formelle est de distinguer trois niveaux. Au niveau 1, les objets et contrats doivent être suffisamment précis pour permettre des tests de type et des contre-exemples. Au niveau 2, les opérateurs de Repo Algebra doivent recevoir des domaines de définition et des lois conditionnelles. Au niveau 3, les propriétés intéressantes de composition --- préservation d'invariants, fermeture, monotonie de certains risques ou limites de reconstruction --- doivent être formulées comme propositions avec conditions nécessaires.
+
+Une direction particulièrement importante est l'étude des hyperarêtes exécutables comme opérateurs partiels sur un état typé. Leur composition peut dépendre de l'ordre si les ressources, l'evidence ou l'état global sont mutables. L'absence d'associativité générale est donc un cas de base à caractériser plutôt qu'une anomalie à masquer.
+
+Le semantic diff constitue une seconde priorité. La décomposition actuelle de $\Delta_T$ en définitions, hypothèses, claims, unités/types, evidence, limites et provenance permet d'éviter une similarité textuelle opaque. Il reste à définir des métriques adaptées à chaque composante et à étudier quelles composantes sont comparables automatiquement.
+
 \section{Expérimentation}
+
+Les sept campagnes fournissent un ordre naturel. EXP-001 et EXP-002 testent la valeur de l'abstraction de capacité. EXP-003 teste la valeur des couches de validation. EXP-004 teste la politique de réutilisation. EXP-005 décrit l'évolution réelle du corpus. EXP-006 teste la fermeture architecturale. EXP-007 teste la cohérence du round-trip théorie--code--evidence.
+
+Chaque campagne doit progresser par niveaux : protocole, mécanique synthétique, replay historique, observation prospective, clean-room et réplication indépendante. Ce chemin empêche qu'un fixture conçu pour vérifier le logiciel soit ensuite cité comme validation empirique du claim scientifique.
+
 \section{Reproduction indépendante}
 
+Une première reproduction indépendante peut rester modeste. Un évaluateur externe pourrait recevoir un petit corpus de capacités, des schémas et un ensemble de tâches gelé, puis reproduire EXP-002 ou EXP-003 sans utiliser l'environnement complet de l'auteur. Une telle reproduction serait plus informative qu'une seconde exécution du même workflow CI.
+
+Une autre route est la réimplémentation indépendante d'un sous-ensemble du Capability IR ou du semantic diff à partir de la spécification seulement. Les divergences de réimplémentation deviennent alors des tests directs de l'ambiguïté de la spécification.
+
+\section{Interopérabilité}
+
+Le modèle de provenance doit être confronté explicitement à PROV-O et RO-Crate, tandis que la description de workflows doit être comparée à CWL et à d'autres systèmes de workflows. L'objectif n'est pas d'absorber tous les standards dans une nouvelle couche, mais de minimiser les inventions de format lorsque des primitives établies suffisent.
+
+\section{Externalisation du corpus}
+
+Une validation externe future devrait ajouter des dépôts qui n'ont pas été écrits avec la terminologie Tristan. C'est une condition forte pour tester si le capability mining découvre réellement des contrats sémantiques ou s'il repose sur des conventions lexicales internes.
+
 \chapter{Conclusion générale}
+
 \section{Réponse bornée à la question centrale}
+
+À ce stade, la réponse à la question centrale est constructive mais non définitive. Il est possible de construire un prototype cohérent dans lequel capacités, claims, evidence, tests, transformations et historique sont représentés comme objets typés et reliés à un build scientifique. Il est également possible de formaliser un routeur, des compilateurs bidirectionnels, un fixed-point test et une mémoire positive/négative/indéterminée sans supprimer les limites épistémiques.
+
+Ce résultat répond à la question d'\emph{expressibilité et de construction}. Il ne répond pas encore complètement à la question de \emph{supériorité}. Celle-ci appartient aux expériences et aux comparaisons d'état de l'art.
+
 \section{Contributions réellement supportées}
+
+Les contributions actuellement supportées sont donc formulées avec prudence :
+
+\begin{enumerate}
+  \item une architecture unifiée et traçable reliant CapabilityCell, Capability IR, hypergraphes exécutables, claims/evidence et compilers théorie--code;
+  \item une séparation opérationnelle entre Software CI, Semantic CI, Scientific CI et OAK;
+  \item un schéma de mémoire qui conserve les résultats négatifs et indéterminés au lieu de ne retenir que les succès;
+  \item un programme de sept expériences falsifiables avec baselines et frontières de causalité;
+  \item une infrastructure de thèse où les claims remontent vers le PDF source et les artefacts GitHub;
+  \item un build LaTeX mesuré où le nombre de pages est une propriété du PDF compilé et non une estimation de longueur;
+  \item une méthode de tribunal de nouveauté qui maintient les contributions candidates en HOLD jusqu'à comparaison et discrimination.
+\end{enumerate}
+
+Aucune de ces contributions n'exige de prétendre que la totalité du système est nouvelle, prouvée ou supérieure. La valeur scientifique recherchée est précisément de convertir une architecture expansive en objets suffisamment explicites pour pouvoir être comparés, réfutés, reproduits et améliorés.
+
+\section{Critère final de promotion}
+
+Le manuscrit ne franchit son gate 512 que lorsque
+\[
+Pages_{compiled}=512
+\]
+et que les pages supplémentaires correspondent à de l'information scientifique ou reproductible plutôt qu'à du remplissage. Ce gate est nécessaire mais non suffisant : une thèse de 512 pages peut encore contenir des claims insuffisamment supportés. Le dernier verdict reste donc multi-gates, avec G11 pour la forme compilée et OAK pour la force réelle des conclusions.
