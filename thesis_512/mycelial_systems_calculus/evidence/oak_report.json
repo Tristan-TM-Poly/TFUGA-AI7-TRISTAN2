@@ -1,0 +1,31 @@
+{
+  "status": "HOLD",
+  "gates": {
+    "G0_latex_compile": "HOLD",
+    "G1_cross_reference_integrity": "HOLD",
+    "G2_bibliography_integrity": "PARTIAL",
+    "G3_claim_evidence_coverage": "PARTIAL",
+    "G4_github_provenance": "PARTIAL",
+    "G5_theory_code_consistency": "PARTIAL",
+    "G6_experiment_reproducibility": "HOLD",
+    "G7_uncertainty_statistics": "HOLD",
+    "G8_novelty_prior_art": "HOLD",
+    "G9_negative_results_limitations": "PARTIAL",
+    "G10_proof_status_language": "PARTIAL",
+    "G11_compiled_page_count_512": "HOLD",
+    "G12_artifact_manifest_hashes": "HOLD"
+  },
+  "verified_now": [
+    "512 equals 2^9",
+    "depth-9 frontier planner exists",
+    "SkillGen CI is green on observed head",
+    "initial claim and prior-art ledgers exist"
+  ],
+  "not_yet_verified": [
+    "complete literature coverage",
+    "experimental hypotheses",
+    "scientific novelty",
+    "full LaTeX compilation",
+    "exact 512 compiled PDF pages"
+  ]
+}
