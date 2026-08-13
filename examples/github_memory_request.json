@@ -1,0 +1,7 @@
+{
+  "request_id": "PR-NEXT-CUMULATIVE-MEMORY",
+  "description": "Build a GitHub pull-request memory and reusable capability graph before creating new modules",
+  "domains": ["github", "memory"],
+  "consumes": ["repository"],
+  "produces": ["pr_index", "capability_graph"]
+}
