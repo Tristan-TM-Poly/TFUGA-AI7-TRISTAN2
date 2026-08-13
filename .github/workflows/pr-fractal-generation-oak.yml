@@ -12,7 +12,7 @@ permissions:
 jobs:
   pr-5k2n-oak:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -27,13 +27,15 @@ jobs:
           python -m compileall -q \
             omega_capability_os_t/github_pr_generation_forest.py \
             omega_capability_os_t/github_pr_generation_r02.py \
+            omega_capability_os_t/github_pr_generation_r03.py \
             tools/compile_pr_5k2n_event.py
 
-      - name: Deterministic 5K2N R0.1-R0.2 court
+      - name: Deterministic 5K2N R0.1-R0.3 court
         run: |
           python -m pytest -q \
             tests/test_omega_github_pr_generation_forest.py \
-            tests/test_omega_github_pr_generation_r02.py
+            tests/test_omega_github_pr_generation_r02.py \
+            tests/test_omega_github_pr_generation_r03.py
 
       - name: Compile canonical R0.1 bounded receipt
         run: |
@@ -153,6 +155,10 @@ jobs:
           import re
           from pathlib import Path
           from omega_capability_os_t.github_memory import GitHubMemoryIndex
+          from omega_capability_os_t.github_pr_generation_r03 import (
+              build_process_capability_request,
+              process_request_to_dict,
+          )
 
           event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
           pr = event["pull_request"]
@@ -191,7 +197,7 @@ jobs:
 
           title = str(pr.get("title") or "")
           body = str(pr.get("body") or "")
-          request = {
+          artifact_request = {
               "request_id": f"live-pr-{repo}-{number}",
               "description": title,
               "domains": ["github", "pull-request", "code-generation", "oak"],
@@ -209,8 +215,12 @@ jobs:
               "intent_tokens": [],
               "boundary": "Live event genome; target/future PRs are hidden from the historical retrieval index.",
           }
+          process_request = process_request_to_dict(build_process_capability_request(target_genome))
           Path("/tmp/omega-pr-5k2n-live-request.json").write_text(
-              json.dumps(request, indent=2, sort_keys=True) + "\n"
+              json.dumps(artifact_request, indent=2, sort_keys=True) + "\n"
+          )
+          Path("/tmp/omega-pr-5k2n-live-process-request.json").write_text(
+              json.dumps(process_request, indent=2, sort_keys=True) + "\n"
           )
           Path("/tmp/omega-pr-5k2n-live-target.json").write_text(
               json.dumps(target_genome, indent=2, sort_keys=True) + "\n"
@@ -227,7 +237,7 @@ jobs:
           )
           PY
 
-      - name: Compile live leakage-controlled cumulative intelligence
+      - name: Compile live leakage-controlled artifact cumulative intelligence
         if: github.event_name == 'pull_request'
         run: |
           python -m omega_capability_os_t.github_cumulative_intelligence_cli \
@@ -240,21 +250,61 @@ jobs:
           import json
           from pathlib import Path
           cumulative = json.loads(Path("/tmp/omega-pr-5k2n-live-cumulative.json").read_text())
-          target = json.loads(Path("/tmp/omega-pr-5k2n-live-target.json").read_text())
           boundary = json.loads(Path("/tmp/omega-pr-5k2n-live-boundary.json").read_text())
           target_ref = boundary["target_ref"]
           assert target_ref not in cumulative["minimal_reuse_coalition"]["inspected_pr_candidates"]
           assert all(row.get("ref") != target_ref for row in cumulative["relevant_pr_genomes"])
-          payload = {
+          PY
+
+      - name: Compile live process-plane cumulative intelligence
+        if: github.event_name == 'pull_request'
+        run: |
+          python -m omega_capability_os_t.github_cumulative_intelligence_cli \
+            /tmp/omega-pr-5k2n-live-process-request.json \
+            --index "$GITHUB_REPOSITORY=/tmp/omega-pr-5k2n-live-index-prior.json" \
+            --max-items 8 \
+            --output /tmp/omega-pr-5k2n-live-process-cumulative.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          process = json.loads(Path("/tmp/omega-pr-5k2n-live-process-cumulative.json").read_text())
+          coalition = process["minimal_reuse_coalition"]
+          assert coalition["reuse_coverage_ratio"] == 1.0, coalition
+          assert coalition["residual_outputs"] == [], coalition
+          assert len(coalition["selected_capabilities"]) >= 5, coalition
+          PY
+
+      - name: Compile live R0.2 and dual-plane R0.3 inputs
+        if: github.event_name == 'pull_request'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          artifact = json.loads(Path("/tmp/omega-pr-5k2n-live-cumulative.json").read_text())
+          process = json.loads(Path("/tmp/omega-pr-5k2n-live-process-cumulative.json").read_text())
+          target = json.loads(Path("/tmp/omega-pr-5k2n-live-target.json").read_text())
+          r02 = {
               "generation": 0,
               "candidate_budget": 32,
               "physical_contract_budget": 8,
               "min_go_gradient": 1.0,
               "target_pr_genome": target,
-              "cumulative_intelligence": cumulative,
+              "cumulative_intelligence": artifact,
+          }
+          r03 = {
+              "generation": 0,
+              "candidate_budget": 32,
+              "physical_contract_budget": 8,
+              "min_go_gradient": 1.0,
+              "target_pr_genome": target,
+              "artifact_cumulative_intelligence": artifact,
+              "process_cumulative_intelligence": process,
           }
           Path("/tmp/omega-pr-5k2n-live-r02-input.json").write_text(
-              json.dumps(payload, indent=2, sort_keys=True) + "\n"
+              json.dumps(r02, indent=2, sort_keys=True) + "\n"
+          )
+          Path("/tmp/omega-pr-5k2n-live-r03-input.json").write_text(
+              json.dumps(r03, indent=2, sort_keys=True) + "\n"
           )
           PY
 
@@ -275,8 +325,37 @@ jobs:
           assert report["historical_context"]["pr_genome"]["ref"] == boundary["target_ref"]
           assert report["physical_patch_compiler"]["write_authority_granted"] is False
           assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
-          if report["historical_context"]["decision"] == "INSPECT":
-              assert report["physical_patch_contract_count"] == 0
+          PY
+
+      - name: Compile live dual-plane R0.3 current-PR decision
+        if: github.event_name == 'pull_request'
+        run: |
+          python -m omega_capability_os_t.github_pr_generation_r03 \
+            /tmp/omega-pr-5k2n-live-r03-input.json \
+            --output /tmp/omega-pr-5k2n-live-r03.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/omega-pr-5k2n-live-r03.json").read_text())
+          boundary = json.loads(Path("/tmp/omega-pr-5k2n-live-boundary.json").read_text())
+          assert report["process_reuse_plane"]["process_reuse_complete"] is True
+          assert report["process_reuse_plane"]["reuse_coverage_ratio"] == 1.0
+          assert report["artifact_residual_plane"]["historical_candidates"]
+          assert report["artifact_residual_plane"]["decision"] == "INSPECT", report["artifact_residual_plane"]
+          assert report["artifact_residual_plane"]["exact_inspection_required"] is True
+          assert report["physical_patch_contract_count"] == 0
+          assert report["heuristic_failure_memory_numeric_penalty"] == 0.0
+          assert report["adaptive_continuation"]["next_generation_candidate"] is None
+          assert all(row["compatibility_proven"] is False for row in report["compatibility_inspection_plan"])
+          assert all(row["reuse_authorized"] is False for row in report["compatibility_inspection_plan"])
+          assert report["physical_patch_compiler"]["write_authority_granted"] is False
+          assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
+          assert report["artifact_residual_plane"]["requested_outputs"] == [
+              "implementation", "tests", "evidence", "documentation"
+          ]
+          assert report["logical_cardinality_decimal"] == "5000"
+          assert report["logical_population_materialized"] is False
+          assert boundary["target_ref"] not in report["artifact_residual_plane"]["historical_candidates"]
           PY
 
       - name: Retain bounded generation receipts
@@ -290,9 +369,12 @@ jobs:
             /tmp/omega-pr-5k2n-r02.json
             /tmp/omega-pr-5k2n-live-index-prior.json
             /tmp/omega-pr-5k2n-live-request.json
+            /tmp/omega-pr-5k2n-live-process-request.json
             /tmp/omega-pr-5k2n-live-target.json
             /tmp/omega-pr-5k2n-live-boundary.json
             /tmp/omega-pr-5k2n-live-cumulative.json
+            /tmp/omega-pr-5k2n-live-process-cumulative.json
             /tmp/omega-pr-5k2n-live-r02.json
+            /tmp/omega-pr-5k2n-live-r03.json
           if-no-files-found: ignore
           retention-days: 14
