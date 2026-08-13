@@ -54,6 +54,12 @@ jobs:
             --output-index /tmp/omega-github-memory-zoom.json \
             --output-context /tmp/omega-github-llmt-context.json \
             --output-receipt /tmp/omega-github-zoom-receipt.json
+      - name: R0.3-R0.7 cumulative evolution court
+        run: |
+          python -m omega_capability_os_t.github_memory_evolution_cli court \
+            /tmp/omega-github-memory-zoom.json \
+            examples/github_memory_request.json \
+            --output /tmp/omega-github-memory-evolution.json
       - name: OAK live receipt assertions
         run: |
           python - <<'PY'
@@ -63,9 +69,10 @@ jobs:
           memory = json.loads(Path("/tmp/omega-github-memory-zoom.json").read_text())
           context = json.loads(Path("/tmp/omega-github-llmt-context.json").read_text())
           zoom = json.loads(Path("/tmp/omega-github-zoom-receipt.json").read_text())
+          evolution = json.loads(Path("/tmp/omega-github-memory-evolution.json").read_text())
           assert memory["schema"] == "omega-github-memory-index/v0.1.0", memory.get("schema")
           assert len(memory["prs"]) >= 1, "live repository should expose at least one PR"
-          assert len(memory["capabilities"]) >= 4, "Capability OS registry was not ingested"
+          assert len(memory["capabilities"]) >= 20, "R0.7 Capability Genome was not ingested"
           assert context["schema"] == "omega-github-llmt-context/v1", context.get("schema")
           assert context["decision"]["creation_allowed"] is False, context["decision"]
           assert context["decision"]["action"] in {"REUSE", "COMPOSE", "EXTEND", "INSPECT"}, context["decision"]
@@ -73,8 +80,14 @@ jobs:
           assert len(zoom["candidate_prs"]) >= 1, zoom
           assert len(zoom["hydrated_prs"]) >= 1, zoom
           assert zoom["changed_file_count"] >= 1, zoom
+          assert evolution["schema"] == "omega-github-memory-evolution-court/v0.7.0", evolution.get("schema")
+          assert evolution["oak"]["status"] == "PASS", evolution["oak"]
+          assert evolution["supersession"]["strong_edges_added"] == 0, evolution["supersession"]
+          assert evolution["federation"]["packet_count"] >= 1, evolution["federation"]
+          assert evolution["residual_artifact"]["generation_allowed"] is False, evolution["residual_artifact"]
           assert len(memory["fingerprint"]) == 64
           assert len(context["fingerprint"]) == 64
+          assert len(evolution["fingerprint"]) == 64
           print(json.dumps({
               "pr_count": len(memory["prs"]),
               "asset_count": len(memory["assets"]),
@@ -84,9 +97,11 @@ jobs:
               "hydrated_prs": zoom["hydrated_prs"],
               "changed_file_count": zoom["changed_file_count"],
               "symbol_count": zoom["symbol_count"],
-              "zoom_errors": zoom["errors"],
+              "supersession_candidates": evolution["supersession"]["candidate_count"],
+              "federated_packets": evolution["federation"]["packet_count"],
               "memory_fingerprint": memory["fingerprint"],
               "context_fingerprint": context["fingerprint"],
+              "evolution_fingerprint": evolution["fingerprint"],
           }, indent=2))
           PY
       - name: Retain bounded memory artifacts
@@ -98,4 +113,5 @@ jobs:
             /tmp/omega-github-memory-zoom.json
             /tmp/omega-github-llmt-context.json
             /tmp/omega-github-zoom-receipt.json
+            /tmp/omega-github-memory-evolution.json
           retention-days: 14
