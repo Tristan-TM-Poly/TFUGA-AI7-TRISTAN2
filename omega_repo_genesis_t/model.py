@@ -16,15 +16,18 @@ class RepoSpec:
     split_score: float = 0.0
     split_rationale: tuple[str, ...] = ()
     visibility: str = "private"
+    public_drivers: tuple[str, ...] = ()
+    private_blockers: tuple[str, ...] = ()
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> "RepoSpec":
         visibility = str(payload.get("visibility", "private")).lower()
-        if visibility != "private":
-            raise ValueError("Repo Genesis v0.1 is private-by-default and refuses non-private specs")
+        if visibility not in {"private", "public"}:
+            raise ValueError("visibility must be 'private' or 'public'")
         score = float(payload.get("split_score", 0.0))
         if not 0.0 <= score <= 1.0:
             raise ValueError("split_score must be in [0, 1]")
+        gate = dict(payload.get("visibility_gate", {}))
         return cls(
             name=str(payload["name"]),
             description=str(payload["description"]),
@@ -36,6 +39,8 @@ class RepoSpec:
             split_score=score,
             split_rationale=tuple(map(str, payload.get("split_rationale", ()))),
             visibility=visibility,
+            public_drivers=tuple(map(str, gate.get("public_drivers", ()))),
+            private_blockers=tuple(map(str, gate.get("private_blockers", ()))),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -50,6 +55,10 @@ class RepoSpec:
             "split_score": self.split_score,
             "split_rationale": list(self.split_rationale),
             "visibility": self.visibility,
+            "visibility_gate": {
+                "public_drivers": list(self.public_drivers),
+                "private_blockers": list(self.private_blockers),
+            },
         }
 
 
