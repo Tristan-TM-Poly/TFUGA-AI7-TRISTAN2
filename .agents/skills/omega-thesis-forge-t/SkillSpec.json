@@ -1,9 +1,9 @@
 {
   "name": "omega-thesis-forge-t",
   "description": "Compile a research-monograph-grade LaTeX thesis from Tristan GitHub repositories and scholarly evidence with exact compiled-page control, claim/evidence traceability, OAK, UNC2, reproducibility, and negative-memory preservation.",
-  "purpose": "Transform a research topic plus authorized GitHub corpus into a rigorous, auditable, modular LaTeX thesis whose claims trace to code, tests, benchmarks, repository history, and external literature, with a default target of exactly 256 compiled pages.",
+  "purpose": "Transform a research topic plus authorized GitHub corpus into a rigorous, auditable, modular LaTeX thesis whose claims trace to code, tests, benchmarks, repository history, and external literature, with a default target of exactly 512 compiled pages.",
   "use_when": [
-    "The user asks for a thesis, dissertation, habilitation-style monograph, or 256-page LaTeX manuscript grounded in their GitHub work.",
+    "The user asks for a thesis, dissertation, habilitation-style monograph, or 512-page LaTeX manuscript grounded in their GitHub work.",
     "The user asks to synthesize many Tristan repositories, PRs, theories, tests, and benchmarks into one academic research artifact.",
     "The user asks to update an existing thesis from new GitHub evidence while preserving provenance and claim status.",
     "The user asks for theory-to-code and code-to-theory traceability in a long scientific manuscript.",
@@ -24,16 +24,16 @@
     "Formalize core objects with definitions, symbols, assumptions, units/types, operators, invariants, proof status, computational mapping, counterexamples, and OAK status.",
     "Create bidirectional Theory-to-Code and Code-to-Theory traceability linking chapter claims to exact repository artifacts, tests, benchmarks, commits, and literature anchors.",
     "Compile missing empirical support into experiment or benchmark plans instead of inventing results; include baselines, controls, uncertainty, ablations, failure analysis, and reproducibility configuration.",
-    "Allocate the 256-page information budget across front matter, foundations, formal theory, architecture/compilers, evidence/trust, learning/evolution, experiments, synthesis, bibliography, and appendices.",
+    "Allocate the 512-page information budget across front matter, foundations, formal theory, architecture/compilers, evidence/trust, learning/evolution, experiments, synthesis, bibliography, and appendices.",
     "Generate a modular LaTeX tree and chapter files with theorem environments, semantic cross-references, bibliography, figures/tables/algorithms, and evidence artifacts.",
     "Run cross-chapter consistency checks for notation, claims, units, definitions, acronyms, labels, references, bibliography keys, and abstract/conclusion overclaim.",
-    "Compile the LaTeX manuscript when possible, read the actual PDF page count, and use a page controller to expand or compress scientific content until the compiled total equals 256 by default.",
+    "Compile the LaTeX manuscript when possible, read the actual PDF page count, and use a page controller to expand or compress scientific content until the compiled total equals 512 by default.",
     "Run OAK gates for build integrity, bibliography, claim coverage, provenance, theory-code consistency, reproducibility, uncertainty, novelty wording, limitations, theorem status, page count, and hashes.",
     "Preserve M-plus, M-minus, and M-unknown thesis memory and emit a reproducibility bundle plus final promotion status."
   ],
   "invariants": [
     "SEARCH -> REUSE -> ADAPT -> GENERATE before every substantial new chapter or implementation artifact.",
-    "Compiled PDF page count, not word count, is the source of truth for the 256-page requirement.",
+    "Compiled PDF page count, not word count, is the source of truth for the 512-page requirement.",
     "Do not pad page count with blank pages, duplicated text, artificial spacing, oversized low-information figures, or gratuitous chapter breaks.",
     "GitHub provenance is not peer review and a merged PR is not scientific proof.",
     "Code existence supports implementation claims only; tests and benchmarks must match the exact claim being made.",
@@ -76,18 +76,18 @@
     "Theorem/conjecture/observation labels match proof status.",
     "Negative evidence and limitations are represented.",
     "The LaTeX source is modular and reproducibly buildable.",
-    "The compiled PDF page count has been measured and equals 256 by default, or the page gate is explicitly HOLD if compilation is unavailable.",
+    "The compiled PDF page count has been measured and equals 512 by default, or the page gate is explicitly HOLD if compilation is unavailable.",
     "The final abstract/conclusion do not exceed the evidence ledger."
   ],
   "eval_cases": [
     {
-      "id": "positive-256-github-thesis",
-      "prompt": "Utilise tous mes dépôts GitHub pertinents pour construire une thèse scientifique de 256 pages en LaTeX sur mes systèmes HGFM/OAK/Capability OS, avec preuves et benchmarks.",
+      "id": "positive-512-github-thesis",
+      "prompt": "Utilise tous mes dépôts GitHub pertinents pour construire une thèse scientifique de 512 pages en LaTeX sur mes systèmes HGFM/OAK/Capability OS, avec preuves et benchmarks.",
       "class": "positive"
     },
     {
       "id": "positive-source-pdf-plus-github",
-      "prompt": "À partir de ce PDF et de mes GitHub, fais une thèse de 256 pages niveau monographie de recherche, en LaTeX, en vérifiant toutes les contributions.",
+      "prompt": "À partir de ce PDF et de mes GitHub, fais une thèse de 512 pages niveau monographie de recherche, en LaTeX, en vérifiant toutes les contributions.",
       "class": "positive"
     },
     {
@@ -102,12 +102,12 @@
     },
     {
       "id": "incomplete-no-topic",
-      "prompt": "Fais-moi une thèse de 256 pages à partir de mes GitHub.",
+      "prompt": "Fais-moi une thèse de 512 pages à partir de mes GitHub.",
       "class": "incomplete"
     },
     {
       "id": "edge-page-count-no-tex-engine",
-      "prompt": "Génère la thèse exactement 256 pages, mais l'environnement n'a pas de moteur TeX.",
+      "prompt": "Génère la thèse exactement 512 pages, mais l'environnement n'a pas de moteur TeX.",
       "class": "edge"
     },
     {
