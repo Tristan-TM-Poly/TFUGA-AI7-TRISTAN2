@@ -12,7 +12,7 @@ permissions:
 jobs:
   pr-5k2n-oak:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -82,7 +82,7 @@ jobs:
           assert len(report["fingerprint"]) == 64
           PY
 
-      - name: Compile history-enriched R0.2 review contracts
+      - name: Compile history-enriched R0.2 fixture review contracts
         run: |
           python -m omega_capability_os_t.github_pr_generation_r02 \
             examples/pr_5k2n_generation_r02_request.json \
@@ -133,6 +133,152 @@ jobs:
           assert report["physical_patch_compiler"]["write_authority_granted"] is False
           PY
 
+      - name: Build live state=all GitHub memory
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -m omega_capability_os_t.github_memory_cli build \
+            --repository "$GITHUB_REPOSITORY" \
+            --registry examples/capability_os_registry.json \
+            --without-files \
+            --output /tmp/omega-pr-5k2n-live-index-all.json
+
+      - name: Hide target and future PRs from live historical retrieval
+        if: github.event_name == 'pull_request'
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+          from omega_capability_os_t.github_memory import GitHubMemoryIndex
+
+          event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
+          pr = event["pull_request"]
+          repo = event["repository"]["full_name"]
+          number = int(pr["number"])
+          target_ref = f"pr:{repo}#{number}"
+
+          raw = json.loads(Path("/tmp/omega-pr-5k2n-live-index-all.json").read_text())
+          kept_prs = []
+          removed_refs = set()
+          for row in raw.get("prs", []):
+              same_repo = str(row.get("repository")) == repo
+              row_number = int(row.get("number", 0))
+              if same_repo and row_number >= number:
+                  removed_refs.add(f"pr:{repo}#{row_number}")
+              else:
+                  kept_prs.append(row)
+          raw["prs"] = kept_prs
+          raw["assets"] = [
+              row for row in raw.get("assets", [])
+              if str(row.get("source_ref")) not in removed_refs
+          ]
+          raw["edges"] = [
+              row for row in raw.get("edges", [])
+              if str(row.get("source")) not in removed_refs
+              and str(row.get("target")) not in removed_refs
+          ]
+          normalized = GitHubMemoryIndex.from_dict(raw).to_dict()
+          assert all(
+              not (row["repository"] == repo and int(row["number"]) >= number)
+              for row in normalized["prs"]
+          )
+          Path("/tmp/omega-pr-5k2n-live-index-prior.json").write_text(
+              json.dumps(normalized, indent=2, sort_keys=True) + "\n"
+          )
+
+          title = str(pr.get("title") or "")
+          body = str(pr.get("body") or "")
+          request = {
+              "request_id": f"live-pr-{repo}-{number}",
+              "description": title,
+              "domains": ["github", "pull-request", "code-generation", "oak"],
+              "consumes": ["prior-pr-memory", "capability-contracts"],
+              "produces": ["implementation", "tests", "evidence", "documentation"],
+          }
+          target_genome = {
+              "ref": target_ref,
+              "repository": repo,
+              "number": number,
+              "lifecycle": "DRAFT" if pr.get("draft") else str(pr.get("state") or "OPEN").upper(),
+              "head_sha": (pr.get("head") or {}).get("sha"),
+              "changed_files": [],
+              "named_concepts": sorted(set(re.findall(r"(?:Ω|OMEGA)[-A-Za-z0-9_∞²³]+", f"{title}\n{body}"))),
+              "intent_tokens": [],
+              "boundary": "Live event genome; target/future PRs are hidden from the historical retrieval index.",
+          }
+          Path("/tmp/omega-pr-5k2n-live-request.json").write_text(
+              json.dumps(request, indent=2, sort_keys=True) + "\n"
+          )
+          Path("/tmp/omega-pr-5k2n-live-target.json").write_text(
+              json.dumps(target_genome, indent=2, sort_keys=True) + "\n"
+          )
+          Path("/tmp/omega-pr-5k2n-live-boundary.json").write_text(
+              json.dumps({
+                  "target_ref": target_ref,
+                  "target_pr_hidden_from_history": True,
+                  "future_prs_hidden_from_history": True,
+                  "removed_refs": sorted(removed_refs),
+                  "prior_pr_count": len(normalized["prs"]),
+                  "boundary": "PR number is used as same-repository temporal order; target and later PRs are excluded from historical retrieval."
+              }, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+
+      - name: Compile live leakage-controlled cumulative intelligence
+        if: github.event_name == 'pull_request'
+        run: |
+          python -m omega_capability_os_t.github_cumulative_intelligence_cli \
+            /tmp/omega-pr-5k2n-live-request.json \
+            --index "$GITHUB_REPOSITORY=/tmp/omega-pr-5k2n-live-index-prior.json" \
+            --max-items 8 \
+            --output /tmp/omega-pr-5k2n-live-cumulative.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cumulative = json.loads(Path("/tmp/omega-pr-5k2n-live-cumulative.json").read_text())
+          target = json.loads(Path("/tmp/omega-pr-5k2n-live-target.json").read_text())
+          boundary = json.loads(Path("/tmp/omega-pr-5k2n-live-boundary.json").read_text())
+          target_ref = boundary["target_ref"]
+          assert target_ref not in cumulative["minimal_reuse_coalition"]["inspected_pr_candidates"]
+          assert all(row.get("ref") != target_ref for row in cumulative["relevant_pr_genomes"])
+          payload = {
+              "generation": 0,
+              "candidate_budget": 32,
+              "physical_contract_budget": 8,
+              "min_go_gradient": 1.0,
+              "target_pr_genome": target,
+              "cumulative_intelligence": cumulative,
+          }
+          Path("/tmp/omega-pr-5k2n-live-r02-input.json").write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+
+      - name: Compile live history-enriched R0.2 current-PR contracts
+        if: github.event_name == 'pull_request'
+        run: |
+          python -m omega_capability_os_t.github_pr_generation_r02 \
+            /tmp/omega-pr-5k2n-live-r02-input.json \
+            --output /tmp/omega-pr-5k2n-live-r02.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/omega-pr-5k2n-live-r02.json").read_text())
+          boundary = json.loads(Path("/tmp/omega-pr-5k2n-live-boundary.json").read_text())
+          assert boundary["target_pr_hidden_from_history"] is True
+          assert boundary["future_prs_hidden_from_history"] is True
+          assert report["historical_context"]["history_enriched"] is True
+          assert report["historical_context"]["pr_genome"]["ref"] == boundary["target_ref"]
+          assert report["physical_patch_compiler"]["write_authority_granted"] is False
+          assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
+          if report["historical_context"]["decision"] == "INSPECT":
+              assert report["physical_patch_contract_count"] == 0
+          PY
+
       - name: Retain bounded generation receipts
         uses: actions/upload-artifact@v4
         with:
@@ -142,5 +288,11 @@ jobs:
             /tmp/omega-pr-5k2n-event.json
             /tmp/omega-pr-5k2n-campaign.json
             /tmp/omega-pr-5k2n-r02.json
+            /tmp/omega-pr-5k2n-live-index-prior.json
+            /tmp/omega-pr-5k2n-live-request.json
+            /tmp/omega-pr-5k2n-live-target.json
+            /tmp/omega-pr-5k2n-live-boundary.json
+            /tmp/omega-pr-5k2n-live-cumulative.json
+            /tmp/omega-pr-5k2n-live-r02.json
           if-no-files-found: ignore
           retention-days: 14
