@@ -5,9 +5,12 @@ on:
     paths:
       - "sage_tristan/tensor_discovery_bench.py"
       - "sage_tristan/tensor_research_compiler.py"
+      - "sage_tristan/tensor_risk_gate.py"
       - "schemas/tensor_discovery_bench_r07.schema.json"
       - "tests/test_tensor_discovery_bench.py"
       - "tests/test_tensor_discovery_bench_schema.py"
+      - "tests/test_tensor_discovery_risk_integration.py"
+      - "tests/test_tensor_discovery_risk_schema_integration.py"
       - "docs/canon/TENSOR-DISCOVERYBENCH-R07.md"
       - ".github/workflows/tensor-discovery-r07.yml"
   push:
@@ -15,9 +18,12 @@ on:
     paths:
       - "sage_tristan/tensor_discovery_bench.py"
       - "sage_tristan/tensor_research_compiler.py"
+      - "sage_tristan/tensor_risk_gate.py"
       - "schemas/tensor_discovery_bench_r07.schema.json"
       - "tests/test_tensor_discovery_bench.py"
       - "tests/test_tensor_discovery_bench_schema.py"
+      - "tests/test_tensor_discovery_risk_integration.py"
+      - "tests/test_tensor_discovery_risk_schema_integration.py"
       - "docs/canon/TENSOR-DISCOVERYBENCH-R07.md"
       - ".github/workflows/tensor-discovery-r07.yml"
   workflow_dispatch:
@@ -44,12 +50,20 @@ jobs:
         run: >-
           python -m compileall -q
           sage_tristan/tensor_discovery_bench.py
+          sage_tristan/tensor_risk_gate.py
           tests/test_tensor_discovery_bench.py
           tests/test_tensor_discovery_bench_schema.py
+          tests/test_tensor_discovery_risk_integration.py
+          tests/test_tensor_discovery_risk_schema_integration.py
       - name: Parse R0.7 schema
         run: python -m json.tool schemas/tensor_discovery_bench_r07.schema.json > /dev/null
       - name: Targeted R0.7 tests
-        run: pytest -q tests/test_tensor_discovery_bench.py tests/test_tensor_discovery_bench_schema.py
+        run: >-
+          pytest -q
+          tests/test_tensor_discovery_bench.py
+          tests/test_tensor_discovery_bench_schema.py
+          tests/test_tensor_discovery_risk_integration.py
+          tests/test_tensor_discovery_risk_schema_integration.py
       - name: Tensor DiscoveryBench deterministic OAK gates
         run: |
           python -m sage_tristan.tensor_discovery_bench --report > /tmp/r07.json
@@ -69,6 +83,7 @@ jobs:
           assert report['cost_normalization_present'] is True
           assert report['contamination_tensor_separate_from_quality'] is True
           assert report['hidden_target_required_for_independent_discovery_eligibility'] is True
+          assert report['meta_routing_uses_cumulative_risk_gate'] is True
           assert report['scalar_intelligence_score_produced'] is False
           assert report['human_novelty_claimed'] is False
           assert report['independent_discovery_certified'] is False
