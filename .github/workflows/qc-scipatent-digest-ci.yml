@@ -1,0 +1,36 @@
+name: QC Science Patent Digest
+
+on:
+  pull_request:
+    paths:
+      - 'projects/qc_scipatent_digest/**'
+      - '.github/workflows/qc-scipatent-digest-ci.yml'
+  workflow_dispatch:
+
+jobs:
+  test-qc-digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test runner
+        run: python -m pip install pytest
+      - name: Run unit tests
+        working-directory: projects/qc_scipatent_digest
+        run: python -m pytest -q
+      - name: Run PLUS ULTRA synthetic demo
+        working-directory: projects/qc_scipatent_digest
+        run: python -m qc_scipatent_digest.cli plus-ultra --out outputs/ci_plus_ultra
+      - name: Check summary counts
+        working-directory: projects/qc_scipatent_digest
+        run: |
+          python - <<'PY'
+          import json
+          with open('outputs/ci_plus_ultra/pipeline_summary.json', encoding='utf-8') as fh:
+              payload = json.load(fh)
+          assert payload['documents'] == 6, payload
+          assert payload['opportunities'] == 6, payload
+          assert payload['bridges'] == 9, payload
+          PY
