@@ -1,25 +1,25 @@
 name: Ω PR 5K2N R0.5 Live Pending Outcomes OAK
 
 on:
-  pull_request:
-    paths:
-      - "omega_capability_os_t/github_pr_generation_r03.py"
-      - "omega_capability_os_t/github_pr_generation_r04.py"
-      - "omega_capability_os_t/github_pr_generation_r05.py"
-      - "schemas/omega-pr-5k2n-generation-r05.schema.json"
-      - ".github/workflows/pr-fractal-generation-r05-live-oak.yml"
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Ω PR 5K2N R0.4 Exact Hydration OAK"]
+    types: [completed]
 
 permissions:
+  actions: read
   contents: read
-  pull-requests: read
 
 jobs:
-  live-pending-outcomes:
+  consume-r04-outcomes:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 6
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact R0.4 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -27,190 +27,38 @@ jobs:
       - name: Install schema validator
         run: python -m pip install jsonschema
 
-      - name: Compile R0.3-R0.5 sources
-        run: |
-          python -m compileall -q \
-            omega_capability_os_t/github_pr_generation_r03.py \
-            omega_capability_os_t/github_pr_generation_r04.py \
-            omega_capability_os_t/github_pr_generation_r05.py
+      - name: Compile R0.5 source
+        run: python -m compileall -q omega_capability_os_t/github_pr_generation_r05.py
 
-      - name: Build live state=all memory
-        if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          python -m omega_capability_os_t.github_memory_cli build \
-            --repository "$GITHUB_REPOSITORY" \
-            --registry examples/capability_os_registry.json \
-            --without-files \
-            --output /tmp/r05-index-all.json
+      - name: Download exact R0.4 artifact without rebuilding GitHub memory
+        uses: actions/download-artifact@v8
+        with:
+          name: omega-pr-5k2n-r04-${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: /tmp/r05-source
 
-      - name: Build leakage-controlled prior index and requests
-        if: github.event_name == 'pull_request'
+      - name: Compile pending R0.5 outcomes from exact R0.4 report
         run: |
           python - <<'PY'
           import json
-          import os
-          import re
           from pathlib import Path
-          from omega_capability_os_t.github_memory import GitHubMemoryIndex
-          from omega_capability_os_t.github_pr_generation_r03 import (
-              build_process_capability_request,
-              process_request_to_dict,
+
+          r04_path = Path("/tmp/r05-source/r04-report.json")
+          assert r04_path.exists(), list(Path("/tmp/r05-source").rglob("*"))
+          r04 = json.loads(r04_path.read_text())
+          source_head = "${{ github.event.workflow_run.head_sha }}"
+          assert r04["target_head_sha"] == source_head, (r04["target_head_sha"], source_head)
+          Path("/tmp/r05-input.json").write_text(
+              json.dumps({"r04_report": r04}, indent=2, sort_keys=True) + "\n"
           )
-
-          event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
-          pr = event["pull_request"]
-          repo = event["repository"]["full_name"]
-          number = int(pr["number"])
-          target_ref = f"pr:{repo}#{number}"
-          raw = json.loads(Path("/tmp/r05-index-all.json").read_text())
-
-          removed = set()
-          kept = []
-          for row in raw.get("prs", []):
-              if str(row.get("repository")) == repo and int(row.get("number", 0)) >= number:
-                  removed.add(f"pr:{repo}#{int(row.get('number', 0))}")
-              else:
-                  kept.append(row)
-          raw["prs"] = kept
-          raw["assets"] = [row for row in raw.get("assets", []) if str(row.get("source_ref")) not in removed]
-          raw["edges"] = [
-              row for row in raw.get("edges", [])
-              if str(row.get("source")) not in removed and str(row.get("target")) not in removed
-          ]
-          prior = GitHubMemoryIndex.from_dict(raw).to_dict()
-          Path("/tmp/r05-index-prior.json").write_text(json.dumps(prior, indent=2, sort_keys=True) + "\n")
-
-          title = str(pr.get("title") or "")
-          body = str(pr.get("body") or "")
-          target = {
-              "ref": target_ref,
-              "repository": repo,
-              "number": number,
-              "lifecycle": "DRAFT" if pr.get("draft") else str(pr.get("state") or "OPEN").upper(),
-              "head_sha": (pr.get("head") or {}).get("sha"),
-              "changed_files": [],
-              "named_concepts": sorted(set(re.findall(r"(?:Ω|OMEGA)[-A-Za-z0-9_∞²³]+", f"{title}\n{body}"))),
-              "intent_tokens": [],
-          }
-          artifact_request = {
-              "request_id": f"r05-artifact-{repo}-{number}",
-              "description": title,
-              "domains": ["github", "pull-request", "code-generation", "oak"],
-              "consumes": ["prior-pr-memory", "capability-contracts"],
-              "produces": ["implementation", "tests", "evidence", "documentation"],
-          }
-          process_request = process_request_to_dict(build_process_capability_request(target))
-          Path("/tmp/r05-target.json").write_text(json.dumps(target, indent=2, sort_keys=True) + "\n")
-          Path("/tmp/r05-artifact-request.json").write_text(json.dumps(artifact_request, indent=2, sort_keys=True) + "\n")
-          Path("/tmp/r05-process-request.json").write_text(json.dumps(process_request, indent=2, sort_keys=True) + "\n")
-          Path("/tmp/r05-boundary.json").write_text(json.dumps({
-              "target_ref": target_ref,
-              "target_hidden": target_ref in removed,
-              "future_hidden": all(
-                  not (row["repository"] == repo and int(row["number"]) >= number)
-                  for row in prior["prs"]
-              ),
-              "prior_pr_count": len(prior["prs"]),
-          }, indent=2, sort_keys=True) + "\n")
-          PY
-
-      - name: Compile artifact and process cumulative intelligence
-        if: github.event_name == 'pull_request'
-        run: |
-          python -m omega_capability_os_t.github_cumulative_intelligence_cli \
-            /tmp/r05-artifact-request.json \
-            --index "$GITHUB_REPOSITORY=/tmp/r05-index-prior.json" \
-            --max-items 8 \
-            --output /tmp/r05-artifact-cumulative.json
-          python -m omega_capability_os_t.github_cumulative_intelligence_cli \
-            /tmp/r05-process-request.json \
-            --index "$GITHUB_REPOSITORY=/tmp/r05-index-prior.json" \
-            --max-items 8 \
-            --output /tmp/r05-process-cumulative.json
-
-      - name: Compile live R0.3 INSPECT queue
-        if: github.event_name == 'pull_request'
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          payload = {
-              "generation": 0,
-              "candidate_budget": 32,
-              "physical_contract_budget": 8,
-              "target_pr_genome": json.loads(Path("/tmp/r05-target.json").read_text()),
-              "artifact_cumulative_intelligence": json.loads(Path("/tmp/r05-artifact-cumulative.json").read_text()),
-              "process_cumulative_intelligence": json.loads(Path("/tmp/r05-process-cumulative.json").read_text()),
-          }
-          Path("/tmp/r05-r03-input.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
-          PY
-          python -m omega_capability_os_t.github_pr_generation_r03 \
-            /tmp/r05-r03-input.json \
-            --output /tmp/r05-r03.json
-
-      - name: Hydrate exact top historical candidates without execution
-        if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          python - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-          from omega_capability_os_t.github_memory import GitHubMemoryIndex, GitHubPRSource
-          from omega_capability_os_t.github_memory_zoom import ProgressiveGitHubRetriever
-
-          index = GitHubMemoryIndex.from_dict(json.loads(Path("/tmp/r05-index-prior.json").read_text()))
-          r03 = json.loads(Path("/tmp/r05-r03.json").read_text())
-          refs = [row["ref"] for row in r03["compatibility_inspection_plan"][:4]]
-          receipt = ProgressiveGitHubRetriever(GitHubPRSource(token=os.environ.get("GITHUB_TOKEN"))).hydrate_refs(
-              index,
-              refs,
-              request_id="r05-live-exact-hydration",
-              max_files_per_pr=8,
-              extract_symbols=True,
-          )
-          Path("/tmp/r05-hydrated-index.json").write_text(json.dumps(index.to_dict(), indent=2, sort_keys=True) + "\n")
-          Path("/tmp/r05-hydration-receipt.json").write_text(json.dumps(receipt.to_dict(), indent=2, sort_keys=True) + "\n")
-          assert len(receipt.hydrated_prs) >= 1
-          PY
-
-      - name: Compile live R0.4 experiment-eligibility report
-        if: github.event_name == 'pull_request'
-        run: |
-          python -m omega_capability_os_t.github_pr_generation_r04 \
-            /tmp/r05-r03.json \
-            /tmp/r05-hydrated-index.json \
-            /tmp/r05-hydration-receipt.json \
-            /tmp/r05-target.json \
-            --max-candidates 4 \
-            --output /tmp/r05-r04.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          r04 = json.loads(Path("/tmp/r05-r04.json").read_text())
-          assert r04["physicalization_gate"] == "INSPECT"
-          assert r04["compatibility_proven_count"] == 0
-          assert r04["reuse_authorized_count"] == 0
-          PY
-
-      - name: Compile R0.5 pending outcomes from live contracts
-        if: github.event_name == 'pull_request'
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          payload = {"r04_report": json.loads(Path("/tmp/r05-r04.json").read_text())}
-          Path("/tmp/r05-input.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
           PY
           python -m omega_capability_os_t.github_pr_generation_r05 \
             /tmp/r05-input.json \
             --output /tmp/r05-report.json
 
-      - name: Validate live pending outcomes remain UNKNOWN HOLD
-        if: github.event_name == 'pull_request'
+      - name: Validate pending live outcomes remain UNKNOWN HOLD
         run: |
           python - <<'PY'
           import json
@@ -219,11 +67,8 @@ jobs:
 
           report = json.loads(Path("/tmp/r05-report.json").read_text())
           schema = json.loads(Path("schemas/omega-pr-5k2n-generation-r05.schema.json").read_text())
-          boundary = json.loads(Path("/tmp/r05-boundary.json").read_text())
           Draft202012Validator(schema).validate(report)
 
-          assert boundary["target_hidden"] is True
-          assert boundary["future_hidden"] is True
           assert report["outcome_receipt_count"] == report["experiment_contract_count"]
           assert report["missing_outcome_contract_ids"] == []
           assert report["verdict_counts"]["COMPATIBLE"] == 0
@@ -241,15 +86,9 @@ jobs:
           assert report["source_renderer_authorized"] is False
           PY
 
-      - name: Retain live R0.5 evidence
-        if: always()
+      - name: Retain R0.5 pending-outcome evidence
         uses: actions/upload-artifact@v4
         with:
           name: omega-pr-5k2n-r05-live-${{ github.run_id }}
-          path: |
-            /tmp/r05-boundary.json
-            /tmp/r05-r03.json
-            /tmp/r05-r04.json
-            /tmp/r05-report.json
-          if-no-files-found: ignore
+          path: /tmp/r05-report.json
           retention-days: 14
