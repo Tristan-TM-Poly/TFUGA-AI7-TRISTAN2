@@ -8,8 +8,11 @@ on:
       - "omega_capability_os_t/github_pr_llmt_inspection.py"
       - "omega_capability_os_t/github_pr_llmt_targets.py"
       - "omega_capability_os_t/github_pr_llmt_findings.py"
+      - "omega_capability_os_t/github_pr_llmt_measurements.py"
       - "omega_research_abi_t/github_memory_bridge.py"
+      - "omega_research_abi_t/github_measurement_bridge.py"
       - "omega_research_abi_t/measurement_allocation.py"
+      - "omega_research_abi_t/pr_measurement_contract_snapshots.json"
       - "omega_research_abi_t/__init__.py"
       - "tests/test_omega_capability_os_github_memory_zoom.py"
       - "tests/test_omega_github_pr_llmt.py"
@@ -17,8 +20,10 @@ on:
       - "tests/test_omega_github_pr_llmt_marginal_coverage.py"
       - "tests/test_omega_github_pr_llmt_targets.py"
       - "tests/test_omega_github_pr_llmt_findings.py"
+      - "tests/test_omega_github_pr_llmt_measurements.py"
       - "tests/test_omega_research_abi_pr_llmt_bridge.py"
       - "tests/test_omega_research_abi_measurement_allocation.py"
+      - "tests/test_omega_research_abi_github_measurement_bridge.py"
       - ".agents/skills/github-pr-llmt/**"
       - ".github/workflows/github-pr-llmt-inspection-oak.yml"
   workflow_dispatch:
@@ -49,8 +54,10 @@ jobs:
             tests/test_omega_github_pr_llmt_marginal_coverage.py \
             tests/test_omega_github_pr_llmt_targets.py \
             tests/test_omega_github_pr_llmt_findings.py \
+            tests/test_omega_github_pr_llmt_measurements.py \
             tests/test_omega_research_abi_pr_llmt_bridge.py \
-            tests/test_omega_research_abi_measurement_allocation.py
+            tests/test_omega_research_abi_measurement_allocation.py \
+            tests/test_omega_research_abi_github_measurement_bridge.py
 
       - name: Compile sources
         run: python -m compileall -q omega_capability_os_t omega_research_abi_t
@@ -121,19 +128,28 @@ jobs:
             --output /tmp/omega-pr-llmt-findings.json
 
       - name: Issue Universal Research ABI transformation receipts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
+          from omega_capability_os_t.github_memory import GitHubPRSource
+          from omega_capability_os_t.github_pr_llmt_measurements import (
+              compile_reconstruction_blob_measurements,
+          )
           from omega_research_abi_t import (
               compile_pr_llmt_measurement_allocation,
               compile_pr_llmt_measurement_requests,
               issue_pr_llmt_inspection_receipt,
               issue_pr_llmt_measurement_allocation_receipt,
               issue_pr_llmt_measurement_request_receipt,
+              issue_pr_llmt_reconstruction_blob_measurement_receipt,
               validate_receipt,
           )
 
+          filegraph = json.loads(Path("/tmp/omega-pr-llmt-target-filegraph.json").read_text())
           plan = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan-wave2.json").read_text())
           overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
           findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
@@ -189,6 +205,39 @@ jobs:
               json.dumps(measurement_packet, indent=2, sort_keys=True)
           )
 
+          source = GitHubPRSource(token=os.getenv("GITHUB_TOKEN"))
+          structural_measurements = compile_reconstruction_blob_measurements(
+              filegraph, requests, source
+          )
+          structural_receipt = issue_pr_llmt_reconstruction_blob_measurement_receipt(
+              filegraph, requests, structural_measurements
+          )
+          structural_validation = validate_receipt(structural_receipt)
+          structural_packet = {
+              "schema": "omega-pr-llmt-structural-measurement-receipt/v0.1.0",
+              "receipt": structural_receipt.to_dict(),
+              "validation": structural_validation,
+              "boundaries": [
+                  "Git blob SHA equality == byte identity for measured file content",
+                  "byte identity != behavioral equivalence",
+                  "byte identity != test success",
+                  "byte identity != merge readiness or supersession authority",
+              ],
+          }
+          assert structural_measurements["pair_count"] == filegraph["reconstruction_pair_count"]
+          assert structural_measurements["error_count"] == 0, structural_measurements
+          assert structural_receipt.operator == "PR_RECONSTRUCTION_BLOB_EQUIVALENCE_MEASURE"
+          assert structural_receipt.authority == "read"
+          assert structural_receipt.oak_state == "PASS", structural_receipt.to_dict()
+          assert structural_validation["status"] == "PASS", structural_validation
+          assert all(item.status == "PASS" for item in structural_receipt.invariants)
+          Path("/tmp/omega-pr-llmt-structural-measurements.json").write_text(
+              json.dumps(structural_measurements, indent=2, sort_keys=True)
+          )
+          Path("/tmp/omega-pr-llmt-structural-measurement-receipt.json").write_text(
+              json.dumps(structural_packet, indent=2, sort_keys=True)
+          )
+
           allocation = compile_pr_llmt_measurement_allocation(requests, max_anchors=12)
           allocation_receipt = issue_pr_llmt_measurement_allocation_receipt(requests, allocation)
           allocation_validation = validate_receipt(allocation_receipt)
@@ -237,8 +286,11 @@ jobs:
           abi_receipt = json.loads(Path("/tmp/omega-pr-llmt-research-abi-receipt.json").read_text())
           requests = json.loads(Path("/tmp/omega-pr-llmt-measurement-requests.json").read_text())
           measurement_receipt = json.loads(Path("/tmp/omega-pr-llmt-measurement-request-receipt.json").read_text())
+          structural_measurements = json.loads(Path("/tmp/omega-pr-llmt-structural-measurements.json").read_text())
+          structural_receipt = json.loads(Path("/tmp/omega-pr-llmt-structural-measurement-receipt.json").read_text())
           allocation = json.loads(Path("/tmp/omega-pr-llmt-measurement-allocation.json").read_text())
           allocation_receipt = json.loads(Path("/tmp/omega-pr-llmt-measurement-allocation-receipt.json").read_text())
+          contract_snapshots = json.loads(Path("omega_research_abi_t/pr_measurement_contract_snapshots.json").read_text())
 
           assert portfolio["schema"] == "omega-pr-llmt-portfolio/v0.1.0"
           assert filegraph["schema"] == "omega-pr-llmt-target-filegraph/v0.2.0"
@@ -251,8 +303,11 @@ jobs:
           assert abi_receipt["schema"] == "omega-pr-llmt-research-abi-receipt/v0.1.0"
           assert requests["schema"] == "omega-pr-llmt-measurement-requests/v0.1.0"
           assert measurement_receipt["schema"] == "omega-pr-llmt-measurement-request-receipt/v0.1.0"
+          assert structural_measurements["schema"] == "omega-pr-llmt-structural-measurements/v0.1.0"
+          assert structural_receipt["schema"] == "omega-pr-llmt-structural-measurement-receipt/v0.1.0"
           assert allocation["schema"] == "omega-pr-llmt-measurement-allocation/v0.1.0"
           assert allocation_receipt["schema"] == "omega-pr-llmt-measurement-allocation-receipt/v0.1.0"
+          assert contract_snapshots["schema"] == "omega-pr-llmt-downstream-contract-snapshots/v0.1.0"
           assert abi_receipt["receipt"]["operator"] == "PR_LLMT_EXACT_INSPECTION"
           assert abi_receipt["receipt"]["authority"] == "read"
           assert abi_receipt["receipt"]["oak_state"] == "PASS"
@@ -261,6 +316,10 @@ jobs:
           assert measurement_receipt["receipt"]["authority"] == "read"
           assert measurement_receipt["receipt"]["oak_state"] == "PASS"
           assert measurement_receipt["validation"]["status"] == "PASS"
+          assert structural_receipt["receipt"]["operator"] == "PR_RECONSTRUCTION_BLOB_EQUIVALENCE_MEASURE"
+          assert structural_receipt["receipt"]["authority"] == "read"
+          assert structural_receipt["receipt"]["oak_state"] == "PASS"
+          assert structural_receipt["validation"]["status"] == "PASS"
           assert allocation_receipt["receipt"]["operator"] == "PR_MEASUREMENT_EVIDENCE_ALLOCATION"
           assert allocation_receipt["receipt"]["authority"] == "read"
           assert allocation_receipt["receipt"]["oak_state"] == "PASS"
@@ -283,6 +342,13 @@ jobs:
               and row["authority"]["merge_authority_granted"] is False
               for row in requests["requests"]
           )
+          assert structural_measurements["source_filegraph_fingerprint"] == filegraph["fingerprint"]
+          assert structural_measurements["source_requests_fingerprint"] == requests["fingerprint"]
+          assert structural_measurements["pair_count"] == filegraph["reconstruction_pair_count"]
+          assert structural_measurements["error_count"] == 0
+          assert structural_measurements["associated_request_count"] <= requests["measurement_kind_counts"].get("reconstruction_equivalence_test", 0)
+          assert all(row["request_fully_resolved"] is False for row in structural_measurements["measurements"])
+          assert all(row["supersession_authority_granted"] is False for row in structural_measurements["measurements"])
           assert allocation["source_requests_fingerprint"] == requests["fingerprint"]
           assert allocation["request_count"] == requests["request_count"]
           assert allocation["target_count"] == requests["target_count"]
@@ -296,6 +362,11 @@ jobs:
           assert allocation["readiness"]["pr449_value_of_computation"]["ready_request_count"] == 0
           assert allocation["downstream_policy"]["numeric_opportunity_or_voc_scores_emitted"] is False
           assert allocation["downstream_policy"]["selected_anchor_is_execution_authority"] is False
+          assert contract_snapshots["routing_policy"]["import_sibling_implementation"] is False
+          assert contract_snapshots["routing_policy"]["require_measured_with_provenance"] is True
+          assert contract_snapshots["routing_policy"]["unknown_numeric_input_is_zero"] is False
+          assert contract_snapshots["contracts"]["pr445_opportunity_evidence"]["head_sha"] == "a7f7352ff6f8c15d2d60049b363182e92b82057a"
+          assert contract_snapshots["contracts"]["pr449_value_of_computation"]["head_sha"] == "29182ef7bed66662456e38f9039e384329afea75"
           assert all(obj["portfolio_fingerprint"] == portfolio["fingerprint"] for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2))
           assert findings["filegraph_fingerprint"] == filegraph["fingerprint"]
           assert findings["inspection_overlay_fingerprint"] == overlay["fingerprint"]
@@ -349,7 +420,7 @@ jobs:
           assert findings["authority"]["merge_authority_granted"] is False
           assert "PRIORITY_SCORE != QUALITY_SCORE" in findings["oak_boundaries"]
           assert "RECONSTRUCTION_PAIR != AUTOMATIC_SUPERSESSION" in findings["oak_boundaries"]
-          assert all(len(obj["fingerprint"]) == 64 for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2, requests, allocation))
+          assert all(len(obj["fingerprint"]) == 64 for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2, requests, structural_measurements, allocation))
           assert all(row["findings"] for row in findings["packets"])
 
           print(json.dumps({
@@ -389,6 +460,15 @@ jobs:
               "measurement_kind_counts": requests["measurement_kind_counts"],
               "measurement_receipt_id": measurement_receipt["receipt"]["receipt_id"],
               "measurement_receipt_fingerprint": measurement_receipt["receipt"]["fingerprint"],
+              "structural_measurement_pair_count": structural_measurements["pair_count"],
+              "structural_measurement_outcomes": structural_measurements["outcome_counts"],
+              "structural_compared_file_count": structural_measurements["compared_file_count"],
+              "structural_blob_match_count": structural_measurements["blob_match_count"],
+              "structural_blob_mismatch_count": structural_measurements["blob_mismatch_count"],
+              "structural_full_changed_blob_equivalence_count": structural_measurements["full_changed_blob_equivalence_count"],
+              "structural_associated_request_count": structural_measurements["associated_request_count"],
+              "structural_receipt_id": structural_receipt["receipt"]["receipt_id"],
+              "structural_receipt_fingerprint": structural_receipt["receipt"]["fingerprint"],
               "evidence_anchor_count": allocation["evidence_anchor_count"],
               "selected_evidence_anchor_count": allocation["selected_anchor_count"],
               "evidence_anchor_policy": allocation["selection_policy"],
@@ -400,6 +480,8 @@ jobs:
               "max_selected_evidence_request_fanout": max((row["request_fanout"] for row in allocation["selected_anchors"]), default=0),
               "max_selected_evidence_target_fanout": max((row["target_fanout"] for row in allocation["selected_anchors"]), default=0),
               "quantitatively_ready_requests": allocation["quantitatively_ready_request_count"],
+              "pr445_contract_snapshot_head": contract_snapshots["contracts"]["pr445_opportunity_evidence"]["head_sha"],
+              "pr449_contract_snapshot_head": contract_snapshots["contracts"]["pr449_value_of_computation"]["head_sha"],
               "pr445_missing_field_counts": allocation["readiness"]["pr445_opportunity_evidence"]["missing_field_counts"],
               "pr449_missing_field_counts": allocation["readiness"]["pr449_value_of_computation"]["missing_field_counts"],
               "allocation_receipt_id": allocation_receipt["receipt"]["receipt_id"],
@@ -423,6 +505,7 @@ jobs:
               "overlay_fingerprint": overlay["fingerprint"],
               "findings_fingerprint": findings["fingerprint"],
               "measurement_requests_fingerprint": requests["fingerprint"],
+              "structural_measurements_fingerprint": structural_measurements["fingerprint"],
               "measurement_allocation_fingerprint": allocation["fingerprint"],
           }, indent=2))
           PY
@@ -444,7 +527,10 @@ jobs:
             /tmp/omega-pr-llmt-research-abi-receipt.json
             /tmp/omega-pr-llmt-measurement-requests.json
             /tmp/omega-pr-llmt-measurement-request-receipt.json
+            /tmp/omega-pr-llmt-structural-measurements.json
+            /tmp/omega-pr-llmt-structural-measurement-receipt.json
             /tmp/omega-pr-llmt-measurement-allocation.json
             /tmp/omega-pr-llmt-measurement-allocation-receipt.json
             /tmp/omega-pr-llmt-inspected-index.json
+            omega_research_abi_t/pr_measurement_contract_snapshots.json
           retention-days: 14
