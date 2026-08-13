@@ -1,10 +1,8 @@
 import json
 from pathlib import Path
 
-import pytest
-
 from omega_repo_genesis_t.model import Constellation, RepoSpec
-from omega_repo_genesis_t.plan import bootstrap_files, build_plan, load_constellation
+from omega_repo_genesis_t.plan import bootstrap_files, build_plan, evaluate_visibility, load_constellation
 
 PATH = Path("data/omega_repo_genesis_t/constellation_v01.json")
 
@@ -20,9 +18,11 @@ def test_constellation_is_private_unique_and_materializable():
     assert len(plan["fingerprint"]) == 64
 
 
-def test_public_spec_fails_closed():
-    with pytest.raises(ValueError):
-        RepoSpec.from_dict({"name": "bad-public", "description": "x", "role": "x", "visibility": "public"})
+def test_public_spec_fails_closed_without_visibility_driver():
+    spec = RepoSpec.from_dict({"name": "bad-public", "description": "x", "role": "x", "visibility": "public"})
+    decision = evaluate_visibility(spec)
+    assert decision.allowed is False
+    assert decision.decision == "HOLD"
 
 
 def test_low_split_score_holds():
@@ -45,4 +45,5 @@ def test_bootstrap_is_provenance_and_oak_bound():
     assert genome["source_sha"] == c.source_sha
     assert genome["visibility"] == "private"
     assert genome["authority"]["automatic_merge"] is False
-    assert genome["authority"]["public_release"] is False
+    assert genome["authority"]["automatic_publication"] is False
+    assert genome["authority"]["public_release_requires_review"] is True
