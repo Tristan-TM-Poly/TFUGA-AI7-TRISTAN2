@@ -11,6 +11,7 @@
     "planned_candidate_count",
     "hydrated_candidate_count",
     "stale_candidate_count",
+    "experiment_eligible_candidate_count",
     "hydration_errors",
     "compatibility_receipts",
     "compatibility_experiment_contracts",
@@ -34,6 +35,7 @@
     "planned_candidate_count": {"type": "integer", "minimum": 0},
     "hydrated_candidate_count": {"type": "integer", "minimum": 0},
     "stale_candidate_count": {"type": "integer", "minimum": 0},
+    "experiment_eligible_candidate_count": {"type": "integer", "minimum": 0},
     "hydration_errors": {"type": "array", "items": {"type": "object"}},
     "compatibility_receipts": {
       "type": "array",
@@ -49,6 +51,8 @@
           "python_symbol_assets",
           "intent_overlap_proxy",
           "evidence_class",
+          "experiment_eligible",
+          "experiment_block_reason",
           "compatibility_verdict",
           "compatibility_proven",
           "reuse_authorized",
@@ -58,6 +62,15 @@
         "properties": {
           "hydration_status": {"enum": ["NOT_HYDRATED", "STALE_HEAD", "HYDRATED_EXACT_HEAD", "HYDRATED_HEAD_UNVERIFIED"]},
           "intent_overlap_proxy": {"type": "number", "minimum": 0, "maximum": 1},
+          "experiment_eligible": {"type": "boolean"},
+          "experiment_block_reason": {
+            "enum": [
+              "exact_head_hydration_required",
+              "no_technical_source_or_symbol_surface",
+              "no_candidate_test_surface",
+              "exact_head_with_technical_and_test_surface"
+            ]
+          },
           "compatibility_verdict": {"const": "UNKNOWN"},
           "compatibility_proven": {"const": false},
           "reuse_authorized": {"const": false},
