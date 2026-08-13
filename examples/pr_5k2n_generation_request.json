@@ -1,0 +1,28 @@
+{
+  "request": {
+    "request_id": "omega-pr-5k2n-reference",
+    "description": "Compile reuse-first candidate additions for a new Tristan pull request",
+    "domains": ["github", "code-generation", "oak", "cvcd"],
+    "consumes": ["pr-genome", "historical-memory"],
+    "produces": ["implementation", "tests", "evidence", "documentation"]
+  },
+  "pr_genome": {
+    "ref": "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#451",
+    "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+    "number": 451,
+    "lifecycle": "DRAFT",
+    "head_sha": null,
+    "changed_files": [
+      "omega_capability_os_t/github_pr_generation_forest.py",
+      "tests/test_omega_github_pr_generation_forest.py"
+    ],
+    "named_concepts": ["Ω-PR-5K2N-T∞", "Ω-GITHUB-CUMULATIVE-INTELLIGENCE-T∞", "OAK", "CVCD"],
+    "intent_tokens": ["generation", "reuse", "pr", "fractal"]
+  },
+  "generation": 10,
+  "seed_count": 5000,
+  "materialization_budget": 32,
+  "min_go_gradient": 1.0,
+  "reuse_coverage_ratio": 0.5,
+  "residual_outputs": ["implementation", "tests", "evidence"]
+}
