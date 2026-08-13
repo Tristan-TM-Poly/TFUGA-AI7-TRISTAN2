@@ -33,6 +33,15 @@ from .github_memory_bridge import (
     issue_pr_llmt_inspection_receipt,
     issue_pr_llmt_measurement_request_receipt,
 )
+from .measurement_allocation import (
+    MEASUREMENT_ALLOCATION_POLICY,
+    MEASUREMENT_ALLOCATION_SCHEMA,
+    PR445_OPPORTUNITY_REQUIRED_FIELDS,
+    PR449_VOC_REQUIRED_FIELDS,
+    adapt_pr_llmt_measurement_allocation,
+    compile_pr_llmt_measurement_allocation,
+    issue_pr_llmt_measurement_allocation_receipt,
+)
 from .compiler import ResearchABICompiler
 
 __all__ = [
@@ -67,4 +76,11 @@ __all__ = [
     "compile_pr_llmt_measurement_requests",
     "issue_pr_llmt_inspection_receipt",
     "issue_pr_llmt_measurement_request_receipt",
+    "MEASUREMENT_ALLOCATION_POLICY",
+    "MEASUREMENT_ALLOCATION_SCHEMA",
+    "PR445_OPPORTUNITY_REQUIRED_FIELDS",
+    "PR449_VOC_REQUIRED_FIELDS",
+    "adapt_pr_llmt_measurement_allocation",
+    "compile_pr_llmt_measurement_allocation",
+    "issue_pr_llmt_measurement_allocation_receipt",
 ]
