@@ -5,7 +5,10 @@ on:
   pull_request:
     paths:
       - 'omega_math_proof_research_os/**'
-      - 'tests/test_omega_math_proof_contracts.py'
+      - 'tests/test_omega_math_proof_*.py'
+      - 'scripts/materialize_omega_math_proof_r01.py'
+      - 'scripts/verify_omega_math_proof_r01.py'
+      - 'artifacts/omega_math_proof_r01/**'
       - 'pyproject.toml'
       - '.github/workflows/omega-math-proof-pilot.yml'
 
@@ -21,8 +24,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install package and test tools
-        run: python -m pip install -e '.[dev]'
+      - name: Install package and focused test tools
+        run: python -m pip install -e . pytest
       - name: Validate pilot manifest
         run: |
           python - <<'PY'
@@ -36,7 +39,12 @@ jobs:
           assert all(s['bytes_policy'] for s in data['sources'])
           print('pilot_sources: PASS (5/5)')
           PY
-      - name: Run contract tests
-        run: pytest -q tests/test_omega_math_proof_contracts.py
-      - name: Smoke test CLI
-        run: omega-proof-r01
+      - name: Run focused math-proof tests
+        run: >-
+          python -m pytest -q
+          tests/test_omega_math_proof_contracts.py
+          tests/test_omega_math_proof_ecosystem.py
+          tests/test_omega_math_proof_extractor.py
+          tests/test_omega_math_proof_seed.py
+      - name: Smoke test module CLI
+        run: python -m omega_math_proof_research_os.cli
