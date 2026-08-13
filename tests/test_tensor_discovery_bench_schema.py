@@ -69,6 +69,7 @@ def test_ablation_schema_forbids_causal_promotion():
 
 def test_root_schema_forbids_scalar_intelligence_and_meta_superiority_claims():
     properties = _schema()["properties"]
+    assert properties["hidden_target_required_for_independent_discovery_eligibility"]["const"] is True
     assert properties["scalar_intelligence_score_produced"]["const"] is False
     assert properties["human_novelty_claimed"]["const"] is False
     assert properties["independent_discovery_certified"]["const"] is False
