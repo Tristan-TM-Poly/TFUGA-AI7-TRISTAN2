@@ -19,15 +19,19 @@ from .receipts import ReceiptError, issue_receipt, validate_receipt
 from .ledger import GENESIS_HASH, ResearchTransitionLedger, TransitionLedgerEntry
 from .github_memory_bridge import (
     GITHUB_MEMORY_R07_BOUNDARY,
+    PR_LLMT_MEASUREMENT_KIND_BY_FINDING,
     PR_LLMT_R01_BOUNDARY,
     adapt_llmt_federation,
     adapt_pr_llmt_findings,
     adapt_pr_llmt_inspection_overlay,
     adapt_pr_llmt_inspection_plan,
+    adapt_pr_llmt_measurement_requests,
     adapt_residual_artifact_spec,
     adapt_reuse_outcome,
     adapt_supersession_report,
+    compile_pr_llmt_measurement_requests,
     issue_pr_llmt_inspection_receipt,
+    issue_pr_llmt_measurement_request_receipt,
 )
 from .compiler import ResearchABICompiler
 
@@ -51,12 +55,16 @@ __all__ = [
     "TransitionLedgerEntry",
     "GITHUB_MEMORY_R07_BOUNDARY",
     "PR_LLMT_R01_BOUNDARY",
+    "PR_LLMT_MEASUREMENT_KIND_BY_FINDING",
     "adapt_llmt_federation",
     "adapt_pr_llmt_findings",
     "adapt_pr_llmt_inspection_overlay",
     "adapt_pr_llmt_inspection_plan",
+    "adapt_pr_llmt_measurement_requests",
     "adapt_residual_artifact_spec",
     "adapt_reuse_outcome",
     "adapt_supersession_report",
+    "compile_pr_llmt_measurement_requests",
     "issue_pr_llmt_inspection_receipt",
+    "issue_pr_llmt_measurement_request_receipt",
 ]
