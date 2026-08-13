@@ -13,6 +13,17 @@ PR_LLMT_R01_BOUNDARY = (
     "inspection_coverage != semantic_relevance_or_reuse_compatibility; "
     "static_AST != runtime_behavior; structural_OAK_PASS != external_truth"
 )
+PR_LLMT_MEASUREMENT_KIND_BY_FINDING = {
+    "DECLARED_RECONSTRUCTION_PAIR": "reconstruction_equivalence_test",
+    "DECLARED_RECONSTRUCTION_SOURCE": "reconstruction_equivalence_test",
+    "FILE_OVERLAP_REVIEW": "shared_surface_compatibility_test",
+    "LARGE_CHANGE_SURFACE": "targeted_regression_measurement",
+    "INSPECTED_REUSE_CANDIDATE": "reuse_compatibility_test",
+    "DEEP_EVIDENCE_GAP": "exact_head_hydration",
+    "DECLARED_PRIOR_LINEAGE": "lineage_head_verification",
+    "KNOWN_LATER_DESCENDANT": "downstream_impact_measurement",
+    "NEGATIVE_MEMORY_AVAILABLE": "negative_memory_context_check",
+}
 
 
 def _payload(value: Any) -> dict[str, Any]:
@@ -308,6 +319,261 @@ def issue_pr_llmt_inspection_receipt(
             f"plan:{plan_env.object_id}",
             f"overlay:{overlay_env.object_id}",
             f"findings:{findings_env.object_id}",
+        ),
+        oak_state=oak_state,
+    )
+
+
+def compile_pr_llmt_measurement_requests(findings: Mapping[str, Any]) -> dict[str, Any]:
+    """Compile findings into deterministic evidence-seeking work requests.
+
+    This bridge intentionally refuses to invent quantitative OpportunityEngine or
+    Value-of-Computation inputs. Those values remain missing until an explicit
+    measurement/model supplies them. The packet therefore routes future work
+    toward #445/#449 contracts without importing sibling-branch implementations.
+    """
+    body = _require_schema(
+        findings,
+        "omega-pr-llmt-findings/v0.2.0",
+        "PR LLMT findings",
+    )
+    source_fingerprint = str(body["fingerprint"])
+    requests: list[dict[str, Any]] = []
+    by_kind: dict[str, int] = {}
+
+    for packet in body.get("packets", []):
+        target_ref = str(packet.get("target_ref") or "")
+        target_head_sha = str(packet.get("head_sha") or "")
+        target_number = packet.get("target_number")
+        if not target_ref or not target_head_sha:
+            continue
+        for finding in packet.get("findings", []):
+            finding_type = str(finding.get("finding_type") or "UNKNOWN")
+            measurement_kind = PR_LLMT_MEASUREMENT_KIND_BY_FINDING.get(
+                finding_type,
+                "manual_evidence_review",
+            )
+            evidence = [str(item) for item in finding.get("evidence", []) if str(item)]
+            seed = {
+                "source_findings_fingerprint": source_fingerprint,
+                "target_ref": target_ref,
+                "target_head_sha": target_head_sha,
+                "finding_type": finding_type,
+                "measurement_kind": measurement_kind,
+                "evidence": evidence,
+            }
+            request_id = f"measurement:{stable_digest(seed)[:20]}"
+            request = {
+                "request_id": request_id,
+                "target_ref": target_ref,
+                "target_number": target_number,
+                "target_head_sha": target_head_sha,
+                "finding_type": finding_type,
+                "measurement_kind": measurement_kind,
+                "triage_priority": int(finding.get("priority", 0)),
+                "priority_is_quality_score": False,
+                "requested_action": str(finding.get("action") or ""),
+                "evidence": evidence,
+                "evidence_fingerprint": stable_digest(evidence),
+                "finding_boundary": str(finding.get("boundary") or ""),
+                "quantitative_inputs": {
+                    "status": "required-before-voc-or-optimization-scoring",
+                    "expected_information_gain_proxy": None,
+                    "expected_cost": None,
+                    "expected_risk": None,
+                    "uncertainty": None,
+                    "expected_savings_prior": None,
+                    "confidence_debt": None,
+                    "engineering_effort_hours": None,
+                    "benchmark_cost": None,
+                },
+                "downstream_contracts": {
+                    "compute_physics_pr445": {
+                        "mode": "snapshot_adapter",
+                        "contract": "OpportunityEvidence",
+                        "quantitative_scoring_ready": False,
+                    },
+                    "research_self_model_pr449": {
+                        "mode": "snapshot_adapter",
+                        "contract": "value_of_computation",
+                        "quantitative_scoring_ready": False,
+                    },
+                },
+                "authority": {
+                    "read": True,
+                    "draft_analysis": True,
+                    "write_authority_granted": False,
+                    "merge_authority_granted": False,
+                },
+                "boundary": (
+                    "measurement_request != measurement; triage_priority != value; "
+                    "routing_contract != imported_sibling_implementation; request != mutation_authority"
+                ),
+            }
+            requests.append(request)
+            by_kind[measurement_kind] = by_kind.get(measurement_kind, 0) + 1
+
+    requests.sort(
+        key=lambda row: (
+            row["target_number"] if row["target_number"] is not None else 10**9,
+            -row["triage_priority"],
+            row["measurement_kind"],
+            row["request_id"],
+        )
+    )
+    request_ids = [row["request_id"] for row in requests]
+    payload: dict[str, Any] = {
+        "schema": "omega-pr-llmt-measurement-requests/v0.1.0",
+        "source_findings_fingerprint": source_fingerprint,
+        "portfolio_fingerprint": body.get("portfolio_fingerprint"),
+        "request_count": len(requests),
+        "target_count": len({row["target_ref"] for row in requests}),
+        "measurement_kind_counts": dict(sorted(by_kind.items())),
+        "requests": requests,
+        "authority": {
+            "read": True,
+            "draft_analysis": True,
+            "write_authority_granted": False,
+            "merge_authority_granted": False,
+        },
+        "downstream_policy": {
+            "import_pr445_implementation": False,
+            "import_pr449_implementation": False,
+            "numeric_opportunity_or_voc_scores_emitted": False,
+            "required_next_step": "measure declared quantitative inputs before scoring",
+        },
+        "oak_boundaries": [
+            "MEASUREMENT_REQUEST != MEASUREMENT",
+            "TRIAGE_PRIORITY != VALUE",
+            "UNMEASURED_INPUT != ZERO",
+            "ROUTING_CONTRACT != IMPORTED_IMPLEMENTATION",
+            "REQUEST != MUTATION_AUTHORITY",
+        ],
+    }
+    if len(request_ids) != len(set(request_ids)):
+        raise ValueError("measurement request ids must be unique")
+    payload["fingerprint"] = stable_digest(payload)
+    return payload
+
+
+def adapt_pr_llmt_measurement_requests(requests: Mapping[str, Any]) -> Envelope:
+    """Expose the request portfolio through the existing Research ABI Work graph."""
+    body = _require_schema(
+        requests,
+        "omega-pr-llmt-measurement-requests/v0.1.0",
+        "PR LLMT measurement requests",
+    )
+    body["source_ontology"] = "omega_research_abi_t.github_memory_bridge.compile_pr_llmt_measurement_requests"
+    body["bridge_boundary"] = (
+        "measurement_request != measurement; request_portfolio != optimization_or_VoC_result"
+    )
+    return Envelope(
+        graph="work",
+        object_type="pr_llmt_measurement_requests",
+        object_id=str(body["fingerprint"]),
+        payload=body,
+        provenance=(f"findings:{body.get('source_findings_fingerprint')}",),
+        authority="read",
+        oak_state="HOLD",
+    )
+
+
+def issue_pr_llmt_measurement_request_receipt(
+    findings: Mapping[str, Any],
+    requests: Mapping[str, Any],
+):
+    """Issue structural proof that findings were converted without false scoring."""
+    findings_env = adapt_pr_llmt_findings(findings)
+    requests_env = adapt_pr_llmt_measurement_requests(requests)
+    rows = list(requests.get("requests", []))
+    ids = [str(row.get("request_id") or "") for row in rows]
+    source_ok = (
+        str(requests.get("source_findings_fingerprint") or "")
+        == str(findings.get("fingerprint") or "")
+    )
+    authority_ok = (
+        requests.get("authority", {}).get("write_authority_granted") is False
+        and requests.get("authority", {}).get("merge_authority_granted") is False
+        and all(
+            row.get("authority", {}).get("write_authority_granted") is False
+            and row.get("authority", {}).get("merge_authority_granted") is False
+            for row in rows
+        )
+    )
+    unique_ok = bool(rows) and len(ids) == len(set(ids)) and all(ids)
+    evidence_ok = all(bool(row.get("evidence")) for row in rows)
+    unscored_ok = all(
+        row.get("quantitative_inputs", {}).get("status")
+        == "required-before-voc-or-optimization-scoring"
+        and all(
+            value is None
+            for key, value in row.get("quantitative_inputs", {}).items()
+            if key != "status"
+        )
+        and row.get("downstream_contracts", {})
+        .get("compute_physics_pr445", {})
+        .get("quantitative_scoring_ready") is False
+        and row.get("downstream_contracts", {})
+        .get("research_self_model_pr449", {})
+        .get("quantitative_scoring_ready") is False
+        for row in rows
+    )
+    invariants = (
+        InvariantCheck(
+            "findings_fingerprint_alignment",
+            "PASS" if source_ok else "FAIL",
+            "request portfolio binds the exact findings fingerprint",
+        ),
+        InvariantCheck(
+            "read_only_authority_ceiling",
+            "PASS" if authority_ok else "FAIL",
+            "no request grants write or merge authority",
+        ),
+        InvariantCheck(
+            "deterministic_unique_request_ids",
+            "PASS" if unique_ok else "FAIL",
+            f"request_count={len(rows)}; unique_ids={len(set(ids))}",
+        ),
+        InvariantCheck(
+            "evidence_preserved_per_request",
+            "PASS" if evidence_ok else "FAIL",
+            "each emitted request carries source finding evidence",
+        ),
+        InvariantCheck(
+            "no_unmeasured_quantitative_scoring",
+            "PASS" if unscored_ok else "FAIL",
+            "#445/#449 quantitative inputs remain missing until measurement",
+        ),
+    )
+    oak_state = "PASS" if all(item.status == "PASS" for item in invariants) else "HOLD"
+    return issue_receipt(
+        operator="PR_FINDINGS_TO_MEASUREMENT_REQUESTS",
+        inputs=(findings_env.ref,),
+        outputs=(requests_env.ref,),
+        assumptions=(
+            "finding evidence is sufficient to request a measurement, not to infer its outcome",
+            "sibling #445/#449 contracts are referenced declaratively and remain independently versioned",
+        ),
+        invariants=invariants,
+        evidence_refs=(findings_env.ref,),
+        residuals=(
+            "measurement_request != measurement",
+            "triage_priority != value",
+            "unmeasured_quantitative_input != zero",
+            "routing_contract != imported_sibling_implementation",
+        ),
+        uncertainty=0.0,
+        cost=0.0,
+        authority="read",
+        risk=0.0,
+        rollback="discard derived read-only measurement request portfolio",
+        provenance=(
+            "PR#448:Universal Research ABI",
+            "PR#450:PR LLMT findings",
+            "PR#445:OpportunityEvidence contract reference only",
+            "PR#449:Value-of-Computation contract reference only",
+            f"findings:{findings_env.object_id}",
+            f"requests:{requests_env.object_id}",
         ),
         oak_state=oak_state,
     )
