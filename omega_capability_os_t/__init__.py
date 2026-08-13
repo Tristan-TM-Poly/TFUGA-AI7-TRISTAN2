@@ -47,6 +47,12 @@ from .github_memory import (
     ReuseBeforeCreateGate,
     build_live_index,
 )
+from .github_memory_zoom import (
+    ProgressiveGitHubRetriever,
+    ProgressiveRetrievalReceipt,
+    SymbolObservation,
+    extract_python_symbols,
+)
 from .normalizers import (
     NORMALIZER_SCHEMA_VERSION,
     ProviderResponseNormalizationError,
@@ -115,5 +121,9 @@ __all__ = [
     "ReuseBeforeCreateGate",
     "GitHubPRSource",
     "build_live_index",
+    "ProgressiveGitHubRetriever",
+    "ProgressiveRetrievalReceipt",
+    "SymbolObservation",
+    "extract_python_symbols",
 ]
 __version__ = "0.6.0"
