@@ -1,6 +1,6 @@
 {
   "skill": "omega-thesis-forge-t",
-  "version": "0.1.0-candidate",
+  "version": "0.2.0-candidate",
   "generator_family": "omega-skillgen-t",
   "generator_version_observed": "0.2.0",
   "status": "GENERATED_CANDIDATE",
@@ -30,7 +30,7 @@
   ],
   "oak_notes": [
     "This skill is a candidate until static/eval/trust/behavioral gates are executed.",
-    "The 256-page property is not validated by this skill artifact itself; it is validated only on a generated compiled thesis PDF.",
+    "The 512-page property is not validated by this skill artifact itself; it is validated only on a generated compiled thesis PDF.",
     "The default thesis profile contains candidate contribution framing, not verified novelty claims."
   ]
 }
