@@ -1,0 +1,107 @@
+name: Ω PR 5K2N Fractal Generation OAK
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  pr-5k2n-oak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test runner and schema validator
+        run: python -m pip install pytest jsonschema
+
+      - name: Compile sources
+        run: |
+          python -m compileall -q \
+            omega_capability_os_t/github_pr_generation_forest.py \
+            tools/compile_pr_5k2n_event.py
+
+      - name: Deterministic 5K2N court
+        run: python -m pytest -q tests/test_omega_github_pr_generation_forest.py
+
+      - name: Compile canonical bounded receipt
+        run: |
+          python -m omega_capability_os_t.github_pr_generation_forest \
+            examples/pr_5k2n_generation_request.json \
+            --output /tmp/omega-pr-5k2n.json
+
+      - name: Compile n=0..3 runtime-bounded campaign
+        run: |
+          python -m omega_capability_os_t.github_pr_generation_forest \
+            examples/pr_5k2n_generation_request.json \
+            --generation 0 \
+            --campaign-generations 4 \
+            --output /tmp/omega-pr-5k2n-campaign.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          campaign = json.loads(Path("/tmp/omega-pr-5k2n-campaign.json").read_text())
+          assert campaign["schema"] == "omega-pr-5k2n-campaign/v0.1.0"
+          assert campaign["architecture_hard_cap"] is False
+          assert campaign["generation_budget_is_runtime_budget"] is True
+          assert 1 <= campaign["generation_count"] <= 4
+          assert campaign["generations"][0]["logical_cardinality_decimal"] == "5000"
+          PY
+
+      - name: Validate receipt schema and OAK invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          report = json.loads(Path("/tmp/omega-pr-5k2n.json").read_text())
+          schema = json.loads(Path("schemas/omega-pr-5k2n-generation-r01.schema.json").read_text())
+          Draft202012Validator(schema).validate(report)
+
+          assert report["seed_count"] == 5000
+          assert report["logical_cardinality_decimal"] == str(5000 * (2 ** report["generation"]))
+          assert report["logical_population_materialized"] is False
+          assert report["compiled_addition_count"] <= report["physical_patch_compiler"]["materialization_budget"]
+          assert report["adaptive_continuation"]["architecture_hard_cap"] is False
+          assert report["physical_patch_compiler"]["write_authority_granted"] is False
+          assert report["physical_patch_compiler"]["automatic_commit_allowed"] is False
+          assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
+          assert "many additions != progress" in report["oak_boundaries"]
+          assert len(report["fingerprint"]) == 64
+          PY
+
+      - name: Compile current PR event receipt
+        if: github.event_name == 'pull_request'
+        run: |
+          python tools/compile_pr_5k2n_event.py \
+            --output /tmp/omega-pr-5k2n-event.json \
+            --generation 0 \
+            --budget 32
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/omega-pr-5k2n-event.json").read_text())
+          assert report["event_context"]["event_only"] is True
+          assert report["event_context"]["history_enriched"] is False
+          assert report["event_context"]["physical_materialization_blocked_until_reuse_inspection"] is True
+          assert report["physical_patch_compiler"]["write_authority_granted"] is False
+          PY
+
+      - name: Retain bounded generation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-pr-5k2n-${{ github.run_id }}
+          path: |
+            /tmp/omega-pr-5k2n.json
+            /tmp/omega-pr-5k2n-event.json
+            /tmp/omega-pr-5k2n-campaign.json
+          if-no-files-found: ignore
+          retention-days: 14
