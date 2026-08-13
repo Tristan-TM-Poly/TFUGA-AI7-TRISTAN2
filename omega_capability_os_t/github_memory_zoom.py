@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Iterable, Mapping
 from urllib.parse import quote, urlencode
 import argparse
 import ast
@@ -20,7 +20,7 @@ from .github_memory import (
     _tokens,
 )
 
-ZOOM_SCHEMA_VERSION = "0.2.0"
+ZOOM_SCHEMA_VERSION = "0.3.0"
 
 
 @dataclass(frozen=True)
@@ -78,7 +78,7 @@ class ProgressiveRetrievalReceipt:
 
 
 class ProgressiveGitHubRetriever:
-    """Zooms only into high-ranked PRs and extracts static Python symbols without executing candidate code."""
+    """Zooms into selected PRs and extracts static Python symbols without executing candidate code."""
 
     def __init__(self, source: GitHubPRSource) -> None:
         self.source = source
@@ -107,25 +107,33 @@ class ProgressiveGitHubRetriever:
         compact = str(payload["content"]).replace("\n", "")
         return base64.b64decode(compact).decode("utf-8", errors="replace")
 
-    def hydrate(
+    def hydrate_refs(
         self,
         index: GitHubMemoryIndex,
-        request: CapabilityRequest,
+        candidate_refs: Iterable[str],
         *,
-        top_prs: int = 5,
+        request_id: str,
         max_files_per_pr: int = 8,
         extract_symbols: bool = True,
     ) -> ProgressiveRetrievalReceipt:
-        candidates = index.search_prs(request, top_k=max(1, top_prs))
+        """Hydrate an explicit ranked/deduplicated inspection queue.
+
+        This is the bridge used by PR-LLMT: ranking and exact inspection stay
+        separate. The caller owns candidate ordering; this method never silently
+        re-ranks explicit references with the older lexical search policy.
+        """
+        if max_files_per_pr < 0:
+            raise ValueError("max_files_per_pr must be non-negative")
+        refs = tuple(dict.fromkeys(str(ref) for ref in candidate_refs if str(ref)))
         hydrated: list[str] = []
         errors: list[dict[str, str]] = []
         changed_file_count = 0
         symbol_count = 0
 
-        for candidate in candidates:
-            ref = str(candidate["ref"])
+        for ref in refs:
             pr = index.prs.get(ref)
             if pr is None:
+                errors.append({"ref": ref, "path": "", "error": "KeyError: candidate ref not present in index"})
                 continue
             try:
                 detail = self._detail(pr.repository, pr.number)
@@ -170,16 +178,35 @@ class ProgressiveGitHubRetriever:
 
         return ProgressiveRetrievalReceipt(
             schema=f"omega-github-progressive-retrieval/v{ZOOM_SCHEMA_VERSION}",
-            request_id=request.request_id,
-            candidate_prs=tuple(str(row["ref"]) for row in candidates),
+            request_id=request_id,
+            candidate_prs=refs,
             hydrated_prs=tuple(hydrated),
             changed_file_count=changed_file_count,
             symbol_count=symbol_count,
             errors=tuple(errors),
             boundary=(
-                "Progressive hydration improves retrieval evidence only. Changed files and AST symbols are candidates, "
+                "Progressive hydration improves inspection evidence only. Ranked refs, changed files and AST symbols are candidates, "
                 "not semantic equivalence, correctness, test success, or permission to mutate."
             ),
+        )
+
+    def hydrate(
+        self,
+        index: GitHubMemoryIndex,
+        request: CapabilityRequest,
+        *,
+        top_prs: int = 5,
+        max_files_per_pr: int = 8,
+        extract_symbols: bool = True,
+    ) -> ProgressiveRetrievalReceipt:
+        """Backward-compatible lexical candidate selection followed by exact hydration."""
+        candidates = index.search_prs(request, top_k=max(1, top_prs))
+        return self.hydrate_refs(
+            index,
+            (str(candidate["ref"]) for candidate in candidates),
+            request_id=request.request_id,
+            max_files_per_pr=max_files_per_pr,
+            extract_symbols=extract_symbols,
         )
 
 
