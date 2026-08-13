@@ -1,0 +1,434 @@
+{
+  "constellation_id": "OMEGA-GITHUB-CONSTELLATION-R02",
+  "owner": "Tristan-TM-Poly",
+  "repositories": [
+    {
+      "capabilities": [
+        "capability.ir",
+        "workunit.schema",
+        "repo.genome",
+        "research.abi",
+        "transformation.receipt",
+        "evidence.receipt",
+        "artifact.ref"
+      ],
+      "consumes": [],
+      "description": "Public stable contracts for Tristan interoperability: Capability IR, WorkUnit, RepoGenome, Research ABI, receipts and provenance references.",
+      "name": "omega-protocol",
+      "produces": [
+        "typed.contracts",
+        "schema.validators",
+        "public.interop"
+      ],
+      "relations": [
+        {
+          "kind": "provides-protocol-to",
+          "target": "omega-kernel"
+        },
+        {
+          "kind": "provides-protocol-to",
+          "target": "tristan-fabric"
+        },
+        {
+          "kind": "provides-protocol-to",
+          "target": "tristan-memory"
+        }
+      ],
+      "role": "public-protocol",
+      "split_rationale": [
+        "highest cross-repo reuse",
+        "stable compatibility surface",
+        "public conformance value",
+        "minimal dependency direction"
+      ],
+      "split_score": 0.98,
+      "visibility": "public",
+      "visibility_gate": {
+        "private_blockers": [],
+        "public_drivers": [
+          "protocol",
+          "conformance",
+          "documentation"
+        ]
+      }
+    },
+    {
+      "capabilities": [
+        "cognitive.isa",
+        "generative.closure",
+        "go.maxmin",
+        "primitive.necessity",
+        "synergy.mine",
+        "self.distill",
+        "knowledge.invalidate"
+      ],
+      "consumes": [
+        "typed.contracts"
+      ],
+      "description": "Public algorithmic kernel: Cognitive ISA, Generative Closure, GO MAX/MIN, primitive necessity, synergy and self-distillation passes.",
+      "name": "omega-kernel",
+      "produces": [
+        "cognitive.program",
+        "closure.report",
+        "distillation.receipt",
+        "synergy.candidate"
+      ],
+      "relations": [
+        {
+          "kind": "uses",
+          "target": "omega-protocol"
+        },
+        {
+          "kind": "audited-by",
+          "target": "omega-oak"
+        },
+        {
+          "kind": "benchmarked-by",
+          "target": "omega-bench"
+        }
+      ],
+      "role": "public-kernel",
+      "split_rationale": [
+        "reusable algorithms",
+        "external validation value",
+        "single canonical ISA",
+        "independent release cadence"
+      ],
+      "split_score": 0.96,
+      "visibility": "public",
+      "visibility_gate": {
+        "private_blockers": [],
+        "public_drivers": [
+          "kernel",
+          "public_evidence"
+        ]
+      }
+    },
+    {
+      "capabilities": [
+        "oak.gate",
+        "uncertainty.attach",
+        "proofdebt.measure",
+        "semantic.ci",
+        "scientific.ci",
+        "reproducibility.check"
+      ],
+      "consumes": [
+        "typed.contracts",
+        "evidence.receipt"
+      ],
+      "description": "Public OAK/UNC2 validation kernel for claim-evidence separation, proof debt, uncertainty, reproducibility and semantic/scientific gates.",
+      "name": "omega-oak",
+      "produces": [
+        "oak.verdict",
+        "proof.debt",
+        "contract.failure",
+        "promotion.gate"
+      ],
+      "relations": [
+        {
+          "kind": "audits",
+          "target": "omega-kernel"
+        },
+        {
+          "kind": "audits",
+          "target": "omega-bench"
+        },
+        {
+          "kind": "provides-public-gates-to",
+          "target": "tristan-fabric"
+        }
+      ],
+      "role": "public-governance",
+      "split_rationale": [
+        "independent governance",
+        "auditability",
+        "external trust surface",
+        "fail-closed semantics"
+      ],
+      "split_score": 0.97,
+      "visibility": "public",
+      "visibility_gate": {
+        "private_blockers": [],
+        "public_drivers": [
+          "kernel",
+          "conformance",
+          "documentation"
+        ]
+      }
+    },
+    {
+      "capabilities": [
+        "benchmark.run",
+        "conformance.test",
+        "repro.capsule",
+        "regeneration.bench",
+        "synergy.bench",
+        "baseline.compare"
+      ],
+      "consumes": [
+        "typed.contracts",
+        "cognitive.program",
+        "oak.verdict"
+      ],
+      "description": "Public deterministic benchmarks, synthetic fixtures, conformance suites and regeneration/synergy courts for the Tristan open kernel.",
+      "name": "omega-bench",
+      "produces": [
+        "benchmark.receipt",
+        "public.evidence",
+        "repro.capsule"
+      ],
+      "relations": [
+        {
+          "kind": "benchmarks",
+          "target": "omega-kernel"
+        },
+        {
+          "kind": "validated-by",
+          "target": "omega-oak"
+        }
+      ],
+      "role": "public-benchmark",
+      "split_rationale": [
+        "public reproducibility",
+        "baseline discipline",
+        "independent benchmark cadence",
+        "external contribution surface"
+      ],
+      "split_score": 0.9,
+      "visibility": "public",
+      "visibility_gate": {
+        "private_blockers": [],
+        "public_drivers": [
+          "benchmark",
+          "public_evidence",
+          "conformance"
+        ]
+      }
+    },
+    {
+      "capabilities": [
+        "repo.registry",
+        "capability.route",
+        "workunit.orchestrate",
+        "repo.embryo",
+        "repo.materialize",
+        "split.score",
+        "lifecycle.plan"
+      ],
+      "consumes": [
+        "typed.contracts",
+        "temporal.repo.graph",
+        "oak.verdict"
+      ],
+      "description": "Private control and genesis plane for repository cells, capability routing, orchestration, split decisions and privileged lifecycle operations.",
+      "name": "tristan-fabric",
+      "produces": [
+        "route.plan",
+        "repo.creation.plan",
+        "ecosystem.receipt"
+      ],
+      "relations": [
+        {
+          "kind": "uses",
+          "target": "omega-protocol"
+        },
+        {
+          "kind": "consults",
+          "target": "omega-oak"
+        },
+        {
+          "kind": "observes",
+          "target": "tristan-observatory"
+        }
+      ],
+      "role": "private-control-plane",
+      "split_rationale": [
+        "privileged authority boundary",
+        "cross-repo fan-out",
+        "independent security policy",
+        "genesis/control coupling"
+      ],
+      "split_score": 0.97,
+      "visibility": "private",
+      "visibility_gate": {
+        "private_blockers": [
+          "privileged_authority"
+        ],
+        "public_drivers": []
+      }
+    },
+    {
+      "capabilities": [
+        "snapshot.publish",
+        "snapshot.verify",
+        "snapshot.delta",
+        "observation.cache",
+        "repo.atlas",
+        "pr.archaeology",
+        "code.phylogeny",
+        "temporal.hgfm"
+      ],
+      "consumes": [
+        "authorized.observation",
+        "public.evidence"
+      ],
+      "description": "Private observe-once/derive-many state plane for GitHub, datasets, benchmarks, literature and temporal repository HGFM/Atlas.",
+      "name": "tristan-observatory",
+      "produces": [
+        "content.addressed.snapshot",
+        "delta.event",
+        "temporal.repo.graph",
+        "reuse.candidates"
+      ],
+      "relations": [
+        {
+          "kind": "feeds",
+          "target": "tristan-memory"
+        },
+        {
+          "kind": "feeds",
+          "target": "tristan-fabric"
+        }
+      ],
+      "role": "private-observation-plane",
+      "split_rationale": [
+        "rate-limit containment",
+        "large indexed state",
+        "licensed/private source boundary",
+        "many downstream consumers"
+      ],
+      "split_score": 0.96,
+      "visibility": "private",
+      "visibility_gate": {
+        "private_blockers": [
+          "restricted_third_party_data"
+        ],
+        "public_drivers": []
+      }
+    },
+    {
+      "capabilities": [
+        "memory.canonical",
+        "memory.lens",
+        "mplus.record",
+        "mminus.record",
+        "mquery.record",
+        "mdelta.record",
+        "synergy.memory",
+        "reuse.outcome"
+      ],
+      "consumes": [
+        "content.addressed.snapshot",
+        "delta.event",
+        "benchmark.receipt",
+        "transformation.receipt"
+      ],
+      "description": "Private canonical cumulative memory for M+, M-, M?, M-delta, synergy memory, evidence state, decisions and reusable memory lenses.",
+      "name": "tristan-memory",
+      "produces": [
+        "memory.lens",
+        "strategy.history",
+        "reuse.context",
+        "calibration.history"
+      ],
+      "relations": [
+        {
+          "kind": "consumes",
+          "target": "tristan-observatory"
+        },
+        {
+          "kind": "feeds",
+          "target": "tristan-llmt"
+        },
+        {
+          "kind": "uses-schema",
+          "target": "omega-protocol"
+        }
+      ],
+      "role": "private-memory-plane",
+      "split_rationale": [
+        "sensitive cumulative state",
+        "cross-system reuse",
+        "append-only history value",
+        "private strategic learning"
+      ],
+      "split_score": 0.95,
+      "visibility": "private",
+      "visibility_gate": {
+        "private_blockers": [
+          "unpublished_ip"
+        ],
+        "public_drivers": []
+      }
+    },
+    {
+      "capabilities": [
+        "llmt.lens",
+        "coalition.compile",
+        "strategy.route",
+        "voc.estimate",
+        "selfmodel.predict",
+        "pr.llmt"
+      ],
+      "consumes": [
+        "workunit.schema",
+        "memory.lens",
+        "cognitive.program",
+        "capability.ir"
+      ],
+      "description": "Private LLMT intelligence plane with memory lenses, sparse coalition compilation, self-model, Value of Computation and internal strategy policies.",
+      "name": "tristan-llmt",
+      "produces": [
+        "llmt.coalition",
+        "strategy.receipt",
+        "prediction.cell"
+      ],
+      "relations": [
+        {
+          "kind": "uses",
+          "target": "omega-kernel"
+        },
+        {
+          "kind": "reads",
+          "target": "tristan-memory"
+        },
+        {
+          "kind": "routes-through",
+          "target": "tristan-fabric"
+        }
+      ],
+      "role": "private-intelligence-plane",
+      "split_rationale": [
+        "proprietary strategy layer",
+        "model/tool dependency isolation",
+        "internal evaluation state",
+        "ephemeral coalition runtime"
+      ],
+      "split_score": 0.93,
+      "visibility": "private",
+      "visibility_gate": {
+        "private_blockers": [
+          "privileged_authority",
+          "unpublished_ip"
+        ],
+        "public_drivers": []
+      }
+    }
+  ],
+  "schema_version": "repo-constellation/v0.2",
+  "source_prs": [
+    330,
+    443,
+    447,
+    448,
+    449,
+    450,
+    452,
+    454,
+    458,
+    459
+  ],
+  "source_repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "source_sha": "e166ba4c0001003b9f243863dd14882af352bded"
+}
