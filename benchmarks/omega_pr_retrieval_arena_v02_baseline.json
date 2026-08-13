@@ -1,0 +1,116 @@
+{
+  "schema": "omega-pr-retrieval-baseline/v0.2.0",
+  "status": "PROBATIONARY",
+  "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "source_head_sha": "ea7ffe1a178ce5cabb197689a61bb039678903a0",
+  "source_workflow_run_id": 31676766222,
+  "source_artifact_id": 9171837584,
+  "source_artifact_digest": "sha256:87f3c9718b1970dd75fd3a1981d81a129c9a0e07bc05cbb2a7fa0b2ce9f64c41",
+  "arena_fingerprint": "1be45b936d0e73548f3be921fa548f4795dfb92862d19d0886aac8233376bb06",
+  "ranker_version": "frozen-v0.1",
+  "top_k": 8,
+  "corpus": {
+    "pr_count": 350,
+    "draft": 64,
+    "merged": 259,
+    "closed_not_merged": 27,
+    "eligible_target_count": 16,
+    "gold_lineage_ref_count": 21,
+    "declared_body_lineage_count": 8,
+    "stack_base_ref_count": 16,
+    "ambiguous_stack_gold_count": 0
+  },
+  "strategies": {
+    "lexical_jaccard": {
+      "hit_count": 0,
+      "micro_recall_at_8": 0.0,
+      "macro_recall_at_8": 0.0,
+      "mrr": 0.0,
+      "mean_candidate_fraction": 0.031287,
+      "target_leakage_count": 0,
+      "future_leakage_count": 0
+    },
+    "recency": {
+      "hit_count": 15,
+      "micro_recall_at_8": 0.714286,
+      "macro_recall_at_8": 0.78125,
+      "mrr": 0.400521,
+      "mean_candidate_fraction": 0.031287,
+      "target_leakage_count": 0,
+      "future_leakage_count": 0
+    },
+    "graph_centrality": {
+      "hit_count": 17,
+      "micro_recall_at_8": 0.809524,
+      "macro_recall_at_8": 0.833333,
+      "mrr": 0.436979,
+      "mean_candidate_fraction": 0.031287,
+      "target_leakage_count": 0,
+      "future_leakage_count": 0
+    },
+    "hybrid_rrf": {
+      "hit_count": 17,
+      "micro_recall_at_8": 0.809524,
+      "macro_recall_at_8": 0.833333,
+      "mrr": 0.564583,
+      "mean_candidate_fraction": 0.031287,
+      "target_leakage_count": 0,
+      "future_leakage_count": 0
+    }
+  },
+  "winner": "hybrid_rrf",
+  "temporal_evaluation": {
+    "method": "ordered 60/40 retrospective split; frozen ranker, no cohort-specific reweighting",
+    "early": {
+      "eligible_target_count": 9,
+      "gold_lineage_ref_count": 9,
+      "hybrid_micro_recall_at_8": 0.888889,
+      "hybrid_mrr": 0.540741
+    },
+    "late_holdout_proxy": {
+      "eligible_target_count": 7,
+      "gold_lineage_ref_count": 12,
+      "hybrid_micro_recall_at_8": 0.75,
+      "hybrid_mrr": 0.595238
+    }
+  },
+  "known_frontier_failures": [
+    {
+      "target": "#323",
+      "missed_gold": ["#313"],
+      "gold_source": "stack_base_ref"
+    },
+    {
+      "target": "#347",
+      "missed_gold": ["#338"],
+      "gold_source": "stack_base_ref"
+    },
+    {
+      "target": "#447",
+      "gold": ["#414", "#417", "#443"],
+      "retrieved_gold": ["#443"],
+      "missed_gold": ["#414", "#417"]
+    }
+  ],
+  "prospective_protocol": {
+    "freeze_ranker_weights": true,
+    "do_not_retune_on_baseline_cases": true,
+    "append_future_eligible_prs_as_untouched_cases": true,
+    "required_before_promotion": [
+      "new prospective targets accumulated after baseline",
+      "zero target/future leakage",
+      "exact-source inspection before reuse",
+      "no material regression on prospective recall/MRR",
+      "external or multi-repository replication when available"
+    ]
+  },
+  "oak_boundaries": [
+    "ARENA_WINNER != GENERALIZATION",
+    "RETROSPECTIVE_HOLDOUT != PROSPECTIVE_VALIDATION",
+    "SAME_REPOSITORY_HISTORY != EXTERNAL_REPLICATION",
+    "LINEAGE_RECALL != ALL_USEFUL_REUSE",
+    "STACK_BASE_REF != SEMANTIC_DEPENDENCY_PROOF",
+    "PR_GENOME_SIMILARITY != IMPLEMENTATION_COMPATIBILITY",
+    "CI_PASS != ENGINEERING_SAVINGS"
+  ]
+}
