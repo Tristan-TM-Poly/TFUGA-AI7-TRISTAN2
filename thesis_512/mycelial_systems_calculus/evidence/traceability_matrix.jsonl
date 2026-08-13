@@ -1,0 +1,2 @@
+{"claim_id":"CLM-FORMAL-001","path":"omega_thesis_factory_t/core.py","test":"tests/test_omega_thesis_monograph512.py"}
+{"claim_id":"CLM-FORMAL-002","path":"omega_thesis_factory_t/monograph512.py","test":"tests/test_omega_thesis_monograph512.py"}
