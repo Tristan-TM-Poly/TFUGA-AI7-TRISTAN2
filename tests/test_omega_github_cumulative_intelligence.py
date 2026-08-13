@@ -5,6 +5,7 @@ from omega_capability_os_t.github_cumulative_intelligence import (
     PRGenomeCompiler,
 )
 from omega_capability_os_t.github_memory import CapabilityRequest, GitHubMemoryIndex, PRMemory
+from omega_capability_os_t.github_retrieval_arena import compile_retrieval_arena
 
 
 def _indexes():
@@ -194,3 +195,58 @@ def test_research_abi_bridge_preserves_read_authority():
     assert envelope.authority == "read"
     assert envelope.oak_state == "UNKNOWN"
     assert envelope.object_type == "github_cumulative_intelligence_context"
+
+
+def test_retrieval_arena_improves_zero_overlap_baseline_without_future_leakage():
+    repository = "Tristan/arena"
+    index = GitHubMemoryIndex()
+    index.add_pr(PRMemory(repository=repository, number=1, state="closed", title="alpha kernel"))
+    index.add_pr(PRMemory(repository=repository, number=2, state="closed", title="beta renderer"))
+    index.add_pr(PRMemory(repository=repository, number=3, state="closed", title="gamma archive"))
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=4,
+            state="closed",
+            title="delta integration",
+            body="extends: #3",
+        )
+    )
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=5,
+            state="open",
+            title="delta integration future",
+        )
+    )
+
+    report = compile_retrieval_arena(index, top_k=1)
+    assert report["eligible_target_count"] == 1
+    assert report["strategies"]["lexical_jaccard"]["micro_recall_at_k"] == 0.0
+    assert report["strategies"]["recency"]["micro_recall_at_k"] == 1.0
+    assert report["improved_over_baseline"] is True
+    assert report["oak"]["status"] == "PASS"
+    assert report["oak"]["temporal_leakage_free"] is True
+    for metrics in report["strategies"].values():
+        assert metrics["target_leakage_count"] == 0
+        assert metrics["future_leakage_count"] == 0
+
+
+def test_retrieval_arena_is_deterministic():
+    repository = "Tristan/arena"
+    index = GitHubMemoryIndex()
+    index.add_pr(PRMemory(repository=repository, number=1, state="closed", title="memory root"))
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=2,
+            state="open",
+            title="memory extension",
+            body="extends: #1",
+        )
+    )
+    left = compile_retrieval_arena(index, top_k=1)
+    right = compile_retrieval_arena(index, top_k=1)
+    assert left == right
+    assert len(left["fingerprint"]) == 64
