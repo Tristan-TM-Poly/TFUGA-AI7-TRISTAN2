@@ -39,6 +39,32 @@ from .external import (
     validate_external_bindings,
     validate_external_receipt,
 )
+from .github_memory import (
+    CapabilityGraph,
+    CapabilityRequest,
+    GitHubMemoryIndex,
+    GitHubPRSource,
+    ReuseBeforeCreateGate,
+    build_live_index,
+)
+from .github_memory_evolution import (
+    CrossRepositoryCapabilityGraph,
+    LLMTFederationCompiler,
+    LLMTIdentity,
+    ResidualArtifactSpec,
+    ResidualCodeCompiler,
+    ReuseOutcomeLearner,
+    ReuseOutcomeReceipt,
+    SupersessionCandidate,
+    TemporalSupersessionMiner,
+    compile_evolution_court,
+)
+from .github_memory_zoom import (
+    ProgressiveGitHubRetriever,
+    ProgressiveRetrievalReceipt,
+    SymbolObservation,
+    extract_python_symbols,
+)
 from .normalizers import (
     NORMALIZER_SCHEMA_VERSION,
     ProviderResponseNormalizationError,
@@ -101,5 +127,25 @@ __all__ = [
     "chatmem_checkpoint_intent",
     "checkpoint_gate_handler",
     "default_chatmem_bootstrap_values",
+    "CapabilityRequest",
+    "GitHubMemoryIndex",
+    "CapabilityGraph",
+    "ReuseBeforeCreateGate",
+    "GitHubPRSource",
+    "build_live_index",
+    "ProgressiveGitHubRetriever",
+    "ProgressiveRetrievalReceipt",
+    "SymbolObservation",
+    "extract_python_symbols",
+    "SupersessionCandidate",
+    "TemporalSupersessionMiner",
+    "ResidualArtifactSpec",
+    "ResidualCodeCompiler",
+    "ReuseOutcomeReceipt",
+    "ReuseOutcomeLearner",
+    "CrossRepositoryCapabilityGraph",
+    "LLMTIdentity",
+    "LLMTFederationCompiler",
+    "compile_evolution_court",
 ]
-__version__ = "0.6.0"
+__version__ = "0.7.0"
