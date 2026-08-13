@@ -2,30 +2,126 @@
 
 \chapter{Cycle de vie des composants}
 \section{Embryogenèse et spécialisation}
+Le vocabulaire biologique est utilisé comme modèle architectural, non comme identité avec un système vivant. Une capacité candidate suit une machine d'états de travail :
+\[
+Seed\to Candidate\to Tested\to Reusable\to Canonical,
+\]
+avec sorties possibles vers HOLD, Dormant ou Archived.
+
 \section{Mitose, fusion et absorption}
+Une « mitose » correspond à une spécialisation lorsque deux sous-domaines exigent des contrats durablement différents. Une fusion condense des composants redondants après comparaison des interfaces et de l'evidence. Une absorption archive un composant dont la fonction est couverte dans le domaine testé.
+
 \section{Dormance et archivage}
+Une piste à forte option mais insuffisamment supportée peut devenir dormante plutôt que supprimée. L'archivage conserve provenance, M$^-$ et conditions de réactivation.
 
 \chapter{Transformation Genome}
 \section{Transformations observées}
+Une transformation observée est enregistrée comme
+\[
+\tau=(context,input,operator,output,evidence,cost,residual,status).
+\]
+Un Transformation Genome regroupe des transformations récurrentes sans effacer leur contexte.
+
 \section{Coûts, gains et régressions}
+On définit un gain local $\Delta V_{verified}=V_{after}-V_{before}$ uniquement lorsque les états sont comparables selon le protocole. Les régressions restent signées.
+
 \section{Réutilisation des transformations}
+La répétition historique d'un pattern est une association. Sa promotion comme primitive générale exige un test de transfert sur des tâches tenues à l'écart.
 
 \chapter{GO Gradient et Value of Computation}
 \section{Gain marginal vérifié}
+Une quantité de scheduling candidate est
+\[
+\nabla_{GO}(a\mid S)=\frac{\mathbb E[\Delta V_{verified}+\Delta I+\Delta Option]}{Cost+Risk+Debt}.
+\]
+Ses composantes restent conservées séparément; la scalarisation ne remplace pas les gates critiques.
+
 \section{Allocation de ressources}
+La source introduit des prix d'ombre $\lambda_k$ et une allocation de la forme
+\[
+\max\;V-\sum_k\lambda_k Resource_k.
+\]
+Il s'agit d'une heuristique d'allocation sous contraintes, non d'une métrique de vérité.
+
 \section{Arrêt rationnel du calcul}
+Le calcul supplémentaire devient défavorable lorsque sa valeur d'information attendue tombe sous son coût ou lorsque le budget est épuisé. Un arrêt pour budget insuffisant produit HOLD, pas une conclusion forcée.
 
 \chapter{Synergies et interactions de second ordre}
 \section{Interactions positives}
+Pour deux transformations $a,b$, une interaction locale peut être estimée par
+\[
+H_{ab}=\Delta V(a,b)-\Delta V(a)-\Delta V(b).
+\]
+Un $H_{ab}>0$ observé indique une synergie dans le protocole testé seulement.
+
 \section{Redondance et conflit}
+Un $H_{ab}<0$ peut signaler interférence, redondance ou conflit. Des ablations servent à distinguer ces explications.
+
 \section{Portfolio de recherches}
+La source propose
+\[
+P=\{a_1,\dots,a_n\},\qquad \sum_i w_i=1,
+\]
+avec petits budgets de scout pour les fronts incertains et davantage de ressources après accumulation d'evidence.
 
 \chapter{Causal credit assignment}
 \section{Association et causalité}
+Le Research Self-Model du corpus secondaire impose
+\[
+HistoricalAssociation\neq CausalMethodEffect.
+\]
+La fréquence d'un opérateur dans des PR réussies n'identifie pas son effet causal.
+
 \section{Baselines et contrefactuels}
+Une attribution exige des tâches comparables avec et sans l'opérateur, ou un protocole contrôlé. Un replay contrefactuel simulé reste marqué simulation.
+
 \section{Ledger d'évolution}
+Le ledger conserve contexte, prédiction antérieure au résultat, observation, baseline, coût, gain, incertitude et provenance afin de permettre une évaluation prospective.
+
+\chapter{Residual Intelligence}
+\section{Residual-to-Theory Compiler}
+Le document source propose
+\[
+r\to\{H_1,\dots,H_n\}\to T^*,
+\]
+où un résidu produit plusieurs explications concurrentes et un test discriminant.
+
+\section{Contre-hypothèses}
+Chaque $H_i$ reçoit des observations attendues et des discriminants par rapport aux alternatives. Les explications non distinguables dans le budget courant restent en M$^?$.
+
+\section{Résidu comme moteur de recherche}
+Les résidus du code, des expériences, du semantic diff et des benchmarks peuvent alimenter le même pipeline sans garantir que la bonne explication soit déjà dans le portefeuille.
 
 \chapter{Self-hosting et points fixes}
 \section{Auto-description}
+Le document source propose un état $\mathcal G^*$ tel que
+\[
+Compiler(\mathcal G^*)\approx\mathcal G^*.
+\]
+Cette relation est interprétée comme fermeture architecturale approximative.
+
 \section{Reconstruction fonctionnelle}
-\section{Bornes de l'auto-amélioration}
+Le Mycelial Fixed-Point Test demande si l'écosystème peut être reconstruit à partir d'un ensemble réduit de schémas, manifests, capability graphs, tests et compilateurs canoniques.
+
+On définit un vecteur
+\[
+R_{fix}=(r_C,r_T,r_Q,r_E,r_P,h),
+\]
+où les $r$ mesurent les fractions de capacités, tests, claims, liens d'evidence et programmes reconstruits, et $h$ les dépendances implicites encore nécessaires.
+
+\section{Bornes de l'auto-hébergement}
+EXP-006 mesure $R_{fix}$. Un score élevé soutient la compressibilité/reproductibilité dans le protocole testé; il ne valide pas automatiquement les claims scientifiques contenus dans l'écosystème.
+
+\chapter{Round-trip Theory--Code--Evidence}
+\section{Cycle de révision}
+La source propose
+\[
+Theory\to Code\to Evidence\to RevisedTheory.
+\]
+La révision doit rester traçable dans le Claim-Evidence Graph.
+
+\section{Résidu $\Delta_T$}
+On conserve un résidu vectoriel pour définitions, hypothèses, claims, types/unités, evidence, limites et provenance.
+
+\section{Interprétation}
+Un faible résidu indique une meilleure cohérence interne sous la métrique choisie; il ne démontre pas la vérité de la théorie. EXP-007 teste ce point.
