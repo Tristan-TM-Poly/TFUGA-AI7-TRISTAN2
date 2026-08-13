@@ -107,10 +107,10 @@ jobs:
           findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
 
           assert portfolio["schema"] == "omega-pr-llmt-portfolio/v0.1.0"
-          assert filegraph["schema"] == "omega-pr-llmt-target-filegraph/v0.1.0"
+          assert filegraph["schema"] == "omega-pr-llmt-target-filegraph/v0.2.0"
           assert plan["schema"] == "omega-pr-llmt-inspection-plan/v0.1.0"
           assert overlay["schema"] == "omega-pr-llmt-inspection-overlay/v0.1.0"
-          assert findings["schema"] == "omega-pr-llmt-findings/v0.1.0"
+          assert findings["schema"] == "omega-pr-llmt-findings/v0.2.0"
           assert filegraph["portfolio_fingerprint"] == portfolio["fingerprint"]
           assert plan["portfolio_fingerprint"] == portfolio["fingerprint"]
           assert overlay["portfolio_fingerprint"] == portfolio["fingerprint"]
@@ -125,6 +125,7 @@ jobs:
           assert filegraph["error_count"] == 0, filegraph["progressive_retrieval"]["errors"]
           assert filegraph["authority"]["write_authority_granted"] is False
           assert filegraph["authority"]["merge_authority_granted"] is False
+          assert filegraph["reconstruction_pair_count"] >= 2, filegraph["reconstruction_pairs"]
           assert len(filegraph["fingerprint"]) == 64
 
           assert plan["operational_budget"]["max_candidates"] == 12
@@ -141,10 +142,14 @@ jobs:
 
           assert findings["packet_count"] == portfolio["packet_count"]
           assert findings["packets_with_file_overlap"] == filegraph["targets_with_file_overlap_count"]
+          assert findings["reconstruction_pair_count"] == filegraph["reconstruction_pair_count"]
+          assert findings["finding_counts"].get("DECLARED_RECONSTRUCTION_PAIR", 0) >= 2
+          assert findings["finding_counts"].get("DECLARED_RECONSTRUCTION_SOURCE", 0) >= 2
           assert findings["authority"]["write_authority_granted"] is False
           assert findings["authority"]["merge_authority_granted"] is False
           assert "PRIORITY_SCORE != QUALITY_SCORE" in findings["oak_boundaries"]
           assert "FILE_OVERLAP != MERGE_CONFLICT" in findings["oak_boundaries"]
+          assert "RECONSTRUCTION_PAIR != AUTOMATIC_SUPERSESSION" in findings["oak_boundaries"]
           assert len(findings["fingerprint"]) == 64
           assert all(row["findings"] for row in findings["packets"])
 
@@ -160,6 +165,8 @@ jobs:
               "target_overlap_edges": filegraph["overlap_edge_count"],
               "targets_with_overlap": filegraph["targets_with_file_overlap_count"],
               "targets_with_overlap_fraction": filegraph["targets_with_file_overlap_fraction"],
+              "reconstruction_pair_count": filegraph["reconstruction_pair_count"],
+              "reconstruction_pairs": filegraph["reconstruction_pairs"],
               "target_file_count_median": filegraph["changed_file_distribution"]["median"],
               "target_file_count_p90": filegraph["changed_file_distribution"]["p90"],
               "large_change_candidates": filegraph["changed_file_distribution"]["large_change_candidate_count"],
@@ -184,6 +191,8 @@ jobs:
                       "score": row["priority_score"],
                       "overlap_neighbors": row["file_overlap_neighbor_count"],
                       "max_shared_files": row["max_shared_file_count"],
+                      "reconstruction_as_target": row["reconstruction_as_target_count"],
+                      "reconstruction_as_source": row["reconstruction_as_source_count"],
                       "inspected_reuse_candidates": row["inspected_reuse_candidate_count"],
                       "finding_types": [finding["finding_type"] for finding in row["findings"]],
                   }
