@@ -68,6 +68,7 @@ jobs:
           assert report['all_baselines_retained'] is True
           assert report['cost_normalization_present'] is True
           assert report['contamination_tensor_separate_from_quality'] is True
+          assert report['hidden_target_required_for_independent_discovery_eligibility'] is True
           assert report['scalar_intelligence_score_produced'] is False
           assert report['human_novelty_claimed'] is False
           assert report['independent_discovery_certified'] is False
