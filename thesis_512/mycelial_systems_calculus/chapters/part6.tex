@@ -1,26 +1,84 @@
 \part{Expériences et études de cas}
 
-\chapter{Benchmark de coordination}
+Cette partie ne contient aucune performance inventée. Chaque chapitre commence comme protocole. Les tableaux de résultats ne sont remplis qu'après exécution avec provenance et statut.
+
+\chapter{EXP-001 — Benchmark de coordination}
 \section{All-to-all, registry et capability routing}
+Comparer les mêmes traces de tâches et de changements sous cinq architectures : couplage pairwise explicite, graphe statique, registry simple, graphe centralisé et dynamic capability graph.
+
 \section{Complexité, latence et maintenance}
+Mesurer relations déclarées, modifications de configuration, ruptures de contrats, latence de résolution, coût de calcul et interventions humaines. La relation $N(N-1)/2$ est utilisée uniquement comme baseline structurelle du graphe complet.
+
 \section{Analyse de sensibilité}
+Faire varier $N$, le nombre de capacités, la multiplicité des fournisseurs, le churn de versions et la proportion de tâches inter-repos.
 
-\chapter{Substitution de fournisseurs}
+\chapter{EXP-002 — Substitution de fournisseurs}
 \section{Implémentations concurrentes}
+Choisir plusieurs capacités disposant d'au moins deux providers ou construire des providers contrôlés équivalents pour la mécanique initiale.
+
 \section{Contrats Capability IR}
+Comparer types sémantiques, unités, qualité, evidence, latence et coût avant/après substitution.
+
 \section{Robustesse aux changements}
+Mesurer modifications des consommateurs, adaptations, violations de contrats et temps de récupération. Les substitutions incompatibles servent de contrôles négatifs.
 
-\chapter{Divergence théorie-code}
+\chapter{EXP-003 — Divergence théorie-code}
 \section{Injection de divergences}
-\section{Tests classiques, CI sémantique et OAK}
+Créer des variantes commit-addressées contenant des défauts d'API, d'unité, convention, baseline, contrôle négatif, incertitude, provenance, hypothèse et conclusion.
+
+\section{Tests classiques, CI sémantique, CI scientifique et OAK}
+Geler les variantes puis exécuter séparément les détecteurs. Les runners ne reçoivent pas le label du défaut avant que leurs receipts soient figés.
+
 \section{Taux de détection et faux positifs}
+Comparer détection par famille, contrôles propres, temps de détection, coût de calcul et effort de revue. Un gain de détection ne peut être interprété sans le coût correspondant.
 
-\chapter{Reuse-first contre generate-first}
+\chapter{EXP-004 — Reuse-first contre generate-first}
 \section{Protocoles expérimentaux}
-\section{Duplication et temps de développement}
-\section{Qualité et maintenabilité}
+Comparer une stratégie generate-first à `SEARCH → REUSE → ADAPT → GENERATE` sur un ensemble de tâches gelé et randomisé ou apparié.
 
-\chapter{Étude empirique du GitHub Tristan}
+\section{Duplication et temps de développement}
+Mesurer implémentations sémantiquement redondantes, nouveaux modules, symboles réutilisés, lignes modifiées, temps et appels d'outils.
+
+\section{Qualité et maintenabilité}
+Mesurer tests, défauts, revue humaine et coût des changements ultérieurs. L'historique seul n'est pas utilisé pour attribuer un effet causal.
+
+\chapter{EXP-005 — Étude empirique du GitHub Tristan}
 \section{Corpus et provenance}
+Le corpus initial inclut `TFUGA-AI7-TRISTAN2` et `TTM-TFUGA-AI7-TRISTAN2`, avec expansion seulement vers des dépôts autorisés et réellement pertinents.
+
 \section{Chronologie des capacités}
+Construire les lignées Repository→PR→Commit→File/Symbol→Capability→Claim→Evidence.
+
 \section{Réutilisation, M-moins et cristallisation}
+Mesurer apparition, réutilisation, duplication, convergence, échecs conservés, promotion et dérive théorie-code. Les résultats restent observationnels.
+
+\chapter{EXP-006 — Mycelial Fixed-Point Reconstruction}
+\section{Seed minimal}
+Geler une version de l'écosystème et définir exactement quels schémas, manifests, graphes, tests et compilateurs sont conservés.
+
+\section{Reconstruction clean-room}
+Reconstruire les artefacts dérivés dans un espace isolé sans dépendances implicites autorisées hors du seed déclaré.
+
+\section{Score de fermeture}
+Mesurer fractions de capacités, tests, claims, evidence et programmes récupérés, ainsi que les dépendances cachées. Le verdict porte sur la reproductibilité architecturale, pas sur la vérité scientifique.
+
+\chapter{EXP-007 — Theory-Code-Evidence Round Trip}
+\section{Théorie de départ}
+Choisir une théorie bornée avec définitions, hypothèses, claims, unités/types et limites explicites.
+
+\section{Compilation et evidence}
+Compiler les obligations, produire l'implémentation ou les HOLD explicites, puis reconstruire la théorie implicite à partir des artefacts observables.
+
+\section{Résidu de round-trip}
+Comparer définitions, hypothèses, claims, unités/types, evidence, limites et provenance. Un faible résidu mesure la cohérence interne dans le protocole; il ne prouve pas le contenu scientifique.
+
+\chapter{Échelle de preuve expérimentale}
+\section{Niveaux}
+Les campagnes progressent selon
+\[
+Protocol\to SyntheticMechanics\to HistoricalReplay\to ProspectiveObservation\to CleanRoomReplay\to IndependentReplication.
+\]
+Aucun niveau n'est déduit automatiquement du précédent.
+
+\section{Rapports négatifs}
+Tout FAIL ou HOLD conserve ses paramètres, traces et conséquences dans M$^-$ ou M$^?$. Les expériences négatives ne sont pas supprimées pour améliorer la conclusion.
