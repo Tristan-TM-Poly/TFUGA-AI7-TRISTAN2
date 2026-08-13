@@ -82,7 +82,7 @@
       }
     }
   },
-  "required": ["release", "task_families", "system_kinds", "runs", "ablations", "hidden_target_required_for_independent_discovery_eligibility", "scalar_intelligence_score_produced", "human_novelty_claimed", "independent_discovery_certified", "meta_llmt_automatically_superior", "benchmark_proxy_only"],
+  "required": ["release", "task_families", "system_kinds", "runs", "ablations", "hidden_target_required_for_independent_discovery_eligibility", "meta_routing_uses_cumulative_risk_gate", "scalar_intelligence_score_produced", "human_novelty_claimed", "independent_discovery_certified", "meta_llmt_automatically_superior", "benchmark_proxy_only"],
   "properties": {
     "release": {"const": "R0.7"},
     "task_families": {"type": "array", "items": {"$ref": "#/$defs/BenchmarkFamily"}},
@@ -90,6 +90,7 @@
     "runs": {"type": "array", "items": {"$ref": "#/$defs/BenchmarkRun"}},
     "ablations": {"type": "array", "items": {"$ref": "#/$defs/AblationReceipt"}},
     "hidden_target_required_for_independent_discovery_eligibility": {"const": true},
+    "meta_routing_uses_cumulative_risk_gate": {"const": true},
     "scalar_intelligence_score_produced": {"const": false},
     "human_novelty_claimed": {"const": false},
     "independent_discovery_certified": {"const": false},
