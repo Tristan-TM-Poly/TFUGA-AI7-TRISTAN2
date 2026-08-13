@@ -42,6 +42,12 @@ from .measurement_allocation import (
     compile_pr_llmt_measurement_allocation,
     issue_pr_llmt_measurement_allocation_receipt,
 )
+from .github_measurement_bridge import (
+    STRUCTURAL_MEASUREMENT_SCHEMA,
+    TARGET_FILEGRAPH_SCHEMA,
+    adapt_pr_llmt_structural_measurements,
+    issue_pr_llmt_reconstruction_blob_measurement_receipt,
+)
 from .compiler import ResearchABICompiler
 
 __all__ = [
@@ -83,4 +89,8 @@ __all__ = [
     "adapt_pr_llmt_measurement_allocation",
     "compile_pr_llmt_measurement_allocation",
     "issue_pr_llmt_measurement_allocation_receipt",
+    "STRUCTURAL_MEASUREMENT_SCHEMA",
+    "TARGET_FILEGRAPH_SCHEMA",
+    "adapt_pr_llmt_structural_measurements",
+    "issue_pr_llmt_reconstruction_blob_measurement_receipt",
 ]
