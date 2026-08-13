@@ -1,0 +1,40 @@
+{
+  "measurement_id": "PAGE-R11",
+  "workflow_run_id": 31708040332,
+  "head_sha": "d8bd352cf8a0b0efc9c61a9f3d3dd7f69f070140",
+  "artifact_id": 9184072886,
+  "artifact_digest": "sha256:d1d6ad01a7c42ea4bf217d85b12f2ae0218a070e83e54d6604b32a0bfb034db2",
+  "target_pages": 512,
+  "actual_pages": 127,
+  "delta": 385,
+  "status": "HOLD",
+  "compiled_page_count_is_source_of_truth": true,
+  "visual_render_verified": true,
+  "low_text_page_audit": {
+    "threshold_chars": 20,
+    "count": 14,
+    "pages": [2, 4, 6, 14, 15, 16, 18, 28, 44, 64, 80, 98, 100, 118],
+    "note": "Includes front-matter/verso/open-right structure and empty list pages; these are not scientific information and may not be used as deliberate padding."
+  },
+  "measured_budget": [
+    {"id":"front","target":24,"actual":16,"gap":8},
+    {"id":"p1","target":48,"actual":10,"gap":38},
+    {"id":"p2","target":84,"actual":16,"gap":68},
+    {"id":"p3","target":84,"actual":20,"gap":64},
+    {"id":"p4","target":72,"actual":16,"gap":56},
+    {"id":"p5","target":60,"actual":18,"gap":42},
+    {"id":"p6","target":80,"actual":20,"gap":60},
+    {"id":"p7","target":24,"actual":10,"gap":14},
+    {"id":"bib","target":24,"actual":0,"gap":24},
+    {"id":"app","target":12,"actual":1,"gap":11}
+  ],
+  "gap_checksum": 385,
+  "scientific_expansion_rule": "Every added page must be justified by new evidence, formalization, derivation, comparison, counterexample, experiment, figure/table with information gain, reproducibility material, or a necessary scholarly reference surface.",
+  "forbidden_gap_closure": [
+    "blank-page padding",
+    "duplicate prose",
+    "artificial spacing",
+    "oversized low-information figures",
+    "chapter breaks inserted only to increase count"
+  ]
+}
