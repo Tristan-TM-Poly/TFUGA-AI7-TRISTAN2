@@ -1,16 +1,123 @@
 \part{Evidence, confiance et incertitude}
+
 \chapter{Repositories avec evidence}
+
 \section{Claims, provenance et versions}
+Chaque claim $q$ est représenté par
+\[
+L(q)=(text,class,status,sources,tests,benchmarks,U,limits,version).
+\]
+Le statut est local au claim et au contexte de preuve; il n'est pas une étiquette globale de qualité du dépôt.
+
+\begin{definition}[Claim-Evidence Graph]
+Le Claim-Evidence Graph est
+\[
+G_{CE}=(Q,E,R),
+\]
+où $Q$ contient les claims, $E$ les éléments d'evidence et de provenance, et $R$ des relations typées telles que \texttt{supports}, \texttt{contradicts}, \texttt{derived-from}, \texttt{tested-by} et \texttt{limited-by}.
+\end{definition}
+
+La provenance doit être comparée aux standards existants, notamment W3C PROV-O et RO-Crate, avant toute revendication de nouveauté du modèle de métadonnées.
+
 \section{Passeports de validation}
+Le Repo Proof Passport du document source est formalisé par
+\[
+\Pi_R=(repo,commit,Q,E,U,P,S,L),
+\]
+où $P$ est la provenance et $L$ les limites. Le mot « proof » ne transfère pas automatiquement la sémantique du Proof-Carrying Code formel.
+
 \chapter{Trust Graph}
-\section{Confiance conditionnee par capacite}
-\section{Fraicheur et contexte}
-\chapter{CI semantique et scientifique}
-\section{Contrats semantiques}
-\section{Controles scientifiques}
+
+\section{Confiance conditionnée par capacité}
+La source propose
+\[
+Trust(R_i,R_j,C),
+\]
+ce qui empêche d'utiliser une réputation globale lorsqu'un même fournisseur est mature pour une capacité et expérimental pour une autre.
+
+\section{Fraîcheur et contexte}
+Une evidence observée sur un commit ou un dataset antérieur reste historique après changement du système. La fraîcheur fait partie du contrat de claim. Pour les claims commit-spécifiques, l'evidence doit référencer le même état ou déclarer explicitement son transfert.
+
+\chapter{CI sémantique et scientifique}
+
+\section{Contrats sémantiques}
+Un champ sémantique peut porter
+\[
+(type,unit,bounds,convention,version).
+\]
+Une valeur peut donc être syntaxiquement valide et néanmoins incompatible avec le sens attendu.
+
+\section{Contrôles scientifiques}
+La source demande notamment : baseline, contrôles négatifs, unités, incertitude, provenance du dataset, test statistique, contre-hypothèse et seed reproductible.
+
+On représente un gate scientifique par
+\[
+G_s(q)=\bigwedge_{k\in K_q} g_k,
+\]
+où les obligations $K_q$ dépendent de la classe du claim. EXP-003 mesure le gain de détection et le coût ajouté; davantage de gates n'est pas automatiquement meilleur.
+
 \chapter{Propagation de l'incertitude}
+
 \section{Composition et calibration}
+On conserve un vecteur d'incertitude
+\[
+U=(U_{data},U_{model},U_{implementation},U_{measurement},U_{transfer},U_{provenance}).
+\]
+La composition de capacités doit déclarer comment ces composantes sont propagées; aucune règle d'addition universelle n'est supposée.
+
+\section{Meta-UNC²}
+La source introduit $U(U)$ : incertitude sur l'estimation d'incertitude. Opérationnellement, cela impose de calibrer les probabilités/intervalles lorsque des observations comparables existent.
+
 \chapter{OAK et Meta-OAK}
+
 \section{Falsification et validation}
-\chapter{Memoire epistemique}
-\section{Resultats positifs, negatifs et indetermines}
+Un claim peut prendre les statuts
+\[
+SUPPORTED,\ PARTIAL,\ HOLD,\ FALSIFIED,\ UNSUPPORTED.
+\]
+Les gates critiques sont non compensatoires : un score élevé sur une dimension ne doit pas masquer une lacune de provenance, d'unités ou d'evidence requise.
+
+\section{Constitution méthodologique}
+La source énonce explicitement
+\[
+Generation\neq Truth,\qquad PassedTest\neq ProvenScientificClaim.
+\]
+Elle impose aussi la conservation de la mémoire négative et une validation plus forte des règles fondamentales que des changements ordinaires.
+
+\section{Meta-OAK}
+Un gate $g$ est lui-même évalué par
+\[
+A(g)=(FP,FN,cost,latency,calibration,coverage).
+\]
+Meta-OAK sert à identifier les gates trop sévères, trop permissifs ou mal calibrés. Il produit des obligations de révision, pas une auto-certification.
+
+\chapter{Mémoire épistémique}
+
+\section{Résultats positifs, négatifs et indéterminés}
+La mémoire est partitionnée en
+\[
+M=M^+\cup M^-\cup M^?.
+\]
+M$^+$ conserve les objets réutilisables suffisamment supportés, M$^-$ les échecs et limites, et M$^?$ les hypothèses non résolues.
+
+\section{M-minus comme anti-dataset}
+Une entrée M$^-$ contient au minimum l'hypothèse, les conditions, l'observation, l'evidence, une cause candidate et une condition de retry. Le but est de réduire la répétition inconsciente d'échecs déjà caractérisés.
+
+\section{Mémoire et causalité}
+Le Research Self-Model du corpus secondaire impose
+\[
+HistoricalAssociation\neq CausalMethodEffect.
+\]
+L'historique peut soutenir chronologie, provenance, lignée et associations. Une attribution causale exige un protocole comparatif séparé.
+
+\chapter{Reproduction et force de preuve}
+
+\section{Evidence corrélée}
+Plusieurs tests dérivés du même fixture ou du même pipeline ne sont pas nécessairement des confirmations indépendantes. Les dépendances de provenance doivent rester visibles.
+
+\section{Échelle de reproduction}
+Une échelle de travail est
+\[
+LocalReplay < CleanRoomReplay < IndependentImplementation < ExternalReplication.
+\]
+Elle indique une augmentation possible d'indépendance, sans garantir automatiquement la vérité d'un claim.
