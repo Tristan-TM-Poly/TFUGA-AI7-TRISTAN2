@@ -38,6 +38,15 @@ def test_controlled_synthetic_contamination_can_be_eligible_in_fixture_only():
     assert contamination.uncertain_axes == ()
 
 
+def test_visible_target_blocks_run_level_independent_discovery_eligibility():
+    registry, _ = synthetic_tensor_fixture()
+    task = next(task for task in deterministic_tasks() if task.family is BenchmarkFamily.DYNAMIC)
+    assert task.contamination.independent_discovery_eligible is True
+    assert task.hidden_target is False
+    run = evaluate(task, system_profile(SystemKind.SINGLE_LLMT, task, registry))
+    assert run.independent_discovery_eligible is False
+
+
 def test_same_tasks_compare_all_four_system_kinds():
     report = build_benchmark_report()
     by_task = {}
@@ -69,8 +78,6 @@ def test_meta_router_is_adaptive_but_not_declared_superior():
     single = system_profile(SystemKind.SINGLE_LLMT, task, registry)
     assert meta.adaptive_routing is True
     assert single.adaptive_routing is False
-    # On a simple task the specialized baseline can remain cheaper; R0.7 must
-    # allow that result instead of forcing a Meta-LLMT win.
     assert single.declared_cost < meta.declared_cost
 
 
@@ -123,6 +130,7 @@ def test_compile_report_exposes_strict_oak_boundaries():
     assert report["all_baselines_retained"] is True
     assert report["cost_normalization_present"] is True
     assert report["contamination_tensor_separate_from_quality"] is True
+    assert report["hidden_target_required_for_independent_discovery_eligibility"] is True
     assert report["scalar_intelligence_score_produced"] is False
     assert report["human_novelty_claimed"] is False
     assert report["independent_discovery_certified"] is False
