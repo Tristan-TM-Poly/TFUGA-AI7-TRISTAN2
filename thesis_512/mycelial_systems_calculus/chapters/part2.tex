@@ -1,36 +1,252 @@
 \part{Calcul formel des systèmes mycéliens}
 
 \chapter{Objets et types fondamentaux}
+
+Cette partie formalise des constructions introduites dans le document source. Leur présence dans la source établit leur statut de \emph{définitions internes}; elle ne démontre ni nouveauté externe, ni supériorité empirique.
+
 \section{RepoCell et CapabilityCell}
+
+\begin{definition}[CapabilityCell]
+Une cellule de capacité est un octuplet typé
+\[
+C=(I,O,T,P,E,U,R,M),
+\]
+où $I$ désigne les entrées sémantiques, $O$ les sorties, $T$ la transformation, $P$ les préconditions, $E$ les preuves ou éléments d'évidence, $U$ l'incertitude, $R$ les ressources nécessaires et $M$ la mémoire associée.
+\end{definition}
+
+Cette définition reprend explicitement la structure de TTM-GitHub-001, pp.~29--30. Une CapabilityCell n'est donc pas identifiée à un fichier, une fonction ou un dépôt particulier. Elle représente un contrat sémantique susceptible d'avoir plusieurs réalisations.
+
+\begin{definition}[Réalisation]
+Une réalisation d'une capacité $C$ est une implémentation $r$ munie d'un morphisme de conformité
+\[
+\rho_r:r\longrightarrow C
+\]
+qui déclare comment les types, préconditions, sorties, evidence, ressources et incertitudes de l'implémentation satisfont ou approximativement satisfont le contrat $C$.
+\end{definition}
+
+\begin{limitation}
+Le symbole $\rho_r$ formalise ici un contrat de recherche. Aucun critère universel de conformité sémantique n'est encore établi. Les expériences de substitution doivent mesurer les divergences effectives plutôt que supposer $\rho_r$ correct.
+\end{limitation}
+
 \section{Entrées, sorties, préconditions et ressources}
+
+Pour une capacité $C$, on note
+\[
+\mathrm{In}(C)=I,\qquad \mathrm{Out}(C)=O.
+\]
+Une composition $C_j\circ C_i$ n'est admissible que si une relation de compatibilité déclarée relie $\mathrm{Out}(C_i)$ à $\mathrm{In}(C_j)$ et si les préconditions de $C_j$ sont satisfaites dans l'état courant.
+
+\begin{definition}[Compatibilité déclarée]
+On écrit
+\[
+C_i\rightsquigarrow C_j
+\]
+si un contrat explicite affirme que la sortie de $C_i$ peut alimenter l'entrée de $C_j$ après zéro ou plusieurs adaptations déclarées.
+\end{definition}
+
+La compatibilité déclarée n'est pas une preuve de compatibilité réelle. Elle crée une obligation de test inter-capacités.
+
 \section{Claims, evidence et mémoire}
 
+On associe à chaque capacité un ensemble de claims $\mathcal Q(C)$, un ensemble d'éléments d'evidence $\mathcal E(C)$ et une mémoire $\mathcal M(C)$ partitionnée en
+\[
+\mathcal M(C)=M^+(C)\cup M^-(C)\cup M^?(C),
+\]
+où $M^+$ conserve les résultats réutilisables suffisamment supportés, $M^-$ les échecs, réfutations et limites, et $M^?$ les objets encore indéterminés.
+
+\begin{definition}[État épistémique local]
+L'état épistémique d'une capacité est
+\[
+\Xi(C)=(\mathcal Q,\mathcal E,U,M^+,M^-,M^?).
+\]
+\end{definition}
+
+L'objectif de la thèse n'est pas de réduire $\Xi$ à un scalaire de confiance global, mais de conserver la structure claim-par-claim et capacité-par-capacité.
+
 \chapter{Capability IR}
+
 \section{Sémantique indépendante des fournisseurs}
+
+Le document source introduit explicitement une représentation intermédiaire de capacité et pose
+\[
+\boxed{\text{Code}\neq\text{Capability}}.
+\]
+
+\begin{definition}[Capability IR]
+Une Capability IR est un enregistrement sémantique normalisé
+\[
+\mathrm{CIR}=(id,v,I_s,O_s,K,Q,\Pi),
+\]
+où $id$ est l'identité de capacité, $v$ sa version, $I_s$ et $O_s$ les types sémantiques d'entrée et de sortie, $K$ les contraintes, $Q$ le contrat de qualité/evidence et $\Pi$ l'ensemble des fournisseurs déclarés.
+\end{definition}
+
+La source donne comme exemple une capacité d'analyse multirésolution dont les sorties incluent un tenseur multi-échelle et un EvidenceReceipt. Cette structure motive une séparation explicite entre sémantique de la demande et localisation du code.
+
 \section{Substitution et compatibilité}
+
+Soient deux fournisseurs $r_1,r_2$ réalisant une même capacité $C$. Une substitution parfaite exigerait idéalement
+\[
+\mathrm{Obs}(r_1,C,x)\equiv\mathrm{Obs}(r_2,C,x)
+\]
+pour toute entrée admissible $x$ sous le contrat considéré. Cette équivalence étant généralement trop forte, la thèse définit plutôt un vecteur de résidus
+\[
+\Delta_{sub}=(\Delta_{type},\Delta_{sem},\Delta_{unit},\Delta_{qual},\Delta_{cost},\Delta_{latency}).
+\]
+
+\begin{conjecture}[Substitution à faible friction]
+Pour certaines familles de tâches, l'intégration par Capability IR peut réduire le nombre de modifications requises chez les consommateurs lorsque le fournisseur change, à condition que $\Delta_{sub}$ reste sous des seuils explicites.
+\end{conjecture}
+
+Cette conjecture est testée dans EXP-002; elle n'est pas dérivée de la définition.
+
 \section{Lowering et adaptation}
 
+Un fournisseur concret peut exiger un \emph{lowering}
+\[
+L_r:\mathrm{CIR}\rightarrow\mathrm{Interface}_r
+\]
+et un adaptateur de sortie
+\[
+A_r:\mathrm{Output}_r\rightarrow O_s.
+\]
+Toute perte sémantique de $L_r$ ou $A_r$ doit être déclarée. Une adaptation silencieuse est traitée comme dette de preuve.
+
 \chapter{Hypergraphes exécutables}
+
 \section{Nœuds, hyperarêtes et transformations}
+
+On définit un état de système comme
+\[
+\mathcal G_t=(V_t,E_t,\Sigma_t,\Xi_t),
+\]
+où $V_t$ contient les capacités, artefacts, claims, tests, agents ou dépôts actifs; $E_t$ les hyperarêtes; $\Sigma_t$ l'état opérationnel; et $\Xi_t$ l'état épistémique.
+
+\begin{definition}[Hyperarête exécutable]
+Une hyperarête exécutable est un tuple
+\[
+e=(P_e,G_e,T_e,O_e,F_e),
+\]
+où $P_e\subseteq V$ est l'ensemble des participants, $G_e$ un garde/précondition, $T_e$ une transformation exécutable ou planifiable, $O_e$ un contrat de sortie et $F_e$ un contrat de preuve/falsification.
+\end{definition}
+
+Cette définition formalise l'idée de la source selon laquelle l'hyperarête devient elle-même un objet exécutable plutôt qu'un simple lien descriptif.
+
 \section{Hyperarête comme programme}
+
+L'exécution conditionnelle d'une hyperarête est représentée par
+\[
+\mathcal G_{t+1}=e(\mathcal G_t)
+\]
+si $G_e(\mathcal G_t)=1$; autrement l'état reste inchangé ou produit un résidu typé.
+
+On distingue trois sorties :
+\[
+\mathrm{Exec}(e)\in\{\mathrm{PASS},\mathrm{HOLD},\mathrm{FAIL}\}.
+\]
+HOLD n'est jamais converti silencieusement en PASS ou FAIL.
+
 \section{Invariants locaux et globaux}
 
+Une transformation peut préserver des invariants locaux tout en violant un invariant global. On introduit donc
+\[
+\mathcal I_{local}(e),\qquad \mathcal I_{global}(\mathcal G).
+\]
+La composition n'est promouvable que si les obligations critiques des deux ensembles sont examinées.
+
 \chapter{Fractalité et multi-résolution}
+
 \section{Fonction, module, repo, cluster, domaine}
+
+La hiérarchie proposée dans la source est
+\[
+\mathrm{CapabilityCell}\rightarrow\mathrm{Module}\rightarrow\mathrm{RepoCell}\rightarrow\mathrm{RepoCluster}\rightarrow\mathrm{Domain}.
+\]
+
+\begin{definition}[Projection d'échelle]
+Pour deux niveaux $\ell<k$, une projection
+\[
+\pi_{k\rightarrow\ell}:\mathcal G_k\rightarrow\mathcal G_\ell
+\]
+compresse un sous-système en un objet de niveau supérieur en conservant un ensemble d'invariants déclarés.
+\end{definition}
+
 \section{Zoom et dézoom}
+
+Le zoom développe un nœud agrégé en sous-graphe; le dézoom applique une projection. La réversibilité parfaite n'est pas exigée. La perte est explicitée par
+\[
+\Delta_{zoom}=D(\mathcal G_k,\mathrm{EXP}(\pi_{k\rightarrow\ell}(\mathcal G_k))).
+\]
+
 \section{Propriétés conservées entre échelles}
 
+Les candidats naturels d'invariants inter-échelles sont les contrats d'interface, claims, evidence, permissions, unités, provenance et limites. Toute expérimentation doit indiquer lesquels sont réellement testés.
+
 \chapter{Algèbre des systèmes}
+
 \section{Union, composition, pipeline et intersection}
+
+On introduit comme langage de travail les opérateurs
+\[
+A\oplus B,\qquad A\circ B,\qquad A\cap B,\qquad A\otimes B,
+\]
+respectivement pour juxtaposition, composition séquentielle, intersection de capacités et composition couplée multi-participants.
+
+\begin{limitation}
+Ces symboles constituent à ce stade une algèbre candidate. Aucune associativité, commutativité, fermeture ou propriété catégorique générale n'est présumée sans hypothèses explicites.
+\end{limitation}
+
 \section{Adaptation, migration et fermeture}
+
+On note $\mathcal A(A\to B)$ un adaptateur déclaré et $\mathrm{Close}(S)$ la fermeture d'un ensemble de capacités sous un ensemble fini d'opérateurs autorisés. L'existence de cette fermeture dépend des contrats de types et des politiques d'autorité.
+
 \section{Lois candidates et contre-exemples}
 
+Chaque loi algébrique proposée doit être accompagnée d'un registre de contre-exemples. Par exemple, la composition peut être non associative lorsque les transformations modifient l'état global, consomment des ressources ou accumulent de l'evidence dépendante de l'ordre.
+
 \chapter{Espace et géométrie des capacités}
+
 \section{Coordonnées sémantiques et opérationnelles}
+
+On associe à une capacité une signature
+\[
+z(C)=(\mathrm{domain},\mathrm{types},\mathrm{quality},\mathrm{cost},\mathrm{latency},\mathrm{risk},\mathrm{uncertainty},\mathrm{evidence}).
+\]
+Cette signature n'est pas supposée euclidienne; elle sert d'interface à plusieurs métriques spécialisées.
+
 \section{Trajectoires d'architecture}
+
+Une évolution est une trajectoire
+\[
+\Gamma=(\mathcal G_0\to\mathcal G_1\to\cdots\to\mathcal G_T)
+\]
+avec résidus, coûts et evidence à chaque transition.
+
 \section{Coût, risque, evidence et réutilisation}
 
+Les scores multiobjectifs sont conservés comme vecteurs tant que les poids ne sont pas justifiés. Un score scalaire peut être utilisé comme heuristique d'ordonnancement mais ne doit pas effacer un gate non compensatoire.
+
 \chapter{Calcul dynamique}
+
 \section{Graphes dépendants de l'intention}
+
+La source donne la relation
+\[
+E_t=f(\mathrm{Intent}_t,\mathrm{State}_t,\mathrm{Capabilities}_t).
+\]
+Nous l'interprétons comme un principe de génération conditionnelle d'hyperarêtes : deux dépôts peuvent être découplés à $t_0$, couplés pour une tâche à $t_1$, puis désolidarisés à $t_2$ après production d'un artefact.
+
 \section{Pression de connaissance et lacunes}
+
+Soit $D_t(C)$ une demande observée pour une capacité et $S_t(C)$ l'offre disponible. Une pression candidate peut être définie par
+\[
+P_t(C)=\phi(D_t(C),S_t(C),U_t(C),Cost_t(C)).
+\]
+La source propose que les zones de demande forte et d'offre faible deviennent des candidats de génération de capacités. Le choix de $\phi$ doit être benchmarké, non imposé par narration.
+
 \section{Évolution temporelle du système}
+
+Le système complet est donc étudié comme un processus
+\[
+(\mathcal G_t,\Xi_t,M_t)\longrightarrow(\mathcal G_{t+1},\Xi_{t+1},M_{t+1})
+\]
+sous contraintes d'autorité, de preuve, de coût et de réversibilité. Les parties suivantes définissent les compilateurs et les tribunaux qui réalisent ces transitions.
