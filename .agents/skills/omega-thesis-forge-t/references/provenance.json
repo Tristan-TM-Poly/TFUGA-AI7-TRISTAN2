@@ -1,0 +1,36 @@
+{
+  "skill": "omega-thesis-forge-t",
+  "version": "0.1.0-candidate",
+  "generator_family": "omega-skillgen-t",
+  "generator_version_observed": "0.2.0",
+  "status": "GENERATED_CANDIDATE",
+  "behavioral_validation": false,
+  "source_attachment": {
+    "name": "TTM-GitHub-001.pdf",
+    "pages": 125,
+    "role": "default subject/profile source",
+    "notes": "User-supplied conversation attachment; concepts must remain source-grounded and are not automatically established external science."
+  },
+  "github_grounding": [
+    {
+      "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "path": "omega_skillgen_t/core.py",
+      "role": "existing SkillSpec/generation/lint/eval architecture"
+    },
+    {
+      "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "path": ".agents/skills/omega-skillgen-t/SKILL.md",
+      "role": "parent recursive skill-foundry conventions"
+    },
+    {
+      "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "path": ".agents/skills/capability-os/SKILL.md",
+      "role": "capability routing, provenance, side-effect and OAK boundary conventions"
+    }
+  ],
+  "oak_notes": [
+    "This skill is a candidate until static/eval/trust/behavioral gates are executed.",
+    "The 256-page property is not validated by this skill artifact itself; it is validated only on a generated compiled thesis PDF.",
+    "The default thesis profile contains candidate contribution framing, not verified novelty claims."
+  ]
+}
