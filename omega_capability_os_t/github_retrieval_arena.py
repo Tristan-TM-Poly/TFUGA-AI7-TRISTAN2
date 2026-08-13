@@ -1,12 +1,12 @@
 """Leakage-controlled historical PR retrieval arena.
 
 The arena compares bounded retrieval strategies on the same historical targets.
-Target bodies are used only after ranking to derive explicit lineage gold labels;
-retrievers receive the target title and a strict lower-numbered PR prefix only.
+Target bodies and stack base refs are used only after ranking to derive explicit
+or structural lineage gold labels. Retrievers receive the target title and a
+strict lower-numbered PR prefix only.
 """
 from __future__ import annotations
 
-from dataclasses import asdict
 from typing import Any, Iterable, Mapping
 import argparse
 import json
@@ -24,16 +24,17 @@ from .github_memory import (
 )
 from .github_memory_replay import ANCESTOR_RELATIONS
 
-ARENA_SCHEMA_VERSION = "0.1.0"
+ARENA_SCHEMA_VERSION = "0.2.0"
 STRATEGIES = (
     "lexical_jaccard",
     "recency",
     "graph_centrality",
     "hybrid_rrf",
 )
+DEFAULT_BRANCH_NAMES = {"main", "master", "develop", "development", "trunk"}
 
 
-def _gold_ancestor_refs(target: PRMemory) -> tuple[str, ...]:
+def _declared_gold_refs(target: PRMemory) -> tuple[str, ...]:
     refs: set[str] = set()
     for edge in extract_explicit_relations(target):
         if edge.relation not in ANCESTOR_RELATIONS:
@@ -45,6 +46,48 @@ def _gold_ancestor_refs(target: PRMemory) -> tuple[str, ...]:
         if number < target.number:
             refs.add(edge.target)
     return tuple(sorted(refs))
+
+
+def _structural_stack_refs(
+    index: GitHubMemoryIndex,
+    target: PRMemory,
+) -> tuple[tuple[str, ...], bool]:
+    """Return a unique non-default branch parent, if current PR metadata exposes one.
+
+    The structural label is deliberately conservative: default-like base branches
+    are excluded, only lower-numbered PRs in the same repository are eligible,
+    and ambiguous reused head refs are rejected instead of guessed.
+    """
+    base_ref = (target.base_ref or "").strip()
+    if not base_ref or base_ref.lower() in DEFAULT_BRANCH_NAMES:
+        return (), False
+    matches = sorted(
+        {
+            pr.ref
+            for pr in index.prs.values()
+            if pr.repository == target.repository
+            and pr.number < target.number
+            and (pr.head_ref or "").strip() == base_ref
+        }
+    )
+    if len(matches) == 1:
+        return (matches[0],), False
+    return (), len(matches) > 1
+
+
+def _gold_ancestor_refs(
+    index: GitHubMemoryIndex,
+    target: PRMemory,
+) -> tuple[tuple[str, ...], dict[str, list[str]], bool]:
+    declared = _declared_gold_refs(target)
+    structural, ambiguous = _structural_stack_refs(index, target)
+    sources: dict[str, list[str]] = {}
+    for ref in declared:
+        sources.setdefault(ref, []).append("declared_body_lineage")
+    for ref in structural:
+        sources.setdefault(ref, []).append("stack_base_ref")
+    refs = tuple(sorted(sources))
+    return refs, sources, ambiguous
 
 
 def _prefix_index(index: GitHubMemoryIndex, target: PRMemory) -> GitHubMemoryIndex:
@@ -86,7 +129,6 @@ def _rankings(
     )
     lexical_rows = prefix.search_prs(request, top_k=max(1, len(prefix.prs)))
     lexical = [str(row["ref"]) for row in lexical_rows]
-    lexical_scores = {str(row["ref"]): float(row["score"]) for row in lexical_rows}
 
     repository = next(iter(prefix.prs.values())).repository
     lineage = HistoryArchaeologist.lineage({repository: prefix})
@@ -113,6 +155,7 @@ def _rankings(
         lineage_density = min(1.0, len(genome.lineage_refs) / 5.0)
         recency = min(1.0, pr.number / denominator)
         hub = (centrality[ref] / max_centrality) if max_centrality else 0.0
+        # Frozen v0.1 scoring weights. v0.2 changes evaluation labels/cohorts only.
         genome_scores[ref] = (
             0.50 * intent_overlap
             + 0.15 * file_overlap
@@ -127,9 +170,6 @@ def _rankings(
     graph_centrality = _rank_from_scores(prefix, centrality_scores)
     genome_ranking = _rank_from_scores(prefix, genome_scores)
 
-    # RRF is intentionally rank-based so heterogeneous score scales do not
-    # masquerade as calibrated probabilities. Missing lexical matches are
-    # appended after positive lexical matches in deterministic recency order.
     lexical_complete = lexical + [ref for ref in recency if ref not in lexical]
     component_rankings = (lexical_complete, genome_ranking, recency, graph_centrality)
     rrf_scores: dict[str, float] = {ref: 0.0 for ref in prefix.prs}
@@ -153,68 +193,7 @@ def _reciprocal_rank(retrieved: Iterable[str], gold: set[str]) -> float:
     return 0.0
 
 
-def compile_retrieval_arena(
-    index: GitHubMemoryIndex,
-    *,
-    top_k: int = 8,
-    max_targets: int | None = None,
-) -> dict[str, Any]:
-    """Evaluate multiple retrieval policies under one temporal/contamination contract."""
-    if top_k <= 0:
-        raise ValueError("top_k must be positive")
-
-    targets = sorted(index.prs.values(), key=lambda pr: (pr.repository, pr.number))
-    cases: list[dict[str, Any]] = []
-    skipped_no_lineage = 0
-
-    for target in targets:
-        gold = _gold_ancestor_refs(target)
-        if not gold:
-            skipped_no_lineage += 1
-            continue
-        prefix = _prefix_index(index, target)
-        if not prefix.prs:
-            continue
-
-        strategy_rankings = _rankings(
-            prefix,
-            query_title=target.title,
-            target_number=target.number,
-        )
-        rows: dict[str, Any] = {}
-        gold_set = set(gold)
-        for strategy in STRATEGIES:
-            retrieved = list(strategy_rankings[strategy][:top_k])
-            hits = [ref for ref in gold if ref in set(retrieved)]
-            future = [
-                ref for ref in retrieved
-                if int(ref.rsplit("#", 1)[1]) >= target.number
-            ]
-            rows[strategy] = {
-                "retrieved_refs": retrieved,
-                "hits": hits,
-                "recall_at_k": round(len(hits) / len(gold), 6),
-                "reciprocal_rank": round(_reciprocal_rank(retrieved, gold_set), 6),
-                "candidate_fraction": round(
-                    min(1.0, len(retrieved) / len(prefix.prs)), 6
-                ) if prefix.prs else 0.0,
-                "target_leaked": target.ref in retrieved,
-                "future_leakage_refs": future,
-            }
-
-        cases.append(
-            {
-                "target_ref": target.ref,
-                "target_number": target.number,
-                "query_mode": "title_only",
-                "prior_pr_count": len(prefix.prs),
-                "gold_lineage_refs": list(gold),
-                "strategies": rows,
-            }
-        )
-        if max_targets is not None and len(cases) >= max_targets:
-            break
-
+def _aggregate_metrics(cases: list[dict[str, Any]]) -> dict[str, Any]:
     total_gold = sum(len(case["gold_lineage_refs"]) for case in cases)
     metrics: dict[str, Any] = {}
     for strategy in STRATEGIES:
@@ -244,16 +223,94 @@ def compile_retrieval_arena(
                 len(case["strategies"][strategy]["future_leakage_refs"]) for case in cases
             ),
         }
+    return {
+        "eligible_target_count": len(cases),
+        "gold_lineage_ref_count": total_gold,
+        "strategies": metrics,
+    }
 
-    winner = sorted(
+
+def _winner(metrics: Mapping[str, Mapping[str, Any]]) -> str:
+    return sorted(
         STRATEGIES,
         key=lambda name: (
-            -metrics[name]["micro_recall_at_k"],
-            -metrics[name]["mrr"],
-            metrics[name]["mean_candidate_fraction"],
+            -float(metrics[name]["micro_recall_at_k"]),
+            -float(metrics[name]["mrr"]),
+            float(metrics[name]["mean_candidate_fraction"]),
             name,
         ),
     )[0]
+
+
+def compile_retrieval_arena(
+    index: GitHubMemoryIndex,
+    *,
+    top_k: int = 8,
+    max_targets: int | None = None,
+) -> dict[str, Any]:
+    """Evaluate frozen retrieval policies under one temporal/contamination contract."""
+    if top_k <= 0:
+        raise ValueError("top_k must be positive")
+
+    targets = sorted(index.prs.values(), key=lambda pr: (pr.repository, pr.number))
+    cases: list[dict[str, Any]] = []
+    skipped_no_lineage = 0
+    ambiguous_stack_gold_count = 0
+
+    for target in targets:
+        gold, gold_sources, ambiguous = _gold_ancestor_refs(index, target)
+        ambiguous_stack_gold_count += int(ambiguous)
+        if not gold:
+            skipped_no_lineage += 1
+            continue
+        prefix = _prefix_index(index, target)
+        if not prefix.prs:
+            continue
+
+        strategy_rankings = _rankings(
+            prefix,
+            query_title=target.title,
+            target_number=target.number,
+        )
+        rows: dict[str, Any] = {}
+        gold_set = set(gold)
+        for strategy in STRATEGIES:
+            retrieved = list(strategy_rankings[strategy][:top_k])
+            retrieved_set = set(retrieved)
+            hits = [ref for ref in gold if ref in retrieved_set]
+            future = [
+                ref for ref in retrieved
+                if int(ref.rsplit("#", 1)[1]) >= target.number
+            ]
+            rows[strategy] = {
+                "retrieved_refs": retrieved,
+                "hits": hits,
+                "recall_at_k": round(len(hits) / len(gold), 6),
+                "reciprocal_rank": round(_reciprocal_rank(retrieved, gold_set), 6),
+                "candidate_fraction": round(
+                    min(1.0, len(retrieved) / len(prefix.prs)), 6
+                ) if prefix.prs else 0.0,
+                "target_leaked": target.ref in retrieved,
+                "future_leakage_refs": future,
+            }
+
+        cases.append(
+            {
+                "target_ref": target.ref,
+                "target_number": target.number,
+                "query_mode": "title_only",
+                "prior_pr_count": len(prefix.prs),
+                "gold_lineage_refs": list(gold),
+                "gold_sources": gold_sources,
+                "strategies": rows,
+            }
+        )
+        if max_targets is not None and len(cases) >= max_targets:
+            break
+
+    aggregate = _aggregate_metrics(cases)
+    metrics = aggregate["strategies"]
+    winner = _winner(metrics)
     baseline = metrics["lexical_jaccard"]
     best = metrics[winner]
     leakage_free = all(
@@ -262,12 +319,27 @@ def compile_retrieval_arena(
     )
     non_regressive = best["micro_recall_at_k"] >= baseline["micro_recall_at_k"]
 
+    source_counts = {"declared_body_lineage": 0, "stack_base_ref": 0}
+    for case in cases:
+        for sources in case["gold_sources"].values():
+            for source in sources:
+                source_counts[source] = source_counts.get(source, 0) + 1
+
+    cut = max(1, int(len(cases) * 0.60)) if cases else 0
+    early_cases = cases[:cut]
+    late_cases = cases[cut:]
+    early = _aggregate_metrics(early_cases)
+    late = _aggregate_metrics(late_cases)
+
     payload: dict[str, Any] = {
         "schema": f"omega-pr-retrieval-arena/v{ARENA_SCHEMA_VERSION}",
+        "ranker_version": "frozen-v0.1",
         "top_k": top_k,
-        "eligible_target_count": len(cases),
+        "eligible_target_count": aggregate["eligible_target_count"],
         "skipped_no_lineage_count": skipped_no_lineage,
-        "gold_lineage_ref_count": total_gold,
+        "gold_lineage_ref_count": aggregate["gold_lineage_ref_count"],
+        "gold_source_counts": source_counts,
+        "ambiguous_stack_gold_count": ambiguous_stack_gold_count,
         "strategies": metrics,
         "winner": winner,
         "improved_over_baseline": (
@@ -277,13 +349,25 @@ def compile_retrieval_arena(
                 and best["mrr"] > baseline["mrr"]
             )
         ),
+        "temporal_evaluation": {
+            "method": "ordered 60/40 retrospective split; frozen ranker, no cohort-specific reweighting",
+            "early": early,
+            "late_holdout_proxy": late,
+            "boundary": (
+                "The late cohort is a retrospective holdout proxy, not a pristine prospective test. "
+                "No ranking weights are fit or changed inside this court."
+            ),
+        },
         "cases": cases,
         "contamination": {
             "query_uses_target_title_only": True,
             "target_body_used_as_gold_only": True,
+            "target_base_ref_used_as_gold_only": True,
             "target_pr_hidden_from_retrieval": True,
             "future_prs_hidden_from_retrieval": True,
             "rankers_use_prior_pr_metadata_only": True,
+            "default_branch_stack_labels_excluded": True,
+            "ambiguous_stack_labels_rejected": True,
             "pretraining_exposure": "unknown",
             "historical_metadata_fidelity": "current_snapshot_proxy",
         },
@@ -291,10 +375,13 @@ def compile_retrieval_arena(
             "status": "PASS" if leakage_free and non_regressive else "FAIL",
             "temporal_leakage_free": leakage_free,
             "best_not_worse_than_baseline": non_regressive,
+            "ranker_frozen_during_v0_2_evaluation": True,
             "boundaries": [
                 "ARENA_WINNER != GENERALIZATION",
-                "SAME_CORPUS_TUNING != OUT_OF_SAMPLE_VALIDATION",
+                "RETROSPECTIVE_HOLDOUT != PROSPECTIVE_VALIDATION",
+                "SAME_REPOSITORY_HISTORY != EXTERNAL_REPLICATION",
                 "LINEAGE_RECALL != ALL_USEFUL_REUSE",
+                "STACK_BASE_REF != SEMANTIC_DEPENDENCY_PROOF",
                 "RECENCY_OR_CENTRALITY != CAUSAL_RELEVANCE",
                 "PR_GENOME_SIMILARITY != IMPLEMENTATION_COMPATIBILITY",
                 "CI_PASS != ENGINEERING_SAVINGS",
