@@ -8,12 +8,15 @@ on:
       - "omega_capability_os_t/github_pr_llmt_inspection.py"
       - "omega_capability_os_t/github_pr_llmt_targets.py"
       - "omega_capability_os_t/github_pr_llmt_findings.py"
+      - "omega_research_abi_t/github_memory_bridge.py"
+      - "omega_research_abi_t/__init__.py"
       - "tests/test_omega_capability_os_github_memory_zoom.py"
       - "tests/test_omega_github_pr_llmt.py"
       - "tests/test_omega_github_pr_llmt_inspection.py"
       - "tests/test_omega_github_pr_llmt_marginal_coverage.py"
       - "tests/test_omega_github_pr_llmt_targets.py"
       - "tests/test_omega_github_pr_llmt_findings.py"
+      - "tests/test_omega_research_abi_pr_llmt_bridge.py"
       - ".agents/skills/github-pr-llmt/**"
       - ".github/workflows/github-pr-llmt-inspection-oak.yml"
   workflow_dispatch:
@@ -43,10 +46,11 @@ jobs:
             tests/test_omega_github_pr_llmt_inspection.py \
             tests/test_omega_github_pr_llmt_marginal_coverage.py \
             tests/test_omega_github_pr_llmt_targets.py \
-            tests/test_omega_github_pr_llmt_findings.py
+            tests/test_omega_github_pr_llmt_findings.py \
+            tests/test_omega_research_abi_pr_llmt_bridge.py
 
       - name: Compile sources
-        run: python -m compileall -q omega_capability_os_t
+        run: python -m compileall -q omega_capability_os_t omega_research_abi_t
 
       - name: Refresh complete PR memory
         env:
@@ -113,6 +117,39 @@ jobs:
             /tmp/omega-pr-llmt-inspection-overlay.json \
             --output /tmp/omega-pr-llmt-findings.json
 
+      - name: Issue Universal Research ABI transformation receipt
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from omega_research_abi_t import issue_pr_llmt_inspection_receipt, validate_receipt
+
+          plan = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan-wave2.json").read_text())
+          overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
+          findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
+          receipt = issue_pr_llmt_inspection_receipt(plan, overlay, findings)
+          validation = validate_receipt(receipt)
+          packet = {
+              "schema": "omega-pr-llmt-research-abi-receipt/v0.1.0",
+              "receipt": receipt.to_dict(),
+              "validation": validation,
+              "boundaries": [
+                  "structural OAK PASS != semantic relevance",
+                  "inspection coverage != reuse compatibility",
+                  "static AST != runtime behavior",
+                  "receipt != mutation authority",
+              ],
+          }
+          assert receipt.operator == "PR_LLMT_EXACT_INSPECTION"
+          assert receipt.authority == "read"
+          assert receipt.oak_state == "PASS", receipt.to_dict()
+          assert validation["status"] == "PASS", validation
+          assert all(item.status == "PASS" for item in receipt.invariants)
+          Path("/tmp/omega-pr-llmt-research-abi-receipt.json").write_text(
+              json.dumps(packet, indent=2, sort_keys=True)
+          )
+          PY
+
       - name: OAK live assertions
         run: |
           python - <<'PY'
@@ -128,6 +165,7 @@ jobs:
           checkpoint2 = json.loads(Path("/tmp/omega-pr-llmt-inspection-checkpoint.json").read_text())
           overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
           findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
+          abi_receipt = json.loads(Path("/tmp/omega-pr-llmt-research-abi-receipt.json").read_text())
 
           assert portfolio["schema"] == "omega-pr-llmt-portfolio/v0.1.0"
           assert filegraph["schema"] == "omega-pr-llmt-target-filegraph/v0.2.0"
@@ -137,6 +175,11 @@ jobs:
           assert checkpoint2["schema"] == "omega-pr-llmt-inspection-checkpoint/v0.1.0"
           assert overlay["schema"] == "omega-pr-llmt-inspection-overlay/v0.1.0"
           assert findings["schema"] == "omega-pr-llmt-findings/v0.2.0"
+          assert abi_receipt["schema"] == "omega-pr-llmt-research-abi-receipt/v0.1.0"
+          assert abi_receipt["receipt"]["operator"] == "PR_LLMT_EXACT_INSPECTION"
+          assert abi_receipt["receipt"]["authority"] == "read"
+          assert abi_receipt["receipt"]["oak_state"] == "PASS"
+          assert abi_receipt["validation"]["status"] == "PASS"
           assert all(obj["portfolio_fingerprint"] == portfolio["fingerprint"] for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2))
           assert findings["filegraph_fingerprint"] == filegraph["fingerprint"]
           assert findings["inspection_overlay_fingerprint"] == overlay["fingerprint"]
@@ -223,6 +266,8 @@ jobs:
               "wave2_static_symbols": overlay["symbol_count"],
               "wave2_errors": overlay["error_count"],
               "cumulative_overlay_count": overlay["cumulative_overlay_count"],
+              "abi_receipt_id": abi_receipt["receipt"]["receipt_id"],
+              "abi_receipt_fingerprint": abi_receipt["receipt"]["fingerprint"],
               "finding_counts": findings["finding_counts"],
               "packets_without_deep_reuse_evidence": findings["packets_without_deep_reuse_evidence"],
               "top_priority_targets": [
@@ -258,5 +303,6 @@ jobs:
             /tmp/omega-pr-llmt-inspection-checkpoint.json
             /tmp/omega-pr-llmt-inspection-overlay.json
             /tmp/omega-pr-llmt-findings.json
+            /tmp/omega-pr-llmt-research-abi-receipt.json
             /tmp/omega-pr-llmt-inspected-index.json
           retention-days: 14
