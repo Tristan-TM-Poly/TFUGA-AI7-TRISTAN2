@@ -1,0 +1,12 @@
+{
+  "all_current_retrieval_observables_preserved": true,
+  "boundary": "CVCD seed preserves the current retrieval/PRGenome observables only. It is not a verbatim PR-body archive and future algorithms using unseen body semantics must rebuild or version the seed.",
+  "concept_equivalent_count": 350,
+  "failure_memory_equivalent_count": 350,
+  "fingerprint": "a52cbac860e173cf12db5454782495785e5e33e0fb248ac7b5c9df54db1781dc",
+  "historical_line_equivalent_count": 350,
+  "keyword_equivalent_count": 350,
+  "pr_count": 350,
+  "schema": "omega-pr-history-seed-cvcd/v0.1.0",
+  "source_text_preserved": false
+}
