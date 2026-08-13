@@ -117,22 +117,28 @@ jobs:
             /tmp/omega-pr-llmt-inspection-overlay.json \
             --output /tmp/omega-pr-llmt-findings.json
 
-      - name: Issue Universal Research ABI transformation receipt
+      - name: Issue Universal Research ABI transformation receipts
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          from omega_research_abi_t import issue_pr_llmt_inspection_receipt, validate_receipt
+          from omega_research_abi_t import (
+              compile_pr_llmt_measurement_requests,
+              issue_pr_llmt_inspection_receipt,
+              issue_pr_llmt_measurement_request_receipt,
+              validate_receipt,
+          )
 
           plan = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan-wave2.json").read_text())
           overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
           findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
-          receipt = issue_pr_llmt_inspection_receipt(plan, overlay, findings)
-          validation = validate_receipt(receipt)
-          packet = {
+
+          inspection_receipt = issue_pr_llmt_inspection_receipt(plan, overlay, findings)
+          inspection_validation = validate_receipt(inspection_receipt)
+          inspection_packet = {
               "schema": "omega-pr-llmt-research-abi-receipt/v0.1.0",
-              "receipt": receipt.to_dict(),
-              "validation": validation,
+              "receipt": inspection_receipt.to_dict(),
+              "validation": inspection_validation,
               "boundaries": [
                   "structural OAK PASS != semantic relevance",
                   "inspection coverage != reuse compatibility",
@@ -140,13 +146,42 @@ jobs:
                   "receipt != mutation authority",
               ],
           }
-          assert receipt.operator == "PR_LLMT_EXACT_INSPECTION"
-          assert receipt.authority == "read"
-          assert receipt.oak_state == "PASS", receipt.to_dict()
-          assert validation["status"] == "PASS", validation
-          assert all(item.status == "PASS" for item in receipt.invariants)
+          assert inspection_receipt.operator == "PR_LLMT_EXACT_INSPECTION"
+          assert inspection_receipt.authority == "read"
+          assert inspection_receipt.oak_state == "PASS", inspection_receipt.to_dict()
+          assert inspection_validation["status"] == "PASS", inspection_validation
+          assert all(item.status == "PASS" for item in inspection_receipt.invariants)
           Path("/tmp/omega-pr-llmt-research-abi-receipt.json").write_text(
-              json.dumps(packet, indent=2, sort_keys=True)
+              json.dumps(inspection_packet, indent=2, sort_keys=True)
+          )
+
+          requests = compile_pr_llmt_measurement_requests(findings)
+          measurement_receipt = issue_pr_llmt_measurement_request_receipt(findings, requests)
+          measurement_validation = validate_receipt(measurement_receipt)
+          measurement_packet = {
+              "schema": "omega-pr-llmt-measurement-request-receipt/v0.1.0",
+              "receipt": measurement_receipt.to_dict(),
+              "validation": measurement_validation,
+              "boundaries": [
+                  "measurement request != measurement",
+                  "triage priority != value",
+                  "unmeasured quantitative input != zero",
+                  "routing contract != imported sibling implementation",
+                  "request != mutation authority",
+              ],
+          }
+          assert requests["request_count"] > 0
+          assert requests["downstream_policy"]["numeric_opportunity_or_voc_scores_emitted"] is False
+          assert measurement_receipt.operator == "PR_FINDINGS_TO_MEASUREMENT_REQUESTS"
+          assert measurement_receipt.authority == "read"
+          assert measurement_receipt.oak_state == "PASS", measurement_receipt.to_dict()
+          assert measurement_validation["status"] == "PASS", measurement_validation
+          assert all(item.status == "PASS" for item in measurement_receipt.invariants)
+          Path("/tmp/omega-pr-llmt-measurement-requests.json").write_text(
+              json.dumps(requests, indent=2, sort_keys=True)
+          )
+          Path("/tmp/omega-pr-llmt-measurement-request-receipt.json").write_text(
+              json.dumps(measurement_packet, indent=2, sort_keys=True)
           )
           PY
 
@@ -166,6 +201,8 @@ jobs:
           overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
           findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
           abi_receipt = json.loads(Path("/tmp/omega-pr-llmt-research-abi-receipt.json").read_text())
+          requests = json.loads(Path("/tmp/omega-pr-llmt-measurement-requests.json").read_text())
+          measurement_receipt = json.loads(Path("/tmp/omega-pr-llmt-measurement-request-receipt.json").read_text())
 
           assert portfolio["schema"] == "omega-pr-llmt-portfolio/v0.1.0"
           assert filegraph["schema"] == "omega-pr-llmt-target-filegraph/v0.2.0"
@@ -176,10 +213,34 @@ jobs:
           assert overlay["schema"] == "omega-pr-llmt-inspection-overlay/v0.1.0"
           assert findings["schema"] == "omega-pr-llmt-findings/v0.2.0"
           assert abi_receipt["schema"] == "omega-pr-llmt-research-abi-receipt/v0.1.0"
+          assert requests["schema"] == "omega-pr-llmt-measurement-requests/v0.1.0"
+          assert measurement_receipt["schema"] == "omega-pr-llmt-measurement-request-receipt/v0.1.0"
           assert abi_receipt["receipt"]["operator"] == "PR_LLMT_EXACT_INSPECTION"
           assert abi_receipt["receipt"]["authority"] == "read"
           assert abi_receipt["receipt"]["oak_state"] == "PASS"
           assert abi_receipt["validation"]["status"] == "PASS"
+          assert measurement_receipt["receipt"]["operator"] == "PR_FINDINGS_TO_MEASUREMENT_REQUESTS"
+          assert measurement_receipt["receipt"]["authority"] == "read"
+          assert measurement_receipt["receipt"]["oak_state"] == "PASS"
+          assert measurement_receipt["validation"]["status"] == "PASS"
+          assert requests["source_findings_fingerprint"] == findings["fingerprint"]
+          assert requests["target_count"] == findings["packet_count"]
+          assert requests["request_count"] >= requests["target_count"]
+          assert requests["downstream_policy"]["import_pr445_implementation"] is False
+          assert requests["downstream_policy"]["import_pr449_implementation"] is False
+          assert requests["downstream_policy"]["numeric_opportunity_or_voc_scores_emitted"] is False
+          assert all(row["evidence"] for row in requests["requests"])
+          assert all(row["priority_is_quality_score"] is False for row in requests["requests"])
+          assert all(
+              row["quantitative_inputs"]["status"] == "required-before-voc-or-optimization-scoring"
+              and all(value is None for key, value in row["quantitative_inputs"].items() if key != "status")
+              for row in requests["requests"]
+          )
+          assert all(
+              row["authority"]["write_authority_granted"] is False
+              and row["authority"]["merge_authority_granted"] is False
+              for row in requests["requests"]
+          )
           assert all(obj["portfolio_fingerprint"] == portfolio["fingerprint"] for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2))
           assert findings["filegraph_fingerprint"] == filegraph["fingerprint"]
           assert findings["inspection_overlay_fingerprint"] == overlay["fingerprint"]
@@ -233,7 +294,7 @@ jobs:
           assert findings["authority"]["merge_authority_granted"] is False
           assert "PRIORITY_SCORE != QUALITY_SCORE" in findings["oak_boundaries"]
           assert "RECONSTRUCTION_PAIR != AUTOMATIC_SUPERSESSION" in findings["oak_boundaries"]
-          assert all(len(obj["fingerprint"]) == 64 for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2))
+          assert all(len(obj["fingerprint"]) == 64 for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2, requests))
           assert all(row["findings"] for row in findings["packets"])
 
           print(json.dumps({
@@ -268,6 +329,11 @@ jobs:
               "cumulative_overlay_count": overlay["cumulative_overlay_count"],
               "abi_receipt_id": abi_receipt["receipt"]["receipt_id"],
               "abi_receipt_fingerprint": abi_receipt["receipt"]["fingerprint"],
+              "measurement_request_count": requests["request_count"],
+              "measurement_target_count": requests["target_count"],
+              "measurement_kind_counts": requests["measurement_kind_counts"],
+              "measurement_receipt_id": measurement_receipt["receipt"]["receipt_id"],
+              "measurement_receipt_fingerprint": measurement_receipt["receipt"]["fingerprint"],
               "finding_counts": findings["finding_counts"],
               "packets_without_deep_reuse_evidence": findings["packets_without_deep_reuse_evidence"],
               "top_priority_targets": [
@@ -286,6 +352,7 @@ jobs:
               "checkpoint_fingerprint": checkpoint2["fingerprint"],
               "overlay_fingerprint": overlay["fingerprint"],
               "findings_fingerprint": findings["fingerprint"],
+              "measurement_requests_fingerprint": requests["fingerprint"],
           }, indent=2))
           PY
 
@@ -304,5 +371,7 @@ jobs:
             /tmp/omega-pr-llmt-inspection-overlay.json
             /tmp/omega-pr-llmt-findings.json
             /tmp/omega-pr-llmt-research-abi-receipt.json
+            /tmp/omega-pr-llmt-measurement-requests.json
+            /tmp/omega-pr-llmt-measurement-request-receipt.json
             /tmp/omega-pr-llmt-inspected-index.json
           retention-days: 14
