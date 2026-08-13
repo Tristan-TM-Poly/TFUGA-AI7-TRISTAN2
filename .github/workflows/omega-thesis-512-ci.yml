@@ -35,7 +35,8 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             latexmk biber \
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
-            texlive-fonts-recommended texlive-science texlive-lang-french
+            texlive-fonts-recommended texlive-science texlive-lang-french \
+            texlive-bibtex-extra
 
       - name: Compile thesis scaffold
         id: latex
