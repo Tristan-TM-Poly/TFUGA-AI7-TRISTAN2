@@ -1,0 +1,51 @@
+{
+  "r04_report": {
+    "schema": "omega-pr-5k2n-compatibility-inspection/v0.4.0",
+    "fingerprint": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "compatibility_experiment_contracts": [
+      {
+        "experiment_id": "compat-exp:fixture",
+        "candidate_ref": "pr:fixture/repo#331",
+        "candidate_head_sha": "cccccccccccccccccccccccccccccccccccccccc",
+        "target_ref": "pr:fixture/repo#452",
+        "target_head_sha": "tttttttttttttttttttttttttttttttttttttttt",
+        "residual_outputs": ["implementation", "tests"],
+        "candidate_source_files": ["omega/example.py"],
+        "candidate_test_files": ["tests/test_example.py"],
+        "required_checks": ["check public interface", "run isolated compatibility tests"],
+        "expected_receipt_fields": ["tests_executed", "interface_checks", "residual_coverage", "verdict"],
+        "execution_authorized": false,
+        "source_mutation_authorized": false,
+        "reuse_authorized_before_experiment": false,
+        "human_review_required": true,
+        "boundary": "Synthetic test contract only; no real historical code executed."
+      }
+    ]
+  },
+  "outcomes": [
+    {
+      "experiment_id": "compat-exp:fixture",
+      "candidate_ref": "pr:fixture/repo#331",
+      "candidate_head_sha": "cccccccccccccccccccccccccccccccccccccccc",
+      "target_head_sha": "tttttttttttttttttttttttttttttttttttttttt",
+      "execution_status": "COMPLETED",
+      "execution_authority_ref": "fixture:explicit-authority",
+      "isolation_receipt_ref": "fixture:isolated-court",
+      "tests_executed": 4,
+      "tests_passed": 4,
+      "tests_failed": 0,
+      "interface_checks": [
+        {
+          "name": "fixture-public-interface",
+          "status": "PASS",
+          "evidence_ref": "fixture:evidence:interface"
+        }
+      ],
+      "residual_coverage": 1.0,
+      "regressions": [],
+      "evidence_refs": ["fixture:evidence:tests", "fixture:evidence:interface"],
+      "environment_fingerprint": "fixture:python-3.12-linux",
+      "source_mutation_performed": false
+    }
+  ]
+}
