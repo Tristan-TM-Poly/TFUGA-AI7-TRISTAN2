@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omega.local/schemas/tensor_risk_gate_r061.schema.json",
+  "title": "Omega Tensor Risk Gate R0.6.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "release",
+    "per_agent_risk_is_coalition_risk",
+    "cumulative_risk_gate_present",
+    "risk_aggregation_model",
+    "portfolio_risk_optimality_proven",
+    "risk_independence_assumed",
+    "real_world_safety_certified"
+  ],
+  "properties": {
+    "release": {"const": "R0.6.1"},
+    "per_agent_risk_is_coalition_risk": {"const": false},
+    "cumulative_risk_gate_present": {"const": true},
+    "risk_aggregation_model": {"const": "additive_declared_proxy"},
+    "portfolio_risk_optimality_proven": {"const": false},
+    "risk_independence_assumed": {"const": false},
+    "real_world_safety_certified": {"const": false}
+  }
+}
