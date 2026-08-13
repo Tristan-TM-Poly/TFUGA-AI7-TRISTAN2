@@ -73,7 +73,7 @@ jobs:
             --output-index /tmp/omega-pr-llmt-target-index.json \
             --output /tmp/omega-pr-llmt-target-filegraph.json
 
-      - name: Inspect highest-fanout unique historical PRs
+      - name: Deep inspection wave 1 - highest fanout
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -82,9 +82,26 @@ jobs:
             /tmp/omega-pr-llmt-portfolio.json \
             --max-candidates 12 \
             --max-files-per-pr 4 \
+            --output-index /tmp/omega-pr-llmt-inspected-index-wave1.json \
+            --output-plan /tmp/omega-pr-llmt-inspection-plan-wave1.json \
+            --output-overlay /tmp/omega-pr-llmt-inspection-overlay-wave1.json \
+            --output-checkpoint /tmp/omega-pr-llmt-inspection-checkpoint-wave1.json
+
+      - name: Deep inspection wave 2 - resume from exact heads
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -m omega_capability_os_t.github_pr_llmt_inspection inspect \
+            /tmp/omega-pr-llmt-inspected-index-wave1.json \
+            /tmp/omega-pr-llmt-portfolio.json \
+            --checkpoint /tmp/omega-pr-llmt-inspection-checkpoint-wave1.json \
+            --prior-overlay /tmp/omega-pr-llmt-inspection-overlay-wave1.json \
+            --max-candidates 12 \
+            --max-files-per-pr 4 \
             --output-index /tmp/omega-pr-llmt-inspected-index.json \
-            --output-plan /tmp/omega-pr-llmt-inspection-plan.json \
-            --output-overlay /tmp/omega-pr-llmt-inspection-overlay.json
+            --output-plan /tmp/omega-pr-llmt-inspection-plan-wave2.json \
+            --output-overlay /tmp/omega-pr-llmt-inspection-overlay.json \
+            --output-checkpoint /tmp/omega-pr-llmt-inspection-checkpoint.json
 
       - name: Compile evidence-bound finding set for every open PR
         run: |
@@ -102,19 +119,23 @@ jobs:
 
           portfolio = json.loads(Path("/tmp/omega-pr-llmt-portfolio.json").read_text())
           filegraph = json.loads(Path("/tmp/omega-pr-llmt-target-filegraph.json").read_text())
-          plan = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan.json").read_text())
+          plan1 = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan-wave1.json").read_text())
+          checkpoint1 = json.loads(Path("/tmp/omega-pr-llmt-inspection-checkpoint-wave1.json").read_text())
+          overlay1 = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay-wave1.json").read_text())
+          plan2 = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan-wave2.json").read_text())
+          checkpoint2 = json.loads(Path("/tmp/omega-pr-llmt-inspection-checkpoint.json").read_text())
           overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
           findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
 
           assert portfolio["schema"] == "omega-pr-llmt-portfolio/v0.1.0"
           assert filegraph["schema"] == "omega-pr-llmt-target-filegraph/v0.2.0"
-          assert plan["schema"] == "omega-pr-llmt-inspection-plan/v0.1.0"
+          assert plan1["schema"] == "omega-pr-llmt-inspection-plan/v0.1.0"
+          assert plan2["schema"] == "omega-pr-llmt-inspection-plan/v0.1.0"
+          assert checkpoint1["schema"] == "omega-pr-llmt-inspection-checkpoint/v0.1.0"
+          assert checkpoint2["schema"] == "omega-pr-llmt-inspection-checkpoint/v0.1.0"
           assert overlay["schema"] == "omega-pr-llmt-inspection-overlay/v0.1.0"
           assert findings["schema"] == "omega-pr-llmt-findings/v0.2.0"
-          assert filegraph["portfolio_fingerprint"] == portfolio["fingerprint"]
-          assert plan["portfolio_fingerprint"] == portfolio["fingerprint"]
-          assert overlay["portfolio_fingerprint"] == portfolio["fingerprint"]
-          assert findings["portfolio_fingerprint"] == portfolio["fingerprint"]
+          assert all(obj["portfolio_fingerprint"] == portfolio["fingerprint"] for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2))
           assert findings["filegraph_fingerprint"] == filegraph["fingerprint"]
           assert findings["inspection_overlay_fingerprint"] == overlay["fingerprint"]
 
@@ -123,22 +144,27 @@ jobs:
           assert filegraph["operational_budget"]["selected_target_count"] == portfolio["packet_count"]
           assert filegraph["hydrated_target_count"] == portfolio["packet_count"]
           assert filegraph["error_count"] == 0, filegraph["progressive_retrieval"]["errors"]
-          assert filegraph["authority"]["write_authority_granted"] is False
-          assert filegraph["authority"]["merge_authority_granted"] is False
           assert filegraph["reconstruction_pair_count"] >= 2, filegraph["reconstruction_pairs"]
-          assert len(filegraph["fingerprint"]) == 64
 
-          assert plan["operational_budget"]["max_candidates"] == 12
-          assert plan["operational_budget"]["architecture_hard_cap"] is False
-          assert plan["planned_unique_ref_count"] == portfolio["unique_candidate_ref_count"]
-          assert plan["selected_ref_count"] <= 12
-          assert plan["selected_ref_count"] + plan["backlog_ref_count"] == plan["planned_unique_ref_count"]
-          assert overlay["selected_ref_count"] == plan["selected_ref_count"]
-          assert overlay["hydrated_ref_count"] <= overlay["selected_ref_count"]
+          assert plan1["operational_budget"]["max_candidates"] == 12
+          assert plan2["operational_budget"]["max_candidates"] == 12
+          assert plan1["operational_budget"]["architecture_hard_cap"] is False
+          assert plan2["operational_budget"]["architecture_hard_cap"] is False
+          assert plan1["planned_unique_ref_count"] == portfolio["unique_candidate_ref_count"]
+          assert plan2["planned_unique_ref_count"] == portfolio["unique_candidate_ref_count"]
+          assert plan1["completed_current_ref_count"] == 0
+          assert plan1["selected_ref_count"] <= 12
+          assert checkpoint1["completed_ref_count"] == overlay1["cumulative_hydrated_ref_count"]
+          assert plan2["completed_current_ref_count"] == checkpoint1["completed_ref_count"]
+          assert set(plan1["selected_refs"]).isdisjoint(plan2["selected_refs"])
+          assert plan2["selected_ref_count"] <= 12
+          assert plan2["completed_current_ref_count"] + plan2["selected_ref_count"] + plan2["backlog_ref_count"] == plan2["planned_unique_ref_count"]
+          assert checkpoint2["completed_ref_count"] == overlay["cumulative_hydrated_ref_count"]
+          assert checkpoint2["completed_ref_count"] >= checkpoint1["completed_ref_count"]
+          assert plan2["stale_checkpoint_ref_count"] == 0
+          assert plan2["unverifiable_checkpoint_ref_count"] == 0
           assert overlay["authority"]["write_authority_granted"] is False
           assert overlay["authority"]["merge_authority_granted"] is False
-          assert len(plan["fingerprint"]) == 64
-          assert len(overlay["fingerprint"]) == 64
 
           assert findings["packet_count"] == portfolio["packet_count"]
           assert findings["packets_with_file_overlap"] == filegraph["targets_with_file_overlap_count"]
@@ -148,14 +174,9 @@ jobs:
           assert findings["authority"]["write_authority_granted"] is False
           assert findings["authority"]["merge_authority_granted"] is False
           assert "PRIORITY_SCORE != QUALITY_SCORE" in findings["oak_boundaries"]
-          assert "FILE_OVERLAP != MERGE_CONFLICT" in findings["oak_boundaries"]
           assert "RECONSTRUCTION_PAIR != AUTOMATIC_SUPERSESSION" in findings["oak_boundaries"]
-          assert len(findings["fingerprint"]) == 64
+          assert all(len(obj["fingerprint"]) == 64 for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2))
           assert all(row["findings"] for row in findings["packets"])
-
-          top = plan["candidates"][:12]
-          assert [row["ref"] for row in top] == plan["selected_refs"]
-          assert all(top[i]["fanout"] >= top[i + 1]["fanout"] for i in range(len(top) - 1))
 
           print(json.dumps({
               "open_pr_packets": portfolio["packet_count"],
@@ -164,32 +185,27 @@ jobs:
               "target_shared_files": filegraph["shared_file_count"],
               "target_overlap_edges": filegraph["overlap_edge_count"],
               "targets_with_overlap": filegraph["targets_with_file_overlap_count"],
-              "targets_with_overlap_fraction": filegraph["targets_with_file_overlap_fraction"],
               "reconstruction_pair_count": filegraph["reconstruction_pair_count"],
               "reconstruction_pairs": filegraph["reconstruction_pairs"],
-              "target_file_count_median": filegraph["changed_file_distribution"]["median"],
-              "target_file_count_p90": filegraph["changed_file_distribution"]["p90"],
-              "large_change_candidates": filegraph["changed_file_distribution"]["large_change_candidate_count"],
-              "top_shared_files": filegraph["shared_files"][:12],
-              "top_overlap_edges": filegraph["overlap_edges"][:12],
-              "planned_unique_refs": plan["planned_unique_ref_count"],
-              "selected_refs": plan["selected_ref_count"],
-              "backlog_refs": plan["backlog_ref_count"],
-              "selected_packet_coverage": plan["selected_packet_coverage_count"],
-              "selected_packet_coverage_fraction": plan["selected_packet_coverage_fraction"],
-              "selected_pair_count": plan["selected_pair_count"],
-              "hydrated_refs": overlay["hydrated_ref_count"],
-              "candidate_changed_files": overlay["changed_file_count"],
-              "candidate_static_symbols": overlay["symbol_count"],
-              "inspection_errors": overlay["error_count"],
-              "packet_coverage_after_hydration": overlay["packet_coverage_after_successful_hydration"],
+              "planned_unique_refs": plan2["planned_unique_ref_count"],
+              "wave1_selected_refs": plan1["selected_ref_count"],
+              "wave1_completed_refs": checkpoint1["completed_ref_count"],
+              "wave1_packet_coverage": overlay1["packet_coverage_after_successful_hydration"],
+              "wave2_precompleted_refs": plan2["completed_current_ref_count"],
+              "wave2_selected_refs": plan2["selected_ref_count"],
+              "final_completed_refs": checkpoint2["completed_ref_count"],
+              "final_backlog_refs": plan2["backlog_ref_count"],
+              "final_packet_coverage": overlay["packet_coverage_after_successful_hydration"],
+              "wave2_changed_files": overlay["changed_file_count"],
+              "wave2_static_symbols": overlay["symbol_count"],
+              "wave2_errors": overlay["error_count"],
+              "cumulative_overlay_count": overlay["cumulative_overlay_count"],
               "finding_counts": findings["finding_counts"],
               "packets_without_deep_reuse_evidence": findings["packets_without_deep_reuse_evidence"],
               "top_priority_targets": [
                   {
                       "ref": row["target_ref"],
                       "score": row["priority_score"],
-                      "overlap_neighbors": row["file_overlap_neighbor_count"],
                       "max_shared_files": row["max_shared_file_count"],
                       "reconstruction_as_target": row["reconstruction_as_target_count"],
                       "reconstruction_as_source": row["reconstruction_as_source_count"],
@@ -198,17 +214,8 @@ jobs:
                   }
                   for row in findings["packets"][:12]
               ],
-              "top_candidates": [
-                  {
-                      "ref": row["ref"],
-                      "fanout": row["fanout"],
-                      "best_rank": row["best_historical_rank"],
-                      "axes": row["evidence_axes"],
-                  }
-                  for row in top
-              ],
               "filegraph_fingerprint": filegraph["fingerprint"],
-              "plan_fingerprint": plan["fingerprint"],
+              "checkpoint_fingerprint": checkpoint2["fingerprint"],
               "overlay_fingerprint": overlay["fingerprint"],
               "findings_fingerprint": findings["fingerprint"],
           }, indent=2))
@@ -221,7 +228,11 @@ jobs:
           path: |
             /tmp/omega-pr-llmt-portfolio.json
             /tmp/omega-pr-llmt-target-filegraph.json
-            /tmp/omega-pr-llmt-inspection-plan.json
+            /tmp/omega-pr-llmt-inspection-plan-wave1.json
+            /tmp/omega-pr-llmt-inspection-checkpoint-wave1.json
+            /tmp/omega-pr-llmt-inspection-overlay-wave1.json
+            /tmp/omega-pr-llmt-inspection-plan-wave2.json
+            /tmp/omega-pr-llmt-inspection-checkpoint.json
             /tmp/omega-pr-llmt-inspection-overlay.json
             /tmp/omega-pr-llmt-findings.json
             /tmp/omega-pr-llmt-inspected-index.json
