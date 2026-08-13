@@ -1,11 +1,11 @@
 /-
 Ω-MATH-PROOF-RESEARCH-OS R0.1 — formalization candidates.
 
-OAK STATUS: CANDIDATE / NOT CI-CERTIFIED IN THIS PR.
+OAK STATUS: CANDIDATE / KERNEL GATE ACTIVE.
 These statements are intentionally small translations of paraphrased logical
-rules extracted from the supplied Book of Proof metadata. Kernel acceptance,
-when wired to a pinned Lean toolchain, still will not by itself certify that a
-formal statement perfectly matches the intended natural-language source.
+rules extracted from the supplied Book of Proof metadata. Kernel acceptance
+under the pinned Lean toolchain certifies only the formal declarations; it does
+not by itself certify semantic identity with the natural-language source.
 -/
 
 universe u
@@ -19,13 +19,18 @@ theorem not_forall_iff_exists_not : (¬ ∀ x, P x) ↔ ∃ x, ¬ P x := by
   classical
   constructor
   · intro h
-    by_contra hne
+    apply Classical.byContradiction
+    intro hne
     apply h
     intro x
-    by_contra hpx
-    exact hne ⟨x, hpx⟩
-  · rintro ⟨x, hpx⟩ hall
-    exact hpx (hall x)
+    apply Classical.byContradiction
+    intro hpx
+    apply hne
+    exact ⟨x, hpx⟩
+  · intro hex hall
+    cases hex with
+    | intro x hpx =>
+      exact hpx (hall x)
 
 end ClassicalLogicSeeds
 
@@ -39,15 +44,16 @@ theorem not_imp_iff_and_not : (¬ (P → Q)) ↔ P ∧ ¬ Q := by
   constructor
   · intro h
     constructor
-    · by_contra hp
+    · apply Classical.byContradiction
+      intro hnp
       apply h
-      intro p
-      exact False.elim (hp p)
-    · intro q
+      intro hp
+      exact False.elim (hnp hp)
+    · intro hq
       apply h
       intro _
-      exact q
-  · rintro ⟨hp, hnq⟩ hpq
-    exact hnq (hpq hp)
+      exact hq
+  · intro hand himp
+    exact hand.right (himp hand.left)
 
 end ConditionalSeed
