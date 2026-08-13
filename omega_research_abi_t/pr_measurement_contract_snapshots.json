@@ -1,0 +1,42 @@
+{
+  "schema": "omega-pr-llmt-downstream-contract-snapshots/v0.1.0",
+  "verified_at_utc": "2026-08-13T09:45:00Z",
+  "contracts": {
+    "pr445_opportunity_evidence": {
+      "pr": 445,
+      "head_sha": "a7f7352ff6f8c15d2d60049b363182e92b82057a",
+      "module": "omega_compute_physics_t/opportunity_engine.py",
+      "symbol": "OpportunityEvidence",
+      "required_numeric_fields": [
+        "static_complexity",
+        "graph_centrality",
+        "usage_weight",
+        "regression_signal",
+        "expected_savings_prior",
+        "confidence_debt",
+        "engineering_effort_hours",
+        "benchmark_cost"
+      ],
+      "boundary": "snapshot of a sibling-branch contract; not an imported implementation and not proof that the sibling head remains current"
+    },
+    "pr449_value_of_computation": {
+      "pr": 449,
+      "head_sha": "29182ef7bed66662456e38f9039e384329afea75",
+      "module": "sage_tristan/tensor_research_self_model.py",
+      "symbol": "value_of_computation",
+      "required_numeric_fields": [
+        "expected_information_gain_proxy",
+        "expected_cost",
+        "expected_risk",
+        "uncertainty"
+      ],
+      "boundary": "snapshot of a sibling-branch contract; Value of Computation is a policy proxy, not guaranteed return or causal proof"
+    }
+  },
+  "routing_policy": {
+    "import_sibling_implementation": false,
+    "require_measured_with_provenance": true,
+    "reverify_snapshot_head_before_live_routing": true,
+    "unknown_numeric_input_is_zero": false
+  }
+}

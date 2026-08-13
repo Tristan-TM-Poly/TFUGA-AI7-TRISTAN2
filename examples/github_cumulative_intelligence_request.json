@@ -1,0 +1,18 @@
+{
+  "request_id": "future-pr-reuse-memory",
+  "description": "Reuse all historical GitHub PR code, theories, systems, applications and creations before drafting a new PR",
+  "domains": [
+    "github",
+    "memory",
+    "llmt",
+    "architecture"
+  ],
+  "consumes": [
+    "repository",
+    "historical_pr_memory"
+  ],
+  "produces": [
+    "pr_index",
+    "llmt_context"
+  ]
+}

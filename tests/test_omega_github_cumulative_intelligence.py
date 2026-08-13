@@ -1,0 +1,305 @@
+from omega_capability_os_t.github_cumulative_intelligence import (
+    CumulativeIntelligenceCompiler,
+    HistoryArchaeologist,
+    MinimalReuseCoalitionCompiler,
+    PRGenomeCompiler,
+)
+from omega_capability_os_t.github_memory import CapabilityRequest, GitHubMemoryIndex, PRMemory
+from omega_capability_os_t.github_retrieval_arena import compile_retrieval_arena
+
+
+def _indexes():
+    repo_a = "Tristan/example-a"
+    repo_b = "Tristan/example-b"
+
+    a = GitHubMemoryIndex()
+    a.add_pr(
+        PRMemory(
+            repository=repo_a,
+            number=1,
+            state="closed",
+            merged=True,
+            title="Ω-HGFM memory compiler",
+            body="M-: duplicated context caused regression\nsource pr: #0",
+            head_sha="a" * 40,
+            files=("omega/memory.py", "tests/test_memory.py"),
+        )
+    )
+    a.add_pr(
+        PRMemory(
+            repository=repo_a,
+            number=2,
+            state="closed",
+            merged=False,
+            title="Closed reconstruction experiment",
+            body="reconstructs: #1\nAlternative retained for future reuse.",
+            head_sha="b" * 40,
+            files=("omega/reconstruction.py",),
+        )
+    )
+    a.ingest_capability_registry(
+        {
+            "capabilities": [
+                {
+                    "id": "github.memory.index",
+                    "domains": ["github", "memory"],
+                    "consumes": ["repository"],
+                    "produces": ["pr_index"],
+                    "authority": "read",
+                    "quality": 0.95,
+                    "information_gain": 0.95,
+                    "verifiability": 0.95,
+                    "reuse": 0.99,
+                    "cost": 0.10,
+                    "latency": 0.10,
+                    "risk": 0.03,
+                    "alternatives": [],
+                    "failure_modes": [],
+                }
+            ]
+        },
+        source_ref=f"pr:{repo_a}#1",
+    )
+
+    b = GitHubMemoryIndex()
+    b.add_pr(
+        PRMemory(
+            repository=repo_b,
+            number=5,
+            state="open",
+            draft=True,
+            title="LLMT context compiler",
+            body="stacked on: Tristan/example-a#1",
+            head_sha="c" * 40,
+            files=("omega/context.py",),
+        )
+    )
+    b.add_pr(
+        PRMemory(
+            repository=repo_b,
+            number=6,
+            state="open",
+            draft=False,
+            title="Application reuse court",
+            body="extends: #5",
+            head_sha="d" * 40,
+            files=("omega/reuse.py",),
+        )
+    )
+    b.ingest_capability_registry(
+        {
+            "capabilities": [
+                {
+                    "id": "github.llmt.context",
+                    "domains": ["github", "memory", "llmt"],
+                    "consumes": ["pr_index"],
+                    "produces": ["llmt_context"],
+                    "authority": "read",
+                    "quality": 0.94,
+                    "information_gain": 0.94,
+                    "verifiability": 0.96,
+                    "reuse": 0.99,
+                    "cost": 0.08,
+                    "latency": 0.08,
+                    "risk": 0.03,
+                    "alternatives": [],
+                    "failure_modes": [],
+                }
+            ]
+        },
+        source_ref=f"pr:{repo_b}#5",
+    )
+
+    return {repo_a: a, repo_b: b}
+
+
+def _request():
+    return CapabilityRequest(
+        request_id="new-pr",
+        description="reuse historical GitHub PR memory for LLMT context",
+        domains=("github", "memory", "llmt"),
+        consumes=("repository",),
+        produces=("pr_index", "llmt_context"),
+    )
+
+
+def test_history_covers_open_draft_merged_and_closed_not_merged():
+    receipt = HistoryArchaeologist.coverage(_indexes())
+    assert receipt.repository_count == 2
+    assert receipt.pr_count == 4
+    assert receipt.open_count == 1
+    assert receipt.draft_count == 1
+    assert receipt.merged_count == 1
+    assert receipt.closed_not_merged_count == 1
+    assert receipt.exact_state_partition is True
+
+
+def test_closed_prs_remain_in_genome_and_merged_is_not_m_plus():
+    indexes = _indexes()
+    genomes = PRGenomeCompiler().compile_all(indexes)
+    merged = genomes["pr:Tristan/example-a#1"]
+    closed = genomes["pr:Tristan/example-a#2"]
+    assert merged.lifecycle == "MERGED"
+    assert merged.epistemic_memory == "M?"
+    assert closed.lifecycle == "CLOSED"
+    assert "omega/reconstruction.py" in closed.changed_files
+    assert any("regression" in line for line in merged.failure_memory)
+
+
+def test_archaeology_preserves_cross_repo_and_reconstruction_lineage():
+    signals = HistoryArchaeologist.lineage(_indexes())
+    triples = {(row.source_ref, row.target_ref, row.relation) for row in signals}
+    assert (
+        "pr:Tristan/example-a#2",
+        "pr:Tristan/example-a#1",
+        "reconstructs",
+    ) in triples
+    assert (
+        "pr:Tristan/example-b#5",
+        "pr:Tristan/example-a#1",
+        "stacked_on",
+    ) in triples
+
+
+def test_minimal_reuse_coalition_covers_explicit_contract_outputs():
+    coalition = MinimalReuseCoalitionCompiler().compile(_indexes(), _request())
+    assert coalition.reuse_coverage_ratio == 1.0
+    assert coalition.residual_outputs == ()
+    assert len(coalition.selected_capabilities) == 2
+    assert "pr:Tristan/example-a#1" in coalition.source_refs
+    assert "pr:Tristan/example-b#5" in coalition.source_refs
+
+
+def test_cumulative_intelligence_compiles_one_memory_many_llmt_views():
+    compiler = CumulativeIntelligenceCompiler()
+    first = compiler.compile(_indexes(), _request(), max_items=4)
+    second = compiler.compile(_indexes(), _request(), max_items=4)
+
+    assert first["fingerprint"] == second["fingerprint"]
+    assert first["history_coverage"]["pr_count"] == 4
+    assert first["minimal_reuse_coalition"]["reuse_coverage_ratio"] == 1.0
+    assert first["generation_constitution"]["search_all_history_before_create"] is True
+    assert first["generation_constitution"]["create_only_residual"] is True
+    assert first["generation_constitution"]["write_authority_granted"] is False
+    assert first["memory_lenses"]["packet_count"] == 6
+    assert any(hit["ref"] == "pr:Tristan/example-a#1" for hit in first["negative_memory_hits"])
+    assert "MERGED != M+" in first["oak_boundaries"]
+
+
+def test_research_abi_bridge_preserves_read_authority():
+    from omega_research_abi_t.github_cumulative_intelligence_bridge import adapt_cumulative_intelligence
+
+    report = CumulativeIntelligenceCompiler().compile(_indexes(), _request(), max_items=3)
+    envelope = adapt_cumulative_intelligence(report)
+    assert envelope.graph == "knowledge"
+    assert envelope.authority == "read"
+    assert envelope.oak_state == "UNKNOWN"
+    assert envelope.object_type == "github_cumulative_intelligence_context"
+
+
+def test_retrieval_arena_improves_zero_overlap_baseline_without_future_leakage():
+    repository = "Tristan/arena"
+    index = GitHubMemoryIndex()
+    index.add_pr(PRMemory(repository=repository, number=1, state="closed", title="alpha kernel"))
+    index.add_pr(PRMemory(repository=repository, number=2, state="closed", title="beta renderer"))
+    index.add_pr(PRMemory(repository=repository, number=3, state="closed", title="gamma archive"))
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=4,
+            state="closed",
+            title="delta integration",
+            body="extends: #3",
+        )
+    )
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=5,
+            state="open",
+            title="delta integration future",
+        )
+    )
+
+    report = compile_retrieval_arena(index, top_k=1)
+    assert report["eligible_target_count"] == 1
+    assert report["strategies"]["lexical_jaccard"]["micro_recall_at_k"] == 0.0
+    assert report["strategies"]["recency"]["micro_recall_at_k"] == 1.0
+    assert report["improved_over_baseline"] is True
+    assert report["oak"]["status"] == "PASS"
+    assert report["oak"]["temporal_leakage_free"] is True
+    for metrics in report["strategies"].values():
+        assert metrics["target_leakage_count"] == 0
+        assert metrics["future_leakage_count"] == 0
+
+
+def test_retrieval_arena_is_deterministic():
+    repository = "Tristan/arena"
+    index = GitHubMemoryIndex()
+    index.add_pr(PRMemory(repository=repository, number=1, state="closed", title="memory root"))
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=2,
+            state="open",
+            title="memory extension",
+            body="extends: #1",
+        )
+    )
+    left = compile_retrieval_arena(index, top_k=1)
+    right = compile_retrieval_arena(index, top_k=1)
+    assert left == right
+    assert len(left["fingerprint"]) == 64
+
+
+def test_retrieval_arena_uses_unique_nondefault_stack_parent_as_gold_only():
+    repository = "Tristan/stack"
+    index = GitHubMemoryIndex()
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=10,
+            state="closed",
+            title="foundation branch",
+            head_ref="feat/foundation",
+        )
+    )
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=11,
+            state="closed",
+            title="default branch distractor",
+            head_ref="main",
+        )
+    )
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=20,
+            state="open",
+            title="orthogonal child title",
+            body="",
+            base_ref="feat/foundation",
+        )
+    )
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=21,
+            state="open",
+            title="future orthogonal child",
+            base_ref="main",
+        )
+    )
+
+    report = compile_retrieval_arena(index, top_k=2)
+    assert report["schema"] == "omega-pr-retrieval-arena/v0.2.0"
+    assert report["eligible_target_count"] == 1
+    assert report["gold_source_counts"]["stack_base_ref"] == 1
+    case = report["cases"][0]
+    assert case["gold_lineage_refs"] == ["pr:Tristan/stack#10"]
+    assert case["gold_sources"]["pr:Tristan/stack#10"] == ["stack_base_ref"]
+    assert report["contamination"]["target_base_ref_used_as_gold_only"] is True
+    assert report["contamination"]["default_branch_stack_labels_excluded"] is True
+    assert report["oak"]["ranker_frozen_during_v0_2_evaluation"] is True

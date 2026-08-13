@@ -1,0 +1,125 @@
+name: Ω PR Retrieval Cross-Repo Replication OAK
+
+on:
+  pull_request:
+    paths:
+      - "omega_capability_os_t/github_retrieval_arena.py"
+      - "benchmarks/omega_pr_retrieval_arena_v02_baseline.json"
+      - "docs/OMEGA_PR_RETRIEVAL_ARENA_V02.md"
+      - ".agents/skills/github-cumulative-intelligence/**"
+      - ".github/workflows/github-retrieval-replication-oak.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  cross-repo-replication:
+    concurrency:
+      group: omega-github-installation-read-${{ github.repository }}
+      cancel-in-progress: false
+      queue: max
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - repo: Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG
+            slug: tristan-tardif-morency-tfug
+          - repo: Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2
+            slug: ttm-tfuga-ai7-tristan2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build external state=all PR memory
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -m omega_capability_os_t.github_memory_cli build \
+            --repository "${{ matrix.repo }}" \
+            --without-files \
+            --max-prs 500 \
+            --output "/tmp/${{ matrix.slug }}-index.json"
+
+      - name: Run frozen v0.1 ranker on external repository
+        run: |
+          python -m omega_capability_os_t.github_retrieval_arena court \
+            "/tmp/${{ matrix.slug }}-index.json" \
+            --top-k 8 \
+            --output "/tmp/${{ matrix.slug }}-arena.json"
+
+      - name: Classify replication evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          slug = "${{ matrix.slug }}"
+          repo = "${{ matrix.repo }}"
+          report = json.loads(Path(f"/tmp/{slug}-arena.json").read_text())
+          assert report["schema"] == "omega-pr-retrieval-arena/v0.2.0"
+          assert report["ranker_version"] == "frozen-v0.1"
+          assert report["oak"]["temporal_leakage_free"] is True
+          assert report["oak"]["ranker_frozen_during_v0_2_evaluation"] is True
+
+          baseline = report["strategies"]["lexical_jaccard"]
+          hybrid = report["strategies"]["hybrid_rrf"]
+          targets = int(report["eligible_target_count"])
+          gold = int(report["gold_lineage_ref_count"])
+
+          if targets < 5 or gold < 5:
+              replication = "INCONCLUSIVE"
+          elif (
+              hybrid["micro_recall_at_k"] > baseline["micro_recall_at_k"]
+              and hybrid["mrr"] >= baseline["mrr"]
+              and hybrid["micro_recall_at_k"] >= 0.50
+          ):
+              replication = "REPLICATED"
+          else:
+              replication = "NOT_REPLICATED"
+
+          receipt = {
+              "schema": "omega-pr-retrieval-cross-repo-replication/v0.1.0",
+              "repository": repo,
+              "ranker_version": report["ranker_version"],
+              "top_k": report["top_k"],
+              "eligible_target_count": targets,
+              "gold_lineage_ref_count": gold,
+              "gold_source_counts": report["gold_source_counts"],
+              "baseline_micro_recall_at_8": baseline["micro_recall_at_k"],
+              "baseline_mrr": baseline["mrr"],
+              "hybrid_micro_recall_at_8": hybrid["micro_recall_at_k"],
+              "hybrid_mrr": hybrid["mrr"],
+              "hybrid_candidate_fraction": hybrid["mean_candidate_fraction"],
+              "winner": report["winner"],
+              "replication_status": replication,
+              "target_leakage_count": hybrid["target_leakage_count"],
+              "future_leakage_count": hybrid["future_leakage_count"],
+              "arena_fingerprint": report["fingerprint"],
+              "boundaries": [
+                  "CROSS_REPO_WITHIN_ONE_ECOSYSTEM != INDEPENDENT_EXTERNAL_REPLICATION",
+                  "REPLICATION_STATUS != SEMANTIC_COMPATIBILITY_PROOF",
+                  "RETROSPECTIVE_REPLICATION != PROSPECTIVE_VALIDATION",
+                  "RANKING_GAIN != ENGINEERING_SAVINGS",
+              ],
+          }
+          Path(f"/tmp/{slug}-replication.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n"
+          )
+          print(json.dumps(receipt, indent=2, sort_keys=True))
+          PY
+
+      - name: Retain replication evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-pr-retrieval-replication-${{ matrix.slug }}-${{ github.run_id }}
+          path: |
+            /tmp/${{ matrix.slug }}-index.json
+            /tmp/${{ matrix.slug }}-arena.json
+            /tmp/${{ matrix.slug }}-replication.json
+          retention-days: 14

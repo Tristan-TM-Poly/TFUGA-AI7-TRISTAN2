@@ -20,6 +20,10 @@ permissions:
 
 jobs:
   github-memory-oak:
+    concurrency:
+      group: omega-github-installation-read-${{ github.repository }}
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -76,7 +80,7 @@ jobs:
           assert context["schema"] == "omega-github-llmt-context/v1", context.get("schema")
           assert context["decision"]["creation_allowed"] is False, context["decision"]
           assert context["decision"]["action"] in {"REUSE", "COMPOSE", "EXTEND", "INSPECT"}, context["decision"]
-          assert zoom["schema"] == "omega-github-progressive-retrieval/v0.2.0", zoom.get("schema")
+          assert zoom["schema"] == "omega-github-progressive-retrieval/v0.3.0", zoom.get("schema")
           assert len(zoom["candidate_prs"]) >= 1, zoom
           assert len(zoom["hydrated_prs"]) >= 1, zoom
           assert zoom["changed_file_count"] >= 1, zoom

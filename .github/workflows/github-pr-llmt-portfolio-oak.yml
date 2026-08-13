@@ -1,0 +1,116 @@
+name: Ω GitHub PR LLMT Portfolio OAK
+
+on:
+  pull_request:
+    paths:
+      - "omega_capability_os_t/github_pr_llmt.py"
+      - "tests/test_omega_github_pr_llmt.py"
+      - ".agents/skills/github-pr-llmt/**"
+      - ".github/workflows/github-pr-llmt-portfolio-oak.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "23 */6 * * *"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  pr-llmt-portfolio-oak:
+    concurrency:
+      group: omega-github-installation-read-${{ github.repository }}
+      cancel-in-progress: false
+      queue: max
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test runner
+        run: python -m pip install pytest
+
+      - name: Deterministic PR LLMT court
+        run: python -m pytest -q tests/test_omega_github_pr_llmt.py
+
+      - name: Compile sources
+        run: python -m compileall -q omega_capability_os_t
+
+      - name: Refresh complete PR memory
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -m omega_capability_os_t.github_memory_cli build \
+            --repository "$GITHUB_REPOSITORY" \
+            --without-files \
+            --max-prs 1000 \
+            --output /tmp/omega-pr-llmt-index.json
+
+      - name: Compile one LLMT packet per open PR
+        run: |
+          python -m omega_capability_os_t.github_pr_llmt portfolio \
+            /tmp/omega-pr-llmt-index.json \
+            --top-k 8 \
+            --output /tmp/omega-pr-llmt-portfolio.json
+
+      - name: OAK live assertions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          portfolio = json.loads(Path("/tmp/omega-pr-llmt-portfolio.json").read_text())
+          assert portfolio["schema"] == "omega-pr-llmt-portfolio/v0.1.0"
+          assert portfolio["ranker_version"] == "frozen-v0.1"
+          assert portfolio["ranking_strategy"] == "hybrid_rrf"
+          assert portfolio["packet_count"] == portfolio["open_or_draft_pr_count"]
+          assert portfolio["authority"]["read"] is True
+          assert portfolio["authority"]["draft_analysis"] is True
+          assert portfolio["authority"]["write_authority_granted"] is False
+          assert portfolio["authority"]["merge_authority_granted"] is False
+          assert len(portfolio["fingerprint"]) == 64
+
+          prior_pairs = 0
+          descendant_pairs = 0
+          for packet in portfolio["packets"]:
+              target = packet["target"]
+              assert target["lifecycle"] in {"OPEN", "DRAFT"}
+              assert packet["inspection_contract"]["progressive_zoom_required"] is True
+              assert packet["inspection_contract"]["inspect_exact_head_sha"] is True
+              assert packet["inspection_contract"]["inspect_tests_and_ci"] is True
+              assert packet["inspection_contract"]["write_authority_granted"] is False
+              assert packet["inspection_contract"]["merge_authority_granted"] is False
+              candidates = packet["historical_retrieval"]["candidates"]
+              prior_pairs += len(candidates)
+              descendant_pairs += len(packet["known_later_descendants"])
+              for candidate in candidates:
+                  assert candidate["number"] < target["number"]
+                  assert candidate["ref"] != target["ref"]
+                  assert candidate["exact_inspection_required"] is True
+
+          assert portfolio["inspection_pair_count"] == prior_pairs + descendant_pairs
+          assert portfolio["unique_candidate_ref_count"] == len(portfolio["unique_candidate_refs"])
+          print(json.dumps({
+              "repository": portfolio["repository"],
+              "open_or_draft_pr_count": portfolio["open_or_draft_pr_count"],
+              "packet_count": portfolio["packet_count"],
+              "historical_candidate_pairs": prior_pairs,
+              "known_later_descendant_pairs": descendant_pairs,
+              "inspection_pair_count": portfolio["inspection_pair_count"],
+              "unique_candidate_refs": portfolio["unique_candidate_ref_count"],
+              "ranker_version": portfolio["ranker_version"],
+              "strategy": portfolio["ranking_strategy"],
+              "fingerprint": portfolio["fingerprint"],
+          }, indent=2))
+          PY
+
+      - name: Retain bounded PR LLMT memory
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-pr-llmt-portfolio-${{ github.run_id }}
+          path: |
+            /tmp/omega-pr-llmt-index.json
+            /tmp/omega-pr-llmt-portfolio.json
+          retention-days: 14

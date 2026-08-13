@@ -1,0 +1,536 @@
+name: Ω GitHub PR LLMT Inspection OAK
+
+on:
+  pull_request:
+    paths:
+      - "omega_capability_os_t/github_memory_zoom.py"
+      - "omega_capability_os_t/github_pr_llmt.py"
+      - "omega_capability_os_t/github_pr_llmt_inspection.py"
+      - "omega_capability_os_t/github_pr_llmt_targets.py"
+      - "omega_capability_os_t/github_pr_llmt_findings.py"
+      - "omega_capability_os_t/github_pr_llmt_measurements.py"
+      - "omega_research_abi_t/github_memory_bridge.py"
+      - "omega_research_abi_t/github_measurement_bridge.py"
+      - "omega_research_abi_t/measurement_allocation.py"
+      - "omega_research_abi_t/pr_measurement_contract_snapshots.json"
+      - "omega_research_abi_t/__init__.py"
+      - "tests/test_omega_capability_os_github_memory_zoom.py"
+      - "tests/test_omega_github_pr_llmt.py"
+      - "tests/test_omega_github_pr_llmt_inspection.py"
+      - "tests/test_omega_github_pr_llmt_marginal_coverage.py"
+      - "tests/test_omega_github_pr_llmt_targets.py"
+      - "tests/test_omega_github_pr_llmt_findings.py"
+      - "tests/test_omega_github_pr_llmt_measurements.py"
+      - "tests/test_omega_research_abi_pr_llmt_bridge.py"
+      - "tests/test_omega_research_abi_measurement_allocation.py"
+      - "tests/test_omega_research_abi_github_measurement_bridge.py"
+      - ".agents/skills/github-pr-llmt/**"
+      - ".github/workflows/github-pr-llmt-inspection-oak.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  pr-llmt-inspection-oak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test runner
+        run: python -m pip install pytest
+
+      - name: Deterministic inspection court
+        run: |
+          python -m pytest -q \
+            tests/test_omega_capability_os_github_memory_zoom.py \
+            tests/test_omega_github_pr_llmt.py \
+            tests/test_omega_github_pr_llmt_inspection.py \
+            tests/test_omega_github_pr_llmt_marginal_coverage.py \
+            tests/test_omega_github_pr_llmt_targets.py \
+            tests/test_omega_github_pr_llmt_findings.py \
+            tests/test_omega_github_pr_llmt_measurements.py \
+            tests/test_omega_research_abi_pr_llmt_bridge.py \
+            tests/test_omega_research_abi_measurement_allocation.py \
+            tests/test_omega_research_abi_github_measurement_bridge.py
+
+      - name: Compile sources
+        run: python -m compileall -q omega_capability_os_t omega_research_abi_t
+
+      - name: Refresh complete PR memory
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -m omega_capability_os_t.github_memory_cli build \
+            --repository "$GITHUB_REPOSITORY" \
+            --without-files \
+            --max-prs 1000 \
+            --output /tmp/omega-pr-llmt-index.json
+
+      - name: Compile all open PR LLMT packets
+        run: |
+          python -m omega_capability_os_t.github_pr_llmt portfolio \
+            /tmp/omega-pr-llmt-index.json \
+            --top-k 8 \
+            --output /tmp/omega-pr-llmt-portfolio.json
+
+      - name: Hydrate changed-file graph for every open PR
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -m omega_capability_os_t.github_pr_llmt_targets \
+            /tmp/omega-pr-llmt-index.json \
+            /tmp/omega-pr-llmt-portfolio.json \
+            --output-index /tmp/omega-pr-llmt-target-index.json \
+            --output /tmp/omega-pr-llmt-target-filegraph.json
+
+      - name: Deep inspection wave 1 - greedy marginal coverage
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -m omega_capability_os_t.github_pr_llmt_inspection inspect \
+            /tmp/omega-pr-llmt-target-index.json \
+            /tmp/omega-pr-llmt-portfolio.json \
+            --max-candidates 12 \
+            --max-files-per-pr 4 \
+            --output-index /tmp/omega-pr-llmt-inspected-index-wave1.json \
+            --output-plan /tmp/omega-pr-llmt-inspection-plan-wave1.json \
+            --output-overlay /tmp/omega-pr-llmt-inspection-overlay-wave1.json \
+            --output-checkpoint /tmp/omega-pr-llmt-inspection-checkpoint-wave1.json
+
+      - name: Deep inspection wave 2 - resume with marginal uncovered coverage
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -m omega_capability_os_t.github_pr_llmt_inspection inspect \
+            /tmp/omega-pr-llmt-inspected-index-wave1.json \
+            /tmp/omega-pr-llmt-portfolio.json \
+            --checkpoint /tmp/omega-pr-llmt-inspection-checkpoint-wave1.json \
+            --prior-overlay /tmp/omega-pr-llmt-inspection-overlay-wave1.json \
+            --max-candidates 12 \
+            --max-files-per-pr 4 \
+            --output-index /tmp/omega-pr-llmt-inspected-index.json \
+            --output-plan /tmp/omega-pr-llmt-inspection-plan-wave2.json \
+            --output-overlay /tmp/omega-pr-llmt-inspection-overlay.json \
+            --output-checkpoint /tmp/omega-pr-llmt-inspection-checkpoint.json
+
+      - name: Compile evidence-bound finding set for every open PR
+        run: |
+          python -m omega_capability_os_t.github_pr_llmt_findings \
+            /tmp/omega-pr-llmt-portfolio.json \
+            /tmp/omega-pr-llmt-target-filegraph.json \
+            /tmp/omega-pr-llmt-inspection-overlay.json \
+            --output /tmp/omega-pr-llmt-findings.json
+
+      - name: Issue Universal Research ABI transformation receipts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from omega_capability_os_t.github_memory import GitHubPRSource
+          from omega_capability_os_t.github_pr_llmt_measurements import (
+              compile_reconstruction_blob_measurements,
+          )
+          from omega_research_abi_t import (
+              compile_pr_llmt_measurement_allocation,
+              compile_pr_llmt_measurement_requests,
+              issue_pr_llmt_inspection_receipt,
+              issue_pr_llmt_measurement_allocation_receipt,
+              issue_pr_llmt_measurement_request_receipt,
+              issue_pr_llmt_reconstruction_blob_measurement_receipt,
+              validate_receipt,
+          )
+
+          filegraph = json.loads(Path("/tmp/omega-pr-llmt-target-filegraph.json").read_text())
+          plan = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan-wave2.json").read_text())
+          overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
+          findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
+
+          inspection_receipt = issue_pr_llmt_inspection_receipt(plan, overlay, findings)
+          inspection_validation = validate_receipt(inspection_receipt)
+          inspection_packet = {
+              "schema": "omega-pr-llmt-research-abi-receipt/v0.1.0",
+              "receipt": inspection_receipt.to_dict(),
+              "validation": inspection_validation,
+              "boundaries": [
+                  "structural OAK PASS != semantic relevance",
+                  "inspection coverage != reuse compatibility",
+                  "static AST != runtime behavior",
+                  "receipt != mutation authority",
+              ],
+          }
+          assert inspection_receipt.operator == "PR_LLMT_EXACT_INSPECTION"
+          assert inspection_receipt.authority == "read"
+          assert inspection_receipt.oak_state == "PASS", inspection_receipt.to_dict()
+          assert inspection_validation["status"] == "PASS", inspection_validation
+          assert all(item.status == "PASS" for item in inspection_receipt.invariants)
+          Path("/tmp/omega-pr-llmt-research-abi-receipt.json").write_text(
+              json.dumps(inspection_packet, indent=2, sort_keys=True)
+          )
+
+          requests = compile_pr_llmt_measurement_requests(findings)
+          measurement_receipt = issue_pr_llmt_measurement_request_receipt(findings, requests)
+          measurement_validation = validate_receipt(measurement_receipt)
+          measurement_packet = {
+              "schema": "omega-pr-llmt-measurement-request-receipt/v0.1.0",
+              "receipt": measurement_receipt.to_dict(),
+              "validation": measurement_validation,
+              "boundaries": [
+                  "measurement request != measurement",
+                  "triage priority != value",
+                  "unmeasured quantitative input != zero",
+                  "routing contract != imported sibling implementation",
+                  "request != mutation authority",
+              ],
+          }
+          assert requests["request_count"] > 0
+          assert requests["downstream_policy"]["numeric_opportunity_or_voc_scores_emitted"] is False
+          assert measurement_receipt.operator == "PR_FINDINGS_TO_MEASUREMENT_REQUESTS"
+          assert measurement_receipt.authority == "read"
+          assert measurement_receipt.oak_state == "PASS", measurement_receipt.to_dict()
+          assert measurement_validation["status"] == "PASS", measurement_validation
+          assert all(item.status == "PASS" for item in measurement_receipt.invariants)
+          Path("/tmp/omega-pr-llmt-measurement-requests.json").write_text(
+              json.dumps(requests, indent=2, sort_keys=True)
+          )
+          Path("/tmp/omega-pr-llmt-measurement-request-receipt.json").write_text(
+              json.dumps(measurement_packet, indent=2, sort_keys=True)
+          )
+
+          source = GitHubPRSource(token=os.getenv("GITHUB_TOKEN"))
+          structural_measurements = compile_reconstruction_blob_measurements(
+              filegraph, requests, source
+          )
+          structural_receipt = issue_pr_llmt_reconstruction_blob_measurement_receipt(
+              filegraph, requests, structural_measurements
+          )
+          structural_validation = validate_receipt(structural_receipt)
+          structural_packet = {
+              "schema": "omega-pr-llmt-structural-measurement-receipt/v0.1.0",
+              "receipt": structural_receipt.to_dict(),
+              "validation": structural_validation,
+              "boundaries": [
+                  "Git blob SHA equality == byte identity for measured file content",
+                  "byte identity != behavioral equivalence",
+                  "byte identity != test success",
+                  "byte identity != merge readiness or supersession authority",
+              ],
+          }
+          assert structural_measurements["pair_count"] == filegraph["reconstruction_pair_count"]
+          assert structural_measurements["error_count"] == 0, structural_measurements
+          assert structural_receipt.operator == "PR_RECONSTRUCTION_BLOB_EQUIVALENCE_MEASURE"
+          assert structural_receipt.authority == "read"
+          assert structural_receipt.oak_state == "PASS", structural_receipt.to_dict()
+          assert structural_validation["status"] == "PASS", structural_validation
+          assert all(item.status == "PASS" for item in structural_receipt.invariants)
+          Path("/tmp/omega-pr-llmt-structural-measurements.json").write_text(
+              json.dumps(structural_measurements, indent=2, sort_keys=True)
+          )
+          Path("/tmp/omega-pr-llmt-structural-measurement-receipt.json").write_text(
+              json.dumps(structural_packet, indent=2, sort_keys=True)
+          )
+
+          allocation = compile_pr_llmt_measurement_allocation(requests, max_anchors=12)
+          allocation_receipt = issue_pr_llmt_measurement_allocation_receipt(requests, allocation)
+          allocation_validation = validate_receipt(allocation_receipt)
+          allocation_packet = {
+              "schema": "omega-pr-llmt-measurement-allocation-receipt/v0.1.0",
+              "receipt": allocation_receipt.to_dict(),
+              "validation": allocation_validation,
+              "boundaries": [
+                  "evidence anchor fanout != Value of Measurement",
+                  "request coverage != resolved uncertainty",
+                  "raw request != measured result",
+                  "allocation != execution authority",
+              ],
+          }
+          assert allocation["selected_anchor_count"] <= 12
+          assert allocation["operational_budget"]["architecture_hard_cap"] is False
+          assert allocation["downstream_policy"]["numeric_opportunity_or_voc_scores_emitted"] is False
+          assert allocation_receipt.operator == "PR_MEASUREMENT_EVIDENCE_ALLOCATION"
+          assert allocation_receipt.authority == "read"
+          assert allocation_receipt.oak_state == "PASS", allocation_receipt.to_dict()
+          assert allocation_validation["status"] == "PASS", allocation_validation
+          assert all(item.status == "PASS" for item in allocation_receipt.invariants)
+          Path("/tmp/omega-pr-llmt-measurement-allocation.json").write_text(
+              json.dumps(allocation, indent=2, sort_keys=True)
+          )
+          Path("/tmp/omega-pr-llmt-measurement-allocation-receipt.json").write_text(
+              json.dumps(allocation_packet, indent=2, sort_keys=True)
+          )
+          PY
+
+      - name: OAK live assertions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          portfolio = json.loads(Path("/tmp/omega-pr-llmt-portfolio.json").read_text())
+          filegraph = json.loads(Path("/tmp/omega-pr-llmt-target-filegraph.json").read_text())
+          plan1 = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan-wave1.json").read_text())
+          checkpoint1 = json.loads(Path("/tmp/omega-pr-llmt-inspection-checkpoint-wave1.json").read_text())
+          overlay1 = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay-wave1.json").read_text())
+          plan2 = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan-wave2.json").read_text())
+          checkpoint2 = json.loads(Path("/tmp/omega-pr-llmt-inspection-checkpoint.json").read_text())
+          overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
+          findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
+          abi_receipt = json.loads(Path("/tmp/omega-pr-llmt-research-abi-receipt.json").read_text())
+          requests = json.loads(Path("/tmp/omega-pr-llmt-measurement-requests.json").read_text())
+          measurement_receipt = json.loads(Path("/tmp/omega-pr-llmt-measurement-request-receipt.json").read_text())
+          structural_measurements = json.loads(Path("/tmp/omega-pr-llmt-structural-measurements.json").read_text())
+          structural_receipt = json.loads(Path("/tmp/omega-pr-llmt-structural-measurement-receipt.json").read_text())
+          allocation = json.loads(Path("/tmp/omega-pr-llmt-measurement-allocation.json").read_text())
+          allocation_receipt = json.loads(Path("/tmp/omega-pr-llmt-measurement-allocation-receipt.json").read_text())
+          contract_snapshots = json.loads(Path("omega_research_abi_t/pr_measurement_contract_snapshots.json").read_text())
+
+          assert portfolio["schema"] == "omega-pr-llmt-portfolio/v0.1.0"
+          assert filegraph["schema"] == "omega-pr-llmt-target-filegraph/v0.2.0"
+          assert plan1["schema"] == "omega-pr-llmt-inspection-plan/v0.1.0"
+          assert plan2["schema"] == "omega-pr-llmt-inspection-plan/v0.1.0"
+          assert checkpoint1["schema"] == "omega-pr-llmt-inspection-checkpoint/v0.1.0"
+          assert checkpoint2["schema"] == "omega-pr-llmt-inspection-checkpoint/v0.1.0"
+          assert overlay["schema"] == "omega-pr-llmt-inspection-overlay/v0.1.0"
+          assert findings["schema"] == "omega-pr-llmt-findings/v0.2.0"
+          assert abi_receipt["schema"] == "omega-pr-llmt-research-abi-receipt/v0.1.0"
+          assert requests["schema"] == "omega-pr-llmt-measurement-requests/v0.1.0"
+          assert measurement_receipt["schema"] == "omega-pr-llmt-measurement-request-receipt/v0.1.0"
+          assert structural_measurements["schema"] == "omega-pr-llmt-structural-measurements/v0.1.0"
+          assert structural_receipt["schema"] == "omega-pr-llmt-structural-measurement-receipt/v0.1.0"
+          assert allocation["schema"] == "omega-pr-llmt-measurement-allocation/v0.1.0"
+          assert allocation_receipt["schema"] == "omega-pr-llmt-measurement-allocation-receipt/v0.1.0"
+          assert contract_snapshots["schema"] == "omega-pr-llmt-downstream-contract-snapshots/v0.1.0"
+          assert abi_receipt["receipt"]["operator"] == "PR_LLMT_EXACT_INSPECTION"
+          assert abi_receipt["receipt"]["authority"] == "read"
+          assert abi_receipt["receipt"]["oak_state"] == "PASS"
+          assert abi_receipt["validation"]["status"] == "PASS"
+          assert measurement_receipt["receipt"]["operator"] == "PR_FINDINGS_TO_MEASUREMENT_REQUESTS"
+          assert measurement_receipt["receipt"]["authority"] == "read"
+          assert measurement_receipt["receipt"]["oak_state"] == "PASS"
+          assert measurement_receipt["validation"]["status"] == "PASS"
+          assert structural_receipt["receipt"]["operator"] == "PR_RECONSTRUCTION_BLOB_EQUIVALENCE_MEASURE"
+          assert structural_receipt["receipt"]["authority"] == "read"
+          assert structural_receipt["receipt"]["oak_state"] == "PASS"
+          assert structural_receipt["validation"]["status"] == "PASS"
+          assert allocation_receipt["receipt"]["operator"] == "PR_MEASUREMENT_EVIDENCE_ALLOCATION"
+          assert allocation_receipt["receipt"]["authority"] == "read"
+          assert allocation_receipt["receipt"]["oak_state"] == "PASS"
+          assert allocation_receipt["validation"]["status"] == "PASS"
+          assert requests["source_findings_fingerprint"] == findings["fingerprint"]
+          assert requests["target_count"] == findings["packet_count"]
+          assert requests["request_count"] >= requests["target_count"]
+          assert requests["downstream_policy"]["import_pr445_implementation"] is False
+          assert requests["downstream_policy"]["import_pr449_implementation"] is False
+          assert requests["downstream_policy"]["numeric_opportunity_or_voc_scores_emitted"] is False
+          assert all(row["evidence"] for row in requests["requests"])
+          assert all(row["priority_is_quality_score"] is False for row in requests["requests"])
+          assert all(
+              row["quantitative_inputs"]["status"] == "required-before-voc-or-optimization-scoring"
+              and all(value is None for key, value in row["quantitative_inputs"].items() if key != "status")
+              for row in requests["requests"]
+          )
+          assert all(
+              row["authority"]["write_authority_granted"] is False
+              and row["authority"]["merge_authority_granted"] is False
+              for row in requests["requests"]
+          )
+          assert structural_measurements["source_filegraph_fingerprint"] == filegraph["fingerprint"]
+          assert structural_measurements["source_requests_fingerprint"] == requests["fingerprint"]
+          assert structural_measurements["pair_count"] == filegraph["reconstruction_pair_count"]
+          assert structural_measurements["error_count"] == 0
+          assert structural_measurements["associated_request_count"] <= requests["measurement_kind_counts"].get("reconstruction_equivalence_test", 0)
+          assert all(row["request_fully_resolved"] is False for row in structural_measurements["measurements"])
+          assert all(row["supersession_authority_granted"] is False for row in structural_measurements["measurements"])
+          assert allocation["source_requests_fingerprint"] == requests["fingerprint"]
+          assert allocation["request_count"] == requests["request_count"]
+          assert allocation["target_count"] == requests["target_count"]
+          assert allocation["selection_policy"] == "greedy_marginal_request_evidence_coverage/v0.1"
+          assert allocation["operational_budget"]["max_anchors"] == 12
+          assert allocation["operational_budget"]["architecture_hard_cap"] is False
+          assert allocation["selected_anchor_count"] <= 12
+          assert allocation["projected_request_coverage_count"] + allocation["remaining_uncovered_request_count"] == requests["request_count"]
+          assert allocation["quantitatively_ready_request_count"] == 0
+          assert allocation["readiness"]["pr445_opportunity_evidence"]["ready_request_count"] == 0
+          assert allocation["readiness"]["pr449_value_of_computation"]["ready_request_count"] == 0
+          assert allocation["downstream_policy"]["numeric_opportunity_or_voc_scores_emitted"] is False
+          assert allocation["downstream_policy"]["selected_anchor_is_execution_authority"] is False
+          assert contract_snapshots["routing_policy"]["import_sibling_implementation"] is False
+          assert contract_snapshots["routing_policy"]["require_measured_with_provenance"] is True
+          assert contract_snapshots["routing_policy"]["unknown_numeric_input_is_zero"] is False
+          assert contract_snapshots["contracts"]["pr445_opportunity_evidence"]["head_sha"] == "a7f7352ff6f8c15d2d60049b363182e92b82057a"
+          assert contract_snapshots["contracts"]["pr449_value_of_computation"]["head_sha"] == "29182ef7bed66662456e38f9039e384329afea75"
+          assert all(obj["portfolio_fingerprint"] == portfolio["fingerprint"] for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2))
+          assert findings["filegraph_fingerprint"] == filegraph["fingerprint"]
+          assert findings["inspection_overlay_fingerprint"] == overlay["fingerprint"]
+
+          assert filegraph["operational_budget"]["max_targets"] is None
+          assert filegraph["operational_budget"]["architecture_hard_cap"] is False
+          assert filegraph["operational_budget"]["selected_target_count"] == portfolio["packet_count"]
+          assert filegraph["hydrated_target_count"] == portfolio["packet_count"]
+          assert filegraph["error_count"] == 0, filegraph["progressive_retrieval"]["errors"]
+          assert filegraph["reconstruction_pair_count"] >= 2, filegraph["reconstruction_pairs"]
+
+          marginal_policy = "greedy_marginal_uncovered_packet_coverage/v0.1"
+          assert plan1["selection_policy"] == marginal_policy
+          assert plan2["selection_policy"] == marginal_policy
+          assert plan1["operational_budget"]["max_candidates"] == 12
+          assert plan2["operational_budget"]["max_candidates"] == 12
+          assert plan1["operational_budget"]["architecture_hard_cap"] is False
+          assert plan2["operational_budget"]["architecture_hard_cap"] is False
+          assert plan1["planned_unique_ref_count"] == portfolio["unique_candidate_ref_count"]
+          assert plan2["planned_unique_ref_count"] == portfolio["unique_candidate_ref_count"]
+          assert plan1["completed_current_ref_count"] == 0
+          assert plan1["selected_ref_count"] <= 12
+          assert plan1["selected_marginal_pair_count"] == plan1["selected_new_packet_coverage_count"]
+          assert plan1["remaining_uncovered_packet_count_after_selection"] == portfolio["packet_count"] - plan1["projected_packet_coverage_after_selection_count"]
+          assert checkpoint1["completed_ref_count"] == overlay1["cumulative_hydrated_ref_count"]
+          assert overlay1["error_count"] == 0, overlay1.get("errors", [])
+          assert overlay1["packet_coverage_after_successful_hydration"] == plan1["projected_packet_coverage_after_selection_count"]
+          assert plan2["completed_current_ref_count"] == checkpoint1["completed_ref_count"]
+          assert set(plan1["selected_refs"]).isdisjoint(plan2["selected_refs"])
+          assert plan2["selected_ref_count"] <= 12
+          assert plan2["selected_marginal_pair_count"] == plan2["selected_new_packet_coverage_count"]
+          assert plan2["remaining_uncovered_packet_count_after_selection"] == portfolio["packet_count"] - plan2["projected_packet_coverage_after_selection_count"]
+          assert plan2["selected_new_packet_coverage_count"] == plan2["projected_packet_coverage_after_selection_count"] - plan2["completed_packet_coverage_count"]
+          assert plan2["completed_current_ref_count"] + plan2["selected_ref_count"] + plan2["backlog_ref_count"] == plan2["planned_unique_ref_count"]
+          assert checkpoint2["completed_ref_count"] == overlay["cumulative_hydrated_ref_count"]
+          assert checkpoint2["completed_ref_count"] >= checkpoint1["completed_ref_count"]
+          assert plan2["stale_checkpoint_ref_count"] == 0
+          assert plan2["unverifiable_checkpoint_ref_count"] == 0
+          assert overlay["error_count"] == 0, overlay.get("errors", [])
+          assert overlay["packet_coverage_after_successful_hydration"] == plan2["projected_packet_coverage_after_selection_count"]
+          assert overlay["packet_coverage_after_successful_hydration"] - overlay1["packet_coverage_after_successful_hydration"] == plan2["selected_new_packet_coverage_count"]
+          assert overlay["authority"]["write_authority_granted"] is False
+          assert overlay["authority"]["merge_authority_granted"] is False
+
+          assert findings["packet_count"] == portfolio["packet_count"]
+          assert findings["packets_with_file_overlap"] == filegraph["targets_with_file_overlap_count"]
+          assert findings["reconstruction_pair_count"] == filegraph["reconstruction_pair_count"]
+          assert findings["finding_counts"].get("DECLARED_RECONSTRUCTION_PAIR", 0) >= 2
+          assert findings["finding_counts"].get("DECLARED_RECONSTRUCTION_SOURCE", 0) >= 2
+          assert findings["authority"]["write_authority_granted"] is False
+          assert findings["authority"]["merge_authority_granted"] is False
+          assert "PRIORITY_SCORE != QUALITY_SCORE" in findings["oak_boundaries"]
+          assert "RECONSTRUCTION_PAIR != AUTOMATIC_SUPERSESSION" in findings["oak_boundaries"]
+          assert all(len(obj["fingerprint"]) == 64 for obj in (filegraph, plan1, plan2, overlay, findings, checkpoint1, checkpoint2, requests, structural_measurements, allocation))
+          assert all(row["findings"] for row in findings["packets"])
+
+          print(json.dumps({
+              "open_pr_packets": portfolio["packet_count"],
+              "target_changed_file_observations": filegraph["total_changed_file_observations"],
+              "target_unique_changed_files": filegraph["unique_changed_file_count"],
+              "target_shared_files": filegraph["shared_file_count"],
+              "target_overlap_edges": filegraph["overlap_edge_count"],
+              "targets_with_overlap": filegraph["targets_with_file_overlap_count"],
+              "reconstruction_pair_count": filegraph["reconstruction_pair_count"],
+              "reconstruction_pairs": filegraph["reconstruction_pairs"],
+              "selection_policy": plan2["selection_policy"],
+              "planned_unique_refs": plan2["planned_unique_ref_count"],
+              "wave1_selected_refs": plan1["selected_ref_count"],
+              "wave1_completed_refs": checkpoint1["completed_ref_count"],
+              "wave1_selected_new_packet_coverage": plan1["selected_new_packet_coverage_count"],
+              "wave1_projected_packet_coverage": plan1["projected_packet_coverage_after_selection_count"],
+              "wave1_packet_coverage": overlay1["packet_coverage_after_successful_hydration"],
+              "wave1_remaining_uncovered": plan1["remaining_uncovered_packet_count_after_selection"],
+              "wave2_precompleted_refs": plan2["completed_current_ref_count"],
+              "wave2_selected_refs": plan2["selected_ref_count"],
+              "wave2_selected_new_packet_coverage": plan2["selected_new_packet_coverage_count"],
+              "wave2_selected_marginal_pairs": plan2["selected_marginal_pair_count"],
+              "wave2_projected_packet_coverage": plan2["projected_packet_coverage_after_selection_count"],
+              "wave2_remaining_uncovered": plan2["remaining_uncovered_packet_count_after_selection"],
+              "final_completed_refs": checkpoint2["completed_ref_count"],
+              "final_backlog_refs": plan2["backlog_ref_count"],
+              "final_packet_coverage": overlay["packet_coverage_after_successful_hydration"],
+              "wave2_changed_files": overlay["changed_file_count"],
+              "wave2_static_symbols": overlay["symbol_count"],
+              "wave2_errors": overlay["error_count"],
+              "cumulative_overlay_count": overlay["cumulative_overlay_count"],
+              "abi_receipt_id": abi_receipt["receipt"]["receipt_id"],
+              "abi_receipt_fingerprint": abi_receipt["receipt"]["fingerprint"],
+              "measurement_request_count": requests["request_count"],
+              "measurement_target_count": requests["target_count"],
+              "measurement_kind_counts": requests["measurement_kind_counts"],
+              "measurement_receipt_id": measurement_receipt["receipt"]["receipt_id"],
+              "measurement_receipt_fingerprint": measurement_receipt["receipt"]["fingerprint"],
+              "structural_measurement_pair_count": structural_measurements["pair_count"],
+              "structural_measurement_outcomes": structural_measurements["outcome_counts"],
+              "structural_compared_file_count": structural_measurements["compared_file_count"],
+              "structural_blob_match_count": structural_measurements["blob_match_count"],
+              "structural_blob_mismatch_count": structural_measurements["blob_mismatch_count"],
+              "structural_full_changed_blob_equivalence_count": structural_measurements["full_changed_blob_equivalence_count"],
+              "structural_associated_request_count": structural_measurements["associated_request_count"],
+              "structural_receipt_id": structural_receipt["receipt"]["receipt_id"],
+              "structural_receipt_fingerprint": structural_receipt["receipt"]["fingerprint"],
+              "evidence_anchor_count": allocation["evidence_anchor_count"],
+              "selected_evidence_anchor_count": allocation["selected_anchor_count"],
+              "evidence_anchor_policy": allocation["selection_policy"],
+              "projected_measurement_request_coverage": allocation["projected_request_coverage_count"],
+              "projected_measurement_request_coverage_fraction": allocation["projected_request_coverage_fraction"],
+              "projected_measurement_target_coverage": allocation["projected_target_coverage_count"],
+              "projected_measurement_target_coverage_fraction": allocation["projected_target_coverage_fraction"],
+              "remaining_uncovered_measurement_requests": allocation["remaining_uncovered_request_count"],
+              "max_selected_evidence_request_fanout": max((row["request_fanout"] for row in allocation["selected_anchors"]), default=0),
+              "max_selected_evidence_target_fanout": max((row["target_fanout"] for row in allocation["selected_anchors"]), default=0),
+              "quantitatively_ready_requests": allocation["quantitatively_ready_request_count"],
+              "pr445_contract_snapshot_head": contract_snapshots["contracts"]["pr445_opportunity_evidence"]["head_sha"],
+              "pr449_contract_snapshot_head": contract_snapshots["contracts"]["pr449_value_of_computation"]["head_sha"],
+              "pr445_missing_field_counts": allocation["readiness"]["pr445_opportunity_evidence"]["missing_field_counts"],
+              "pr449_missing_field_counts": allocation["readiness"]["pr449_value_of_computation"]["missing_field_counts"],
+              "allocation_receipt_id": allocation_receipt["receipt"]["receipt_id"],
+              "allocation_receipt_fingerprint": allocation_receipt["receipt"]["fingerprint"],
+              "finding_counts": findings["finding_counts"],
+              "packets_without_deep_reuse_evidence": findings["packets_without_deep_reuse_evidence"],
+              "top_priority_targets": [
+                  {
+                      "ref": row["target_ref"],
+                      "score": row["priority_score"],
+                      "max_shared_files": row["max_shared_file_count"],
+                      "reconstruction_as_target": row["reconstruction_as_target_count"],
+                      "reconstruction_as_source": row["reconstruction_as_source_count"],
+                      "inspected_reuse_candidates": row["inspected_reuse_candidate_count"],
+                      "finding_types": [finding["finding_type"] for finding in row["findings"]],
+                  }
+                  for row in findings["packets"][:12]
+              ],
+              "filegraph_fingerprint": filegraph["fingerprint"],
+              "checkpoint_fingerprint": checkpoint2["fingerprint"],
+              "overlay_fingerprint": overlay["fingerprint"],
+              "findings_fingerprint": findings["fingerprint"],
+              "measurement_requests_fingerprint": requests["fingerprint"],
+              "structural_measurements_fingerprint": structural_measurements["fingerprint"],
+              "measurement_allocation_fingerprint": allocation["fingerprint"],
+          }, indent=2))
+          PY
+
+      - name: Retain exact inspection evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-pr-llmt-inspection-${{ github.run_id }}
+          path: |
+            /tmp/omega-pr-llmt-portfolio.json
+            /tmp/omega-pr-llmt-target-filegraph.json
+            /tmp/omega-pr-llmt-inspection-plan-wave1.json
+            /tmp/omega-pr-llmt-inspection-checkpoint-wave1.json
+            /tmp/omega-pr-llmt-inspection-overlay-wave1.json
+            /tmp/omega-pr-llmt-inspection-plan-wave2.json
+            /tmp/omega-pr-llmt-inspection-checkpoint.json
+            /tmp/omega-pr-llmt-inspection-overlay.json
+            /tmp/omega-pr-llmt-findings.json
+            /tmp/omega-pr-llmt-research-abi-receipt.json
+            /tmp/omega-pr-llmt-measurement-requests.json
+            /tmp/omega-pr-llmt-measurement-request-receipt.json
+            /tmp/omega-pr-llmt-structural-measurements.json
+            /tmp/omega-pr-llmt-structural-measurement-receipt.json
+            /tmp/omega-pr-llmt-measurement-allocation.json
+            /tmp/omega-pr-llmt-measurement-allocation-receipt.json
+            /tmp/omega-pr-llmt-inspected-index.json
+            omega_research_abi_t/pr_measurement_contract_snapshots.json
+          retention-days: 14

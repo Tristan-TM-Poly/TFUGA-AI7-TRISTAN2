@@ -1,0 +1,88 @@
+{
+  "schema": "omega-pr-retrieval-cross-repo-replication-suite/v0.1.0",
+  "status": "REPLICATED_WITHIN_ECOSYSTEM",
+  "ranker_version": "frozen-v0.1",
+  "top_k": 8,
+  "source_head_sha": "27f8a46bb5809187acf03d305e0fcae554713d80",
+  "source_workflow_run_id": 31677316267,
+  "repositories": [
+    {
+      "repository": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+      "replication_status": "REPLICATED",
+      "eligible_target_count": 23,
+      "gold_lineage_ref_count": 23,
+      "gold_source_counts": {
+        "declared_body_lineage": 0,
+        "stack_base_ref": 23
+      },
+      "baseline_micro_recall_at_8": 0.434783,
+      "baseline_mrr": 0.229710,
+      "hybrid_micro_recall_at_8": 1.000000,
+      "hybrid_mrr": 0.740580,
+      "hybrid_candidate_fraction": 0.296715,
+      "target_leakage_count": 0,
+      "future_leakage_count": 0,
+      "winner": "hybrid_rrf",
+      "arena_fingerprint": "86ecf7ff3d32bf291ce4aaef10db55f3ba9d60c3c7fdf21b249439c995bc1712",
+      "artifact_id": 9172037637,
+      "artifact_digest": "sha256:632dc9444be49e320be2e62e76290824569bdd7610f3f5bae51c01d3280ae5ef"
+    },
+    {
+      "repository": "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2",
+      "replication_status": "REPLICATED",
+      "eligible_target_count": 135,
+      "gold_lineage_ref_count": 135,
+      "gold_source_counts": {
+        "declared_body_lineage": 0,
+        "stack_base_ref": 135
+      },
+      "baseline_micro_recall_at_8": 0.259259,
+      "baseline_mrr": 0.091455,
+      "hybrid_micro_recall_at_8": 0.896296,
+      "hybrid_mrr": 0.580661,
+      "hybrid_candidate_fraction": 0.072183,
+      "target_leakage_count": 0,
+      "future_leakage_count": 0,
+      "winner": "hybrid_rrf",
+      "arena_fingerprint": "a988b2e5ed518d9b6351e1a6a0f29a63aa2c0ee3af542496499bf3ebfaf70536",
+      "artifact_id": 9172056122,
+      "artifact_digest": "sha256:50cdc8ea58944f2389f5e254d722f9060ad670a930dcf50e3b8de3409ab51502"
+    }
+  ],
+  "descriptive_aggregate": {
+    "eligible_target_count": 158,
+    "gold_lineage_ref_count": 158,
+    "baseline_hit_count": 45,
+    "hybrid_hit_count": 144,
+    "baseline_micro_recall_at_8": 0.284810,
+    "hybrid_micro_recall_at_8": 0.911392,
+    "target_weighted_baseline_mrr": 0.111581,
+    "target_weighted_hybrid_mrr": 0.603940,
+    "target_leakage_count": 0,
+    "future_leakage_count": 0,
+    "note": "Descriptive pooling only; repositories are not independent random samples and all gold labels in this suite are structural stack-base labels."
+  },
+  "promotion_state": {
+    "cross_repository_retrospective_replication": true,
+    "independent_external_replication": false,
+    "prospective_validation": false,
+    "semantic_compatibility_proven": false,
+    "engineering_savings_proven": false,
+    "ranker_remains_probationary": true
+  },
+  "next_required_evidence": [
+    "accumulate untouched future eligible PRs after the frozen baseline",
+    "measure prospective Recall@k and MRR without changing weights",
+    "inspect exact candidate code/tests before reuse decisions",
+    "measure actual reuse acceptance, LOC avoided, CI attempts, regressions and maintenance outcomes",
+    "replicate outside the same project ecosystem when a comparable public corpus is available"
+  ],
+  "oak_boundaries": [
+    "CROSS_REPO_WITHIN_ONE_ECOSYSTEM != INDEPENDENT_EXTERNAL_REPLICATION",
+    "STACK_BASE_REF != SEMANTIC_DEPENDENCY_PROOF",
+    "RETRIEVAL_RECALL != IMPLEMENTATION_COMPATIBILITY",
+    "RETROSPECTIVE_REPLICATION != PROSPECTIVE_VALIDATION",
+    "RANKING_GAIN != ENGINEERING_SAVINGS",
+    "ARENA_WINNER != GENERALIZATION"
+  ]
+}

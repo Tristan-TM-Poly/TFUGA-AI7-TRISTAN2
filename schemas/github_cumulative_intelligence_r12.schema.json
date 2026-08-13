@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "omega-github-cumulative-intelligence-r12.schema.json",
+  "title": "Omega GitHub Cumulative Intelligence R1.2",
+  "type": "object",
+  "required": [
+    "schema",
+    "request",
+    "history_coverage",
+    "minimal_reuse_coalition",
+    "generation_constitution",
+    "oak_boundaries",
+    "fingerprint"
+  ],
+  "properties": {
+    "schema": {
+      "const": "omega-github-cumulative-intelligence/v1.2.0"
+    },
+    "request": {
+      "type": "object"
+    },
+    "history_coverage": {
+      "type": "object"
+    },
+    "minimal_reuse_coalition": {
+      "type": "object"
+    },
+    "relevant_pr_genomes": {
+      "type": "array"
+    },
+    "lineage_neighborhood": {
+      "type": "array"
+    },
+    "negative_memory_hits": {
+      "type": "array"
+    },
+    "repository_residual_courts": {
+      "type": "array"
+    },
+    "llmt_federation": {
+      "type": "array"
+    },
+    "memory_lenses": {
+      "type": "object"
+    },
+    "generation_constitution": {
+      "type": "object"
+    },
+    "oak_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": true
+}
