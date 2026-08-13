@@ -1,0 +1,46 @@
+{
+  "measurement_id": "PAGE-R20",
+  "measurement_role": "clean compiled baseline after substantive Part I and Part VII",
+  "workflow_run_id": 31709503781,
+  "head_sha": "75a47ad067641f4142248cc4cc95ecfe2f8755e1",
+  "artifact_id": 9184653353,
+  "artifact_digest": "sha256:7bdb82c07ee3b828790ddb559176d3242230a125439ad16940d4474447364dc9",
+  "target_pages": 512,
+  "actual_pages": 133,
+  "delta": 379,
+  "status": "HOLD",
+  "compiled_page_count_is_source_of_truth": true,
+  "bibliography": {
+    "compiled": true,
+    "biber_found_citekeys": 12,
+    "pdf_pages": 2,
+    "undefined_citation_warning_observed": false
+  },
+  "part_start_pages": {
+    "p1": 17,
+    "p2": 31,
+    "p3": 47,
+    "p4": 67,
+    "p5": 83,
+    "p6": 101,
+    "p7": 121,
+    "bibliography": 131,
+    "appendix_reproducibility": 133
+  },
+  "measured_budget": [
+    {"id":"front","target":24,"actual":16,"gap":8},
+    {"id":"p1","target":48,"actual":14,"gap":34},
+    {"id":"p2","target":84,"actual":16,"gap":68},
+    {"id":"p3","target":84,"actual":20,"gap":64},
+    {"id":"p4","target":72,"actual":16,"gap":56},
+    {"id":"p5","target":60,"actual":18,"gap":42},
+    {"id":"p6","target":80,"actual":20,"gap":60},
+    {"id":"p7","target":24,"actual":10,"gap":14},
+    {"id":"bib","target":24,"actual":2,"gap":22},
+    {"id":"app","target":12,"actual":1,"gap":11}
+  ],
+  "gap_checksum": 379,
+  "gain_since_r11_pages": 6,
+  "gain_interpretation": "The page gain came from substantive literature-grounded prose and a compiled bibliography, not layout padding.",
+  "next_expansion_priority": ["p2","p3","p6","p4","p5","p1","bib","p7","app","front"]
+}
