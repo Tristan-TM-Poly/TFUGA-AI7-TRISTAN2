@@ -1,0 +1,42 @@
+name: Omega Math Proof Pilot
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'omega_math_proof_research_os/**'
+      - 'tests/test_omega_math_proof_contracts.py'
+      - 'pyproject.toml'
+      - '.github/workflows/omega-math-proof-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install package and test tools
+        run: python -m pip install -e '.[dev]'
+      - name: Validate pilot manifest
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('omega_math_proof_research_os/pilot_sources.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          assert data['pilot'] == 'proof-kernel-5'
+          assert len(data['sources']) == 5
+          assert len({s['id'] for s in data['sources']}) == 5
+          assert all(s['bytes_policy'] for s in data['sources'])
+          print('pilot_sources: PASS (5/5)')
+          PY
+      - name: Run contract tests
+        run: pytest -q tests/test_omega_math_proof_contracts.py
+      - name: Smoke test CLI
+        run: omega-proof-r01
