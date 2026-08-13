@@ -2,11 +2,11 @@
 
 R0.7 evaluates the software architecture introduced in R0.6 without claiming a
 scalar intelligence score, human novelty, independent discovery, or causal
-operator effectiveness.  The deterministic fixtures in this module are
+operator effectiveness. The deterministic fixtures in this module are
 benchmark proxies used to validate the benchmark harness itself.
 
 The central comparison unit is: same task + same declared evidence boundary +
-multiple system configurations.  Performance, resource cost, contamination,
+multiple system configurations. Performance, resource cost, contamination,
 calibration, robustness and ablation effects remain separate fields.
 """
 from __future__ import annotations
@@ -21,10 +21,10 @@ from typing import Mapping, Sequence
 from sage_tristan.tensor_research_compiler import (
     CognitiveProgram,
     LLMTRegistry,
-    SparseTensorCoalitionCompiler,
     ceres_cognitive_program,
     synthetic_tensor_fixture,
 )
+from sage_tristan.tensor_risk_gate import CumulativeRiskTensorCompiler
 
 
 EPS = 1e-12
@@ -263,6 +263,7 @@ def system_profile(kind: SystemKind, task: BenchmarkTask, registry: LLMTRegistry
         ids = ("person_a", "person_b")
         capabilities, sources, cost = _merge_people(registry, ids)
         return SystemProfile("fixed_a_b", kind, ids, capabilities, sources, cost + 0.04, 2, False)
+
     problem_registry, _ = synthetic_tensor_fixture()
     from sage_tristan.tensor_research_compiler import ProblemGenome
 
@@ -275,7 +276,7 @@ def system_profile(kind: SystemKind, task: BenchmarkTask, registry: LLMTRegistry
         evidence_ids=("r07_fixture",),
         risk_budget=0.5,
     )
-    receipt = SparseTensorCoalitionCompiler(problem_registry).compile(problem, max_llmts=3)
+    receipt = CumulativeRiskTensorCompiler(problem_registry).compile(problem, max_llmts=3)
     ids = receipt.selected_person_ids
     capabilities, sources, cost = _merge_people(problem_registry, ids)
     return SystemProfile("meta_llmt_router", kind, ids, capabilities, sources, cost + 0.08, len(ids), True)
@@ -421,6 +422,7 @@ def compile_report() -> dict[str, object]:
         "cost_normalization_present": True,
         "contamination_tensor_separate_from_quality": True,
         "hidden_target_required_for_independent_discovery_eligibility": True,
+        "meta_routing_uses_cumulative_risk_gate": True,
         "scalar_intelligence_score_produced": False,
         "human_novelty_claimed": False,
         "independent_discovery_certified": False,
@@ -432,7 +434,8 @@ def compile_report() -> dict[str, object]:
             "R0.7 validates benchmark plumbing and comparison semantics using deterministic synthetic proxies. "
             "It does not measure human-like intelligence, certify novelty, remove pretrained-model contamination, "
             "or prove causal effects from ablations or coalition synergies. Independent-discovery eligibility also "
-            "requires a hidden target in addition to controlled contamination axes."
+            "requires a hidden target in addition to controlled contamination axes. MetaLLMT routing uses the "
+            "R0.6.1 additive cumulative declared-risk gate, which is not a real-world safety model."
         ),
     }
 
