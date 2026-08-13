@@ -6,6 +6,14 @@ import argparse
 import json
 import os
 import re
+import sys
+
+# Direct execution as `python tools/compile_pr_5k2n_event.py` places only
+# `tools/` on sys.path. Restore the repository root explicitly so the
+# canonical package is imported without requiring installation.
+_REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(_REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPOSITORY_ROOT))
 
 from omega_capability_os_t.github_memory import CapabilityRequest
 from omega_capability_os_t.github_pr_generation_forest import compile_pr_generation_forest
