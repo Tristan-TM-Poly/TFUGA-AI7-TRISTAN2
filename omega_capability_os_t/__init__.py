@@ -39,6 +39,14 @@ from .external import (
     validate_external_bindings,
     validate_external_receipt,
 )
+from .github_memory import (
+    CapabilityGraph,
+    CapabilityRequest,
+    GitHubMemoryIndex,
+    GitHubPRSource,
+    ReuseBeforeCreateGate,
+    build_live_index,
+)
 from .normalizers import (
     NORMALIZER_SCHEMA_VERSION,
     ProviderResponseNormalizationError,
@@ -101,5 +109,11 @@ __all__ = [
     "chatmem_checkpoint_intent",
     "checkpoint_gate_handler",
     "default_chatmem_bootstrap_values",
+    "CapabilityRequest",
+    "GitHubMemoryIndex",
+    "CapabilityGraph",
+    "ReuseBeforeCreateGate",
+    "GitHubPRSource",
+    "build_live_index",
 ]
 __version__ = "0.6.0"
