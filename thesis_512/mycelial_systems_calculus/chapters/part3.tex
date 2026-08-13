@@ -1,36 +1,283 @@
 \part{Architecture, protocoles et compilateurs}
 
 \chapter{Tristan Repo Protocol}
+
 \section{Intent, Capability et WorkUnit}
+
+Le protocole distingue trois plans qui ne doivent pas être confondus :
+\[
+\mathrm{Intent}\neq\mathrm{Capability}\neq\mathrm{WorkUnit}.
+\]
+Un Intent décrit un objectif et des contraintes; une Capability décrit une transformation réutilisable; un WorkUnit décrit une unité de travail contextualisée et bornée.
+
+\begin{definition}[IntentSpec]
+Un IntentSpec est
+\[
+J=(id,o,c,q,a),
+\]
+où $o$ est l'objectif, $c$ les contraintes, $q$ les exigences de qualité/evidence et $a$ la borne d'autorité.
+\end{definition}
+
+\begin{definition}[WorkUnit]
+Un WorkUnit est
+\[
+W=(id,k,x,y,\kappa,\rho,\Xi),
+\]
+où $k$ est la classe de tâche, $x$ et $y$ les contrats d'entrée/sortie, $\kappa$ le budget/coût, $\rho$ le risque et $\Xi$ les obligations épistémiques.
+\end{definition}
+
+Le dépôt secondaire TTM-TFUGA-AI7-TRISTAN2 contient déjà une famille Living Factory qui traite les WorkUnits comme objets déterministes de contrôle et sépare explicitement score de priorité, evidence et autorité. Cette implémentation constitue un cas d'étude interne, pas une validation scientifique externe.
+
 \section{Artifact, Claim et Evidence}
+
+Un artefact n'est pas automatiquement une preuve. On associe donc
+\[
+A\mapsto\{Q_i\}_{i=1}^m
+\]
+avec un ledger de claims $Q_i$. Chaque claim possède un statut parmi un ensemble ordonné de maturités épistémiques et référence explicitement ses sources, tests, benchmarks, incertitudes et limites.
+
+\begin{definition}[EvidenceReceipt]
+Un EvidenceReceipt est un reçu typé
+\[
+R_E=(source,version,method,observation,uncertainty,scope,status).
+\]
+Il atteste une observation ou un résultat dans un contexte donné; il n'étend pas automatiquement son domaine de validité.
+\end{definition}
+
 \section{Event, Memory et Action}
 
+Une action $a_t$ transforme un état seulement si l'autorité requise est satisfaite. On sépare
+\[
+\mathrm{can\_plan}(a),\qquad \mathrm{can\_execute}(a),\qquad \mathrm{did\_execute}(a).
+\]
+Cette séparation est cohérente avec Capability OS, où disponibilité d'un outil, permission de planification et autorisation d'exécution sont des faits distincts.
+
 \chapter{Repo ISA et programmes distribués}
+
 \section{Instructions primitives}
+
+Nous introduisons une ISA de recherche minimale :
+\[
+\mathcal I=\{SEARCH,MAP,ZOOM,TRANSFORM,GENERATE,ATTACK,COMPARE,TEST,CRYSTALLIZE\}.
+\]
+Elle est proche de l'ISA explicitement utilisée par les compilateurs de recherche du corpus GitHub. Son but est de fournir un vocabulaire d'exécution commun, non de prétendre qu'il s'agit d'un jeu d'instructions universel minimal.
+
 \section{Programmes de repos}
+
+Un programme distribué est une séquence partiellement ordonnée
+\[
+P=(V_P,E_P,\lambda,\Gamma),
+\]
+où $\lambda:V_P\to\mathcal I$ étiquette les étapes et $\Gamma$ contient les contrats d'entrée, evidence, ressources, rollback et autorité.
+
 \section{Composition et interprétation}
 
+L'interpréteur associe à une instruction et un état une transition typée
+\[
+\llbracket i\rrbracket:\mathcal S\to \mathcal S\times\mathcal R,
+\]
+où $\mathcal R$ est un reçu contenant au minimum le statut, les sorties déclarées, la provenance et les résidus.
+
+\begin{limitation}
+Cette sémantique opérationnelle est une cible de formalisation. Les connecteurs réels conservent leurs propres schémas et échecs; le runtime doit normaliser ces réponses sans prétendre éliminer toute dérive de fournisseur.
+\end{limitation}
+
 \chapter{Intent-to-RepoGraph Compiler}
+
 \section{Compilation de l'intention}
+
+Le document source formule la transformation
+\[
+\mathrm{NaturalLanguage}\rightarrow HGFM_{execution}.
+\]
+Pour rester testable, la présente thèse factorise ce saut en étapes explicites :
+\[
+J\xrightarrow{parse}S_J\xrightarrow{decompose}\{W_i\}\xrightarrow{resolve}\{C_i\}\xrightarrow{plan}P.
+\]
+
+Le parseur produit une spécification candidate; aucune phrase en langage naturel n'est considérée comme un contrat exécutable vérifié avant la résolution des ambiguïtés matérielles.
+
 \section{Résolution de capacités}
+
+La résolution est un problème de satisfaction sous contraintes :
+\[
+C^*=\arg\max_{C\in\mathcal C(J)} U(C\mid J)
+\]
+sous les contraintes de type, evidence, coût, risque, disponibilité et autorité.
+
+On préfère une représentation vectorielle des critères. Lorsqu'un score scalaire est utilisé pour ordonner des candidats, les gates non compensatoires restent externes au score.
+
 \section{Plan exécutable et contraintes}
 
+La sortie du compilateur est
+\[
+P_J=(G_J,Contracts_J,EvidenceReq_J,Rollback_J,Authority_J).
+\]
+Le plan est exécutable seulement si chaque hyperarête possède un provider résolu, un contrat de sortie et un chemin de reprise ou d'échec explicite.
+
 \chapter{Theory-to-Repo Compiler}
+
 \section{Claims vers programmes de recherche}
+
+Le document source décrit
+\[
+\boxed{Theory\rightarrow ExecutableResearchProgram}.
+\]
+On représente une théorie candidate par
+\[
+\Theta=(D,A,Q,F,M,B),
+\]
+où $D$ sont les définitions, $A$ les hypothèses, $Q$ les claims, $F$ les objets formels, $M$ les méthodes et $B$ les frontières/limitations.
+
+Le compilateur produit un graphe d'obligations :
+\[
+\mathcal O(\Theta)=\{o_{claim},o_{proof},o_{data},o_{simulation},o_{benchmark},o_{counterexample},o_{reproduction}\}.
+\]
+
 \section{Tests, simulations et capacités manquantes}
+
+Pour chaque claim $q$, le compilateur doit distinguer :
+\[
+\mathrm{SupportPath}(q),\quad \mathrm{FalsificationPath}(q),\quad \mathrm{Missing}(q).
+\]
+Un manque produit un WorkUnit ou un besoin de capacité, et non une evidence fictive.
+
 \section{Génération bornée d'artefacts}
 
+La génération est autorisée dans l'espace des candidats : documentation, code scaffold, tests, protocoles, figures, simulations ou tickets de recherche. La promotion vers un claim démontré exige des gates séparés.
+
 \chapter{Repo-to-Theory Compiler}
+
 \section{Hypothèses implicites du code}
+
+Le document source propose d'extraire
+\[
+\mathrm{ImplicitTheory}(R)
+\]
+à partir du code, des tests, de la documentation, des benchmarks et de l'historique.
+
+Nous définissons une extraction candidate
+\[
+\mathcal X(R)=(Types,Units,Assumptions,Invariants,Claims,FailureModes,DataDependencies).
+\]
+Les éléments extraits portent une provenance au niveau du fichier, symbole, test ou commit.
+
 \section{Extraction des invariants}
+
+Les tests constituent une source d'invariants opérationnels possibles, mais un test peut être incomplet. Un invariant extrait est donc typé :
+\[
+I\in\{DECLARED,TESTED,EMPIRICALLY\_OBSERVED,FORMALLY\_PROVED,CANDIDATE\}.
+\]
+
 \section{Modèle sémantique reconstruit}
 
+La théorie reconstruite $\widehat\Theta_R$ est un objet dérivé. Elle ne doit jamais être présentée comme l'intention mentale des auteurs du code. Elle représente seulement la meilleure reconstruction supportée par les artefacts observés.
+
 \chapter{Compilation bidirectionnelle et semantic diff}
+
 \section{Théorie vers implémentation}
+
+On définit
+\[
+F:\Theta\to R
+\]
+comme compilateur théorie-vers-système et
+\[
+G:R\to\widehat\Theta_R
+\]
+comme compilateur système-vers-théorie.
+
+Un round-trip idéal satisferait
+\[
+G(F(\Theta))\simeq\Theta.
+\]
+
 \section{Implémentation vers théorie}
+
+La correspondance est évaluée claim-par-claim et invariant-par-invariant, plutôt que par une similarité textuelle globale. On introduit le résidu vectoriel
+\[
+\Delta_T=(\Delta_D,\Delta_A,\Delta_Q,\Delta_U,\Delta_E,\Delta_B),
+\]
+respectivement pour définitions, hypothèses, claims, unités/types, evidence et frontières.
+
 \section{Détection des divergences}
 
+Le document source donne l'intuition :
+\[
+\Delta=Theory-Implementation.
+\]
+La thèse remplace ce scalaire narratif par une famille de tests discriminants. EXP-003 injecte notamment des changements d'unité, conventions, hypothèses, evidence périmée et conclusions non supportées pour comparer Software CI, Semantic CI, Scientific CI et OAK.
+
+\begin{conjecture}[Valeur du semantic diff]
+Sur un corpus de divergences contrôlées, une combinaison de contrats sémantiques, obligations scientifiques et provenance détectera certaines incohérences que des tests syntaxiques/fonctionnels seuls ne détectent pas, avec un coût de faux positifs mesurable.
+\end{conjecture}
+
 \chapter{Routage et marché interne des capacités}
+
 \section{Fournisseurs interchangeables}
+
+Pour une capacité $C$, soit $\Pi(C)=\{r_1,\ldots,r_k\}$ l'ensemble des providers conformes candidats. Le routeur produit un ordre partiel selon :
+\[
+(performance,accuracy,uncertainty,cost,availability,compatibility,evidence,risk).
+\]
+Cette liste reprend la logique de la source tout en ajoutant explicitement evidence et risque comme dimensions non négligeables.
+
 \section{Qualité, latence, coût et confiance}
+
+La confiance est indexée par capacité :
+\[
+Trust(R_i,R_j,C),
+\]
+comme dans le document source. Un dépôt peut être fiable pour une classe de transformation et expérimental pour une autre. Aucun score global de confiance n'est requis.
+
 \section{Compétition, ensemble et niches}
+
+Le corpus secondaire Living Factory introduit déjà des réputations locales, patterns multi-tâches et qualification prospective, tout en maintenant les frontières : association historique $\neq$ effet causal et self-improvement $\neq$ self-certification. Ces objets deviennent des cas d'étude pour le routeur plutôt que des preuves de supériorité.
+
+\chapter{Proof-Carrying Repositories et transactions inter-repos}
+
+\section{Repo Proof Passport}
+
+Le document source définit conceptuellement
+\[
+Repo+Evidence+Claims+Limits=ProofCarryingRepo.
+\]
+Nous représentons un passport par
+\[
+\Pi_R=(commit,claims,evidence,uncertainty,provenance,security,limits).
+\]
+Le terme \emph{proof-carrying} est employé ici au sens architectural interne; il doit être distingué du Proof-Carrying Code formel de la littérature.
+
+\section{Contract tests inter-repos}
+
+Pour un producteur $A$ et un consommateur $B$, un test de contrat vérifie au minimum : schéma, type sémantique, unités, conventions, version et bornes. La relation
+\[
+A\circ B
+\]
+n'est promue que sur un ensemble de cas explicites.
+
+\section{Transactions et rollback}
+
+Une transaction multi-repos candidate est un ensemble d'actions $\{a_i\}$ avec préconditions, receipts et rollback. Les écritures externes restent hors de l'autorité implicite d'un compilateur de recherche.
+
+\chapter{Scientific Build Graph}
+
+\section{Software CI, Semantic CI, Scientific CI}
+
+Le document source impose la distinction
+\[
+SoftwareCI+SemanticCI+ScientificCI+OAK.
+\]
+Scientific CI vérifie notamment présence de baseline, contrôles négatifs, unités, incertitude, provenance du dataset, test statistique, contre-hypothèse et seed reproductible.
+
+\section{Graphe de build scientifique}
+
+On généralise le build graph par
+\[
+Claim\rightarrow Data\rightarrow Method\rightarrow Code\rightarrow Test\rightarrow Benchmark\rightarrow EvidenceReceipt\rightarrow Decision.
+\]
+Une modification de n'importe quel nœud déclenche uniquement le cône de recomputation nécessaire si les dépendances sont correctement déclarées.
+
+\section{Défauts de build épistémique}
+
+Sont traités comme défauts distincts : référence absente, evidence périmée, unité incompatible, baseline absente, test négatif manquant, source non traçable, claim plus fort que l'evidence et résultat non reproductible. Ces défauts alimentent M$^-$ au lieu d'être masqués pour rendre la narration plus propre.
