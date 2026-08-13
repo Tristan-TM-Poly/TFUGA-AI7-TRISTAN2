@@ -12,7 +12,7 @@ permissions:
 jobs:
   pr-5k2n-oak:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -26,18 +26,22 @@ jobs:
         run: |
           python -m compileall -q \
             omega_capability_os_t/github_pr_generation_forest.py \
+            omega_capability_os_t/github_pr_generation_r02.py \
             tools/compile_pr_5k2n_event.py
 
-      - name: Deterministic 5K2N court
-        run: python -m pytest -q tests/test_omega_github_pr_generation_forest.py
+      - name: Deterministic 5K2N R0.1-R0.2 court
+        run: |
+          python -m pytest -q \
+            tests/test_omega_github_pr_generation_forest.py \
+            tests/test_omega_github_pr_generation_r02.py
 
-      - name: Compile canonical bounded receipt
+      - name: Compile canonical R0.1 bounded receipt
         run: |
           python -m omega_capability_os_t.github_pr_generation_forest \
             examples/pr_5k2n_generation_request.json \
             --output /tmp/omega-pr-5k2n.json
 
-      - name: Compile n=0..3 runtime-bounded campaign
+      - name: Compile R0.1 n=0..3 runtime-bounded campaign
         run: |
           python -m omega_capability_os_t.github_pr_generation_forest \
             examples/pr_5k2n_generation_request.json \
@@ -55,7 +59,7 @@ jobs:
           assert campaign["generations"][0]["logical_cardinality_decimal"] == "5000"
           PY
 
-      - name: Validate receipt schema and OAK invariants
+      - name: Validate R0.1 receipt schema and OAK invariants
         run: |
           python - <<'PY'
           import json
@@ -78,6 +82,40 @@ jobs:
           assert len(report["fingerprint"]) == 64
           PY
 
+      - name: Compile history-enriched R0.2 review contracts
+        run: |
+          python -m omega_capability_os_t.github_pr_generation_r02 \
+            examples/pr_5k2n_generation_r02_request.json \
+            --output /tmp/omega-pr-5k2n-r02.json
+
+      - name: Validate R0.2 schema and reuse-first OAK gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          report = json.loads(Path("/tmp/omega-pr-5k2n-r02.json").read_text())
+          schema = json.loads(Path("schemas/omega-pr-5k2n-generation-r02.schema.json").read_text())
+          Draft202012Validator(schema).validate(report)
+
+          assert report["schema"] == "omega-pr-5k2n-generation-contextual/v0.2.0"
+          assert report["historical_context"]["history_enriched"] is True
+          assert report["historical_context"]["decision"] == "EXTEND"
+          assert report["logical_cardinality_decimal"] == str(5000 * (2 ** report["generation"]))
+          assert report["logical_population_materialized"] is False
+          assert report["empirical_outcome_signal_used"] is True
+          assert report["physical_patch_contract_count"] <= report["physical_patch_compiler"]["contract_budget"]
+          assert report["physical_patch_compiler"]["code_change_generated"] is False
+          assert report["physical_patch_compiler"]["write_authority_granted"] is False
+          assert report["physical_patch_compiler"]["automatic_commit_allowed"] is False
+          assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
+          assert report["adaptive_continuation"]["architecture_hard_cap"] is False
+          assert all(row["causal_synergy_proven"] is False for row in report["synergy_pairs"])
+          assert all(row["materialization_status"] == "REVIEW_CONTRACT_ONLY" for row in report["physical_patch_contracts"])
+          assert len(report["fingerprint"]) == 64
+          PY
+
       - name: Compile current PR event receipt
         if: github.event_name == 'pull_request'
         run: |
@@ -95,7 +133,7 @@ jobs:
           assert report["physical_patch_compiler"]["write_authority_granted"] is False
           PY
 
-      - name: Retain bounded generation receipt
+      - name: Retain bounded generation receipts
         uses: actions/upload-artifact@v4
         with:
           name: omega-pr-5k2n-${{ github.run_id }}
@@ -103,5 +141,6 @@ jobs:
             /tmp/omega-pr-5k2n.json
             /tmp/omega-pr-5k2n-event.json
             /tmp/omega-pr-5k2n-campaign.json
+            /tmp/omega-pr-5k2n-r02.json
           if-no-files-found: ignore
           retention-days: 14
