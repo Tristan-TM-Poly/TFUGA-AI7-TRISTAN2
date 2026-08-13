@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .compiler import ResearchABICompiler
-from .core import Envelope, GraphEdge, InvariantCheck, ObjectRef
+from .core import Envelope, InvariantCheck, ObjectRef
 
 
 def _load(path: str) -> dict[str, Any]:
@@ -56,6 +56,8 @@ def compile_fixture(payload: dict[str, Any]) -> dict[str, Any]:
             rollback=item.get("rollback", ""),
             provenance=tuple(item.get("provenance", [])),
             oak_state=item.get("oak_state", "UNKNOWN"),
+            state_before=item.get("state_before"),
+            state_after=item.get("state_after"),
         )
     return compiler.compile(max_per_graph=int(payload.get("max_per_graph", 8)))
 
