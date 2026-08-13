@@ -1,22 +1,14 @@
-"""Ω-TTM-EXEC-T — executable convergence layer for TTM-2048.
+"""Ω-TTM-EXEC-T — convergence layer reusing canonical Tristan runtimes."""
 
-This package deliberately reuses the repository's canonical WorkUnit, Capability OS,
-and Cognitive Computer instead of defining parallel copies of those abstractions.
-"""
-
+from .compile import compile_report
 from .epistemic import Claim, EpistemicStatus, EvidenceClass, OAKDecision, evaluate_claim
+from .execute import execute_report
 from .primitives import TTM_PRIMITIVES, primitive_contract
-from .runtime import TTMRuntime
 
 __all__ = [
-    "Claim",
-    "EpistemicStatus",
-    "EvidenceClass",
-    "OAKDecision",
-    "TTM_PRIMITIVES",
-    "TTMRuntime",
-    "evaluate_claim",
-    "primitive_contract",
+    "Claim", "EpistemicStatus", "EvidenceClass", "OAKDecision",
+    "TTM_PRIMITIVES", "compile_report", "execute_report",
+    "evaluate_claim", "primitive_contract",
 ]
 
 __version__ = "0.1.0"
