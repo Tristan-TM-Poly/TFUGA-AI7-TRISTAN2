@@ -6,9 +6,11 @@ on:
       - "omega_capability_os_t/github_memory_zoom.py"
       - "omega_capability_os_t/github_pr_llmt.py"
       - "omega_capability_os_t/github_pr_llmt_inspection.py"
+      - "omega_capability_os_t/github_pr_llmt_targets.py"
       - "tests/test_omega_capability_os_github_memory_zoom.py"
       - "tests/test_omega_github_pr_llmt.py"
       - "tests/test_omega_github_pr_llmt_inspection.py"
+      - "tests/test_omega_github_pr_llmt_targets.py"
       - ".agents/skills/github-pr-llmt/**"
       - ".github/workflows/github-pr-llmt-inspection-oak.yml"
   workflow_dispatch:
@@ -35,7 +37,8 @@ jobs:
           python -m pytest -q \
             tests/test_omega_capability_os_github_memory_zoom.py \
             tests/test_omega_github_pr_llmt.py \
-            tests/test_omega_github_pr_llmt_inspection.py
+            tests/test_omega_github_pr_llmt_inspection.py \
+            tests/test_omega_github_pr_llmt_targets.py
 
       - name: Compile sources
         run: python -m compileall -q omega_capability_os_t
@@ -57,12 +60,22 @@ jobs:
             --top-k 8 \
             --output /tmp/omega-pr-llmt-portfolio.json
 
-      - name: Inspect highest-fanout unique PRs
+      - name: Hydrate changed-file graph for every open PR
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python -m omega_capability_os_t.github_pr_llmt_targets \
+            /tmp/omega-pr-llmt-index.json \
+            /tmp/omega-pr-llmt-portfolio.json \
+            --output-index /tmp/omega-pr-llmt-target-index.json \
+            --output /tmp/omega-pr-llmt-target-filegraph.json
+
+      - name: Inspect highest-fanout unique historical PRs
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           python -m omega_capability_os_t.github_pr_llmt_inspection inspect \
-            /tmp/omega-pr-llmt-index.json \
+            /tmp/omega-pr-llmt-target-index.json \
             /tmp/omega-pr-llmt-portfolio.json \
             --max-candidates 12 \
             --max-files-per-pr 4 \
@@ -77,13 +90,27 @@ jobs:
           from pathlib import Path
 
           portfolio = json.loads(Path("/tmp/omega-pr-llmt-portfolio.json").read_text())
+          filegraph = json.loads(Path("/tmp/omega-pr-llmt-target-filegraph.json").read_text())
           plan = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan.json").read_text())
           overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
 
+          assert portfolio["schema"] == "omega-pr-llmt-portfolio/v0.1.0"
+          assert filegraph["schema"] == "omega-pr-llmt-target-filegraph/v0.1.0"
           assert plan["schema"] == "omega-pr-llmt-inspection-plan/v0.1.0"
           assert overlay["schema"] == "omega-pr-llmt-inspection-overlay/v0.1.0"
+          assert filegraph["portfolio_fingerprint"] == portfolio["fingerprint"]
           assert plan["portfolio_fingerprint"] == portfolio["fingerprint"]
           assert overlay["portfolio_fingerprint"] == portfolio["fingerprint"]
+
+          assert filegraph["operational_budget"]["max_targets"] is None
+          assert filegraph["operational_budget"]["architecture_hard_cap"] is False
+          assert filegraph["operational_budget"]["selected_target_count"] == portfolio["packet_count"]
+          assert filegraph["hydrated_target_count"] == portfolio["packet_count"]
+          assert filegraph["error_count"] == 0, filegraph["progressive_retrieval"]["errors"]
+          assert filegraph["authority"]["write_authority_granted"] is False
+          assert filegraph["authority"]["merge_authority_granted"] is False
+          assert len(filegraph["fingerprint"]) == 64
+
           assert plan["operational_budget"]["max_candidates"] == 12
           assert plan["operational_budget"]["architecture_hard_cap"] is False
           assert plan["planned_unique_ref_count"] == portfolio["unique_candidate_ref_count"]
@@ -102,6 +129,17 @@ jobs:
 
           print(json.dumps({
               "open_pr_packets": portfolio["packet_count"],
+              "target_changed_file_observations": filegraph["total_changed_file_observations"],
+              "target_unique_changed_files": filegraph["unique_changed_file_count"],
+              "target_shared_files": filegraph["shared_file_count"],
+              "target_overlap_edges": filegraph["overlap_edge_count"],
+              "targets_with_overlap": filegraph["targets_with_file_overlap_count"],
+              "targets_with_overlap_fraction": filegraph["targets_with_file_overlap_fraction"],
+              "target_file_count_median": filegraph["changed_file_distribution"]["median"],
+              "target_file_count_p90": filegraph["changed_file_distribution"]["p90"],
+              "large_change_candidates": filegraph["changed_file_distribution"]["large_change_candidate_count"],
+              "top_shared_files": filegraph["shared_files"][:12],
+              "top_overlap_edges": filegraph["overlap_edges"][:12],
               "planned_unique_refs": plan["planned_unique_ref_count"],
               "selected_refs": plan["selected_ref_count"],
               "backlog_refs": plan["backlog_ref_count"],
@@ -109,8 +147,8 @@ jobs:
               "selected_packet_coverage_fraction": plan["selected_packet_coverage_fraction"],
               "selected_pair_count": plan["selected_pair_count"],
               "hydrated_refs": overlay["hydrated_ref_count"],
-              "changed_files": overlay["changed_file_count"],
-              "static_symbols": overlay["symbol_count"],
+              "candidate_changed_files": overlay["changed_file_count"],
+              "candidate_static_symbols": overlay["symbol_count"],
               "inspection_errors": overlay["error_count"],
               "packet_coverage_after_hydration": overlay["packet_coverage_after_successful_hydration"],
               "top_candidates": [
@@ -122,6 +160,7 @@ jobs:
                   }
                   for row in top
               ],
+              "filegraph_fingerprint": filegraph["fingerprint"],
               "plan_fingerprint": plan["fingerprint"],
               "overlay_fingerprint": overlay["fingerprint"],
           }, indent=2))
@@ -133,6 +172,7 @@ jobs:
           name: omega-pr-llmt-inspection-${{ github.run_id }}
           path: |
             /tmp/omega-pr-llmt-portfolio.json
+            /tmp/omega-pr-llmt-target-filegraph.json
             /tmp/omega-pr-llmt-inspection-plan.json
             /tmp/omega-pr-llmt-inspection-overlay.json
             /tmp/omega-pr-llmt-inspected-index.json
