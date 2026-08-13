@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "pilot": "proof-kernel-5",
+  "sources": [
+    {
+      "id": "book-of-proof",
+      "title": "Book of Proof, Third Edition",
+      "authors": ["Richard Hammack"],
+      "role": ["proof-literacy", "logic", "proof-writing", "counterexamples", "induction"],
+      "provenance_mode": "user-supplied-source-metadata-only",
+      "bytes_policy": "do-not-commit-third-party-pdf"
+    },
+    {
+      "id": "sundstrom-mathematical-reasoning",
+      "title": "Mathematical Reasoning: Writing and Proof",
+      "authors": ["Ted Sundstrom"],
+      "role": ["proof-writing", "reasoning", "curriculum"],
+      "provenance_mode": "harvest-candidate",
+      "bytes_policy": "artifact-only-after-license-gate"
+    },
+    {
+      "id": "ernst-proof-ibl",
+      "title": "An Introduction to Proof via Inquiry-Based Learning",
+      "authors": ["Dana Ernst"],
+      "role": ["proof-discovery", "inquiry", "curriculum"],
+      "provenance_mode": "harvest-candidate",
+      "bytes_policy": "artifact-only-after-license-gate"
+    },
+    {
+      "id": "forallx-calgary",
+      "title": "forall x: Calgary. An Introduction to Formal Logic",
+      "authors": ["P. D. Magnus", "Tim Button", "Robert Trueman", "Richard Zach", "contributors"],
+      "role": ["formal-logic", "natural-deduction", "formalization"],
+      "provenance_mode": "open-logic-project",
+      "bytes_policy": "license-and-attribution-gate"
+    },
+    {
+      "id": "openlogic-slc",
+      "title": "Sets, Logic, Computation: An Open Introduction to Metalogic",
+      "authors": ["Richard Zach", "Open Logic Project contributors"],
+      "role": ["set-theory", "first-order-logic", "metatheory", "computability"],
+      "provenance_mode": "open-logic-project",
+      "bytes_policy": "license-and-attribution-gate"
+    }
+  ],
+  "oak_boundary": "This pilot manifest identifies sources and intended roles. It is not a claim that bytes are present, licenses permit redistribution, or source claims are formally verified."
+}
