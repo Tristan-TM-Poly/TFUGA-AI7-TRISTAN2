@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omega.local/schemas/tensor_research_self_model_r08.schema.json",
+  "title": "Omega Tensor Research Self-Model R0.8",
+  "type": "object",
+  "$defs": {
+    "OutcomeClass": {
+      "type": "string",
+      "enum": ["positive", "negative", "mixed", "unknown"]
+    },
+    "MemoryClass": {
+      "type": "string",
+      "enum": ["M+", "M-", "M?"]
+    },
+    "CreditUnit": {
+      "type": "string",
+      "enum": ["operator", "coalition", "system_kind"]
+    },
+    "CreditReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit_type", "unit_id", "support_count", "comparison_count",
+        "mean_information_with_unit", "mean_information_without_unit",
+        "association_delta", "mean_cost_with_unit", "causal_credit_proven",
+        "confounding_possible", "observational_only"
+      ],
+      "properties": {
+        "unit_type": {"$ref": "#/$defs/CreditUnit"},
+        "unit_id": {"type": "string"},
+        "support_count": {"type": "integer", "minimum": 0},
+        "comparison_count": {"type": "integer", "minimum": 0},
+        "mean_information_with_unit": {"type": "number", "minimum": 0, "maximum": 1},
+        "mean_information_without_unit": {"type": "number", "minimum": 0, "maximum": 1},
+        "association_delta": {"type": "number", "minimum": -1, "maximum": 1},
+        "mean_cost_with_unit": {"type": "number", "minimum": 0},
+        "causal_credit_proven": {"const": false},
+        "confounding_possible": {"const": true},
+        "observational_only": {"const": true}
+      }
+    },
+    "PredictionReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "problem_family", "system_kind", "support_count",
+        "predicted_information_gain_proxy", "predicted_cost_proxy",
+        "predicted_calibration_proxy", "predictive_association_only",
+        "causal_effect_proven", "external_validity_proven"
+      ],
+      "properties": {
+        "problem_family": {"type": "string"},
+        "system_kind": {"type": "string"},
+        "support_count": {"type": "integer", "minimum": 0},
+        "predicted_information_gain_proxy": {"type": "number", "minimum": 0, "maximum": 1},
+        "predicted_cost_proxy": {"type": "number", "minimum": 0},
+        "predicted_calibration_proxy": {"type": "number", "minimum": 0, "maximum": 1},
+        "predictive_association_only": {"const": true},
+        "causal_effect_proven": {"const": false},
+        "external_validity_proven": {"const": false}
+      }
+    },
+    "ValueOfComputationReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id", "expected_information_gain_proxy", "expected_cost",
+        "expected_risk", "uncertainty_penalty", "value_of_computation_proxy",
+        "recommend_compute", "policy_proxy_only", "causal_effect_proven",
+        "guaranteed_positive_return"
+      ],
+      "properties": {
+        "candidate_id": {"type": "string"},
+        "expected_information_gain_proxy": {"type": "number", "minimum": 0, "maximum": 1},
+        "expected_cost": {"type": "number", "minimum": 0},
+        "expected_risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "uncertainty_penalty": {"type": "number", "minimum": 0},
+        "value_of_computation_proxy": {"type": "number"},
+        "recommend_compute": {"type": "boolean"},
+        "policy_proxy_only": {"const": true},
+        "causal_effect_proven": {"const": false},
+        "guaranteed_positive_return": {"const": false}
+      }
+    }
+  },
+  "required": [
+    "engine", "release", "episode_count", "memory_counts", "operator_credits",
+    "coalition_credits", "predictions", "value_of_computation",
+    "append_only_episode_ledger", "m_plus_is_truth",
+    "m_minus_is_permanent_refutation", "m_question_preserved",
+    "credit_is_causal_proof", "prediction_is_causal_effect",
+    "value_of_computation_is_guaranteed_return",
+    "benchmark_history_is_external_scientific_validation",
+    "upstream_r07_required", "oak_note"
+  ],
+  "properties": {
+    "engine": {"const": "Omega-TENSOR-RESEARCH-SELF-MODEL-T"},
+    "release": {"const": "R0.8"},
+    "episode_count": {"type": "integer", "minimum": 1},
+    "memory_counts": {
+      "type": "object",
+      "required": ["M+", "M-", "M?"],
+      "properties": {
+        "M+": {"type": "integer", "minimum": 0},
+        "M-": {"type": "integer", "minimum": 0},
+        "M?": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "operator_credits": {"type": "array", "items": {"$ref": "#/$defs/CreditReceipt"}},
+    "coalition_credits": {"type": "array", "items": {"$ref": "#/$defs/CreditReceipt"}},
+    "predictions": {"type": "array", "items": {"$ref": "#/$defs/PredictionReceipt"}},
+    "value_of_computation": {"type": "array", "items": {"$ref": "#/$defs/ValueOfComputationReceipt"}},
+    "append_only_episode_ledger": {"const": true},
+    "m_plus_is_truth": {"const": false},
+    "m_minus_is_permanent_refutation": {"const": false},
+    "m_question_preserved": {"const": true},
+    "credit_is_causal_proof": {"const": false},
+    "prediction_is_causal_effect": {"const": false},
+    "value_of_computation_is_guaranteed_return": {"const": false},
+    "benchmark_history_is_external_scientific_validation": {"const": false},
+    "upstream_r07_required": {"const": true},
+    "oak_note": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

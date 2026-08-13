@@ -1,0 +1,88 @@
+name: Tensor Research Self-Model R0.8 OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "sage_tristan/tensor_research_self_model.py"
+      - "sage_tristan/tensor_discovery_bench.py"
+      - "sage_tristan/tensor_risk_gate.py"
+      - "schemas/tensor_research_self_model_r08.schema.json"
+      - "tests/test_tensor_research_self_model.py"
+      - "tests/test_tensor_research_self_model_schema.py"
+      - "docs/canon/TENSOR-RESEARCH-SELF-MODEL-R08.md"
+      - ".github/workflows/tensor-research-self-model-r08.yml"
+  push:
+    branches: ["feat/tensor-research-self-model-r08"]
+    paths:
+      - "sage_tristan/tensor_research_self_model.py"
+      - "sage_tristan/tensor_discovery_bench.py"
+      - "sage_tristan/tensor_risk_gate.py"
+      - "schemas/tensor_research_self_model_r08.schema.json"
+      - "tests/test_tensor_research_self_model.py"
+      - "tests/test_tensor_research_self_model_schema.py"
+      - "docs/canon/TENSOR-RESEARCH-SELF-MODEL-R08.md"
+      - ".github/workflows/tensor-research-self-model-r08.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile R0.8
+        run: >-
+          python -m compileall -q
+          sage_tristan/tensor_research_self_model.py
+          sage_tristan/tensor_discovery_bench.py
+          sage_tristan/tensor_risk_gate.py
+          tests/test_tensor_research_self_model.py
+          tests/test_tensor_research_self_model_schema.py
+      - name: Parse R0.8 schema
+        run: python -m json.tool schemas/tensor_research_self_model_r08.schema.json > /dev/null
+      - name: Targeted R0.8 tests
+        run: pytest -q tests/test_tensor_research_self_model.py tests/test_tensor_research_self_model_schema.py
+      - name: Research Self-Model deterministic OAK gates
+        run: |
+          python -m sage_tristan.tensor_research_self_model --report > /tmp/r08.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('/tmp/r08.json').read_text())
+          assert report['release'] == 'R0.8'
+          assert report['episode_count'] == 32
+          assert sum(report['memory_counts'].values()) == 32
+          assert set(report['memory_counts']) == {'M+', 'M-', 'M?'}
+          assert report['append_only_episode_ledger'] is True
+          assert report['m_plus_is_truth'] is False
+          assert report['m_minus_is_permanent_refutation'] is False
+          assert report['m_question_preserved'] is True
+          assert report['credit_is_causal_proof'] is False
+          assert report['prediction_is_causal_effect'] is False
+          assert report['value_of_computation_is_guaranteed_return'] is False
+          assert report['benchmark_history_is_external_scientific_validation'] is False
+          assert report['upstream_r07_required'] is True
+          assert len(report['predictions']) == 32
+          assert all(item['causal_credit_proven'] is False for item in report['operator_credits'])
+          assert all(item['observational_only'] is True for item in report['operator_credits'])
+          assert all(item['causal_credit_proven'] is False for item in report['coalition_credits'])
+          assert all(item['predictive_association_only'] is True for item in report['predictions'])
+          assert all(item['causal_effect_proven'] is False for item in report['predictions'])
+          assert any(item['recommend_compute'] is True for item in report['value_of_computation'])
+          assert any(item['recommend_compute'] is False for item in report['value_of_computation'])
+          assert all(item['guaranteed_positive_return'] is False for item in report['value_of_computation'])
+          print('PROMOTE R0.8: self-model software gates only')
+          PY
