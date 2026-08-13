@@ -1,0 +1,20 @@
+{
+  "max_per_graph": 4,
+  "objects": [
+    {"name":"claim","graph":"knowledge","object_type":"claim","object_id":"claim:reuse-first","payload":{"text":"Reuse verified capabilities before creating residual code"},"provenance":["PR#447"],"oak_state":"PASS"},
+    {"name":"cap","graph":"capability","object_type":"capability","object_id":"github.reuse_before_create","payload":{"produces":["reuse_decision","residual_capability"]},"provenance":["PR#447"],"oak_state":"PASS"},
+    {"name":"work","graph":"work","object_type":"work_unit","object_id":"work:abi-r01","payload":{"goal":"compile shared research ABI"},"provenance":["chat:2026-08-12"]},
+    {"name":"experiment","graph":"experiment","object_type":"test_suite","object_id":"exp:abi-court","payload":{"kind":"deterministic-regression"},"provenance":["tests/test_omega_research_abi_t.py"]},
+    {"name":"prov","graph":"provenance","object_type":"git_commit","object_id":"prov:branch-head","payload":{"branch":"feat/omega-universal-research-abi-r01"}},
+    {"name":"value","graph":"value","object_type":"value_record","object_id":"value:minimal-novelty","payload":{"reuse_leverage":1.0,"risk":0.1}}
+  ],
+  "edges": [
+    {"source":"cap","target":"work","relation":"supports"},
+    {"source":"experiment","target":"claim","relation":"tests"},
+    {"source":"prov","target":"work","relation":"records"},
+    {"source":"value","target":"work","relation":"prioritizes"}
+  ],
+  "transformations": [
+    {"operator":"compile_universal_research_abi","inputs":["cap","work"],"outputs":["prov"],"evidence":["experiment"],"invariants":[{"name":"six_graph_separation","status":"PASS","detail":"graph kinds remain distinct"},{"name":"receipt_required","status":"PASS","detail":"transformation emits receipt"}],"residuals":["independent PR adapters remain snapshot-only until integrated"],"uncertainty":0.15,"cost":1.0,"risk":0.1,"oak_state":"PASS","provenance":["PR#447","chat:2026-08-12"]}
+  ]
+}

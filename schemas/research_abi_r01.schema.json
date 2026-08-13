@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2/schemas/research_abi_r01.schema.json",
+  "title": "Omega Universal Research ABI R0.1 fixture",
+  "type": "object",
+  "required": ["objects"],
+  "properties": {
+    "max_per_graph": {"type":"integer","minimum":1},
+    "objects": {
+      "type":"array",
+      "items": {
+        "type":"object",
+        "required":["graph","object_type","object_id","payload"],
+        "properties": {
+          "graph":{"enum":["knowledge","capability","work","experiment","provenance","value"]},
+          "object_type":{"type":"string","minLength":1},
+          "object_id":{"type":"string","minLength":1},
+          "payload":{"type":"object"},
+          "uncertainty":{"type":"number","minimum":0,"maximum":1},
+          "authority":{"enum":["read","draft","write","irreversible"]},
+          "oak_state":{"enum":["UNKNOWN","HOLD","PASS","FAIL"]}
+        }
+      }
+    },
+    "edges":{"type":"array"},
+    "transformations":{"type":"array"}
+  }
+}
