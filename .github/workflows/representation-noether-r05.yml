@@ -1,0 +1,88 @@
+name: Representation Noether Compiler R0.5 OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "sage_tristan/representation_noether_compiler.py"
+      - "sage_tristan/discovery_path_ir.py"
+      - "sage_tristan/greatsages_time_machine.py"
+      - "schemas/representation_morphism_r05.schema.json"
+      - "tests/test_representation_noether_compiler.py"
+      - "tests/test_representation_noether_schema.py"
+      - "docs/canon/REPRESENTATION-NOETHER-COMPILER-R05.md"
+      - ".github/workflows/representation-noether-r05.yml"
+  push:
+    branches: ["feat/ait-greatsages-gauss-r01"]
+    paths:
+      - "sage_tristan/representation_noether_compiler.py"
+      - "sage_tristan/discovery_path_ir.py"
+      - "sage_tristan/greatsages_time_machine.py"
+      - "schemas/representation_morphism_r05.schema.json"
+      - "tests/test_representation_noether_compiler.py"
+      - "tests/test_representation_noether_schema.py"
+      - "docs/canon/REPRESENTATION-NOETHER-COMPILER-R05.md"
+      - ".github/workflows/representation-noether-r05.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile R0.5
+        run: >-
+          python -m compileall -q
+          sage_tristan/representation_noether_compiler.py
+          tests/test_representation_noether_compiler.py
+          tests/test_representation_noether_schema.py
+      - name: Parse R0.5 schema
+        run: python -m json.tool schemas/representation_morphism_r05.schema.json > /dev/null
+      - name: Targeted R0.5 tests
+        run: pytest -q tests/test_representation_noether_compiler.py tests/test_representation_noether_schema.py
+      - name: Representation and Noether deterministic gates
+        run: |
+          python -m sage_tristan.representation_noether_compiler --report > /tmp/r05.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('/tmp/r05.json').read_text())
+          audit = report['representation_audit']
+          best = report['best_morphism_path']
+          bad = report['negative_control']
+
+          assert report['release'] == 'R0.5'
+          assert audit['all_changes_covered'] is True
+          assert audit['promotable'] is True
+          assert audit['uncovered_step_ids'] == []
+          assert audit['quarantined_morphism_ids'] == []
+          assert best['quarantined'] is False
+          assert best['morphism_ids'] == [
+              'ceres_rep_switch_r05',
+              'ceres_residualize_r05',
+              'ceres_orbit_reconstruction_r05',
+          ]
+          assert bad['status'] == 'quarantine'
+          assert 'target_problem_identity' in bad['broken_invariant_ids']
+          assert bad['physical_conservation_law_claimed'] is False
+          assert bad['mathematical_theorem_claimed'] is False
+          assert report['noether_is_architectural_analogy'] is True
+          assert report['physical_conservation_law_claimed'] is False
+          assert report['historical_cognitive_metric_claimed'] is False
+          assert report['proxy_metrics_are_universal'] is False
+          assert report['scientific_superiority_certified'] is False
+          print('PROMOTE R0.5: representation/noether software gates only')
+          PY
