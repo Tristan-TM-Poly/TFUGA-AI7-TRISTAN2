@@ -50,7 +50,7 @@ def _portfolio():
 
 def _filegraph():
     return {
-        "schema": "omega-pr-llmt-target-filegraph/v0.1.0",
+        "schema": "omega-pr-llmt-target-filegraph/v0.2.0",
         "portfolio_fingerprint": "p" * 64,
         "fingerprint": "f" * 64,
         "changed_file_distribution": {
@@ -68,6 +68,8 @@ def _filegraph():
                 "shared_files": ["a.py", "b.py", "c.py", "d.py", "e.py"],
             }
         ],
+        "reconstruction_pair_count": 0,
+        "reconstruction_pairs": [],
     }
 
 
@@ -94,7 +96,7 @@ def _overlay():
 
 def test_findings_combine_overlap_inspection_lineage_and_negative_memory():
     report = compile_pr_findings(_portfolio(), _filegraph(), _overlay())
-    assert report["schema"] == "omega-pr-llmt-findings/v0.1.0"
+    assert report["schema"] == "omega-pr-llmt-findings/v0.2.0"
     assert report["packet_count"] == 2
     by_ref = {row["target_ref"]: row for row in report["packets"]}
     first = by_ref["pr:o/r#10"]
@@ -120,6 +122,67 @@ def test_findings_preserve_uncertainty_when_deep_evidence_missing():
     assert second["inspected_reuse_candidate_count"] == 0
     assert report["packets_without_deep_reuse_evidence"] == 1
     assert report["packets_with_file_overlap"] == 2
+
+
+def test_reconstruction_pair_replaces_generic_overlap_with_supersession_review():
+    portfolio = {
+        "schema": "omega-pr-llmt-portfolio/v0.1.0",
+        "fingerprint": "z" * 64,
+        "packets": [
+            {
+                "target": {"ref": "pr:o/r#20", "number": 20, "title": "source", "head_sha": "s" * 40, "failure_memory": []},
+                "historical_retrieval": {"candidates": []},
+                "declared_prior_lineage": [],
+                "known_later_descendants": [],
+            },
+            {
+                "target": {"ref": "pr:o/r#21", "number": 21, "title": "rebuild", "head_sha": "r" * 40, "failure_memory": []},
+                "historical_retrieval": {"candidates": []},
+                "declared_prior_lineage": [],
+                "known_later_descendants": [],
+            },
+        ],
+    }
+    filegraph = {
+        "schema": "omega-pr-llmt-target-filegraph/v0.2.0",
+        "portfolio_fingerprint": "z" * 64,
+        "fingerprint": "g" * 64,
+        "changed_file_distribution": {"large_change_candidates": []},
+        "targets": [
+            {"ref": "pr:o/r#20", "changed_file_count": 2},
+            {"ref": "pr:o/r#21", "changed_file_count": 2},
+        ],
+        "overlap_edges": [
+            {"left": "pr:o/r#20", "right": "pr:o/r#21", "shared_file_count": 2, "shared_files": ["a.py", "b.py"]}
+        ],
+        "reconstruction_pair_count": 1,
+        "reconstruction_pairs": [
+            {
+                "source_ref": "pr:o/r#20",
+                "reconstruction_ref": "pr:o/r#21",
+                "evidence": "OAK reconstruction of #20",
+                "shared_file_count": 2,
+                "shared_files": ["a.py", "b.py"],
+                "same_changed_file_set": True,
+            }
+        ],
+    }
+    overlay = {
+        "schema": "omega-pr-llmt-inspection-overlay/v0.1.0",
+        "portfolio_fingerprint": "z" * 64,
+        "fingerprint": "o" * 64,
+        "overlays": [],
+    }
+    report = compile_pr_findings(portfolio, filegraph, overlay)
+    by_ref = {row["target_ref"]: row for row in report["packets"]}
+    source_kinds = {row["finding_type"] for row in by_ref["pr:o/r#20"]["findings"]}
+    rebuild_kinds = {row["finding_type"] for row in by_ref["pr:o/r#21"]["findings"]}
+    assert "DECLARED_RECONSTRUCTION_SOURCE" in source_kinds
+    assert "DECLARED_RECONSTRUCTION_PAIR" in rebuild_kinds
+    assert "FILE_OVERLAP_REVIEW" not in source_kinds
+    assert "FILE_OVERLAP_REVIEW" not in rebuild_kinds
+    assert report["reconstruction_pair_count"] == 1
+    assert "RECONSTRUCTION_PAIR != AUTOMATIC_SUPERSESSION" in report["oak_boundaries"]
 
 
 def test_priority_score_is_triage_only_and_output_is_deterministic():
