@@ -59,6 +59,8 @@ class CompatibilityInspectionReceipt:
     target_exact_path_overlap: tuple[str, ...]
     intent_overlap_proxy: float
     evidence_class: str
+    experiment_eligible: bool
+    experiment_block_reason: str
     compatibility_verdict: str
     compatibility_proven: bool
     reuse_authorized: bool
@@ -154,6 +156,21 @@ def _evidence_class(
     return "METADATA_ONLY"
 
 
+def _experiment_eligibility(
+    status: str,
+    source_files: tuple[str, ...],
+    test_files: tuple[str, ...],
+    symbol_assets: tuple[str, ...],
+) -> tuple[bool, str]:
+    if status != "HYDRATED_EXACT_HEAD":
+        return False, "exact_head_hydration_required"
+    if not source_files and not symbol_assets:
+        return False, "no_technical_source_or_symbol_surface"
+    if not test_files:
+        return False, "no_candidate_test_surface"
+    return True, "exact_head_with_technical_and_test_surface"
+
+
 def compile_compatibility_inspection_r04(
     r03_report: Mapping[str, Any],
     hydrated_index_payload: Mapping[str, Any],
@@ -199,6 +216,7 @@ def compile_compatibility_inspection_r04(
         candidate_tokens = pr.keywords if pr else ()
         intent_overlap = round(_jaccard(target_tokens, candidate_tokens), 6)
         evidence_class = _evidence_class(status, sources, tests, workflows, symbols)
+        experiment_eligible, experiment_reason = _experiment_eligibility(status, sources, tests, symbols)
         receipt = CompatibilityInspectionReceipt(
             ref=ref,
             planned_head_sha=planned_head,
@@ -213,6 +231,8 @@ def compile_compatibility_inspection_r04(
             target_exact_path_overlap=overlap,
             intent_overlap_proxy=intent_overlap,
             evidence_class=evidence_class,
+            experiment_eligible=experiment_eligible,
+            experiment_block_reason=experiment_reason,
             compatibility_verdict="UNKNOWN",
             compatibility_proven=False,
             reuse_authorized=False,
@@ -224,7 +244,7 @@ def compile_compatibility_inspection_r04(
         )
         receipts.append(receipt)
 
-        if status.startswith("HYDRATED") and status != "HYDRATED_HEAD_UNVERIFIED":
+        if experiment_eligible:
             payload = {
                 "candidate_ref": ref,
                 "candidate_head_sha": hydrated_head,
@@ -287,6 +307,7 @@ def compile_compatibility_inspection_r04(
         "hydration_receipt_schema": hydration_receipt.get("schema"),
         "hydrated_candidate_count": len([row for row in receipts if row.hydration_status.startswith("HYDRATED")]),
         "stale_candidate_count": len([row for row in receipts if row.hydration_status == "STALE_HEAD"]),
+        "experiment_eligible_candidate_count": len([row for row in receipts if row.experiment_eligible]),
         "hydration_errors": errors,
         "compatibility_receipts": [row.to_dict() for row in receipts],
         "compatibility_experiment_contracts": [row.to_dict() for row in experiments],
@@ -300,6 +321,7 @@ def compile_compatibility_inspection_r04(
         "automatic_merge_allowed": False,
         "oak_boundaries": [
             "hydrated exact head != compatible behavior",
+            "exact head without technical/test surface != experiment-ready",
             "changed-file overlap != semantic equivalence",
             "AST symbol overlap != interface compatibility",
             "test file exists != test passed",
