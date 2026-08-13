@@ -48,3 +48,21 @@ jobs:
           tests/test_omega_math_proof_seed.py
       - name: Smoke test module CLI
         run: python -m omega_math_proof_research_os.cli
+
+  lean-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up pinned Lean toolchain and build proof seed
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: omega_math_proof_research_os/formalization_candidates
+          build: true
+          test: false
+          lint: false
+          use-mathlib-cache: false
+          use-github-cache: false
+      - name: Direct kernel check
+        working-directory: omega_math_proof_research_os/formalization_candidates
+        run: lean BookOfProofSeed.lean
