@@ -13,7 +13,8 @@ R0.3 INSPECT queue
 -> test/workflow surface inventory
 -> exact-head freshness check
 -> CompatibilityInspectionReceipt
--> CompatibilityExperimentContract
+-> experiment-eligibility gate
+-> CompatibilityExperimentContract only for testable technical surfaces
 ```
 
 ## Reused kernel
@@ -44,7 +45,7 @@ planned SHA != hydrated SHA
 -> no experiment contract
 ```
 
-If either SHA is unavailable, the state remains `HYDRATED_HEAD_UNVERIFIED` and is not promoted to an executable experiment contract.
+If either SHA is unavailable, the state remains `HYDRATED_HEAD_UNVERIFIED` and is not promoted to an experiment contract.
 
 ## Static evidence classes
 
@@ -69,6 +70,65 @@ test file exists != test passed
 symbol exists != behavior compatible
 ```
 
+## Experiment-eligibility gate
+
+Exact-head hydration is necessary but no longer sufficient even to emit a compatibility-experiment obligation.
+
+A candidate is experiment-eligible only when all three conditions hold:
+
+```text
+hydration_status = HYDRATED_EXACT_HEAD
+AND (source_files != empty OR python_symbol_assets != empty)
+AND test_files != empty
+```
+
+Otherwise the receipt remains inspected but blocked with an explicit reason:
+
+```text
+exact_head_hydration_required
+no_technical_source_or_symbol_surface
+no_candidate_test_surface
+```
+
+The eligible state is:
+
+```text
+exact_head_with_technical_and_test_surface
+```
+
+This is still not a compatibility verdict.
+
+## M− captured from the live R0.4 court
+
+The first live exact-hydration court successfully hydrated the top four historical candidates at their exact head SHAs, but three of the four exposed only metadata/documentation-level surfaces. The first R0.4 implementation would have emitted experiment contracts merely because the SHA matched.
+
+That promotion is now rejected permanently:
+
+```text
+exact-head metadata-only candidate
+!= experiment-ready candidate
+```
+
+A dedicated regression court keeps metadata-only exact-head candidates at:
+
+```text
+experiment_eligible = false
+experiment_contract_count contribution = 0
+compatibility_proven = false
+reuse_authorized = false
+```
+
+In the hardened live #452 court, four candidates hydrated at exact head, but only PR #331 exposed both a technical source/symbol surface and a test surface. Therefore:
+
+```text
+hydrated candidates            = 4
+stale candidates               = 0
+experiment-eligible candidates = 1
+experiment contracts           = 1
+compatibility proven           = 0
+reuse authorized               = 0
+```
+
 ## Compatibility verdict
 
 Every R0.4 static receipt intentionally emits:
@@ -80,11 +140,11 @@ reuse_authorized = false
 execution_authorized = false
 ```
 
-Even an exact-head candidate with source, tests, workflows and symbol overlap is still only a better experiment target.
+Even an exact-head, experiment-eligible candidate with source, tests, workflows or symbol overlap is still only a better experiment target.
 
 ## CompatibilityExperimentContract
 
-An exact-head hydrated candidate may produce a test obligation containing:
+An exact-head candidate that also survives the technical/test-surface gate may produce a test obligation containing:
 
 - candidate PR/ref and exact head SHA;
 - target PR/ref and exact head SHA;
@@ -132,6 +192,7 @@ The safe chain is instead:
 
 ```text
 exact hydration
+-> technical/test-surface gate
 -> inspect
 -> test compatibility
 -> evidence
@@ -139,12 +200,13 @@ exact hydration
 -> only then optional renderer
 ```
 
-This prevents historical code from being transplanted solely because it shares paths, symbols, terminology or green-looking repository structure.
+This prevents historical code from being transplanted solely because it shares SHAs, paths, symbols, terminology or green-looking repository structure.
 
 ## OAK boundaries
 
 ```text
 hydrated exact head != compatible behavior
+exact head without technical/test surface != experiment-ready
 changed-file overlap != semantic equivalence
 AST symbol overlap != interface compatibility
 test file exists != test passed
@@ -160,7 +222,7 @@ CI green for this compiler != compatibility of candidate code
 
 The next useful generation is empirical compatibility, not a larger virtual forest:
 
-1. execute bounded target-specific compatibility experiments in isolation;
+1. execute only bounded, separately authorized target-specific compatibility experiments in isolation;
 2. pin candidate/target SHAs and dependency environment;
 3. require exact test commands and results;
 4. collect interface/behavior mismatches and regression witnesses;
