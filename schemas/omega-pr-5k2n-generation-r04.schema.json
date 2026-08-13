@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-pr-5k2n-generation-r04.schema.json",
+  "title": "Omega PR 5K2N compatibility inspection R0.4",
+  "type": "object",
+  "required": [
+    "schema",
+    "target_ref",
+    "artifact_decision_in",
+    "candidate_budget",
+    "planned_candidate_count",
+    "hydrated_candidate_count",
+    "stale_candidate_count",
+    "hydration_errors",
+    "compatibility_receipts",
+    "compatibility_experiment_contracts",
+    "experiment_contract_count",
+    "compatibility_proven_count",
+    "reuse_authorized_count",
+    "physicalization_gate",
+    "write_authority_granted",
+    "execution_authorized",
+    "automatic_commit_allowed",
+    "automatic_merge_allowed",
+    "oak_boundaries",
+    "fingerprint"
+  ],
+  "properties": {
+    "schema": {"const": "omega-pr-5k2n-compatibility-inspection/v0.4.0"},
+    "target_ref": {"type": "string", "minLength": 1},
+    "target_head_sha": {"type": ["string", "null"]},
+    "artifact_decision_in": {"enum": ["REUSE", "COMPOSE", "EXTEND", "CREATE_RESIDUAL", "INSPECT"]},
+    "candidate_budget": {"type": "integer", "minimum": 1},
+    "planned_candidate_count": {"type": "integer", "minimum": 0},
+    "hydrated_candidate_count": {"type": "integer", "minimum": 0},
+    "stale_candidate_count": {"type": "integer", "minimum": 0},
+    "hydration_errors": {"type": "array", "items": {"type": "object"}},
+    "compatibility_receipts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "ref",
+          "hydration_status",
+          "changed_files",
+          "source_files",
+          "test_files",
+          "workflow_files",
+          "python_symbol_assets",
+          "intent_overlap_proxy",
+          "evidence_class",
+          "compatibility_verdict",
+          "compatibility_proven",
+          "reuse_authorized",
+          "execution_authorized",
+          "boundary"
+        ],
+        "properties": {
+          "hydration_status": {"enum": ["NOT_HYDRATED", "STALE_HEAD", "HYDRATED_EXACT_HEAD", "HYDRATED_HEAD_UNVERIFIED"]},
+          "intent_overlap_proxy": {"type": "number", "minimum": 0, "maximum": 1},
+          "compatibility_verdict": {"const": "UNKNOWN"},
+          "compatibility_proven": {"const": false},
+          "reuse_authorized": {"const": false},
+          "execution_authorized": {"const": false}
+        }
+      }
+    },
+    "compatibility_experiment_contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "experiment_id",
+          "candidate_ref",
+          "candidate_head_sha",
+          "target_ref",
+          "residual_outputs",
+          "required_checks",
+          "expected_receipt_fields",
+          "execution_authorized",
+          "source_mutation_authorized",
+          "reuse_authorized_before_experiment",
+          "human_review_required",
+          "boundary"
+        ],
+        "properties": {
+          "execution_authorized": {"const": false},
+          "source_mutation_authorized": {"const": false},
+          "reuse_authorized_before_experiment": {"const": false},
+          "human_review_required": {"const": true}
+        }
+      }
+    },
+    "experiment_contract_count": {"type": "integer", "minimum": 0},
+    "compatibility_proven_count": {"const": 0},
+    "reuse_authorized_count": {"const": 0},
+    "physicalization_gate": {"const": "INSPECT"},
+    "write_authority_granted": {"const": false},
+    "execution_authorized": {"const": false},
+    "automatic_commit_allowed": {"const": false},
+    "automatic_merge_allowed": {"const": false},
+    "oak_boundaries": {"type": "array", "minItems": 8, "items": {"type": "string"}},
+    "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
