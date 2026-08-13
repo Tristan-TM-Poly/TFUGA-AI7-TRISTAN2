@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-pr-5k2n-generation-r05.schema.json",
+  "title": "Omega PR 5K2N compatibility outcomes R0.5",
+  "type": "object",
+  "required": [
+    "schema",
+    "source_r04_fingerprint",
+    "experiment_contract_count",
+    "outcome_receipt_count",
+    "missing_outcome_contract_ids",
+    "receipts",
+    "verdict_counts",
+    "memory_candidate_counts",
+    "review_order",
+    "automatic_reuse_authorized",
+    "automatic_memory_promotion_authorized",
+    "write_authority_granted",
+    "automatic_commit_allowed",
+    "automatic_merge_allowed",
+    "source_renderer_authorized",
+    "oak_boundaries",
+    "fingerprint"
+  ],
+  "properties": {
+    "schema": {"const": "omega-pr-5k2n-compatibility-outcomes/v0.5.0"},
+    "source_r04_fingerprint": {"type": ["string", "null"]},
+    "experiment_contract_count": {"type": "integer", "minimum": 0},
+    "outcome_receipt_count": {"type": "integer", "minimum": 0},
+    "missing_outcome_contract_ids": {"type": "array", "items": {"type": "string"}},
+    "receipts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "experiment_id",
+          "candidate_ref",
+          "candidate_head_sha",
+          "target_ref",
+          "target_head_sha",
+          "execution_status",
+          "tests_executed",
+          "tests_passed",
+          "tests_failed",
+          "interface_checks",
+          "residual_coverage",
+          "regressions",
+          "evidence_refs",
+          "candidate_sha_fresh",
+          "target_sha_fresh",
+          "evidence_complete_for_promotion",
+          "verdict",
+          "action_candidate",
+          "memory_candidate",
+          "action_authorized",
+          "memory_promotion_authorized",
+          "source_mutation_performed",
+          "boundary"
+        ],
+        "properties": {
+          "execution_status": {"enum": ["NOT_EXECUTED", "COMPLETED", "FAILED_TO_RUN"]},
+          "tests_executed": {"type": "integer", "minimum": 0},
+          "tests_passed": {"type": "integer", "minimum": 0},
+          "tests_failed": {"type": "integer", "minimum": 0},
+          "test_pass_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "test_pass_rate_wilson_95": {
+            "oneOf": [
+              {"type": "null"},
+              {
+                "type": "array",
+                "prefixItems": [
+                  {"type": "number", "minimum": 0, "maximum": 1},
+                  {"type": "number", "minimum": 0, "maximum": 1}
+                ],
+                "minItems": 2,
+                "maxItems": 2
+              }
+            ]
+          },
+          "interface_checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "status"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1},
+                "status": {"enum": ["PASS", "FAIL", "UNKNOWN"]},
+                "evidence_ref": {"type": ["string", "null"]}
+              }
+            }
+          },
+          "residual_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+          "candidate_sha_fresh": {"type": "boolean"},
+          "target_sha_fresh": {"type": "boolean"},
+          "evidence_complete_for_promotion": {"type": "boolean"},
+          "verdict": {"enum": ["COMPATIBLE", "PARTIAL_COMPATIBLE", "INCOMPATIBLE", "UNKNOWN"]},
+          "action_candidate": {"enum": ["REUSE_CANDIDATE", "EXTEND_CANDIDATE", "REJECT_CANDIDATE", "HOLD"]},
+          "memory_candidate": {"enum": ["M_PLUS_CANDIDATE", "M_MINUS_CANDIDATE", "M_QUERY_CANDIDATE"]},
+          "action_authorized": {"const": false},
+          "memory_promotion_authorized": {"const": false},
+          "source_mutation_performed": {"const": false}
+        }
+      }
+    },
+    "verdict_counts": {
+      "type": "object",
+      "required": ["COMPATIBLE", "PARTIAL_COMPATIBLE", "INCOMPATIBLE", "UNKNOWN"],
+      "properties": {
+        "COMPATIBLE": {"type": "integer", "minimum": 0},
+        "PARTIAL_COMPATIBLE": {"type": "integer", "minimum": 0},
+        "INCOMPATIBLE": {"type": "integer", "minimum": 0},
+        "UNKNOWN": {"type": "integer", "minimum": 0}
+      }
+    },
+    "memory_candidate_counts": {
+      "type": "object",
+      "required": ["M_PLUS_CANDIDATE", "M_MINUS_CANDIDATE", "M_QUERY_CANDIDATE"]
+    },
+    "review_order": {"type": "array", "items": {"type": "string"}},
+    "automatic_reuse_authorized": {"const": false},
+    "automatic_memory_promotion_authorized": {"const": false},
+    "write_authority_granted": {"const": false},
+    "automatic_commit_allowed": {"const": false},
+    "automatic_merge_allowed": {"const": false},
+    "source_renderer_authorized": {"const": false},
+    "oak_boundaries": {"type": "array", "minItems": 10, "items": {"type": "string"}},
+    "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
