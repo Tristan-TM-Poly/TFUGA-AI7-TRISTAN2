@@ -1,11 +1,11 @@
 ---
 name: pr-fractal-generation
-description: Compile bounded Ω-PR-5K2N-T∞ candidate forests, dual-plane reuse decisions and review-only PhysicalPatchContracts without materializing the full logical population.
+description: Compile bounded Ω-PR-5K2N-T∞ candidate forests, dual-plane reuse decisions, exact compatibility-inspection receipts and review-only experiment contracts without materializing the full logical population.
 ---
 
 # PR Fractal Generation
 
-Use this skill for new or existing PRs that should benefit from Ω-PR-5K2N-T∞ while preserving cumulative memory, reuse-before-create, OAK, CVCD, M+/M-/M? and bounded physical execution.
+Use this skill for new or existing PRs that should benefit from Ω-PR-5K2N-T∞ while preserving cumulative memory, reuse-before-create, exact-head provenance, OAK, CVCD, M+/M-/M? and bounded physical execution.
 
 ## Core law
 
@@ -15,9 +15,9 @@ C_n = 5000 * 2^n
 
 This is a logical address space, never a requirement to create that many files, lines, commits, agents, tool calls or patches.
 
-## R0.3 procedure
+## R0.4 procedure
 
-1. Resolve exact repository, PR number and head SHA.
+1. Resolve exact repository, PR number and target head SHA.
 2. Build `state=all` GitHub memory and hide the target plus later same-repository PRs before historical retrieval.
 3. Compile two independent #450 cumulative-intelligence requests:
    - **Process Reuse Plane** for `pr_index`, `capability_graph`, `reuse_decision`, `residual_artifact_spec`, `llmt_context`;
@@ -38,12 +38,23 @@ This is a logical address space, never a requirement to create that many files, 
 12. Search bounded complementary pairs; keep `causal_synergy_proven=false` until matched experiments/ablations exist.
 13. If artifact action is `INSPECT`, emit a SHA-aware Compatibility Inspection Plan and **zero PhysicalPatchContracts**.
 14. Every inspection candidate starts `NOT_EXECUTED`, `compatibility_proven=false`, `reuse_authorized=false`.
-15. Hydrate exact historical source, tests, symbols and CI at the recorded head SHA before promoting a candidate to REUSE/EXTEND.
-16. Only after compatibility evidence may bounded `PhysicalPatchContract` objects be emitted.
-17. Keep all contracts `REVIEW_CONTRACT_ONLY`; they are not source patches.
-18. Require tests, provenance/evidence refs, rollback and exact-head freshness in every future physicalization step.
-19. A separately authorized source renderer may be introduced later, but write, commit and merge permissions are never inferred from generation scale or CI.
-20. Feed measured compatibility, accepted changes, regressions and failures back into M+, M− or M?.
+15. Hydrate only a bounded top-k historical queue using the existing `ProgressiveGitHubRetriever`; do not import or execute candidate code.
+16. Compare the planned historical head SHA with the hydrated head. Head drift → `STALE_HEAD` and blocks experiment compilation.
+17. Inventory changed paths, technical source paths, test paths, workflow paths and static Python symbols at the hydrated head.
+18. Classify static evidence conservatively (`METADATA_ONLY`, `STATIC_ONLY`, `STATIC_SOURCE_TEST_SURFACE`, `STATIC_SOURCE_TEST_CI_SURFACE`, etc.).
+19. A candidate is **experiment-eligible only if**:
+   - hydration is `HYDRATED_EXACT_HEAD`;
+   - technical source or static symbol surface exists;
+   - a candidate test surface exists.
+20. Exact-head metadata alone is not experiment-ready. Preserve this as M− rather than manufacturing a compatibility experiment.
+21. Even experiment-eligible candidates remain `compatibility_verdict=UNKNOWN`, `compatibility_proven=false`, `reuse_authorized=false`, `execution_authorized=false`.
+22. Compile only `CompatibilityExperimentContract` obligations describing future interface/behavior checks; do not execute them automatically.
+23. Require candidate SHA, target SHA, tests, interface checks, residual coverage, regression witnesses and evidence refs in every future `CompatibilityOutcomeReceipt`.
+24. Only after an evidence-bearing compatibility outcome may a candidate be routed toward REUSE/EXTEND or confirmed M−/HOLD.
+25. Only after compatibility evidence may bounded `PhysicalPatchContract` objects be reconsidered.
+26. Keep all physical contracts `REVIEW_CONTRACT_ONLY`; they are not source patches.
+27. A separately authorized source renderer may be introduced later, but write, commit and merge permissions are never inferred from generation scale, hydration or CI.
+28. Feed measured compatibility, accepted changes, regressions and failures back into M+, M− or M?.
 
 ## Adaptive depth
 
@@ -60,6 +71,7 @@ A finite run uses runtime/candidate/inspection/contract/review budgets. `INSPECT
 ```text
 code_change_generated = false
 write_authority_granted = false
+execution_authorized = false
 automatic_commit_allowed = false
 automatic_merge_allowed = false
 human_review_required = true
@@ -74,6 +86,13 @@ historical candidate != compatible implementation
 regex failure-memory lead != confirmed M-
 confirmed historical failure != causal law
 process reuse coverage 1.0 != target artifact completeness
+hydrated exact head != compatible behavior
+exact head without technical/test surface != experiment-ready
+changed-file overlap != semantic equivalence
+AST symbol overlap != interface compatibility
+test file exists != test passed
+workflow file exists != CI passed at candidate head
+CompatibilityExperimentContract != experiment execution
 5K*2^n logical candidates != 5K*2^n physical edits
 proxy score != measured engineering value
 synergy proxy != causal synergy
