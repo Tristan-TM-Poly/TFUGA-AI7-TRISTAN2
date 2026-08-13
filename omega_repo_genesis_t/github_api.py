@@ -21,7 +21,7 @@ def _default_transport(token: str) -> Transport:
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
             "Content-Type": "application/json",
-            "User-Agent": "omega-repo-genesis-t/0.1",
+            "User-Agent": "omega-repo-genesis-t/0.2",
         })
         try:
             with urlopen(req, timeout=30) as response:
@@ -50,13 +50,32 @@ class GitHubRepoFactory:
         status, _ = self._call("GET", f"https://api.github.com/repos/{full_name}")
         return status == 200
 
-    def create_private_repository(self, owner: str, name: str, description: str) -> dict[str, Any]:
-        if self.exists(f"{owner}/{name}"):
-            return {"repository": f"{owner}/{name}", "status": "EXISTS", "mutated": False}
+    def create_repository(
+        self,
+        owner: str,
+        name: str,
+        description: str,
+        *,
+        visibility: str,
+        allow_public: bool = False,
+    ) -> dict[str, Any]:
+        if visibility not in {"private", "public"}:
+            raise ValueError("visibility must be 'private' or 'public'")
+        full_name = f"{owner}/{name}"
+        if self.exists(full_name):
+            return {"repository": full_name, "status": "EXISTS", "mutated": False}
+
+        if visibility == "public" and not allow_public:
+            return {
+                "repository": full_name,
+                "status": "HOLD_PUBLIC_REQUIRES_EXPLICIT_ALLOW_PUBLIC",
+                "mutated": False,
+            }
+
         status, payload = self._call("POST", "https://api.github.com/user/repos", {
             "name": name,
             "description": description,
-            "private": True,
+            "private": visibility == "private",
             "auto_init": True,
             "has_issues": True,
             "has_projects": False,
@@ -68,7 +87,11 @@ class GitHubRepoFactory:
         actual_owner = payload.get("owner", {}).get("login")
         if actual_owner and actual_owner != owner:
             raise RuntimeError(f"created repository owner mismatch: expected {owner}, got {actual_owner}")
-        return {"repository": f"{owner}/{name}", "status": "CREATED_PRIVATE", "mutated": True}
+        return {
+            "repository": full_name,
+            "status": f"CREATED_{visibility.upper()}",
+            "mutated": True,
+        }
 
     def put_file_if_absent(self, full_name: str, path: str, content: str) -> dict[str, Any]:
         status, _ = self._call("GET", f"https://api.github.com/repos/{full_name}/contents/{path}")
@@ -83,23 +106,38 @@ class GitHubRepoFactory:
             raise RuntimeError(f"GitHub bootstrap failed for {full_name}/{path}: HTTP {status}: {payload}")
         return {"path": path, "status": "CREATED", "mutated": True}
 
-    def materialize(self, constellation: Constellation, *, threshold: float = 0.72) -> dict[str, Any]:
+    def materialize(
+        self,
+        constellation: Constellation,
+        *,
+        threshold: float = 0.72,
+        allow_public: bool = False,
+    ) -> dict[str, Any]:
         plan = build_plan(constellation, threshold=threshold)
         results = []
         for candidate in plan["create_candidates"]:
             full_name = candidate["repository"]
             owner, name = full_name.split("/", 1)
             spec = next(r for r in constellation.repositories if r.name == name)
-            repo_result = self.create_private_repository(owner, name, spec.description)
+            repo_result = self.create_repository(
+                owner,
+                name,
+                spec.description,
+                visibility=spec.visibility,
+                allow_public=allow_public,
+            )
+            if not repo_result["mutated"] and repo_result["status"].startswith("HOLD_"):
+                results.append({"repository": full_name, "repo": repo_result, "files": []})
+                continue
             file_results = [
                 self.put_file_if_absent(full_name, path, content)
                 for path, content in bootstrap_files(candidate, constellation).items()
             ]
             results.append({"repository": full_name, "repo": repo_result, "files": file_results})
         return {
-            "schema_version": "repo-genesis-receipt/v0.1",
+            "schema_version": "repo-genesis-receipt/v0.2",
             "constellation_id": constellation.constellation_id,
-            "private_only": True,
+            "public_materialization_authorized": bool(allow_public),
             "destructive_updates": False,
             "results": results,
         }
