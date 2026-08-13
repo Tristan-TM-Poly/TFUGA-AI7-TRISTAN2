@@ -1,0 +1,141 @@
+{
+  "generation": 8,
+  "candidate_budget": 64,
+  "physical_contract_budget": 16,
+  "min_go_gradient": 1.0,
+  "target_pr_genome": {
+    "ref": "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#452",
+    "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+    "number": 452,
+    "lifecycle": "DRAFT",
+    "head_sha": "18d77e5817c79a4ec2286a97c84160711a49a086",
+    "changed_files": [
+      "omega_capability_os_t/github_pr_generation_forest.py",
+      "omega_capability_os_t/github_pr_generation_r02.py",
+      "omega_capability_os_t/github_pr_generation_r03.py"
+    ],
+    "named_concepts": [
+      "Ω-PR-5K2N-T∞",
+      "Ω-GITHUB-CUMULATIVE-INTELLIGENCE"
+    ],
+    "intent_tokens": [
+      "reuse",
+      "dual-plane",
+      "inspection",
+      "oak"
+    ]
+  },
+  "artifact_cumulative_intelligence": {
+    "schema": "omega-github-cumulative-intelligence/v1.2.0",
+    "request": {
+      "request_id": "artifact-pr-452-r03-example",
+      "description": "Implement, test, document and evidence the target PR artifact",
+      "domains": ["github", "software", "oak"],
+      "consumes": ["prior_pr_memory", "capability_contracts"],
+      "produces": ["implementation", "tests", "evidence", "documentation"]
+    },
+    "minimal_reuse_coalition": {
+      "request_id": "artifact-pr-452-r03-example",
+      "selected_capabilities": [],
+      "source_refs": [],
+      "inspected_pr_candidates": [
+        "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#450",
+        "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#447"
+      ],
+      "requested_outputs": ["implementation", "tests", "evidence", "documentation"],
+      "contract_covered_outputs": [],
+      "residual_outputs": ["implementation", "tests", "evidence", "documentation"],
+      "reuse_coverage_ratio": 0.0
+    },
+    "repository_residual_courts": [
+      {
+        "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+        "residual": {
+          "decision": "CREATE",
+          "required_tests": [
+            "unit tests for every residual output",
+            "integration test against selected reused capabilities"
+          ],
+          "required_provenance": []
+        }
+      }
+    ],
+    "relevant_pr_genomes": [
+      {
+        "ref": "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#450",
+        "head_sha": "8beb39290e654169025c2516f2e2317c0e868e15",
+        "changed_files": [
+          "omega_capability_os_t/github_cumulative_intelligence.py"
+        ],
+        "symbol_assets": [
+          "symbol:omega_capability_os_t/github_cumulative_intelligence.py:CumulativeIntelligenceCompiler"
+        ]
+      },
+      {
+        "ref": "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#447",
+        "head_sha": "7d7663d52a6693681632cd65a9cf15753676c131",
+        "changed_files": [
+          "omega_capability_os_t/github_memory.py"
+        ],
+        "symbol_assets": [
+          "symbol:omega_capability_os_t/github_memory.py:ReuseBeforeCreateGate"
+        ]
+      }
+    ],
+    "negative_memory_hits": [
+      {
+        "ref": "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#419",
+        "failure_memory": [
+          "blocked PRs remain draft"
+        ]
+      }
+    ]
+  },
+  "process_cumulative_intelligence": {
+    "schema": "omega-github-cumulative-intelligence/v1.2.0",
+    "request": {
+      "request_id": "process-reuse-pr452",
+      "description": "Compile reuse-first prior-PR intelligence and residual contracts",
+      "domains": ["github", "memory", "architecture", "llmt", "software"],
+      "consumes": ["repository", "prior_pr_memory", "capability_registry"],
+      "produces": [
+        "pr_index",
+        "capability_graph",
+        "reuse_decision",
+        "residual_artifact_spec",
+        "llmt_context"
+      ]
+    },
+    "minimal_reuse_coalition": {
+      "request_id": "process-reuse-pr452",
+      "selected_capabilities": [
+        "TFUGA-AI7-TRISTAN2:github.memory.index",
+        "TFUGA-AI7-TRISTAN2:github.capability_graph.compile",
+        "TFUGA-AI7-TRISTAN2:github.reuse_before_create",
+        "TFUGA-AI7-TRISTAN2:github.residual.compile",
+        "TFUGA-AI7-TRISTAN2:github.llmt_context.compile"
+      ],
+      "source_refs": ["registry:capability-os"],
+      "inspected_pr_candidates": [],
+      "requested_outputs": [
+        "pr_index",
+        "capability_graph",
+        "reuse_decision",
+        "residual_artifact_spec",
+        "llmt_context"
+      ],
+      "contract_covered_outputs": [
+        "pr_index",
+        "capability_graph",
+        "reuse_decision",
+        "residual_artifact_spec",
+        "llmt_context"
+      ],
+      "residual_outputs": [],
+      "reuse_coverage_ratio": 1.0
+    },
+    "repository_residual_courts": [],
+    "relevant_pr_genomes": [],
+    "negative_memory_hits": []
+  }
+}
