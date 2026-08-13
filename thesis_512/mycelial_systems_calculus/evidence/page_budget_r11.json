@@ -10,6 +10,16 @@
   "status": "HOLD",
   "compiled_page_count_is_source_of_truth": true,
   "visual_render_verified": true,
+  "part_start_pages": {
+    "p1": 17,
+    "p2": 27,
+    "p3": 43,
+    "p4": 63,
+    "p5": 79,
+    "p6": 97,
+    "p7": 117,
+    "appendix_reproducibility": 127
+  },
   "low_text_page_audit": {
     "threshold_chars": 20,
     "count": 14,
