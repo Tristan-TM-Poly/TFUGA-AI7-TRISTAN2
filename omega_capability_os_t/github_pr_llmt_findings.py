@@ -20,7 +20,7 @@ import json
 
 from .github_memory import _stable_digest
 
-FINDINGS_SCHEMA_VERSION = "0.1.0"
+FINDINGS_SCHEMA_VERSION = "0.2.0"
 
 
 @dataclass(frozen=True)
@@ -52,6 +52,22 @@ def _target_overlap_rows(filegraph: Mapping[str, Any], target_ref: str) -> list[
         )
     rows.sort(key=lambda row: (-row["shared_file_count"], row["neighbor"]))
     return rows
+
+
+def _reconstruction_roles(
+    filegraph: Mapping[str, Any], target_ref: str
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    as_reconstruction: list[dict[str, Any]] = []
+    as_source: list[dict[str, Any]] = []
+    for pair in filegraph.get("reconstruction_pairs", []):
+        row = dict(pair)
+        if str(pair.get("reconstruction_ref", "")) == target_ref:
+            as_reconstruction.append(row)
+        if str(pair.get("source_ref", "")) == target_ref:
+            as_source.append(row)
+    as_reconstruction.sort(key=lambda row: (-int(row.get("shared_file_count", 0)), str(row.get("source_ref", ""))))
+    as_source.sort(key=lambda row: (-int(row.get("shared_file_count", 0)), str(row.get("reconstruction_ref", ""))))
+    return as_reconstruction, as_source
 
 
 def _inspected_reuse_rows(overlay: Mapping[str, Any], target_ref: str) -> list[dict[str, Any]]:
@@ -105,7 +121,7 @@ def compile_pr_findings(
 ) -> dict[str, Any]:
     if portfolio.get("schema") != "omega-pr-llmt-portfolio/v0.1.0":
         raise ValueError(f"unsupported portfolio schema: {portfolio.get('schema')}")
-    if filegraph.get("schema") != "omega-pr-llmt-target-filegraph/v0.1.0":
+    if filegraph.get("schema") != "omega-pr-llmt-target-filegraph/v0.2.0":
         raise ValueError(f"unsupported filegraph schema: {filegraph.get('schema')}")
     if overlay.get("schema") != "omega-pr-llmt-inspection-overlay/v0.1.0":
         raise ValueError(f"unsupported inspection overlay schema: {overlay.get('schema')}")
@@ -128,6 +144,13 @@ def compile_pr_findings(
         target = packet.get("target", {})
         target_ref = str(target.get("ref", ""))
         overlaps = _target_overlap_rows(filegraph, target_ref)
+        reconstruction_as_target, reconstruction_as_source = _reconstruction_roles(filegraph, target_ref)
+        reconstruction_neighbors = {
+            str(row.get("source_ref", "")) for row in reconstruction_as_target
+        } | {
+            str(row.get("reconstruction_ref", "")) for row in reconstruction_as_source
+        }
+        generic_overlaps = [row for row in overlaps if row["neighbor"] not in reconstruction_neighbors]
         inspected = _inspected_reuse_rows(overlay, target_ref)
         negatives = _negative_memory(packet)
         prior_lineage = tuple(packet.get("declared_prior_lineage", []))
@@ -136,12 +159,52 @@ def compile_pr_findings(
 
         findings: list[PRFinding] = []
 
-        if overlaps:
-            max_shared = max(row["shared_file_count"] for row in overlaps)
+        if reconstruction_as_target:
+            findings.append(
+                PRFinding(
+                    finding_type="DECLARED_RECONSTRUCTION_PAIR",
+                    priority=5,
+                    action=(
+                        "Review this reconstruction against its declared source as a replacement/supersession candidate; "
+                        "compare exact blobs, tests and current-base behavior before any close/merge decision."
+                    ),
+                    evidence=tuple(
+                        f"source={row.get('source_ref')};shared_files={row.get('shared_file_count')};"
+                        f"same_changed_file_set={row.get('same_changed_file_set')};evidence={row.get('evidence')}"
+                        for row in reconstruction_as_target[:4]
+                    ),
+                    boundary=(
+                        "Declared reconstruction plus changed-path agreement is strong provenance evidence, but it does not prove byte identity, "
+                        "correctness, merge readiness, or authorization to supersede/close the source PR."
+                    ),
+                )
+            )
+
+        if reconstruction_as_source:
+            findings.append(
+                PRFinding(
+                    finding_type="DECLARED_RECONSTRUCTION_SOURCE",
+                    priority=5,
+                    action=(
+                        "Inspect the newer declared reconstruction before editing this source PR; prefer one canonical repair locus and preserve this PR as provenance until replacement is verified."
+                    ),
+                    evidence=tuple(
+                        f"reconstruction={row.get('reconstruction_ref')};shared_files={row.get('shared_file_count')};"
+                        f"same_changed_file_set={row.get('same_changed_file_set')};evidence={row.get('evidence')}"
+                        for row in reconstruction_as_source[:4]
+                    ),
+                    boundary=(
+                        "A declared reconstruction is a supersession-review signal, not an automatic supersession, closure, merge, or deletion instruction."
+                    ),
+                )
+            )
+
+        if generic_overlaps:
+            max_shared = max(row["shared_file_count"] for row in generic_overlaps)
             priority = 4 if max_shared >= 5 else 3 if max_shared >= 2 else 2
             evidence = tuple(
                 f"{row['neighbor']}:{row['shared_file_count']} shared file(s)"
-                for row in overlaps[:5]
+                for row in generic_overlaps[:5]
             )
             findings.append(
                 PRFinding(
@@ -242,6 +305,9 @@ def compile_pr_findings(
                 "head_sha": target.get("head_sha"),
                 "changed_file_count": int(target_files.get("changed_file_count", 0)),
                 "file_overlap_neighbor_count": len(overlaps),
+                "generic_file_overlap_neighbor_count": len(generic_overlaps),
+                "reconstruction_as_target_count": len(reconstruction_as_target),
+                "reconstruction_as_source_count": len(reconstruction_as_source),
                 "max_shared_file_count": max((row["shared_file_count"] for row in overlaps), default=0),
                 "inspected_reuse_candidate_count": len(successful_inspected),
                 "declared_prior_lineage_count": len(prior_lineage),
@@ -273,6 +339,7 @@ def compile_pr_findings(
         "finding_counts": dict(sorted(aggregate_counts.items())),
         "packets_with_file_overlap": with_overlap,
         "packets_without_deep_reuse_evidence": without_deep,
+        "reconstruction_pair_count": int(filegraph.get("reconstruction_pair_count", 0)),
         "top_priority_targets": [row["target_ref"] for row in packet_rows[:12]],
         "packets": packet_rows,
         "authority": {
@@ -286,6 +353,8 @@ def compile_pr_findings(
             "FILE_OVERLAP != MERGE_CONFLICT",
             "STATIC_AST != BEHAVIORAL_EQUIVALENCE",
             "DECLARED_LINEAGE != CAUSAL_DEPENDENCY_PROOF",
+            "DECLARED_RECONSTRUCTION != BYTE_IDENTITY",
+            "RECONSTRUCTION_PAIR != AUTOMATIC_SUPERSESSION",
             "M_MINUS != UNIVERSAL_REFUTATION",
             "FINDING != AUTHORIZATION_TO_MUTATE",
         ],
