@@ -12,11 +12,48 @@ from typing import Any, Mapping
 import argparse
 import json
 import os
+import re
 
-from .github_memory import GitHubMemoryIndex, GitHubPRSource, _stable_digest
+from .github_memory import GitHubMemoryIndex, GitHubPRSource, PRMemory, _stable_digest
 from .github_memory_zoom import ProgressiveGitHubRetriever
 
-TARGET_FILEGRAPH_SCHEMA_VERSION = "0.1.0"
+TARGET_FILEGRAPH_SCHEMA_VERSION = "0.2.0"
+
+_RECONSTRUCTION_PATTERNS = (
+    re.compile(
+        r"(?im)^\s*(?:#{1,6}\s*)?(?:(?:(?:clean|oak)\s+){0,2}reconstruction\s+of\s+)(.+)$"
+    ),
+    re.compile(r"(?im)^\s*(?:[-*+]\s*)?reconstructs?\s*:\s*(.+)$"),
+)
+
+
+def _extract_pr_refs(text: str, repository: str) -> tuple[str, ...]:
+    refs: list[str] = []
+    occupied: set[str] = set()
+    for match in re.finditer(r"([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)#(\d+)", text):
+        refs.append(f"pr:{match.group(1)}#{int(match.group(2))}")
+        occupied.add(match.group(0))
+    scrubbed = text
+    for token in occupied:
+        scrubbed = scrubbed.replace(token, "")
+    for number in re.findall(r"(?:PR[- ]?|#)(\d+)", scrubbed, flags=re.IGNORECASE):
+        refs.append(f"pr:{repository}#{int(number)}")
+    return tuple(dict.fromkeys(refs))
+
+
+def _declared_reconstruction_refs(pr: PRMemory) -> tuple[tuple[str, str], ...]:
+    rows: list[tuple[str, str]] = []
+    seen: set[tuple[str, str]] = set()
+    for pattern in _RECONSTRUCTION_PATTERNS:
+        for match in pattern.finditer(pr.body or ""):
+            evidence = match.group(0).strip()
+            for ref in _extract_pr_refs(match.group(1), pr.repository):
+                row = (ref, evidence)
+                if row in seen:
+                    continue
+                seen.add(row)
+                rows.append(row)
+    return tuple(rows)
 
 
 def compile_target_file_graph(
@@ -52,9 +89,11 @@ def compile_target_file_graph(
 
     targets: list[dict[str, Any]] = []
     file_targets: dict[str, set[str]] = {}
+    target_files_by_ref: dict[str, tuple[str, ...]] = {}
     for ref in selected_refs:
         pr = index.prs.get(ref)
         files = tuple(pr.files) if pr else ()
+        target_files_by_ref[ref] = files
         for path in files:
             file_targets.setdefault(path, set()).add(ref)
         targets.append(
@@ -98,6 +137,53 @@ def compile_target_file_graph(
     overlap_edges.sort(
         key=lambda row: (-row["shared_file_count"], row["left"], row["right"])
     )
+    overlap_by_pair = {
+        frozenset((row["left"], row["right"])): row
+        for row in overlap_edges
+    }
+
+    reconstruction_pairs: list[dict[str, Any]] = []
+    seen_reconstructions: set[tuple[str, str]] = set()
+    selected_ref_set = set(selected_refs)
+    for reconstruction_ref in selected_refs:
+        pr = index.prs.get(reconstruction_ref)
+        if pr is None:
+            continue
+        for source_ref, evidence in _declared_reconstruction_refs(pr):
+            if source_ref not in selected_ref_set or source_ref == reconstruction_ref:
+                continue
+            overlap = overlap_by_pair.get(frozenset((source_ref, reconstruction_ref)))
+            if overlap is None:
+                continue
+            relation_key = (source_ref, reconstruction_ref)
+            if relation_key in seen_reconstructions:
+                continue
+            seen_reconstructions.add(relation_key)
+            source_files = set(target_files_by_ref.get(source_ref, ()))
+            reconstruction_files = set(target_files_by_ref.get(reconstruction_ref, ()))
+            reconstruction_pairs.append(
+                {
+                    "source_ref": source_ref,
+                    "reconstruction_ref": reconstruction_ref,
+                    "evidence": evidence,
+                    "shared_file_count": int(overlap["shared_file_count"]),
+                    "shared_files": list(overlap["shared_files"]),
+                    "source_changed_file_count": len(source_files),
+                    "reconstruction_changed_file_count": len(reconstruction_files),
+                    "same_changed_file_set": bool(source_files) and source_files == reconstruction_files,
+                    "boundary": (
+                        "Declared reconstruction plus exact changed-path overlap is strong provenance/review evidence. "
+                        "Matching changed-file sets do not prove byte-identical blobs, equivalent commits, correct tests, or safe supersession."
+                    ),
+                }
+            )
+    reconstruction_pairs.sort(
+        key=lambda row: (
+            -row["shared_file_count"],
+            row["source_ref"],
+            row["reconstruction_ref"],
+        )
+    )
 
     file_counts = sorted(row["changed_file_count"] for row in targets)
     if file_counts:
@@ -137,6 +223,8 @@ def compile_target_file_graph(
         "targets_with_file_overlap_fraction": round(
             len(targets_with_overlap) / len(selected_refs), 6
         ) if selected_refs else 0.0,
+        "reconstruction_pair_count": len(reconstruction_pairs),
+        "reconstruction_pairs": reconstruction_pairs,
         "changed_file_distribution": {
             "median": median,
             "p90": p90,
@@ -160,6 +248,9 @@ def compile_target_file_graph(
             "FILE_OVERLAP != MERGE_CONFLICT",
             "LARGE_DIFF != LOW_QUALITY",
             "CHANGED_FILENAME != BEHAVIORAL_EQUIVALENCE",
+            "RECONSTRUCTION_DECLARATION != BYTE_IDENTITY",
+            "SAME_CHANGED_FILE_SET != SAME_BLOBS",
+            "RECONSTRUCTION_PAIR != AUTOMATIC_SUPERSESSION",
             "TARGET_FILEGRAPH != GITHUB_WRITE_AUTHORITY",
         ],
     }
