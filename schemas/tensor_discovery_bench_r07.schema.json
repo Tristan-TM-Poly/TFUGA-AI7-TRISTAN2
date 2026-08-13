@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omega.local/schemas/tensor_discovery_bench_r07.schema.json",
+  "title": "Omega Tensor DiscoveryBench R0.7",
+  "type": "object",
+  "$defs": {
+    "ExposureStatus": {
+      "type": "string",
+      "enum": ["controlled_zero", "possible", "present", "unknown"]
+    },
+    "BenchmarkFamily": {
+      "type": "string",
+      "enum": ["historical", "synthetic", "secret", "dynamic", "formal", "simulation", "cross_domain", "adversarial"]
+    },
+    "SystemKind": {
+      "type": "string",
+      "enum": ["single_llmt", "single_shadow", "fixed_coalition", "meta_llmt"]
+    },
+    "ContaminationTensor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["context", "retrieval", "tools", "pretraining", "benchmark", "human"],
+      "properties": {
+        "context": {"$ref": "#/$defs/ExposureStatus"},
+        "retrieval": {"$ref": "#/$defs/ExposureStatus"},
+        "tools": {"$ref": "#/$defs/ExposureStatus"},
+        "pretraining": {"$ref": "#/$defs/ExposureStatus"},
+        "benchmark": {"$ref": "#/$defs/ExposureStatus"},
+        "human": {"$ref": "#/$defs/ExposureStatus"}
+      }
+    },
+    "BenchmarkTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "family", "required_capabilities", "contamination", "budget", "hidden_target", "novelty_scope", "human_novelty_claimed"],
+      "properties": {
+        "task_id": {"type": "string", "minLength": 1},
+        "family": {"$ref": "#/$defs/BenchmarkFamily"},
+        "required_capabilities": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "contamination": {"$ref": "#/$defs/ContaminationTensor"},
+        "budget": {"type": "number", "exclusiveMinimum": 0},
+        "hidden_target": {"type": "boolean"},
+        "novelty_scope": {"const": "benchmark_only"},
+        "human_novelty_claimed": {"const": false}
+      }
+    },
+    "BenchmarkRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "family", "system_id", "system_kind", "capability_coverage", "evidence_strength", "calibration_proxy", "robustness_proxy", "verified_information_gain_proxy", "declared_cost", "discovery_yield", "contamination", "independent_discovery_eligible", "independent_discovery_claimed", "human_novelty_claimed", "benchmark_proxy_only"],
+      "properties": {
+        "task_id": {"type": "string"},
+        "family": {"$ref": "#/$defs/BenchmarkFamily"},
+        "system_id": {"type": "string"},
+        "system_kind": {"$ref": "#/$defs/SystemKind"},
+        "capability_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence_strength": {"type": "number", "minimum": 0, "maximum": 1},
+        "calibration_proxy": {"type": "number", "minimum": 0, "maximum": 1},
+        "robustness_proxy": {"type": "number", "minimum": 0, "maximum": 1},
+        "verified_information_gain_proxy": {"type": "number", "minimum": 0, "maximum": 1},
+        "declared_cost": {"type": "number", "exclusiveMinimum": 0},
+        "discovery_yield": {"type": "number", "minimum": 0},
+        "contamination": {"$ref": "#/$defs/ContaminationTensor"},
+        "independent_discovery_eligible": {"type": "boolean"},
+        "independent_discovery_claimed": {"const": false},
+        "human_novelty_claimed": {"const": false},
+        "benchmark_proxy_only": {"const": true}
+      }
+    },
+    "AblationReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["program_id", "removed_instruction_id", "removed_operator_id", "baseline_capability_coverage", "ablated_capability_coverage", "delta_coverage", "causal_effect_proven"],
+      "properties": {
+        "program_id": {"type": "string"},
+        "removed_instruction_id": {"type": "string"},
+        "removed_operator_id": {"type": ["string", "null"]},
+        "baseline_capability_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "ablated_capability_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "delta_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "causal_effect_proven": {"const": false}
+      }
+    }
+  },
+  "required": ["release", "task_families", "system_kinds", "runs", "ablations", "scalar_intelligence_score_produced", "human_novelty_claimed", "independent_discovery_certified", "meta_llmt_automatically_superior", "benchmark_proxy_only"],
+  "properties": {
+    "release": {"const": "R0.7"},
+    "task_families": {"type": "array", "items": {"$ref": "#/$defs/BenchmarkFamily"}},
+    "system_kinds": {"type": "array", "items": {"$ref": "#/$defs/SystemKind"}},
+    "runs": {"type": "array", "items": {"$ref": "#/$defs/BenchmarkRun"}},
+    "ablations": {"type": "array", "items": {"$ref": "#/$defs/AblationReceipt"}},
+    "scalar_intelligence_score_produced": {"const": false},
+    "human_novelty_claimed": {"const": false},
+    "independent_discovery_certified": {"const": false},
+    "meta_llmt_automatically_superior": {"const": false},
+    "benchmark_proxy_only": {"const": true}
+  }
+}
