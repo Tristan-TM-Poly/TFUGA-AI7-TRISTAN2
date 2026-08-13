@@ -1,1 +1,24 @@
-{"target_pages":512,"page_tree_depth":9}
+{
+  "id": "OMEGA_MYCELIAL_SYSTEMS_CALCULUS_T_512",
+  "status": "CANDIDATE",
+  "language": "fr",
+  "target_pages": 512,
+  "page_tree_depth": 9,
+  "page_tree_identity": "512 = 2^9",
+  "compiled_pdf_is_page_source_of_truth": true,
+  "title": "Calcul mycelien des ecosystemes logiciels et scientifiques distribues",
+  "source_attachment": "TTM-GitHub-001.pdf",
+  "primary_repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "required_outputs": [
+    "latex_source",
+    "bibliography",
+    "corpus_manifest",
+    "claims_ledger",
+    "traceability_matrix",
+    "novelty_matrix",
+    "experiment_program",
+    "page_count_receipt"
+  ],
+  "method": "SEARCH_REUSE_ADAPT_GENERATE",
+  "negative_memory_required": true
+}
