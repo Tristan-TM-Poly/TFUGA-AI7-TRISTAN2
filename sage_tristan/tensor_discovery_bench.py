@@ -16,12 +16,11 @@ from dataclasses import asdict, dataclass
 from enum import Enum
 import json
 from statistics import mean
-from typing import Iterable, Mapping, Sequence
+from typing import Mapping, Sequence
 
 from sage_tristan.tensor_research_compiler import (
     CognitiveProgram,
     LLMTRegistry,
-    PersonLLMT,
     SparseTensorCoalitionCompiler,
     ceres_cognitive_program,
     synthetic_tensor_fixture,
@@ -265,8 +264,6 @@ def system_profile(kind: SystemKind, task: BenchmarkTask, registry: LLMTRegistry
         capabilities, sources, cost = _merge_people(registry, ids)
         return SystemProfile("fixed_a_b", kind, ids, capabilities, sources, cost + 0.04, 2, False)
     problem_registry, _ = synthetic_tensor_fixture()
-    # Reuse the same deterministic registry but compile against the task-specific
-    # requirement set.  This measures router semantics, not real model quality.
     from sage_tristan.tensor_research_compiler import ProblemGenome
 
     problem = ProblemGenome(
@@ -289,7 +286,6 @@ def evaluate(task: BenchmarkTask, profile: SystemProfile) -> BenchmarkRun:
     capabilities = set(profile.capability_tags)
     coverage = len(required & capabilities) / len(required)
     evidence = min(1.0, len(profile.source_ids) / 5.0)
-    # These are deterministic benchmark-harness proxies, not measured cognition.
     calibration = min(1.0, 0.45 + 0.25 * coverage + 0.05 * min(2, len(profile.selected_person_ids)))
     robustness = min(1.0, 0.40 + 0.30 * coverage + 0.05 * min(3, profile.shadow_count))
     information = min(1.0, coverage * (0.65 + 0.35 * evidence))
@@ -307,7 +303,7 @@ def evaluate(task: BenchmarkTask, profile: SystemProfile) -> BenchmarkRun:
         declared_cost=round(profile.declared_cost, 6),
         discovery_yield=round(yield_value, 6),
         contamination=task.contamination,
-        independent_discovery_eligible=task.contamination.independent_discovery_eligible,
+        independent_discovery_eligible=task.hidden_target and task.contamination.independent_discovery_eligible,
     )
 
 
@@ -419,11 +415,12 @@ def compile_report() -> dict[str, object]:
         "pareto_fronts": [asdict(item) for item in report.pareto],
         "ablations": [asdict(item) for item in report.ablations],
         "historical_contamination": asdict(historical.contamination),
-        "historical_independent_discovery_eligible": historical.contamination.independent_discovery_eligible,
+        "historical_independent_discovery_eligible": historical.hidden_target and historical.contamination.independent_discovery_eligible,
         "same_task_comparison": True,
         "all_baselines_retained": True,
         "cost_normalization_present": True,
         "contamination_tensor_separate_from_quality": True,
+        "hidden_target_required_for_independent_discovery_eligibility": True,
         "scalar_intelligence_score_produced": False,
         "human_novelty_claimed": False,
         "independent_discovery_certified": False,
@@ -434,7 +431,8 @@ def compile_report() -> dict[str, object]:
         "oak_note": (
             "R0.7 validates benchmark plumbing and comparison semantics using deterministic synthetic proxies. "
             "It does not measure human-like intelligence, certify novelty, remove pretrained-model contamination, "
-            "or prove causal effects from ablations or coalition synergies."
+            "or prove causal effects from ablations or coalition synergies. Independent-discovery eligibility also "
+            "requires a hidden target in addition to controlled contamination axes."
         ),
     }
 
