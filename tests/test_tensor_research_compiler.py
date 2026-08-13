@@ -239,5 +239,5 @@ def test_compile_report_exposes_oak_boundaries_and_sparse_tensor():
     assert report["r04_runtime_trace_required"] is True
     assert report["program_audit"]["status"] == "admissible_software_program"
     assert report["program_path_bridge"]["exact_operator_trace_match"] is True
-    assert report["synthetic_coalition"]["selected_person_ids"] == ["person_a", "person_b"]
+    assert report["synthetic_coalition"]["selected_person_ids"] == ("person_a", "person_b")
     assert report["sparse_tensor"]["materialized_shadow_count"] < report["sparse_tensor"]["coarse_theoretical_upper_bound"]
