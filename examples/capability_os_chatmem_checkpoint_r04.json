@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.4.0",
+  "checkpoint_manifest": {
+    "checkpoint_id": "CHATMEM-CP-0002",
+    "previous_checkpoint": "memory/chatgpt/live/2026-08-10T224200Z/checkpoint.json",
+    "oak_status": "PASS",
+    "public_derivation_only": true,
+    "raw_transcript_committed": false,
+    "source_hashes": [
+      "sha256:REPLACE_WITH_REAL_SOURCE_HASH"
+    ],
+    "touched_systems": [
+      "Ω-CAPABILITY-OS-T∞",
+      "Ω-CHATMEM-HGFM-T∞"
+    ]
+  },
+  "persistence_values": {
+    "library_container_path": "/mnt/data/chatmem-checkpoint.zip",
+    "library_destination": "/Tristan/ChatGPT Memory/Checkpoints/chatmem-checkpoint.zip",
+    "repo": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+    "branch": "feature/omega-capability-os-r01",
+    "checkpoint_path": "memory/chatgpt/live/CHATMEM-CP-0002/checkpoint.json",
+    "checkpoint_content": "{\"checkpoint_id\":\"CHATMEM-CP-0002\"}",
+    "commit_message": "feat(chatmem): add checkpoint CHATMEM-CP-0002",
+    "pointer_path": "memory/chatgpt/CHATMEM_GLOBAL_POINTER.json",
+    "pointer_content": "{\"latest_checkpoint\":\"memory/chatgpt/live/CHATMEM-CP-0002/checkpoint.json\"}",
+    "pointer_blob_sha": "REPLACE_WITH_CURRENT_POINTER_BLOB_SHA",
+    "pointer_commit_message": "chore(chatmem): advance global pointer"
+  },
+  "boundary": "Example only. Placeholder hashes/paths do not authorize execution or qualify as evidence."
+}

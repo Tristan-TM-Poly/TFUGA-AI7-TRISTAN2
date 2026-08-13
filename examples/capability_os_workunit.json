@@ -1,0 +1,22 @@
+{
+  "work_unit_id": "WU-CAP-R02",
+  "kind": "implementation",
+  "objective": "Generate a deterministic Capability OS integration artifact and validate it",
+  "requirement_ids": [
+    "REQ-CAP-R02"
+  ],
+  "dependency_ids": [
+    "WU-PREV"
+  ],
+  "outputs": [
+    "generated/capability_os_r02.json"
+  ],
+  "validations": [
+    "unit_tests",
+    "oak_receipt_present"
+  ],
+  "language": "python",
+  "risk": "normal",
+  "generator": "implementation_generator",
+  "status": "planned"
+}
