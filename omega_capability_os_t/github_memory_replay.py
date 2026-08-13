@@ -101,7 +101,15 @@ class HistoricalReplayCase:
     future_leakage_refs: tuple[str, ...]
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        payload = asdict(self)
+        for key in (
+            "gold_lineage_refs",
+            "retrieved_refs",
+            "hits",
+            "future_leakage_refs",
+        ):
+            payload[key] = list(payload[key])
+        return payload
 
 
 def _gold_ancestor_refs(target: PRMemory) -> tuple[str, ...]:
