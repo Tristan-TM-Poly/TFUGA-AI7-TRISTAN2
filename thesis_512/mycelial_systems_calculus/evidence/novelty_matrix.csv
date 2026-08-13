@@ -1,0 +1,6 @@
+contribution_id,tristan_construct,nearest_prior_art,shared_structure,material_difference,novelty_status,evidence_required
+NOV-001,Capability IR,MLIR multi-level intermediate representation,intermediate representations and multiple implementations,semantic capability routing across repository providers rather than compiler lowering alone,HOLD,systematic comparison and benchmark
+NOV-002,Proof-Carrying Repository,Proof-Carrying Code,artifact carries evidence checked by consumer,repository-level multi-claim evidence passport rather than code-safety proof alone,HOLD,formal trust model and prior-art review
+NOV-003,Mycelial Repo Fabric,software architecture abstractions plus monorepo/polyrepo systems,components interactions and large-scale code organization,dynamic executable hyperedges plus capability routing plus evidence memory,HOLD,architecture literature review and scaling experiments
+NOV-004,Theory-Code Bidirectional Compiler,model-driven engineering and executable runtime megamodels,models linked to executable systems,bidirectional claim-code semantic diff with evidence ledger,HOLD,nearest-neighbor literature court
+NOV-005,Scientific CI,continuous integration and large-scale build/test systems,automated checking before integration,claim-level semantic scientific controls beyond software test pass,HOLD,formal definitions and divergence-detection benchmark
