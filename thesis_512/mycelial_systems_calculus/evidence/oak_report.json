@@ -1,8 +1,8 @@
 {
   "status": "HOLD",
   "gates": {
-    "G0_latex_structural_compile": "HOLD",
-    "G1_reference_integrity": "HOLD",
+    "G0_latex_structural_compile": "PASS",
+    "G1_reference_integrity": "PARTIAL",
     "G2_bibliography_integrity": "HOLD",
     "G3_claim_evidence_coverage": "PARTIAL",
     "G4_github_provenance_sha": "PARTIAL",
@@ -13,7 +13,7 @@
     "G9_negative_results_limits": "PASS",
     "G10_no_unsupported_theorem_language": "PASS",
     "G11_compiled_page_count_512": "HOLD",
-    "G12_artifact_hash_manifest": "HOLD"
+    "G12_artifact_hash_manifest": "PARTIAL"
   },
   "structural_facts": {
     "page_tree_target": 512,
@@ -23,11 +23,20 @@
     "experiment_courts": 7
   },
   "build_state": {
-    "diagnostic_artifacts_retained": true,
-    "fixed_missing_lmodern_dependency": true,
-    "declared_texlive_bibtex_extra_for_biblatex": true,
-    "clean_compile_observed": false,
-    "measured_pdf_pages": null
+    "workflow_run_id": 31708040332,
+    "head_sha": "d8bd352cf8a0b0efc9c61a9f3d3dd7f69f070140",
+    "artifact_id": 9184072886,
+    "artifact_digest": "sha256:d1d6ad01a7c42ea4bf217d85b12f2ae0218a070e83e54d6604b32a0bfb034db2",
+    "clean_compile_observed": true,
+    "page_measurement_observed": true,
+    "measured_pdf_pages": 127,
+    "target_pdf_pages": 512,
+    "page_delta": 385,
+    "page_status": "HOLD",
+    "rendered_pages_inspected": [1, 13, 37, 65, 85, 86, 113, 123, 125, 127],
+    "low_text_page_count": 14,
+    "bibliography_in_build": "empty",
+    "overfull_boxes_observed": 4
   },
   "promotion": "BLOCKED_UNTIL_MUST_PASS_GATES",
   "scientific_truth_implied": false,
