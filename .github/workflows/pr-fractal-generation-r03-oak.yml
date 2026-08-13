@@ -1,0 +1,77 @@
+name: Ω PR 5K2N R0.3 Dual-Plane OAK
+
+on:
+  pull_request:
+    paths:
+      - "omega_capability_os_t/github_pr_generation_r03.py"
+      - "tests/test_omega_github_pr_generation_r03.py"
+      - "examples/pr_5k2n_generation_r03_request.json"
+      - "schemas/omega-pr-5k2n-generation-r03.schema.json"
+      - "docs/OMEGA_PR_5K2N_GENERATION_R03.md"
+      - ".agents/skills/pr-fractal-generation/SKILL.md"
+      - ".github/workflows/pr-fractal-generation-r03-oak.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  dual-plane-oak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deterministic court dependencies
+        run: python -m pip install pytest jsonschema
+
+      - name: Compile R0.3
+        run: python -m compileall -q omega_capability_os_t/github_pr_generation_r03.py
+
+      - name: Run R0.3 OAK tests
+        run: python -m pytest -q tests/test_omega_github_pr_generation_r03.py
+
+      - name: Compile canonical dual-plane fixture
+        run: |
+          python -m omega_capability_os_t.github_pr_generation_r03 \
+            examples/pr_5k2n_generation_r03_request.json \
+            --output /tmp/omega-pr-5k2n-r03.json
+
+      - name: Validate R0.3 schema and truth boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          report = json.loads(Path("/tmp/omega-pr-5k2n-r03.json").read_text())
+          schema = json.loads(Path("schemas/omega-pr-5k2n-generation-r03.schema.json").read_text())
+          Draft202012Validator(schema).validate(report)
+
+          assert report["schema"] == "omega-pr-5k2n-generation-dual-plane/v0.3.0"
+          assert report["process_reuse_plane"]["process_reuse_complete"] is True
+          assert report["process_reuse_plane"]["reuse_coverage_ratio"] == 1.0
+          assert report["artifact_residual_plane"]["decision"] == "INSPECT"
+          assert report["artifact_residual_plane"]["historical_candidates"]
+          assert report["heuristic_failure_memory_numeric_penalty"] == 0.0
+          assert report["physical_patch_contract_count"] == 0
+          assert report["adaptive_continuation"]["architecture_hard_cap"] is False
+          assert report["adaptive_continuation"]["next_generation_candidate"] is None
+          assert all(row["inspection_status"] == "NOT_EXECUTED" for row in report["compatibility_inspection_plan"])
+          assert all(row["compatibility_proven"] is False for row in report["compatibility_inspection_plan"])
+          assert all(row["reuse_authorized"] is False for row in report["compatibility_inspection_plan"])
+          assert report["physical_patch_compiler"]["write_authority_granted"] is False
+          assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
+          assert len(report["fingerprint"]) == 64
+          PY
+
+      - name: Retain dual-plane fixture
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-pr-5k2n-r03-${{ github.run_id }}
+          path: /tmp/omega-pr-5k2n-r03.json
+          retention-days: 14
