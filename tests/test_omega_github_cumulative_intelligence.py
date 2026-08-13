@@ -250,3 +250,56 @@ def test_retrieval_arena_is_deterministic():
     right = compile_retrieval_arena(index, top_k=1)
     assert left == right
     assert len(left["fingerprint"]) == 64
+
+
+def test_retrieval_arena_uses_unique_nondefault_stack_parent_as_gold_only():
+    repository = "Tristan/stack"
+    index = GitHubMemoryIndex()
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=10,
+            state="closed",
+            title="foundation branch",
+            head_ref="feat/foundation",
+        )
+    )
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=11,
+            state="closed",
+            title="default branch distractor",
+            head_ref="main",
+        )
+    )
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=20,
+            state="open",
+            title="orthogonal child title",
+            body="",
+            base_ref="feat/foundation",
+        )
+    )
+    index.add_pr(
+        PRMemory(
+            repository=repository,
+            number=21,
+            state="open",
+            title="future orthogonal child",
+            base_ref="main",
+        )
+    )
+
+    report = compile_retrieval_arena(index, top_k=2)
+    assert report["schema"] == "omega-pr-retrieval-arena/v0.2.0"
+    assert report["eligible_target_count"] == 1
+    assert report["gold_source_counts"]["stack_base_ref"] == 1
+    case = report["cases"][0]
+    assert case["gold_lineage_refs"] == ["pr:Tristan/stack#10"]
+    assert case["gold_sources"]["pr:Tristan/stack#10"] == ["stack_base_ref"]
+    assert report["contamination"]["target_base_ref_used_as_gold_only"] is True
+    assert report["contamination"]["default_branch_stack_labels_excluded"] is True
+    assert report["oak"]["ranker_frozen_during_v0_2_evaluation"] is True
