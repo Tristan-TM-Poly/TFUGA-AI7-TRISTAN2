@@ -1,0 +1,32 @@
+\documentclass[11pt,letterpaper,twoside,openright]{book}
+\input{config/packages}
+\input{config/macros}
+\input{config/theorems}
+\addbibresource{bibliography/references.bib}
+
+\title{Calcul mycélien des écosystèmes logiciels et scientifiques distribués}
+\author{Tristan Tardif-Morency}
+\date{2026}
+
+\begin{document}
+\frontmatter
+\maketitle
+\input{frontmatter/abstracts}
+\tableofcontents
+\listoffigures
+\listoftables
+
+\mainmatter
+\input{chapters/part1}
+\input{chapters/part2}
+\input{chapters/part3}
+\input{chapters/part4}
+\input{chapters/part5}
+\input{chapters/part6}
+\input{chapters/part7}
+
+\backmatter
+\printbibliography
+\appendix
+\input{appendices/reproducibility}
+\end{document}
