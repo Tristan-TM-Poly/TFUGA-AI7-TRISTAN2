@@ -72,7 +72,9 @@ def test_target_file_graph_hydrates_all_targets_without_source_content_fetch():
     assert report["changed_file_distribution"]["p90"] == 2
     assert report["authority"]["write_authority_granted"] is False
     assert not any("/contents/" in call for call in calls)
-    assert not hydrated.assets
+    assert hydrated.assets
+    assert all(asset.source_kind == "pr_changed_file" for asset in hydrated.assets.values())
+    assert all(asset.source_kind != "pr_head_python_ast_symbol" for asset in hydrated.assets.values())
 
 
 def test_target_file_graph_budget_is_operational_not_architectural():
