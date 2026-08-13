@@ -1,0 +1,27 @@
+{
+  "measurement_id": "PAGE-R32",
+  "workflow_run_id": 31711355114,
+  "head_sha": "3003b49e797a30a92dd898bbb8ded572114051b0",
+  "artifact_id": 9185469821,
+  "artifact_digest": "sha256:4d1d28a970428809dc760c892166a37bce3e7f1bbf1e85763b36d8ab4cb543b0",
+  "target_pages": 512,
+  "actual_pages": 185,
+  "delta": 327,
+  "status": "HOLD",
+  "part_start_pages": {"p1":21,"p2":35,"p3":65,"p4":85,"p5":117,"p6":135,"p7":173,"bibliography":183,"appendix":185},
+  "measured_budget": [
+    {"id":"front","target":24,"actual":20,"gap":4},
+    {"id":"p1","target":48,"actual":14,"gap":34},
+    {"id":"p2","target":84,"actual":30,"gap":54},
+    {"id":"p3","target":84,"actual":20,"gap":64},
+    {"id":"p4","target":72,"actual":32,"gap":40},
+    {"id":"p5","target":60,"actual":18,"gap":42},
+    {"id":"p6","target":80,"actual":38,"gap":42},
+    {"id":"p7","target":24,"actual":10,"gap":14},
+    {"id":"bib","target":24,"actual":2,"gap":22},
+    {"id":"app","target":12,"actual":1,"gap":11}
+  ],
+  "gap_checksum": 327,
+  "gain_since_r20_pages": 52,
+  "gain_sources": {"p2_formal":14,"p4_evidence":16,"p6_methods":18,"front_toc":4}
+}
