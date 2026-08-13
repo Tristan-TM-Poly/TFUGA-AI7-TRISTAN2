@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+from pathlib import Path
+import json
+import subprocess
+import sys
+
 from omega_capability_os_t.github_memory import CapabilityRequest
 from omega_capability_os_t.github_pr_generation_forest import (
     DEFAULT_SEED_COUNT,
@@ -134,3 +139,45 @@ def test_campaign_covers_n_to_runtime_budget_without_turning_budget_into_nmax():
     assert [row["generation"] for row in campaign["generations"]] == list(range(campaign["generation_count"]))
     assert campaign["generations"][0]["logical_cardinality_decimal"] == "5000"
     assert len(campaign["fingerprint"]) == 64
+
+
+def test_direct_event_script_resolves_repository_package(tmp_path):
+    """M− regression: direct tools/ execution must not lose the repository package root."""
+    repo_root = Path(__file__).resolve().parents[1]
+    event_path = tmp_path / "event.json"
+    output_path = tmp_path / "receipt.json"
+    event_path.write_text(
+        json.dumps(
+            {
+                "number": 452,
+                "repository": {"full_name": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2"},
+                "pull_request": {
+                    "number": 452,
+                    "title": "5K2N direct-script regression",
+                    "body": "Ω-PR-5K2N-T∞",
+                    "state": "open",
+                    "draft": True,
+                    "head": {"sha": "candidate-head"},
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(repo_root / "tools" / "compile_pr_5k2n_event.py"),
+            "--event", str(event_path),
+            "--output", str(output_path),
+            "--generation", "0",
+            "--budget", "4",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    report = json.loads(output_path.read_text(encoding="utf-8"))
+    assert report["event_context"]["physical_materialization_blocked_until_reuse_inspection"] is True
+    assert report["physical_patch_compiler"]["write_authority_granted"] is False
