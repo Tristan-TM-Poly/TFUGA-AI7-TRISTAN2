@@ -88,15 +88,23 @@ jobs:
           assert "MERGED != M+" in report["oak_boundaries"]
           assert len(report["fingerprint"]) == 64
 
-          assert arena["schema"] == "omega-pr-retrieval-arena/v0.1.0"
+          assert arena["schema"] == "omega-pr-retrieval-arena/v0.2.0"
+          assert arena["ranker_version"] == "frozen-v0.1"
           assert arena["oak"]["status"] == "PASS", arena["oak"]
           assert arena["oak"]["temporal_leakage_free"] is True
+          assert arena["oak"]["ranker_frozen_during_v0_2_evaluation"] is True
+          assert arena["gold_source_counts"]["stack_base_ref"] >= 1
+          assert arena["ambiguous_stack_gold_count"] >= 0
           assert arena["strategies"]["lexical_jaccard"]["target_leakage_count"] == 0
           assert arena["strategies"]["lexical_jaccard"]["future_leakage_count"] == 0
           winner = arena["strategies"][arena["winner"]]
           baseline = arena["strategies"]["lexical_jaccard"]
           assert winner["micro_recall_at_k"] >= baseline["micro_recall_at_k"]
           assert len(arena["fingerprint"]) == 64
+          early = arena["temporal_evaluation"]["early"]
+          late = arena["temporal_evaluation"]["late_holdout_proxy"]
+          assert early["eligible_target_count"] >= 1
+          assert late["eligible_target_count"] >= 1
 
           print(json.dumps({
               "pr_count": coverage["pr_count"],
@@ -107,11 +115,19 @@ jobs:
               "reuse_coverage_ratio": report["minimal_reuse_coalition"]["reuse_coverage_ratio"],
               "retrieval_targets": arena["eligible_target_count"],
               "retrieval_gold_refs": arena["gold_lineage_ref_count"],
+              "declared_gold_refs": arena["gold_source_counts"]["declared_body_lineage"],
+              "structural_gold_refs": arena["gold_source_counts"]["stack_base_ref"],
               "retrieval_winner": arena["winner"],
               "baseline_recall_at_8": baseline["micro_recall_at_k"],
               "winner_recall_at_8": winner["micro_recall_at_k"],
               "winner_mrr": winner["mrr"],
               "retrieval_improved": arena["improved_over_baseline"],
+              "early_targets": early["eligible_target_count"],
+              "late_targets": late["eligible_target_count"],
+              "early_hybrid_recall": early["strategies"]["hybrid_rrf"]["micro_recall_at_k"],
+              "late_hybrid_recall": late["strategies"]["hybrid_rrf"]["micro_recall_at_k"],
+              "early_hybrid_mrr": early["strategies"]["hybrid_rrf"]["mrr"],
+              "late_hybrid_mrr": late["strategies"]["hybrid_rrf"]["mrr"],
               "fingerprint": report["fingerprint"],
               "arena_fingerprint": arena["fingerprint"],
           }, indent=2))
