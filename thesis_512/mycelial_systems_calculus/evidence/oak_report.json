@@ -22,10 +22,13 @@
     "source_pdf_pages": 230,
     "experiment_courts": 7
   },
-  "current_m_minus": [
-    "first clean CI build exposed an undeclared lmodern dependency",
-    "second clean CI build exposed the missing biblatex package set"
-  ],
+  "build_state": {
+    "diagnostic_artifacts_retained": true,
+    "fixed_missing_lmodern_dependency": true,
+    "declared_texlive_bibtex_extra_for_biblatex": true,
+    "clean_compile_observed": false,
+    "measured_pdf_pages": null
+  },
   "promotion": "BLOCKED_UNTIL_MUST_PASS_GATES",
   "scientific_truth_implied": false,
   "compiled_512_pages_claimed": false
