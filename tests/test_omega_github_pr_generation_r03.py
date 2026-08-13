@@ -214,7 +214,7 @@ def test_regex_failure_memory_is_inspection_lead_not_numeric_m_minus_penalty():
         outcome_policy=None,
         candidate_budget=24,
     )
-    assert report["artifact_residual_plane"]["heuristic_failure_memory_refs"] == ["pr:o/r#80"]
+    assert report["artifact_residual_plane"]["heuristic_failure_memory_refs"] == ("pr:o/r#80",)
     assert report["heuristic_failure_memory_numeric_penalty"] == 0.0
     assert report["confirmed_negative_signal"]["applied"] is False
     assert all(row["heuristic_failure_memory_penalty"] == 0.0 for row in report["evaluated_candidates"])
