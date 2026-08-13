@@ -1,0 +1,82 @@
+name: Tensor DiscoveryBench R0.7 OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "sage_tristan/tensor_discovery_bench.py"
+      - "sage_tristan/tensor_research_compiler.py"
+      - "schemas/tensor_discovery_bench_r07.schema.json"
+      - "tests/test_tensor_discovery_bench.py"
+      - "tests/test_tensor_discovery_bench_schema.py"
+      - "docs/canon/TENSOR-DISCOVERYBENCH-R07.md"
+      - ".github/workflows/tensor-discovery-r07.yml"
+  push:
+    branches: ["feat/ait-greatsages-gauss-r01"]
+    paths:
+      - "sage_tristan/tensor_discovery_bench.py"
+      - "sage_tristan/tensor_research_compiler.py"
+      - "schemas/tensor_discovery_bench_r07.schema.json"
+      - "tests/test_tensor_discovery_bench.py"
+      - "tests/test_tensor_discovery_bench_schema.py"
+      - "docs/canon/TENSOR-DISCOVERYBENCH-R07.md"
+      - ".github/workflows/tensor-discovery-r07.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile R0.7
+        run: >-
+          python -m compileall -q
+          sage_tristan/tensor_discovery_bench.py
+          tests/test_tensor_discovery_bench.py
+          tests/test_tensor_discovery_bench_schema.py
+      - name: Parse R0.7 schema
+        run: python -m json.tool schemas/tensor_discovery_bench_r07.schema.json > /dev/null
+      - name: Targeted R0.7 tests
+        run: pytest -q tests/test_tensor_discovery_bench.py tests/test_tensor_discovery_bench_schema.py
+      - name: Tensor DiscoveryBench deterministic OAK gates
+        run: |
+          python -m sage_tristan.tensor_discovery_bench --report > /tmp/r07.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('/tmp/r07.json').read_text())
+          assert report['release'] == 'R0.7'
+          assert len(report['task_families']) == 8
+          assert set(report['system_kinds']) == {
+              'single_llmt', 'single_shadow', 'fixed_coalition', 'meta_llmt'
+          }
+          assert len(report['runs']) == 32
+          assert report['same_task_comparison'] is True
+          assert report['all_baselines_retained'] is True
+          assert report['cost_normalization_present'] is True
+          assert report['contamination_tensor_separate_from_quality'] is True
+          assert report['scalar_intelligence_score_produced'] is False
+          assert report['human_novelty_claimed'] is False
+          assert report['independent_discovery_certified'] is False
+          assert report['meta_llmt_automatically_superior'] is False
+          assert report['ablation_is_causal_proof'] is False
+          assert report['benchmark_proxy_only'] is True
+          assert report['historical_independent_discovery_eligible'] is False
+          assert report['historical_contamination']['pretraining'] == 'possible'
+          assert all(item['causal_effect_proven'] is False for item in report['ablations'])
+          assert all(item['scalar_intelligence_score_produced'] is False for item in report['pareto_fronts'])
+          print('PROMOTE R0.7: benchmark-harness software gates only')
+          PY
