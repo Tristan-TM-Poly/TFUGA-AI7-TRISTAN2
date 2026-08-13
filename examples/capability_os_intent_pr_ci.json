@@ -1,0 +1,9 @@
+{
+  "intent_id": "pr-ci-diagnosis",
+  "available_inputs": ["repo", "pr_number"],
+  "required_outputs": ["job_log", "pr_diff"],
+  "domains": ["github", "software"],
+  "allow_mutation": false,
+  "allow_irreversible": false,
+  "max_steps": 8
+}

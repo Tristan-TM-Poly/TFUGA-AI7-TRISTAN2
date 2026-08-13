@@ -1,0 +1,77 @@
+{
+  "schema_version": "0.3.0",
+  "boundary": "Bindings describe how an authorized external execution layer should call tools. They do not grant permission or invoke tools by themselves.",
+  "bindings": [
+    {
+      "capability_id": "github.fetch_pr",
+      "connector": "GitHub",
+      "action": "fetch_pr",
+      "argument_template": {
+        "repo_full_name": "$repo",
+        "pr_number": "$pr_number"
+      }
+    },
+    {
+      "capability_id": "github.get_pr_diff",
+      "connector": "GitHub",
+      "action": "get_pr_diff",
+      "argument_template": {
+        "repo_full_name": "$repo",
+        "pr_number": "$pr_number",
+        "format": "diff"
+      }
+    },
+    {
+      "capability_id": "files.search",
+      "connector": "files",
+      "action": "search",
+      "argument_template": {
+        "search_query": [{"q": "$query"}],
+        "top_k": 10
+      },
+      "notes": ["Default request is semantic QA search; execution layer may tighten scope before invocation."]
+    },
+    {
+      "capability_id": "google_drive.search",
+      "connector": "Google_Drive",
+      "action": "search",
+      "argument_template": {
+        "query": "$query",
+        "topn": 20,
+        "best_effort_fetch": false
+      }
+    },
+    {
+      "capability_id": "gmail.search_email_ids",
+      "connector": "Gmail",
+      "action": "search_email_ids",
+      "argument_template": {
+        "query": "$gmail_query",
+        "max_results": 20
+      },
+      "notes": ["Read-only ID discovery only; content reads and mutations remain separate capabilities."]
+    },
+    {
+      "capability_id": "google_calendar.search_events",
+      "connector": "Google_Calendar",
+      "action": "search_events",
+      "argument_template": {
+        "query": "$calendar_query",
+        "time_min": "$time_min",
+        "time_max": "$time_max",
+        "timezone_str": "America/Montreal",
+        "calendar_id": "primary",
+        "max_results": 50
+      }
+    },
+    {
+      "capability_id": "web.system1_search_query",
+      "connector": "web",
+      "action": "system1_search_query",
+      "argument_template": {
+        "system1_search_query": [{"q": "$query"}],
+        "response_length": "short"
+      }
+    }
+  ]
+}

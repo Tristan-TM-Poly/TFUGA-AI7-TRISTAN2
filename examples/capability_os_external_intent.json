@@ -1,0 +1,9 @@
+{
+  "intent_id": "external-github-pr-read",
+  "available_inputs": ["repo", "pr_number"],
+  "required_outputs": ["pr_metadata", "commit_sha"],
+  "domains": ["github", "software"],
+  "allow_mutation": false,
+  "allow_irreversible": false,
+  "max_steps": 4
+}
