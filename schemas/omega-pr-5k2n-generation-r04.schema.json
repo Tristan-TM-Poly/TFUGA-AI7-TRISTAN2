@@ -37,6 +37,15 @@
     "stale_candidate_count": {"type": "integer", "minimum": 0},
     "experiment_eligible_candidate_count": {"type": "integer", "minimum": 0},
     "hydration_errors": {"type": "array", "items": {"type": "object"}},
+    "frozen_fallback": {"type": "boolean"},
+    "current_live_history_complete": {"type": "boolean"},
+    "inspection_context_source_head_sha": {"type": ["string", "null"]},
+    "inspection_context_fresh": {"type": "boolean"},
+    "source_r04_fingerprint": {"type": "string"},
+    "source_workflow_run_id": {"type": "integer", "minimum": 0},
+    "source_artifact_id": {"type": "integer", "minimum": 0},
+    "source_artifact_sha256": {"type": "string"},
+    "residual_outputs": {"type": "array", "items": {"type": "string"}},
     "compatibility_receipts": {
       "type": "array",
       "items": {
@@ -68,7 +77,9 @@
               "exact_head_hydration_required",
               "no_technical_source_or_symbol_surface",
               "no_candidate_test_surface",
-              "exact_head_with_technical_and_test_surface"
+              "exact_head_with_technical_and_test_surface",
+              "stale_target_inspection_context",
+              "frozen_static_seed_requires_live_revalidation"
             ]
           },
           "compatibility_verdict": {"const": "UNKNOWN"},
