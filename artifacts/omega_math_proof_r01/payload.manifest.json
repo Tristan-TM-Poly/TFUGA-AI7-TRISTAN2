@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "source_filename": "omega-math-proofs-64-harvest-pack.zip",
+  "encoding": "base85",
+  "parts": [
+    "payload.part01.b85",
+    "payload.part02.b85"
+  ],
+  "part_count": 2,
+  "raw_size": 82013,
+  "encoded_size": 102517,
+  "sha256": "f3910c665895198537f770db90b8c72cf46614bb619355386c79adbac74bd973",
+  "expected_catalog_count": 64,
+  "claim_boundary": "This payload contains discovery metadata/code/contracts only, not the 64 third-party book PDF bytes. Binary book fetch and per-source redistribution review remain separate OAK gates."
+}

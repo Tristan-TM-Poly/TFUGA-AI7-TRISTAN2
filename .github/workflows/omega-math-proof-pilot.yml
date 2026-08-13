@@ -1,0 +1,69 @@
+name: Omega Math Proof Pilot
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'omega_math_proof_research_os/**'
+      - 'tests/test_omega_math_proof_*.py'
+      - 'scripts/materialize_omega_math_proof_r01.py'
+      - 'scripts/verify_omega_math_proof_r01.py'
+      - 'artifacts/omega_math_proof_r01/**'
+      - 'pyproject.toml'
+      - '.github/workflows/omega-math-proof-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install package and focused test tools
+        run: python -m pip install -e . pytest
+      - name: Validate pilot manifest
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('omega_math_proof_research_os/pilot_sources.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          assert data['pilot'] == 'proof-kernel-5'
+          assert len(data['sources']) == 5
+          assert len({s['id'] for s in data['sources']}) == 5
+          assert all(s['bytes_policy'] for s in data['sources'])
+          print('pilot_sources: PASS (5/5)')
+          PY
+      - name: Run focused math-proof tests
+        run: >-
+          python -m pytest -q
+          tests/test_omega_math_proof_contracts.py
+          tests/test_omega_math_proof_ecosystem.py
+          tests/test_omega_math_proof_extractor.py
+          tests/test_omega_math_proof_seed.py
+      - name: Smoke test module CLI
+        run: python -m omega_math_proof_research_os.cli
+
+  lean-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up pinned Lean toolchain and build proof seed
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: omega_math_proof_research_os/formalization_candidates
+          auto-config: false
+          build: true
+          test: false
+          lint: false
+          use-mathlib-cache: false
+          use-github-cache: false
+      - name: Direct kernel check
+        working-directory: omega_math_proof_research_os/formalization_candidates
+        run: lean BookOfProofSeed.lean

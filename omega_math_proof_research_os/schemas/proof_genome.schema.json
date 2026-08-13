@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-math-proof/proof_genome.schema.json",
+  "title": "ProofGenome",
+  "type": "object",
+  "properties": {
+    "quantifier_signature": {"type": "array", "items": {"type": "string"}},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "representations": {"type": "array", "items": {"type": "string"}},
+    "operators": {"type": "array", "items": {"type": "string"}},
+    "lemmas": {"type": "array", "items": {"type": "string"}},
+    "branching_signature": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+    "kernel_status": {"enum": ["unverified", "accepted", "rejected"]}
+  },
+  "additionalProperties": false
+}
