@@ -1,5 +1,11 @@
 # Default thesis profile — TTM-GitHub-001 / Ω-MYCELIAL-SYSTEMS-CALCULUS-T
 
+## Target
+
+**512 compiled LaTeX pages, exact by default.**
+
+The page count is measured from the built PDF. This profile never treats word count or source-file length as proof of the target.
+
 ## Candidate title
 
 **Calcul mycélien des écosystèmes logiciels et scientifiques distribués : hypergraphes exécutables, représentation intermédiaire des capacités, compilation bidirectionnelle théorie–code et validation épistémique**
@@ -12,7 +18,7 @@ This is a candidate title, not a novelty claim.
 
 ## Research object
 
-The manuscript studies a GitHub-scale research ecosystem not as a bag of repositories but as a multiscale executable system in which repositories, modules, functions, capabilities, claims, evidence, tests, benchmarks, agents, transformations, and histories are typed objects linked by executable hyperedges.
+The manuscript studies a GitHub-scale research ecosystem not as a bag of repositories but as a multiscale executable system in which repositories, modules, functions, capabilities, claims, evidence, tests, benchmarks, agents, transformations and histories are typed objects linked by executable hyperedges.
 
 The source architecture progresses through:
 
@@ -35,473 +41,496 @@ Repo
 
 ## Central research question
 
-> Can a large, heterogeneous, evolving research-code ecosystem be represented and operated as a typed multiscale hypergraph of capabilities such that composition, reuse, evidence propagation, semantic consistency, and controlled self-improvement become explicit, testable, and scalable properties rather than ad-hoc repository conventions?
-
-## Subquestions
-
-1. What should be the fundamental unit: repository, module, function, or semantic CapabilityCell?
-2. Can a Capability IR decouple semantic demand from concrete implementation provider?
-3. Which algebraic operators are sufficient to express composition, intersection, adaptation, migration, and closure of research-software systems?
-4. How should an executable hyperedge differ formally from an ordinary dependency edge?
-5. Can natural-language intent be compiled into an executable repository/capability hypergraph while preserving constraints and evidence requirements?
-6. Can theory and implementation be compiled bidirectionally and compared by a semantic-difference operator?
-7. How should evidence, uncertainty, negative results, provenance, and trust propagate across repository boundaries?
-8. Can local CI success be separated from global scientific/ecosystem validity?
-9. Which lifecycle operations—specialization, mitosis, fusion, dormancy, absorption/apoptosis—have useful formal software analogues?
-10. Can the ecosystem learn which transformations improve future architecture without confusing historical association with causality?
-11. What measurable conditions justify self-hosting and fixed-point claims?
-12. Under what workloads does the proposed architecture outperform simpler baselines such as monorepos, static dependency graphs, service registries, package managers, workflow DAGs, and conventional agent orchestration?
+> Can a large, heterogeneous and evolving research-code ecosystem be represented and operated as a typed multiscale hypergraph of capabilities such that composition, reuse, evidence propagation, semantic consistency and controlled self-improvement become explicit, testable and scalable properties rather than ad-hoc repository conventions?
 
 ## Candidate thesis statement
 
-A plausible thesis statement to test—not assume—is:
+A hypothesis to test, not assume:
+
+> A capability-centered, typed, multiscale executable-hypergraph architecture can reduce coordination friction and increase reusable verified composition in large research-code ecosystems when semantic contracts, evidence propagation, routing, lifecycle operations and self-improvement mechanisms are subjected to explicit global invariants, reproducible benchmarks, uncertainty tracking and falsification gates.
 
-> A capability-centered, typed, multiscale executable-hypergraph architecture can reduce coordination friction and increase reusable verified composition in large research-code ecosystems when its semantic contracts, evidence propagation, routing, lifecycle operations, and self-improvement mechanisms are subjected to explicit global invariants, reproducible benchmarks, uncertainty tracking, and falsification gates.
+## OAK thesis stance
 
-The manuscript must weaken, refine, or reject this statement if experiments do not support it.
+The manuscript must distinguish:
 
-## Formal core
+```text
+known external result
+internal definition
+formal derivation
+implemented mechanism
+simulation
+measured result
+hypothesis
+conjecture
+negative result
+unsupported claim
+```
 
-### 1. Repository state
+Internal Tristan terminology is not itself evidence of novelty. GitHub implementation is not peer review. Passing tests are not scientific proof. Biological vocabulary such as mycelium, mitosis, apoptosis and metabolism is treated as an architectural model/metaphor until given formal semantics.
 
-Candidate state model:
+# Exact 512-page information budget
 
-\[
-R_i = (I,C,P,Cl,E,A,T,M,Pol,D,Ev),
-\]
+```text
+Front matter                                   24
+Part I — Problem, prior art, foundations       48
+Part II — Formal mycelial systems calculus     84
+Part III — Architecture and compilers          84
+Part IV — Evidence, trust, OAK and UNC²        72
+Part V — Learning, evolution and self-hosting  60
+Part VI — Experiments and case studies         80
+Part VII — Synthesis and conclusion            24
+Bibliography                                   24
+Appendices                                     12
+TOTAL                                         512
+```
 
-where identity, capabilities, ports, claims, evidence, artifacts, tests, memory, policies, dependencies, and events are explicit typed components.
+The budget is a control surface, not a padding quota.
 
-### 2. CapabilityCell
+# Front matter — 24 pages
 
-Candidate semantic unit:
+1. Title, institutional metadata and thesis declaration — 2 pages.
+2. Résumé français — 4 pages.
+3. English abstract — 4 pages.
+4. Nomenclature and symbol table — 6 pages.
+5. Contribution map and reading guide — 4 pages.
+6. Reproducibility/evidence legend — 4 pages.
 
-\[
-C_i=(I,O,T,P,E,U,R,M),
-\]
+# Part I — Problem, prior art and foundations — 48 pages
 
-with inputs, outputs, transformation, preconditions, evidence, uncertainty, resources, and memory.
+## Chapter 1 — Research problem and falsifiable scope — 12 pages
 
-The thesis must specify typing, equality/equivalence, substitution conditions, versioning, and failure semantics.
+- coordination complexity across many repositories;
+- failure modes of manual all-to-all coupling;
+- distinction between software scale and scientific scale;
+- central hypotheses and null hypotheses;
+- scope boundaries and evaluation criteria.
 
-### 3. Repository hypergraph
+## Chapter 2 — Prior art in software ecosystems — 12 pages
 
-Candidate multiscale object:
+Compare against:
 
-\[
-\mathcal G_{repo}=(V_R,E_H,E_V,E_T),
-\]
+- monorepos and polyrepos;
+- package/dependency managers;
+- service registries;
+- workflow DAG systems;
+- build graphs;
+- microservices/service meshes;
+- component/plugin systems;
+- federated code ecosystems.
 
-with repository nodes, composition hyperedges, Venn/intersection structures, and temporal transformation edges.
+## Chapter 3 — Prior art in knowledge and scientific systems — 12 pages
 
-A stronger formalization should distinguish:
+Compare against:
 
-- ordinary graph edge;
-- typed dependency;
-- hyperedge;
-- executable hyperedge;
-- temporal transition;
-- semantic intersection;
-- evidence/trust edge.
+- knowledge graphs;
+- provenance graphs;
+- workflow/provenance standards;
+- scientific CI/reproducibility systems;
+- theorem/proof artifact systems;
+- evidence graphs;
+- multi-agent research orchestration.
 
-### 4. Repository algebra
+## Chapter 4 — Mathematical foundations — 12 pages
 
-Candidate operators:
+Formal foundations for:
 
-\[
-A\oplus B,\quad
-A\otimes B,\quad
-A\circ B,\quad
-A\cap B,\quad
-A\setminus B,\quad
-A\triangleright B,\quad
-A\Rightarrow B,\quad
-A^\star.
-\]
+- graphs/hypergraphs;
+- typed graphs;
+- category-inspired composition where justified;
+- algebraic interfaces;
+- state-transition systems;
+- semantics and contracts;
+- uncertainty/provenance objects.
 
-The manuscript must define domains/codomains and laws rather than relying on notation alone. Associativity, identity elements, closure, commutativity, monotonicity, distributivity, partiality, and failure propagation should be proved, disproved, or explicitly left open for each operator.
+# Part II — Formal Mycelial Systems Calculus — 84 pages
 
-### 5. Capability space
+Six chapters × 14 pages.
 
-Candidate coordinate model:
+## Chapter 5 — RepoCell and CapabilityCell
 
-\[
-c_i=(domain,semantics,cost,accuracy,latency,risk,evidence,uncertainty,reuse,maturity).
-\]
+Define the shift from repository identity to semantic capability units.
 
-Intent becomes a target region in capability space, and routing becomes constrained trajectory optimization.
+Formal candidate:
 
-### 6. Global value functional
+```text
+C_i = (I,O,T,P,E,U,R,M)
+```
 
-Candidate GO-MAX-inspired objective:
+with inputs, outputs, transformation, preconditions, evidence, uncertainty, resources and memory.
 
-\[
-\mathcal L=\frac{
-VerifiedReusableCapabilities\times UsefulCompositions\times Evidence
-}{
-Duplication+Cost+Coupling+Debt
-}.
-\]
+## Chapter 6 — Capability IR
 
-This must be operationalized into measurable proxies before empirical claims are made.
+Define semantic input/output contracts, versions, units/types, evidence requirements and provider substitution.
 
-## Candidate contribution families
+Study:
 
-All novelty labels remain `HOLD` until literature review.
+```text
+Code ≠ Capability
+```
 
-### C1 — Capability-centered multiscale ontology
+and conditions for multiple implementations to realize one semantic capability.
 
-Repository-level architecture grounded in semantic capabilities rather than only source-code packaging boundaries.
+## Chapter 7 — Executable hypergraphs and HGFM
 
-### C2 — Capability IR
+Separate:
 
-A typed intermediate representation for semantic inputs/outputs, evidence, uncertainty, quality, and provider substitution.
+```text
+Hyperedge as relation
+```
 
-### C3 — Executable hyperedges
+from:
 
-Hyperedges treated as executable programs/workflows with participants, transformations, evidence contracts, and learned value.
+```text
+Hyperedge as executable program
+```
 
-### C4 — Repo Algebra and compiler stack
+Formalize nested/multiscale structure and the fractal invariance hypothesis.
 
-An algebra of ecosystem composition plus compilation from intent/architecture expressions to executable repository graphs.
+## Chapter 8 — Repo Algebra
 
-### C5 — Bidirectional Theory ⇄ ExecutableSystem compilation
+Study operators such as:
 
-Theory-to-repository graph generation combined with repository-to-implicit-theory extraction and semantic difference analysis.
+```text
+A ⊕ B
+A ⊗ B
+A ∘ B
+A ∩ B
+A \ B
+A ▷ B
+A ⇒ B
+A★
+```
 
-### C6 — Proof-/evidence-carrying repositories
+Each operator requires a semantic contract and algebraic properties must be proved or explicitly left as conjectural.
 
-Repository passports carrying claims, evidence, limits, uncertainty, provenance, and security/validation status.
+## Chapter 9 — Capability space and routing geometry
 
-### C7 — Semantic and Scientific CI
+Represent a capability by coordinates such as domain, semantics, cost, latency, accuracy, risk, evidence, uncertainty, reuse and maturity.
 
-CI layers that test semantic contracts, units, baselines, provenance, uncertainty, negative controls, and scientific-claim support separately from software correctness.
+Turn routing into constrained trajectory optimization.
 
-### C8 — Multiscale lifecycle calculus
+## Chapter 10 — Local and global invariants
 
-Formal software operations inspired by biological metaphors: embryogenesis/incubation, mitosis, fusion, dormancy, absorption/apoptosis, recombination, and horizontal transfer.
+Distinguish:
 
-### C9 — Negative-knowledge and uncertainty propagation
+```text
+Truth_local
+Truth_global
+```
 
-M− and UNC² propagated through capability chains rather than discarded locally.
+Formalize ecosystem invariants such as provider existence, claim evidence, API versioning, semantic compatibility and cycle constraints.
 
-### C10 — Controlled self-hosting and meta-evolution
+# Part III — Architecture and Compilers — 84 pages
 
-The system analyzes and proposes changes to itself while generation remains distinct from acceptance and global gates remain authoritative.
+Six chapters × 14 pages.
 
-## Baseline families for literature/experimental comparison
+## Chapter 11 — Tristan Repo Protocol and Repository ISA
 
-At minimum compare against relevant concepts from:
+Formalize core objects:
 
-- monorepo and multi-repo engineering;
-- package managers and dependency graphs;
-- service registries and service meshes;
-- build systems and incremental build graphs;
-- workflow DAG engines;
-- dataflow systems;
-- microservices and interface description languages;
-- component models and software product lines;
-- knowledge graphs and provenance graphs;
-- hypergraph computation;
-- intermediate representations and compiler architectures;
-- theorem/proof-carrying code where relevant;
-- formal methods and contract-based design;
-- scientific workflow/reproducibility systems;
-- multi-agent orchestration;
-- software architecture mining and repository mining;
-- causal inference for software-engineering interventions;
-- self-adaptive/autonomic software systems.
+```text
+Intent
+Capability
+WorkUnit
+Artifact
+Claim
+Evidence
+Uncertainty
+Event
+Memory
+Action
+```
 
-The thesis must search current scholarship and standards before asserting novelty against any of these families.
+and executable instructions such as DISCOVER, ROUTE, FETCH, TRANSFORM, COMPARE, BENCH, VERIFY, FALSIFY, MERGE, SPLIT, ROLLBACK, LEARN and SPAWN.
 
-# Exact 256-page architecture
+## Chapter 12 — Intent-to-RepoGraph compiler
 
-The total includes all front matter, bibliography, and appendices.
+Study compilation:
 
-## Front matter — 12 pages
+```text
+NaturalLanguage Intent
+→ constrained capability graph
+→ provider resolution
+→ executable HGFM
+```
 
-- title / institutional pages;
-- French abstract;
-- English abstract;
-- contribution map;
-- notation and acronyms;
-- compact reader guide.
+Include ambiguity handling, authority constraints and evidence requirements.
 
-## Part I — Problem, prior art, foundations — 24 pages
+## Chapter 13 — Repo Compiler and Meta-Repo Compiler
 
-### Chapter 1 — Research problem and falsifiable thesis — 8 pages
+Study:
 
-- motivation from coordination debt;
-- research question;
-- scope and non-goals;
-- falsification criteria;
-- contribution status taxonomy.
+```text
+ArchitectureExpression → ExecutableGitHubSystem
+ProblemFamily → SystemGenerator
+```
 
-### Chapter 2 — State of the art and nearest conceptual baselines — 8 pages
+with explicit limits on recursion and generation authority.
 
-- repository architectures;
-- distributed systems;
-- compiler IRs;
-- workflow/agent systems;
-- hypergraphs;
-- scientific reproducibility;
-- formal contracts.
+## Chapter 14 — Theory-to-Repo compiler
 
-### Chapter 3 — Epistemic and systems methodology — 8 pages
+Map theory to:
 
-- OAK;
-- UNC²;
-- M+/M−/M?;
-- provenance;
-- local vs global truth;
-- experimental methodology.
+- claims;
+- assumptions;
+- formal objects;
+- simulations;
+- required datasets;
+- benchmarks;
+- counterexamples;
+- tests;
+- capabilities.
 
-## Part II — Formal Mycelial Systems Calculus — 42 pages
+## Chapter 15 — Repo-to-Theory compiler
 
-### Chapter 4 — RepoCell and CapabilityCell ontology — 10 pages
+From code/tests/docs/benchmarks infer candidate implicit assumptions and semantic claims.
 
-- typed state spaces;
-- scale hierarchy;
-- semantic identity;
-- invariants;
-- lifecycle state.
+The inference is explicitly fallible and audited.
 
-### Chapter 5 — Capability IR and substitution semantics — 10 pages
+## Chapter 16 — Bidirectional semantic-difference compiler
 
-- semantic types;
-- provider independence;
-- pre/postconditions;
-- uncertainty/evidence types;
-- version compatibility.
+Study:
 
-### Chapter 6 — Executable hypergraphs and multiscale HGFM — 11 pages
+```text
+Theory ⇄ ExecutableSystem
+Δ = Theory − Implementation
+```
 
-- static vs dynamic graph;
-- executable hyperedge;
-- recursive nesting;
-- Venn/intersection cells;
-- temporal HGFM.
+Define semantic mismatch categories and falsification tests.
 
-### Chapter 7 — Repo Algebra, capability space, and optimization — 11 pages
+# Part IV — Evidence, Trust, OAK and UNC² — 72 pages
 
-- algebraic operators;
-- laws/counterexamples;
-- capability-space geometry;
-- routing objectives;
-- GO Gradient/Hessian interpretation.
+Six chapters × 12 pages.
 
-## Part III — Architecture and compilers — 42 pages
+## Chapter 17 — Proof-carrying repositories
 
-### Chapter 8 — Tristan Repo Protocol and Repository ISA — 10 pages
+Define claims, evidence passports, limitations, provenance and trust boundaries.
 
-- Intent, Capability, WorkUnit, Artifact, Claim, Evidence, Uncertainty, Event, Memory, Action;
-- instruction semantics;
-- failure and rollback.
+## Chapter 18 — Semantic CI
 
-### Chapter 9 — Intent-to-RepoGraph and Repo Compiler — 10 pages
+Check meaning rather than syntax alone:
 
-- planning;
-- capability resolution;
-- schema adapters;
-- dynamic routing;
-- execution graphs.
-
-### Chapter 10 — Theory-to-Repo and Repo-to-Theory compilation — 11 pages
-
-- extracting formal requirements from theories;
-- mining implicit assumptions from code;
-- semantic diff;
-- living documentation.
-
-### Chapter 11 — Cross-repository transactions and digital twins — 11 pages
-
-- synchronized transformations;
-- virtual PRs;
-- impact simulation;
-- ecosystem invariants;
-- rollback.
-
-## Part IV — Evidence, trust, OAK and UNC² — 36 pages
-
-### Chapter 12 — Proof-/evidence-carrying repositories — 9 pages
-
-- claim passports;
-- evidence receipts;
-- provenance;
-- trust by capability.
-
-### Chapter 13 — Semantic CI and Scientific CI — 9 pages
-
-- semantic types;
 - units;
-- schema evolution;
-- scientific baselines;
-- negative controls;
-- dataset provenance.
+- semantic types;
+- invariants;
+- schemas;
+- cross-repo contract compatibility.
 
-### Chapter 14 — Local truth, global truth, and ecosystem invariants — 9 pages
+## Chapter 19 — Scientific CI
 
-- composition failures;
-- global contract tests;
-- invariant catalog;
-- Noether-inspired heuristic separated from theorem claims.
+Require baselines, controls, provenance, statistics, uncertainty, seeds and counter-hypotheses.
 
-### Chapter 15 — Uncertainty, M−, and causal credit — 9 pages
+## Chapter 20 — OAK architecture
 
-- uncertainty propagation;
-- meta-uncertainty;
-- negative result dissemination;
-- causal vs correlational architecture improvements.
+Formalize PASS/HOLD/FAIL gates and distinguish software validation from scientific validation.
 
-## Part V — Learning, evolution, and self-hosting — 30 pages
+## Chapter 21 — UNC² propagation
 
-### Chapter 16 — Repo lifecycle: embryogenesis, mitosis, fusion, apoptosis — 10 pages
+Track uncertainty and meta-uncertainty across multi-stage transformations.
 
-- virtual capability → module → repo;
-- split criteria;
-- merge/absorption criteria;
-- provenance preservation.
+## Chapter 22 — Trust graph and evidence gradients
 
-### Chapter 17 — Synergy, knowledge pressure, markets, and resource allocation — 10 pages
+Study capability-specific trust, evidence gradients, confidence debt and how proof strength changes across compositions.
 
-- synergy miner;
-- gap detector;
-- knowledge pressure;
-- shadow prices;
-- research portfolio allocation.
+# Part V — Learning, Evolution and Self-Hosting — 60 pages
 
-### Chapter 18 — Primitive mining, self-hosting, and fixed points — 10 pages
+Five chapters × 12 pages.
 
-- repeated programs → new primitives;
-- transformation genome;
-- self-analysis;
-- fixed-point criteria;
-- bounded meta-evolution.
+## Chapter 23 — Lifecycle calculus
 
-## Part VI — Experiments and case studies — 40 pages
+Formalize software analogues of:
 
-### Chapter 19 — Coordination-scaling benchmark — 10 pages
+- embryogenesis;
+- specialization;
+- mitosis;
+- fusion;
+- dormancy;
+- absorption/apoptosis.
 
-Compare explicit pairwise repo wiring against capability-registry/on-demand routing under controlled synthetic and real-corpus workloads.
+## Chapter 24 — Negative knowledge and M+/M−/M?
 
-Measure at least:
+Study propagation of failed strategies, counterexamples, rejected architectures and uncertain hypotheses.
 
-- number of maintained relations;
-- discovery latency;
-- integration effort;
-- failure localization;
-- schema-change propagation;
-- human review burden.
+## Chapter 25 — Synergy, GO Gradient and Repo Hessian
 
-Do not claim asymptotic improvement without a defined cost model.
+Study marginal verified value and pairwise interaction terms for capability investment.
 
-### Chapter 20 — Capability substitution and semantic-contract benchmark — 10 pages
+## Chapter 26 — Causal credit assignment
 
-Compare multiple providers for the same Capability IR.
+Separate historical association from causal improvement using baselines, counterfactuals and intervention-like benchmark designs.
+
+## Chapter 27 — Self-hosting and fixed points
+
+Study candidate condition:
+
+```text
+Compiler(G*) ≈ G*
+```
+
+as a reproducibility/closure criterion, never as a claim of unlimited intelligence.
+
+# Part VI — Experiments and Case Studies — 80 pages
+
+Five chapters × 16 pages.
+
+## Chapter 28 — Coordination scaling benchmark
+
+Compare manual all-to-all repository coupling with registry/capability routing across increasing N.
 
 Measure:
 
-- substitutability success;
-- adapter burden;
-- semantic mismatch rate;
-- performance/cost tradeoffs;
-- trust/evidence routing quality.
+- number of explicit relationships;
+- configuration effort;
+- failure propagation;
+- discovery latency;
+- reuse ratio;
+- maintenance overhead.
 
-### Chapter 21 — Theory–code consistency and Scientific-CI benchmark — 10 pages
+## Chapter 29 — Capability substitution benchmark
 
-Inject controlled semantic drift and evaluate detection by:
+Create multiple providers for the same Capability IR and test routing by task class, accuracy, cost and latency.
 
-- normal software tests;
-- semantic contracts;
-- scientific CI;
-- OAK gates.
+## Chapter 30 — Theory↔code divergence experiment
 
-Measure false-positive/false-negative behavior.
+Inject controlled semantic mismatches and compare detection by:
 
-### Chapter 22 — Tristan GitHub ecosystem case study — 10 pages
+```text
+ordinary tests
+Semantic CI
+Scientific CI
+OAK
+```
 
-Apply the architecture to the actual authorized Tristan repositories.
+Measure detection rate, false positives, false negatives and cost.
 
-Report:
+## Chapter 31 — Reuse-first versus generate-first experiment
 
-- corpus size and provenance;
-- capability map;
-- duplicate/reuse opportunities;
-- M− propagation examples;
-- candidate lifecycle transformations;
-- limitations caused by incomplete historical metadata or missing benchmarks.
+Compare:
 
-## Part VII — Synthesis and conclusion — 12 pages
+```text
+SEARCH → REUSE → ADAPT → GENERATE
+```
 
-### Chapter 23 — General discussion and threats to validity — 7 pages
+against generate-first development.
 
-- external validity;
-- construct validity;
-- scale limits;
-- security/permissions;
-- governance;
-- architecture-vs-metaphor boundaries;
-- open mathematical questions.
+Measure duplication, integration cost, regression rate, code volume and verified reusable capability yield.
 
-### Chapter 24 — Conclusions and research program — 5 pages
+## Chapter 32 — Empirical Tristan GitHub case study
 
-- answer central question only to the strength supported by evidence;
-- list supported, partial, falsified, and open contributions;
-- bounded future work.
+Use the actual authorized GitHub corpus to construct a temporal capability/evidence graph.
 
-## Bibliography — 12 pages
+Possible analyses:
 
-Target high-density, primary/peer-reviewed/standards-oriented references. Exact count should be driven by coverage, not a vanity number.
+- capability density;
+- duplicated semantic implementations;
+- PR-to-capability evolution;
+- negative-memory reuse;
+- cross-repo reuse;
+- global versus local test states;
+- bottleneck capabilities;
+- high-synergy intersections.
 
-## Appendices — 6 pages
+Internal repository history remains internal empirical evidence, not external scientific validation.
 
-- key schemas;
-- benchmark contract excerpts;
-- reproducibility manifest;
-- extended theorem/proof details only if not essential to the main argument.
+# Part VII — Synthesis and Conclusion — 24 pages
+
+## Chapter 33 — Synthesis of validated and falsified contributions — 12 pages
+
+Separate:
+
+```text
+validated
+partially supported
+falsified
+unresolved
+future work
+```
+
+## Chapter 34 — Generalization and research frontier — 12 pages
+
+Discuss boundaries toward:
+
+- distributed scientific operating systems;
+- executable epistemology;
+- capability markets;
+- formal verification;
+- large-scale agent systems;
+- cross-domain research compilers.
+
+No generalization may outrun measured evidence.
+
+# Bibliography — 24 pages
+
+Target a real research bibliography, not a page quota. The 24-page allocation is provisional and must adapt to the actual source corpus while the global page controller preserves 512 pages through substantive content rebalancing.
+
+# Appendices — 12 pages
+
+Prioritize dense reproducibility material:
+
+1. notation and schemas;
+2. benchmark configurations;
+3. claim/evidence table excerpts;
+4. formal proof details that would interrupt the main text;
+5. exact build and environment description;
+6. GitHub provenance/hashing conventions.
+
+# Required research artifacts
+
+The profile expects:
+
+```text
+thesis_contract.json
+corpus_manifest.jsonl
+claims_ledger.jsonl
+traceability_matrix.jsonl
+novelty_matrix.csv
+experiment_manifest.jsonl
+benchmark_manifest.jsonl
+oak_report.json
+M_PLUS.jsonl
+M_MINUS.jsonl
+M_UNKNOWN.jsonl
+page_count_receipt.json
+```
 
 # Page controller rule
 
-The page allocation above is a starting control vector. The final compiled PDF must equal 256 pages. Move pages between chapters as evidence density demands, but preserve:
+After every full LaTeX build:
 
 ```text
-Total = 256
+delta = 512 − actual_pages
 ```
 
-without filler.
+Expansion priority:
 
-# Default evidence priorities
+1. unsupported major claim needing literature/evidence;
+2. formal object lacking derivation or counterexample;
+3. benchmark lacking baseline/ablation;
+4. uncertainty/threat-to-validity gap;
+5. reproducibility gap;
+6. useful appendix material.
 
-For this thesis profile, search GitHub in roughly this order:
+Compression priority:
 
-1. capability/intent/work-unit kernels;
-2. OAK and uncertainty kernels;
-3. HGFM/hypergraph representations;
-4. skill foundry and Capability OS;
-5. GitHub living factory/repo intelligence work;
-6. PR/commit/history artifacts that show architectural evolution;
-7. tests and benchmarks;
-8. M−/failure registries;
-9. theory cards and canonical docs;
-10. experiments and case-specific repositories.
+1. duplicated exposition;
+2. redundant definitions;
+3. low-value narrative;
+4. repeated background;
+5. oversized tables/figures with weak information density.
 
-# OAK-sensitive language
+Blank-page padding and artificial spacing are forbidden.
 
-Prefer:
+# Final OAK acceptance
 
-- “we define” for explicit new notation/constructions;
-- “we implement” for code verified in the corpus;
-- “we observe” for measured data;
-- “we simulate” for simulations;
-- “we hypothesize” for unverified causal mechanisms;
-- “we conjecture” for mathematical statements without proof;
-- “the literature establishes” only with exact supporting references;
-- “candidate contribution” until novelty review passes.
+The thesis is a promotion candidate only if:
 
-Avoid:
-
-- “revolutionary” as an academic evidence category;
-- “proved” for tested code;
-- “validated experimentally” for synthetic or simulated data;
-- “novel” solely because terminology is internally named;
-- biological terms as literal claims about software ecosystems unless formally defined.
+- the LaTeX build succeeds reproducibly;
+- the actual PDF page count is 512;
+- all major claims have evidence or explicit HOLD status;
+- novelty language has prior-art support;
+- theory↔code mappings are traceable;
+- empirical claims have real benchmark/measurement provenance;
+- negative evidence is preserved;
+- uncertainty and limitations are visible;
+- bibliography and cross-references resolve;
+- abstract and conclusion do not exceed the strongest supported claim status.
