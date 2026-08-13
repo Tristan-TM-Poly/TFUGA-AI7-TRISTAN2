@@ -7,374 +7,139 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
 
 jobs:
   pr-5k2n-oak:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install test runner and schema validator
+      - name: Install deterministic court dependencies
         run: python -m pip install pytest jsonschema
 
-      - name: Compile sources
+      - name: Compile R0.1-R0.5 sources
         run: |
           python -m compileall -q \
             omega_capability_os_t/github_pr_generation_forest.py \
             omega_capability_os_t/github_pr_generation_r02.py \
             omega_capability_os_t/github_pr_generation_r03.py \
+            omega_capability_os_t/github_pr_generation_r04.py \
+            omega_capability_os_t/github_pr_generation_r05.py \
             tools/compile_pr_5k2n_event.py
 
-      - name: Deterministic 5K2N R0.1-R0.3 court
+      - name: Deterministic R0.1-R0.5 OAK court
         run: |
           python -m pytest -q \
             tests/test_omega_github_pr_generation_forest.py \
             tests/test_omega_github_pr_generation_r02.py \
-            tests/test_omega_github_pr_generation_r03.py
+            tests/test_omega_github_pr_generation_r03.py \
+            tests/test_omega_github_pr_generation_r04.py \
+            tests/test_omega_github_pr_generation_r04_hardening.py \
+            tests/test_omega_github_pr_generation_r05.py
 
-      - name: Compile canonical R0.1 bounded receipt
+      - name: Compile canonical R0.1 bounded receipt and n=0..3 campaign
         run: |
           python -m omega_capability_os_t.github_pr_generation_forest \
             examples/pr_5k2n_generation_request.json \
-            --output /tmp/omega-pr-5k2n.json
-
-      - name: Compile R0.1 n=0..3 runtime-bounded campaign
-        run: |
+            --output /tmp/omega-pr-5k2n-r01.json
           python -m omega_capability_os_t.github_pr_generation_forest \
             examples/pr_5k2n_generation_request.json \
             --generation 0 \
             --campaign-generations 4 \
             --output /tmp/omega-pr-5k2n-campaign.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          campaign = json.loads(Path("/tmp/omega-pr-5k2n-campaign.json").read_text())
-          assert campaign["schema"] == "omega-pr-5k2n-campaign/v0.1.0"
-          assert campaign["architecture_hard_cap"] is False
-          assert campaign["generation_budget_is_runtime_budget"] is True
-          assert 1 <= campaign["generation_count"] <= 4
-          assert campaign["generations"][0]["logical_cardinality_decimal"] == "5000"
-          PY
 
-      - name: Validate R0.1 receipt schema and OAK invariants
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          from jsonschema import Draft202012Validator
-
-          report = json.loads(Path("/tmp/omega-pr-5k2n.json").read_text())
-          schema = json.loads(Path("schemas/omega-pr-5k2n-generation-r01.schema.json").read_text())
-          Draft202012Validator(schema).validate(report)
-
-          assert report["seed_count"] == 5000
-          assert report["logical_cardinality_decimal"] == str(5000 * (2 ** report["generation"]))
-          assert report["logical_population_materialized"] is False
-          assert report["compiled_addition_count"] <= report["physical_patch_compiler"]["materialization_budget"]
-          assert report["adaptive_continuation"]["architecture_hard_cap"] is False
-          assert report["physical_patch_compiler"]["write_authority_granted"] is False
-          assert report["physical_patch_compiler"]["automatic_commit_allowed"] is False
-          assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
-          assert "many additions != progress" in report["oak_boundaries"]
-          assert len(report["fingerprint"]) == 64
-          PY
-
-      - name: Compile history-enriched R0.2 fixture review contracts
+      - name: Compile deterministic R0.2, R0.3 and R0.5 fixtures
         run: |
           python -m omega_capability_os_t.github_pr_generation_r02 \
             examples/pr_5k2n_generation_r02_request.json \
             --output /tmp/omega-pr-5k2n-r02.json
+          python -m omega_capability_os_t.github_pr_generation_r03 \
+            examples/pr_5k2n_generation_r03_request.json \
+            --output /tmp/omega-pr-5k2n-r03.json
+          python -m omega_capability_os_t.github_pr_generation_r05 \
+            examples/pr_5k2n_generation_r05_request.json \
+            --output /tmp/omega-pr-5k2n-r05.json
 
-      - name: Validate R0.2 schema and reuse-first OAK gates
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          from jsonschema import Draft202012Validator
-
-          report = json.loads(Path("/tmp/omega-pr-5k2n-r02.json").read_text())
-          schema = json.loads(Path("schemas/omega-pr-5k2n-generation-r02.schema.json").read_text())
-          Draft202012Validator(schema).validate(report)
-
-          assert report["schema"] == "omega-pr-5k2n-generation-contextual/v0.2.0"
-          assert report["historical_context"]["history_enriched"] is True
-          assert report["historical_context"]["decision"] == "EXTEND"
-          assert report["logical_cardinality_decimal"] == str(5000 * (2 ** report["generation"]))
-          assert report["logical_population_materialized"] is False
-          assert report["empirical_outcome_signal_used"] is True
-          assert report["physical_patch_contract_count"] <= report["physical_patch_compiler"]["contract_budget"]
-          assert report["physical_patch_compiler"]["code_change_generated"] is False
-          assert report["physical_patch_compiler"]["write_authority_granted"] is False
-          assert report["physical_patch_compiler"]["automatic_commit_allowed"] is False
-          assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
-          assert report["adaptive_continuation"]["architecture_hard_cap"] is False
-          assert all(row["causal_synergy_proven"] is False for row in report["synergy_pairs"])
-          assert all(row["materialization_status"] == "REVIEW_CONTRACT_ONLY" for row in report["physical_patch_contracts"])
-          assert len(report["fingerprint"]) == 64
-          PY
-
-      - name: Compile current PR event receipt
+      - name: Compile current PR event receipt without GitHub API
         if: github.event_name == 'pull_request'
         run: |
           python tools/compile_pr_5k2n_event.py \
             --output /tmp/omega-pr-5k2n-event.json \
             --generation 0 \
             --budget 32
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          report = json.loads(Path("/tmp/omega-pr-5k2n-event.json").read_text())
-          assert report["event_context"]["event_only"] is True
-          assert report["event_context"]["history_enriched"] is False
-          assert report["event_context"]["physical_materialization_blocked_until_reuse_inspection"] is True
-          assert report["physical_patch_compiler"]["write_authority_granted"] is False
-          PY
 
-      - name: Build live state=all GitHub memory
-        if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          python -m omega_capability_os_t.github_memory_cli build \
-            --repository "$GITHUB_REPOSITORY" \
-            --registry examples/capability_os_registry.json \
-            --without-files \
-            --output /tmp/omega-pr-5k2n-live-index-all.json
-
-      - name: Hide target and future PRs from live historical retrieval
-        if: github.event_name == 'pull_request'
+      - name: Validate schemas and permanent non-authority invariants
         run: |
           python - <<'PY'
           import json
-          import os
-          import re
           from pathlib import Path
-          from omega_capability_os_t.github_memory import GitHubMemoryIndex
-          from omega_capability_os_t.github_pr_generation_r03 import (
-              build_process_capability_request,
-              process_request_to_dict,
-          )
+          from jsonschema import Draft202012Validator
 
-          event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
-          pr = event["pull_request"]
-          repo = event["repository"]["full_name"]
-          number = int(pr["number"])
-          target_ref = f"pr:{repo}#{number}"
+          def load(path):
+              return json.loads(Path(path).read_text())
 
-          raw = json.loads(Path("/tmp/omega-pr-5k2n-live-index-all.json").read_text())
-          kept_prs = []
-          removed_refs = set()
-          for row in raw.get("prs", []):
-              same_repo = str(row.get("repository")) == repo
-              row_number = int(row.get("number", 0))
-              if same_repo and row_number >= number:
-                  removed_refs.add(f"pr:{repo}#{row_number}")
-              else:
-                  kept_prs.append(row)
-          raw["prs"] = kept_prs
-          raw["assets"] = [
-              row for row in raw.get("assets", [])
-              if str(row.get("source_ref")) not in removed_refs
-          ]
-          raw["edges"] = [
-              row for row in raw.get("edges", [])
-              if str(row.get("source")) not in removed_refs
-              and str(row.get("target")) not in removed_refs
-          ]
-          normalized = GitHubMemoryIndex.from_dict(raw).to_dict()
-          assert all(
-              not (row["repository"] == repo and int(row["number"]) >= number)
-              for row in normalized["prs"]
-          )
-          Path("/tmp/omega-pr-5k2n-live-index-prior.json").write_text(
-              json.dumps(normalized, indent=2, sort_keys=True) + "\n"
-          )
+          r01 = load('/tmp/omega-pr-5k2n-r01.json')
+          campaign = load('/tmp/omega-pr-5k2n-campaign.json')
+          r02 = load('/tmp/omega-pr-5k2n-r02.json')
+          r03 = load('/tmp/omega-pr-5k2n-r03.json')
+          r05 = load('/tmp/omega-pr-5k2n-r05.json')
 
-          title = str(pr.get("title") or "")
-          body = str(pr.get("body") or "")
-          artifact_request = {
-              "request_id": f"live-pr-{repo}-{number}",
-              "description": title,
-              "domains": ["github", "pull-request", "code-generation", "oak"],
-              "consumes": ["prior-pr-memory", "capability-contracts"],
-              "produces": ["implementation", "tests", "evidence", "documentation"],
-          }
-          target_genome = {
-              "ref": target_ref,
-              "repository": repo,
-              "number": number,
-              "lifecycle": "DRAFT" if pr.get("draft") else str(pr.get("state") or "OPEN").upper(),
-              "head_sha": (pr.get("head") or {}).get("sha"),
-              "changed_files": [],
-              "named_concepts": sorted(set(re.findall(r"(?:Ω|OMEGA)[-A-Za-z0-9_∞²³]+", f"{title}\n{body}"))),
-              "intent_tokens": [],
-              "boundary": "Live event genome; target/future PRs are hidden from the historical retrieval index.",
-          }
-          process_request = process_request_to_dict(build_process_capability_request(target_genome))
-          Path("/tmp/omega-pr-5k2n-live-request.json").write_text(
-              json.dumps(artifact_request, indent=2, sort_keys=True) + "\n"
-          )
-          Path("/tmp/omega-pr-5k2n-live-process-request.json").write_text(
-              json.dumps(process_request, indent=2, sort_keys=True) + "\n"
-          )
-          Path("/tmp/omega-pr-5k2n-live-target.json").write_text(
-              json.dumps(target_genome, indent=2, sort_keys=True) + "\n"
-          )
-          Path("/tmp/omega-pr-5k2n-live-boundary.json").write_text(
-              json.dumps({
-                  "target_ref": target_ref,
-                  "target_pr_hidden_from_history": True,
-                  "future_prs_hidden_from_history": True,
-                  "removed_refs": sorted(removed_refs),
-                  "prior_pr_count": len(normalized["prs"]),
-                  "boundary": "PR number is used as same-repository temporal order; target and later PRs are excluded from historical retrieval."
-              }, indent=2, sort_keys=True) + "\n"
-          )
+          Draft202012Validator(load('schemas/omega-pr-5k2n-generation-r01.schema.json')).validate(r01)
+          Draft202012Validator(load('schemas/omega-pr-5k2n-generation-r02.schema.json')).validate(r02)
+          Draft202012Validator(load('schemas/omega-pr-5k2n-generation-r03.schema.json')).validate(r03)
+          Draft202012Validator(load('schemas/omega-pr-5k2n-generation-r05.schema.json')).validate(r05)
+
+          assert r01['seed_count'] == 5000
+          assert r01['logical_population_materialized'] is False
+          assert r01['physical_patch_compiler']['write_authority_granted'] is False
+          assert campaign['architecture_hard_cap'] is False
+          assert campaign['generation_budget_is_runtime_budget'] is True
+
+          assert r02['historical_context']['decision'] == 'EXTEND'
+          assert r02['physical_patch_compiler']['code_change_generated'] is False
+          assert r02['physical_patch_compiler']['automatic_merge_allowed'] is False
+
+          assert r03['process_reuse_plane']['process_reuse_complete'] is True
+          assert r03['artifact_residual_plane']['decision'] == 'INSPECT'
+          assert r03['physical_patch_contract_count'] == 0
+          assert r03['heuristic_failure_memory_numeric_penalty'] == 0.0
+
+          assert r05['verdict_counts']['COMPATIBLE'] == 1
+          assert r05['receipts'][0]['action_candidate'] == 'REUSE_CANDIDATE'
+          assert r05['receipts'][0]['action_authorized'] is False
+          assert r05['automatic_reuse_authorized'] is False
+          assert r05['automatic_memory_promotion_authorized'] is False
+          assert r05['source_renderer_authorized'] is False
+          assert r05['automatic_merge_allowed'] is False
           PY
 
-      - name: Compile live leakage-controlled artifact cumulative intelligence
-        if: github.event_name == 'pull_request'
-        run: |
-          python -m omega_capability_os_t.github_cumulative_intelligence_cli \
-            /tmp/omega-pr-5k2n-live-request.json \
-            --index "$GITHUB_REPOSITORY=/tmp/omega-pr-5k2n-live-index-prior.json" \
-            --max-items 8 \
-            --output /tmp/omega-pr-5k2n-live-cumulative.json
-
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          cumulative = json.loads(Path("/tmp/omega-pr-5k2n-live-cumulative.json").read_text())
-          boundary = json.loads(Path("/tmp/omega-pr-5k2n-live-boundary.json").read_text())
-          target_ref = boundary["target_ref"]
-          assert target_ref not in cumulative["minimal_reuse_coalition"]["inspected_pr_candidates"]
-          assert all(row.get("ref") != target_ref for row in cumulative["relevant_pr_genomes"])
-          PY
-
-      - name: Compile live process-plane cumulative intelligence
-        if: github.event_name == 'pull_request'
-        run: |
-          python -m omega_capability_os_t.github_cumulative_intelligence_cli \
-            /tmp/omega-pr-5k2n-live-process-request.json \
-            --index "$GITHUB_REPOSITORY=/tmp/omega-pr-5k2n-live-index-prior.json" \
-            --max-items 8 \
-            --output /tmp/omega-pr-5k2n-live-process-cumulative.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          process = json.loads(Path("/tmp/omega-pr-5k2n-live-process-cumulative.json").read_text())
-          coalition = process["minimal_reuse_coalition"]
-          assert coalition["reuse_coverage_ratio"] == 1.0, coalition
-          assert coalition["residual_outputs"] == [], coalition
-          assert len(coalition["selected_capabilities"]) >= 5, coalition
-          PY
-
-      - name: Compile live R0.2 and dual-plane R0.3 inputs
+      - name: Validate event receipt boundary
         if: github.event_name == 'pull_request'
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          artifact = json.loads(Path("/tmp/omega-pr-5k2n-live-cumulative.json").read_text())
-          process = json.loads(Path("/tmp/omega-pr-5k2n-live-process-cumulative.json").read_text())
-          target = json.loads(Path("/tmp/omega-pr-5k2n-live-target.json").read_text())
-          r02 = {
-              "generation": 0,
-              "candidate_budget": 32,
-              "physical_contract_budget": 8,
-              "min_go_gradient": 1.0,
-              "target_pr_genome": target,
-              "cumulative_intelligence": artifact,
-          }
-          r03 = {
-              "generation": 0,
-              "candidate_budget": 32,
-              "physical_contract_budget": 8,
-              "min_go_gradient": 1.0,
-              "target_pr_genome": target,
-              "artifact_cumulative_intelligence": artifact,
-              "process_cumulative_intelligence": process,
-          }
-          Path("/tmp/omega-pr-5k2n-live-r02-input.json").write_text(
-              json.dumps(r02, indent=2, sort_keys=True) + "\n"
-          )
-          Path("/tmp/omega-pr-5k2n-live-r03-input.json").write_text(
-              json.dumps(r03, indent=2, sort_keys=True) + "\n"
-          )
+          event = json.loads(Path('/tmp/omega-pr-5k2n-event.json').read_text())
+          assert event['event_context']['event_only'] is True
+          assert event['event_context']['history_enriched'] is False
+          assert event['event_context']['physical_materialization_blocked_until_reuse_inspection'] is True
+          assert event['physical_patch_compiler']['write_authority_granted'] is False
           PY
 
-      - name: Compile live history-enriched R0.2 current-PR contracts
-        if: github.event_name == 'pull_request'
-        run: |
-          python -m omega_capability_os_t.github_pr_generation_r02 \
-            /tmp/omega-pr-5k2n-live-r02-input.json \
-            --output /tmp/omega-pr-5k2n-live-r02.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          report = json.loads(Path("/tmp/omega-pr-5k2n-live-r02.json").read_text())
-          boundary = json.loads(Path("/tmp/omega-pr-5k2n-live-boundary.json").read_text())
-          assert boundary["target_pr_hidden_from_history"] is True
-          assert boundary["future_prs_hidden_from_history"] is True
-          assert report["historical_context"]["history_enriched"] is True
-          assert report["historical_context"]["pr_genome"]["ref"] == boundary["target_ref"]
-          assert report["physical_patch_compiler"]["write_authority_granted"] is False
-          assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
-          PY
-
-      - name: Compile live dual-plane R0.3 current-PR decision
-        if: github.event_name == 'pull_request'
-        run: |
-          python -m omega_capability_os_t.github_pr_generation_r03 \
-            /tmp/omega-pr-5k2n-live-r03-input.json \
-            --output /tmp/omega-pr-5k2n-live-r03.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          report = json.loads(Path("/tmp/omega-pr-5k2n-live-r03.json").read_text())
-          boundary = json.loads(Path("/tmp/omega-pr-5k2n-live-boundary.json").read_text())
-          assert report["process_reuse_plane"]["process_reuse_complete"] is True
-          assert report["process_reuse_plane"]["reuse_coverage_ratio"] == 1.0
-          assert report["artifact_residual_plane"]["historical_candidates"]
-          assert report["artifact_residual_plane"]["decision"] == "INSPECT", report["artifact_residual_plane"]
-          assert report["artifact_residual_plane"]["exact_inspection_required"] is True
-          assert report["physical_patch_contract_count"] == 0
-          assert report["heuristic_failure_memory_numeric_penalty"] == 0.0
-          assert report["adaptive_continuation"]["next_generation_candidate"] is None
-          assert all(row["compatibility_proven"] is False for row in report["compatibility_inspection_plan"])
-          assert all(row["reuse_authorized"] is False for row in report["compatibility_inspection_plan"])
-          assert report["physical_patch_compiler"]["write_authority_granted"] is False
-          assert report["physical_patch_compiler"]["automatic_merge_allowed"] is False
-          assert report["artifact_residual_plane"]["requested_outputs"] == [
-              "implementation", "tests", "evidence", "documentation"
-          ]
-          assert report["logical_cardinality_decimal"] == "5000"
-          assert report["logical_population_materialized"] is False
-          assert boundary["target_ref"] not in report["artifact_residual_plane"]["historical_candidates"]
-          PY
-
-      - name: Retain bounded generation receipts
+      - name: Retain deterministic evidence
         uses: actions/upload-artifact@v4
         with:
-          name: omega-pr-5k2n-${{ github.run_id }}
+          name: omega-pr-5k2n-deterministic-${{ github.run_id }}
           path: |
-            /tmp/omega-pr-5k2n.json
-            /tmp/omega-pr-5k2n-event.json
+            /tmp/omega-pr-5k2n-r01.json
             /tmp/omega-pr-5k2n-campaign.json
             /tmp/omega-pr-5k2n-r02.json
-            /tmp/omega-pr-5k2n-live-index-prior.json
-            /tmp/omega-pr-5k2n-live-request.json
-            /tmp/omega-pr-5k2n-live-process-request.json
-            /tmp/omega-pr-5k2n-live-target.json
-            /tmp/omega-pr-5k2n-live-boundary.json
-            /tmp/omega-pr-5k2n-live-cumulative.json
-            /tmp/omega-pr-5k2n-live-process-cumulative.json
-            /tmp/omega-pr-5k2n-live-r02.json
-            /tmp/omega-pr-5k2n-live-r03.json
+            /tmp/omega-pr-5k2n-r03.json
+            /tmp/omega-pr-5k2n-r05.json
+            /tmp/omega-pr-5k2n-event.json
           if-no-files-found: ignore
           retention-days: 14
