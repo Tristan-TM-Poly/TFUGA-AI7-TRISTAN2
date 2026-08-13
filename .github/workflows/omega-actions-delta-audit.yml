@@ -13,6 +13,10 @@ concurrency:
 
 jobs:
   impact-audit:
+    concurrency:
+      group: omega-github-installation-read-${{ github.repository }}
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

@@ -17,6 +17,10 @@ permissions:
 
 jobs:
   pr-llmt-portfolio-oak:
+    concurrency:
+      group: omega-github-installation-read-${{ github.repository }}
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
