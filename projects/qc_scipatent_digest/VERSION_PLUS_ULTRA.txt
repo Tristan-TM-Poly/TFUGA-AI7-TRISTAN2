@@ -1,0 +1,3 @@
+version: 0.3.0-plus-ultra
+package: qc_scipatent_digest_plus_ultra.zip
+validation: pytest 2 passed; plus-ultra demo generated 6 documents, 6 opportunities, 9 bridges
