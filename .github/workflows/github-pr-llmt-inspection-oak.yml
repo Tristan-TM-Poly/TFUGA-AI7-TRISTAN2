@@ -7,10 +7,12 @@ on:
       - "omega_capability_os_t/github_pr_llmt.py"
       - "omega_capability_os_t/github_pr_llmt_inspection.py"
       - "omega_capability_os_t/github_pr_llmt_targets.py"
+      - "omega_capability_os_t/github_pr_llmt_findings.py"
       - "tests/test_omega_capability_os_github_memory_zoom.py"
       - "tests/test_omega_github_pr_llmt.py"
       - "tests/test_omega_github_pr_llmt_inspection.py"
       - "tests/test_omega_github_pr_llmt_targets.py"
+      - "tests/test_omega_github_pr_llmt_findings.py"
       - ".agents/skills/github-pr-llmt/**"
       - ".github/workflows/github-pr-llmt-inspection-oak.yml"
   workflow_dispatch:
@@ -38,7 +40,8 @@ jobs:
             tests/test_omega_capability_os_github_memory_zoom.py \
             tests/test_omega_github_pr_llmt.py \
             tests/test_omega_github_pr_llmt_inspection.py \
-            tests/test_omega_github_pr_llmt_targets.py
+            tests/test_omega_github_pr_llmt_targets.py \
+            tests/test_omega_github_pr_llmt_findings.py
 
       - name: Compile sources
         run: python -m compileall -q omega_capability_os_t
@@ -83,6 +86,14 @@ jobs:
             --output-plan /tmp/omega-pr-llmt-inspection-plan.json \
             --output-overlay /tmp/omega-pr-llmt-inspection-overlay.json
 
+      - name: Compile evidence-bound finding set for every open PR
+        run: |
+          python -m omega_capability_os_t.github_pr_llmt_findings \
+            /tmp/omega-pr-llmt-portfolio.json \
+            /tmp/omega-pr-llmt-target-filegraph.json \
+            /tmp/omega-pr-llmt-inspection-overlay.json \
+            --output /tmp/omega-pr-llmt-findings.json
+
       - name: OAK live assertions
         run: |
           python - <<'PY'
@@ -93,14 +104,19 @@ jobs:
           filegraph = json.loads(Path("/tmp/omega-pr-llmt-target-filegraph.json").read_text())
           plan = json.loads(Path("/tmp/omega-pr-llmt-inspection-plan.json").read_text())
           overlay = json.loads(Path("/tmp/omega-pr-llmt-inspection-overlay.json").read_text())
+          findings = json.loads(Path("/tmp/omega-pr-llmt-findings.json").read_text())
 
           assert portfolio["schema"] == "omega-pr-llmt-portfolio/v0.1.0"
           assert filegraph["schema"] == "omega-pr-llmt-target-filegraph/v0.1.0"
           assert plan["schema"] == "omega-pr-llmt-inspection-plan/v0.1.0"
           assert overlay["schema"] == "omega-pr-llmt-inspection-overlay/v0.1.0"
+          assert findings["schema"] == "omega-pr-llmt-findings/v0.1.0"
           assert filegraph["portfolio_fingerprint"] == portfolio["fingerprint"]
           assert plan["portfolio_fingerprint"] == portfolio["fingerprint"]
           assert overlay["portfolio_fingerprint"] == portfolio["fingerprint"]
+          assert findings["portfolio_fingerprint"] == portfolio["fingerprint"]
+          assert findings["filegraph_fingerprint"] == filegraph["fingerprint"]
+          assert findings["inspection_overlay_fingerprint"] == overlay["fingerprint"]
 
           assert filegraph["operational_budget"]["max_targets"] is None
           assert filegraph["operational_budget"]["architecture_hard_cap"] is False
@@ -122,6 +138,15 @@ jobs:
           assert overlay["authority"]["merge_authority_granted"] is False
           assert len(plan["fingerprint"]) == 64
           assert len(overlay["fingerprint"]) == 64
+
+          assert findings["packet_count"] == portfolio["packet_count"]
+          assert findings["packets_with_file_overlap"] == filegraph["targets_with_file_overlap_count"]
+          assert findings["authority"]["write_authority_granted"] is False
+          assert findings["authority"]["merge_authority_granted"] is False
+          assert "PRIORITY_SCORE != QUALITY_SCORE" in findings["oak_boundaries"]
+          assert "FILE_OVERLAP != MERGE_CONFLICT" in findings["oak_boundaries"]
+          assert len(findings["fingerprint"]) == 64
+          assert all(row["findings"] for row in findings["packets"])
 
           top = plan["candidates"][:12]
           assert [row["ref"] for row in top] == plan["selected_refs"]
@@ -151,6 +176,19 @@ jobs:
               "candidate_static_symbols": overlay["symbol_count"],
               "inspection_errors": overlay["error_count"],
               "packet_coverage_after_hydration": overlay["packet_coverage_after_successful_hydration"],
+              "finding_counts": findings["finding_counts"],
+              "packets_without_deep_reuse_evidence": findings["packets_without_deep_reuse_evidence"],
+              "top_priority_targets": [
+                  {
+                      "ref": row["target_ref"],
+                      "score": row["priority_score"],
+                      "overlap_neighbors": row["file_overlap_neighbor_count"],
+                      "max_shared_files": row["max_shared_file_count"],
+                      "inspected_reuse_candidates": row["inspected_reuse_candidate_count"],
+                      "finding_types": [finding["finding_type"] for finding in row["findings"]],
+                  }
+                  for row in findings["packets"][:12]
+              ],
               "top_candidates": [
                   {
                       "ref": row["ref"],
@@ -163,6 +201,7 @@ jobs:
               "filegraph_fingerprint": filegraph["fingerprint"],
               "plan_fingerprint": plan["fingerprint"],
               "overlay_fingerprint": overlay["fingerprint"],
+              "findings_fingerprint": findings["fingerprint"],
           }, indent=2))
           PY
 
@@ -175,5 +214,6 @@ jobs:
             /tmp/omega-pr-llmt-target-filegraph.json
             /tmp/omega-pr-llmt-inspection-plan.json
             /tmp/omega-pr-llmt-inspection-overlay.json
+            /tmp/omega-pr-llmt-findings.json
             /tmp/omega-pr-llmt-inspected-index.json
           retention-days: 14
