@@ -84,6 +84,7 @@ from .source_oak_policy import SourceOAKPolicy, SourceOAKPolicyReport, apply_sou
 from .source_record_validation import RecordValidationFinding, RecordValidationReport, validate_public_records
 from .source_registry_schema import SourceSchema, SourceSchemaFinding, SourceSchemaReport, default_source_schemas, validate_records_against_schema
 from .source_selection import available_demo_sources, select_demo_records
+from .student_polyspecialist import DEFAULT_AXES, CourseCandidate, EvidenceState, MultiSpecializationPlan, PlanWeights, PlannedCourse, StudentProfile, compile_polyspecialist_plan, render_polyspecialist_markdown
 from .twin_answer_engine import TwinAnswer, answer_twin_question, render_twin_answer
 from .version_manifest import VersionEntry, VersionManifest, build_version_manifest
 from .workflow_seed import WorkflowSeed, WorkflowSeedStep, build_workflow_seed, render_workflow_seed
