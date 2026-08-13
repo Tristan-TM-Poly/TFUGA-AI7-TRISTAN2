@@ -1,0 +1,30 @@
+name: Ω PR 5K2N R0.5 Frozen Integration OAK
+
+on:
+  pull_request:
+    paths:
+      - "omega_capability_os_t/github_pr_generation_r04_frozen.py"
+      - "omega_capability_os_t/github_pr_generation_r05.py"
+      - "tests/test_omega_github_pr_generation_r05_frozen_integration.py"
+      - ".github/workflows/pr-fractal-generation-r05-frozen-integration.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frozen-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile and run frozen R0.4→R0.5 integration court
+        run: |
+          python -m compileall -q \
+            omega_capability_os_t/github_pr_generation_r04_frozen.py \
+            omega_capability_os_t/github_pr_generation_r05.py
+          python -m pip install pytest
+          python -m pytest -q tests/test_omega_github_pr_generation_r05_frozen_integration.py

@@ -1,0 +1,117 @@
+name: Ω PR 5K2N R0.5 Frozen HOLD OAK
+
+on:
+  pull_request:
+    paths:
+      - "omega_capability_os_t/github_pr_generation_r04_frozen.py"
+      - "omega_capability_os_t/github_pr_generation_r05.py"
+      - "data/omega_pr_5k2n/r04_frozen/prior_452_static_seed.json"
+      - "schemas/omega-pr-5k2n-generation-r04.schema.json"
+      - "schemas/omega-pr-5k2n-generation-r05.schema.json"
+      - ".github/workflows/pr-fractal-generation-r05-frozen-hold.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frozen-hold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install schema validator
+        run: python -m pip install jsonschema
+
+      - name: Compile target genome from event only
+        if: github.event_name == 'pull_request'
+        run: |
+          python - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+          pr = event['pull_request']
+          repo = event['repository']['full_name']
+          number = int(pr['number'])
+          title = str(pr.get('title') or '')
+          body = str(pr.get('body') or '')
+          target = {
+              'ref': f'pr:{repo}#{number}',
+              'repository': repo,
+              'number': number,
+              'lifecycle': 'DRAFT' if pr.get('draft') else str(pr.get('state') or 'OPEN').upper(),
+              'head_sha': (pr.get('head') or {}).get('sha'),
+              'changed_files': [],
+              'named_concepts': sorted(set(re.findall(r'(?:Ω|OMEGA)[-A-Za-z0-9_∞²³]+', f'{title}\n{body}'))),
+              'intent_tokens': [],
+          }
+          Path('/tmp/target.json').write_text(json.dumps(target, indent=2, sort_keys=True) + '\n')
+          PY
+
+      - name: Compile stale-safe frozen R0.4 report
+        if: github.event_name == 'pull_request'
+        run: |
+          python -m omega_capability_os_t.github_pr_generation_r04_frozen \
+            data/omega_pr_5k2n/r04_frozen/prior_452_static_seed.json \
+            /tmp/target.json \
+            --output /tmp/r04.json
+
+      - name: Compile R0.5 outcomes from frozen HOLD report
+        if: github.event_name == 'pull_request'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          Path('/tmp/r05-input.json').write_text(json.dumps({
+              'r04_report': json.loads(Path('/tmp/r04.json').read_text())
+          }, indent=2, sort_keys=True) + '\n')
+          PY
+          python -m omega_capability_os_t.github_pr_generation_r05 \
+            /tmp/r05-input.json \
+            --output /tmp/r05.json
+
+      - name: Validate frozen HOLD chain remains non-authoritative
+        if: github.event_name == 'pull_request'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          r04 = json.loads(Path('/tmp/r04.json').read_text())
+          r05 = json.loads(Path('/tmp/r05.json').read_text())
+          s04 = json.loads(Path('schemas/omega-pr-5k2n-generation-r04.schema.json').read_text())
+          s05 = json.loads(Path('schemas/omega-pr-5k2n-generation-r05.schema.json').read_text())
+          Draft202012Validator(s04).validate(r04)
+          Draft202012Validator(s05).validate(r05)
+
+          assert r04['frozen_fallback'] is True
+          assert r04['current_live_history_complete'] is False
+          assert r04['experiment_contract_count'] == 0
+          assert r04['physicalization_gate'] == 'INSPECT'
+
+          assert r05['experiment_contract_count'] == 0
+          assert r05['outcome_receipt_count'] == 0
+          assert r05['missing_outcome_contract_ids'] == []
+          assert r05['verdict_counts']['COMPATIBLE'] == 0
+          assert r05['verdict_counts']['PARTIAL_COMPATIBLE'] == 0
+          assert r05['verdict_counts']['INCOMPATIBLE'] == 0
+          assert r05['verdict_counts']['UNKNOWN'] == 0
+          assert r05['automatic_reuse_authorized'] is False
+          assert r05['automatic_memory_promotion_authorized'] is False
+          assert r05['write_authority_granted'] is False
+          assert r05['source_renderer_authorized'] is False
+          assert r05['automatic_merge_allowed'] is False
+          PY
+
+      - name: Retain frozen HOLD chain
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-pr-5k2n-r05-frozen-hold-${{ github.run_id }}
+          path: |
+            /tmp/r04.json
+            /tmp/r05.json
+          retention-days: 14

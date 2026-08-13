@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega-pr-5k2n-generation-r01.schema.json",
+  "title": "Omega PR 5K2N Generation Receipt R0.1",
+  "type": "object",
+  "required": [
+    "schema", "request_id", "pr_ref", "generation", "law", "seed_count",
+    "logical_cardinality_decimal", "logical_population_materialized",
+    "sampled_candidate_count", "compiled_addition_count", "compiled_additions",
+    "adaptive_continuation", "physical_patch_compiler", "oak_boundaries", "fingerprint"
+  ],
+  "properties": {
+    "schema": {"const": "omega-pr-5k2n-generation/v0.1.0"},
+    "request_id": {"type": "string"},
+    "pr_ref": {"type": "string"},
+    "generation": {"type": "integer", "minimum": 0},
+    "law": {"const": "C_n = seed_count * 2^n"},
+    "seed_count": {"type": "integer", "minimum": 1},
+    "logical_cardinality_decimal": {"type": "string", "pattern": "^[0-9]+$"},
+    "logical_population_materialized": {"const": false},
+    "sampled_candidate_count": {"type": "integer", "minimum": 0},
+    "compiled_addition_count": {"type": "integer", "minimum": 0},
+    "compiled_additions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidate_id", "address", "target", "action", "pattern_signature",
+          "go_gradient_proxy", "proof_required", "materialization_status"
+        ],
+        "properties": {
+          "candidate_id": {"type": "string"},
+          "address": {
+            "type": "object",
+            "required": [
+              "generation", "logical_index", "seed_id", "family", "polarity",
+              "route_integer", "route_digest"
+            ]
+          },
+          "materialization_status": {"const": "SPEC_ONLY"},
+          "proof_required": {"const": true}
+        }
+      }
+    },
+    "adaptive_continuation": {
+      "type": "object",
+      "required": ["architecture_hard_cap", "current_generation", "continue", "rule"],
+      "properties": {"architecture_hard_cap": {"const": false}}
+    },
+    "physical_patch_compiler": {
+      "type": "object",
+      "required": [
+        "logical_addition_is_physical_patch", "compiled_addition_is_code_change",
+        "write_authority_granted", "automatic_commit_allowed", "automatic_merge_allowed",
+        "human_review_required", "materialization_budget"
+      ],
+      "properties": {
+        "logical_addition_is_physical_patch": {"const": false},
+        "compiled_addition_is_code_change": {"const": false},
+        "write_authority_granted": {"const": false},
+        "automatic_commit_allowed": {"const": false},
+        "automatic_merge_allowed": {"const": false},
+        "human_review_required": {"const": true}
+      }
+    },
+    "oak_boundaries": {"type": "array", "items": {"type": "string"}},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  },
+  "additionalProperties": true
+}

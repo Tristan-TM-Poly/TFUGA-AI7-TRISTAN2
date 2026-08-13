@@ -1,0 +1,94 @@
+name: Ω PR 5K2N R0.5 Live Pending Outcomes OAK
+
+on:
+  workflow_run:
+    workflows: ["Ω PR 5K2N R0.4 Exact Hydration OAK"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  consume-r04-outcomes:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout exact R0.4 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install schema validator
+        run: python -m pip install jsonschema
+
+      - name: Compile R0.5 source
+        run: python -m compileall -q omega_capability_os_t/github_pr_generation_r05.py
+
+      - name: Download exact R0.4 artifact without rebuilding GitHub memory
+        uses: actions/download-artifact@v8
+        with:
+          name: omega-pr-5k2n-r04-${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: /tmp/r05-source
+
+      - name: Compile pending R0.5 outcomes from exact R0.4 report
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          r04_path = Path("/tmp/r05-source/r04-report.json")
+          assert r04_path.exists(), list(Path("/tmp/r05-source").rglob("*"))
+          r04 = json.loads(r04_path.read_text())
+          source_head = "${{ github.event.workflow_run.head_sha }}"
+          assert r04["target_head_sha"] == source_head, (r04["target_head_sha"], source_head)
+          Path("/tmp/r05-input.json").write_text(
+              json.dumps({"r04_report": r04}, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+          python -m omega_capability_os_t.github_pr_generation_r05 \
+            /tmp/r05-input.json \
+            --output /tmp/r05-report.json
+
+      - name: Validate pending live outcomes remain UNKNOWN HOLD
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          report = json.loads(Path("/tmp/r05-report.json").read_text())
+          schema = json.loads(Path("schemas/omega-pr-5k2n-generation-r05.schema.json").read_text())
+          Draft202012Validator(schema).validate(report)
+
+          assert report["outcome_receipt_count"] == report["experiment_contract_count"]
+          assert report["missing_outcome_contract_ids"] == []
+          assert report["verdict_counts"]["COMPATIBLE"] == 0
+          assert report["verdict_counts"]["PARTIAL_COMPATIBLE"] == 0
+          assert report["verdict_counts"]["INCOMPATIBLE"] == 0
+          assert report["verdict_counts"]["UNKNOWN"] == report["outcome_receipt_count"]
+          assert report["memory_candidate_counts"]["M_QUERY_CANDIDATE"] == report["outcome_receipt_count"]
+          assert all(row["execution_status"] == "NOT_EXECUTED" for row in report["receipts"])
+          assert all(row["action_candidate"] == "HOLD" for row in report["receipts"])
+          assert all(row["action_authorized"] is False for row in report["receipts"])
+          assert all(row["memory_promotion_authorized"] is False for row in report["receipts"])
+          assert report["automatic_reuse_authorized"] is False
+          assert report["automatic_memory_promotion_authorized"] is False
+          assert report["write_authority_granted"] is False
+          assert report["source_renderer_authorized"] is False
+          PY
+
+      - name: Retain R0.5 pending-outcome evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-pr-5k2n-r05-live-${{ github.run_id }}
+          path: /tmp/r05-report.json
+          retention-days: 14

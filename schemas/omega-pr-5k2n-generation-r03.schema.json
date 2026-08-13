@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-pr-5k2n-generation-r03.schema.json",
+  "title": "Omega PR 5K2N dual-plane generation R0.3",
+  "type": "object",
+  "required": [
+    "schema",
+    "law",
+    "generation",
+    "logical_cardinality_decimal",
+    "logical_population_materialized",
+    "process_reuse_plane",
+    "artifact_residual_plane",
+    "outcome_signal",
+    "confirmed_negative_signal",
+    "heuristic_failure_memory_numeric_penalty",
+    "compatibility_inspection_plan",
+    "evaluated_candidates",
+    "physical_patch_contracts",
+    "physical_patch_contract_count",
+    "physical_patch_compiler",
+    "adaptive_continuation",
+    "oak_boundaries",
+    "fingerprint"
+  ],
+  "properties": {
+    "schema": {"const": "omega-pr-5k2n-generation-dual-plane/v0.3.0"},
+    "law": {"const": "C_n = 5000 * 2^n"},
+    "generation": {"type": "integer", "minimum": 0},
+    "logical_cardinality_decimal": {"type": "string", "pattern": "^[1-9][0-9]*$"},
+    "logical_population_materialized": {"const": false},
+    "process_reuse_plane": {
+      "type": "object",
+      "required": [
+        "request_outputs",
+        "selected_capabilities",
+        "covered_outputs",
+        "residual_outputs",
+        "reuse_coverage_ratio",
+        "process_reuse_complete",
+        "boundary"
+      ],
+      "properties": {
+        "reuse_coverage_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+        "process_reuse_complete": {"type": "boolean"}
+      }
+    },
+    "artifact_residual_plane": {
+      "type": "object",
+      "required": [
+        "requested_outputs",
+        "selected_capabilities",
+        "contract_covered_outputs",
+        "residual_outputs",
+        "historical_candidates",
+        "heuristic_failure_memory_refs",
+        "decision",
+        "decision_basis",
+        "exact_inspection_required",
+        "boundary"
+      ],
+      "properties": {
+        "decision": {"enum": ["REUSE", "COMPOSE", "EXTEND", "CREATE_RESIDUAL", "INSPECT"]},
+        "exact_inspection_required": {"type": "boolean"}
+      }
+    },
+    "outcome_signal": {
+      "type": "object",
+      "required": ["action", "sample_count", "mean_utility", "evidence_refs", "observational_only"],
+      "properties": {"observational_only": {"const": true}}
+    },
+    "confirmed_negative_signal": {
+      "type": "object",
+      "required": ["action", "sample_count", "failures", "evidence_refs", "penalty", "applied", "boundary"],
+      "properties": {
+        "penalty": {"type": "number", "minimum": 0, "maximum": 0.3},
+        "applied": {"type": "boolean"}
+      }
+    },
+    "heuristic_failure_memory_numeric_penalty": {"const": 0.0},
+    "compatibility_inspection_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "rank",
+          "ref",
+          "inspection_status",
+          "required_checks",
+          "compatibility_proven",
+          "reuse_authorized",
+          "boundary"
+        ],
+        "properties": {
+          "rank": {"type": "integer", "minimum": 1},
+          "inspection_status": {"const": "NOT_EXECUTED"},
+          "compatibility_proven": {"const": false},
+          "reuse_authorized": {"const": false}
+        }
+      }
+    },
+    "evaluated_candidate_count": {"type": "integer", "minimum": 0},
+    "evaluated_candidates": {"type": "array", "items": {"type": "object"}},
+    "synergy_pairs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["causal_synergy_proven"],
+        "properties": {"causal_synergy_proven": {"const": false}}
+      }
+    },
+    "physical_patch_contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "materialization_status",
+          "code_change_generated",
+          "write_authority_granted",
+          "automatic_commit_allowed",
+          "automatic_merge_allowed",
+          "human_review_required",
+          "rollback_required"
+        ],
+        "properties": {
+          "materialization_status": {"const": "REVIEW_CONTRACT_ONLY"},
+          "code_change_generated": {"const": false},
+          "write_authority_granted": {"const": false},
+          "automatic_commit_allowed": {"const": false},
+          "automatic_merge_allowed": {"const": false},
+          "human_review_required": {"const": true},
+          "rollback_required": {"const": true}
+        }
+      }
+    },
+    "physical_patch_contract_count": {"type": "integer", "minimum": 0},
+    "physical_patch_compiler": {
+      "type": "object",
+      "required": [
+        "contract_budget",
+        "code_change_generated",
+        "write_authority_granted",
+        "automatic_commit_allowed",
+        "automatic_merge_allowed",
+        "human_review_required",
+        "artifact_decision_gate",
+        "process_reuse_complete",
+        "exact_compatibility_inspection_required"
+      ],
+      "properties": {
+        "code_change_generated": {"const": false},
+        "write_authority_granted": {"const": false},
+        "automatic_commit_allowed": {"const": false},
+        "automatic_merge_allowed": {"const": false},
+        "human_review_required": {"const": true}
+      }
+    },
+    "adaptive_continuation": {
+      "type": "object",
+      "required": ["architecture_hard_cap", "current_generation", "rule"],
+      "properties": {
+        "architecture_hard_cap": {"const": false},
+        "current_generation": {"type": "integer", "minimum": 0}
+      }
+    },
+    "oak_boundaries": {"type": "array", "minItems": 10, "items": {"type": "string"}},
+    "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

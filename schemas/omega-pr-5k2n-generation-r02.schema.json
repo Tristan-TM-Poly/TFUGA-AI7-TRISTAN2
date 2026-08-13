@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/omega-pr-5k2n-generation-r02.schema.json",
+  "title": "Omega PR 5K2N contextual generation R0.2",
+  "type": "object",
+  "required": [
+    "schema",
+    "law",
+    "generation",
+    "logical_cardinality_decimal",
+    "logical_population_materialized",
+    "historical_context",
+    "outcome_signal",
+    "empirical_outcome_signal_used",
+    "evaluated_candidate_count",
+    "evaluated_candidates",
+    "synergy_pairs",
+    "physical_patch_contracts",
+    "physical_patch_contract_count",
+    "physical_patch_compiler",
+    "adaptive_continuation",
+    "oak_boundaries",
+    "fingerprint"
+  ],
+  "properties": {
+    "schema": {
+      "const": "omega-pr-5k2n-generation-contextual/v0.2.0"
+    },
+    "law": {
+      "const": "C_n = 5000 * 2^n"
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "logical_cardinality_decimal": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "logical_population_materialized": {
+      "const": false
+    },
+    "historical_context": {
+      "type": "object",
+      "required": [
+        "decision",
+        "selected_capabilities",
+        "residual_outputs",
+        "exact_inspection_refs",
+        "reuse_coverage_ratio",
+        "history_enriched",
+        "physical_code_generation_allowed"
+      ],
+      "properties": {
+        "decision": {
+          "enum": [
+            "REUSE",
+            "COMPOSE",
+            "EXTEND",
+            "CREATE_RESIDUAL",
+            "INSPECT"
+          ]
+        },
+        "selected_capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "residual_outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exact_inspection_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reuse_coverage_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "history_enriched": {
+          "const": true
+        },
+        "physical_code_generation_allowed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "outcome_signal": {
+      "type": "object",
+      "required": [
+        "action",
+        "sample_count",
+        "mean_utility",
+        "evidence_refs",
+        "observational_only"
+      ],
+      "properties": {
+        "sample_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "observational_only": {
+          "const": true
+        }
+      }
+    },
+    "empirical_outcome_signal_used": {
+      "type": "boolean"
+    },
+    "sampled_candidate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "evaluated_candidate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "evaluated_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "synergy_pairs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "causal_synergy_proven",
+          "synergy_proxy"
+        ],
+        "properties": {
+          "causal_synergy_proven": {
+            "const": false
+          }
+        }
+      }
+    },
+    "physical_patch_contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "contract_id",
+          "candidate_id",
+          "family",
+          "operation",
+          "decision",
+          "rollback_required",
+          "code_change_generated",
+          "write_authority_granted",
+          "automatic_commit_allowed",
+          "automatic_merge_allowed",
+          "human_review_required",
+          "materialization_status"
+        ],
+        "properties": {
+          "rollback_required": {
+            "const": true
+          },
+          "code_change_generated": {
+            "const": false
+          },
+          "write_authority_granted": {
+            "const": false
+          },
+          "automatic_commit_allowed": {
+            "const": false
+          },
+          "automatic_merge_allowed": {
+            "const": false
+          },
+          "human_review_required": {
+            "const": true
+          },
+          "materialization_status": {
+            "const": "REVIEW_CONTRACT_ONLY"
+          }
+        }
+      }
+    },
+    "physical_patch_contract_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "code_or_refactor_contract_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "physical_patch_compiler": {
+      "type": "object",
+      "required": [
+        "contract_budget",
+        "code_change_generated",
+        "write_authority_granted",
+        "automatic_commit_allowed",
+        "automatic_merge_allowed",
+        "human_review_required",
+        "history_enriched_required",
+        "decision_gate"
+      ],
+      "properties": {
+        "contract_budget": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "code_change_generated": {
+          "const": false
+        },
+        "write_authority_granted": {
+          "const": false
+        },
+        "automatic_commit_allowed": {
+          "const": false
+        },
+        "automatic_merge_allowed": {
+          "const": false
+        },
+        "human_review_required": {
+          "const": true
+        },
+        "history_enriched_required": {
+          "const": true
+        },
+        "decision_gate": {
+          "enum": [
+            "REUSE",
+            "COMPOSE",
+            "EXTEND",
+            "CREATE_RESIDUAL",
+            "INSPECT"
+          ]
+        }
+      }
+    },
+    "adaptive_continuation": {
+      "type": "object",
+      "required": [
+        "architecture_hard_cap",
+        "current_generation",
+        "base_continue_proxy",
+        "rule"
+      ],
+      "properties": {
+        "architecture_hard_cap": {
+          "const": false
+        },
+        "current_generation": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "oak_boundaries": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "string"
+      }
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema": "omega-pr-5k2n-r04-frozen-static-seed/v0.1.0",
+  "source_target_head_sha": "27ab8eb65897d31ce4492ecef9815761678ee702",
+  "source_r04_fingerprint": "48a5b79b1943a851b8890ac531c26c342b43da3b3e20923fc81aafafd4958d1b",
+  "source_workflow_run_id": 31688256818,
+  "source_artifact_id": 9176301419,
+  "source_artifact_sha256": "0a6a01a37519054c07ea2d463201ace3503d6c30b100df6ddb5aa301d18a3ab8",
+  "artifact_decision": "INSPECT",
+  "residual_outputs": ["documentation", "evidence", "implementation", "tests"],
+  "receipts": [
+    {
+      "ref": "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#185",
+      "planned_head_sha": "abb5e6c99379b661377fe2a473aea266a61685b0",
+      "hydrated_head_sha": "abb5e6c99379b661377fe2a473aea266a61685b0",
+      "hydration_status": "HYDRATED_EXACT_HEAD",
+      "head_match": true,
+      "changed_files": [
+        "demo_packets/paper_to_code_oak/README.md",
+        "demo_packets/patent_to_opportunity_oak/README.md",
+        "orchestration/parallel_execution_manifest.yaml",
+        "orchestration/parallel_lane_backlog.yaml"
+      ],
+      "source_files": [],
+      "test_files": [],
+      "workflow_files": [],
+      "python_symbol_assets": [],
+      "target_exact_path_overlap": [],
+      "intent_overlap_proxy": 0.022222,
+      "evidence_class": "METADATA_ONLY"
+    },
+    {
+      "ref": "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#98",
+      "planned_head_sha": "aa22b785d35ec536b6da0a0cfe2bed99e65e3c01",
+      "hydrated_head_sha": "aa22b785d35ec536b6da0a0cfe2bed99e65e3c01",
+      "hydration_status": "HYDRATED_EXACT_HEAD",
+      "head_match": true,
+      "changed_files": [
+        ".github/ISSUE_TEMPLATE/adapter_task.md",
+        ".github/ISSUE_TEMPLATE/config.yml",
+        ".github/ISSUE_TEMPLATE/oak_task.md",
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        "docs/oak_work_forms/README.md",
+        "docs/oak_work_forms/adapter_form.md",
+        "docs/oak_work_forms/pull_request_form.md"
+      ],
+      "source_files": [],
+      "test_files": [],
+      "workflow_files": [],
+      "python_symbol_assets": [],
+      "target_exact_path_overlap": [],
+      "intent_overlap_proxy": 0.029412,
+      "evidence_class": "METADATA_ONLY"
+    },
+    {
+      "ref": "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#419",
+      "planned_head_sha": "00e9a0406465bb4ef5a2d24f446874fb900e1483",
+      "hydrated_head_sha": "00e9a0406465bb4ef5a2d24f446874fb900e1483",
+      "hydration_status": "HYDRATED_EXACT_HEAD",
+      "head_match": true,
+      "changed_files": [".github/workflows/pr-oak-autopilot.yml"],
+      "source_files": [],
+      "test_files": [],
+      "workflow_files": [".github/workflows/pr-oak-autopilot.yml"],
+      "python_symbol_assets": [],
+      "target_exact_path_overlap": [],
+      "intent_overlap_proxy": 0.032787,
+      "evidence_class": "METADATA_ONLY"
+    },
+    {
+      "ref": "pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#331",
+      "planned_head_sha": "56f040b8ba73373ae517a5fec2e642bd96a55465",
+      "hydrated_head_sha": "56f040b8ba73373ae517a5fec2e642bd96a55465",
+      "hydration_status": "HYDRATED_EXACT_HEAD",
+      "head_match": true,
+      "changed_files": [
+        "omega_millennium_t/r06/__init__.py",
+        "omega_millennium_t/r06/hardening.py",
+        "tests/test_omega_problem_atlas_r06_violation_semantics.py"
+      ],
+      "source_files": [
+        "omega_millennium_t/r06/__init__.py",
+        "omega_millennium_t/r06/hardening.py"
+      ],
+      "test_files": ["tests/test_omega_problem_atlas_r06_violation_semantics.py"],
+      "workflow_files": [],
+      "python_symbol_assets": [
+        "symbol:pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#331:omega_millennium_t/r06/hardening.py:assess_claims_hardened",
+        "symbol:pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#331:tests/test_omega_problem_atlas_r06_violation_semantics.py:test_violated_assumption_is_not_treated_as_discharged",
+        "symbol:pr:Tristan-TM-Poly/TFUGA-AI7-TRISTAN2#331:tests/test_omega_problem_atlas_r06_violation_semantics.py:test_violated_assumption_is_not_treated_as_discharged.node"
+      ],
+      "target_exact_path_overlap": [],
+      "intent_overlap_proxy": 0.031746,
+      "evidence_class": "STATIC_SOURCE_TEST_SURFACE"
+    }
+  ],
+  "boundary": "Frozen static inspection evidence from the last successful exact-hydration R0.4 run. Candidate structure is historical evidence only. Current-target compatibility must be revalidated against the current target head; stale target context forces HOLD and zero experiment contracts."
+}
