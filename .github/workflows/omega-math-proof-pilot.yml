@@ -58,6 +58,7 @@ jobs:
         uses: leanprover/lean-action@v1
         with:
           lake-package-directory: omega_math_proof_research_os/formalization_candidates
+          auto-config: false
           build: true
           test: false
           lint: false
