@@ -1,17 +1,19 @@
 """Ω-COMPUTE-PHYSICS-T∞ / Ω-META-COMPUTE-PHYSICS-T∞.
 
-Empirical, OAK-safe resource modelling and meta-discovery for functions,
-pipelines and repository fleets.
+Empirical, OAK-safe resource modelling, fleet intelligence and optimization
+discovery for functions, pipelines and repository fleets.
 
-Important epistemic rule: fitted finite-domain scaling, static loop-depth hints,
-representation compression, residual associations and cross-language static
-fingerprints are evidence for planning; they are not mathematical Big-O/Theta
-proofs, causal identification, semantic equivalence or sandbox guarantees.
+Important epistemic rule: static hints, fitted finite-domain scaling,
+representation compression, residual associations, optimization priors and
+cross-language fingerprints are evidence for planning; they are not Big-O/Theta
+proofs, causal identification, semantic equivalence, speedup guarantees or
+sandbox guarantees.
 """
 
 from .active import ExperimentCandidate, discriminating_experiment, geometric_design_space, rank_experiments, select_next_experiments
 from .atlas import ComplexityAtlas, EmpiricalResourceModel, ResourceSample
 from .benchmark_contract import BenchmarkContract, BenchmarkRisk, InputAxis, gate_contract, load_contract
+from .bottleneck_dynamics import BottleneckDynamicsReport, BottleneckObservation, BottleneckTransition, trace_bottleneck_migration
 from .budget import BudgetCompileReport, CandidateEvaluation, ResourceConstraint, compile_budget, pareto_front, quality_per_cost
 from .call_graph import CallEdge, CallGraphReport, build_call_graph
 from .change_impact import ChangeImpactReport, ImpactedNode, propagate_change_impact
@@ -26,6 +28,11 @@ from .fleet_stage_a import FleetStageAReport, StageABenchmarkSeed, StageAReposit
 from .language_adapters import LanguageAdapterRegistry, LexicalCodeAdapter, PythonAdapter, SourceGenome, default_language_registry
 from .machine_genome import MachineGenome, calibrate_machine, fingerprint_machine
 from .meta_oak import MetaOAKCheck, MetaOAKReport, audit_representation_candidate, audit_residual_interpretation, audit_theory_ecology, audit_validated_model
+from .opportunity_engine import OpportunityDecision, OpportunityEvidence, rank_optimization_opportunities, score_optimization_opportunity
+from .optimization_arena import OptimizationArenaReport, VariantEvidence, VariantScore, run_optimization_arena
+from .optimization_credit import TransformationCredit, shapley_optimization_credit
+from .optimization_genome import OptimizationGene, TransferCandidate, WorkloadSignature, cosine_context_similarity, rank_transfer_candidates
+from .optimization_portfolio import OptimizationPortfolioPlan, PortfolioOpportunity, optimize_portfolio
 from .optimization_roi import OptimizationOpportunity, OptimizationROIRow, rank_optimization_roi, score_opportunity
 from .profiler import ProfileResult, profile_call, profile_pipeline
 from .regression_ledger import RegressionEvent, RegressionLedger, event_from_diff
@@ -35,6 +42,7 @@ from .residuals import MissingVariableCandidate, ResidualPoint, ResidualReport, 
 from .risk_preflight import RiskFinding, RiskPreflightReport, scan_source_risk
 from .snapshot_ledger import RepositorySnapshot, SnapshotDiff, SnapshotFile, compare_snapshots, snapshot_checkout, snapshot_from_records
 from .theory_foundry import FalsificationCandidate, TheoryCandidate, generate_theory_competition, rank_falsification_candidates
+from .transformation_algebra import OptimizationTransformation, TransformationProgram, canonical_transformation_library, compose_transformations
 from .tropical import DirectionalDominance, ExponentTerm, asymptotic_direction_spectrum, directional_dominance, dominance_signature
 from .universal_fleet import UniversalFleetReport, UniversalRepositoryReport, scan_universal_checkout, scan_universal_fleet
 from .validation import ConformalInterval, DriftReport, ModelCandidate, ValidatedResourceModel, detect_drift, fit_validated_resource_model
@@ -70,6 +78,13 @@ __all__ = [
     "ImpactedNode", "ChangeImpactReport", "propagate_change_impact",
     "ConfidenceDebtReport", "confidence_debt",
     "OptimizationOpportunity", "OptimizationROIRow", "score_opportunity", "rank_optimization_roi",
+    "OpportunityEvidence", "OpportunityDecision", "score_optimization_opportunity", "rank_optimization_opportunities",
+    "OptimizationTransformation", "TransformationProgram", "canonical_transformation_library", "compose_transformations",
+    "VariantEvidence", "VariantScore", "OptimizationArenaReport", "run_optimization_arena",
+    "OptimizationGene", "WorkloadSignature", "TransferCandidate", "cosine_context_similarity", "rank_transfer_candidates",
+    "TransformationCredit", "shapley_optimization_credit",
+    "BottleneckObservation", "BottleneckTransition", "BottleneckDynamicsReport", "trace_bottleneck_migration",
+    "PortfolioOpportunity", "OptimizationPortfolioPlan", "optimize_portfolio",
 ]
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
