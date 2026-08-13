@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 from typing import Any, Iterable, Mapping
 
 from .adapters import adapt_capability, adapt_snapshot, component_manifest
 from .core import Envelope, GraphEdge, InvariantCheck, ObjectRef, stable_digest
 from .graphs import ResearchGraphKernel
+from .ledger import ResearchTransitionLedger
 from .receipts import issue_receipt, validate_receipt
 
 
@@ -14,6 +16,7 @@ class ResearchABICompiler:
     def __init__(self) -> None:
         self.kernel = ResearchGraphKernel()
         self.receipts: list[dict[str, Any]] = []
+        self.transition_ledger = ResearchTransitionLedger()
 
     def ingest_capabilities(self, capabilities: Iterable[Any], *, provenance: tuple[str, ...] = ()) -> tuple[ObjectRef, ...]:
         return tuple(self.kernel.add(adapt_capability(cap, provenance=provenance)) for cap in capabilities)
@@ -80,7 +83,11 @@ class ResearchABICompiler:
         rollback: str = "",
         provenance: Iterable[str] = (),
         oak_state: str = "UNKNOWN",
+        state_before: str | None = None,
+        state_after: str | None = None,
     ) -> dict[str, Any]:
+        if (state_before is None) != (state_after is None):
+            raise ValueError("state_before and state_after must be supplied together")
         receipt = issue_receipt(
             operator=operator,
             inputs=inputs,
@@ -98,7 +105,14 @@ class ResearchABICompiler:
             oak_state=oak_state,
         )
         validation = validate_receipt(receipt)
-        record = {"receipt": receipt.to_dict(), "validation": validation}
+        record: dict[str, Any] = {"receipt": receipt.to_dict(), "validation": validation}
+        if state_before is not None and state_after is not None:
+            entry = self.transition_ledger.append(
+                receipt,
+                state_before=state_before,
+                state_after=state_after,
+            )
+            record["ledger_entry"] = asdict(entry)
         self.receipts.append(record)
         return record
 
@@ -106,10 +120,11 @@ class ResearchABICompiler:
         graph_validation = self.kernel.validate()
         packet = self.kernel.context_packet(max_per_graph=max_per_graph)
         payload = {
-            "abi": "omega-universal-research-abi-r01",
+            "abi": "omega-universal-research-abi-r02",
             "graph_validation": graph_validation,
             "context": packet,
             "receipts": self.receipts,
+            "transition_ledger": self.transition_ledger.to_dict(),
             "component_manifest": component_manifest(),
             "boundaries": [
                 "claim != evidence",
@@ -120,6 +135,7 @@ class ResearchABICompiler:
                 "value != scientific validity",
                 "similarity != semantic equivalence",
                 "receipt != external truth certificate",
+                "hash chain integrity != external signature or truth",
             ],
         }
         payload["fingerprint"] = stable_digest(payload)
