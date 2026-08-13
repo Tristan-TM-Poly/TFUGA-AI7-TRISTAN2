@@ -1,0 +1,4 @@
+{"id":"M-001","lesson":"A 512-node PageTree does not establish a 512-page compiled PDF.","regression":"require measured page_count_receipt before G11 PASS"}
+{"id":"M-002","lesson":"A repository implementation does not establish scientific novelty.","regression":"keep novelty claims HOLD until prior-art court"}
+{"id":"M-003","lesson":"Passing software tests does not validate scaling or scientific hypotheses.","regression":"require explicit baseline experiments"}
+{"id":"M-004","lesson":"Biological vocabulary can become metaphorical overreach if semantics are not formalized.","regression":"label metaphor/model boundaries explicitly"}
