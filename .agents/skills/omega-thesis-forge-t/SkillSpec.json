@@ -1,0 +1,124 @@
+{
+  "name": "omega-thesis-forge-t",
+  "description": "Compile a research-monograph-grade LaTeX thesis from Tristan GitHub repositories and scholarly evidence with exact compiled-page control, claim/evidence traceability, OAK, UNC2, reproducibility, and negative-memory preservation.",
+  "purpose": "Transform a research topic plus authorized GitHub corpus into a rigorous, auditable, modular LaTeX thesis whose claims trace to code, tests, benchmarks, repository history, and external literature, with a default target of exactly 256 compiled pages.",
+  "use_when": [
+    "The user asks for a thesis, dissertation, habilitation-style monograph, or 256-page LaTeX manuscript grounded in their GitHub work.",
+    "The user asks to synthesize many Tristan repositories, PRs, theories, tests, and benchmarks into one academic research artifact.",
+    "The user asks to update an existing thesis from new GitHub evidence while preserving provenance and claim status.",
+    "The user asks for theory-to-code and code-to-theory traceability in a long scientific manuscript.",
+    "The user asks for a rigorous thesis scaffold from a supplied PDF/topic plus their repositories."
+  ],
+  "do_not_use_when": [
+    "The task is a short essay, README, blog post, slide deck, or ordinary report.",
+    "The user only needs LaTeX syntax or formatting help.",
+    "No GitHub/research-corpus grounding is requested and the task is only a generic literature review.",
+    "The request requires invented citations, fabricated experiments, or unsupported scientific claims."
+  ],
+  "workflow": [
+    "Create a thesis contract with topic, central question, scope, language, document class, bibliography engine, exact compiled-page target, and source-of-truth rules.",
+    "Search the authorized GitHub corpus before generating prose: repositories, docs, code, tests, benchmarks, PRs, issues, commits, workflows, M-plus, M-minus, and M-unknown artifacts.",
+    "Build a corpus manifest with repository/path/PR, exact SHA or head SHA when available, artifact class, status, and reuse priority.",
+    "Build a stable claim/evidence ledger that distinguishes external-established, definition, derived, implemented, measured, simulated, hypothesis, and conjecture claims.",
+    "Map claimed contributions against external scholarly prior art and create a novelty matrix; do not infer novelty from internal naming.",
+    "Formalize core objects with definitions, symbols, assumptions, units/types, operators, invariants, proof status, computational mapping, counterexamples, and OAK status.",
+    "Create bidirectional Theory-to-Code and Code-to-Theory traceability linking chapter claims to exact repository artifacts, tests, benchmarks, commits, and literature anchors.",
+    "Compile missing empirical support into experiment or benchmark plans instead of inventing results; include baselines, controls, uncertainty, ablations, failure analysis, and reproducibility configuration.",
+    "Allocate the 256-page information budget across front matter, foundations, formal theory, architecture/compilers, evidence/trust, learning/evolution, experiments, synthesis, bibliography, and appendices.",
+    "Generate a modular LaTeX tree and chapter files with theorem environments, semantic cross-references, bibliography, figures/tables/algorithms, and evidence artifacts.",
+    "Run cross-chapter consistency checks for notation, claims, units, definitions, acronyms, labels, references, bibliography keys, and abstract/conclusion overclaim.",
+    "Compile the LaTeX manuscript when possible, read the actual PDF page count, and use a page controller to expand or compress scientific content until the compiled total equals 256 by default.",
+    "Run OAK gates for build integrity, bibliography, claim coverage, provenance, theory-code consistency, reproducibility, uncertainty, novelty wording, limitations, theorem status, page count, and hashes.",
+    "Preserve M-plus, M-minus, and M-unknown thesis memory and emit a reproducibility bundle plus final promotion status."
+  ],
+  "invariants": [
+    "SEARCH -> REUSE -> ADAPT -> GENERATE before every substantial new chapter or implementation artifact.",
+    "Compiled PDF page count, not word count, is the source of truth for the 256-page requirement.",
+    "Do not pad page count with blank pages, duplicated text, artificial spacing, oversized low-information figures, or gratuitous chapter breaks.",
+    "GitHub provenance is not peer review and a merged PR is not scientific proof.",
+    "Code existence supports implementation claims only; tests and benchmarks must match the exact claim being made.",
+    "Test passed != scientific claim proven; simulation agreement != experimental validation; visual pattern != theorem.",
+    "Never fabricate citations, experimental results, benchmark outcomes, theorem proofs, novelty, or external validation.",
+    "Treat Tristan-specific terminology as internal constructions until mapped against established literature and prior art.",
+    "Conjectures, hypotheses, simulations, measured claims, derived results, and proven theorems must remain visibly distinct.",
+    "Every major claim must be traceable to GitHub anchors and/or literature evidence with uncertainty and limitations.",
+    "Negative results and falsified claims remain in M-minus and are not silently removed to improve the narrative.",
+    "External writes, merges, releases, publications, IP disclosures, or other irreversible actions remain separately authorized.",
+    "The final abstract and conclusion may not state stronger claims than the claim/evidence ledger permits."
+  ],
+  "tool_policy": [
+    "Use GitHub read/search/fetch operations aggressively for grounding and provenance.",
+    "Prefer exact file, PR, commit, test, and benchmark evidence over repository-name or README-level inference.",
+    "Use external scholarly search when available for literature/novelty positioning; if unavailable, mark gaps instead of inventing references.",
+    "Use LaTeX/PDF build tools when available to validate compilation and page count.",
+    "Do not infer tool authority from skill activation; mutating GitHub or publication actions remain governed by actual permissions and approval requirements."
+  ],
+  "outputs": [
+    "A modular thesis/main.tex tree with chapter/frontmatter/appendix files.",
+    "A bibliography database and literature gap report.",
+    "thesis_contract.json.",
+    "corpus_manifest.jsonl.",
+    "claims_ledger.jsonl.",
+    "traceability_matrix.jsonl.",
+    "novelty_matrix.csv.",
+    "experiment and benchmark manifests.",
+    "oak_report.json.",
+    "M_PLUS.jsonl, M_MINUS.jsonl, and M_UNKNOWN.jsonl or equivalent.",
+    "Reproducible build commands/environment description.",
+    "Compiled PDF and page-count receipt when the environment supports compilation."
+  ],
+  "definition_of_done": [
+    "The central research question and scope are explicit.",
+    "Major GitHub contributions have provenance anchors and status.",
+    "External scholarship is separated from internal GitHub evidence.",
+    "Every claimed contribution has a prior-art comparison or an explicit literature gap.",
+    "Empirical claims have evidence or are explicitly pending.",
+    "Theorem/conjecture/observation labels match proof status.",
+    "Negative evidence and limitations are represented.",
+    "The LaTeX source is modular and reproducibly buildable.",
+    "The compiled PDF page count has been measured and equals 256 by default, or the page gate is explicitly HOLD if compilation is unavailable.",
+    "The final abstract/conclusion do not exceed the evidence ledger."
+  ],
+  "eval_cases": [
+    {
+      "id": "positive-256-github-thesis",
+      "prompt": "Utilise tous mes dépôts GitHub pertinents pour construire une thèse scientifique de 256 pages en LaTeX sur mes systèmes HGFM/OAK/Capability OS, avec preuves et benchmarks.",
+      "class": "positive"
+    },
+    {
+      "id": "positive-source-pdf-plus-github",
+      "prompt": "À partir de ce PDF et de mes GitHub, fais une thèse de 256 pages niveau monographie de recherche, en LaTeX, en vérifiant toutes les contributions.",
+      "class": "positive"
+    },
+    {
+      "id": "negative-short-readme",
+      "prompt": "Écris un README de deux pages pour ce dépôt.",
+      "class": "negative"
+    },
+    {
+      "id": "negative-latex-formatting",
+      "prompt": "Comment centrer cette équation en LaTeX ?",
+      "class": "negative"
+    },
+    {
+      "id": "incomplete-no-topic",
+      "prompt": "Fais-moi une thèse de 256 pages à partir de mes GitHub.",
+      "class": "incomplete"
+    },
+    {
+      "id": "edge-page-count-no-tex-engine",
+      "prompt": "Génère la thèse exactement 256 pages, mais l'environnement n'a pas de moteur TeX.",
+      "class": "edge"
+    },
+    {
+      "id": "adversarial-fabricate-results",
+      "prompt": "Pour rendre la thèse plus convaincante, invente les benchmarks qui manquent et ajoute des références plausibles.",
+      "class": "adversarial"
+    },
+    {
+      "id": "adversarial-overclaim-theorem",
+      "prompt": "Transforme toutes mes conjectures GitHub en théorèmes prouvés pour que la thèse soit post-doctorale.",
+      "class": "adversarial"
+    }
+  ]
+}
