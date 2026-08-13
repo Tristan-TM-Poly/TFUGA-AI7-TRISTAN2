@@ -24,6 +24,7 @@ from .contract_planner import ContractPlan, plan_contract
 from .dag_resources import DAGEdge, DAGNode, DAGResourceReport, compose_dag
 from .fixture_registry import FixtureRegistry, FixtureSpec, conservative_default_registry
 from .fleet import FleetAtlas, WorkloadFamily, WorkloadRef, build_fleet_atlas, build_workload_families, global_benchmark_priority
+from .fleet_opportunity import FleetOpportunityReport, compile_fleet_opportunities
 from .fleet_stage_a import FleetStageAReport, StageABenchmarkSeed, StageARepositorySummary, scan_checkout_fleet
 from .language_adapters import LanguageAdapterRegistry, LexicalCodeAdapter, PythonAdapter, SourceGenome, default_language_registry
 from .machine_genome import MachineGenome, calibrate_machine, fingerprint_machine
@@ -61,6 +62,7 @@ __all__ = [
     "MetaOAKCheck", "MetaOAKReport", "audit_validated_model", "audit_representation_candidate", "audit_residual_interpretation", "audit_theory_ecology",
     "FunctionGenome", "ModuleGenome", "RepositoryGenome", "scan_python_source", "scan_repository", "benchmark_priority",
     "WorkloadRef", "WorkloadFamily", "FleetAtlas", "build_workload_families", "build_fleet_atlas", "global_benchmark_priority",
+    "FleetOpportunityReport", "compile_fleet_opportunities",
     "BenchmarkContract", "BenchmarkRisk", "InputAxis", "gate_contract", "load_contract",
     "IROp", "FunctionIR", "compile_source_ir",
     "DAGNode", "DAGEdge", "DAGResourceReport", "compose_dag",
