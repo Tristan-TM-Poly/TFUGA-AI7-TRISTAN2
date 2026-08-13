@@ -15,6 +15,6 @@
     {"source":"value","target":"work","relation":"prioritizes"}
   ],
   "transformations": [
-    {"operator":"compile_universal_research_abi","inputs":["cap","work"],"outputs":["prov"],"evidence":["experiment"],"invariants":[{"name":"six_graph_separation","status":"PASS","detail":"graph kinds remain distinct"},{"name":"receipt_required","status":"PASS","detail":"transformation emits receipt"}],"residuals":["independent PR adapters remain snapshot-only until integrated"],"uncertainty":0.15,"cost":1.0,"risk":0.1,"oak_state":"PASS","provenance":["PR#447","chat:2026-08-12"]}
+    {"operator":"compile_universal_research_abi","inputs":["cap","work"],"outputs":["prov"],"evidence":["experiment"],"invariants":[{"name":"six_graph_separation","status":"PASS","detail":"graph kinds remain distinct"},{"name":"receipt_required","status":"PASS","detail":"transformation emits receipt"}],"residuals":["independent PR adapters remain snapshot-only until integrated"],"uncertainty":0.15,"cost":1.0,"risk":0.1,"oak_state":"PASS","provenance":["PR#447","chat:2026-08-12"],"state_before":"state:reuse-memory-r07","state_after":"state:universal-research-abi-r02"}
   ]
 }
