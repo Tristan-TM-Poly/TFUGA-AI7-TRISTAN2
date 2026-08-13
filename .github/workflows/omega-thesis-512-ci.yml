@@ -38,23 +38,40 @@ jobs:
             texlive-fonts-recommended texlive-science texlive-lang-french
 
       - name: Compile thesis scaffold
+        id: latex
         working-directory: thesis_512/mycelial_systems_calculus
-        run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+        shell: bash
+        run: |
+          set +e
+          latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex 2>&1 | tee latex-build.log
+          status=${PIPESTATUS[0]}
+          echo "latex_exit_code=$status" >> "$GITHUB_OUTPUT"
+          if [[ -f main.log ]]; then
+            echo "===== main.log tail ====="
+            tail -n 120 main.log
+          fi
+          exit "$status"
 
       - name: Measure compiled page count
+        if: success()
         working-directory: thesis_512/mycelial_systems_calculus
         run: python scripts/page_controller.py main.pdf
 
       - name: Display page receipt
+        if: success()
         working-directory: thesis_512/mycelial_systems_calculus
         run: cat page_count_receipt.json
 
-      - name: Upload draft thesis and page receipt
+      - name: Upload thesis build diagnostics
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: omega-thesis-512-draft
+          name: omega-thesis-512-build-diagnostics
           path: |
+            thesis_512/mycelial_systems_calculus/latex-build.log
+            thesis_512/mycelial_systems_calculus/main.log
+            thesis_512/mycelial_systems_calculus/main.blg
             thesis_512/mycelial_systems_calculus/main.pdf
             thesis_512/mycelial_systems_calculus/page_count_receipt.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
