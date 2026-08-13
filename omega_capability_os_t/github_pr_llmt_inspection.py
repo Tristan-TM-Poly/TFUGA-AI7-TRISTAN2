@@ -1,11 +1,11 @@
 """Fanout-first exact inspection overlays for the per-PR LLMT portfolio.
 
 The module consumes the canonical PR-LLMT portfolio and reuses #447 progressive
-GitHub hydration. It deduplicates candidate PRs across all open target PRs,
-prioritizes candidates that can inform the most packets, and emits read-only
-inspection evidence. Operational budgets are explicit parameters, never hard
-architecture ceilings. Checkpoints are keyed by exact (PR ref, head SHA), so a
-moved head automatically becomes pending again.
+GitHub hydration. It deduplicates candidate PRs across all open target PRs and
+prioritizes inspections by verified marginal packet coverage. Operational
+budgets are explicit parameters, never hard architecture ceilings. Checkpoints
+are keyed by exact (PR ref, head SHA), so a moved head automatically becomes
+pending again.
 """
 from __future__ import annotations
 
@@ -82,13 +82,74 @@ def compile_inspection_checkpoint(overlay: Mapping[str, Any]) -> dict[str, Any]:
     return payload
 
 
+def _candidate_sort_key(candidate: InspectionCandidate) -> tuple[Any, ...]:
+    return (
+        -candidate.fanout,
+        -candidate.historical_rank_mass,
+        candidate.best_historical_rank if candidate.best_historical_rank is not None else 10**9,
+        -_pr_number(candidate.ref),
+        candidate.ref,
+    )
+
+
+def _greedy_marginal_selection(
+    pending: Iterable[InspectionCandidate],
+    *,
+    already_covered_targets: set[str],
+    max_candidates: int | None,
+) -> tuple[list[InspectionCandidate], list[dict[str, Any]], set[str]]:
+    """Greedily maximize newly covered target packets per inspection slot.
+
+    The first wave reduces exactly to the original fanout ordering because the
+    covered set is empty. Later waves recompute marginal gain after every pick,
+    preventing several high-fanout candidates that cover the same packets from
+    consuming the scarce inspection budget ahead of candidates that add new
+    packets.
+    """
+    pool = list(pending)
+    selected: list[InspectionCandidate] = []
+    selection_trace: list[dict[str, Any]] = []
+    covered = set(already_covered_targets)
+    budget = len(pool) if max_candidates is None else max_candidates
+
+    while pool and len(selected) < budget:
+        ranked = sorted(
+            pool,
+            key=lambda candidate: (
+                -len(set(candidate.affected_targets) - covered),
+                *_candidate_sort_key(candidate),
+            ),
+        )
+        chosen = ranked[0]
+        marginal_targets = sorted(
+            set(chosen.affected_targets) - covered,
+            key=lambda ref: (_pr_number(ref), ref),
+        )
+        selected.append(chosen)
+        selection_trace.append(
+            {
+                "selection_index": len(selected),
+                "ref": chosen.ref,
+                "fanout": chosen.fanout,
+                "marginal_uncovered_fanout": len(marginal_targets),
+                "marginal_uncovered_targets": marginal_targets,
+                "historical_rank_mass": chosen.historical_rank_mass,
+                "best_historical_rank": chosen.best_historical_rank,
+            }
+        )
+        covered.update(chosen.affected_targets)
+        pool.remove(chosen)
+
+    return selected, selection_trace, covered
+
+
 def compile_inspection_plan(
     portfolio: Mapping[str, Any],
     *,
     max_candidates: int | None = None,
     checkpoint: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Deduplicate candidate PRs and prioritize high-fanout exact inspection."""
+    """Deduplicate candidates and maximize marginal uncovered packet coverage."""
     if max_candidates is not None and max_candidates < 0:
         raise ValueError("max_candidates must be non-negative or omitted")
     if portfolio.get("schema") != "omega-pr-llmt-portfolio/v0.1.0":
@@ -139,22 +200,23 @@ def compile_inspection_plan(
             )
         )
 
-    candidates.sort(
-        key=lambda row: (
-            -row.fanout,
-            -row.historical_rank_mass,
-            row.best_historical_rank if row.best_historical_rank is not None else 10**9,
-            -_pr_number(row.ref),
-            row.ref,
-        )
-    )
+    candidates.sort(key=_candidate_sort_key)
     current_completed = [
         candidate
         for candidate in candidates
         if candidate.head_sha and completed_heads.get(candidate.ref) == candidate.head_sha
     ]
     pending = [candidate for candidate in candidates if candidate not in current_completed]
-    selected = pending if max_candidates is None else pending[:max_candidates]
+    completed_targets = {
+        target
+        for candidate in current_completed
+        for target in candidate.affected_targets
+    }
+    selected, selection_trace, projected_covered_targets = _greedy_marginal_selection(
+        pending,
+        already_covered_targets=completed_targets,
+        max_candidates=max_candidates,
+    )
     stale_checkpoint_refs = sorted(
         ref
         for ref, old_sha in completed_heads.items()
@@ -168,19 +230,30 @@ def compile_inspection_plan(
         for candidate in selected
         for target in candidate.affected_targets
     }
-    completed_targets = {
-        target
-        for candidate in current_completed
-        for target in candidate.affected_targets
-    }
+    newly_covered_targets = projected_covered_targets - completed_targets
     total_targets = {
         str(packet["target"]["ref"])
         for packet in portfolio.get("packets", [])
     }
+    remaining_uncovered_before = total_targets - completed_targets
+    remaining_uncovered_after = total_targets - projected_covered_targets
+
+    marginal_by_ref = {
+        row["ref"]: row["marginal_uncovered_fanout"]
+        for row in selection_trace
+    }
+    candidate_rows = []
+    for candidate in candidates:
+        row = candidate.to_dict()
+        row["selected_this_wave"] = candidate in selected
+        row["marginal_uncovered_fanout_at_selection"] = marginal_by_ref.get(candidate.ref)
+        candidate_rows.append(row)
+
     payload: dict[str, Any] = {
         "schema": f"omega-pr-llmt-inspection-plan/v{INSPECTION_SCHEMA_VERSION}",
         "portfolio_fingerprint": portfolio.get("fingerprint"),
         "checkpoint_fingerprint": checkpoint.get("fingerprint") if checkpoint else None,
+        "selection_policy": "greedy_marginal_uncovered_packet_coverage/v0.1",
         "operational_budget": {
             "max_candidates": max_candidates,
             "architecture_hard_cap": False,
@@ -200,13 +273,27 @@ def compile_inspection_plan(
         "unverifiable_checkpoint_refs": unverifiable_checkpoint_refs,
         "completed_current_refs": [candidate.ref for candidate in current_completed],
         "completed_packet_coverage_count": len(completed_targets),
+        "remaining_uncovered_packet_count_before_selection": len(remaining_uncovered_before),
         "selected_packet_coverage_count": len(selected_targets),
+        "selected_new_packet_coverage_count": len(newly_covered_targets),
+        "projected_packet_coverage_after_selection_count": len(projected_covered_targets),
+        "remaining_uncovered_packet_count_after_selection": len(remaining_uncovered_after),
         "total_packet_count": len(total_targets),
         "selected_packet_coverage_fraction": round(
             len(selected_targets) / len(total_targets), 6
         ) if total_targets else 0.0,
+        "selected_new_packet_coverage_fraction": round(
+            len(newly_covered_targets) / len(total_targets), 6
+        ) if total_targets else 0.0,
+        "projected_packet_coverage_after_selection_fraction": round(
+            len(projected_covered_targets) / len(total_targets), 6
+        ) if total_targets else 0.0,
         "selected_pair_count": sum(candidate.fanout for candidate in selected),
-        "candidates": [candidate.to_dict() for candidate in candidates],
+        "selected_marginal_pair_count": sum(
+            int(row["marginal_uncovered_fanout"]) for row in selection_trace
+        ),
+        "selection_trace": selection_trace,
+        "candidates": candidate_rows,
         "selected_refs": [candidate.ref for candidate in selected],
         "authority": {
             "read": True,
@@ -214,8 +301,8 @@ def compile_inspection_plan(
             "merge_authority_granted": False,
         },
         "boundary": (
-            "Fanout prioritizes reusable inspection effort, not semantic relevance. "
-            "Every selected PR still requires exact source/test evidence before reuse."
+            "Marginal coverage maximizes how many previously uncovered PR packets receive deep evidence per inspection slot. "
+            "It is an inspection-efficiency policy, not semantic relevance, correctness, or Value-of-Information proof."
         ),
     }
     payload["fingerprint"] = _stable_digest(payload)
@@ -292,6 +379,7 @@ def inspect_portfolio(
             {
                 "ref": ref,
                 "fanout": candidate["fanout"],
+                "marginal_uncovered_fanout_at_selection": candidate.get("marginal_uncovered_fanout_at_selection"),
                 "affected_targets": candidate["affected_targets"],
                 "evidence_axes": candidate["evidence_axes"],
                 "best_historical_rank": candidate["best_historical_rank"],
@@ -345,7 +433,7 @@ def inspect_portfolio(
             "merge_authority_granted": False,
         },
         "oak_boundaries": [
-            "FANOUT != SEMANTIC_RELEVANCE",
+            "MARGINAL_COVERAGE != SEMANTIC_RELEVANCE",
             "HYDRATED_HEAD != CORRECT_IMPLEMENTATION",
             "CHANGED_FILE != REUSABLE_BEHAVIOR",
             "AST_SYMBOL != BEHAVIORAL_EQUIVALENCE",
