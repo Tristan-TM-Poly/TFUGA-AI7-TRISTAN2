@@ -4,6 +4,7 @@ import json
 from dataclasses import replace
 from pathlib import Path
 
+from omega_capability_os_t.core import load_registry, validate_registry
 from omega_capability_os_t.github_memory_evolution import (
     ResidualArtifactSpec,
     ReuseOutcomeReceipt,
@@ -100,3 +101,21 @@ def test_reference_fixture_emits_verified_transition_chain() -> None:
     assert ledger["verification"]["status"] == "PASS"
     assert ledger["verification"]["entry_count"] == 1
     assert result["receipts"][0]["ledger_entry"]["state_before"] == "state:reuse-memory-r07"
+
+
+def test_live_capability_registry_passes_and_self_registers_r02() -> None:
+    payload = json.loads(Path("examples/capability_os_registry.json").read_text(encoding="utf-8"))
+    registry = load_registry(payload)
+    report = validate_registry(registry)
+    assert report["status"] == "PASS", report["errors"]
+    ids = {cap.capability_id for cap in registry}
+    assert {
+        "research_abi.object.envelope",
+        "research_abi.six_graph.compile",
+        "research_abi.receipt.issue",
+        "research_abi.receipt.verify",
+        "research_abi.snapshot.bridge",
+        "research_abi.context.compile",
+        "research_abi.github_memory_r07.bridge",
+        "research_abi.transition_ledger.append_verify",
+    } <= ids
