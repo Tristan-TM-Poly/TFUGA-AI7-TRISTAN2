@@ -27,6 +27,7 @@
     "head_sha": "d8bd352cf8a0b0efc9c61a9f3d3dd7f69f070140",
     "artifact_id": 9184072886,
     "artifact_digest": "sha256:d1d6ad01a7c42ea4bf217d85b12f2ae0218a070e83e54d6604b32a0bfb034db2",
+    "page_budget_receipt": "evidence/page_budget_r11.json",
     "clean_compile_observed": true,
     "page_measurement_observed": true,
     "measured_pdf_pages": 127,
