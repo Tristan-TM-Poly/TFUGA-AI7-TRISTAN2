@@ -19,6 +19,7 @@ from .forest import (
     thesis_forest_oak_report,
     zoom_thesis,
 )
+from .registry_forest import RegistryZoomReceipt, compile_registry_forest, seed_candidate
 
 __all__ = [
     "OAK_STATUS_ORDER",
@@ -38,4 +39,7 @@ __all__ = [
     "dezoom_result",
     "thesis_forest_oak_report",
     "demo_zoom_candidates",
+    "RegistryZoomReceipt",
+    "compile_registry_forest",
+    "seed_candidate",
 ]
