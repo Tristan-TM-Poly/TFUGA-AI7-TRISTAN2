@@ -1,0 +1,6 @@
+name = "omega_math_proof_seeds"
+version = "0.1.0"
+defaultTargets = ["BookOfProofSeed"]
+
+[[lean_lib]]
+name = "BookOfProofSeed"
