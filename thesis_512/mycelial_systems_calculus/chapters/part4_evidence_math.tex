@@ -1,0 +1,201 @@
+\chapter{Calcul des preuves, dépendances et décisions}
+
+\section{Evidence comme objet typé}
+
+Une evidence $e$ n'est pas un booléen. On la représente par
+\[
+e=(source,method,observation,scope,version,U,provenance,status).
+\]
+Deux evidence portant sur le même claim peuvent être incomparables si leurs scopes diffèrent. Une simulation et une mesure de banc, par exemple, ne sont pas deux répétitions du même type d'observation.
+
+\section{Relation de support}
+
+On note
+\[
+e\vdash_s q
+\]
+si l'evidence $e$ soutient le claim $q$ dans le scope $s$. Cette relation ne signifie pas que $q$ est vrai universellement. Elle encode un lien de justification documenté.
+
+\begin{definition}[Couverture d'un claim]
+Soit $O(q)$ l'ensemble des obligations requises pour promouvoir $q$. Si $k$ obligations sur $m=|O(q)|$ possèdent une evidence admissible, on définit
+\[
+Coverage_E(q)=\frac{k}{m}.
+\]
+\end{definition}
+
+\begin{limitation}
+$Coverage_E=1$ est nécessaire pour certains gates mais n'est pas suffisant pour la vérité : toutes les evidence pourraient être mal calibrées, corrélées ou fondées sur une hypothèse fausse commune.
+\end{limitation}
+
+\section{Dépendance de provenance}
+
+Soient $Anc(e)$ les ancêtres de provenance d'une evidence. Une mesure simple de chevauchement est
+\[
+J(e_i,e_j)=\frac{|Anc(e_i)\cap Anc(e_j)|}{|Anc(e_i)\cup Anc(e_j)|}
+\]
+lorsque le dénominateur est non nul. Cette quantité n'est pas une probabilité d'indépendance; elle révèle seulement une dépendance structurale observable.
+
+Deux confirmations avec $J=1$ peuvent n'apporter presque aucune indépendance supplémentaire si elles dérivent du même run. Deux evidence avec $J=0$ peuvent encore partager des biais non documentés. Le score sert donc de signal de dépendance, pas de certificat.
+
+\chapter{Propagation élémentaire de l'incertitude}
+
+\section{Somme de variables}
+
+Pour deux variables aléatoires $X,Y$ avec variances finies,
+\[
+Var(X+Y)=Var(X)+Var(Y)+2Cov(X,Y).
+\]
+L'omission du terme de covariance est légitime seulement sous hypothèse d'indépendance ou covariance nulle justifiée.
+
+Cette identité fournit un principe général pour les pipelines scientifiques : additionner quadratiquement des incertitudes sans examiner les dépendances peut sous-estimer ou surestimer l'incertitude finale.
+
+\section{Transformation locale}
+
+Pour une fonction différentiable $f$ et une variable $X$ concentrée près de $\mu$, une approximation de premier ordre donne
+\[
+Var(f(X))\approx [f'(\mu)]^2Var(X).
+\]
+En dimension $d$, avec covariance $\Sigma_X$ et Jacobien $J_f$,
+\[
+\Sigma_{f(X)}\approx J_f\Sigma_XJ_f^{\top}.
+\]
+
+Ces formules ne sont utilisées que lorsque l'approximation locale est acceptable. Une transformation fortement non linéaire ou une distribution multimodale peut exiger propagation Monte Carlo ou bornes non linéaires.
+
+\section{Incertitude de transfert}
+
+Lorsqu'un résultat observé dans un contexte $s_1$ est appliqué à $s_2$, on introduit une composante distincte $U_{transfer}$ plutôt que de l'absorber dans l'erreur de mesure. Ainsi
+\[
+U=(U_{measurement},U_{model},U_{implementation},U_{transfer},U_{provenance}).
+\]
+La séparation évite de faire disparaître une hypothèse de transportabilité derrière un intervalle numérique unique.
+
+\chapter{Calibration des validateurs}
+
+\section{Validator comme classificateur}
+
+Un gate OAK ou Scientific CI peut être étudié comme un détecteur produisant PASS/HOLD/FAIL. Sur un corpus où un oracle de défaut est disponible, on peut mesurer erreurs de faux positif et faux négatif par famille.
+
+Pour un détecteur binaire dérivé, on rapporte
+\[
+FPR=\frac{FP}{FP+TN},\qquad FNR=\frac{FN}{FN+TP}.
+\]
+Un gate très sévère peut réduire $FNR$ tout en augmentant fortement $FPR$ et le coût de revue.
+
+\section{Prédictions probabilistes}
+
+Si un sous-système émet une probabilité $p_i$ d'un événement binaire $y_i\in\{0,1\}$, le Brier score est
+\[
+B=\frac1n\sum_{i=1}^n(p_i-y_i)^2.
+\]
+Un score faible indique une meilleure précision quadratique des probabilités sur l'échantillon considéré. Il ne sépare pas à lui seul calibration et discrimination; les diagrammes de calibration et décompositions adaptées peuvent compléter l'analyse.
+
+\section{Meta-OAK}
+
+On résume un validateur $g$ par
+\[
+A(g)=(coverage,FPR,FNR,latency,cost,human,calibration).
+\]
+Meta-OAK compare ces vecteurs sur des familles de défauts. Il ne cherche pas un « validateur parfait » mais des régions où un gate devient trop permissif ou trop coûteux.
+
+\chapter{Fraîcheur et obsolescence de l'evidence}
+
+\section{Fraîcheur événementielle}
+
+La fraîcheur n'est pas nécessairement une fonction du temps seul. Une evidence peut rester valide pendant un an si rien de pertinent ne change, puis devenir obsolète immédiatement après modification d'une dépendance critique.
+
+On définit donc un prédicat
+\[
+Fresh(e,S_t)
+\]
+fonction de l'evidence et de l'état courant. Pour une evidence commit-spécifique, un changement du SHA observé peut suffire à rendre le prédicat faux.
+
+\section{Événements invalidants}
+
+Les événements potentiellement invalidants incluent : changement de code, dataset révisé, schéma modifié, provider remplacé, unité changée, protocole corrigé, vulnérabilité découverte ou hypothèse retirée. Le type d'evidence détermine quels événements sont pertinents.
+
+\section{Supersession}
+
+Une nouvelle evidence $e_2$ peut superséder $e_1$ sans supprimer $e_1$. Le ledger conserve
+\[
+e_1\xrightarrow{SUPERSEDED\_BY}e_2.
+\]
+Cette structure permet de reconstruire ce qui était raisonnablement supporté à une date antérieure sans présenter l'ancien état comme actuel.
+
+\chapter{Décisions non compensatoires}
+
+\section{Gates critiques}
+
+Soit $G_c(q)$ l'ensemble des gates critiques d'un claim. Une règle de promotion est
+\[
+Promote(q)=1\iff \forall g\in G_c(q),\;g(q)=PASS.
+\]
+Les métriques de performance peuvent ensuite ordonner plusieurs candidats déjà admissibles.
+
+\begin{proposition}
+Sous cette règle, aucune amélioration d'une métrique secondaire ne peut compenser un gate critique FAIL ou HOLD.
+\end{proposition}
+
+\begin{proof}
+La condition de promotion est une conjonction sur les gates critiques. Si un terme n'est pas PASS, la conjonction est fausse indépendamment des métriques hors $G_c(q)$.
+\end{proof}
+
+\section{Pourquoi la moyenne peut être dangereuse}
+
+Supposons un score moyen
+\[
+S=\frac1d\sum_{i=1}^d s_i.
+\]
+Un candidat peut obtenir $S$ élevé malgré $s_j=0$ sur une dimension critique si les autres scores sont proches de 1. Ce mécanisme est acceptable pour des préférences compensatoires mais inadéquat lorsque $s_j=0$ signifie unité invalide, autorité interdite ou evidence absente.
+
+\section{Pareto avant scalarisation}
+
+Lorsque plusieurs critères sont des objectifs et non des gates, une frontière de Pareto conserve les compromis sans imposer prématurément des poids. La scalarisation intervient seulement lorsque l'action exige un choix unique et que les poids peuvent être justifiés.
+
+\chapter{Mémoire négative comme information}
+
+\section{Valeur d'un échec}
+
+Un échec reproductible élimine au minimum un triplet
+\[
+(method,context,claim)
+\]
+dans les conditions observées. Il peut donc réduire l'espace de recherche futur même si aucun claim positif n'est produit.
+
+\section{Entrée M-moins minimale}
+
+Une entrée utile contient : identifiant, hypothèse, contexte, action, observation, evidence, cause candidate, réparation, condition de retry et test de régression. Une simple phrase « cela n'a pas marché » est trop pauvre pour devenir anti-dataset.
+
+\section{Non-répétition conditionnelle}
+
+Une politique peut bloquer la répétition exacte d'un échec lorsque contexte et préconditions sont équivalents. Mais elle doit autoriser un retry lorsque la cause candidate a changé : nouvelle version, nouveau provider, nouvelles données ou réparation explicite.
+
+\chapter{Force d'evidence et indépendance}
+
+\section{Réexécution locale}
+
+Une réexécution locale sur le même code et les mêmes données teste la déterminisme ou répétabilité de l'exécution. Elle est utile mais partage presque toutes les sources de biais de l'original.
+
+\section{Clean-room}
+
+Une reproduction clean-room retire caches, fichiers implicites et état non déclaré. Elle teste davantage la complétude de la spécification et la reproductibilité environnementale.
+
+\section{Réimplémentation indépendante}
+
+Une réimplémentation à partir d'une spécification, sans réutiliser le code principal, ajoute de l'indépendance concernant les bugs d'implémentation communs. Elle peut néanmoins partager la même hypothèse théorique erronée.
+
+\section{Réplication externe}
+
+Une réplication externe peut apporter des données, opérateurs et environnements nouveaux. Son absence n'annule pas une contribution interne, mais limite la force des claims de généralisation.
+
+\chapter{Audit des conclusions}
+
+\section{Abstract et conclusion comme vues compilées}
+
+L'abstract et la conclusion sont traités comme des vues du Claim Ledger. Ils ne doivent pas introduire un claim plus fort que ceux supportés dans le corps.
+
+Une règle d'audit est : chaque phrase comparative ou de nouveauté dans l'abstract doit référencer au moins un claim ID dont le statut autorise cette formulation. Dans la version candidate actuelle, les claims de nouveauté restent HOLD; l'abstract doit donc parler de constructions et d'hypothèses testées, non de supériorité établie.
+
+\section{Régression épistémique}
+
+Un nouveau résultat peut forcer la rétrogradation d'un claim. La stabilité de la narration n'est pas un objectif supérieur à la fidélité de l'evidence. Le système de thèse doit accepter qu'une conclusion devienne plus prudente au fur et à mesure que le corpus s'enrichit.
