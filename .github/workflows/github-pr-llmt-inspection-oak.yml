@@ -11,6 +11,7 @@ on:
       - "tests/test_omega_capability_os_github_memory_zoom.py"
       - "tests/test_omega_github_pr_llmt.py"
       - "tests/test_omega_github_pr_llmt_inspection.py"
+      - "tests/test_omega_github_pr_llmt_marginal_coverage.py"
       - "tests/test_omega_github_pr_llmt_targets.py"
       - "tests/test_omega_github_pr_llmt_findings.py"
       - ".agents/skills/github-pr-llmt/**"
@@ -40,6 +41,7 @@ jobs:
             tests/test_omega_capability_os_github_memory_zoom.py \
             tests/test_omega_github_pr_llmt.py \
             tests/test_omega_github_pr_llmt_inspection.py \
+            tests/test_omega_github_pr_llmt_marginal_coverage.py \
             tests/test_omega_github_pr_llmt_targets.py \
             tests/test_omega_github_pr_llmt_findings.py
 
@@ -73,7 +75,7 @@ jobs:
             --output-index /tmp/omega-pr-llmt-target-index.json \
             --output /tmp/omega-pr-llmt-target-filegraph.json
 
-      - name: Deep inspection wave 1 - highest fanout
+      - name: Deep inspection wave 1 - greedy marginal coverage
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -87,7 +89,7 @@ jobs:
             --output-overlay /tmp/omega-pr-llmt-inspection-overlay-wave1.json \
             --output-checkpoint /tmp/omega-pr-llmt-inspection-checkpoint-wave1.json
 
-      - name: Deep inspection wave 2 - resume from exact heads
+      - name: Deep inspection wave 2 - resume with marginal uncovered coverage
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -146,6 +148,9 @@ jobs:
           assert filegraph["error_count"] == 0, filegraph["progressive_retrieval"]["errors"]
           assert filegraph["reconstruction_pair_count"] >= 2, filegraph["reconstruction_pairs"]
 
+          marginal_policy = "greedy_marginal_uncovered_packet_coverage/v0.1"
+          assert plan1["selection_policy"] == marginal_policy
+          assert plan2["selection_policy"] == marginal_policy
           assert plan1["operational_budget"]["max_candidates"] == 12
           assert plan2["operational_budget"]["max_candidates"] == 12
           assert plan1["operational_budget"]["architecture_hard_cap"] is False
@@ -154,15 +159,25 @@ jobs:
           assert plan2["planned_unique_ref_count"] == portfolio["unique_candidate_ref_count"]
           assert plan1["completed_current_ref_count"] == 0
           assert plan1["selected_ref_count"] <= 12
+          assert plan1["selected_marginal_pair_count"] == plan1["selected_new_packet_coverage_count"]
+          assert plan1["remaining_uncovered_packet_count_after_selection"] == portfolio["packet_count"] - plan1["projected_packet_coverage_after_selection_count"]
           assert checkpoint1["completed_ref_count"] == overlay1["cumulative_hydrated_ref_count"]
+          assert overlay1["error_count"] == 0, overlay1.get("errors", [])
+          assert overlay1["packet_coverage_after_successful_hydration"] == plan1["projected_packet_coverage_after_selection_count"]
           assert plan2["completed_current_ref_count"] == checkpoint1["completed_ref_count"]
           assert set(plan1["selected_refs"]).isdisjoint(plan2["selected_refs"])
           assert plan2["selected_ref_count"] <= 12
+          assert plan2["selected_marginal_pair_count"] == plan2["selected_new_packet_coverage_count"]
+          assert plan2["remaining_uncovered_packet_count_after_selection"] == portfolio["packet_count"] - plan2["projected_packet_coverage_after_selection_count"]
+          assert plan2["selected_new_packet_coverage_count"] == plan2["projected_packet_coverage_after_selection_count"] - plan2["completed_packet_coverage_count"]
           assert plan2["completed_current_ref_count"] + plan2["selected_ref_count"] + plan2["backlog_ref_count"] == plan2["planned_unique_ref_count"]
           assert checkpoint2["completed_ref_count"] == overlay["cumulative_hydrated_ref_count"]
           assert checkpoint2["completed_ref_count"] >= checkpoint1["completed_ref_count"]
           assert plan2["stale_checkpoint_ref_count"] == 0
           assert plan2["unverifiable_checkpoint_ref_count"] == 0
+          assert overlay["error_count"] == 0, overlay.get("errors", [])
+          assert overlay["packet_coverage_after_successful_hydration"] == plan2["projected_packet_coverage_after_selection_count"]
+          assert overlay["packet_coverage_after_successful_hydration"] - overlay1["packet_coverage_after_successful_hydration"] == plan2["selected_new_packet_coverage_count"]
           assert overlay["authority"]["write_authority_granted"] is False
           assert overlay["authority"]["merge_authority_granted"] is False
 
@@ -187,12 +202,20 @@ jobs:
               "targets_with_overlap": filegraph["targets_with_file_overlap_count"],
               "reconstruction_pair_count": filegraph["reconstruction_pair_count"],
               "reconstruction_pairs": filegraph["reconstruction_pairs"],
+              "selection_policy": plan2["selection_policy"],
               "planned_unique_refs": plan2["planned_unique_ref_count"],
               "wave1_selected_refs": plan1["selected_ref_count"],
               "wave1_completed_refs": checkpoint1["completed_ref_count"],
+              "wave1_selected_new_packet_coverage": plan1["selected_new_packet_coverage_count"],
+              "wave1_projected_packet_coverage": plan1["projected_packet_coverage_after_selection_count"],
               "wave1_packet_coverage": overlay1["packet_coverage_after_successful_hydration"],
+              "wave1_remaining_uncovered": plan1["remaining_uncovered_packet_count_after_selection"],
               "wave2_precompleted_refs": plan2["completed_current_ref_count"],
               "wave2_selected_refs": plan2["selected_ref_count"],
+              "wave2_selected_new_packet_coverage": plan2["selected_new_packet_coverage_count"],
+              "wave2_selected_marginal_pairs": plan2["selected_marginal_pair_count"],
+              "wave2_projected_packet_coverage": plan2["projected_packet_coverage_after_selection_count"],
+              "wave2_remaining_uncovered": plan2["remaining_uncovered_packet_count_after_selection"],
               "final_completed_refs": checkpoint2["completed_ref_count"],
               "final_backlog_refs": plan2["backlog_ref_count"],
               "final_packet_coverage": overlay["packet_coverage_after_successful_hydration"],
