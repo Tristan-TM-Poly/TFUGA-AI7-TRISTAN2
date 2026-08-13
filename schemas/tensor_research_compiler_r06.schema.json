@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/tfuga/tensor_research_compiler_r06.schema.json",
+  "title": "Omega Tensor Research Compiler R0.6",
+  "description": "Machine contract for logical PersonLLMT profiles, ephemeral Shadows and typed cognitive programs. Structural validity does not certify a person, mind, causal synergy, scientific truth or routing optimality.",
+  "type": "object",
+  "required": ["person_llmt", "shadow", "cognitive_program"],
+  "properties": {
+    "person_llmt": {"$ref": "#/$defs/personLLMT"},
+    "shadow": {"$ref": "#/$defs/shadowSpec"},
+    "cognitive_program": {"$ref": "#/$defs/cognitiveProgram"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "personLLMT": {
+      "type": "object",
+      "required": [
+        "person_id", "model_version", "corpus_ids", "source_ids", "operator_ids",
+        "representation_ids", "capability_tags", "temporal_gate_year", "permission_scope",
+        "cost", "risk", "epistemic_debt", "model_not_person", "historical_mind_certified"
+      ],
+      "properties": {
+        "person_id": {"type": "string", "minLength": 1},
+        "model_version": {"type": "string", "minLength": 1},
+        "corpus_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "source_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "operator_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "representation_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "capability_tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "temporal_gate_year": {"type": ["integer", "null"]},
+        "permission_scope": {"type": "string", "enum": ["public_only", "consented_private", "deny_private"]},
+        "cost": {"type": "number", "minimum": 0},
+        "risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "epistemic_debt": {"type": "number", "minimum": 0},
+        "model_not_person": {"const": true},
+        "historical_mind_certified": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "shadowSpec": {
+      "type": "object",
+      "required": [
+        "shadow_id", "person_id", "role", "domain", "temporal_gate_year", "mirror",
+        "operator_ids", "representation_ids", "objective", "requires_private_data",
+        "ephemeral", "model_not_person"
+      ],
+      "properties": {
+        "shadow_id": {"type": "string", "minLength": 1},
+        "person_id": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "enum": ["solver", "critic", "formalizer", "counterexample", "representation", "evidence"]},
+        "domain": {"type": "string", "minLength": 1},
+        "temporal_gate_year": {"type": ["integer", "null"]},
+        "mirror": {"type": "string", "enum": ["historical", "modern", "computational", "adversarial", "formal"]},
+        "operator_ids": {"type": "array", "items": {"type": "string"}},
+        "representation_ids": {"type": "array", "items": {"type": "string"}},
+        "objective": {"type": "string", "minLength": 1},
+        "requires_private_data": {"type": "boolean"},
+        "ephemeral": {"const": true},
+        "model_not_person": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "instruction": {
+      "type": "object",
+      "required": [
+        "instruction_id", "opcode", "input_type", "output_type", "operator_id",
+        "representation_before", "representation_after", "cost_budget", "uncertainty_budget", "note"
+      ],
+      "properties": {
+        "instruction_id": {"type": "string", "minLength": 1},
+        "opcode": {"type": "string", "enum": [
+          "LOAD", "GATE", "ZOOM", "DEZOOM", "REP", "CVCD", "INV", "SYM",
+          "APPROX", "RESIDUAL", "TRANSFER", "BRANCH", "COUNTER", "MERGE",
+          "SIM", "PROVE", "OAK", "STORE_PLUS", "STORE_MINUS"
+        ]},
+        "input_type": {"type": "string", "enum": ["problem", "representation", "claim", "oak_receipt", "artifact"]},
+        "output_type": {"type": "string", "enum": ["problem", "representation", "claim", "oak_receipt", "artifact"]},
+        "operator_id": {"type": ["string", "null"]},
+        "representation_before": {"type": "array", "items": {"type": "string"}},
+        "representation_after": {"type": "array", "items": {"type": "string"}},
+        "cost_budget": {"type": "number", "minimum": 0},
+        "uncertainty_budget": {"type": "number", "minimum": 0, "maximum": 1},
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "cognitiveProgram": {
+      "type": "object",
+      "required": [
+        "program_id", "problem_id", "instructions", "source_shadow_ids",
+        "max_cost", "max_depth", "stop_conditions"
+      ],
+      "properties": {
+        "program_id": {"type": "string", "minLength": 1},
+        "problem_id": {"type": "string", "minLength": 1},
+        "instructions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/instruction"}},
+        "source_shadow_ids": {"type": "array", "items": {"type": "string"}},
+        "max_cost": {"type": "number", "minimum": 0},
+        "max_depth": {"type": "integer", "minimum": 1},
+        "stop_conditions": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "x-oak-boundary": "Schema validity proves structure only. PersonLLMT is not a person; Shadow is not a mind; consensus is not truth; synergy is not causal proof; sparse routing is not globally optimal by construction."
+}
