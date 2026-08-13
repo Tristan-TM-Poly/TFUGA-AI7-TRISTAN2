@@ -1,0 +1,74 @@
+name: Ω PR 5K2N R0.5 Compatibility Outcomes OAK
+
+on:
+  pull_request:
+    paths:
+      - "omega_capability_os_t/github_pr_generation_r05.py"
+      - "tests/test_omega_github_pr_generation_r05.py"
+      - "schemas/omega-pr-5k2n-generation-r05.schema.json"
+      - "examples/pr_5k2n_generation_r05_request.json"
+      - "docs/OMEGA_PR_5K2N_GENERATION_R05.md"
+      - ".github/workflows/pr-fractal-generation-r05-oak.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility-outcomes-oak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deterministic court dependencies
+        run: python -m pip install pytest jsonschema
+
+      - name: Compile and test R0.5
+        run: |
+          python -m compileall -q omega_capability_os_t/github_pr_generation_r05.py
+          python -m pytest -q tests/test_omega_github_pr_generation_r05.py
+
+      - name: Compile synthetic compatible fixture
+        run: |
+          python -m omega_capability_os_t.github_pr_generation_r05 \
+            examples/pr_5k2n_generation_r05_request.json \
+            --output /tmp/omega-pr-5k2n-r05.json
+
+      - name: Validate schema and non-authority boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          report = json.loads(Path("/tmp/omega-pr-5k2n-r05.json").read_text())
+          schema = json.loads(Path("schemas/omega-pr-5k2n-generation-r05.schema.json").read_text())
+          Draft202012Validator(schema).validate(report)
+
+          assert report["schema"] == "omega-pr-5k2n-compatibility-outcomes/v0.5.0"
+          assert report["verdict_counts"]["COMPATIBLE"] == 1
+          assert report["memory_candidate_counts"]["M_PLUS_CANDIDATE"] == 1
+          receipt = report["receipts"][0]
+          assert receipt["verdict"] == "COMPATIBLE"
+          assert receipt["action_candidate"] == "REUSE_CANDIDATE"
+          assert receipt["action_authorized"] is False
+          assert receipt["memory_promotion_authorized"] is False
+          assert report["automatic_reuse_authorized"] is False
+          assert report["automatic_memory_promotion_authorized"] is False
+          assert report["write_authority_granted"] is False
+          assert report["automatic_commit_allowed"] is False
+          assert report["automatic_merge_allowed"] is False
+          assert report["source_renderer_authorized"] is False
+          assert len(report["fingerprint"]) == 64
+          PY
+
+      - name: Retain R0.5 deterministic fixture
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-pr-5k2n-r05-${{ github.run_id }}
+          path: /tmp/omega-pr-5k2n-r05.json
+          retention-days: 14
