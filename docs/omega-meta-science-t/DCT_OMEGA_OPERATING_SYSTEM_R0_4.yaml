@@ -1,0 +1,38 @@
+id: omega-discovery-operating-system-t-r0-4
+name: Omega Discovery Operating System T R0.4
+repo_path: omega_meta_science_t/operating_system.py
+status: D
+definition: >-
+  Deterministic OAK-bounded contract layer for epistemic claim typing,
+  semantic theory diffs, dependency-aware scientific rebuilds,
+  proof-carrying claims, Verified Discovery Units and Discovery ROI.
+hypotheses:
+  - Explicit claim types can reduce accidental promotion from correlation to causation or from evidence to proof.
+  - Semantic theory diffs can make scientific lineage more attributable than file diffs alone.
+  - Dependency-aware invalidation can avoid both stale descendants and unnecessary full rebuilds.
+  - Proof-carrying claim contracts can make evidence, tests and OAK state machine-readable.
+  - Transparent bounded productivity and ROI metrics are safer than unsupported researcher-equivalent or valuation claims.
+equation_or_model: >-
+  VDU=0.30U+0.25R+0.20G+0.15A+0.10N after OAK PASS;
+  ROI_D=(V_expected*P_validation)/(C_compute+C_experiment+C_human+C_risk).
+code_or_calculation: omega_meta_science_t/operating_system.py
+test_path: tests/test_omega_meta_science_operating_system.py
+proof_path: null
+risk_boundary:
+  - Claim types are declared software contracts, not a complete epistemology.
+  - A causal_design or formal_proof label does not independently prove causality or theoremhood.
+  - Theory diffs operate on explicit snapshots and do not solve arbitrary semantic equivalence.
+  - Build invalidation follows declared dependencies only.
+  - Proof-carrying claims certify declared gates, not external truth.
+  - VDU weights are policy choices and not natural constants.
+  - Discovery ROI is a decision surrogate, not a valuation or revenue guarantee.
+m_minus:
+  - Never convert correlation to causality without an explicit causal-identification contract.
+  - Never count an OAK-blocked result as verified discovery output.
+  - Never interpret dependency hashes or build PASS as truth of scientific content.
+  - Never convert a modelled ROI score directly into company valuation.
+next_experiment: >-
+  Connect the contract layer to hash-addressed real artifacts, provenance-derived
+  evidence dependency graphs, optional SAT/SMT claim checking, active experiment
+  portfolios and calibrated held-out outcome tracking.
+promotion_decision: prototype

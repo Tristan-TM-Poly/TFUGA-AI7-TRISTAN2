@@ -1,0 +1,49 @@
+name: omega-meta-science-t
+
+on:
+  pull_request:
+    paths:
+      - "omega_meta_science_t/**"
+      - "tests/test_omega_meta_science*.py"
+      - "docs/omega-meta-science-t/**"
+      - ".github/workflows/omega-meta-science-t.yml"
+  push:
+    branches: [main]
+    paths:
+      - "omega_meta_science_t/**"
+      - "tests/test_omega_meta_science*.py"
+      - "docs/omega-meta-science-t/**"
+      - ".github/workflows/omega-meta-science-t.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  meta-science-bench:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Run MetaScienceBench R0.1-R0.4 tests
+        run: >-
+          python -m pytest -q
+          tests/test_omega_meta_science_t.py
+          tests/test_omega_meta_science_discovery.py
+          tests/test_omega_meta_science_geometry.py
+          tests/test_omega_meta_science_operating_system.py
+      - name: Replay MetaScienceBench JSON
+        run: python -m omega_meta_science_t --compact > /tmp/meta_science_report.json
+      - name: Replay Discovery Dynamics JSON
+        run: python -m omega_meta_science_t.discovery_cli --compact > /tmp/discovery_dynamics_report.json
+      - name: Replay Discovery Geometry Algebra JSON
+        run: python -m omega_meta_science_t.geometry_cli --compact > /tmp/discovery_geometry_algebra_report.json
+      - name: Replay Discovery OS R0.4 JSON
+        run: python -m omega_meta_science_t.operating_system_cli --compact > /tmp/discovery_os_r0_4_report.json
