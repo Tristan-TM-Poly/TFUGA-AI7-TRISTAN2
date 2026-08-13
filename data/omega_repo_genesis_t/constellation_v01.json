@@ -1,0 +1,106 @@
+{
+  "schema_version": "repo-constellation/v0.1",
+  "constellation_id": "OMEGA-HYPERMYCELIAL-CONSTELLATION-R01",
+  "owner": "Tristan-TM-Poly",
+  "source_repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "source_sha": "abb0d7f287607c3dbf24b128637cb73370c8ba8a",
+  "source_prs": [330, 443, 447, 448, 449, 450, 452],
+  "repositories": [
+    {
+      "name": "tristan-repo-fabric",
+      "description": "Control plane for Tristan repository cells, capability routing, graph reconstruction and cross-repo orchestration.",
+      "role": "control-plane",
+      "capabilities": ["repo.registry", "capability.route", "hypergraph.compile", "workunit.orchestrate"],
+      "consumes": ["repo.genome", "capability.ir", "repo.event"],
+      "produces": ["repo.graph", "route.plan", "ecosystem.receipt"],
+      "relations": [{"kind":"coordinates","target":"omega-capability-protocol"},{"kind":"coordinates","target":"omega-repo-atlas"}],
+      "split_score": 0.94,
+      "split_rationale": ["cross-repository reuse", "independent release cadence", "control-plane security boundary", "high fan-out leverage"],
+      "visibility": "private"
+    },
+    {
+      "name": "omega-capability-protocol",
+      "description": "Shared Tristan Repo Protocol and Capability IR schemas for interoperable repos, agents, work units and receipts.",
+      "role": "protocol-kernel",
+      "capabilities": ["capability.ir", "trp.schema", "semantic.contract", "repo.genome"],
+      "consumes": [],
+      "produces": ["typed.contracts", "schema.validators"],
+      "relations": [{"kind":"provides-protocol-to","target":"tristan-repo-fabric"},{"kind":"provides-protocol-to","target":"omega-repo-forge"}],
+      "split_score": 0.96,
+      "split_rationale": ["extreme reuse", "versioned compatibility surface", "minimal stable kernel", "independent conformance testing"],
+      "visibility": "private"
+    },
+    {
+      "name": "omega-observation-bus",
+      "description": "Content-addressed observe-once/derive-many snapshot bus for GitHub, datasets, benchmarks, literature and simulations.",
+      "role": "observation-plane",
+      "capabilities": ["snapshot.publish", "snapshot.verify", "snapshot.delta", "observation.cache"],
+      "consumes": ["authorized.observation"],
+      "produces": ["content.addressed.snapshot", "delta.event"],
+      "relations": [{"kind":"feeds","target":"omega-repo-atlas"},{"kind":"feeds","target":"omega-evidence-ledger"}],
+      "split_score": 0.93,
+      "split_rationale": ["rate-limit containment", "shared caching", "provenance boundary", "many downstream consumers"],
+      "visibility": "private"
+    },
+    {
+      "name": "omega-evidence-ledger",
+      "description": "Append-only evidence, provenance, uncertainty and M+/M-/M? receipts shared across Tristan systems.",
+      "role": "evidence-plane",
+      "capabilities": ["evidence.receipt", "provenance.chain", "uncertainty.attach", "memory.delta"],
+      "consumes": ["artifact", "claim", "observation"],
+      "produces": ["evidence.graph", "proof.debt", "memory.receipt"],
+      "relations": [{"kind":"audits","target":"tristan-repo-fabric"},{"kind":"feeds","target":"omega-oak-mesh"}],
+      "split_score": 0.95,
+      "split_rationale": ["tamper-sensitive boundary", "cross-domain reuse", "append-only semantics", "independent governance"],
+      "visibility": "private"
+    },
+    {
+      "name": "omega-repo-atlas",
+      "description": "Temporal HGFM atlas of repositories, PRs, commits, capabilities, claims, evidence, lineage and latent dark matter.",
+      "role": "knowledge-plane",
+      "capabilities": ["repo.atlas", "pr.archaeology", "code.phylogeny", "darkmatter.scan", "temporal.hgfm"],
+      "consumes": ["content.addressed.snapshot", "repo.event", "evidence.graph"],
+      "produces": ["temporal.repo.graph", "reuse.candidates", "gap.candidates"],
+      "relations": [{"kind":"consumes","target":"omega-observation-bus"},{"kind":"guides","target":"omega-repo-forge"}],
+      "split_score": 0.91,
+      "split_rationale": ["large indexed state", "read-heavy workload", "many consumers", "independent evolution"],
+      "visibility": "private"
+    },
+    {
+      "name": "omega-repo-forge",
+      "description": "Embryo-to-repository compiler with gap detection, split scoring, templates, tests, CI, rollback and OAK gates.",
+      "role": "genesis-plane",
+      "capabilities": ["repo.embryo", "repo.materialize", "gap.detect", "split.score", "repo.apoptosis.plan"],
+      "consumes": ["repo.graph", "capability.ir", "gap.candidate", "evidence.graph"],
+      "produces": ["repo.creation.plan", "repo.bootstrap", "repo.lifecycle.receipt"],
+      "relations": [{"kind":"uses","target":"omega-capability-protocol"},{"kind":"consults","target":"omega-oak-mesh"}],
+      "split_score": 0.94,
+      "split_rationale": ["privileged creation boundary", "reusable generator", "lifecycle governance", "separate release policy"],
+      "visibility": "private"
+    },
+    {
+      "name": "omega-llmt-fabric",
+      "description": "Dynamic LLMT lens and sparse coalition compiler over shared Tristan memory, capabilities and Cognitive ISA.",
+      "role": "intelligence-plane",
+      "capabilities": ["llmt.lens", "coalition.compile", "strategy.route", "voc.estimate", "selfmodel.predict"],
+      "consumes": ["workunit", "memory.lens", "capability.graph", "cognitive.program"],
+      "produces": ["llmt.coalition", "strategy.receipt", "prediction.cell"],
+      "relations": [{"kind":"routes-through","target":"tristan-repo-fabric"},{"kind":"audited-by","target":"omega-oak-mesh"}],
+      "split_score": 0.89,
+      "split_rationale": ["specialized runtime", "benchmark cadence", "model/tool dependency isolation", "many ephemeral consumers"],
+      "visibility": "private"
+    },
+    {
+      "name": "omega-oak-mesh",
+      "description": "Cross-repository OAK constitution, semantic/scientific contract tests, risk gates and proof-debt coordination.",
+      "role": "constitution-plane",
+      "capabilities": ["oak.crossrepo", "semantic.ci", "scientific.ci", "risk.gate", "proofdebt.measure"],
+      "consumes": ["claim", "evidence.graph", "repo.graph", "transformation.receipt"],
+      "produces": ["oak.verdict", "contract.failure", "promotion.gate"],
+      "relations": [{"kind":"governs","target":"tristan-repo-fabric"},{"kind":"governs","target":"omega-repo-forge"}],
+      "split_score": 0.97,
+      "split_rationale": ["governance independence", "cross-repo authority boundary", "high reuse", "fail-closed semantics"],
+      "visibility": "private"
+    }
+  ]
+}
