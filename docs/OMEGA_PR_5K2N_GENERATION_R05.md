@@ -49,7 +49,7 @@ tests_executed > 0
 interface checks present and non-UNKNOWN
 ```
 
-Missing any one of these keeps:
+Missing any one keeps:
 
 ```text
 verdict = UNKNOWN
@@ -80,13 +80,7 @@ It does not authorize reuse or canonical M+ promotion.
 
 ### PARTIAL_COMPATIBLE
 
-Same clean evidence, but:
-
-```text
-0 < residual_coverage < 1
-```
-
-Produces:
+Same clean evidence with `0 < residual_coverage < 1` produces:
 
 ```text
 action_candidate = EXTEND_CANDIDATE
@@ -95,15 +89,7 @@ memory_candidate = M_QUERY_CANDIDATE
 
 ### INCOMPATIBLE
 
-With complete evidence, any of:
-
-```text
-failed compatibility test
-failed interface check
-regression witness
-```
-
-produces:
+With complete evidence, a failed compatibility test, failed interface check or regression witness produces:
 
 ```text
 action_candidate = REJECT_CANDIDATE
@@ -119,8 +105,6 @@ All incomplete, stale, unexecuted or under-evidenced states remain `UNKNOWN/HOLD
 ## Test-rate calibration
 
 R0.5 records the finite observed test pass rate and a 95% Wilson interval when at least one test is supplied.
-
-This is useful for bounded evidence bookkeeping only:
 
 ```text
 Wilson interval over test cases
@@ -166,15 +150,62 @@ Even a `COMPATIBLE` receipt is not a patch renderer permission.
 fixture-compatible != real historical compatibility
 ```
 
-The live PR workflow uses a different negative control: R0.4 contracts are converted to pending `NOT_EXECUTED` outcomes. Therefore the expected live result is:
+## Live negative control
+
+The live path deliberately does **not** execute the R0.4 candidate. It consumes the exact R0.4 artifact and generates pending outcomes:
 
 ```text
-UNKNOWN
-HOLD
-M_QUERY_CANDIDATE
+NOT_EXECUTED
+-> UNKNOWN
+-> HOLD
+-> M_QUERY_CANDIDATE
 ```
 
 until a separately authorized isolated experiment supplies evidence.
+
+## M− — duplicate live GitHub crawling
+
+The first R0.5 live workflow independently rebuilt the full `state=all` PR memory while the R0.3/R0.4 workflows were doing the same. Concurrent full-history crawls exhausted the GitHub Installation API quota and produced HTTP 403 rate-limit failure before R0.5 ran.
+
+The rejected architecture was:
+
+```text
+R0.3 workflow -> full PR crawl
+R0.4 workflow -> full PR crawl
+R0.5 workflow -> full PR crawl
+```
+
+R0.5 now uses the correct reuse-first data path:
+
+```text
+one R0.4 live crawl/hydration
+-> retained exact-head artifact
+-> workflow_run success event
+-> actions/download-artifact by source run-id
+-> R0.5 pending-outcome compiler
+```
+
+The post-R0.4 consumer needs only:
+
+```text
+actions: read
+contents: read
+```
+
+and performs no second PR-history crawl. The official `actions/download-artifact` cross-run interface is used with `github-token` and `run-id`.
+
+Canonical anti-fan-out rule:
+
+```text
+one authorized live snapshot
+-> many downstream content-addressed consumers
+```
+
+not:
+
+```text
+N agents/workflows × N complete API crawls
+```
 
 ## OAK boundaries
 
@@ -190,6 +221,7 @@ stale candidate or target SHA blocks promotion
 COMPLETED without authority/isolation/evidence refs blocks promotion
 M_PLUS_CANDIDATE != canonical M+
 M_MINUS_CANDIDATE != canonical M-
+workflow artifact reuse != truth
 source rendering remains separately authorized
 ```
 
