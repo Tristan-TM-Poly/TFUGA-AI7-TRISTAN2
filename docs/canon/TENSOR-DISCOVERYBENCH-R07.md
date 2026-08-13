@@ -5,7 +5,7 @@
 **Executable benchmark-harness software model.**
 
 R0.7 exists to falsify and compare the R0.6 Tensor Research Compiler against
-simpler baselines.  The deterministic fixtures validate benchmark plumbing and
+simpler baselines. The deterministic fixtures validate benchmark plumbing and
 comparison semantics; they are not measurements of human intelligence, real
 scientific discovery productivity, or historical cognition.
 
@@ -47,7 +47,7 @@ cross_domain
 adversarial
 ```
 
-The current deterministic fixtures provide one task per family.  They test the
+The current deterministic fixtures provide one task per family. They test the
 harness, not the scientific capabilities of a deployed language model.
 
 ## Multi-axis evaluation
@@ -105,17 +105,29 @@ present
 unknown
 ```
 
-A run is eligible even to discuss independent discovery only when all six axes
-are `controlled_zero`.
+A run is eligible even to discuss independent discovery only when **both** of
+the following hold:
 
+```text
+hidden_target = true
+all six contamination axes = controlled_zero
+```
+
+Controlled contamination alone is insufficient when the target is visible.
 This is deliberately strict.
+
+Permanent M-:
+
+```text
+clean contamination tensor + visible target != independent rediscovery condition
+```
 
 ### Historical tasks
 
-For the historical family, pretraining exposure is `possible` and human
-exposure is `unknown` in the deterministic contract.  Therefore historical
-rediscovery cannot be promoted as independent discovery merely because context
-and retrieval gates were clean.
+For the historical family, pretraining exposure is `possible`, human exposure
+is `unknown`, and the deterministic target is not treated as secret. Therefore
+historical rediscovery cannot be promoted as independent discovery merely
+because context and retrieval gates were clean.
 
 Permanent M-:
 
@@ -126,7 +138,7 @@ historical rediscovery != independent discovery
 
 ## Baselines are permanent
 
-R0.7 keeps all four architecture classes in every task.  A future benchmark may
+R0.7 keeps all four architecture classes in every task. A future benchmark may
 add additional baselines, but MetaLLMT must never be evaluated without simpler
 comparators.
 
@@ -143,7 +155,7 @@ meta architecture != automatic superiority
 ## Tensor routing benchmark
 
 `meta_llmt` reuses the sparse R0.6 coalition compiler against each task's
-required capabilities.  It therefore tests adaptive membership selection
+required capabilities. It therefore tests adaptive membership selection
 rather than a fixed A+B coalition.
 
 This does not prove the greedy router globally optimal.
@@ -249,6 +261,7 @@ per-agent risk gate != coalition risk budget
 - system-kind enum;
 - contamination axes/statuses;
 - run fields;
+- `hidden_target_required_for_independent_discovery_eligibility = true`;
 - `human_novelty_claimed = false`;
 - `independent_discovery_claimed = false`;
 - `causal_effect_proven = false` for ablations;
@@ -268,11 +281,12 @@ R0.7 is promotable as a software benchmark layer only when:
 5. the deterministic suite contains 32 runs;
 6. cost remains explicit and normalized yield is reported;
 7. contamination remains separate from quality;
-8. historical pretraining contamination is not erased;
-9. no human novelty or independent-discovery certificate is emitted;
-10. ablations remain explicitly non-causal;
-11. Pareto fronts do not emit a scalar intelligence score;
-12. MetaLLMT superiority is not hard-coded.
+8. hidden target is required in addition to controlled contamination for run-level independent-discovery eligibility;
+9. historical pretraining contamination is not erased;
+10. no human novelty or independent-discovery certificate is emitted;
+11. ablations remain explicitly non-causal;
+12. Pareto fronts do not emit a scalar intelligence score;
+13. MetaLLMT superiority is not hard-coded.
 
 ## What R0.7 enables next
 
@@ -305,6 +319,7 @@ not a claim of autonomous scientific intelligence.
 benchmark != proof
 proxy != natural law
 rediscovery != novelty
+visible target != independent rediscovery condition
 ablation != causal proof
 MetaLLMT != automatic superiority
 contamination must remain visible
