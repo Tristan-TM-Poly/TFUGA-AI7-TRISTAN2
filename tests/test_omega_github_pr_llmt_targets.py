@@ -57,6 +57,7 @@ def test_target_file_graph_hydrates_all_targets_without_source_content_fetch():
         GitHubPRSource(api_base="https://example.invalid", transport=transport),
     )
 
+    assert report["schema"] == "omega-pr-llmt-target-filegraph/v0.2.0"
     assert report["hydrated_target_count"] == 2
     assert report["error_count"] == 0
     assert report["total_changed_file_observations"] == 4
@@ -64,6 +65,7 @@ def test_target_file_graph_hydrates_all_targets_without_source_content_fetch():
     assert report["shared_file_count"] == 1
     assert report["overlap_edge_count"] == 1
     assert report["targets_with_file_overlap_count"] == 2
+    assert report["reconstruction_pair_count"] == 0
     assert report["shared_files"][0]["path"] == "omega/shared.py"
     assert report["shared_files"][0]["fanout"] == 2
     edge = report["overlap_edges"][0]
@@ -75,6 +77,60 @@ def test_target_file_graph_hydrates_all_targets_without_source_content_fetch():
     assert hydrated.assets
     assert all(asset.source_kind == "pr_changed_file" for asset in hydrated.assets.values())
     assert all(asset.source_kind != "pr_head_python_ast_symbol" for asset in hydrated.assets.values())
+
+
+def test_target_file_graph_classifies_declared_reconstruction_without_claiming_blob_identity():
+    index = GitHubMemoryIndex()
+    index.add_pr(PRMemory("o/r", 20, "open", "source"))
+    index.add_pr(PRMemory("o/r", 21, "open", "reconstruction"))
+
+    def transport(url: str):
+        if url.endswith("/pulls/20"):
+            return {
+                "number": 20,
+                "state": "open",
+                "title": "source",
+                "body": "original implementation",
+                "head": {"sha": "src", "ref": "feat/source"},
+                "base": {"ref": "main"},
+            }
+        if url.endswith("/pulls/21"):
+            return {
+                "number": 21,
+                "state": "open",
+                "title": "reconstruction",
+                "body": "## OAK reconstruction of #20\nReplayed on current main.",
+                "head": {"sha": "new", "ref": "feat/rebuild"},
+                "base": {"ref": "main"},
+            }
+        if "/pulls/20/files" in url or "/pulls/21/files" in url:
+            return [
+                {"filename": "omega/kernel.py", "status": "added"},
+                {"filename": "tests/test_kernel.py", "status": "added"},
+            ]
+        raise AssertionError(url)
+
+    portfolio = {
+        "schema": "omega-pr-llmt-portfolio/v0.1.0",
+        "fingerprint": "r" * 64,
+        "packets": [
+            {"target": {"ref": "pr:o/r#21"}},
+            {"target": {"ref": "pr:o/r#20"}},
+        ],
+    }
+    report, _ = compile_target_file_graph(
+        index,
+        portfolio,
+        GitHubPRSource(api_base="https://example.invalid", transport=transport),
+    )
+    assert report["reconstruction_pair_count"] == 1
+    pair = report["reconstruction_pairs"][0]
+    assert pair["source_ref"] == "pr:o/r#20"
+    assert pair["reconstruction_ref"] == "pr:o/r#21"
+    assert pair["shared_file_count"] == 2
+    assert pair["same_changed_file_set"] is True
+    assert "reconstruction of #20" in pair["evidence"]
+    assert "SAME_CHANGED_FILE_SET != SAME_BLOBS" in report["oak_boundaries"]
 
 
 def test_target_file_graph_budget_is_operational_not_architectural():
