@@ -1,31 +1,70 @@
-# Prior-art map — initial court
+# Prior-art map — Literature Court R1
 
-Status: **seed only**. This is not a completed novelty review.
+Status: **active and incomplete**. This file identifies nearest neighbors; it does not establish novelty.
 
 ## Repository organization
 
-`potvin2016monorepo` establishes a strong baseline for very-large-scale repository organization and the trade-offs of a monolithic source repository. The thesis must therefore compare the proposed Repo Fabric against mature monorepo infrastructure rather than treating large repository coordination as an unsolved blank slate.
+`potvin2016monorepo` is a strong baseline for very-large-scale repository organization and the trade-offs of a monolithic source repository. The thesis must compare Repo Fabric against mature monorepo and polyrepo integration rather than treating large-scale source coordination as an empty field.
 
 ## Software architecture abstractions
 
-`shaw1995architecture` is a foundational baseline for components, interactions, configuration constraints, and architecture-level abstractions above programming-language elements. Any claim around typed RepoCells or executable architectural relations must state what is materially different from established software-architecture models.
+`shaw1995architecture` is a foundational baseline for architecture-level components, interactions and configuration constraints. Typed RepoCells or CapabilityCells are therefore not novel merely because they exist above functions and files.
 
 ## Intermediate representations
 
-`lattner2020mlir` is a strong nearest neighbor for reusable, extensible intermediate representations spanning multiple abstraction levels and implementations. Capability IR must therefore justify its distinct semantic domain: provider-independent capabilities, evidence contracts, routing and cross-repository composition.
+`lattner2020mlir` is a strong nearest neighbor for reusable and extensible intermediate representations across multiple abstraction levels and implementations. Capability IR must justify any material difference in terms of provider-independent task semantics, evidence/uncertainty contracts, routing and cross-repository composition.
 
 ## Proof-carrying artifacts
 
-`necula1997pcc` is the canonical baseline for attaching machine-checkable proof obligations to code consumption. Proof-Carrying Repository is not novel merely because it carries evidence; the research question is whether repository-level multi-claim evidence passports, uncertainty, provenance and semantic/scientific CI constitute a materially distinct useful abstraction.
+`necula1997pcc` is the canonical baseline for code accompanied by machine-checkable proof of adherence to a safety policy. The thesis must not transfer PCC's proof semantics to a broader repository evidence passport. A Proof-Carrying Repository is currently a different, weaker architectural construction containing commit, claims, evidence, uncertainty, provenance, security and limits.
 
-## Executable runtime models and adaptation
+## Executable runtime models
 
-`vogel2018runtime` provides a baseline for executable runtime megamodels and explicit feedback-loop models. The self-hosting / living Repo Fabric must therefore be compared against executable model-at-runtime and self-adaptive-system literature.
+`vogel2018runtime` and `vogel2018megamodels` are close neighbors for executable runtime megamodels, explicit feedback loops and relations among runtime models. Claims around living/executable architectural graphs must therefore compare directly with models-at-runtime research.
+
+## Scientific workflow systems
+
+`crusoe2021cwl` and the Common Workflow Language specification provide mature prior art for portable, declarative workflows that compose heterogeneous tools. `sutera2025workflowterminology` further provides a modern community terminology spanning workflow characteristics, composition, orchestration, data management and metadata capture.
+
+Consequently, Intent-to-RepoGraph is not novel merely because it composes heterogeneous software. Candidate differences to test include semantic capability demand, provider resolution under evidence/uncertainty constraints and the bidirectional theory/code layer.
+
+## Provenance and research-object packaging
+
+`lebo2013provo` provides a W3C Recommendation for interoperable provenance. `soilandreyes2021rocrate` and `leo2023workflowrunrocrate` describe research-object and workflow-run packaging that connects data, software, workflows and provenance.
+
+EvidenceReceipt should therefore map to established provenance concepts wherever possible. Carrying provenance is not itself a novelty claim. The candidate research delta is its coupling to typed claims, capability routing, OAK state and semantic/scientific validation.
+
+## Contribution-level court
+
+Do not evaluate the entire system as one giant novelty claim. Evaluate each candidate independently:
+
+| Candidate | Nearest baseline family | Status |
+|---|---|---|
+| CapabilityCell | architecture/components + workflow interfaces | HOLD |
+| Capability IR | MLIR + workflow portability + service contracts | HOLD |
+| Executable hyperedge | workflow/runtime execution + graph models | HOLD |
+| Proof-Carrying Repository | PCC + PROV-O + RO-Crate | HOLD |
+| Semantic/Scientific CI | schema/type validation + scientific workflow practice | HOLD |
+| Theory-to-Repo Compiler | model-driven engineering + workflow generation | HOLD |
+| Repo-to-Theory Compiler | program/specification analysis | HOLD |
+| Theory-Code semantic diff | bidirectional transformation | HOLD |
+| Mycelial fixed-point test | reproducible/self-describing systems | HOLD |
+| Residual-to-Theory compiler | hypothesis generation + discriminating experiments | HOLD |
 
 ## OAK decision rule
 
-For every candidate contribution:
+For every candidate contribution require:
 
-`nearest prior art -> shared structure -> material difference -> executable test -> limitations -> novelty status`.
+```text
+nearest prior art
+-> shared structure
+-> material difference
+-> why difference matters
+-> executable discriminator
+-> negative control
+-> evidence
+-> limitations
+-> novelty status
+```
 
 Until that chain is complete, novelty remains `HOLD`.
