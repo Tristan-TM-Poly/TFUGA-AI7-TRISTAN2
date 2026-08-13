@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-math-proof/source_anchor.schema.json",
+  "title": "SourceAnchor",
+  "type": "object",
+  "required": ["source_id", "source_url", "license_status"],
+  "properties": {
+    "source_id": {"type": "string", "minLength": 1},
+    "source_url": {"type": "string", "minLength": 1},
+    "document_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "page": {"type": ["integer", "null"], "minimum": 1},
+    "bbox": {
+      "type": ["array", "null"],
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"type": "number"}
+    },
+    "license_status": {"type": "string"},
+    "metadata": {"type": "object"}
+  },
+  "additionalProperties": true
+}
