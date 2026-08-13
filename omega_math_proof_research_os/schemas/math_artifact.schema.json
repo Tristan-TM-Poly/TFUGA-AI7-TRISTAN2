@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-math-proof/math_artifact.schema.json",
+  "title": "MathArtifact",
+  "type": "object",
+  "required": ["artifact_id", "kind", "natural_text", "formal_status", "oak_status", "source_anchors"],
+  "properties": {
+    "artifact_id": {"type": "string", "minLength": 1},
+    "kind": {
+      "enum": ["definition", "axiom", "notation", "example", "theorem", "lemma", "corollary", "proof", "counterexample", "exercise", "solution", "algorithm", "heuristic"]
+    },
+    "natural_text": {"type": "string"},
+    "normalized_statement": {"type": ["string", "null"]},
+    "formal_statement": {"type": ["string", "null"]},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "conclusion": {"type": ["string", "null"]},
+    "definitions_used": {"type": "array", "items": {"type": "string"}},
+    "source_anchors": {"type": "array", "items": {"$ref": "source_anchor.schema.json"}},
+    "semantic_residual": {"type": ["number", "null"], "minimum": 0},
+    "formal_status": {"enum": ["unformalized", "candidate", "compiled", "kernel_accepted", "kernel_rejected"]},
+    "oak_status": {"enum": ["source_extracted", "hold", "verified", "rejected"]}
+  },
+  "additionalProperties": true
+}
