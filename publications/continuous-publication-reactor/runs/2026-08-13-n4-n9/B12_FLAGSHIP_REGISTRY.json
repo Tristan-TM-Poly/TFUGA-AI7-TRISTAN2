@@ -1,0 +1,18 @@
+{
+  "flagships": [
+    "ChemLogLin",
+    "FFWT protein contact maps",
+    "FFWT-HAC-CVCD neural coherence",
+    "CVCD multi-fidelity CFD",
+    "hyperalgebraic advantage",
+    "executable M- recurrence",
+    "M- overgeneralization",
+    "OAKGate clean-room replication",
+    "OAK/M-/JKD/Regeneration causal ablation",
+    "query-conditioned quantum circuit complexity",
+    "FFWT microstructure encoding",
+    "Research Opportunity Compiler matching"
+  ],
+  "status": "priority execution fronts; not validated by registry membership",
+  "grounding_note": "repository grounding is partial and must be verified per flagship before scientific promotion"
+}

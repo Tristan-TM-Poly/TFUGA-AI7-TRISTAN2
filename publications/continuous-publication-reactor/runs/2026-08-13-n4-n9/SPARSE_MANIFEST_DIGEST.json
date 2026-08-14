@@ -1,0 +1,7 @@
+{
+  "filename": "sparse_candidate_manifest.jsonl",
+  "line_count": 1845,
+  "bytes": 954350,
+  "sha256": "70a92b3400368338fb89a9d8e8a0fc8669a14c7ee395d7689b3e7df73e68b234",
+  "policy": "not committed; sparse explored candidates only; cohort/task hashes remain in generation receipts"
+}
