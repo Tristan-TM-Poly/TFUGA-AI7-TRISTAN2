@@ -1,10 +1,12 @@
 from .core import (
-    EpistemicNode, HyperedgeContract, ResidualField,
-    MinusMemory, PlusMemory, MorphogenesisPolicy,
+    EpistemicNode, HyperedgeContract, CausalHyperedge,
+    ExperimentHyperedge, ResidualField, MinusMemory, PlusMemory,
+    MorphogenesisPolicy, FractalScaleMap, CounterfactualWorld,
     RegenerationBench, SelfRegeneratingHGFM,
 )
 __all__ = [
-    "EpistemicNode","HyperedgeContract","ResidualField",
-    "MinusMemory","PlusMemory","MorphogenesisPolicy",
-    "RegenerationBench","SelfRegeneratingHGFM",
+    "EpistemicNode","HyperedgeContract","CausalHyperedge","ExperimentHyperedge",
+    "ResidualField","MinusMemory","PlusMemory","MorphogenesisPolicy",
+    "FractalScaleMap","CounterfactualWorld","RegenerationBench",
+    "SelfRegeneratingHGFM",
 ]
