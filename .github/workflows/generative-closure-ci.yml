@@ -1,0 +1,27 @@
+name: Generative Closure CI
+
+on:
+  pull_request:
+    paths:
+      - 'omega_generative_closure_t/**'
+      - 'omega_meta_science_t/**'
+      - 'tests/test_omega_generative_closure_r03.py'
+      - 'docs/OMEGA_GENERATIVE_CLOSURE_R03_MORPHOGENESIS.md'
+      - '.github/workflows/generative-closure-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m compileall -q omega_generative_closure_t omega_meta_science_t
+      - run: python -m unittest discover -s tests -p 'test_omega_generative_closure_r03.py' -v
