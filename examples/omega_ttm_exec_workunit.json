@@ -1,0 +1,11 @@
+{
+  "work_unit_id": "WU-TTM-EXEC-DEMO",
+  "kind": "software",
+  "objective": "Build one test artifact",
+  "requirement_ids": ["REQ-1"],
+  "dependency_ids": [],
+  "outputs": ["artifact.json"],
+  "validations": ["unit_test"],
+  "language": "python",
+  "risk": "normal"
+}

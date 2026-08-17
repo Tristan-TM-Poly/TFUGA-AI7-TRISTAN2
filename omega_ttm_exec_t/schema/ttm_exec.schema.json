@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega TTM EXEC envelope",
+  "type": "object",
+  "required": ["work_unit"],
+  "properties": {
+    "work_unit": {
+      "type": "object",
+      "description": "Canonical omega_intent_t WorkUnit payload",
+      "required": ["work_unit_id", "kind", "objective", "outputs", "validations"]
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["statement", "domain", "status", "evidence_class", "uncertainty"]
+      }
+    }
+  },
+  "additionalProperties": false
+}

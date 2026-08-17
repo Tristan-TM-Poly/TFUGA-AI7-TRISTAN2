@@ -1,0 +1,20 @@
+name: TTM EXEC CI
+on:
+  pull_request:
+    paths: ['omega_ttm_exec_t/**','tests/test_omega_ttm_exec_*.py','docs/OMEGA_TTM_EXEC_T_R0_1.md','examples/omega_ttm_exec_workunit.json','.github/workflows/ttm-exec-ci.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10','3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m compileall -q omega_ttm_exec_t
+      - run: python -m unittest discover -s tests -p 'test_omega_ttm_exec_*.py' -v
+      - run: python -m omega_ttm_exec_t.cli examples/omega_ttm_exec_workunit.json > /tmp/ttm-exec.json
