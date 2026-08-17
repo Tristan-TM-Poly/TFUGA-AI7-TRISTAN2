@@ -1,0 +1,28 @@
+name: Omega Cheat Code Engine CI
+
+on:
+  pull_request:
+    paths:
+      - 'omega_cheat_code_t/**'
+      - 'tests/test_omega_cheat_code_t.py'
+      - 'docs/omega_cheat_code_t/**'
+      - '.github/workflows/omega-cheat-code-engine.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test dependency
+        run: python -m pip install pytest
+      - name: Run focused tests
+        run: python -m pytest -q tests/test_omega_cheat_code_t.py
+      - name: Compile package
+        run: python -m compileall -q omega_cheat_code_t
