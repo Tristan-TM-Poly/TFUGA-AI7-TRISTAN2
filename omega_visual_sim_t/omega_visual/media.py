@@ -110,7 +110,7 @@ def _validate_timeline_records(
     for index, raw in enumerate(records):
         record = deepcopy(_mapping(raw, f"{path}[{index}]"))
         identifier = _text(record.get("id"), f"{path}[{index}].id")
-        _text(record.get(label_field), f"{path}[{index}].{label_field")
+        _text(record.get(label_field), f"{path}[{index}].{label_field}")
         start, _ = _validate_interval(record, f"{path}[{index}]", duration_s)
         if start < previous_start:
             raise MediaSpecError(f"{path} must be ordered by start_s")
