@@ -5,6 +5,7 @@ on:
     paths:
       - 'omega_invariant_operator_t/**'
       - 'tests/test_omega_invariant_operator_t.py'
+      - 'tests/test_omega_invariant_operator_genesis_r02.py'
       - 'docs/omega_invariant_operator_t/**'
       - '.github/workflows/omega-invariant-operator-t.yml'
   workflow_dispatch:
@@ -26,8 +27,13 @@ jobs:
       - name: Install test dependency
         run: python -m pip install pytest
       - name: Run focused tests
-        run: python -m pytest -q tests/test_omega_invariant_operator_t.py
+        run: >-
+          python -m pytest -q
+          tests/test_omega_invariant_operator_t.py
+          tests/test_omega_invariant_operator_genesis_r02.py
       - name: Compile package
         run: python -m compileall -q omega_invariant_operator_t
       - name: Run deterministic TSP smoke
         run: python -m omega_invariant_operator_t tsp --nodes 5 --max-witnesses 8 > /tmp/omega-invariant-operator.json
+      - name: Run trace-to-problem genesis smoke
+        run: python -m omega_invariant_operator_t tsp-genesis --max-witnesses 8 > /tmp/omega-problem-genesis.json
