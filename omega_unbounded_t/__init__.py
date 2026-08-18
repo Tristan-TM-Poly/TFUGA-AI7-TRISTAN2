@@ -35,6 +35,18 @@ from .governance import (
     dominates,
     pareto_front,
 )
+from .phase_evolution import (
+    CapacityEnvelope,
+    MutationCandidate,
+    PhaseAction,
+    PhaseDecision,
+    PhaseEvolutionEngine,
+    PhaseLabel,
+    PhasePolicy,
+    PhaseState,
+    RegenerationAudit,
+    TransitionWeights,
+)
 from .recursive_evolution import (
     AdversarialOAKBench,
     AdversarialScenario,
@@ -87,6 +99,7 @@ __all__ = [
     "CanaryPromotionEngine",
     "CanaryReport",
     "CanarySample",
+    "CapacityEnvelope",
     "CapacityPolicy",
     "CapacityState",
     "ControllerVariant",
@@ -97,7 +110,14 @@ __all__ = [
     "ListWorkSource",
     "MMinusLedger",
     "MPlusLedger",
+    "MutationCandidate",
     "ObjectiveVector",
+    "PhaseAction",
+    "PhaseDecision",
+    "PhaseEvolutionEngine",
+    "PhaseLabel",
+    "PhasePolicy",
+    "PhaseState",
     "ProofBundleWriter",
     "PromotionDecision",
     "RangeWorkSource",
@@ -105,6 +125,7 @@ __all__ = [
     "RecursiveEvolutionLab",
     "ReflexMemoryLedger",
     "ReflexRule",
+    "RegenerationAudit",
     "ResourceAwareSelfImprovementLab",
     "ResourceSampler",
     "ResourceSnapshot",
@@ -119,6 +140,7 @@ __all__ = [
     "StopGate",
     "StopPolicy",
     "SyntheticCapacityExecutor",
+    "TransitionWeights",
     "VariantOutcome",
     "adaptive_candidate_stream",
     "default_adversarial_scenarios",
@@ -130,4 +152,4 @@ __all__ = [
     "synthetic_additions",
 ]
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
