@@ -1,0 +1,63 @@
+{
+  "policy_id": "omega-unbounded-phase-evolution-r0.7",
+  "status": "offline_oak_gated_prototype",
+  "capacity_contract": {
+    "channels": [
+      "compute",
+      "agents",
+      "humans",
+      "proof",
+      "memory",
+      "governance"
+    ],
+    "common_unit_required": true,
+    "effective_absorption": "minimum_channel"
+  },
+  "transition_pressure": {
+    "critical_pressure": 0.65,
+    "weights": {
+      "residual": 1.0,
+      "debt": 1.0,
+      "latency": 1.0,
+      "compute_cost": 1.0,
+      "human_friction": 1.0
+    },
+    "interpretation": "heuristic_not_physical_law"
+  },
+  "criticality": {
+    "target_ratio": 0.9,
+    "overload_ratio": 1.1,
+    "stability_law": "generation_rate_must_not_persist_above_verified_absorption_rate"
+  },
+  "mutation_gate": {
+    "minimum_score": 0.75,
+    "maximum_uncertainty": 0.65,
+    "score": "expected_residual_reduction/(migration_cost+migration_risk+induced_debt)",
+    "positive_denominator_required": true,
+    "scalar_score_has_final_authority": false
+  },
+  "reversibility": {
+    "uncertainty_threshold": 0.3,
+    "mutation_requires_reversible_path": true,
+    "overload_response_requires_reversible_path": true
+  },
+  "regeneration_gate": {
+    "minimum_capacity_conservation": 0.98,
+    "minimum_regeneration_conservation": 0.95,
+    "preferred_direction": "reduce_persistent_complexity_while_preserving_guarded_capability"
+  },
+  "authority": {
+    "automatic_execution": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "automatic_deployment": false,
+    "human_approval_required_for_irreversible_change": true
+  },
+  "oak_boundaries": {
+    "phase_labels_are_operating_regime_heuristics": true,
+    "physical_phase_transition_claim": false,
+    "universal_order_parameter_claim": false,
+    "real_world_calibration_complete": false,
+    "founder_independence_claim": false
+  }
+}
