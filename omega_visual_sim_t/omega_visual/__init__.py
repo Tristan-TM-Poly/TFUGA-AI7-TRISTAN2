@@ -1,3 +1,3 @@
-"""Ω-VISUAL-SIM-T∞ executable-world and deterministic visual compiler."""
+"""Ω-VISUAL-SIM-T∞ executable-world, deterministic visual and audiovisual compiler."""
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
