@@ -101,6 +101,7 @@ class PhasePolicy:
     target_criticality: float = 0.90
     overload_criticality: float = 1.10
     reversibility_uncertainty_threshold: float = 0.30
+    maximum_mutation_uncertainty: float = 0.65
     minimum_capacity_conservation: float = 0.98
     minimum_regeneration_conservation: float = 0.95
 
@@ -109,6 +110,7 @@ class PhasePolicy:
             "critical_pressure",
             "target_criticality",
             "reversibility_uncertainty_threshold",
+            "maximum_mutation_uncertainty",
             "minimum_capacity_conservation",
             "minimum_regeneration_conservation",
         ):
@@ -117,6 +119,10 @@ class PhasePolicy:
             raise ValueError("mutation_threshold cannot be negative")
         if self.overload_criticality <= self.target_criticality:
             raise ValueError("overload_criticality must exceed target_criticality")
+        if self.maximum_mutation_uncertainty < self.reversibility_uncertainty_threshold:
+            raise ValueError(
+                "maximum_mutation_uncertainty must be at least the reversibility threshold"
+            )
 
 
 class PhaseAction(str, Enum):
@@ -178,6 +184,8 @@ class MutationCandidate:
         _unit_interval(self.reversibility, "reversibility")
         for name in ("migration_cost", "migration_risk", "induced_debt"):
             _non_negative(float(getattr(self, name)), name)
+        if self.migration_cost + self.migration_risk + self.induced_debt <= 0.0:
+            raise ValueError("mutation cost+risk+debt denominator must be positive")
 
     def score(self, current: PhaseState) -> float:
         denominator = self.migration_cost + self.migration_risk + self.induced_debt
@@ -189,7 +197,7 @@ class MutationCandidate:
             self.expected_residual_reduction
             * (1.0 + capability_gain)
             * (0.5 + 0.5 * self.reversibility)
-            / max(denominator, _EPS)
+            / denominator
         )
 
 
@@ -274,7 +282,9 @@ class PhaseEvolutionEngine:
         ):
             _non_negative(value, name)
         denominator = migration_cost + migration_risk + induced_debt
-        return expected_residual_reduction / max(denominator, _EPS)
+        if denominator <= 0.0:
+            raise ValueError("mutation cost+risk+debt denominator must be positive")
+        return expected_residual_reduction / denominator
 
     def evaluate(
         self,
@@ -308,14 +318,20 @@ class PhaseEvolutionEngine:
             action = PhaseAction.THROTTLE_GENERATION
             reasons.append("generation exceeds verified absorption capacity")
         elif pressure >= self.policy.critical_pressure:
-            if mutation >= self.policy.mutation_threshold:
+            if (
+                mutation >= self.policy.mutation_threshold
+                and uncertainty <= self.policy.maximum_mutation_uncertainty
+            ):
                 action = PhaseAction.MUTATE
                 reasons.append("transition pressure is critical")
                 reasons.append("candidate mutation clears residual-reduction threshold")
             else:
                 action = PhaseAction.COMPRESS_AND_OBSERVE
                 reasons.append("transition pressure is critical")
-                reasons.append("mutation evidence is insufficient")
+                if mutation < self.policy.mutation_threshold:
+                    reasons.append("mutation evidence is insufficient")
+                if uncertainty > self.policy.maximum_mutation_uncertainty:
+                    reasons.append("mutation uncertainty exceeds promotion ceiling")
         elif criticality >= self.policy.target_criticality:
             action = PhaseAction.COMPRESS_AND_VERIFY
             reasons.append("system is operating near verified absorption limit")
