@@ -126,12 +126,13 @@ export function generateHyperMetaCells() {
 export const HYPERMETA_CELLS = generateHyperMetaCells();
 
 export function filterHyperMetaCells({ query = "", family = "all", operator = "all" } = {}) {
-  const normalized = String(query).trim().toLocaleLowerCase("fr");
+  const tokens = String(query).trim().toLocaleLowerCase("fr").split(/\s+/).filter(Boolean);
   return HYPERMETA_CELLS.filter((cell) => {
     if (family !== "all" && cell.familyId !== family) return false;
     if (operator !== "all" && cell.operator !== operator) return false;
-    if (!normalized) return true;
-    return `${cell.id} ${cell.familyLabel} ${cell.operator} ${cell.label}`.toLocaleLowerCase("fr").includes(normalized);
+    if (!tokens.length) return true;
+    const haystack = `${cell.id} ${cell.familyLabel} ${cell.operator} ${cell.label}`.toLocaleLowerCase("fr");
+    return tokens.every((token) => haystack.includes(token));
   });
 }
 
