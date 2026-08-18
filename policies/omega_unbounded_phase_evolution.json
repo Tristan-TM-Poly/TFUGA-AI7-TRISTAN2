@@ -31,7 +31,9 @@
   },
   "mutation_gate": {
     "minimum_score": 0.75,
+    "maximum_uncertainty": 0.65,
     "score": "expected_residual_reduction/(migration_cost+migration_risk+induced_debt)",
+    "positive_denominator_required": true,
     "scalar_score_has_final_authority": false
   },
   "reversibility": {
