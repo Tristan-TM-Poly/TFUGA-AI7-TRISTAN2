@@ -1,10 +1,13 @@
 # Ω-VISUAL-SIM-T∞
 
-Compilateur visuel scientifique déterministe, traçable et désormais attachable au web.
+Compilateur scientifique déterministe, traçable, attachable au web et désormais audiovisuel.
 Le MVP R0.1 transforme un `VisualSpec` JSON en image SVG/PNG, GIF animé, manifeste
 de provenance et rapport OAK. R0.2 ajoute une ABI `ExecutableWorld → SimCapsule`
 pour brancher la simulation dans une interface interactive sans confondre rendu,
-simulation et preuve.
+simulation et preuve. R0.3 ajoute `AudioVisualIR → MediaMicroscopeSlot` afin de
+synchroniser vidéo, mots, phonèmes, représentations spectrales, amplitude, phase,
+relations de phase, pitch et formants sans prétendre qu'une représentation candidate
+est automatiquement vraie ou supérieure.
 
 ## Démonstration R0.1
 
@@ -60,6 +63,62 @@ Le contrat d'attachement expose dès R0.2 les actions `inspect`, `fork`, `compar
 `reset`; leur runtime UI complet reste une frontière suivante et non une capacité
 prétendument déjà implémentée.
 
+## R0.3 — AudioVisualIR / MediaMicroscope
+
+`omega_visual.media` définit la première ABI audiovisuelle commune à l'analyse de
+vidéos, au futur moteur FFWT et au site interactif :
+
+```text
+Video / audio source
+→ upstream extraction
+→ AudioVisualIR
+   ├─ word + phoneme timeline
+   ├─ representation portfolio
+   │  ├─ FFT/STFT/CQT/WAVELET baseline
+   │  └─ FFWT / FFWT-HAC candidate
+   ├─ amplitude + phase
+   ├─ relative phase graph
+   ├─ pitch + formants
+   ├─ scenes + semantic beats
+   └─ provenance + rights + OAK
+→ MediaMicroscopeSlot
+```
+
+Le contrat `schema/audio-visual-ir.schema.json` est volontairement une **IR**, pas un
+faux analyseur : il reçoit des sorties calculées par des extracteurs/transformées en
+amont et les rend synchronisables, comparables, traçables et testables. Les fonctions
+`amplitude_phase()` et `relative_phase_graph()` fournissent les premières primitives
+complexes exactes du noyau; le calcul FFWT complet reste un backend à qualifier contre
+les baselines.
+
+Gates R0.3 :
+
+```text
+FFWT candidate → baseline FFT/STFT/CQT/WAVELET obligatoire
+FFWT / FFWT-HAC → amplitude + phase explicitement préservées
+VERIFIED representation → evidence_refs non vides
+absolute phase → jamais déclarée invariant
+analysis → jamais promue en mesure instrumentale
+representation → jamais promue en vérité
+FFWT superiority → false tant qu'un OAKBench réel ne la démontre pas
+```
+
+`compile_media_capsule()` produit une capsule content-addressed :
+
+```text
+protocol: OMEGA-MEDIA-ATTACH/0.1
+attachment.slot: MediaMicroscopeSlot
+actions: inspect, seek, zoom, compare, fork, reset
+panels: video, waveform, timeline, words, phonemes, amplitude, phase,
+        phase_graph, pitch, formants
+synchronization_key: time_s
+```
+
+Cette MRU rend donc possible une même coordonnée temporelle pour cliquer un mot ou un
+phonème et synchroniser ensuite vidéo, waveform, spectre/FFWT, phase et variables
+acoustiques. La resynthèse, l'extraction audio réelle et le viewer TypeScript complet
+restent des capacités futures explicites.
+
 ## Garanties du MVP
 
 - simulation déterministe d'un oscillateur harmonique amorti;
@@ -75,29 +134,40 @@ prétendument déjà implémentée.
 - ABI ExecutableWorld avec références de vues validées et unités non vides;
 - statut `VERIFIED` refusé sans au moins un enregistrement de preuve;
 - hash du monde séparé du hash d'exécution afin de rendre seed/cache explicites;
-- incertitudes non quantifiées exportées comme résidus OAK visibles.
+- incertitudes non quantifiées exportées comme résidus OAK visibles;
+- AudioVisualIR content-addressed avec timeline phonème/mot et provenance;
+- FFWT refusé comme candidat isolé sans baseline déclarée;
+- FFWT `VERIFIED` refusé sans évidence;
+- phase absolue séparée des relations de phase plus robustes.
 
 ## Contrats machine-readable
 
 - R0.1 : `schema/visual-spec.schema.json`
 - R0.2 : `schema/executable-world.schema.json`
+- R0.2 publication : `schema/publication-fabric.schema.json`
+- R0.3 média : `schema/audio-visual-ir.schema.json`
 
 Le validateur d'exécution R0.1 applique en plus les contraintes physiques du solveur :
 masse et raideur positives, amortissement non négatif et régime sous-amorti.
 Le validateur `validate_executable_world()` R0.2 ajoute des gates sémantiques sans
 dépendance externe : intégrité des identifiants, unités, références de vues, cibles
 d'exécution, fidélité, incertitude et preuve minimale pour le statut `VERIFIED`.
+`validate_audio_visual_ir()` R0.3 ajoute l'intégrité temporelle, les liens mot↔phonème,
+le portefeuille de représentations, les droits/provenance et les gates OAK FFWT.
 
 Le GIF reste une sortie de compatibilité. Les objets sources demeurent le `VisualSpec`,
-la trajectoire `states.json`, l'`ExecutableWorld` et la `SimCapsule` content-addressed.
+la trajectoire `states.json`, l'`ExecutableWorld`, la `SimCapsule`, l'`AudioVisualIR`
+et les capsules content-addressed.
 
 ## Frontière suivante
 
-1. `SimSlot` TypeScript/React consommant directement `OMEGA-SIM-ATTACH/0.2`.
-2. registre de capacités et routeur `client ↔ remote ↔ hybrid`.
-3. SceneGraph/HGFM générique et adaptateurs champs, tenseurs et hypergraphes.
-4. Adaptive Fidelity `toy → analytical → ROM → surrogate → full solver`.
-5. StateStream/ViewStream effectifs avec reprise de session et cache par contenu.
-6. bandes d'incertitude Bayes-Tristan et comparaisons expérimentales.
-7. Solver/Representation Tournament et résidus de désaccord.
-8. `Question → ExecutableWorld` et `Theory → ExecutableWorld` sous OAK.
+1. `SimSlot` + `MediaMicroscopeSlot` TypeScript/React consommant les protocoles canoniques.
+2. extracteur vidéo/audio réel : audio track → transcription → phonème timeline → portfolio de transformées.
+3. FFWT/FFWT-HAC backend réel avec OAKBench contre FFT/STFT/CQT/wavelets sur reconstruction, phase, compression et tâches vocales.
+4. resynthèse contrôlée `Modify(parameter) → Render → Compare` avec conservation explicite des facteurs non ciblés.
+5. SceneGraph/HGFM audiovisuel reliant timestamps, claims, équations, simulations et objets visuels.
+6. registre de capacités et routeur `client ↔ remote ↔ hybrid`.
+7. Adaptive Fidelity `toy → analytical → ROM → surrogate → full solver`.
+8. StateStream/ViewStream/MediaStream effectifs avec cache par contenu.
+9. bandes d'incertitude Bayes-Tristan et comparaisons expérimentales.
+10. `Question/Theory/Video → ExecutableWorld + AudioVisualIR` sous OAK.
