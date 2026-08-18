@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/executable-world-0.2.json",
+  "title": "Omega SIMVIS ExecutableWorld",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "world",
+    "state",
+    "observables",
+    "engines",
+    "views",
+    "uncertainty",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.2"},
+    "world": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "title", "scientific_status", "assumptions", "domain_of_validity"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "scientific_status": {
+          "enum": ["ARTISTIC", "CONCEPTUAL", "SCHEMATIC", "DATA_DRIVEN", "SIMULATED", "EXPERIMENTAL", "VERIFIED"]
+        },
+        "assumptions": {"type": "array", "items": {"type": "string"}},
+        "domain_of_validity": {"type": "string", "minLength": 1}
+      }
+    },
+    "state": {"$ref": "#/$defs/quantities"},
+    "observables": {"$ref": "#/$defs/quantities"},
+    "engines": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "capability", "execution", "fidelity", "inputs", "outputs"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "capability": {"type": "string", "minLength": 1},
+          "execution": {
+            "type": "object",
+            "required": ["target", "deterministic"],
+            "properties": {
+              "target": {"enum": ["client", "remote", "hybrid"]},
+              "deterministic": {"type": "boolean"}
+            }
+          },
+          "fidelity": {"enum": ["toy", "analytical", "rom", "surrogate", "full_solver"]},
+          "inputs": {"type": "array", "items": {"type": "string"}},
+          "outputs": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "views": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "observables", "transformations"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "observables": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "transformations": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "controls": {"type": "array"},
+    "uncertainty": {
+      "type": "object",
+      "required": ["parameter", "measurement", "numerical", "structural", "extrapolation"],
+      "properties": {
+        "parameter": {"type": "string", "minLength": 1},
+        "measurement": {"type": "string", "minLength": 1},
+        "numerical": {"type": "string", "minLength": 1},
+        "structural": {"type": "string", "minLength": 1},
+        "extrapolation": {"type": "string", "minLength": 1}
+      }
+    },
+    "evidence": {"type": "array"},
+    "known_limits": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "quantity": {
+      "type": "object",
+      "required": ["id", "quantity", "unit"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "quantity": {"type": "string", "minLength": 1},
+        "unit": {"type": "string", "minLength": 1}
+      }
+    },
+    "quantities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/quantity"}
+    }
+  }
+}
