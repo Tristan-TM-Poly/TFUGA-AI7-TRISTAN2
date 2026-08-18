@@ -2,22 +2,22 @@
   "schema_version": "0.3.0",
   "generated_from": "2026-08-02T18:12:00-04:00",
   "algorithm": "sha256(path\\0sha256\\0size\\n)",
-  "root_sha256": "98046738c6bd60080f78bf76a2b18b6ce22ad9f7bc09f90c203dd911d7c2672f",
+  "root_sha256": "d8785a5720279035eac78a2076fa45e33f32ce7d97979ca35d72f478e9ccefb5",
   "metrics": {
-    "files": 34,
-    "bytes": 638575,
+    "files": 37,
+    "bytes": 657230,
     "roles": {
       "document-shell": 1,
       "documentation": 1,
-      "javascript-module": 22,
+      "javascript-module": 24,
       "public-data": 5,
-      "stylesheet": 4,
+      "stylesheet": 5,
       "web-manifest": 1
     },
     "extensions": {
-      ".css": 4,
+      ".css": 5,
       ".html": 1,
-      ".js": 22,
+      ".js": 24,
       ".json": 5,
       ".md": 1,
       ".webmanifest": 1
@@ -81,10 +81,17 @@
       "cache_candidate": true
     },
     {
+      "path": "hypermeta.css",
+      "role": "stylesheet",
+      "size_bytes": 4753,
+      "sha256": "045a2e78341a46ee062171d93ba2dec92740bb77ec7a75a7dd9befcf4f5f3370",
+      "cache_candidate": true
+    },
+    {
       "path": "index.html",
       "role": "document-shell",
-      "size_bytes": 4666,
-      "sha256": "45e3c3c04798065c8441cb0bd05a756841c5bb37fd9f465c33c0260b07bb3b20",
+      "size_bytes": 4833,
+      "sha256": "f140fb7af38f345fb5870dc28757cda0b32f931631d69f9153e18c47026264e4",
       "cache_candidate": true
     },
     {
@@ -111,8 +118,8 @@
     {
       "path": "src/application.js",
       "role": "javascript-module",
-      "size_bytes": 6516,
-      "sha256": "917514fa77aa46085ca6cb875a3b54b35e46a91072f137e35d008c6956355bc5",
+      "size_bytes": 6602,
+      "sha256": "f51bc45f71f78b250a7f56887e5c66c2c9b1a12494193c288457d6b388b5ecd8",
       "cache_candidate": true
     },
     {
@@ -134,6 +141,13 @@
       "role": "javascript-module",
       "size_bytes": 4418,
       "sha256": "7ec7324980bddb3121b0dd4a99229b31f28457799b010a1662f3d550a8851a69",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/hypermeta-kernel.js",
+      "role": "javascript-module",
+      "size_bytes": 6286,
+      "sha256": "4660c83edb9603f633e019f18bbc34e6741761f1596089a0010cead309fbbd7b",
       "cache_candidate": true
     },
     {
@@ -214,6 +228,13 @@
       "cache_candidate": true
     },
     {
+      "path": "src/views/hypermeta.js",
+      "role": "javascript-module",
+      "size_bytes": 7281,
+      "sha256": "82199459763fc56d18c40df9671cc38d9195569aafe01879669d5e4031bc2cc8",
+      "cache_candidate": true
+    },
+    {
       "path": "src/views/mminus.js",
       "role": "javascript-module",
       "size_bytes": 3442,
@@ -258,8 +279,8 @@
     {
       "path": "sw.js",
       "role": "javascript-module",
-      "size_bytes": 2079,
-      "sha256": "410a5afd1f6f0fb5b829cd1f3de8fc5826266b26478197d957fee91835ef1a10",
+      "size_bytes": 2161,
+      "sha256": "d82f7e41bb6e8fce6b435bdded62b2043edbedd911f4b2b6827ad2555af71e64",
       "cache_candidate": true
     }
   ],

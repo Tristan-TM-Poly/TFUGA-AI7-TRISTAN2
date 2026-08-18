@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE = "tristan-web-os-r03-v6";
+const CACHE = "tristan-web-os-r03-v7";
 const SHELL = [
   "./",
   "./index.html",
@@ -8,11 +8,13 @@ const SHELL = [
   "./r03.css",
   "./oakgate.css",
   "./accessibility.css",
+  "./hypermeta.css",
   "./app.js",
   "./app.webmanifest",
   "./src/application.js",
   "./src/data-store.js",
   "./src/exporters.js",
+  "./src/hypermeta-kernel.js",
   "./src/oak-engine.js",
   "./src/preferences.js",
   "./src/router.js",
@@ -24,6 +26,7 @@ const SHELL = [
   "./src/views/dashboard.js",
   "./src/views/evidence.js",
   "./src/views/graph.js",
+  "./src/views/hypermeta.js",
   "./src/views/mminus.js",
   "./src/views/oakgate.js",
   "./src/views/provenance.js",
