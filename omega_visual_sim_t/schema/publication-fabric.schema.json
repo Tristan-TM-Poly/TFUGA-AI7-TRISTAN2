@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega/publication-fabric.schema.json",
+  "title": "OMEGA Publication Fabric 0.1",
+  "type": "object",
+  "required": ["protocol", "source", "narrative", "surfaces", "rights", "provenance", "oak", "bundle_sha256", "bundle_id"],
+  "properties": {
+    "protocol": {"const": "OMEGA-PUBLICATION-FABRIC/0.1"},
+    "bundle_id": {"type": "string", "minLength": 1},
+    "bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source": {
+      "type": "object",
+      "required": ["kind", "protocol", "capsule_id", "world_sha256", "scientific_status"],
+      "properties": {
+        "kind": {"const": "SimCapsule"},
+        "protocol": {"const": "OMEGA-SIM-ATTACH/0.2"},
+        "capsule_id": {"type": "string", "minLength": 1},
+        "world_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "scientific_status": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "narrative": {
+      "type": "object",
+      "required": ["title", "summary", "claim_ids", "evidence_refs"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "claim_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "surfaces": {
+      "type": "object",
+      "required": ["web", "github", "youtube"],
+      "properties": {
+        "web": {"type": "object"},
+        "github": {"type": "object"},
+        "youtube": {
+          "type": "object",
+          "required": ["enabled", "channels", "publication_authorized", "mode", "renditions"],
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "channels": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+            "publication_authorized": {"type": "boolean"},
+            "mode": {"enum": ["draft_export_only", "publish_candidate"]},
+            "renditions": {"type": "array", "minItems": 1}
+          }
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "required": ["mode", "reuse_distinctive_third_party_assets", "semantic_original_required"],
+      "properties": {
+        "mode": {"enum": ["owned", "licensed", "semantic_original"]},
+        "reuse_distinctive_third_party_assets": {"const": false},
+        "semantic_original_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {"type": "object"},
+    "oak": {
+      "type": "object",
+      "required": ["scientific_status", "simulation_is_proof", "visualization_is_truth", "popularity_is_evidence", "publication_is_validation", "external_publication_requires_explicit_authority", "residues"],
+      "properties": {
+        "scientific_status": {"type": "string", "minLength": 1},
+        "simulation_is_proof": {"const": false},
+        "visualization_is_truth": {"const": false},
+        "popularity_is_evidence": {"const": false},
+        "publication_is_validation": {"const": false},
+        "external_publication_requires_explicit_authority": {"const": true},
+        "residues": {"type": "array"}
+      }
+    }
+  },
+  "additionalProperties": false
+}

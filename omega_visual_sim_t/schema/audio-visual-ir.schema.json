@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega/audio-visual-ir.schema.json",
+  "title": "OMEGA AudioVisualIR 0.1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "media",
+    "audio",
+    "timeline",
+    "video",
+    "links",
+    "provenance",
+    "oak"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "media": {
+      "type": "object",
+      "required": ["id", "title", "duration_s", "source_kind"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "duration_s": {"type": "number", "exclusiveMinimum": 0},
+        "source_kind": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "audio": {
+      "type": "object",
+      "required": ["sample_rate_hz", "channels", "representations"],
+      "properties": {
+        "sample_rate_hz": {"type": "integer", "minimum": 1},
+        "channels": {"type": "integer", "minimum": 1},
+        "representations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "family", "epistemic_status", "preserves", "evidence_refs"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "family": {"enum": ["FFT", "STFT", "CQT", "WAVELET", "FFWT", "FFWT_HAC", "LEARNED", "OTHER"]},
+              "epistemic_status": {"enum": ["CANDIDATE", "MEASURED", "DERIVED", "VERIFIED"]},
+              "preserves": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1},
+                "uniqueItems": true
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1},
+                "uniqueItems": true
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "features": {
+          "type": "object",
+          "properties": {
+            "pitch_hz": {"type": "array"},
+            "formants_hz": {"type": "array"},
+            "phase_relations": {"type": "array"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "timeline": {
+      "type": "object",
+      "required": ["phonemes", "words", "semantic_beats"],
+      "properties": {
+        "phonemes": {"type": "array"},
+        "words": {"type": "array"},
+        "semantic_beats": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "video": {
+      "type": "object",
+      "required": ["scenes"],
+      "properties": {"scenes": {"type": "array"}},
+      "additionalProperties": true
+    },
+    "links": {"type": "array"},
+    "provenance": {
+      "type": "object",
+      "required": ["input_sha256", "rights_mode"],
+      "properties": {
+        "input_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+        "rights_mode": {"enum": ["owned", "licensed", "semantic_original"]}
+      },
+      "additionalProperties": true
+    },
+    "oak": {
+      "type": "object",
+      "required": ["analysis_is_measurement", "representation_is_truth", "ffwt_superiority_claimed"],
+      "properties": {
+        "analysis_is_measurement": {"const": false},
+        "representation_is_truth": {"const": false},
+        "ffwt_superiority_claimed": {"const": false}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -32,3 +32,17 @@ jobs:
         run: omega-visual render omega_visual_sim_t/examples/oscillator.json --output /tmp/omega-visual-demo
       - name: Verify provenance
         run: omega-visual verify /tmp/omega-visual-demo/manifest.json
+      - name: Compile web-attachable SimCapsule
+        run: omega-visual capsule omega_visual_sim_t/examples/oscillator.json --seed 7 --output /tmp/omega-visual-demo/capsule.json
+      - name: Verify attachment invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          capsule = json.loads(Path('/tmp/omega-visual-demo/capsule.json').read_text())
+          assert capsule['protocol'] == 'OMEGA-SIM-ATTACH/0.2'
+          assert capsule['attachment']['slot'] == 'SimSlot'
+          assert capsule['oak']['scientific_status'] == 'SIMULATED'
+          assert capsule['oak']['simulation_is_proof'] is False
+          assert capsule['reproducibility']['content_addressed'] is True
+          PY
