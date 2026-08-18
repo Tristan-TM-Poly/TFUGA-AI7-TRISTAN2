@@ -10,6 +10,7 @@ import { renderClaims, renderClaim } from "./views/claims.js";
 import { renderDashboard } from "./views/dashboard.js";
 import { renderEvidence } from "./views/evidence.js";
 import { renderGraph } from "./views/graph.js";
+import { renderHyperMeta } from "./views/hypermeta.js";
 import { renderMminus } from "./views/mminus.js";
 import { renderOakGate } from "./views/oakgate.js";
 import { renderProvenance } from "./views/provenance.js";
@@ -23,6 +24,7 @@ const ROUTES = Object.freeze({
   claims: renderClaims,
   claim: renderClaim,
   graph: renderGraph,
+  hypermeta: renderHyperMeta,
   evidence: renderEvidence,
   provenance: renderProvenance,
   oakgate: renderOakGate,
