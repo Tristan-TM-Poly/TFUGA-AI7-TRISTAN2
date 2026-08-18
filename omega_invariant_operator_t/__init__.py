@@ -1,4 +1,4 @@
-"""Ω-INVARIANT-OPERATOR-GENESIS-T R0.1 public surface."""
+"""Ω-INVARIANT-OPERATOR-GENESIS-T R0.1→R0.2 public surface."""
 
 from .benchmark import (
     ApoptosisDecision,
@@ -16,6 +16,15 @@ from .core import (
     apply_witness,
     check_invariants,
     synthesize_minimal_operator,
+)
+from .genesis import (
+    GraphInvariantGrammarLedger,
+    InvariantHypothesis,
+    ObjectiveHypothesis,
+    ProblemHypothesis,
+    materialize_invariants,
+    mine_graph_problem,
+    synthesize_from_problem,
 )
 from .tsp import (
     Edge,
@@ -35,9 +44,13 @@ __all__ = [
     "BaselineCoverage",
     "BaselineOperator",
     "Edge",
+    "GraphInvariantGrammarLedger",
     "InvariantCheck",
+    "InvariantHypothesis",
     "NamedInvariant",
+    "ObjectiveHypothesis",
     "OperatorWitness",
+    "ProblemHypothesis",
     "SearchBiasLedger",
     "SynthesisReceipt",
     "WeightedWitness",
@@ -48,8 +61,11 @@ __all__ = [
     "cycle_edges",
     "edge",
     "evaluate_apoptosis",
+    "materialize_invariants",
+    "mine_graph_problem",
     "posthoc_exchange_name",
     "rank_weighted_witnesses",
+    "synthesize_from_problem",
     "synthesize_minimal_operator",
     "synthesize_tsp_exchange",
     "tour_weight",
