@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omega-visual-sim-t"
-version = "0.1.0"
-description = "OAK-safe deterministic scientific image and animation compiler"
+version = "0.2.0"
+description = "OAK-safe executable world, scientific simulation and visual compiler"
 requires-python = ">=3.10"
 dependencies = ["Pillow>=10"]
 
