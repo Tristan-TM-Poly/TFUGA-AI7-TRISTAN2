@@ -299,6 +299,28 @@ def test_phase_uncertainty_increases_reversibility_requirement() -> None:
     assert high.reversible_required is True
 
 
+def test_phase_high_uncertainty_blocks_mutation_promotion() -> None:
+    engine = PhaseEvolutionEngine()
+    state = _phase_state(
+        residual_pressure=0.95,
+        debt_pressure=0.80,
+        latency_pressure=0.75,
+        compute_cost_pressure=0.70,
+        human_friction=0.70,
+    )
+    decision = _phase_evaluate(
+        engine,
+        state,
+        expected_residual_reduction=0.95,
+        migration_cost=0.10,
+        migration_risk=0.10,
+        induced_debt=0.05,
+        uncertainty=0.90,
+    )
+    assert decision.action is PhaseAction.COMPRESS_AND_OBSERVE
+    assert "mutation uncertainty exceeds promotion ceiling" in decision.reasons
+
+
 def test_phase_regeneration_audit_accepts_capability_preserving_distillation() -> None:
     engine = PhaseEvolutionEngine()
     before = _phase_state()
@@ -354,6 +376,19 @@ def test_phase_mutation_ranking_penalizes_cost_risk_and_debt() -> None:
     )
     ranked = PhaseEvolutionEngine.rank_mutations(current, (expensive, cheap))
     assert [item.name for item in ranked] == ["cheap", "expensive"]
+
+
+def test_phase_zero_mutation_denominator_is_rejected() -> None:
+    with pytest.raises(ValueError, match="denominator must be positive"):
+        MutationCandidate(
+            "free-lunch",
+            expected_residual_reduction=1.0,
+            verified_capability_after=0.90,
+            migration_cost=0.0,
+            migration_risk=0.0,
+            induced_debt=0.0,
+            reversibility=1.0,
+        )
 
 
 def test_phase_capacity_dimensions_must_be_positive() -> None:
