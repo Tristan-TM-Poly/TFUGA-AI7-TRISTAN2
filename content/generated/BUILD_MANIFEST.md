@@ -1,9 +1,9 @@
 # Tristan Web OS — Build Manifest
 
 - Schema: `0.3.0`
-- Files: **37**
-- Bytes: **657230**
-- Root SHA-256: `d8785a5720279035eac78a2076fa45e33f32ce7d97979ca35d72f478e9ccefb5`
+- Files: **38**
+- Bytes: **670638**
+- Root SHA-256: `c984f1a6eb6dd4bad6127cdefd87754c0f9239da232fe2ebf25e8648ff87c63a`
 
 > The root hash identifies bytes in this repository snapshot; it is not a security or scientific certification.
 
@@ -11,7 +11,7 @@
 
 - `document-shell`: 1
 - `documentation`: 1
-- `javascript-module`: 24
+- `javascript-module`: 25
 - `public-data`: 5
 - `stylesheet`: 5
 - `web-manifest`: 1
@@ -37,7 +37,8 @@
 | `src/core.js` | javascript-module | 14111 | `07f2d31a352485e333fa32f3ae2fa60ee6632b4159b8482da5852d3b13aad736` |
 | `src/data-store.js` | javascript-module | 7860 | `82810030a5f9e17e314b28652959b3e5e2ffdc87f645a3638d4b3f999a15b821` |
 | `src/exporters.js` | javascript-module | 4418 | `7ec7324980bddb3121b0dd4a99229b31f28457799b010a1662f3d550a8851a69` |
-| `src/hypermeta-kernel.js` | javascript-module | 6286 | `4660c83edb9603f633e019f18bbc34e6741761f1596089a0010cead309fbbd7b` |
+| `src/hypermeta-kernel.js` | javascript-module | 7159 | `7c44ab12d39ed744382817316fbd918f0b83a731eebf28d8dbce1c76e3db3d43` |
+| `src/morphogenetic-field.js` | javascript-module | 7537 | `64baa8052ef0198d2cbb40f6225589cf3d93340e7f2e4e3ebd21a7f7306f61cd` |
 | `src/oak-engine.js` | javascript-module | 8283 | `0d142bc8a0adaa21f3e043cbb2c49adf449cd4de6008f0ed89127fa7064bedf5` |
 | `src/preferences.js` | javascript-module | 1366 | `13e83fa8768fd0f31d64c9785447a9335ac326cd3bbae44f2a4e2b474b19d937` |
 | `src/router.js` | javascript-module | 1910 | `218df7262b76d0e3ae0887e5c277c1b19e8e875e4c28950c5720bc00a0360066` |
@@ -49,14 +50,14 @@
 | `src/views/dashboard.js` | javascript-module | 4475 | `692c9200981ac8e9303334ba73f9d16792f54f7fb321d53255fd70f2dc20802c` |
 | `src/views/evidence.js` | javascript-module | 3591 | `19798309ce7182a10dc1c097560b3279ed4c7b1a6434d16d7ea722788c1998be` |
 | `src/views/graph.js` | javascript-module | 7470 | `61aac4b5fcbfb7e1670275b695c1693d1de8a118ee24e4c8834109255cfa3f23` |
-| `src/views/hypermeta.js` | javascript-module | 7281 | `82199459763fc56d18c40df9671cc38d9195569aafe01879669d5e4031bc2cc8` |
+| `src/views/hypermeta.js` | javascript-module | 12245 | `1d6bf6214a4d560dea1fe5e37a24d7cf08f2b84474ac8e0bf7a7fca6823329b7` |
 | `src/views/mminus.js` | javascript-module | 3442 | `f46486ee5857c4d0b62489c43a50a9adadc1172baaa6644a3ba017752ba98f93` |
 | `src/views/oakgate.js` | javascript-module | 7092 | `4665ad00abba9555a04dcece5b7b4392075f1ccd52dccdb830c4e725a9737bfa` |
 | `src/views/provenance.js` | javascript-module | 6922 | `4b0bed21d75660c056844ccb9bfd71d5b894abcbf038792132ab9e3eb7fe0114` |
 | `src/views/roadmap.js` | javascript-module | 3021 | `b265682be42fc1b910cc50d36e1f7d2ff3641b61ed98aadbf87b27cb6660f040` |
 | `src/views/theory.js` | javascript-module | 4745 | `a604dd86eca22f435e3c89ef7082f29ed74350c4d30249f44c1c27a0dda2a178` |
 | `styles.css` | stylesheet | 11348 | `b151d56951abcf92f267bc23a526e790b2cedcde3d9f9ea32d8c7b933d21433f` |
-| `sw.js` | javascript-module | 2161 | `d82f7e41bb6e8fce6b435bdded62b2043edbedd911f4b2b6827ad2555af71e64` |
+| `sw.js` | javascript-module | 2195 | `5dba38de462bd9974e8adeed7958e31713f52195e94e48a6ff13e8c99ca6beac` |
 
 ## Verification
 
