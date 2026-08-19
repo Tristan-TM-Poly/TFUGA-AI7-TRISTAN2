@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.systems/schemas/omega-drive-github-absorb/drive_manifest.schema.json",
+  "title": "Ω-DRIVE-GITHUB-ABSORB-T Drive Manifest",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "source_url_sha256",
+      "drive_file_id",
+      "kind",
+      "inventoried_at",
+      "oak_status",
+      "github_target",
+      "risk_level",
+      "requires_oauth"
+    ],
+    "properties": {
+      "source_url": {"type": "string"},
+      "source_url_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+      "normalized_url": {"type": ["string", "null"]},
+      "drive_file_id": {"type": ["string", "null"]},
+      "kind": {"enum": ["file", "folder", "doc", "sheet", "slides", "unknown"]},
+      "mime_type": {"type": ["string", "null"]},
+      "size_bytes": {"type": ["integer", "null"], "minimum": 0},
+      "sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+      "downloaded_at": {"type": ["string", "null"]},
+      "inventoried_at": {"type": "string"},
+      "extraction_method": {"type": ["string", "null"]},
+      "oak_status": {
+        "enum": [
+          "ALLOW_INVENTORY_ONLY",
+          "ALLOW_PRIVATE_SYNC",
+          "ALLOW_BRANCH_ONLY",
+          "REQUIRES_REDACTION",
+          "REQUIRES_IP_REVIEW",
+          "BLOCK_PUBLICATION",
+          "BLOCK_DOWNLOAD"
+        ]
+      },
+      "scanner_flags": {"type": "array", "items": {"type": "string"}},
+      "github_target": {"type": "string"},
+      "risk_level": {"enum": ["low", "medium", "high"]},
+      "requires_oauth": {"type": "boolean"}
+    },
+    "additionalProperties": true
+  }
+}
