@@ -1,6 +1,6 @@
 book_id: omega-jkd-qsim-foundational-book-t
-version: 0.1.0
-status: FOUNDATIONAL_DRAFT
+version: 0.2.0
+status: FOUNDATIONAL_DRAFT_THEORY_AS_CODE
 public_title: "La Loi du Minimum Suffisant"
 subtitle: "Générer le possible. Conserver le nécessaire. Vérifier le réel. Régénérer le reste."
 core_loop:
@@ -13,7 +13,7 @@ core_loop:
   - MAX
 core_claim:
   text: "Toute complexité persistante doit prouver une capacité mesurable qui disparaît lorsqu'on la retire."
-  epistemic_status: HYPOTHESIS_TO_OPERATIONALIZE
+  epistemic_status: HYPOTHESIS_UNDER_EXPERIMENT
 invariants:
   - Generated != Verified
   - Simplified != Equivalent
@@ -109,10 +109,21 @@ validation_program:
     - formal_proof
     - independent_replication
     - cross_scale_regression
-next_actions:
+r0_2_evidence:
+  chapter_dependency_hypergraph: CHAPTER_GRAPH.json
+  bounded_exact_basis_solver: experiments/minimum_sufficient_basis.py
+  unit_tests: experiments/test_minimum_sufficient_basis.py
+  oak_receipt: experiments/OAK_RECEIPT_R0_2.md
+  local_replay: "6/6 tests PASS; repository CI pending"
+completed_actions:
   - crystallize_claim_ledger
   - build_chapter_dependency_hypergraph
-  - create_executable_ablation_pilots
-  - connect_existing_HGFM_CVCD_OAK_artifacts
+  - create_first_executable_ablation_pilot
   - prepare_public_reader_site_projection
+next_actions:
+  - compare_exact_solver_against_greedy_baselines
+  - create_cross_scale_localpass_globalfail_fixture
+  - benchmark_regenerate_vs_persist_total_cost
+  - connect_existing_HGFM_CVCD_OAK_artifacts
   - create_publication_and_IP_gate
+  - independently_replay_first_experiment
