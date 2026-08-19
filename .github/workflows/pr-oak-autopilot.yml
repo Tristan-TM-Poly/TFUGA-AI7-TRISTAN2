@@ -1,0 +1,61 @@
+name: PR OAK Autopilot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, ready_for_review, converted_to_draft]
+
+permissions:
+  contents: read
+  checks: read
+  statuses: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: pr-oak-autopilot-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  oak:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const marker = '<!-- pr-oak-autopilot -->';
+            const bad = new Set(['failure','cancelled','timed_out','action_required','startup_failure','stale']);
+            const draftOnly = /draft(?:ed)?\s+(?:stacked\s+)?pr\s+only|draft[- ]only|keep[^\n]{0,80}in draft|remain[^\n]{0,80}draft/i;
+            const exactGate = /exact[- ]head|exact head|ci remains authoritative|required ci|must complete successfully/i;
+            const noMerge = /do not merge|no automatic merge|merge[^\n]{0,80}not authorized|no merge[^\n]{0,80}authorized/i;
+            const {data: prs} = await github.rest.pulls.list({owner, repo, state:'open', per_page:100});
+            for (const pr of prs) {
+              const body = pr.body || '';
+              const checks = await github.paginate(github.rest.checks.listForRef, {owner, repo, ref:pr.head.sha, per_page:100});
+              const failing = checks.filter(c => bad.has(c.conclusion));
+              const pending = checks.filter(c => c.status !== 'completed');
+              let stale = false;
+              try {
+                const cmp = await github.rest.repos.compareCommitsWithBasehead({owner, repo, basehead:`${pr.base.ref}...${pr.head.sha}`});
+                stale = (cmp.data.behind_by || 0) > 0;
+              } catch (e) { core.warning(`compare failed for #${pr.number}: ${e.message}`); }
+              const reasons = [];
+              if (draftOnly.test(body)) reasons.push('PR contract requires draft state');
+              if (failing.length) reasons.push(`exact-head failing checks: ${failing.map(x => `${x.name}=${x.conclusion}`).join(', ')}`);
+              if (exactGate.test(body) && pending.length) reasons.push(`exact-head checks still pending: ${pending.map(x => x.name).join(', ')}`);
+              if (exactGate.test(body) && stale) reasons.push('branch is behind its base while exact-head validation is required');
+              if (noMerge.test(body) && !pr.draft) reasons.push('PR contract explicitly withholds merge authority');
+              if (reasons.length && !pr.draft) await github.graphql('mutation($id:ID!){convertPullRequestToDraft(input:{pullRequestId:$id}){pullRequest{isDraft}}}', {id:pr.node_id});
+              if (reasons.length) {
+                const text = `${marker}\n### OAK hold\n\n${reasons.map(r => `- ${r}`).join('\n')}\n\nObserved head: \`${pr.head.sha}\`\n\nSafest next action: resolve the blocker on this exact head, then re-run validation. This workflow never merges, force-pushes, weakens checks, changes permissions, deploys, or publishes.`;
+                const comments = await github.paginate(github.rest.issues.listComments, {owner, repo, issue_number:pr.number, per_page:100});
+                const old = comments.find(c => (c.body || '').includes(marker));
+                if (!old) await github.rest.issues.createComment({owner, repo, issue_number:pr.number, body:text});
+                else if (old.body !== text) await github.rest.issues.updateComment({owner, repo, comment_id:old.id, body:text});
+              }
+            }
