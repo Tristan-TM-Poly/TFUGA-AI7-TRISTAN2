@@ -1,0 +1,76 @@
+name: Omega GitHub Mycelium OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_github_mycelium_t/**"
+      - "tests/test_omega_github_mycelium_t.py"
+      - "examples/omega_github_mycelium_t_demo.py"
+      - "schemas/omega-github-mycelium-*.schema.json"
+      - "data/omega_github_mycelium_t/**"
+      - "docs/omega_github_mycelium_t/**"
+      - "pyproject.toml"
+      - ".github/workflows/omega-github-mycelium.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-github-mycelium-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile package and focused surfaces
+        run: |
+          python -m compileall omega_github_mycelium_t tests/test_omega_github_mycelium_t.py examples/omega_github_mycelium_t_demo.py
+      - name: Run focused court
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_omega_github_mycelium_t.py
+      - name: Validate sample snapshot
+        run: |
+          python -m omega_github_mycelium_t validate-snapshot data/omega_github_mycelium_t/repository_snapshot_2026_08_03.json
+      - name: Materialize deterministic demo
+        run: |
+          rm -rf generated/omega_github_mycelium_t/ci-a generated/omega_github_mycelium_t/ci-b
+          python -m omega_github_mycelium_t plan \
+            --objective "Detect code documentation divergence" \
+            --root-creation omega-doc-t \
+            --snapshot data/omega_github_mycelium_t/repository_snapshot_2026_08_03.json \
+            --candidate-repository Tristan-TM-Poly/TFUGA-AI7-TRISTAN2 \
+            --output-dir generated/omega_github_mycelium_t/ci-a || test $? -eq 2
+          python -m omega_github_mycelium_t plan \
+            --objective "Detect code documentation divergence" \
+            --root-creation omega-doc-t \
+            --snapshot data/omega_github_mycelium_t/repository_snapshot_2026_08_03.json \
+            --candidate-repository Tristan-TM-Poly/TFUGA-AI7-TRISTAN2 \
+            --output-dir generated/omega_github_mycelium_t/ci-b || test $? -eq 2
+          diff -ru generated/omega_github_mycelium_t/ci-a generated/omega_github_mycelium_t/ci-b
+      - name: Verify no remote mutation surface
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          forbidden = ("merge_pull_request(", "enable_auto_merge(", "delete_repository(", "force_push(")
+          text = "\n".join(path.read_text(encoding="utf-8") for path in Path("omega_github_mycelium_t").glob("*.py"))
+          assert not any(token in text for token in forbidden)
+          PY
+      - name: Upload review bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-github-mycelium-${{ matrix.python-version }}
+          path: generated/omega_github_mycelium_t/ci-a
+          retention-days: 14
