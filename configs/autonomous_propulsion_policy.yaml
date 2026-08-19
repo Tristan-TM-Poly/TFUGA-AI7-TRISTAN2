@@ -1,0 +1,34 @@
+schema_version: 1
+branch: omega_ait_autonomous_propulsion_mesh_t
+status: OAK-safe propulsion policy
+
+core_rules:
+  - if_one_path_waits_advance_another_safe_path
+  - every_safe_next_move_spawns_the_next_useful_chain
+  - visible_gaps_become_repo_tasks
+  - failed_checks_become_tests_and_learning_notes
+  - no_progress_without_trace
+  - no_trace_without_next_step
+  - choose_useful_safe_work_not_spectacle
+  - no_auto_merge
+  - no_auto_publish
+  - no_external_contact
+
+queues:
+  Q0: ideas_to_anchor
+  Q1: theories_to_formalize
+  Q2: tools_to_create
+  Q3: tests_to_add
+  Q4: benchmarks_to_build
+  Q5: oak_reports_to_write
+  Q6: learning_notes_to_record
+  Q7: gaps_to_reduce
+  Q8: prs_to_enrich
+  Q9: branches_to_canonize
+  Q10: review_items
+
+required_sprint_outputs:
+  - one_artifact
+  - one_check
+  - one_gap_reduced
+  - one_next_safe_move

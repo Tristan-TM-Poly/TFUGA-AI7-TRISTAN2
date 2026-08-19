@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/oak_medical_decision.schema.json",
+  "title": "OAKMedicalDecision",
+  "description": "Conservative routing decision for medical-risk prompts. Not diagnosis, not treatment, not dosing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["route", "reason", "red_flags", "allowed_response_scope", "forbidden_actions"],
+  "properties": {
+    "route": {
+      "type": "string",
+      "enum": ["educational_only", "physician_or_pharmacist", "poison_control", "emergency_services", "refuse_optimization"]
+    },
+    "reason": {"type": "string"},
+    "red_flags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "allowed_response_scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "mechanism_explanation",
+          "risk_framing",
+          "source_citation",
+          "poison_control_or_emergency_routing",
+          "clinician_question_preparation",
+          "privacy_scrubbing",
+          "generic_safety_documentation"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "dose_optimization",
+          "tolerance_strategy",
+          "potentiation_strategy",
+          "self_experimentation_guidance",
+          "medical_clearance",
+          "autonomous_diagnosis",
+          "delayed_escalation",
+          "public_personal_health_detail_commit"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "privacy_status": {
+      "type": "string",
+      "enum": ["generic", "needs_scrubbing", "scrubbed"]
+    }
+  }
+}

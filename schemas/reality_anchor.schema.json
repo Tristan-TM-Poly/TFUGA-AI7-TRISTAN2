@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/reality_anchor.schema.json",
+  "title": "RealityAnchor",
+  "description": "Minimum real-world tether for an AIT-generated idea. Not a proof by itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["definition", "example", "test", "limitation", "risk", "residue", "source_status", "claim_status"],
+  "properties": {
+    "definition": {"type": "string", "minLength": 1},
+    "example": {"type": "string", "minLength": 1},
+    "test": {"type": "string", "minLength": 1},
+    "limitation": {"type": "string", "minLength": 1},
+    "risk": {"type": "string", "minLength": 1},
+    "residue": {"type": "string", "minLength": 1},
+    "source_status": {
+      "type": "string",
+      "enum": ["unsourced_or_internal", "secondary_source", "primary_source", "official_source", "measured_internal", "independently_reproduced"]
+    },
+    "claim_status": {
+      "type": "string",
+      "enum": ["vision", "metaphor", "hypothesis", "prototype", "measured_result", "proof", "quarantined"]
+    },
+    "oak_notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

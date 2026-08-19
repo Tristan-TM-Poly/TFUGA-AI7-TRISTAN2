@@ -1,0 +1,41 @@
+schema_version: 1
+branch: omega_ait_research_factory_t
+status: OAK-safe ResearchFactory policy
+
+core_rules:
+  - no_prototype_claim_without_tests
+  - no_strong_claim_without_benchmark
+  - release_requires_review_gates
+  - value_hypothesis_is_not_scientific_proof
+  - failed_tests_become_m_minus
+  - factory_outputs_are_plans_not_external_actions
+  - no_auto_publish
+  - no_auto_merge
+
+factory_lines:
+  - reality_anchor
+  - experiment
+  - prototype_tests
+  - benchmark
+  - reviewed_release
+  - risk_reduction
+  - quarantine
+
+review_gates:
+  - oak
+  - source_quality
+  - tests
+  - privacy_review
+  - asset_review
+  - rollback
+  - explicit_validation
+
+dashboard_fields:
+  - RealityLevel
+  - ProofLevel
+  - CanonRank
+  - BenchmarkLevel
+  - ReleaseStatus
+  - ValueScore
+  - RiskDebt
+  - NextAction

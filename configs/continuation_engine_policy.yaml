@@ -1,0 +1,52 @@
+schema_version: 1
+branch: omega_ait_continuation_engine_t
+status: OAK-safe continuation policy
+
+core_rules:
+  - every_state_must_produce_a_safe_next_move
+  - blocked_is_never_final
+  - uncertainty_becomes_experiment
+  - direct_action_is_replaced_by_safe_artifact_when_needed
+  - cognitive_work_is_conserved_as_artifact
+  - choose_most_useful_safe_action_not_most_spectacular
+  - no_auto_merge
+  - no_auto_publish
+
+safe_artifacts:
+  - doc
+  - schema
+  - tool
+  - test
+  - benchmark
+  - oak_report
+  - m_minus
+  - draft_pr
+  - simulation
+  - review_packet
+  - quarantine_note
+  - next_action_note
+
+fallback_ladder:
+  - direct_action
+  - reversible_action
+  - draft_pr
+  - repo_artifact
+  - simulation
+  - test
+  - oak_report
+  - m_minus
+  - quarantine_note
+  - summary_next_action
+
+motion_states:
+  M0: direct_create
+  M1: reversible_build
+  M2: draft_pr
+  M3: simulation
+  M4: test_generation
+  M5: oak_report
+  M6: review_packet
+  M7: quarantine_analysis
+  M8: m_minus_learning
+  M9: canon_update
+  M10: safe_next_action_only

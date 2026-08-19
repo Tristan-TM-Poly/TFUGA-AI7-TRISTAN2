@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/propulsion_packet.schema.json",
+  "title": "PropulsionPacket",
+  "description": "Traceable packet for safe autonomous propulsion across task queues.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["goal", "queue", "chosen_action", "artifact", "propulsion_score", "oak_state", "next_chain"],
+  "properties": {
+    "goal": {"type": "string", "minLength": 1},
+    "queue": {"type": "string", "minLength": 1},
+    "chosen_action": {"type": "string", "minLength": 1},
+    "artifact": {"type": "string", "minLength": 1},
+    "propulsion_score": {"type": "integer"},
+    "oak_state": {"type": "string", "enum": ["continue", "simulate", "test", "review_packet", "private_note", "hold", "quarantine"]},
+    "debts_reduced": {"type": "array", "items": {"type": "string"}},
+    "m_minus_added": {"type": "array", "items": {"type": "string"}},
+    "risk_notes": {"type": "array", "items": {"type": "string"}},
+    "next_chain": {"type": "array", "items": {"type": "string"}}
+  }
+}

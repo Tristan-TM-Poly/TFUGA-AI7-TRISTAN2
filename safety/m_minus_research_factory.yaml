@@ -1,0 +1,48 @@
+schema_version: 1
+branch: omega_ait_research_factory_t
+status: OAK-safe negative memory registry
+
+patterns:
+  - id: M_FACTORY_001
+    name: prototype_without_tests
+    severity: high
+    pattern: Prototype exists but lacks tests.
+    safe_response: Add tests before stronger claims.
+
+  - id: M_FACTORY_002
+    name: claim_without_benchmark
+    severity: high
+    pattern: Performance or value claim lacks benchmark or baseline.
+    safe_response: Add BenchmarkLadder target and baseline.
+
+  - id: M_FACTORY_003
+    name: value_confused_with_proof
+    severity: medium
+    pattern: Market or user interest is treated as scientific proof.
+    safe_response: Separate value hypothesis from proof status.
+
+  - id: M_FACTORY_004
+    name: release_before_review
+    severity: critical
+    pattern: Public-facing release planned before review gates.
+    safe_response: Hold release and run OAK, source, tests, and privacy/asset review.
+
+  - id: M_FACTORY_005
+    name: failed_test_not_recorded
+    severity: medium
+    pattern: Failed test is not converted into M− and next iteration.
+    safe_response: Record failure, residue, better test, and next action.
+
+  - id: M_FACTORY_006
+    name: factory_plan_executed_as_action
+    severity: critical
+    pattern: Planning packet is mistaken for permission to act externally.
+    safe_response: Keep as plan; require explicit validation for external effects.
+
+default_actions:
+  prototype_without_tests: add_tests
+  claim_without_benchmark: add_baseline
+  value_confused_with_proof: separate_value_from_proof
+  release_before_review: hold_for_review
+  failed_test_not_recorded: add_m_minus
+  factory_plan_executed_as_action: no_external_action

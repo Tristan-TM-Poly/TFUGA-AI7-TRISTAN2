@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/canon_mutation.schema.json",
+  "title": "CanonMutation",
+  "description": "A proposed mutation to the Tristan CanonGraph.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mutation_id", "mutation_type", "target_nodes", "risk_level", "required_gates", "status"],
+  "properties": {
+    "mutation_id": {"type": "string", "minLength": 1},
+    "mutation_type": {
+      "type": "string",
+      "enum": ["add", "upgrade", "downgrade", "deprecate", "split", "merge", "quarantine", "link", "unlink", "artifact_compile"]
+    },
+    "target_nodes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "risk_level": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+    "required_gates": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["oak", "privacy", "ip", "medical_boundary", "legal_financial", "security", "rollback", "tests", "human_validation"]},
+      "uniqueItems": true
+    },
+    "status": {"type": "string", "enum": ["proposed", "sandbox", "draft_pr", "reviewing", "accepted", "rejected", "quarantined"]},
+    "rollback_plan": {"type": "string"},
+    "oak_notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/biotox_event.schema.json",
+  "title": "BiotoxEvent",
+  "description": "OAK-safe event schema for pharmacology/toxicology risk routing. Not diagnostic and not a dosing model.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_type", "substance", "real_exposure", "symptoms", "context", "privacy_status"],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": ["theoretical", "real_exposure", "possible_overdose", "medication_error", "interaction_question", "unknown"]
+    },
+    "substance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "class": {"type": "string"},
+        "formulation": {"type": "string"},
+        "route": {"type": "string"},
+        "amount_text": {
+          "type": "string",
+          "description": "Free-text amount if provided. Do not convert to dosing guidance."
+        }
+      }
+    },
+    "real_exposure": {"type": "boolean"},
+    "time_since_exposure_text": {"type": "string"},
+    "symptoms": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "co_ingestions": {"type": "array", "items": {"type": "string"}},
+        "sleep_deprivation": {"type": "boolean"},
+        "heat_or_exertion": {"type": "boolean"},
+        "unknowns": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "privacy_status": {
+      "type": "string",
+      "enum": ["generic", "contains_personal_health_details", "scrubbed"]
+    },
+    "notes": {"type": "string"}
+  }
+}

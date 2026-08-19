@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-systems.local/schemas/canon_audit_report.schema.json",
+  "title": "CanonAuditReport",
+  "description": "Self-audit report for CanonOS branches and artifacts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["audit_id", "scope", "findings", "risk_summary", "safe_next_actions"],
+  "properties": {
+    "audit_id": {"type": "string", "minLength": 1},
+    "scope": {"type": "string", "minLength": 1},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["finding_type", "severity", "description", "recommended_action"],
+        "properties": {
+          "finding_type": {"type": "string", "enum": ["overclaim", "missing_test", "orphan_file", "missing_m_minus", "contradiction", "risk_debt", "privacy_ip_risk", "stale_branch", "overheated_branch", "cold_branch"]},
+          "severity": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+          "description": {"type": "string"},
+          "recommended_action": {"type": "string"}
+        }
+      }
+    },
+    "risk_summary": {"type": "string"},
+    "safe_next_actions": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,48 @@
+schema_version: 1
+branch: omega_ait_autonomous_propulsion_mesh_t
+status: OAK-safe negative memory registry
+
+patterns:
+  - id: M_PROP_001
+    name: single_queue_stall
+    severity: medium
+    pattern: One queue waits and the whole system stops.
+    safe_response: Advance another ready safe queue.
+
+  - id: M_PROP_002
+    name: gap_not_mapped
+    severity: medium
+    pattern: A visible gap is not converted into a repo task.
+    safe_response: Create a check, note, report, test, or artifact plan.
+
+  - id: M_PROP_003
+    name: failure_without_test
+    severity: high
+    pattern: A failure is patched without a reproducer or regression test.
+    safe_response: Build repair plan with test first.
+
+  - id: M_PROP_004
+    name: progress_without_trace
+    severity: medium
+    pattern: A change is made without reason, evidence, check, or next step.
+    safe_response: Create ProgressTrace.
+
+  - id: M_PROP_005
+    name: impressive_over_useful
+    severity: medium
+    pattern: The system chooses spectacle over the most useful safe task.
+    safe_response: Use PropulsionScore and OAK routing.
+
+  - id: M_PROP_006
+    name: connector_filter_dead_end
+    severity: low
+    pattern: Connector filter blocks a path and no alternative is tried.
+    safe_response: Rename, simplify, defer, or document as audit note.
+
+default_actions:
+  single_queue_stall: task_queue_mesh
+  gap_not_mapped: artifact_swarm
+  failure_without_test: self_repair_loop
+  progress_without_trace: progress_memory
+  impressive_over_useful: propulsion_score
+  connector_filter_dead_end: choose_alternate_safe_path

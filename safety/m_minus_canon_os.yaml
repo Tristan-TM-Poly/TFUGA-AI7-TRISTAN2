@@ -1,0 +1,62 @@
+schema_version: 1
+branch: omega_ait_canon_os_t
+status: OAK-safe negative memory registry
+
+patterns:
+  - id: M_CANON_001
+    name: canon_promotion_without_evidence
+    severity: critical
+    pattern: Promoting an idea to canon rank without tests, proof capital, or review.
+    safe_response: Downgrade CanonRank and require ProofCapital target.
+
+  - id: M_CANON_002
+    name: orphan_artifact
+    severity: medium
+    pattern: File, tool, test, or report exists without CanonGraph links.
+    safe_response: Link to theory, test, artifact, source, or archive.
+
+  - id: M_CANON_003
+    name: persona_sovereignty_error
+    severity: high
+    pattern: Treating one persona or agent as sufficient to promote canon status.
+    safe_response: Require Canon Council and OAK review.
+
+  - id: M_CANON_004
+    name: contradiction_untracked
+    severity: high
+    pattern: Known contradiction remains unresolved and untracked.
+    safe_response: Route to ContradictionEngine.
+
+  - id: M_CANON_005
+    name: residue_discarded
+    severity: medium
+    pattern: Unexplained residue is removed instead of mined or archived.
+    safe_response: Convert to ResiduePacket or archive with reason.
+
+  - id: M_CANON_006
+    name: canon_overheating
+    severity: high
+    pattern: Branch becomes hype-heavy, overconfident, or weakly grounded.
+    safe_response: Cool through CanonThermostat, RealityAnchor, and tests.
+
+  - id: M_CANON_007
+    name: sensitive_merge_without_review
+    severity: critical
+    pattern: Sensitive canon change is treated as ready without review.
+    safe_response: Keep draft PR and require review gate.
+
+  - id: M_CANON_008
+    name: deprecation_avoidance
+    severity: medium
+    pattern: Weak or obsolete ideas remain active because deprecation feels like failure.
+    safe_response: Deprecate cleanly; preserve provenance.
+
+default_actions:
+  canon_promotion_without_evidence: downgrade_rank
+  orphan_artifact: link_or_archive
+  persona_sovereignty_error: canon_council_review
+  contradiction_untracked: contradiction_engine
+  residue_discarded: residue_miner
+  canon_overheating: canon_thermostat
+  sensitive_merge_without_review: keep_draft
+  deprecation_avoidance: deprecation_engine

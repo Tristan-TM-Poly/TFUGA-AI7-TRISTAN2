@@ -1,0 +1,25 @@
+schema_version: 1
+source: PR220
+state: draft_alias_registry
+
+aliases:
+  safe_fork_engine:
+    actual_file: tools/option_selector.py
+    reason: connector_safe_alias
+  infinite_useful_work:
+    actual_file: tools/useful_work_catalog.py
+    reason: connector_safe_alias
+  progress_trace:
+    actual_file: schemas/progress_log.schema.json
+    reason: connector_safe_alias
+  task_queue_node:
+    actual_file: schemas/task_queue_item.schema.json
+    reason: connector_safe_alias
+  pending_refactoring_graph:
+    actual_file: configs/pending_next_steps.yaml
+    reason: connector_safe_alias
+
+cleanup_next:
+  - add optional compatibility aliases after review
+  - keep semantic equivalence notes
+  - avoid changing behavior in same draft

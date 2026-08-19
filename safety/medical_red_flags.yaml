@@ -1,0 +1,70 @@
+schema_version: 1
+branch: omega_biotox_pharma_guardian_t
+status: OAK-safe medical red flag registry
+hard_boundary: >-
+  This file supports conservative safety routing only. It is not medical advice,
+  not diagnosis, not treatment, and not a substitute for poison control,
+  emergency services, physicians, pharmacists, or local clinical protocols.
+
+emergency_red_flags:
+  respiratory:
+    - difficulty breathing
+    - shortness of breath
+    - cannot breathe
+    - blue lips
+  neurological:
+    - seizure
+    - convulsion
+    - loss of consciousness
+    - cannot be awakened
+    - severe confusion
+    - stroke-like symptoms
+    - severe headache with neurological symptoms
+  cardiovascular:
+    - chest pain
+    - severe palpitations
+    - fainting
+    - collapse
+    - severe blood pressure symptoms
+  psychiatric_neurological:
+    - hallucinations
+    - severe paranoia
+    - uncontrollable agitation
+    - violent confusion
+  thermal_muscular:
+    - high fever
+    - hyperthermia
+    - rigid muscles
+    - severe tremor
+    - suspected rhabdomyolysis
+  ingestion_context:
+    - overdose
+    - possible overdose
+    - medication error
+    - mixed ingestion
+    - unknown ingestion
+    - child exposure
+    - intentional self-harm context
+
+conservative_action_rules:
+  any_emergency_red_flag: emergency_services_now
+  possible_overdose_without_red_flags: poison_control_now
+  medication_error_without_red_flags: poison_control_or_pharmacist_or_prescriber
+  theoretical_question: education_only_with_no_dosing_optimization
+  self_harm_context: emergency_or_crisis_support_plus_medical_care
+  optimization_request: refuse_optimization_redirect_to_safety
+
+response_constraints:
+  never:
+    - provide personal dose calculations
+    - normalize supratherapeutic exposure
+    - provide tolerance strategies
+    - provide potentiation strategies
+    - delay emergency escalation
+    - imply AI can diagnose or clear the user medically
+  always_for_possible_overdose:
+    - recommend poison control or emergency services
+    - advise not to drive
+    - advise no additional substances
+    - encourage keeping medication package available for responders
+    - keep privacy and avoid public health-detail leakage
