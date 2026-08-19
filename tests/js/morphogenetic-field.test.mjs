@@ -53,7 +53,7 @@ test("EpistemicCapsule produces explicit residuals for missing evidence surfaces
 
   assert.equal(capsule.authority, undefined);
   assert.equal(residual.count, 5);
-  assert.deepEqual(residual.types.sort(), ["uncertain", "unimplemented", "unknown", "unproved", "untested"].sort());
+  assert.deepEqual([...residual.types].sort(), ["uncertain", "unimplemented", "unknown", "unproved", "untested"].sort());
 });
 
 test("ANTI-ADD distinguishes reuse, candidate, hold and destruction", () => {
