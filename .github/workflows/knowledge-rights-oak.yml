@@ -1,0 +1,30 @@
+name: Knowledge Rights OAK
+
+on:
+  pull_request:
+    paths:
+      - "omega_knowledge_rights/**"
+      - ".github/workflows/knowledge-rights-oak.yml"
+  push:
+    branches: [main]
+    paths:
+      - "omega_knowledge_rights/**"
+      - ".github/workflows/knowledge-rights-oak.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  court:
+    name: Deterministic policy court
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile kernel
+        run: python -m compileall -q omega_knowledge_rights
+      - name: Run OAK court
+        run: python -m unittest discover -s omega_knowledge_rights/tests -v
