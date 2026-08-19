@@ -1,0 +1,101 @@
+{
+  "schema": "ark_sp_cube_gaia.diversification_matrix.v0.14",
+  "status": "C_plus_diversification_scaffold",
+  "merged_spine": {
+    "source_pr": 232,
+    "merged_state": "v0.8-v0.13 spine merged into main",
+    "spine_role": "claim routes, OAK ledgers, protocols, dashboard, validation and freeze review"
+  },
+  "tracks": [
+    {
+      "id": "D1",
+      "name": "SP-CUBE Passive Lab",
+      "goal": "turn passive delta-T protocol into a measured-candidate data path",
+      "first_artifacts": ["data schema", "logger plan", "sample comparison table"],
+      "success_gate": "valid local dataset with baseline comparison",
+      "failure_gate": "SP-CUBE sample does not beat baseline under logged conditions",
+      "oak_boundary": "not certified cooling technology"
+    },
+    {
+      "id": "D2",
+      "name": "Ark-M1 Low-Power Bench",
+      "goal": "prepare a safe low-power thermal/energy bench",
+      "first_artifacts": ["BOM", "sensor map", "safety cutoff checklist"],
+      "success_gate": "stable low-power heat source and logged comparison",
+      "failure_gate": "unstable power, sensor failure, unsafe heating or no measurable difference",
+      "oak_boundary": "not validated energy product"
+    },
+    {
+      "id": "D3",
+      "name": "Methane MRV",
+      "goal": "build event-level anti-double-counting records",
+      "first_artifacts": ["event schema", "before/after evidence fields", "uncertainty fields"],
+      "success_gate": "unique event ID with before/repair/after evidence placeholders",
+      "failure_gate": "missing uncertainty, missing repair evidence, duplicate event or source ambiguity",
+      "oak_boundary": "not certified offset issuance"
+    },
+    {
+      "id": "D4",
+      "name": "OAK Tooling",
+      "goal": "turn OAK-Lint into runnable guardrails",
+      "first_artifacts": ["CLI", "lint report", "CI gate proposal"],
+      "success_gate": "unsafe phrases produce WARN/BLOCK",
+      "failure_gate": "false pass on revenue/certification/vacuum-energy language",
+      "oak_boundary": "not replacement for human review"
+    },
+    {
+      "id": "D5",
+      "name": "Public-Safe Dashboard",
+      "goal": "display status, proof level, next gate and non-claims",
+      "first_artifacts": ["portfolio HTML", "status cards", "claim boundary badges"],
+      "success_gate": "external reader sees limits before claims",
+      "failure_gate": "dashboard implies certified performance or revenue",
+      "oak_boundary": "not investor proof"
+    },
+    {
+      "id": "D6",
+      "name": "Thesis/Patent Route",
+      "goal": "convert claims into thesis/patent-style records",
+      "first_artifacts": ["claim tree", "risk map", "review card"],
+      "success_gate": "each invention-like idea has novelty/risk/evidence slots",
+      "failure_gate": "legal or patent validity implied without review",
+      "oak_boundary": "not legal advice or patent validation"
+    },
+    {
+      "id": "D7",
+      "name": "Infra/Gov Graph Routing",
+      "goal": "route GAIA/MRV events into infrastructure/governance graph formats",
+      "first_artifacts": ["node schema", "severity route", "proof edge map"],
+      "success_gate": "event can become local review draft without remote mutation",
+      "failure_gate": "graph implies official public-sector decision",
+      "oak_boundary": "not public authority"
+    },
+    {
+      "id": "D8",
+      "name": "Sensor Logger",
+      "goal": "prepare ESP32 or Python serial logging scaffold",
+      "first_artifacts": ["sensor list", "CSV schema", "calibration TODO"],
+      "success_gate": "timestamped temperature/power/environment log can be produced",
+      "failure_gate": "uncalibrated data presented as certified measurement",
+      "oak_boundary": "not calibrated instrument certification"
+    },
+    {
+      "id": "D9",
+      "name": "Verified Sources",
+      "goal": "replace citation TODOs with checked references",
+      "first_artifacts": ["source registry", "access date", "claim linkage"],
+      "success_gate": "each public claim maps to a source or a clear TODO",
+      "failure_gate": "unsupported public claim remains unlabeled",
+      "oak_boundary": "not complete bibliography until reviewed"
+    },
+    {
+      "id": "D10",
+      "name": "FailureSynth Expansion",
+      "goal": "turn failure modes into local issue drafts and lint rules",
+      "first_artifacts": ["failure-to-issue table", "severity", "safe rewrite"],
+      "success_gate": "each high-risk claim has a failure mode and safe rewrite",
+      "failure_gate": "failure mode is vague, untestable or not routed",
+      "oak_boundary": "no remote issues without explicit confirmation"
+    }
+  ]
+}
