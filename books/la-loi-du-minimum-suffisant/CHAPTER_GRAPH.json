@@ -1,0 +1,41 @@
+{
+  "schema": "lms.chapter-graph.v0.1",
+  "epistemic_status": "DESIGN_ARTIFACT",
+  "nodes": [
+    {"id": "P1", "label": "La rupture"},
+    {"id": "P2", "label": "Jeet Kun Do de Tristan"},
+    {"id": "P3", "label": "Simplification Quantique de Tristan"},
+    {"id": "P4", "label": "Hypergraphes fractals mycéliens"},
+    {"id": "P5", "label": "Intelligence cross-scale"},
+    {"id": "P6", "label": "Générer, détruire, régénérer"},
+    {"id": "P7", "label": "Compilateur universel"},
+    {"id": "P8", "label": "Automatisation"},
+    {"id": "P9", "label": "Science et preuve"},
+    {"id": "P10", "label": "Applications scientifiques et techniques"},
+    {"id": "P11", "label": "Projets et produits"},
+    {"id": "P12", "label": "Compagnies"},
+    {"id": "P13", "label": "Noyau régénératif"},
+    {"id": "P14", "label": "La loi"}
+  ],
+  "hyperedges": [
+    {"sources": ["P1"], "targets": ["P2", "P3"], "relation": "motivates"},
+    {"sources": ["P2", "P3"], "targets": ["P4"], "relation": "requires_multiscale_representation"},
+    {"sources": ["P2", "P3", "P4"], "targets": ["P5"], "relation": "lifts_to_cross_scale"},
+    {"sources": ["P2", "P3", "P5"], "targets": ["P6"], "relation": "defines_morphogenesis"},
+    {"sources": ["P4", "P5", "P6"], "targets": ["P7"], "relation": "compiles"},
+    {"sources": ["P7"], "targets": ["P8"], "relation": "automates"},
+    {"sources": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"], "targets": ["P9"], "relation": "must_be_falsified_by"},
+    {"sources": ["P2", "P3", "P4", "P5", "P7", "P9"], "targets": ["P10"], "relation": "instantiates"},
+    {"sources": ["P7", "P9", "P10"], "targets": ["P11"], "relation": "crystallizes_into"},
+    {"sources": ["P9", "P11"], "targets": ["P12"], "relation": "scales_value_capture"},
+    {"sources": ["P5", "P6", "P7", "P8", "P9", "P10", "P11", "P12"], "targets": ["P13"], "relation": "compresses_into"},
+    {"sources": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11", "P12", "P13"], "targets": ["P14"], "relation": "synthesizes"}
+  ],
+  "global_invariants": [
+    "Generated != Verified",
+    "Simplified != Equivalent",
+    "Tested != Proven",
+    "LocalPASS != GlobalPASS",
+    "QuantumInspired != QuantumPhysicalValidation"
+  ]
+}
