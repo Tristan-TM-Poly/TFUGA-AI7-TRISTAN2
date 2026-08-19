@@ -1,6 +1,6 @@
-# Ω Knowledge Rights Kernel — R0.2
+# Ω Knowledge Rights Kernel — R0.3
 
-This directory turns the R0.1 Knowledge Rights / Controlled Disclosure architecture into a small deterministic executable kernel.
+This directory turns Knowledge Rights / Controlled Disclosure into a small deterministic executable kernel.
 
 Status: **technical prototype**. It is not legal advice, does not determine ownership, trade-secret status or jurisdictional compliance, and does not replace qualified legal/privacy/security review.
 
@@ -9,14 +9,16 @@ Status: **technical prototype**. It is not legal advice, does not determine owne
 ```text
 KnowledgeRightsGenome
 + Request
-→ validate
-→ policy conflicts
-→ expiry / purpose / operation gates
+→ policy court
 → ALLOW | ESCALATE | DENY
-→ DisclosureReceipt (when disclosure is authorized)
+→ deterministic field-level DisclosureCapsule
+→ cumulative Reconstruction Court
+→ DisclosureReceipt / evidence
 ```
 
-The prototype deliberately keeps `REDACT` and `SANDBOX` as future capabilities instead of pretending to implement semantic redaction or secure isolation.
+R0.3 adds the first bounded `REDACT`-like capability, but only as an **explicit top-level field allow-list projection**. It does not claim semantic redaction, anonymization, de-identification, privilege preservation, or resistance to arbitrary inference.
+
+`SANDBOX` remains unimplemented until a real isolation boundary exists.
 
 ## Permanent invariants
 
@@ -28,13 +30,17 @@ CanSee != CanExport != CanPublish
 ReadPermission != AITrainingPermission
 Confidentiality < ApplicableLaw
 Conflict => fail closed
+Projection != semantic redaction
+Structural reconstruction test != complete inference safety
 ```
 
 ## Files
 
-- `knowledge_rights.py` — deterministic policy evaluator, conflict checker and receipt generator.
+- `knowledge_rights.py` — deterministic policy evaluator, conflict checker and DisclosureReceipt generator.
+- `disclosure_capsule.py` — field-level capsule compiler + cumulative reconstruction court.
 - `schemas/knowledge_rights_genome.schema.json` — interchange contract for one governed asset.
-- `tests/test_knowledge_rights.py` — OAK test court.
+- `tests/test_knowledge_rights.py` — R0.2 policy court.
+- `tests/test_disclosure_capsule.py` — R0.3 disclosure/reconstruction court.
 
 ## Quick test
 
@@ -44,7 +50,7 @@ python -m unittest discover -s omega_knowledge_rights/tests -v
 
 No third-party dependency is required.
 
-## R0.2 decision semantics
+## R0.2 policy semantics
 
 A request contains:
 
@@ -52,45 +58,60 @@ A request contains:
 (actor, asset_id, purpose, operation, timestamp, context)
 ```
 
-The evaluator follows this order:
-
-1. reject malformed genomes or requests;
-2. if a policy conflict touches the requested operation, return `DENY`;
-3. if the permission expired, return `DENY`;
-4. if the context declares a legally required/protected disclosure path, return `ESCALATE` for qualified handling rather than silently suppressing it;
-5. if the purpose is not explicitly allowed, return `DENY`;
-6. if the operation is explicitly forbidden, return `DENY`;
-7. if the operation is not explicitly allowed, return `DENY`;
-8. otherwise return `ALLOW`.
+The evaluator rejects malformed, expired, out-of-purpose, forbidden or ambiguous requests. A protected/lawful disclosure context is escalated for qualified handling instead of being silently suppressed.
 
 `READ` never implies `TRAIN`, `EXPORT`, `PUBLISH`, `DERIVE`, or another operation.
 
-## Conflict model
+## R0.3 DisclosureCapsule
 
-Rules can additionally narrow permissions by actor/purpose. A conflict exists when two applicable rules express opposite decisions for the same operation under overlapping scope. The kernel fails closed on that operation and reports the conflicting rule IDs.
+A capsule spec declares:
 
-## DisclosureReceipt
+```text
+capsule_id
+asset_id
+operation
+actors[] / purposes[]
+include_fields[]
+required_fields[]
+exclude_fields[]
+```
 
-An authorized disclosure can emit a receipt that records:
+The compiler first requires the underlying Knowledge Rights request to be `ALLOW`. It then emits only fields named in `include_fields`; all other top-level fields are omitted. Required fields must exist and include/exclude conflicts fail closed.
 
-- asset ID;
-- actor;
-- purpose;
-- operation;
-- policy version;
-- timestamp;
-- SHA-256 of the disclosed manifest/payload description;
-- decision and OAK invariants.
+The resulting manifest records the exact disclosed field names, omitted field names, payload SHA-256, policy version and the explicit statement:
 
-The receipt proves what the software recorded about the governed event. It does **not** prove truth, legal enforceability or ownership.
+```text
+semantic_redaction_claimed = false
+```
+
+## R0.3 cumulative Reconstruction Court
+
+A single capsule can be safe while a sequence of capsules becomes unsafe. R0.3 therefore evaluates the union of fields disclosed across history plus a candidate capsule.
+
+A reconstruction rule is explicit and falsifiable:
+
+```text
+rule_id = "reconstruct-X"
+required_fields = ["part_a", "part_b", ...]
+```
+
+If the candidate completes a protected field set that history had not already completed, the candidate is blocked with `cumulative_reconstruction_risk`.
+
+The court distinguishes:
+
+- `already_triggered_rule_ids` — historical risk that predates the candidate;
+- `newly_triggered_rule_ids` — marginal risk caused by adding the candidate;
+- `safe_to_add` — true only when no new explicit rule is completed.
+
+This benchmark is **structural only**. It cannot prove safety against semantic inference, side channels, external knowledge, model memorization, screenshots, transcription, or an adversary that derives information not encoded in the declared field-set rules.
 
 ## Next gates
 
-R0.3 should only add capabilities that can be independently tested:
+R0.4 should add only independently testable capabilities:
 
-- `REDACT` with deterministic field-level disclosure capsules;
-- `SANDBOX` only after a real isolation boundary exists;
-- policy composition across multiple assets/contracts;
-- cumulative disclosure/reconstruction benchmark;
-- signed receipts only after key custody and rotation are defined;
-- integration with GitHub/Drive permissions without creating a second authority system.
+- policy composition across multiple assets/contracts without creating a second authority system;
+- nested/path-aware disclosure projections with explicit type/schema checks;
+- empirical reconstruction adversaries beyond explicit field sets, benchmarked against false-positive/false-negative baselines;
+- signed receipts only after key custody, rotation and revocation are defined;
+- integration with GitHub/Drive permissions as evidence inputs, not replacements for provider authority;
+- `SANDBOX` only after a real isolation boundary and escape tests exist.
