@@ -2,14 +2,14 @@
   "schema_version": "0.3.0",
   "generated_from": "2026-08-02T18:12:00-04:00",
   "algorithm": "sha256(path\\0sha256\\0size\\n)",
-  "root_sha256": "d8785a5720279035eac78a2076fa45e33f32ce7d97979ca35d72f478e9ccefb5",
+  "root_sha256": "c984f1a6eb6dd4bad6127cdefd87754c0f9239da232fe2ebf25e8648ff87c63a",
   "metrics": {
-    "files": 37,
-    "bytes": 657230,
+    "files": 38,
+    "bytes": 670638,
     "roles": {
       "document-shell": 1,
       "documentation": 1,
-      "javascript-module": 24,
+      "javascript-module": 25,
       "public-data": 5,
       "stylesheet": 5,
       "web-manifest": 1
@@ -17,7 +17,7 @@
     "extensions": {
       ".css": 5,
       ".html": 1,
-      ".js": 24,
+      ".js": 25,
       ".json": 5,
       ".md": 1,
       ".webmanifest": 1
@@ -146,8 +146,15 @@
     {
       "path": "src/hypermeta-kernel.js",
       "role": "javascript-module",
-      "size_bytes": 6286,
-      "sha256": "4660c83edb9603f633e019f18bbc34e6741761f1596089a0010cead309fbbd7b",
+      "size_bytes": 7159,
+      "sha256": "7c44ab12d39ed744382817316fbd918f0b83a731eebf28d8dbce1c76e3db3d43",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/morphogenetic-field.js",
+      "role": "javascript-module",
+      "size_bytes": 7537,
+      "sha256": "64baa8052ef0198d2cbb40f6225589cf3d93340e7f2e4e3ebd21a7f7306f61cd",
       "cache_candidate": true
     },
     {
@@ -230,8 +237,8 @@
     {
       "path": "src/views/hypermeta.js",
       "role": "javascript-module",
-      "size_bytes": 7281,
-      "sha256": "82199459763fc56d18c40df9671cc38d9195569aafe01879669d5e4031bc2cc8",
+      "size_bytes": 12245,
+      "sha256": "1d6bf6214a4d560dea1fe5e37a24d7cf08f2b84474ac8e0bf7a7fca6823329b7",
       "cache_candidate": true
     },
     {
@@ -279,8 +286,8 @@
     {
       "path": "sw.js",
       "role": "javascript-module",
-      "size_bytes": 2161,
-      "sha256": "d82f7e41bb6e8fce6b435bdded62b2043edbedd911f4b2b6827ad2555af71e64",
+      "size_bytes": 2195,
+      "sha256": "5dba38de462bd9974e8adeed7958e31713f52195e94e48a6ff13e8c99ca6beac",
       "cache_candidate": true
     }
   ],
