@@ -102,15 +102,27 @@ export const OAK_INVARIANTS = Object.freeze([
   "LocalPASS != GlobalPASS"
 ]);
 
-export function generateHyperMetaCells() {
+function normalizeFamily(family, index) {
+  if (Array.isArray(family)) return [String(family[0] || `family-${index + 1}`), String(family[1] || family[0] || `Family ${index + 1}`)];
+  return [String(family?.id || `family-${index + 1}`), String(family?.label || family?.id || `Family ${index + 1}`)];
+}
+
+export function generateHyperMetaCells({
+  families = HYPERMETA_FAMILIES,
+  operators = HYPERMETA_OPERATORS,
+  namespace = "hm"
+} = {}) {
+  if (!Array.isArray(families) || !families.length) throw new TypeError("families must be a non-empty array");
+  if (!Array.isArray(operators) || !operators.length) throw new TypeError("operators must be a non-empty array");
+
   const cells = [];
-  for (let familyIndex = 0; familyIndex < HYPERMETA_FAMILIES.length; familyIndex += 1) {
-    const [familyId, familyLabel] = HYPERMETA_FAMILIES[familyIndex];
-    for (let operatorIndex = 0; operatorIndex < HYPERMETA_OPERATORS.length; operatorIndex += 1) {
-      const operator = HYPERMETA_OPERATORS[operatorIndex];
-      const ordinal = familyIndex * HYPERMETA_OPERATORS.length + operatorIndex + 1;
+  for (let familyIndex = 0; familyIndex < families.length; familyIndex += 1) {
+    const [familyId, familyLabel] = normalizeFamily(families[familyIndex], familyIndex);
+    for (let operatorIndex = 0; operatorIndex < operators.length; operatorIndex += 1) {
+      const operator = String(operators[operatorIndex]);
+      const ordinal = familyIndex * operators.length + operatorIndex + 1;
       cells.push(Object.freeze({
-        id: `hm-${String(ordinal).padStart(4, "0")}`,
+        id: `${namespace}-${String(ordinal).padStart(4, "0")}`,
         ordinal,
         familyId,
         familyLabel,
@@ -125,9 +137,9 @@ export function generateHyperMetaCells() {
 
 export const HYPERMETA_CELLS = generateHyperMetaCells();
 
-export function filterHyperMetaCells({ query = "", family = "all", operator = "all" } = {}) {
+export function filterHyperMetaCells({ query = "", family = "all", operator = "all", cells = HYPERMETA_CELLS } = {}) {
   const tokens = String(query).trim().toLocaleLowerCase("fr").split(/\s+/).filter(Boolean);
-  return HYPERMETA_CELLS.filter((cell) => {
+  return cells.filter((cell) => {
     if (family !== "all" && cell.familyId !== family) return false;
     if (operator !== "all" && cell.operator !== operator) return false;
     if (!tokens.length) return true;
@@ -136,15 +148,18 @@ export function filterHyperMetaCells({ query = "", family = "all", operator = "a
   });
 }
 
-export function hyperMetaKernelReceipt() {
-  const expected = HYPERMETA_FAMILIES.length * HYPERMETA_OPERATORS.length;
+export function hyperMetaKernelReceipt({ families = HYPERMETA_FAMILIES, operators = HYPERMETA_OPERATORS } = {}) {
+  const cells = generateHyperMetaCells({ families, operators });
+  const expected = families.length * operators.length;
   return Object.freeze({
-    schema: "tristan.hypermeta-kernel/0.1",
-    families: HYPERMETA_FAMILIES.length,
-    operators: HYPERMETA_OPERATORS.length,
-    generatedCells: HYPERMETA_CELLS.length,
+    schema: "tristan.hypermeta-kernel/0.2",
+    families: families.length,
+    operators: operators.length,
+    generatedCells: cells.length,
     expectedCells: expected,
-    deterministicClosure: HYPERMETA_CELLS.length === expected,
-    claimBoundary: "1024 generated instruction cells are a design/search space, not 1024 verified scientific results or persistent modules."
+    deterministicClosure: cells.length === expected,
+    dynamicGrammar: true,
+    bootstrapShape: `${HYPERMETA_FAMILIES.length}x${HYPERMETA_OPERATORS.length}`,
+    claimBoundary: "The 32x32 bootstrap is a mutable search grammar, not a claim that 32 families or 32 operators are irreducible, complete, scientifically validated, or permanently canonical."
   });
 }
