@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE = "tristan-web-os-r03-v8";
+const CACHE = "tristan-web-os-r03-v10";
 const SHELL = [
   "./",
   "./index.html",
@@ -9,6 +9,8 @@ const SHELL = [
   "./oakgate.css",
   "./accessibility.css",
   "./hypermeta.css",
+  "./public-media.css",
+  "./knowledge-worlds.css",
   "./app.js",
   "./app.webmanifest",
   "./src/application.js",
@@ -16,6 +18,8 @@ const SHELL = [
   "./src/exporters.js",
   "./src/hypermeta-kernel.js",
   "./src/morphogenetic-field.js",
+  "./src/public-media-kernel.js",
+  "./src/knowledge-world-kernel.js",
   "./src/oak-engine.js",
   "./src/preferences.js",
   "./src/router.js",
@@ -28,6 +32,8 @@ const SHELL = [
   "./src/views/evidence.js",
   "./src/views/graph.js",
   "./src/views/hypermeta.js",
+  "./src/views/knowledge-worlds.js",
+  "./src/views/public-media.js",
   "./src/views/mminus.js",
   "./src/views/oakgate.js",
   "./src/views/provenance.js",

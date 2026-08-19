@@ -11,9 +11,11 @@ import { renderDashboard } from "./views/dashboard.js";
 import { renderEvidence } from "./views/evidence.js";
 import { renderGraph } from "./views/graph.js";
 import { renderHyperMeta } from "./views/hypermeta.js";
+import { renderKnowledgeWorlds } from "./views/knowledge-worlds.js";
 import { renderMminus } from "./views/mminus.js";
 import { renderOakGate } from "./views/oakgate.js";
 import { renderProvenance } from "./views/provenance.js";
+import { renderPublicMedia } from "./views/public-media.js";
 import { renderRoadmap } from "./views/roadmap.js";
 import { renderTheory } from "./views/theory.js";
 
@@ -25,6 +27,8 @@ const ROUTES = Object.freeze({
   claim: renderClaim,
   graph: renderGraph,
   hypermeta: renderHyperMeta,
+  worlds: renderKnowledgeWorlds,
+  publicmedia: renderPublicMedia,
   evidence: renderEvidence,
   provenance: renderProvenance,
   oakgate: renderOakGate,
@@ -141,7 +145,7 @@ export async function startApplication() {
     errorBox?.remove();
     router.start();
     registerServiceWorker();
-    window.TristanWebOS = Object.freeze({ store, router, preferences, version: "0.3.0" });
+    window.TristanWebOS = Object.freeze({ store, router, preferences, version: "0.3.2" });
   } catch (error) {
     console.error(error);
     loading?.remove();
