@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE = "tristan-web-os-r03-v7";
+const CACHE = "tristan-web-os-r03-v8";
 const SHELL = [
   "./",
   "./index.html",
@@ -15,6 +15,7 @@ const SHELL = [
   "./src/data-store.js",
   "./src/exporters.js",
   "./src/hypermeta-kernel.js",
+  "./src/morphogenetic-field.js",
   "./src/oak-engine.js",
   "./src/preferences.js",
   "./src/router.js",
