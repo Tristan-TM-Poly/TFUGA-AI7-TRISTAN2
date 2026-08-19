@@ -1,0 +1,11 @@
+{
+  "name": "AIT-GitHubManager + AIT-CloudsServersManager v0.1",
+  "local_validation": "ALL TESTS PASSED",
+  "files": 38,
+  "oak_status": "ops_packet_ready_dry_run",
+  "github_gate": "github_plan_ready_pr_draft",
+  "cloud_gate": "cloud_plan_ready_dry_run",
+  "external_actions": "disabled_by_default",
+  "merge_enabled": false,
+  "deploy_enabled": false
+}
