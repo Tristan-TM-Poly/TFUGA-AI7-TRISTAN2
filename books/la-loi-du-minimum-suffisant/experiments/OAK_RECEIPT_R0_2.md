@@ -1,6 +1,6 @@
 # OAK Receipt — Minimum Sufficient Basis R0.2
 
-**Status:** `LOCAL_REPLAY_PASS / REPOSITORY_CI_PENDING`
+**Status:** `LOCAL_REPLAY_PASS / EXACT_HEAD_CI_PASS / MERGED`
 
 ## Claim under test
 
@@ -26,9 +26,12 @@ python -m unittest -v test_minimum_sufficient_basis.py
 python minimum_sufficient_basis.py
 ```
 
-## Observed local replay
+## Observed qualification
 
-`6/6` unit tests passed on Python 3 during the authoring session.
+- local Python replay: `6/6` unit tests PASS;
+- exact-head GitHub `Ω Actions ΔCI Audit R0.3`: `SUCCESS` on `a10a70eeb83399b90b596c77cd32eeb32d91b41a`;
+- qualified branch remained current with canonical `main` before promotion;
+- PR #486 merged as `59340dff46cf9517930b7150ab97276abfea5028`.
 
 Covered cases:
 
@@ -46,7 +49,8 @@ Covered cases:
 - no cross-scale causal validity is inferred from this toy solver;
 - exhaustive search is combinatorial and capped at 20 components by default;
 - the chapter graph is a design dependency graph, not empirical proof of the theory;
-- repository CI and independent replay remain separate promotion gates.
+- exact-head CI is repository evidence, not independent scientific replication;
+- independent replay remains a separate promotion gate.
 
 ## Next discriminating experiments
 

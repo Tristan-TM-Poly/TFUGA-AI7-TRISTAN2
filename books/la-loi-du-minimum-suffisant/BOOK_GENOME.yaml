@@ -114,11 +114,16 @@ r0_2_evidence:
   bounded_exact_basis_solver: experiments/minimum_sufficient_basis.py
   unit_tests: experiments/test_minimum_sufficient_basis.py
   oak_receipt: experiments/OAK_RECEIPT_R0_2.md
-  local_replay: "6/6 tests PASS; repository CI pending"
+  local_replay: "6/6 tests PASS"
+  exact_head_ci: "SUCCESS on a10a70eeb83399b90b596c77cd32eeb32d91b41a"
+  canonical_merge: "59340dff46cf9517930b7150ab97276abfea5028"
+  independent_replication: PENDING
 completed_actions:
   - crystallize_claim_ledger
   - build_chapter_dependency_hypergraph
   - create_first_executable_ablation_pilot
+  - qualify_first_pilot_with_exact_head_ci
+  - merge_first_theory_as_code_pilot
   - prepare_public_reader_site_projection
 next_actions:
   - compare_exact_solver_against_greedy_baselines
