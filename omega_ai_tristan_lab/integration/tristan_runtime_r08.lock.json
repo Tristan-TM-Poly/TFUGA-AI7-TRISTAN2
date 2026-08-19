@@ -1,0 +1,83 @@
+{
+  "schema_version": "tristan-integration-lock-0.2",
+  "environment_id": "tristan-runtime-four-repo-r02",
+  "runtime": {
+    "distribution": "omega-ai-tristan-lab",
+    "version": "0.7.0",
+    "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+    "commit": "f4f1968b6fd63ec4c2167f79d29701d92e65afa7",
+    "subdirectory": "omega_ai_tristan_lab",
+    "capabilities": ["tristan.idea.analyze"],
+    "pip_target": "git+https://github.com/Tristan-TM-Poly/TFUGA-AI7-TRISTAN2.git@f4f1968b6fd63ec4c2167f79d29701d92e65afa7#subdirectory=omega_ai_tristan_lab"
+  },
+  "peers": [
+    {
+      "key": "pefa",
+      "full_name": "Tristan-TM-Poly/PEFA-FractalEnergySystem",
+      "visibility": "private",
+      "distribution": "pefa-fractal-energy-system",
+      "commit": "1e72e4619c3fb2b2c175f23ae8053d752a709621",
+      "branch_provenance": "feat/tristan-runtime-adapter-r01",
+      "capabilities": ["pefa-omega-em2.cvcd-extract", "pefa-omega-em2.cvcd-expand"],
+      "subdirectory": null,
+      "pip_target": "git+https://github.com/Tristan-TM-Poly/PEFA-FractalEnergySystem.git@1e72e4619c3fb2b2c175f23ae8053d752a709621"
+    },
+    {
+      "key": "omni-core",
+      "full_name": "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2",
+      "visibility": "public",
+      "distribution": "tristan-omni-core",
+      "commit": "29e77ad2e1214eb536043b31670071f5079285a5",
+      "branch_provenance": "feat/tristan-runtime-adapter-r01",
+      "capabilities": ["tristan-omni-core.evidence-to-idea", "tristan-omni-core.valuation-assess"],
+      "subdirectory": null,
+      "pip_target": "git+https://github.com/Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2.git@29e77ad2e1214eb536043b31670071f5079285a5"
+    },
+    {
+      "key": "protein-fold",
+      "full_name": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+      "visibility": "public",
+      "distribution": "protein-fold-tristan",
+      "commit": "42c3467b2675c7d83beae6b274586dc2cdf77d42",
+      "branch_provenance": "feat/tristan-runtime-adapter-r01",
+      "capabilities": [
+        "protein-fold-tristan.sequence-validate",
+        "protein-fold-tristan.contact-map",
+        "protein-fold-tristan.oak-level"
+      ],
+      "subdirectory": null,
+      "pip_target": "git+https://github.com/Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG.git@42c3467b2675c7d83beae6b274586dc2cdf77d42"
+    }
+  ],
+  "probes": [
+    {
+      "id": "pefa-cvcd-omni-oak-r02",
+      "mode": "pipeline",
+      "capabilities": [
+        "pefa-omega-em2.cvcd-extract",
+        "tristan-omni-core.evidence-to-idea",
+        "tristan.idea.analyze"
+      ],
+      "description": "Exact-pinned PEFA CVCD extraction -> Omni evidence bridge -> TristanLab OAK analysis.",
+      "interpretation_boundary": "SOFTWARE_COMPOSITION_AND_OAK_REPORT_NOT_SCIENTIFIC_PROOF"
+    },
+    {
+      "id": "protein-sequence-runtime-r01",
+      "mode": "independent-probe",
+      "capabilities": ["protein-fold-tristan.sequence-validate"],
+      "description": "Independent Protein sequence-validation probe in the same four-repository runtime environment.",
+      "interpretation_boundary": "COMPUTATIONAL_VALIDATION_ONLY_NONCLINICAL"
+    }
+  ],
+  "evidence": {
+    "repository": "Tristan-TM-Poly/PEFA-FractalEnergySystem",
+    "run_id": 31193546089,
+    "workflow": "Tristan Runtime Adapter R0.2 Four-Repo Matrix",
+    "driver_commit": "1e72e4619c3fb2b2c175f23ae8053d752a709621",
+    "artifact_id": 8999841064,
+    "artifact_sha256": "ddff439b450870965fc7a4b103ced0c3955890dda55bc08ceeaffd18f8961b41",
+    "marker": "FOUR_REPO_RUNTIME_PINNED_PASS"
+  },
+  "status": "CI_VERIFIED_FOUR_REPO_R02",
+  "oak_rule": "The four-repository matrix proves exact-pinned software co-installation and bounded capability execution only. It does not establish physical validity, biological function, clinical meaning, independent scientific reproduction, economic value, patentability, security certification, or permission to merge peer branches."
+}

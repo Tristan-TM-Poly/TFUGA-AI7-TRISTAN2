@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/tir_artifact.schema.json",
+  "title": "TristanArtifact",
+  "type": "object",
+  "required": ["id", "kind", "payload", "provenance", "uncertainty", "oak_status", "schema_version", "digest"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^tir:"},
+    "kind": {"type": "string"},
+    "payload": {},
+    "provenance": {
+      "type": "object",
+      "required": ["source", "version", "operation", "parents", "commit", "distribution", "repository", "install_source", "wheel_sha256"],
+      "properties": {
+        "source": {"type": "string"},
+        "version": {"type": "string"},
+        "operation": {"type": "string"},
+        "parents": {"type": "array", "items": {"type": "string"}},
+        "commit": {"type": "string"},
+        "distribution": {"type": "string"},
+        "repository": {"type": "string"},
+        "install_source": {"type": "string"},
+        "wheel_sha256": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "uncertainty": {"type": "object"},
+    "oak_status": {"type": "string"},
+    "schema_version": {"const": "tir-0.2"},
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

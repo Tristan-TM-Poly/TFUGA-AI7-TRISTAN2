@@ -1,0 +1,152 @@
+"""Generate reproducible Tristan Runtime bundle plans from immutable evidence locks.
+
+Public bundle materialization is privacy-preserving by default: private peer names,
+repository paths, commits and install targets are omitted unless the caller
+explicitly asks for a private extension file. The current runtime version is
+derived from the built-in plugin rather than duplicated as a second source of
+truth.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+import json
+from pathlib import Path
+from typing import Any
+
+from .integration_r08 import DEFAULT_R08_LOCK, R08IntegrationLock
+
+
+@dataclass(frozen=True, slots=True)
+class BundleFiles:
+    directory: Path
+    manifest: Path
+    public_requirements: Path
+    private_extension_requirements: Path | None
+
+    def to_dict(self) -> dict[str, str | None]:
+        return {
+            "directory": str(self.directory),
+            "manifest": str(self.manifest),
+            "public_requirements": str(self.public_requirements),
+            "private_extension_requirements": str(self.private_extension_requirements) if self.private_extension_requirements else None,
+        }
+
+
+class BundlePlan:
+    """Side-effect-bounded current-runtime bundle planner."""
+
+    current_runtime_distribution = "omega-ai-tristan-lab"
+
+    def __init__(self, lock: R08IntegrationLock = DEFAULT_R08_LOCK):
+        lock.validate()
+        self.lock = lock
+
+    @property
+    def current_runtime_version(self) -> str:
+        from .plugin import plugin
+        return str(plugin.version)
+
+    def public_peer_targets(self) -> tuple[str, ...]:
+        return tuple(peer.pip_target for peer in self.lock.peers if peer.visibility == "public")
+
+    def _public_verified_environment_evidence(self) -> dict[str, Any]:
+        """Return an R08 evidence view that cannot disclose private peer topology."""
+        public_peers = tuple(peer for peer in self.lock.peers if peer.visibility == "public")
+        public_capabilities = set(self.lock.runtime.capabilities)
+        for peer in public_peers:
+            public_capabilities.update(peer.capabilities)
+        public_probes = [
+            probe.to_dict()
+            for probe in self.lock.probes
+            if set(probe.capabilities).issubset(public_capabilities)
+        ]
+        return {
+            "schema_version": self.lock.schema_version,
+            "environment_id": self.lock.environment_id,
+            "runtime": self.lock.runtime.to_dict(),
+            "peers": [peer.to_dict() for peer in public_peers],
+            "probes": public_probes,
+            "evidence": {
+                "artifact_sha256": self.lock.evidence.artifact_sha256,
+                "marker": self.lock.evidence.marker,
+            },
+            "status": self.lock.status,
+            "oak_rule": self.lock.oak_rule,
+            "privacy": {
+                "private_peer_count": len(self.lock.peers) - len(public_peers),
+                "private_peer_details_redacted": True,
+                "private_evidence_location_redacted": True,
+            },
+        }
+
+    def manifest(self, *, include_private_extension: bool = False) -> dict[str, Any]:
+        private_targets = list(self.lock.private_extension_targets()) if include_private_extension else []
+        verified_evidence = (
+            self.lock.to_dict()
+            if include_private_extension
+            else self._public_verified_environment_evidence()
+        )
+        return {
+            "bundle_schema": "tristan-runtime-bundle-plan-1.0",
+            "current_runtime": {
+                "distribution": self.current_runtime_distribution,
+                "version": self.current_runtime_version,
+                "source_mode": "build-wheel-from-current-checkout",
+            },
+            "verified_environment_evidence": verified_evidence,
+            "public_peer_build_targets": list(self.public_peer_targets()),
+            "private_extension_included": include_private_extension,
+            "private_extension_targets": private_targets,
+            "build_policy": {
+                "network_on_import": False,
+                "automatic_install": False,
+                "automatic_publish": False,
+                "private_targets_in_public_bundle": False,
+                "wheelhouse_expected": True,
+                "peer_source_refs_immutable": True,
+                "verified_runtime_is_not_silently_substituted_for_current_runtime": True,
+                "private_evidence_redacted_by_default": True,
+            },
+            "oak_rule": (
+                "The historical R08 evidence lock proves an earlier exact runtime environment. "
+                "The current v1.0 runtime has a separate typed four-repository receipt and must "
+                "pass its own CI. A bundle plan is a reproducibility recipe, not scientific certification."
+            ),
+        }
+
+    def public_requirements_text(self) -> str:
+        lines = [
+            "# Generated by Ω-TRISTAN-RUNTIME BundlePlan v1.0",
+            f"# Build {self.current_runtime_distribution}=={self.current_runtime_version} from the current checkout; exact public peer sources follow.",
+        ]
+        lines.extend(self.public_peer_targets())
+        return "\n".join(lines) + "\n"
+
+    def private_extension_requirements_text(self) -> str:
+        lines = [
+            "# Private extension targets; explicit authenticated installation required.",
+            "# Keep this file and private bundle manifest out of public distribution.",
+        ]
+        lines.extend(self.lock.private_extension_targets())
+        return "\n".join(lines) + "\n"
+
+    def materialize(self, directory: str | Path, *, include_private_extension: bool = False) -> BundleFiles:
+        root = Path(directory)
+        root.mkdir(parents=True, exist_ok=True)
+        manifest_path = root / "bundle-manifest.json"
+        public_path = root / "requirements-public.lock"
+        private_path = root / "requirements-private-extension.lock" if include_private_extension else None
+        manifest_path.write_text(
+            json.dumps(
+                self.manifest(include_private_extension=include_private_extension),
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            ) + "\n",
+            encoding="utf-8",
+        )
+        public_path.write_text(self.public_requirements_text(), encoding="utf-8")
+        if private_path is not None:
+            private_path.write_text(self.private_extension_requirements_text(), encoding="utf-8")
+        return BundleFiles(root, manifest_path, public_path, private_path)
