@@ -1,0 +1,29 @@
+{
+  "name": "Automate everything safely",
+  "intent": "Prepare the full automation chain while keeping final external effects gated by OAK and approval.",
+  "system": "github",
+  "action_type": "open_pr",
+  "target": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "approved": true,
+  "public": true,
+  "reversible": true,
+  "rollback": "close_draft_pr",
+  "touches_humans": false,
+  "touches_money": false,
+  "touches_ip": true,
+  "touches_health": false,
+  "touches_safety": false,
+  "risk": {
+    "legal": 1,
+    "ip": 2,
+    "finance": 0,
+    "safety": 0,
+    "privacy": 0,
+    "reputation": 1,
+    "irreversibility": 1
+  },
+  "metadata": {
+    "automation_profile": "draft_and_queue",
+    "rule": "automate_preparation_not_irreversible_execution"
+  }
+}

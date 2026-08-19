@@ -1,0 +1,63 @@
+{
+  "schema_version": "0.1",
+  "purpose": "Example input for PR Build-To-Green planning. This is data only; no GitHub mutation is performed.",
+  "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "pull_requests": [
+    {
+      "number": 45,
+      "title": "Add Daily Ω Briefing operating system",
+      "draft": false,
+      "mergeable": true,
+      "checks_state": "failure",
+      "has_conflicts": false,
+      "changed_files": [
+        "sage_tristan/daily_omega_dashboard.py",
+        "scripts/daily_omega_dashboard.py",
+        "tests/test_daily_omega_dashboard.py"
+      ],
+      "safety_flags": [],
+      "metadata": {
+        "head_sha": "024c5e41b1c76cc794d863372d32aad056a0e83d"
+      }
+    },
+    {
+      "number": 9,
+      "title": "FTPCI-Ω / AIT-Ω / JKD-YY3 / Ω-MGHFM-TGNT engines",
+      "draft": false,
+      "mergeable": false,
+      "checks_state": "success",
+      "has_conflicts": true,
+      "changed_files": [
+        "docs/omega-mghfm-tgnt-prime-tensors.md"
+      ],
+      "safety_flags": [],
+      "metadata": {
+        "head_sha": "ada6c081a522cacc2bc6dfd869d1f386036dedd0"
+      }
+    },
+    {
+      "number": 165,
+      "title": "Ω-ACTION-EXT-T MVP",
+      "draft": true,
+      "mergeable": true,
+      "checks_state": "clean",
+      "has_conflicts": false,
+      "changed_files": [
+        "packages/omega_action_ext_t/"
+      ],
+      "safety_flags": [
+        "external_action_kernel"
+      ],
+      "metadata": {
+        "head_sha": "example"
+      }
+    }
+  ],
+  "oak_rules": [
+    "Do not mark drafts ready automatically.",
+    "Do not force-push or rewrite history.",
+    "Do not weaken CI to create green status.",
+    "Do not auto-resolve semantic conflicts.",
+    "Merge only after non-draft clean status with expected head SHA."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Create GitHub PR for Omega Action Ext T",
+  "intent": "Create a draft pull request for the action automation kernel without merging it.",
+  "system": "github",
+  "action_type": "open_pr",
+  "target": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "approved": true,
+  "public": true,
+  "reversible": true,
+  "rollback": "close_draft_pr_or_delete_branch",
+  "touches_humans": false,
+  "touches_money": false,
+  "touches_ip": true,
+  "risk": {
+    "legal": 1,
+    "ip": 2,
+    "finance": 0,
+    "safety": 0,
+    "privacy": 0,
+    "reputation": 1,
+    "irreversibility": 1
+  },
+  "metadata": {
+    "mode": "draft_pr_only",
+    "no_merge": true,
+    "oak_rule": "branch_and_draft_pr_preferred_over_main_direct_write"
+  }
+}
