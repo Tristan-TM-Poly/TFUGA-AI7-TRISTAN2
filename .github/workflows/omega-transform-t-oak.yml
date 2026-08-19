@@ -1,0 +1,36 @@
+name: Ω-TRANSFORM-T OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_transform_t/**"
+      - "tests/test_omega_transform_t.py"
+      - "scripts/omega_transform_t_oak_bench.py"
+      - "scripts/omega_transform_t_anomaly_demo.py"
+      - "scripts/omega_transform_t_extreme_oak_bench.py"
+      - "configs/omega_transform_atlas.json"
+      - "docs/theories/omega-transform-t-ffwt-n.md"
+      - "docs/roadmaps/omega-transform-t-roadmap.md"
+      - ".github/workflows/omega-transform-t-oak.yml"
+  workflow_dispatch:
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install runtime dependency
+        run: python -m pip install numpy
+      - name: Compile Ω-TRANSFORM-T package
+        run: python -m compileall omega_transform_t scripts tests
+      - name: Run unit tests
+        run: python -m unittest tests/test_omega_transform_t.py
+      - name: Run OAKBench
+        run: python scripts/omega_transform_t_oak_bench.py
+      - name: Run anomaly demo
+        run: python scripts/omega_transform_t_anomaly_demo.py
+      - name: Run extreme OAKBench
+        run: python scripts/omega_transform_t_extreme_oak_bench.py
