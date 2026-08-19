@@ -10,6 +10,10 @@ import {
   filterHyperMetaCells,
   hyperMetaKernelReceipt
 } from "../hypermeta-kernel.js";
+import {
+  compileMorphogeneticWorkspace,
+  createTransformationField
+} from "../morphogenetic-field.js";
 
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
@@ -71,6 +75,84 @@ function renderContracts() {
   return grid;
 }
 
+function renderMorphogeneticCompiler() {
+  const section = el("section", { className: "hm-section" });
+  const intent = el("input", { type: "text", value: "Tester une théorie avec le minimum de complexité persistante", "aria-label": "Intention à compiler" });
+  const objectType = el("select", { "aria-label": "Type d'objet" });
+  for (const type of ["theory", "claim", "equation", "dataset", "simulation", "experiment", "artifact", "question"]) objectType.append(el("option", { value: type, text: type }));
+  const operator = el("select", { "aria-label": "Opérateur principal" });
+  for (const item of HYPERMETA_OPERATORS) operator.append(el("option", { value: item, text: item }));
+  operator.value = "GO OAK";
+  const depth = el("input", { type: "number", min: "0", max: "12", step: "1", value: "1", "aria-label": "MetaDepth" });
+  const verifiedGain = el("input", { type: "number", min: "0", step: "0.25", value: "0.5", "aria-label": "Gain vérifié" });
+  const novelCoverage = el("input", { type: "number", min: "0", step: "0.25", value: "0.5", "aria-label": "Couverture nouvelle" });
+  const reuseGain = el("input", { type: "number", min: "0", step: "0.25", value: "0.5", "aria-label": "Gain de réutilisation" });
+  const complexityDebt = el("input", { type: "number", min: "0", step: "0.25", value: "0.5", "aria-label": "Dette de complexité" });
+  const output = el("div", { className: "hm-command-detail", "aria-live": "polite" });
+
+  function labeled(label, control) {
+    return el("label", {}, [el("small", { text: label }), control]);
+  }
+
+  function compile() {
+    const scores = {
+      verifiedGain: Number(verifiedGain.value),
+      novelCoverage: Number(novelCoverage.value),
+      reuseGain: Number(reuseGain.value),
+      complexityDebt: Number(complexityDebt.value)
+    };
+    const workspace = compileMorphogeneticWorkspace({
+      intent: intent.value,
+      objectType: objectType.value,
+      operator: operator.value,
+      metaDepth: Number(depth.value),
+      scores
+    });
+    const localField = createTransformationField({
+      families: [[objectType.value, objectType.value]],
+      operators: [operator.value],
+      objectType: objectType.value,
+      namespace: "local"
+    });
+    output.replaceChildren(
+      el("p", { className: "eyebrow", text: `MATERIALIZATION · ${workspace.materialization}` }),
+      el("p", { text: workspace.intent }),
+      el("code", { text: `${localField.cells[0].id} · ${localField.cells[0].familyLabel} × ${localField.cells[0].operator}` }),
+      el("p", { text: `Résidus initiaux: ${workspace.residualField.count} · ${workspace.residualField.types.join(", ") || "aucun"}` }),
+      el("p", { text: `ANTI-ADD: ${workspace.antiAdd.decision} · net ${workspace.antiAdd.net.toFixed(2)} · MetaDepth ${workspace.metaDepthGate.allowed ? "PASS" : "HOLD"} (${workspace.metaDepthGate.verifiedGain.toFixed(2)} / ${workspace.metaDepthGate.requiredGain.toFixed(2)})` }),
+      el("p", { text: `Obligations: ${workspace.obligations.join(", ") || "aucune obligation spéciale ajoutée"}` }),
+      el("small", { text: workspace.boundary })
+    );
+  }
+
+  const controls = el("div", { className: "hm-filters" }, [
+    labeled("Intent", intent),
+    labeled("Objet", objectType),
+    labeled("Opérateur", operator),
+    labeled("MetaDepth", depth),
+    labeled("Verified gain", verifiedGain),
+    labeled("Novel coverage", novelCoverage),
+    labeled("Reuse gain", reuseGain),
+    labeled("Complexity debt", complexityDebt)
+  ]);
+  for (const control of [intent, objectType, operator, depth, verifiedGain, novelCoverage, reuseGain, complexityDebt]) control.addEventListener(control === intent ? "input" : "change", compile);
+  compile();
+
+  section.append(
+    el("div", { className: "hm-section-head" }, [
+      el("div", {}, [
+        el("p", { className: "eyebrow", text: "Ω-VERIFIED-MORPHOGENETIC-CAPABILITY-FIELD" }),
+        el("h2", { text: "Intent → EpistemicCapsule → ResidualField → ANTI-ADD" })
+      ]),
+      el("span", { className: "hm-status hold", text: "REVERSIBLE COMPILER" })
+    ]),
+    el("p", { className: "fineprint", text: "Cette couche ne crée ni page persistante, ni preuve, ni permission. Elle décide d'abord REUSE / HOLD / CANDIDATE sous un gate de profondeur méta." }),
+    controls,
+    output
+  );
+  return section;
+}
+
 function renderMatrix() {
   const section = el("section", { className: "hm-section" });
   const search = el("input", { type: "search", placeholder: "Rechercher prove, media, residual…", "aria-label": "Rechercher les cellules Hyper-Meta" });
@@ -106,9 +188,10 @@ function renderMatrix() {
 
   section.append(
     el("div", { className: "hm-section-head" }, [
-      el("div", {}, [el("p", { className: "eyebrow", text: "Ω-HYPERMETA-1024-T" }), el("h2", { text: "Matrice 32 × 32" })]),
+      el("div", {}, [el("p", { className: "eyebrow", text: "Ω-HYPERMETA-1024-T · BOOTSTRAP GRAMMAR" }), el("h2", { text: "Matrice 32 × 32 compressible" })]),
       el("p", { className: "hm-count" }, [counter, document.createTextNode(" cellules visibles")])
     ]),
+    el("p", { className: "fineprint", text: "32×32 est maintenant un bootstrap mutable. Le noyau accepte des ensembles de familles et d'opérateurs plus petits ou plus grands; toute promotion reste soumise à OAK et à la dette de complexité." }),
     el("div", { className: "hm-filters" }, [search, family, operator]),
     grid
   );
@@ -123,14 +206,14 @@ export function renderHyperMeta() {
     el("section", { className: "hm-hero" }, [
       el("p", { className: "eyebrow", text: "GO PR MAX × GO TRISTAN × GO TRISTAN2 × GO TRISTAN² × MULTI-MERGE-MAX" }),
       el("h1", { text: "Hyper-Meta Lab" }),
-      el("p", { className: "hm-lede", text: "Un espace interactif de transformations candidates. Le noyau génère 1024 cellules sans créer 1024 modules persistants." }),
-      el("code", { className: "hm-equation", text: "Intent → Represent → Generate → Attack → Simulate → Prove/Measure → OAK → Compress → Regenerate" })
+      el("p", { className: "hm-lede", text: "Un champ morphogénétique de transformations candidates. Le 32×32 n'est plus une ontologie fixe: c'est une grammaire bootstrap que le système peut compresser ou étendre sous vérification." }),
+      el("code", { className: "hm-equation", text: "Intent → Capsule → Residual → Transform → Attack → Verify → ANTI-ADD → Materialize / Hold / Reuse" })
     ]),
     el("section", { className: "hm-metrics" }, [
-      metric("familles", receipt.families, "domaines Hyper-Meta"),
-      metric("opérateurs", receipt.operators, "ISA Ω-ZERO"),
-      metric("cellules", receipt.generatedCells, receipt.deterministicClosure ? "fermeture déterministe PASS" : "closure FAIL"),
-      metric("modules imposés", "0", "les cellules restent candidates")
+      metric("familles bootstrap", receipt.families, "grammaire mutable"),
+      metric("opérateurs bootstrap", receipt.operators, "ISA Ω-ZERO mutable"),
+      metric("cellules bootstrap", receipt.generatedCells, receipt.deterministicClosure ? "fermeture déterministe PASS" : "closure FAIL"),
+      metric("grammaire dynamique", receipt.dynamicGrammar ? "ON" : "OFF", "32×32 n'est pas irréductible")
     ]),
     el("section", { className: "hm-section" }, [
       el("div", { className: "hm-section-head" }, [
@@ -139,6 +222,7 @@ export function renderHyperMeta() {
       ]),
       renderMetabolism()
     ]),
+    renderMorphogeneticCompiler(),
     el("section", { className: "hm-section" }, [
       el("div", { className: "hm-section-head" }, [
         el("div", {}, [el("p", { className: "eyebrow", text: "GLOBALPASS SNAPSHOT · 2026-08-18" }), el("h2", { text: "Contrats d'intégration GitHub" })])
@@ -148,9 +232,9 @@ export function renderHyperMeta() {
     renderMatrix(),
     el("section", { className: "hm-section hm-compiler" }, [
       el("div", {}, [
-        el("p", { className: "eyebrow", text: "THEORY → INTERACTIONPROGRAM" }),
-        el("h2", { text: "Compilation vers le Web exécutable" }),
-        el("pre", {}, [el("code", { text: "TheorySpec\n  ↓\nInteractionProgram\n  ↓\nExecutableWorld\n  ↓\nSimCapsule\n  ↓\nPublicationBundle\n  ├─ Web\n  ├─ GitHub\n  └─ Media" })])
+        el("p", { className: "eyebrow", text: "KNOWLEDGE PROGRAM → PORTABLE CAPSULE" }),
+        el("h2", { text: "Compilation vers les projections exécutables" }),
+        el("pre", {}, [el("code", { text: "Intent\n  ↓\nEpistemicCapsule\n  ↓\nTransformationField\n  ↓\nInteractionProgram\n  ↓\nExecutableWorld / Proof / Experiment\n  ↓\nPublicationBundle\n  ├─ Web\n  ├─ GitHub\n  └─ Media" })])
       ]),
       el("div", {}, [
         el("h3", { text: "OAK invariants" }),
