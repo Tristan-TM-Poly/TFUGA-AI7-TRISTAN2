@@ -1,0 +1,89 @@
+{
+  "schema": "OMEGA-KNOWLEDGE-RIGHTS-GOVERNANCE/0.1",
+  "status": "architecture_candidate",
+  "authority": {
+    "automatic_external_disclosure": false,
+    "automatic_publication": false,
+    "automatic_legal_execution": false,
+    "automatic_ai_training_permission": false,
+    "human_or_qualified_review_required_for_legal_use": true
+  },
+  "invariants": [
+    "Generated != Verified",
+    "Policy != Law",
+    "Receipt != LegalProof",
+    "CanSee != CanExport != CanPublish",
+    "ReadPermission != AITrainingPermission",
+    "Confidentiality < ApplicableLaw",
+    "LocalPASS != GlobalPASS"
+  ],
+  "operations": [
+    "READ",
+    "COPY",
+    "DERIVE",
+    "SUMMARIZE",
+    "SIMULATE",
+    "TRAIN",
+    "BENCHMARK",
+    "PUBLISH",
+    "PATENT",
+    "LICENSE",
+    "SELL",
+    "TRANSFER",
+    "ARCHIVE",
+    "DELETE",
+    "PROVE",
+    "AGGREGATE"
+  ],
+  "gate_outcomes": ["ALLOW", "REDACT", "SANDBOX", "ESCALATE", "DENY"],
+  "required_genome_fields": [
+    "asset_id",
+    "origin",
+    "custodian",
+    "classification",
+    "privacy_status",
+    "ip_status",
+    "publication_status",
+    "allowed_purposes",
+    "allowed_operations",
+    "forbidden_operations",
+    "release_triggers",
+    "protected_disclosure_kernel",
+    "evidence_refs"
+  ],
+  "anti_nda_portfolio": [
+    "NO_NDA",
+    "MINIMAL_NDA",
+    "MUTUAL_NDA",
+    "PROJECT_SCOPED_NDA",
+    "TRADE_SECRET_ARCHITECTURE",
+    "PATENT_FIRST",
+    "OPEN_PUBLICATION",
+    "CONTROLLED_API_SANDBOX",
+    "DERIVED_OUTPUT_ONLY"
+  ],
+  "oak_checks": [
+    "scope_defined",
+    "purpose_defined",
+    "authority_evidenced",
+    "privacy_compatible",
+    "protected_disclosure_compatible",
+    "duration_justified",
+    "operationally_feasible",
+    "policy_conflicts_checked",
+    "rollback_or_release_path_defined",
+    "provenance_preserved"
+  ],
+  "commercialization_gate": {
+    "pilot_allowed": true,
+    "legal_enforceability_claim_allowed": false,
+    "superiority_claim_allowed_without_benchmark": false,
+    "required_before_scale": [
+      "qualified_legal_review",
+      "measured_policy_error_baseline",
+      "privacy_risk_review",
+      "user_workflow_test",
+      "evidence_receipts"
+    ]
+  }
+}
