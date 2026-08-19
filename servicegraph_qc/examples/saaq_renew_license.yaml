@@ -1,0 +1,109 @@
+service_id: "saaq_renew_license"
+service_name: "SAAQ - renouvellement du permis de conduire"
+owner_organization: "Société de l'assurance automobile du Québec"
+public_need: "Renouveler un permis de conduire sans déplacement inutile, sans opacité et avec recours humain"
+
+channels:
+  - online
+  - phone
+  - counter
+  - assisted_kiosk
+
+citizen_segments:
+  - citoyen numérique autonome
+  - personne âgée
+  - personne sans carte de crédit
+  - personne en région éloignée
+  - personne avec handicap
+  - nouvel arrivant
+
+legal_rules:
+  - identité valide
+  - paiement
+  - dossier de conduite
+  - photo si requise
+  - condition médicale si applicable
+
+data_nodes:
+  - identity
+  - address
+  - driving_record
+  - payment_status
+  - medical_flag
+  - photo_status
+
+process_steps:
+  - recevoir avis de renouvellement
+  - s'authentifier
+  - confirmer identité et adresse
+  - vérifier conditions applicables
+  - payer
+  - recevoir confirmation
+  - suivre statut
+  - obtenir recours en cas d'erreur
+
+friction_points:
+  - authentification difficile
+  - statut de demande non visible
+  - paiement principalement numérique
+  - rendez-vous indisponibles ou peu visibles
+  - données incohérentes entre systèmes
+  - documents ou preuves redemandées
+  - langage administratif peu clair
+
+risks:
+  - panne portail
+  - surcharge téléphonique
+  - exclusion numérique
+  - correction lente d'erreur de dossier
+  - dépendance fournisseur
+  - absence de rollback opérationnel
+
+oak_tests:
+  - test personne âgée sans téléphone intelligent
+  - test panne paiement
+  - test surcharge lundi matin
+  - test région sans Internet fiable
+  - test lecteur d'écran
+  - test correction d'adresse incohérente
+  - test retour arrière papier/agent
+  - test délai public de résolution
+
+success_metrics:
+  - temps médian de résolution
+  - taux d'abandon
+  - nombre de contacts par demande
+  - taux d'erreur corrigée en moins de 48h
+  - satisfaction citoyenne
+  - temps moyen d'escalade humaine
+
+human_recourses:
+  - téléphone
+  - comptoir
+  - escalade agent spécialisé
+  - correction dossier
+  - plainte officielle
+
+m_minus_rules:
+  - pas de lancement massif sans pilote
+  - pas de fermeture des canaux alternatifs
+  - pas d'indicateurs verts si tests incomplets
+  - pas de système critique sans mode dégradé
+
+metric_inputs:
+  resolution: 0.68
+  accessibility: 0.52
+  transparency: 0.45
+  security: 0.72
+  human_recourse: 0.60
+  interoperability: 0.48
+  cost_control: 0.40
+
+penalties:
+  outage_risk: 0.60
+  no_human_channel: 0.20
+  no_rollback: 0.70
+  no_accessibility_test: 0.50
+  opaque_status: 0.80
+  vendor_lock_in: 0.70
+  repeated_documents: 0.60

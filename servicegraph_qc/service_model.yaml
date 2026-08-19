@@ -1,0 +1,86 @@
+schema_version: "0.1"
+name: "ServiceGraph-QC"
+branch: "Ω-SERVICES-QC-T"
+description: >
+  Modèle de service public québécois représenté comme hypergraphe opérationnel.
+  Il sert à diagnostiquer les frictions, mesurer les risques, générer des tests OAK
+  et produire des recommandations de réforme.
+
+required_fields:
+  service_id: "Identifiant stable du service"
+  service_name: "Nom public du service"
+  public_need: "Besoin humain réel à résoudre"
+  owner_organization: "Organisme responsable"
+  channels: "Canaux d'accès disponibles"
+  citizen_segments: "Segments à tester, incluant les populations vulnérables"
+  legal_rules: "Règles et contraintes applicables"
+  data_nodes: "Données utilisées ou produites"
+  process_steps: "Étapes du parcours de bout en bout"
+  friction_points: "Points de friction citoyenne"
+  risks: "Risques opérationnels, légaux, humains, cyber ou fournisseurs"
+  oak_tests: "Tests de validation avant déploiement"
+  success_metrics: "Mesures de résolution réelle"
+  human_recourses: "Recours humains, correction et appel"
+  m_minus_rules: "Règles anti-répétition issues des échecs passés"
+
+scoring:
+  resolution_weight: 25
+  accessibility_weight: 15
+  transparency_weight: 15
+  security_weight: 15
+  human_recourse_weight: 10
+  interoperability_weight: 10
+  cost_control_weight: 10
+  penalties:
+    outage: 10
+    no_human_channel: 15
+    no_rollback: 20
+    no_accessibility_test: 15
+    opaque_status: 10
+    vendor_lock_in: 10
+    repeated_documents: 5
+
+maturity_levels:
+  L0: "Papier opaque"
+  L1: "Numérisé superficiellement"
+  L2: "Portail en ligne fragmenté"
+  L3: "Parcours citoyen mesuré"
+  L4: "Données interopérables avec contrôle"
+  L5: "Service omnicanal humain"
+  L6: "Amélioration continue par M⁻"
+  L7: "Service proactif, vérifiable et résilient"
+
+oak_gate:
+  - id: OAK-0
+    name: "Besoin réel"
+    question: "Le besoin citoyen est-il prouvé par données et témoignages?"
+  - id: OAK-1
+    name: "Parcours cartographié"
+    question: "Le parcours complet a-t-il été modélisé de bout en bout?"
+  - id: OAK-2
+    name: "Règles explicites"
+    question: "Les règles légales et administratives sont-elles documentées?"
+  - id: OAK-3
+    name: "Données prêtes"
+    question: "Qualité, doublons, sécurité, migration et conservation sont-ils maîtrisés?"
+  - id: OAK-4
+    name: "Prototype testé"
+    question: "Employés et citoyens réels ont-ils testé le prototype?"
+  - id: OAK-5
+    name: "Accessibilité"
+    question: "Personnes âgées, handicap, ruralité, pauvreté et faible littératie numérique sont-ils testés?"
+  - id: OAK-6
+    name: "Cybersécurité"
+    question: "Menaces, authentification, journalisation et réponse incident sont-ils testés?"
+  - id: OAK-7
+    name: "Charge et panne"
+    question: "Le service tient-il en surcharge et en dégradation?"
+  - id: OAK-8
+    name: "Retour arrière"
+    question: "Un plan de continuité existe-t-il si le système échoue?"
+  - id: OAK-9
+    name: "Transparence"
+    question: "Coûts, risques, délais et livrables sont-ils visibles?"
+  - id: OAK-10
+    name: "Déploiement progressif"
+    question: "Pilote, cohorte, région, généralisation sont-ils séparés?"

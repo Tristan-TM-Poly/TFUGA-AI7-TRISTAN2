@@ -1,0 +1,105 @@
+service_id: "ramq_health_card"
+service_name: "RAMQ - carte d'assurance maladie"
+owner_organization: "Régie de l'assurance maladie du Québec"
+public_need: "Obtenir, renouveler ou corriger une carte d'assurance maladie avec clarté, accessibilité et continuité de couverture"
+
+channels:
+  - online
+  - phone
+  - counter
+  - mail
+
+citizen_segments:
+  - famille avec enfant
+  - personne âgée
+  - nouvel arrivant
+  - personne sans adresse stable
+  - personne avec handicap
+  - personne en région éloignée
+
+legal_rules:
+  - identité
+  - résidence au Québec
+  - photo et signature si requises
+  - statut d'admissibilité
+  - documents de preuve
+
+data_nodes:
+  - identity
+  - address
+  - eligibility_status
+  - photo_status
+  - renewal_date
+  - proof_documents
+
+process_steps:
+  - comprendre admissibilité
+  - rassembler documents
+  - déposer demande
+  - valider identité et résidence
+  - recevoir statut
+  - corriger erreurs
+  - recevoir carte
+
+friction_points:
+  - documents difficiles à comprendre
+  - délai de traitement opaque
+  - statut de demande non visible
+  - dépendance au courrier
+  - correction lente d'erreur
+  - langage administratif peu clair
+
+risks:
+  - rupture de couverture perçue
+  - documents perdus ou incomplets
+  - exclusion numérique
+  - attente téléphonique élevée
+  - erreurs d'identité ou d'adresse
+
+oak_tests:
+  - test nouvel arrivant avec documents mixtes
+  - test personne âgée sans ordinateur
+  - test adresse temporaire
+  - test correction nom/adresse
+  - test lecteur d'écran
+  - test suivi de statut
+  - test mode dégradé courrier/comptoir
+
+success_metrics:
+  - temps médian avant carte reçue
+  - taux de demande incomplète
+  - nombre de contacts par demande
+  - taux de correction sans nouvelle demande complète
+  - satisfaction citoyenne
+  - disponibilité d'un recours humain
+
+human_recourses:
+  - téléphone
+  - comptoir Services Québec
+  - correction dossier
+  - plainte officielle
+  - accompagnement communautaire
+
+m_minus_rules:
+  - ne jamais rendre le service uniquement numérique
+  - ne pas redemander les mêmes preuves si déjà vérifiées
+  - fournir statut clair et prochaines étapes
+  - protéger les personnes sans littératie administrative forte
+
+metric_inputs:
+  resolution: 0.70
+  accessibility: 0.60
+  transparency: 0.50
+  security: 0.78
+  human_recourse: 0.66
+  interoperability: 0.52
+  cost_control: 0.55
+
+penalties:
+  outage_risk: 0.30
+  no_human_channel: 0.10
+  no_rollback: 0.40
+  no_accessibility_test: 0.50
+  opaque_status: 0.65
+  vendor_lock_in: 0.30
+  repeated_documents: 0.70

@@ -1,0 +1,111 @@
+service_id: "education_financial_aid"
+service_name: "Aide financière aux études - demande et suivi"
+owner_organization: "Ministère de l'Enseignement supérieur"
+public_need: "Permettre à un étudiant de demander, comprendre et suivre son aide financière sans perdre une session à cause de complexité administrative"
+
+channels:
+  - online
+  - phone
+  - school_financial_aid_office
+  - mail
+
+citizen_segments:
+  - étudiant cégep
+  - étudiant universitaire
+  - étudiant parent
+  - étudiant autonome financièrement
+  - étudiant en situation de handicap
+  - étudiant sans soutien familial
+  - nouvel arrivant admissible
+
+legal_rules:
+  - statut étudiant
+  - programme admissible
+  - revenus
+  - situation familiale
+  - résidence
+  - documents scolaires
+  - délais de demande
+
+data_nodes:
+  - identity
+  - school_enrollment
+  - income
+  - family_status
+  - disability_status_if_consented
+  - payment_schedule
+  - missing_documents
+
+process_steps:
+  - comprendre admissibilité
+  - déposer demande
+  - transmettre documents
+  - recevoir calcul
+  - suivre versements
+  - corriger erreur
+  - réviser si situation change
+
+friction_points:
+  - langage administratif difficile
+  - documents manquants peu clairs
+  - délai de traitement opaque
+  - statut de demande non visible
+  - preuves redemandées
+  - difficulté à obtenir recours avant début de session
+
+risks:
+  - abandon ou précarité financière
+  - retard de versement
+  - erreur de calcul
+  - exclusion numérique
+  - stress élevé
+  - données sensibles mal comprises
+
+oak_tests:
+  - test étudiant parent
+  - test étudiant sans soutien familial
+  - test changement de revenus
+  - test rentrée scolaire en surcharge
+  - test accessibilité mobile
+  - test lecteur d'écran
+  - test correction urgente avant session
+  - test collaboration bureau d'aide financière
+
+success_metrics:
+  - temps médian avant décision
+  - taux de demandes incomplètes
+  - taux de versement à temps
+  - nombre de contacts par demande
+  - taux de correction urgente
+  - compréhension du calcul
+
+human_recourses:
+  - bureau d'aide financière institutionnel
+  - téléphone
+  - correction dossier
+  - demande de révision
+  - plainte officielle
+
+m_minus_rules:
+  - ne pas laisser un étudiant sans statut clair avant la session
+  - afficher documents manquants précisément
+  - offrir escalade humaine pour risque de décrochage
+  - éviter redemande de preuves scolaires déjà transmises
+
+metric_inputs:
+  resolution: 0.66
+  accessibility: 0.58
+  transparency: 0.46
+  security: 0.76
+  human_recourse: 0.62
+  interoperability: 0.44
+  cost_control: 0.60
+
+penalties:
+  outage_risk: 0.35
+  no_human_channel: 0.20
+  no_rollback: 0.40
+  no_accessibility_test: 0.55
+  opaque_status: 0.75
+  vendor_lock_in: 0.30
+  repeated_documents: 0.65
