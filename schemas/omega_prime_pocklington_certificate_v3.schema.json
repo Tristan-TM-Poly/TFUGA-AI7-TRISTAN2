@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega_prime_pocklington_certificate_v3.schema.json",
+  "title": "Omega Prime Pocklington Certificate V3",
+  "type": "object",
+  "required": ["version", "n", "known_factor_product", "cofactor", "factors", "probable_prime_prefilter", "oak", "sha256"],
+  "properties": {
+    "version": {"const": "3.0"},
+    "n": {"type": "integer", "minimum": 3},
+    "known_factor_product": {"type": "integer", "minimum": 2},
+    "cofactor": {"type": "integer", "minimum": 1},
+    "factors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["prime", "exponent", "witness", "child_certificate"],
+        "properties": {
+          "prime": {"type": "integer", "minimum": 2},
+          "exponent": {"type": "integer", "minimum": 1},
+          "witness": {"type": "integer", "minimum": 2},
+          "child_certificate": {"type": ["object", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "probable_prime_prefilter": {"type": "object"},
+    "oak": {
+      "type": "object",
+      "required": ["status", "proof_is_deterministic", "probable_prime_prefilter_is_not_the_proof", "novelty_claimed", "record_claimed", "economic_value_claimed"],
+      "properties": {
+        "status": {"const": "PROVEN_PRIME_BY_POCKLINGTON_R0_3"},
+        "proof_is_deterministic": {"const": true},
+        "probable_prime_prefilter_is_not_the_proof": {"const": true},
+        "novelty_claimed": {"const": false},
+        "record_claimed": {"const": false},
+        "economic_value_claimed": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

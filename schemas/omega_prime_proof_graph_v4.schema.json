@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tfuga.local/schemas/omega_prime_proof_graph_v4.schema.json",
+  "title": "Omega Prime recursive Pocklington proof graph R0.4",
+  "type": "object",
+  "required": ["version", "root", "nodes", "oak", "sha256"],
+  "properties": {
+    "version": {"const": "4.0"},
+    "root": {"type": "string", "minLength": 1},
+    "nodes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["node_id", "n", "certificate", "child_refs"],
+        "properties": {
+          "node_id": {"type": "string"},
+          "n": {"type": "integer", "minimum": 3},
+          "certificate": {"type": "object"},
+          "child_refs": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "oak": {
+      "type": "object",
+      "required": ["status", "novelty_claimed", "record_claimed"],
+      "properties": {
+        "status": {"const": "RECURSIVE_POCKLINGTON_PROOF_DAG_R0_4"},
+        "novelty_claimed": {"const": false},
+        "record_claimed": {"const": false}
+      },
+      "additionalProperties": true
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

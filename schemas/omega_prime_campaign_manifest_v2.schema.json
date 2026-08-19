@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan-tm-poly.github.io/schemas/omega_prime_campaign_manifest_v2.schema.json",
+  "title": "Omega Prime Campaign Manifest V2",
+  "type": "object",
+  "required": ["manifest_version", "campaign_id", "policy", "shard_count", "task_count", "tasks", "sha256", "claims"],
+  "properties": {
+    "manifest_version": {"const": "2.0"},
+    "campaign_id": {"type": "string", "pattern": "^omega-prime-campaign-[0-9a-f]{16}$"},
+    "policy": {
+      "type": "object",
+      "required": ["exponent_min", "exponent_max", "k_min", "k_max", "shard_size", "max_value"],
+      "properties": {
+        "exponent_min": {"type": "integer", "minimum": 1},
+        "exponent_max": {"type": "integer", "minimum": 1},
+        "k_min": {"type": "integer", "minimum": 1},
+        "k_max": {"type": "integer", "minimum": 1},
+        "shard_size": {"type": "integer", "minimum": 1},
+        "max_value": {"type": "integer", "minimum": 3, "maximum": 18446744073709551615}
+      },
+      "additionalProperties": false
+    },
+    "shard_count": {"type": "integer", "minimum": 0},
+    "task_count": {"type": "integer", "minimum": 0},
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["task_id", "shard_id", "ordinal", "family", "exponent", "k", "value", "state"],
+        "properties": {
+          "task_id": {"type": "string"},
+          "shard_id": {"type": "string", "pattern": "^shard-[0-9]{8}$"},
+          "ordinal": {"type": "integer", "minimum": 0},
+          "family": {"const": "proth"},
+          "exponent": {"type": "integer", "minimum": 1},
+          "k": {"type": "integer", "minimum": 1},
+          "value": {"type": "string", "pattern": "^[0-9]+$"},
+          "state": {"const": "planned"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "claims": {
+      "type": "object",
+      "required": ["finite_plan_is_permanent_compute_cap", "external_novelty_checked", "record_claimed"],
+      "properties": {
+        "finite_plan_is_permanent_compute_cap": {"const": false},
+        "external_novelty_checked": {"const": false},
+        "record_claimed": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
