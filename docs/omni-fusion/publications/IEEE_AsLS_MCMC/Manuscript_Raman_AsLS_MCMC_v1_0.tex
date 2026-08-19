@@ -1,0 +1,20 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\title{Uncertainty-Aware AsLS-MCMC Baseline Correction for Raman Spectra}
+\author{Tristan Tardif-Morency}
+\begin{document}
+\maketitle
+\begin{abstract}
+This OAK-safe draft defines a reproducible scaffold for Raman baseline correction using asymmetric least squares and MCMC parameter exploration. It does not claim completed empirical validation.
+\end{abstract}
+\section{Model}
+Given a spectrum $y \in \mathbb{R}^n$, estimate a baseline $z$ by
+\begin{equation}
+\hat z = \arg\min_z \sum_i w_i (y_i-z_i)^2 + \lambda \lVert D^{(2)}z \rVert_2^2.
+\end{equation}
+Weights are updated asymmetrically with parameter $p$.
+\section{MCMC}
+Sample $\theta=(\log_{10}\lambda,\operatorname{logit}(p))$ and evaluate each candidate by baseline smoothness, corrected-spectrum plausibility, and benchmark error when ground truth exists.
+\section{OAK Status}
+Current status: definition and manuscript scaffold only. Promotion requires code, data, metrics, uncertainty intervals, and failure cases.
+\end{document}
