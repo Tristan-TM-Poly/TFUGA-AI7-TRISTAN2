@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/omega-master-doc-atlas-r10.json",
+  "title": "Ω-MASTER-DOC-ATLAS-T∞ R1.0",
+  "type": "object",
+  "required": ["atlas_version", "schema_version", "repository_count", "repositories", "totals", "repository_similarity", "shared_component_candidates", "cross_repository_identical_modules", "source_snapshots", "oak_boundaries", "truth_boundary", "atlas_fingerprint"],
+  "properties": {
+    "atlas_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.0.0"},
+    "repository_count": {"type": "integer", "minimum": 1},
+    "repositories": {"type": "array", "minItems": 1},
+    "totals": {"type": "object"},
+    "repository_similarity": {"type": "array"},
+    "shared_component_candidates": {"type": "array"},
+    "cross_repository_identical_modules": {"type": "array"},
+    "cross_repository_duplicate_claims": {"type": "array"},
+    "source_snapshots": {"type": "array", "minItems": 1},
+    "oak_boundaries": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "truth_boundary": {"type": "string"},
+    "atlas_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}
