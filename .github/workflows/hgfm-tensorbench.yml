@@ -1,0 +1,35 @@
+name: HGFM TensorBench
+
+on:
+  pull_request:
+    paths:
+      - "benchmarks/hgfm_tensorbench.py"
+      - "tests/test_hgfm_tensorbench.py"
+      - "configs/hgfm_tensorbench.schema.json"
+      - "docs/research/HGFM_TENSORBENCH.md"
+      - ".github/workflows/hgfm-tensorbench.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tensorbench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run focused tests
+        run: python -m unittest tests.test_hgfm_tensorbench -v
+      - name: Generate strict JSON report
+        run: |
+          python -m benchmarks.hgfm_tensorbench \
+            --output out/hgfm-tensorbench/report.json
+          python -m json.tool out/hgfm-tensorbench/report.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hgfm-tensorbench-report
+          path: out/hgfm-tensorbench/report.json
