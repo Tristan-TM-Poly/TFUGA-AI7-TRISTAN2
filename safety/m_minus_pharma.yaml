@@ -1,0 +1,80 @@
+schema_version: 1
+branch: omega_pharma_hgfm_t
+status: OAK-safe negative memory registry
+hard_boundary: >-
+  This registry is for safety routing and anti-pattern detection only. It is not
+  medical advice, not dosing guidance, and not a substitute for poison control,
+  emergency services, physicians, or pharmacists.
+
+risk_patterns:
+  - id: M_PHARMA_001
+    name: body_weight_normalization_error
+    severity: high
+    pattern: Assuming high body weight makes a high or supratherapeutic drug exposure safe.
+    safe_response: Explain that body weight alone does not determine safety; route real overdose or medication error to poison control or emergency care.
+
+  - id: M_PHARMA_002
+    name: tolerance_illusion
+    severity: high
+    pattern: Assuming prior use or tolerance prevents overdose or severe adverse reaction.
+    safe_response: State that tolerance does not eliminate cardiovascular, neurological, psychiatric, thermal, or interaction risk.
+
+  - id: M_PHARMA_003
+    name: performance_fallacy
+    severity: medium
+    pattern: Confusing stimulation, wakefulness, or euphoria with intelligence, learning, or productivity.
+    safe_response: Reframe performance as a calibrated stability basin; discourage escalation or self-experimentation.
+
+  - id: M_PHARMA_004
+    name: dose_linearity_fallacy
+    severity: high
+    pattern: Treating multiple times a recommended dose as a simple linear increase in effect.
+    safe_response: Explain nonlinear risk, phase transitions, and idiosyncratic responses.
+
+  - id: M_PHARMA_005
+    name: stacking_error
+    severity: high
+    pattern: Combining stimulants or psychoactive substances with caffeine, nicotine, alcohol, decongestants, antidepressants, recreational substances, supplements, or unknown medications.
+    safe_response: Do not provide optimization advice; route to pharmacist, prescriber, poison control, or emergency services depending on risk.
+
+  - id: M_PHARMA_006
+    name: wait_and_see_delay
+    severity: critical
+    pattern: Waiting until severe symptoms before contacting poison control or emergency services after possible overdose.
+    safe_response: For possible overdose, recommend contacting poison control or emergency services immediately.
+
+  - id: M_PHARMA_007
+    name: autonomous_medical_agent_error
+    severity: critical
+    pattern: Allowing AI automation to diagnose, dose, triage, or manage emergency medical risk without a qualified human.
+    safe_response: Keep automation at L0-L1 and route to qualified human medical systems.
+
+  - id: M_PHARMA_008
+    name: public_health_detail_leakage
+    severity: high
+    pattern: Publishing personal medical details, medication exposures, or identifiable health narratives into public repositories.
+    safe_response: Strip personal data; commit only generic safety documentation.
+
+red_flags:
+  emergency_escalation:
+    - chest pain
+    - severe palpitations
+    - fainting
+    - shortness of breath
+    - seizure
+    - loss of consciousness
+    - severe confusion
+    - hallucinations
+    - uncontrollable agitation
+    - high fever
+    - hyperthermia
+    - rigid muscles
+    - severe headache with neurological symptoms
+    - mixed ingestion
+    - unknown ingestion
+
+default_action:
+  real_or_possible_overdose: poison_control_or_emergency_services
+  medication_error_without_red_flags: poison_control_or_pharmacist_or_prescriber
+  theoretical_question: educational_explanation_with_no_dosing_optimization
+  self_experimentation_request: refuse_optimization_and_redirect_to_safety
