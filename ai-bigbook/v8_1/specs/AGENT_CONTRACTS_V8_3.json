@@ -1,0 +1,34 @@
+{
+  "mode": "local_patch_only",
+  "global_laws": [
+    "PowerReal must stay in [0,1]",
+    "Every claim must have an R0-R5 status",
+    "Every strong claim must pass RedTeam before promotion",
+    "No external mutation without local approval",
+    "Generated artifacts are reproducible from source"
+  ],
+  "blocked_actions": [
+    "deploy",
+    "push_to_main",
+    "payment",
+    "self_replication",
+    "credential_access",
+    "platform_spam",
+    "unapproved_external_write"
+  ],
+  "agents": [
+    "AI_CORPUS_EXTRACTOR",
+    "AI_DEDUPLICATOR",
+    "AI_FFWT_ANALYST",
+    "AI_HGFM_BUILDER",
+    "AI_THEORY_CANONIZER",
+    "AI_CODE_GENERATOR",
+    "AI_TEST_RUNNER",
+    "AI_RED_TEAM",
+    "AI_EVIDENCE_GATE",
+    "AI_BOOK_EDITOR",
+    "AI_PROJECTION_FORGE",
+    "AI_APPROVAL_SENTINEL",
+    "AI_META_SYNERGY_FORGE"
+  ]
+}

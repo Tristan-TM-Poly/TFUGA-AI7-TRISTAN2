@@ -1,0 +1,28 @@
+name: AI-BIGBOOK V8.3 Local CI
+
+on:
+  pull_request:
+    paths:
+      - 'ai-bigbook/v8_1/**'
+      - '.github/workflows/ai_bigbook_v8_3_local_ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run EvidenceGate on seed claims
+        run: python ai-bigbook/v8_1/scripts/evidence_gate.py ai-bigbook/v8_1/specs/CLAIMS_REGISTRY_SEED.jsonl
+      - name: Smoke test tensor address generator
+        run: python ai-bigbook/v8_1/scripts/generate_tensor_address_space.py
+      - name: Smoke test Omni Translator
+        run: python ai-bigbook/v8_1/scripts/omni_translator.py TEST_CONCEPT 0.1,0.2,0.3
+      - name: Smoke test AI-PANTHEO registry
+        run: python ai-bigbook/v8_1/scripts/ai_pantheo_registry.py
