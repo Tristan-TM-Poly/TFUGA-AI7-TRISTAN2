@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/knowledge-rights-genome-r0.2.json",
+  "title": "KnowledgeRightsGenome R0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "asset_id",
+    "policy_version",
+    "origin",
+    "custodian",
+    "classification",
+    "privacy_status",
+    "ip_status",
+    "publication_status",
+    "allowed_purposes",
+    "allowed_operations",
+    "forbidden_operations",
+    "release_triggers",
+    "protected_disclosure_kernel",
+    "evidence_refs"
+  ],
+  "properties": {
+    "asset_id": {"type": "string", "minLength": 1},
+    "policy_version": {"type": "string", "minLength": 1},
+    "origin": {"type": "string", "minLength": 1},
+    "custodian": {"type": "string", "minLength": 1},
+    "classification": {
+      "type": "string",
+      "enum": ["PUBLIC", "INTERNAL", "CONFIDENTIAL", "RESTRICTED", "UNKNOWN"]
+    },
+    "privacy_status": {"type": "string", "minLength": 1},
+    "ip_status": {"type": "string", "minLength": 1},
+    "publication_status": {"type": "string", "minLength": 1},
+    "allowed_purposes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "allowed_operations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/operation"}
+    },
+    "forbidden_operations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/operation"}
+    },
+    "expires_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "release_triggers": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "protected_disclosure_kernel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "contexts"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "contexts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "rules": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/rule"}
+    }
+  },
+  "$defs": {
+    "operation": {
+      "type": "string",
+      "enum": [
+        "READ", "COPY", "DERIVE", "SUMMARIZE", "SIMULATE", "TRAIN",
+        "BENCHMARK", "PUBLISH", "PATENT", "LICENSE", "SELL", "TRANSFER",
+        "ARCHIVE", "DELETE", "PROVE", "AGGREGATE", "EXPORT"
+      ]
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule_id", "effect", "operations"],
+      "properties": {
+        "rule_id": {"type": "string", "minLength": 1},
+        "effect": {"type": "string", "enum": ["ALLOW", "DENY"]},
+        "actors": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "purposes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "operations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/operation"}}
+      }
+    }
+  }
+}
