@@ -1,0 +1,118 @@
+book_id: omega-jkd-qsim-foundational-book-t
+version: 0.1.0
+status: FOUNDATIONAL_DRAFT
+public_title: "La Loi du Minimum Suffisant"
+subtitle: "Générer le possible. Conserver le nécessaire. Vérifier le réel. Régénérer le reste."
+core_loop:
+  - ALL
+  - GENERATE
+  - JKD
+  - QSIM
+  - OAK
+  - REGENERATE
+  - MAX
+core_claim:
+  text: "Toute complexité persistante doit prouver une capacité mesurable qui disparaît lorsqu'on la retire."
+  epistemic_status: HYPOTHESIS_TO_OPERATIONALIZE
+invariants:
+  - Generated != Verified
+  - Simplified != Equivalent
+  - Tested != Proven
+  - LocalPASS != GlobalPASS
+  - MoreMinimal != MoreCorrect
+  - QuantumInspired != QuantumPhysicalValidation
+scales:
+  - idea
+  - theory
+  - proof
+  - algorithm
+  - code
+  - system
+  - application
+  - product
+  - project
+  - company
+  - ecosystem
+universal_contract_fields:
+  - goal
+  - metrics
+  - invariants
+  - tolerance
+  - risk
+  - evidence
+universal_operators:
+  - generate
+  - merge
+  - split
+  - prune
+  - compress
+  - ablate
+  - verify
+  - regenerate
+  - scale
+  - virtualize
+  - destroy
+  - promote
+  - hold
+chapters:
+  - part: 1
+    title: "La rupture"
+    focus: [complexity, necessity, minimum_sufficient_structure]
+  - part: 2
+    title: "Jeet Kun Do de Tristan"
+    focus: [minimum_action, direct_transformation, pipeline_distillation]
+  - part: 3
+    title: "Simplification Quantique de Tristan"
+    focus: [state_space_reduction, causal_quotient, adaptive_resolution]
+  - part: 4
+    title: "Hypergraphes fractals mycéliens"
+    focus: [HGFM, multiscale, zoom_dezoom]
+  - part: 5
+    title: "Intelligence cross-scale"
+    focus: [cross_scale_necessity, globalpass, synergy]
+  - part: 6
+    title: "Générer, détruire, régénérer"
+    focus: [morphogenesis, apoptosis, regeneration_cost]
+  - part: 7
+    title: "Compilateur universel"
+    focus: [universal_object, operators, cognitive_isa]
+  - part: 8
+    title: "Automatisation"
+    focus: [automation_compiler, meta_automation, automation_ablation]
+  - part: 9
+    title: "Science et preuve"
+    focus: [OAK, falsifier_compiler, evidence_receipts]
+  - part: 10
+    title: "Applications scientifiques et techniques"
+    focus: [math, ai, software, simulation, crypto, engineering]
+  - part: 11
+    title: "Projets et produits"
+    focus: [minimum_project, minimum_useful_product, proof_of_value]
+  - part: 12
+    title: "Compagnies"
+    focus: [minimum_viable_company, shared_kernel, value_capture]
+  - part: 13
+    title: "Noyau régénératif"
+    focus: [minimal_generating_basis, fertile_compression, regeneration]
+  - part: 14
+    title: "La loi"
+    focus: [synthesis, limitations, experimental_program]
+validation_program:
+  required_per_major_claim:
+    - formal_definition_or_executable_spec
+    - baseline
+    - ablation_or_counterexample
+    - evidence_receipt
+    - uncertainty_and_limits
+  preferred_when_applicable:
+    - benchmark
+    - formal_proof
+    - independent_replication
+    - cross_scale_regression
+next_actions:
+  - crystallize_claim_ledger
+  - build_chapter_dependency_hypergraph
+  - create_executable_ablation_pilots
+  - connect_existing_HGFM_CVCD_OAK_artifacts
+  - prepare_public_reader_site_projection
+  - create_publication_and_IP_gate
