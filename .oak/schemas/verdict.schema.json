@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OAKGate Verdict v1",
+  "type": "object",
+  "required": [
+    "verdict",
+    "severity",
+    "blocking",
+    "readiness_score",
+    "gate_results",
+    "knowns",
+    "unknowns",
+    "next_actions",
+    "context"
+  ],
+  "properties": {
+    "verdict": {"type": "string"},
+    "severity": {
+      "type": "string",
+      "enum": ["READY", "WARNING", "INCOMPLETE", "FAILED", "BLOCKED", "CRITICAL"]
+    },
+    "blocking": {"type": "boolean"},
+    "readiness_score": {"type": "integer", "minimum": 0, "maximum": 100},
+    "gate_results": {"type": "array"},
+    "knowns": {"type": "array"},
+    "unknowns": {"type": "array"},
+    "next_actions": {"type": "array"},
+    "context": {"type": "object"}
+  }
+}

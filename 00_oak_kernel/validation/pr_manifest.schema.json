@@ -1,0 +1,317 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://tristan-t.omega/schemas/pr_manifest.schema.v1.json",
+  "title": "Manifeste canonique de Pull Request Tristan-T",
+  "description": "Déclaration versionnée d'une PR. Les statuts CI et démontré sont calculés par OAKGate et ne peuvent pas être auto-déclarés.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pr_id",
+    "title",
+    "class",
+    "product",
+    "claim",
+    "dependencies",
+    "risk",
+    "validation",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "pr_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "class": {
+      "type": "string",
+      "enum": ["K", "P", "E", "D"],
+      "description": "K=Kernel, P=Product, E=Experimental, D=Documentation."
+    },
+    "product": {
+      "type": "string",
+      "enum": [
+        "oakgate",
+        "grid_evidence_engine",
+        "pmu_digital_twin",
+        "research_sandbox",
+        "core_infrastructure"
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "statement", "status", "domain", "falsification_criteria"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^CLM-[A-Z0-9][A-Z0-9._-]{2,63}$"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 4000
+        },
+        "status": {
+          "type": "string",
+          "enum": ["proposed", "tested_local", "contested"],
+          "description": "ci_passed et demonstrated sont des statuts calculés, jamais auto-déclarés."
+        },
+        "domain": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        },
+        "falsification_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 1000
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_prs", "supersedes"],
+      "properties": {
+        "required_prs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "supersedes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["technical", "scientific", "security", "operational"],
+      "properties": {
+        "technical": {"$ref": "#/definitions/risk_level"},
+        "scientific": {"$ref": "#/definitions/risk_level"},
+        "security": {"$ref": "#/definitions/risk_level"},
+        "operational": {"$ref": "#/definitions/risk_level"}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_tests", "baseline_comparison", "clean_environment_reproduction"],
+      "properties": {
+        "unit_tests": {"$ref": "#/definitions/check_declaration"},
+        "baseline_comparison": {"$ref": "#/definitions/baseline_check"},
+        "clean_environment_reproduction": {"$ref": "#/definitions/check_declaration"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ledger_path", "ledger_sha256", "required_kinds"],
+      "properties": {
+        "ledger_path": {
+          "type": "string",
+          "pattern": "^evidence/pr_[0-9]+\\.jsonl$"
+        },
+        "ledger_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "required_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "unit_test",
+              "integration_test",
+              "baseline",
+              "reproduction",
+              "security_scan",
+              "benchmark",
+              "review"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "risk_level": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "check_declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "expected": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "required": {"const": true}
+            }
+          },
+          "then": {
+            "required": ["command", "expected"]
+          }
+        }
+      ]
+    },
+    "baseline_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "expected": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "baseline_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "direction", "threshold"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "direction": {
+                "type": "string",
+                "enum": ["min", "max", "equal"]
+              },
+              "threshold": {"type": "number"}
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "required": {"const": true}
+            }
+          },
+          "then": {
+            "required": ["command", "expected", "baseline_id", "metrics"]
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "class": {"enum": ["K", "P", "E"]}
+        }
+      },
+      "then": {
+        "properties": {
+          "validation": {
+            "properties": {
+              "unit_tests": {
+                "properties": {
+                  "required": {"const": true}
+                }
+              },
+              "baseline_comparison": {
+                "properties": {
+                  "required": {"const": true}
+                },
+                "required": ["baseline_id", "metrics"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "class": {"enum": ["K", "P"]}
+        }
+      },
+      "then": {
+        "properties": {
+          "validation": {
+            "properties": {
+              "clean_environment_reproduction": {
+                "properties": {
+                  "required": {"const": true}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
