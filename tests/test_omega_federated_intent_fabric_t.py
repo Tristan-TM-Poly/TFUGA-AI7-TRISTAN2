@@ -1,13 +1,16 @@
+from omega_intent_t.models import Intent
 from omega_federated_intent_fabric_t import (
     AuthorityLevel,
     FederatedIntentCompiler,
     IntentKind,
     RelationKind,
+    SourceAvailability,
     SourceEnvelope,
     SourceKind,
     SourceVisibility,
+    to_capability_input,
+    to_existing_intent,
 )
-from omega_federated_intent_fabric_t.model import SourceAvailability
 
 
 def _github_source(**overrides):
@@ -127,6 +130,26 @@ def test_ucir_seed_preserves_authority_boundary():
     assert seed["authority"]["generated_intents_authorized"] is False
     assert seed["authority"]["external_action_authorized"] is False
     assert seed["receipt_sha256"] == receipt.receipt_sha256
+
+
+def test_bridge_reuses_canonical_intent_ir_without_execution_authority():
+    receipt = FederatedIntentCompiler().compile([_github_source()])
+    intent = to_existing_intent(receipt)
+
+    assert isinstance(intent, Intent)
+    assert intent.mode == "focused"
+    assert intent.metadata["federated_source_receipt_sha256"] == receipt.receipt_sha256
+    assert intent.metadata["execution_authorized"] is False
+    assert intent.metadata["external_action_authorized"] is False
+
+
+def test_capability_handoff_is_read_only_by_construction():
+    receipt = FederatedIntentCompiler().compile([_github_source()])
+    handoff = to_capability_input(receipt)
+
+    assert handoff["execution_authorized"] is False
+    assert handoff["allow_mutation"] is False
+    assert handoff["allow_irreversible"] is False
 
 
 def test_duplicate_source_envelope_is_rejected():
