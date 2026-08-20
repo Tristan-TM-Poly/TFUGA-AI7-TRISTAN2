@@ -1,0 +1,121 @@
+{
+  "cell_id": "KC-OMEGA-INVERSE-PROBLEM-T-001",
+  "subject": "Ω-INVERSE-PROBLEM-T∞",
+  "definition": "General OAK-safe inverse-problem kernel that analyzes rank, nullity and conditioning before routing to Moore-Penrose, Tikhonov, nonlinear local or linear-Gaussian Bayesian reconstruction.",
+  "domain": "mathematics-scientific-computing-inverse-problems",
+  "oak_status": "IMPLEMENTED_CANDIDATE",
+  "claims": [
+    {
+      "claim_id": "CLM-INVERSE-PROBLEM-LINEAR-001",
+      "text": "For small linear systems, the implementation computes a bounded reference Moore-Penrose representative and reports rank/nullity/conditioning plus forward residuals.",
+      "status": "implemented_claim",
+      "scope": "small dense matrices in the stdlib-only Jacobi/small-Gram reference kernel",
+      "assumptions": [
+        "numerical rank tolerance is appropriate to scaling",
+        "the forward matrix is the intended model",
+        "modes below the Gram finite-precision resolution floor are treated as numerical null modes"
+      ],
+      "failure_conditions": [
+        "NumPy pinv baseline materially disagrees on declared reference families",
+        "rank/nullity is unstable under reasonable tolerance changes",
+        "a null-space ambiguity is presented as unique recovery"
+      ]
+    },
+    {
+      "claim_id": "CLM-INVERSE-PROBLEM-NONLINEAR-001",
+      "text": "The implementation provides a damped finite-difference Gauss-Newton inverse step with residual-decreasing backtracking for local nonlinear reconstruction.",
+      "status": "prototype_claim",
+      "scope": "small smooth nonlinear maps near a usable initial guess",
+      "assumptions": [
+        "finite-difference Jacobian is meaningful locally",
+        "the selected branch is reachable from the initial guess"
+      ],
+      "failure_conditions": [
+        "residual increases without rejection",
+        "local convergence is presented as a global uniqueness theorem"
+      ]
+    },
+    {
+      "claim_id": "CLM-INVERSE-PROBLEM-BAYES-001",
+      "text": "For a declared linear-Gaussian model, the implementation computes the closed-form posterior mean and covariance.",
+      "status": "implemented_claim",
+      "scope": "finite-dimensional nonsingular prior and noise covariance matrices",
+      "assumptions": [
+        "Gaussian prior and likelihood are the intended model"
+      ],
+      "failure_conditions": [
+        "posterior result is presented as prior-independent evidence",
+        "covariance inputs are singular but treated as invertible"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVD-INVERSE-PROBLEM-CODE-001",
+      "kind": "code",
+      "source_path": "omega_inverse_problem_t/core.py",
+      "status": "implemented"
+    },
+    {
+      "evidence_id": "EVD-INVERSE-PROBLEM-TEST-001",
+      "kind": "test",
+      "source_path": "tests/test_omega_inverse_problem_t.py",
+      "status": "reproduced_reference_suite"
+    },
+    {
+      "evidence_id": "EVD-INVERSE-PROBLEM-NUMPY-001",
+      "kind": "baseline",
+      "source_path": "tests/test_omega_inverse_problem_numpy_baseline.py",
+      "status": "local_cross_validation_passed",
+      "metadata": {
+        "baseline": "numpy.linalg.pinv",
+        "families": "square, tall, wide, deterministic random, rank-deficient"
+      }
+    },
+    {
+      "evidence_id": "EVD-INVERSE-PROBLEM-CI-001",
+      "kind": "ci",
+      "source_path": ".github/workflows/omega_inverse_problem_ci.yml",
+      "status": "final_head_pending"
+    }
+  ],
+  "m_minus": [
+    {
+      "id": "M-INVERSE-PROBLEM-GRAM-001",
+      "observation": "The first implementation formed A^T A for every matrix geometry. Independent NumPy comparison exposed false inversion of numerical null modes for wide matrices.",
+      "correction": "Use the smaller Gram matrix A^T A or A A^T according to shape and enforce a sqrt(machine-epsilon) singular-value resolution floor.",
+      "lesson": "An exact algebraic identity can still be a poor finite-precision algorithm."
+    }
+  ],
+  "risks": [
+    "false uniqueness from minimum-norm reconstruction",
+    "numerical rank sensitivity to scaling and threshold",
+    "condition-number squaring in Gram representations",
+    "noise amplification in ill-conditioned maps",
+    "regularization bias",
+    "prior sensitivity in Bayesian inversion",
+    "local nonlinear solver converging to the wrong branch"
+  ],
+  "next_actions": [
+    "Pass final exact-head dedicated CI including NumPy baseline court.",
+    "Add tolerance/scaling campaigns against production SVD baselines.",
+    "Connect Ω-INVERSE-T∞ Taylor/Puiseux local predictors.",
+    "Add null-space basis and resolution-matrix diagnostics.",
+    "Add constraints, generalized Tikhonov and robust losses.",
+    "Add nonlinear Bayesian and multimodal branch representations."
+  ],
+  "aliases": ["InverseProblem-T", "General Inverse Compiler", "Inverse Representation Router"],
+  "source_paths": [
+    "omega_inverse_problem_t/",
+    "tests/test_omega_inverse_problem_t.py",
+    "tests/test_omega_inverse_problem_numpy_baseline.py",
+    "docs/omega-inverse-problem/",
+    ".github/workflows/omega_inverse_problem_ci.yml"
+  ],
+  "owner": "Tristan",
+  "public_disclosure": true,
+  "metadata": {
+    "knowledge_cell_version": "0.1",
+    "oak_boundary": "Executable prototype candidate; no large-scale numerical superiority, global identifiability, or physical uniqueness claim."
+  }
+}
