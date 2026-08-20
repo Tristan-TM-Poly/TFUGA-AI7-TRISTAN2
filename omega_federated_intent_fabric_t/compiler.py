@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from hashlib import sha256
 import json
 from typing import Iterable, Sequence
@@ -33,6 +33,28 @@ def _relation_id(kind: RelationKind, intent_ids: Sequence[str]) -> str:
     return _digest((kind.value, *sorted(intent_ids)), "rel_")
 
 
+def _intent_dict(item: StructuredIntent) -> dict:
+    return {
+        "intent_id": item.intent_id,
+        "kind": item.kind.value,
+        "text": item.text,
+        "source_envelope_ids": list(item.source_envelope_ids),
+        "evidence_refs": list(item.evidence_refs),
+        "status": item.status,
+        "action_authorized": item.action_authorized,
+    }
+
+
+def _relation_dict(item: IntentRelation) -> dict:
+    return {
+        "relation_id": item.relation_id,
+        "kind": item.kind.value,
+        "intent_ids": list(item.intent_ids),
+        "evidence_refs": list(item.evidence_refs),
+        "inferred": item.inferred,
+    }
+
+
 @dataclass(frozen=True)
 class FederatedIntentReceipt:
     source_count: int
@@ -49,13 +71,14 @@ class FederatedIntentReceipt:
 
     def to_dict(self) -> dict:
         return {
+            "schema": "omega-federated-intent-receipt/v1",
             "source_count": self.source_count,
             "present_source_count": self.present_source_count,
             "empty_source_count": self.empty_source_count,
             "intent_count": self.intent_count,
             "relation_count": self.relation_count,
-            "intents": [asdict(item) for item in self.intents],
-            "relations": [asdict(item) for item in self.relations],
+            "intents": [_intent_dict(item) for item in self.intents],
+            "relations": [_relation_dict(item) for item in self.relations],
             "source_ids": list(self.source_ids),
             "oak_checks": list(self.oak_checks),
             "action_authorized": self.action_authorized,
@@ -101,28 +124,8 @@ class FederatedIntentCompiler:
 
         payload = {
             "sources": [source.envelope_id for source in source_list],
-            "intents": [
-                {
-                    "id": item.intent_id,
-                    "kind": item.kind.value,
-                    "text": item.text,
-                    "sources": item.source_envelope_ids,
-                    "evidence": item.evidence_refs,
-                    "status": item.status,
-                    "action_authorized": item.action_authorized,
-                }
-                for item in intents
-            ],
-            "relations": [
-                {
-                    "id": item.relation_id,
-                    "kind": item.kind.value,
-                    "intents": item.intent_ids,
-                    "evidence": item.evidence_refs,
-                    "inferred": item.inferred,
-                }
-                for item in relations
-            ],
+            "intents": [_intent_dict(item) for item in intents],
+            "relations": [_relation_dict(item) for item in relations],
             "oak_checks": oak_checks,
             "action_authorized": False,
         }
@@ -202,8 +205,6 @@ class FederatedIntentCompiler:
                 )
             )
 
-        # EMPTY is evidence about the observed connector result only. It must not
-        # synthesize a claim that the domain itself contains nothing.
         if source.availability == SourceAvailability.EMPTY:
             intents.append(
                 self._make_intent(
