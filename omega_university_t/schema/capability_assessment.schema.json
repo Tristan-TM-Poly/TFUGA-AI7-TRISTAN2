@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-university/capability-assessment-r0.2.schema.json",
+  "title": "Omega University Capability Assessment R0.2",
+  "type": "object",
+  "required": [
+    "capability_id",
+    "decision",
+    "accepted_evidence_ids",
+    "distinct_methods",
+    "independent_sources",
+    "max_reality_level",
+    "unmet_requirements",
+    "authority",
+    "external_action_authorized",
+    "credential_awarded",
+    "scientific_claim_proven"
+  ],
+  "properties": {
+    "capability_id": {"type": "string", "minLength": 1},
+    "decision": {
+      "enum": ["INSUFFICIENT_EVIDENCE", "EVIDENCE_SUFFICIENT_UNDER_POLICY"]
+    },
+    "accepted_evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "distinct_methods": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "independent_sources": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "max_reality_level": {"type": "integer", "minimum": 0, "maximum": 5},
+    "unmet_requirements": {"type": "array", "items": {"type": "string"}},
+    "authority": {"const": "EVIDENCE_ASSESSMENT_ONLY"},
+    "external_action_authorized": {"const": false},
+    "credential_awarded": {"const": false},
+    "scientific_claim_proven": {"const": false}
+  },
+  "additionalProperties": false
+}
