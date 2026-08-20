@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-university/curriculum-plan-r0.1.schema.json",
+  "title": "Omega University Curriculum Plan R0.1",
+  "type": "object",
+  "required": [
+    "targets",
+    "already_verified",
+    "missing",
+    "ordered",
+    "authority",
+    "external_action_authorized",
+    "credential_awarded",
+    "scientific_claim_proven"
+  ],
+  "properties": {
+    "targets": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "already_verified": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "missing": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "ordered": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "authority": {"const": "PLAN_ONLY"},
+    "external_action_authorized": {"const": false},
+    "credential_awarded": {"const": false},
+    "scientific_claim_proven": {"const": false}
+  },
+  "additionalProperties": false
+}
