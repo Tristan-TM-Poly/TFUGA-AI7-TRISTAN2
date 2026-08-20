@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "omega_federated_intent_fabric_t/**"
-      - "tests/test_omega_federated_intent_fabric_t.py"
+      - "tests/test_omega_federated_intent*.py"
       - "docs/omega_federated_intent_fabric_t/**"
       - ".github/workflows/omega-federated-intent-fabric-ci.yml"
   workflow_dispatch:
@@ -30,13 +30,14 @@ jobs:
       - name: Compile package
         run: python -m compileall -q omega_federated_intent_fabric_t
       - name: Federated intent OAK court
-        run: python -m pytest -q tests/test_omega_federated_intent_fabric_t.py
-      - name: Authority smoke
+        run: python -m pytest -q tests/test_omega_federated_intent*.py
+      - name: Authority and closure smoke
         run: |
           python - <<'PY'
           from omega_federated_intent_fabric_t import (
               AuthorityLevel,
               FederatedIntentCompiler,
+              IntentClosureCompiler,
               SourceEnvelope,
               SourceKind,
               SourceVisibility,
@@ -55,11 +56,18 @@ jobs:
               explicit_intents=("verify fixture",),
           )
           receipt = FederatedIntentCompiler().compile([source])
+          closure = IntentClosureCompiler().compile(receipt)
           intent = to_existing_intent(receipt)
           capability = to_capability_input(receipt)
+          seed = IntentClosureCompiler.next_intent_seed(closure)
+
           assert receipt.action_authorized is False
+          assert closure.action_authorized is False
+          assert closure.unlock_set.action_authorized is False
           assert intent.metadata["execution_authorized"] is False
           assert capability["allow_mutation"] is False
           assert capability["allow_irreversible"] is False
-          print(receipt.receipt_sha256)
+          assert seed["authority"]["execution_authorized"] is False
+          assert seed["authority"]["merge_authorized"] is False
+          print(closure.receipt_sha256)
           PY
