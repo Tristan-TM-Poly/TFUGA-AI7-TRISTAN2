@@ -1,0 +1,25 @@
+{
+  "version": "R0.1",
+  "project_id": "TFUGA_AI7_TRISTAN2",
+  "public_sdk": {
+    "distribution": "tristan-tfuga-ai7-sdk",
+    "import": "tristan_tfuga_ai7_sdk",
+    "publish_candidate": true
+  },
+  "private_core": {
+    "alias": "PRIVATE_CORE::TFUGA_AI7_TRISTAN2",
+    "locator_exposed": false,
+    "materialization": "external_private_repo_or_service"
+  },
+  "capability_service": "CAPABILITY_SERVICE::TFUGA_AI7_TRISTAN2",
+  "capability_namespace": "tfuga",
+  "identity": {
+    "trusted_issuer_required": true,
+    "github_username_only_is_authorization": false
+  },
+  "security": {
+    "ship_private_implementation_in_public_wheel": false,
+    "client_side_feature_flag_is_security_boundary": false,
+    "server_side_authorization_required": true
+  }
+}
