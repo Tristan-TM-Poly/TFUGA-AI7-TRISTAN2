@@ -1,0 +1,57 @@
+{
+  "id": "omega-tristan-omniuniversity-selfgenesis-t-r0.2",
+  "status": "X/D-candidate",
+  "parent": "omega_university_t/BOOK0.json",
+  "mission": "Extend deterministic curriculum planning with bounded evidence assessment, mandatory NONE comparison, and structural research-frontier navigation without promoting software outputs into educational or scientific truth.",
+  "kernel": {
+    "capability": [
+      "EvidenceRecord",
+      "EvidencePolicy",
+      "CapabilityAssessment"
+    ],
+    "curriculum": [
+      "CurriculumOption",
+      "NONE baseline",
+      "compare_curriculum_options"
+    ],
+    "frontier": [
+      "FrontierItem",
+      "FrontierReachability",
+      "map_frontier"
+    ]
+  },
+  "triad": {
+    "C": "capability evidence sufficient under explicit caller policy",
+    "F": "frontier distance from declared evidence-qualified capabilities",
+    "R": "reality level and independence metadata remain evidence attributes, never automatic external truth"
+  },
+  "hard_invariants": [
+    "Evidence != Truth",
+    "PolicySufficient != ScientificallyProven",
+    "CapabilityAssessment != Credential",
+    "ShorterCurriculum != BetterLearning",
+    "SelectedOption != AuthorizedAction",
+    "ReachableFrontier != NovelResearch",
+    "ReachableFrontier != ResearchSuccess",
+    "NONE is always a first-class curriculum option",
+    "Generator != FinalJudge"
+  ],
+  "minimum_replay": {
+    "command": "python -m unittest discover -s omega_university_t/tests -p 'test_university*.py' -v",
+    "expected_scope": "software behavior only"
+  },
+  "m_minus": [
+    "duplicate evidence identifiers must fail closed",
+    "multiple records from one independent source must not fake source diversity",
+    "invalid evidence must not count toward policy sufficiency",
+    "frontier labels are caller inputs and do not prove novelty",
+    "structural plan minimization must retain NONE baseline"
+  ],
+  "next_frontier": [
+    "frozen out-of-sample capability assessments",
+    "empirical learning-gain baselines",
+    "counterfactual prerequisite ablation with measured outcomes",
+    "privacy-preserving learner state",
+    "proof-carrying credentials only after independent qualification"
+  ]
+}
