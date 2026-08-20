@@ -1,0 +1,63 @@
+{
+  "id": "omega-university-book0-r0.1",
+  "name": "Ω-TRISTAN-OMNIUNIVERSITY-SELFGENESIS-T∞",
+  "status": "X/D-candidate",
+  "primitive": "VerifiedCapabilityTransformation",
+  "kernel": [
+    "CapabilityGoal",
+    "VerifiedCapabilityState",
+    "PrerequisiteGraph",
+    "CurriculumCompiler",
+    "CurriculumPlan",
+    "PlanningReceipt"
+  ],
+  "loop": [
+    "GOAL",
+    "GAP",
+    "COMPILE",
+    "EXPERIENCE",
+    "EVIDENCE",
+    "VERIFY",
+    "TRANSFER",
+    "FRONTIER",
+    "DISTILL",
+    "REGENERATE"
+  ],
+  "r0_1_implemented": [
+    "deterministic prerequisite compilation",
+    "verified-capability cut set",
+    "reachable-cycle rejection",
+    "unresolved-prerequisite rejection",
+    "stable planning receipt",
+    "authority and credential hard-false boundaries"
+  ],
+  "not_implemented": [
+    "adaptive tutoring",
+    "learning-outcome inference",
+    "cognitive profiling",
+    "credential issuance",
+    "research-frontier routing",
+    "JIT faculty generation",
+    "external action execution",
+    "accreditation",
+    "scientific proof of educational superiority"
+  ],
+  "invariants": [
+    "Generated != Verified",
+    "CapabilityGoal != CurriculumPlan",
+    "CurriculumPlan != Learning",
+    "Learning != VerifiedCapability",
+    "VerifiedCapability != Credential",
+    "Credential != HumanValue",
+    "Simulation != Reality",
+    "PlanningAuthority != ExecutionAuthority",
+    "LocalPASS != GlobalPASS"
+  ],
+  "promotion_requirements": [
+    "exact-head CI pass",
+    "baseline comparison",
+    "ablation",
+    "transfer measurement",
+    "independent reality anchor for empirical claims"
+  ]
+}
