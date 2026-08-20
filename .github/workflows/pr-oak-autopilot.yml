@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   checks: read
   statuses: read
   pull-requests: write
@@ -29,16 +30,43 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const marker = '<!-- pr-oak-autopilot -->';
+            const selfWorkflowName = 'PR OAK Autopilot';
             const bad = new Set(['failure','cancelled','timed_out','action_required','startup_failure','stale']);
             const draftOnly = /draft(?:ed)?\s+(?:stacked\s+)?pr\s+only|draft[- ]only|keep[^\n]{0,80}in draft|remain[^\n]{0,80}draft/i;
             const exactGate = /exact[- ]head|exact head|ci remains authoritative|required ci|must complete successfully/i;
             const noMerge = /do not merge|no automatic merge|merge[^\n]{0,80}not authorized|no merge[^\n]{0,80}authorized/i;
+            const runNameCache = new Map();
+
+            async function workflowNameForCheck(check) {
+              const details = check.details_url || '';
+              const match = details.match(/\/actions\/runs\/(\d+)(?:\/|$)/);
+              if (!match) return null;
+              const runId = Number(match[1]);
+              if (runNameCache.has(runId)) return runNameCache.get(runId);
+              try {
+                const {data: run} = await github.rest.actions.getWorkflowRun({owner, repo, run_id: runId});
+                const name = run.name || null;
+                runNameCache.set(runId, name);
+                return name;
+              } catch (e) {
+                core.warning(`workflow lookup failed for check ${check.id}: ${e.message}`);
+                runNameCache.set(runId, null);
+                return null;
+              }
+            }
+
             const {data: prs} = await github.rest.pulls.list({owner, repo, state:'open', per_page:100});
             for (const pr of prs) {
               const body = pr.body || '';
               const checks = await github.paginate(github.rest.checks.listForRef, {owner, repo, ref:pr.head.sha, per_page:100});
-              const failing = checks.filter(c => bad.has(c.conclusion));
-              const pending = checks.filter(c => c.status !== 'completed');
+              const selfCheckIds = new Set();
+              for (const check of checks) {
+                if (check.name !== 'oak') continue;
+                if ((await workflowNameForCheck(check)) === selfWorkflowName) selfCheckIds.add(check.id);
+              }
+              const authoritativeChecks = checks.filter(c => !selfCheckIds.has(c.id));
+              const failing = authoritativeChecks.filter(c => bad.has(c.conclusion));
+              const pending = authoritativeChecks.filter(c => c.status !== 'completed');
               let stale = false;
               try {
                 const cmp = await github.rest.repos.compareCommitsWithBasehead({owner, repo, basehead:`${pr.base.ref}...${pr.head.sha}`});
@@ -51,11 +79,15 @@ jobs:
               if (exactGate.test(body) && stale) reasons.push('branch is behind its base while exact-head validation is required');
               if (noMerge.test(body) && !pr.draft) reasons.push('PR contract explicitly withholds merge authority');
               if (reasons.length && !pr.draft) await github.graphql('mutation($id:ID!){convertPullRequestToDraft(input:{pullRequestId:$id}){pullRequest{isDraft}}}', {id:pr.node_id});
+
+              const comments = await github.paginate(github.rest.issues.listComments, {owner, repo, issue_number:pr.number, per_page:100});
+              const old = comments.find(c => (c.body || '').includes(marker));
+              let text;
               if (reasons.length) {
-                const text = `${marker}\n### OAK hold\n\n${reasons.map(r => `- ${r}`).join('\n')}\n\nObserved head: \`${pr.head.sha}\`\n\nSafest next action: resolve the blocker on this exact head, then re-run validation. This workflow never merges, force-pushes, weakens checks, changes permissions, deploys, or publishes.`;
-                const comments = await github.paginate(github.rest.issues.listComments, {owner, repo, issue_number:pr.number, per_page:100});
-                const old = comments.find(c => (c.body || '').includes(marker));
-                if (!old) await github.rest.issues.createComment({owner, repo, issue_number:pr.number, body:text});
-                else if (old.body !== text) await github.rest.issues.updateComment({owner, repo, comment_id:old.id, body:text});
+                text = `${marker}\n### OAK hold\n\n${reasons.map(r => `- ${r}`).join('\n')}\n\nObserved head: \`${pr.head.sha}\`\n\nSafest next action: resolve the blocker on this exact head, then re-run validation. This workflow never merges, force-pushes, weakens checks, changes permissions, deploys, or publishes.`;
+              } else {
+                text = `${marker}\n### OAK clear\n\nNo current OAK hold was found among authoritative external checks and freshness gates.\n\nObserved head: \`${pr.head.sha}\`\n\nThis is a bounded gate result, not merge authorization and not proof beyond the checks actually observed.`;
               }
+              if (!old) await github.rest.issues.createComment({owner, repo, issue_number:pr.number, body:text});
+              else if (old.body !== text) await github.rest.issues.updateComment({owner, repo, comment_id:old.id, body:text});
             }
