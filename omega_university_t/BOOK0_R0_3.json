@@ -1,0 +1,63 @@
+{
+  "id": "OMEGA-TRISTAN-OMNIUNIVERSITY-SELFGENESIS-T-R0.3",
+  "status": "D-MVP-CANDIDATE",
+  "mission": "Measure bounded learning/reality observations without promoting them into causal, credential, or scientific truth.",
+  "inherits": [
+    "BOOK0.json",
+    "BOOK0_R0_2.json"
+  ],
+  "kernel": {
+    "learning_reality": [
+      "FrozenAssessment",
+      "LearningObservation",
+      "LearningGainResult",
+      "OODProbeResult"
+    ],
+    "prerequisite_ablation": [
+      "PrerequisiteAblationCase",
+      "PrerequisiteAblationResult"
+    ]
+  },
+  "pipeline": [
+    "FREEZE_ASSESSMENT",
+    "BIND_OBSERVATION_TO_DIGEST",
+    "MEASURE_OBSERVED_DELTA",
+    "CHECK_CAUSAL_REVIEW_ELIGIBILITY",
+    "PROBE_OOD_CONTEXT",
+    "ABLATE_PREREQUISITE_IN_FIXTURE",
+    "EMIT_NON_AUTHORIZING_RECEIPT"
+  ],
+  "hard_invariants": [
+    "ObservedGain != CausalProof",
+    "CausalReviewEligible != CausalProof",
+    "FrozenAssessment != IndependentAssessment",
+    "HoldoutMetadata != ProvenSecrecy",
+    "OODContext != TransferProof",
+    "CandidateRedundantUnderFixture != GloballyRedundant",
+    "AblationResult != PermissionToRemovePrerequisite",
+    "Assessment != Credential",
+    "SoftwarePASS != EducationalEffectiveness",
+    "LocalPASS != GlobalPASS"
+  ],
+  "reality_debt": [
+    "No real learner cohort is included in R0.3.",
+    "No randomized controlled study is executed by this package.",
+    "Caller-supplied independence/randomization/holdout flags are not externally authenticated.",
+    "No benchmark secrecy guarantee exists merely because generator_exposed=false.",
+    "No causal effect size, statistical significance, retention, or long-horizon transfer claim is established."
+  ],
+  "next_discriminating_experiments": [
+    "Synthetic negative controls that must produce zero or negative observed gain.",
+    "Independent held-out benchmark families with manifest separation.",
+    "Repeated-measures retention windows.",
+    "Baseline-vs-intervention difference-in-differences under a preregistered protocol.",
+    "Prerequisite ablation across multiple target capabilities and cohorts.",
+    "Reality-anchor bridge from simulated tasks to independently measured physical or operational tasks where appropriate."
+  ],
+  "authority": {
+    "external_action_authorized": false,
+    "credential_award_authorized": false,
+    "prerequisite_graph_mutation_authorized": false,
+    "scientific_claim_promotion_authorized": false
+  }
+}
