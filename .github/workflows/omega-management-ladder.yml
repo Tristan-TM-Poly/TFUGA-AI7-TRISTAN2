@@ -1,0 +1,33 @@
+name: Omega Management Ladder OAK
+
+on:
+  pull_request:
+    paths:
+      - 'omega_management_t/**'
+      - 'tests/test_omega_management_ladder.py'
+      - 'benchmarks/omega_management_ladder_benchmark.py'
+      - 'manifests/omega_management_artifact_ladder.json'
+      - '.agents/skills/artifact-genesis-ladder/SKILL.md'
+      - 'docs/canon/OMEGA_ARTIFACT_GENESIS_LADDER_T.md'
+      - 'docs/canon/OMEGA_MANAGEMENT_T_INFINITY_R0_2.md'
+
+permissions:
+  contents: read
+
+jobs:
+  oak:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile
+        run: python -m compileall omega_management_t benchmarks
+      - name: R0.1 and R0.2 tests
+        run: python -m unittest tests.test_omega_management_t tests.test_omega_management_ladder
+      - name: Ladder benchmark smoke
+        run: python benchmarks/omega_management_ladder_benchmark.py
