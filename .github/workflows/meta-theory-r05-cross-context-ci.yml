@@ -1,0 +1,28 @@
+name: Meta Theory R0.5 Cross Context CI
+
+on:
+  pull_request:
+    paths:
+      - 'omega_generative_closure_t/cross_context.py'
+      - 'omega_generative_closure_t/theory_evolution.py'
+      - 'tests/test_omega_meta_theory_r05_cross_context.py'
+      - 'docs/OMEGA_META_THEORY_EVOLUTION_R05_CROSS_CONTEXT.md'
+      - '.github/workflows/meta-theory-r05-cross-context-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m compileall -q omega_generative_closure_t
+      - run: python -m unittest tests.test_omega_meta_theory_r05_cross_context -v
+      - run: python -m unittest tests.test_omega_meta_theory_evolution_r04 -v
