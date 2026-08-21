@@ -17,6 +17,9 @@ on:
       - 'tests/test_capability_os_virtual_tristan_r01.py'
       - 'tests/test_capability_os_virtual_tristan_swarm_r02.py'
       - 'tests/test_capability_os_virtual_tristan_8f_r03.py'
+      - 'tests/test_capability_os_virtual_tristan_8f_r04.py'
+      - '.agents/skills/eighth-fire/SKILL.md'
+      - 'docs/CAPABILITY_OS_VIRTUAL_TRISTAN_8F_R04.md'
       - 'tests/fixtures/capability_os_pr501_508_trace.json'
       - 'omega_capability_os_t/**'
       - 'omega_generative_closure_t/**'
@@ -50,8 +53,10 @@ jobs:
         run: python -m unittest tests.test_capability_os_virtual_tristan_r01 -v
       - name: Virtual Tristan minimum swarm court
         run: python -m unittest tests.test_capability_os_virtual_tristan_swarm_r02 -v
-      - name: Virtual Tristan Eighth Fire court
+      - name: Virtual Tristan Eighth Fire R0.3 court
         run: python -m unittest tests.test_capability_os_virtual_tristan_8f_r03 -v
+      - name: Virtual Tristan Eighth Fire R0.4 constitutional transfer court
+        run: python -m unittest tests.test_capability_os_virtual_tristan_8f_r04 -v
       - name: R0.10 regression
         run: python -m unittest tests.test_omega_meta_theory_r10_reprovenance_replay -v
       - name: Capability OS regression

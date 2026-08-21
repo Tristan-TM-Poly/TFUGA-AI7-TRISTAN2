@@ -7,9 +7,11 @@ missing consent, or irreversible harm behind an aggregate score.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from math import isfinite
 from typing import Iterable
+
+from omega_capability_os_t.core import stable_digest
 
 
 @dataclass(frozen=True)
@@ -173,4 +175,175 @@ def eighth_fire_swarm_court(
         forgotten_beneficiaries=forgotten,
         decisions=decisions,
         blockers=tuple(sorted(set(blockers))),
+    )
+
+
+# R0.4: constitutional projection and prospective proof-of-transfer.
+# These objects extend the existing beneficiary-flow court rather than creating
+# a second Eighth-Fire runtime or a new agent ontology.
+
+
+@dataclass(frozen=True)
+class ConstitutionalGates:
+    evidence: bool
+    safety: bool
+    non_domination: bool
+    regeneration: bool
+    rollback_contestability: bool
+
+    def blockers(self) -> tuple[str, ...]:
+        checks = {
+            "evidence_gate_failed": self.evidence,
+            "safety_gate_failed": self.safety,
+            "non_domination_gate_failed": self.non_domination,
+            "regeneration_gate_failed": self.regeneration,
+            "rollback_contestability_gate_failed": self.rollback_contestability,
+        }
+        return tuple(sorted(name for name, passed in checks.items() if not passed))
+
+
+@dataclass(frozen=True)
+class ConstitutionalFlowDecision:
+    beneficiary_id: str
+    decision: str
+    blockers: tuple[str, ...]
+    diagnostic_score: float
+    apoptosis_ready: bool
+    oak_boundary: str = (
+        "PASS means the supplied beneficiary flow and explicitly supplied constitutional gates pass. "
+        "It does not establish moral truth, cultural authority, causal benefit, permission to act, or complete harm discovery."
+    )
+
+
+def evaluate_constitutional_beneficiary_flow(
+    flow: BeneficiaryFlow,
+    gates: ConstitutionalGates,
+    thresholds: EighthFireThresholds = EighthFireThresholds(),
+) -> ConstitutionalFlowDecision:
+    base = evaluate_beneficiary_flow(flow, thresholds)
+    blockers = tuple(sorted(set(base.blockers + gates.blockers())))
+    return ConstitutionalFlowDecision(
+        beneficiary_id=flow.beneficiary_id,
+        decision="PASS" if not blockers else "HOLD",
+        blockers=blockers,
+        diagnostic_score=base.diagnostic_score,
+        apoptosis_ready=base.apoptosis_ready and not blockers,
+    )
+
+
+@dataclass(frozen=True)
+class FrozenTransferCriteria:
+    experiment_id: str
+    evaluator_id: str
+    min_withdrawal_retention: float = 0.70
+    min_delayed_retention: float = 0.60
+    max_dependency_after_withdrawal: float = 0.0
+    require_delayed_above_baseline: bool = True
+    require_evaluator_separation: bool = True
+
+    def __post_init__(self) -> None:
+        if not self.experiment_id.strip() or not self.evaluator_id.strip():
+            raise ValueError("experiment_id and evaluator_id must be non-empty")
+        values = (
+            self.min_withdrawal_retention,
+            self.min_delayed_retention,
+            self.max_dependency_after_withdrawal,
+        )
+        if any(not isfinite(float(v)) for v in values):
+            raise ValueError("transfer criteria values must be finite")
+        if any(float(v) < 0.0 for v in values):
+            raise ValueError("transfer criteria values must be >= 0")
+
+    def digest(self) -> str:
+        return stable_digest(asdict(self))
+
+
+@dataclass(frozen=True)
+class TransferObservation:
+    beneficiary_id: str
+    criteria_digest: str
+    generator_id: str
+    evaluator_id: str
+    baseline_capability: float
+    assisted_capability: float
+    withdrawal_capability: float
+    delayed_capability: float
+    dependency_after_withdrawal: float
+    system_available_during_withdrawal: bool = False
+
+    def __post_init__(self) -> None:
+        for value in (
+            self.baseline_capability,
+            self.assisted_capability,
+            self.withdrawal_capability,
+            self.delayed_capability,
+            self.dependency_after_withdrawal,
+        ):
+            if not isfinite(float(value)) or float(value) < 0.0:
+                raise ValueError("transfer observations must be finite and >= 0")
+        if not self.beneficiary_id.strip():
+            raise ValueError("beneficiary_id must be non-empty")
+        if not self.generator_id.strip() or not self.evaluator_id.strip():
+            raise ValueError("generator_id and evaluator_id must be non-empty")
+
+
+@dataclass(frozen=True)
+class TransferEvidenceReceipt:
+    beneficiary_id: str
+    decision: str
+    withdrawal_retention: float | None
+    delayed_retention: float | None
+    delayed_gain_over_baseline: float
+    dependency_after_withdrawal: float
+    blockers: tuple[str, ...]
+    criteria_digest: str
+    oak_boundary: str = (
+        "PASS means one supplied finite observation satisfies frozen transfer criteria after declared system withdrawal. "
+        "It does not establish randomized causal effect, universal independence, long-term empowerment, complete beneficiary discovery, "
+        "or permission to deploy or expand."
+    )
+
+
+def evaluate_prospective_transfer(
+    criteria: FrozenTransferCriteria,
+    observation: TransferObservation,
+) -> TransferEvidenceReceipt:
+    expected_digest = criteria.digest()
+    blockers: list[str] = []
+    if observation.criteria_digest != expected_digest:
+        blockers.append("criteria_digest_mismatch")
+    if observation.evaluator_id != criteria.evaluator_id:
+        blockers.append("unexpected_evaluator")
+    if criteria.require_evaluator_separation and observation.generator_id == observation.evaluator_id:
+        blockers.append("generator_evaluator_not_separated")
+    if observation.system_available_during_withdrawal:
+        blockers.append("system_not_withdrawn")
+    if observation.dependency_after_withdrawal > criteria.max_dependency_after_withdrawal:
+        blockers.append("dependency_after_withdrawal_exceeds_threshold")
+
+    withdrawal_retention: float | None = None
+    delayed_retention: float | None = None
+    if observation.assisted_capability <= 0.0:
+        blockers.append("assisted_capability_not_positive")
+    else:
+        withdrawal_retention = observation.withdrawal_capability / observation.assisted_capability
+        delayed_retention = observation.delayed_capability / observation.assisted_capability
+        if withdrawal_retention < criteria.min_withdrawal_retention:
+            blockers.append("insufficient_withdrawal_retention")
+        if delayed_retention < criteria.min_delayed_retention:
+            blockers.append("insufficient_delayed_retention")
+
+    delayed_gain = observation.delayed_capability - observation.baseline_capability
+    if criteria.require_delayed_above_baseline and delayed_gain <= 0.0:
+        blockers.append("no_delayed_gain_over_baseline")
+
+    return TransferEvidenceReceipt(
+        beneficiary_id=observation.beneficiary_id,
+        decision="PASS" if not blockers else "HOLD",
+        withdrawal_retention=None if withdrawal_retention is None else round(withdrawal_retention, 6),
+        delayed_retention=None if delayed_retention is None else round(delayed_retention, 6),
+        delayed_gain_over_baseline=round(delayed_gain, 6),
+        dependency_after_withdrawal=observation.dependency_after_withdrawal,
+        blockers=tuple(sorted(set(blockers))),
+        criteria_digest=expected_digest,
     )
