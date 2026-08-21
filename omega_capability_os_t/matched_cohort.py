@@ -113,17 +113,21 @@ def compare_matched_cohorts(
     match_keys: Iterable[str] = ("task_family", "difficulty_band", "risk_band"),
 ) -> MatchedCohortReport:
     items = tuple(executions)
-    keys = tuple(match_keys)
+    keys = tuple(str(key) for key in match_keys)
     blockers: list[str] = []
     if not keys:
         blockers.append("missing_match_keys")
+    if any(not key.strip() for key in keys):
+        blockers.append("blank_match_key")
+    if len(set(keys)) != len(keys):
+        blockers.append("duplicate_match_key")
 
     expected_digest = measurement_criteria.digest()
     if any(x.receipt.criteria_digest != expected_digest for x in items):
         blockers.append("criteria_digest_mismatch")
     if any(x.receipt.authority_widening for x in items):
         blockers.append("authority_widening_detected")
-    if any(any(not str(x.strata.get(k, "")) for k in keys) for x in items):
+    if keys and any(any(not str(x.strata.get(k, "")) for k in keys) for x in items):
         blockers.append("missing_match_stratum")
     if any(set(measurement_criteria.metrics) - set(x.receipt.measurements) for x in items):
         blockers.append("missing_frozen_metric")
