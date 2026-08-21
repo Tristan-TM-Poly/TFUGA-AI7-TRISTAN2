@@ -11,7 +11,7 @@ Use this skill after intent and beneficiaries are explicit, before describing a 
 
 Do not create a separate Eighth-Fire runtime when Capability OS can express the transformation.
 
-`Intent -> Capability OS -> Virtual Tristan/minimum swarm when needed -> Eighth-Fire beneficiary court -> constitutional gates -> prospective transfer evidence -> OAK/authority -> HOLD|PASS`
+`Intent -> Capability OS -> Virtual Tristan/minimum swarm when needed -> Eighth-Fire beneficiary court -> constitutional gates -> prospective transfer evidence -> social-legitimacy profile when people/institutions are affected -> OAK/authority -> HOLD|PASS`
 
 ## Required distinctions
 
@@ -24,6 +24,10 @@ Do not create a separate Eighth-Fire runtime when Capability OS can express the 
 - `ExpectedBeneficiarySet != CompleteBeneficiarySet`
 - `IdentitySeparation != StatisticalIndependence`
 - `PASS-Québec != ValidationElsewhere`
+- `AcceptanceRate↑ != SocialLegitimacy↑`
+- `Consensus != Truth`
+- `ClickedAccept != InformedConsent`
+- `LegitimateProcessPASS != AdoptionPASS`
 
 ## Non-compensatory constitutional gates
 
@@ -48,7 +52,8 @@ A failure cannot be compensated by a high aggregate score.
 5. Run constitutional gates.
 6. Prefer the minimum sufficient Virtual Tristan population or simpler baseline.
 7. Run prospective proof-of-transfer when real beneficiary capability is claimed.
-8. Keep execution authority in Capability OS / real governance; 8F never grants authority itself.
+8. If the transformation affects social adoption or public/institutional acceptance, run the social-legitimacy profile.
+9. Keep execution authority in Capability OS / real governance; 8F never grants authority itself.
 
 ## Prospective proof-of-transfer
 
@@ -65,9 +70,31 @@ A transfer claim must HOLD when:
 - withdrawal or delayed retention falls below the frozen threshold;
 - delayed capability does not beat baseline when required.
 
+## Social-legitimacy profile
+
+Never optimize acceptance directly. Optimize the conditions for an informed, voluntary, contestable and reversible decision.
+
+Freeze before observation:
+
+`initiative/version/consent/evaluator -> understanding threshold -> agency threshold -> acceptance-debt ceiling -> opt-out -> contestability -> reversibility -> evidence transparency -> stakeholder representation -> anti-manipulation rule`
+
+Record acceptance rate only as a diagnostic. It is never a positive gate. A process with zero adoption may PASS if the rejection is informed and voluntary.
+
+Compute bounded diagnostic `AcceptanceDebt` from unresolved concerns, information asymmetry, hidden dependency, unmeasured harm and unrepresented stakeholders. High acceptance cannot compensate for excessive debt.
+
+Consent is versioned. A material change after consent triggers `RECONSULT`; do not silently inherit consent across materially different system versions.
+
+Preserve material minority objections as `MinorityResiduals`. Disagreement is evidence, not noise to erase.
+
+### Anti-persuasion hard boundary
+
+Allowed: accessibility adaptation, translation, role-appropriate explanation and alternate representations grounded in the same claims/evidence.
+
+DENY: psychological-vulnerability targeting, individualized manipulation to raise acceptance, hiding burdens/alternatives to improve conversion, or post-observation metric redefinition.
+
 ## Mandatory n+1 attacks
 
-- omitted beneficiary
+- omitted beneficiary or affected stakeholder
 - hidden persistent dependency
 - simpler comparable intervention
 - metric Goodhart attack
@@ -77,6 +104,9 @@ A transfer claim must HOLD when:
 - lower-capture decentralized alternative
 - evaluator/source collusion
 - cultural-authority overclaim
+- consent invalidated by material version change
+- minority concern hidden by averages
+- acceptance optimized without understanding/agency
 
 ## Cultural boundary
 
@@ -85,6 +115,8 @@ This repository's Eighth-Fire architecture is Tristan's personal normative/engin
 ## Québec-first boundary
 
 Québec is the first intended real-world validation anchor. A local PASS can at most make controlled further testing eligible; it does not establish transfer to other populations or jurisdictions.
+
+For social-legitimacy work, the goal is not to make Québec accept a system. The goal is to increase Québec's verified capacity to understand, test, modify, adopt or refuse systems that affect it.
 
 ## Anti-inflation
 
