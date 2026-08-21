@@ -1,0 +1,40 @@
+{
+  "experiment_id": "capability-os-pair01-match-key-validation",
+  "base_sha": "d7d41af2a3b06bb235048bcfee5ab9999c5478ef",
+  "task": "Reject empty or duplicate match_keys in omega_capability_os_t.matched_cohort.compare_matched_cohorts with focused deterministic tests.",
+  "cohorts": {
+    "baseline": "local-pass policy: focused code/tests + required CI observed; no Capability OS promotion/freshness/review court used as a decision gate",
+    "transplant": "Capability OS policy: same implementation task and tests, plus exact-head Capability OS/OAK promotion gates, freshness, mergeability and review-residue checks"
+  },
+  "frozen_metrics": [
+    "repair_iterations",
+    "ci_failures",
+    "persistent_changes",
+    "regressions",
+    "tool_calls",
+    "residuals_remaining",
+    "seconds_to_global_pass"
+  ],
+  "measurement_rules": {
+    "repair_iterations": "count code/test correction rounds after first implementation commit",
+    "ci_failures": "count completed GitHub Actions runs with failure conclusion before cohort GlobalPASS",
+    "persistent_changes": "count changed files versus base at cohort GlobalPASS",
+    "regressions": "count previously passing focused regression courts that fail",
+    "tool_calls": "count GitHub connector calls from cohort branch creation through declared GlobalPASS",
+    "residuals_remaining": "count declared blocking residuals at GlobalPASS",
+    "seconds_to_global_pass": "GitHub elapsed seconds from cohort PR created_at to last required gate completion"
+  },
+  "matching_strata": {
+    "task_family": "capability_os_validation",
+    "difficulty_band": "small",
+    "risk_band": "low"
+  },
+  "decision_boundary": "This is one paired engineering observation, not causal proof. No policy promotion from a single pair; feed receipts to R0.4 which remains HOLD below min_pairs.",
+  "oak": [
+    "SameTask != SameDifficultyInPractice",
+    "SameOperator != Randomization",
+    "LowerOverhead != BetterGovernance",
+    "OnePair != CausalEffect",
+    "PreregisteredMetric != PerfectMeasurement"
+  ]
+}
