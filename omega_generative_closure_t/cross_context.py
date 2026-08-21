@@ -1,8 +1,8 @@
 """Ω Meta-Theory R0.5: cross-context regeneration and false-fixed-point detection.
 
 A basis that is minimal or stable in one probe family is not automatically
-portable to another. This module measures transfer explicitly and holds when
-cross-context evidence contradicts apparent local closure.
+portable to another. Transfer failures are measured as residuals rather than
+raised as exceptions.
 """
 
 from __future__ import annotations
@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable, Mapping
 
+from .closure import compute_closure
 from .core import Rule
 from .theory_evolution import RegenerationBenchmarkReport, regeneration_benchmark
 
@@ -27,12 +28,17 @@ class ProbeFamily:
 @dataclass(frozen=True)
 class ProbeFamilyResult:
     family: str
-    report: RegenerationBenchmarkReport
+    observables: frozenset[str]
+    reachable: frozenset[str]
+    retained: frozenset[str]
+    missing: frozenset[str]
+    retained_ratio: float
 
 
 @dataclass(frozen=True)
 class CrossContextRegenerationReport:
     training_family: str
+    training_report: RegenerationBenchmarkReport
     training_basis: frozenset[str]
     family_results: tuple[ProbeFamilyResult, ...]
     min_retained_ratio: float
@@ -47,17 +53,23 @@ class CrossContextRegenerationReport:
     )
 
 
-def _retained_ratio_from_fixed_basis(
+def _evaluate_fixed_basis(
     basis: frozenset[str],
     rules: tuple[Rule, ...],
-    observables: frozenset[str],
-) -> float:
-    from .closure import compute_closure
-
+    family: ProbeFamily,
+) -> ProbeFamilyResult:
     closure = compute_closure(basis, rules)
-    if not observables:
-        return 1.0
-    return len(observables & closure.reachable) / len(observables)
+    retained = frozenset(family.observables & closure.reachable)
+    missing = frozenset(family.observables.difference(closure.reachable))
+    ratio = 1.0 if not family.observables else len(retained) / len(family.observables)
+    return ProbeFamilyResult(
+        family=family.name,
+        observables=family.observables,
+        reachable=closure.reachable,
+        retained=retained,
+        missing=missing,
+        retained_ratio=ratio,
+    )
 
 
 def cross_context_regeneration(
@@ -92,23 +104,11 @@ def cross_context_regeneration(
     )
     basis = train.reduced_seeds
 
-    results: list[ProbeFamilyResult] = []
-    transfer_failures: list[str] = []
-    ratios: list[float] = []
-
-    for family in families:
-        family_report = regeneration_benchmark(
-            basis,
-            ordered_rules,
-            observables=family.observables,
-            max_candidates=max_candidates,
-            min_rule_evidence=min_rule_evidence,
-        )
-        ratio = _retained_ratio_from_fixed_basis(basis, ordered_rules, family.observables)
-        ratios.append(ratio)
-        results.append(ProbeFamilyResult(family=family.name, report=family_report))
-        if ratio < min_transfer_ratio:
-            transfer_failures.append(family.name)
+    results = tuple(_evaluate_fixed_basis(basis, ordered_rules, family) for family in families)
+    ratios = [result.retained_ratio for result in results]
+    transfer_failures = tuple(
+        sorted(result.family for result in results if result.retained_ratio < min_transfer_ratio)
+    )
 
     local_fixed = train.stable_under_second_pass and train.oak_status == "PASS"
     false_fixed_point = local_fixed and bool(transfer_failures)
@@ -123,11 +123,12 @@ def cross_context_regeneration(
 
     return CrossContextRegenerationReport(
         training_family=training_family,
+        training_report=train,
         training_basis=basis,
-        family_results=tuple(results),
+        family_results=results,
         min_retained_ratio=min(ratios),
         mean_retained_ratio=sum(ratios) / len(ratios),
-        transfer_failures=tuple(sorted(transfer_failures)),
+        transfer_failures=transfer_failures,
         false_fixed_point=false_fixed_point,
         oak_status="PASS" if not blockers else "HOLD",
         blockers=tuple(sorted(set(blockers))),
