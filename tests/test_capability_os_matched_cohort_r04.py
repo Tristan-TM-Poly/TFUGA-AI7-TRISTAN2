@@ -98,6 +98,26 @@ class CapabilityOSMatchedCohortR04Tests(unittest.TestCase):
         self.assertEqual(report.decision, "STOP")
         self.assertTrue(report.blockers)
 
+    def test_blank_match_key_is_rejected(self):
+        c = self.criteria()
+        rows = (
+            self.matched(self.receipt("b", "baseline", c, 3, 1)),
+            self.matched(self.receipt("t", "transplant", c, 2, 1)),
+        )
+        report = compare_matched_cohorts(c, SequentialCriteria(min_pairs=1), rows, match_keys=("task_family", " "))
+        self.assertEqual(report.decision, "HOLD")
+        self.assertIn("blank_match_key", report.blockers)
+
+    def test_duplicate_match_key_is_rejected(self):
+        c = self.criteria()
+        rows = (
+            self.matched(self.receipt("b", "baseline", c, 3, 1)),
+            self.matched(self.receipt("t", "transplant", c, 2, 1)),
+        )
+        report = compare_matched_cohorts(c, SequentialCriteria(min_pairs=1), rows, match_keys=("task_family", "task_family"))
+        self.assertEqual(report.decision, "HOLD")
+        self.assertIn("duplicate_match_key", report.blockers)
+
 
 if __name__ == "__main__":
     unittest.main()
