@@ -1,0 +1,10 @@
+{
+  "case_id": "OUT-2026-0003",
+  "disposition": "send_or_continue",
+  "next_action": "human_review",
+  "reasons": [
+    "personal verified Gmail remains the transport",
+    "bounded non-commercial or relationship-based outreach"
+  ],
+  "score": 80
+}
