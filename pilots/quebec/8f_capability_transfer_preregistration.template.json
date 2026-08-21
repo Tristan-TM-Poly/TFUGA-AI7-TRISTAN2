@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.1.0",
+  "protocol_id": "TBD_REAL_QC_PILOT_ID",
+  "jurisdiction": "Québec, Canada",
+  "context": "TBD_REAL_QUEBEC_CONTEXT",
+  "affected_groups": [
+    "TBD_REAL_AFFECTED_GROUP"
+  ],
+  "beneficiary_groups": [
+    "TBD_REAL_BENEFICIARY_GROUP"
+  ],
+  "system_version": "TBD_FROZEN_SYSTEM_VERSION",
+  "consent_version": "TBD_FROZEN_CONSENT_VERSION",
+  "generator_id": "TBD_GENERATOR_ROLE_OR_ID",
+  "evaluator_id": "TBD_INDEPENDENT_EVALUATOR_ROLE_OR_ID",
+  "baseline": "TBD_REAL_BASELINE",
+  "intervention": "TBD_BOUNDED_INTERVENTION",
+  "alternatives": [
+    "TBD_SIMPLER_OR_NO_INTERVENTION_ALTERNATIVE"
+  ],
+  "transfer_observable": "TBD_CAPABILITY_OBSERVABLE_AFTER_WITHDRAWAL",
+  "withdrawal_condition": "TBD_EXPLICIT_SYSTEM_WITHDRAWAL_CONDITION",
+  "delayed_replay_window": "TBD_DELAY_DEFINED_BEFORE_OUTCOMES",
+  "dependency_measurement": "TBD_POST_WITHDRAWAL_DEPENDENCY_MEASURE",
+  "min_withdrawal_retention": 0.7,
+  "min_delayed_retention": 0.6,
+  "max_dependency_after_withdrawal": 0.0,
+  "min_understanding": 0.7,
+  "min_agency": 0.7,
+  "max_acceptance_debt": 0.5,
+  "opt_out_mechanism": "TBD_REAL_OPT_OUT_MECHANISM",
+  "contestation_mechanism": "TBD_REAL_CONTESTATION_MECHANISM",
+  "rollback_mechanism": "TBD_REAL_ROLLBACK_MECHANISM",
+  "evidence_disclosure": "TBD_WHAT_EVIDENCE_AND_UNCERTAINTY_WILL_BE_DISCLOSED",
+  "stakeholder_representation": "TBD_HOW_AFFECTED_GROUPS_ARE_REPRESENTED",
+  "minority_residual_policy": "TBD_HOW_UNRESOLVED_MINORITARY_OBJECTIONS_ARE_PRESERVED",
+  "material_change_reconsultation": true,
+  "personalized_psychological_targeting": false,
+  "acceptance_rate_is_success_gate": false,
+  "outcomes_observed": false,
+  "authority_status": "UNRESOLVED",
+  "decision_criteria": [
+    "HOLD",
+    "REVISE",
+    "NO_ACTION",
+    "PILOT_ELIGIBLE"
+  ],
+  "require_delayed_above_baseline": true,
+  "require_evaluator_separation": true,
+  "notes": "Template only. Replace every TBD field with real pre-outcome protocol information. Do not insert synthetic outcomes as real evidence. FROZEN does not authorize execution."
+}
