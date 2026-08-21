@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.1.0",
+  "protocol_id": "qc-baip-learnverify-candidate-r01",
+  "jurisdiction": "Québec, Canada",
+  "context": "BAIP / Polytechnique Montréal — candidate engineering-learning pilot centered on delayed capability transfer without AI",
+  "affected_groups": [
+    "TBD_REAL_STUDENT_COHORT",
+    "TBD_REAL_INSTRUCTOR_OR_COURSE_TEAM"
+  ],
+  "beneficiary_groups": [
+    "TBD_REAL_STUDENT_COHORT"
+  ],
+  "system_version": "LEARNVERIFY_R1_CANDIDATE",
+  "consent_version": "TBD_APPLICABLE_BAIP_OR_INSTITUTIONAL_GOVERNANCE_VERSION",
+  "generator_id": "Tristan-TM-Poly / Capability OS pilot designer",
+  "evaluator_id": "TBD_INDEPENDENT_EVALUATOR_ROLE_OR_ID",
+  "baseline": "Human-only and Human+Checklist comparison conditions on the same authentic engineering task; exact task TBD",
+  "intervention": "Human+AI and Human+AI+Minimal Verification comparison conditions; exact tooling and instructions TBD",
+  "alternatives": [
+    "Current teaching/practice with no pilot",
+    "Human-only",
+    "Human+Checklist without AI"
+  ],
+  "transfer_observable": "Delayed independent understanding/transfer performance without AI; exact task, rubric and primary endpoint TBD",
+  "withdrawal_condition": "AI unavailable during the independent transfer test; exact enforcement procedure TBD",
+  "delayed_replay_window": "TBD_PREDEFINED_DELAY_BEFORE_OUTCOME_OBSERVATION",
+  "dependency_measurement": "Post-withdrawal need for AI/support and ability to explain/refaire independently; exact instrument TBD",
+  "min_withdrawal_retention": 0.7,
+  "min_delayed_retention": 0.6,
+  "max_dependency_after_withdrawal": 0.0,
+  "min_understanding": 0.7,
+  "min_agency": 0.7,
+  "max_acceptance_debt": 0.5,
+  "opt_out_mechanism": "TBD_REAL_OPT_OUT_MECHANISM",
+  "contestation_mechanism": "TBD_REAL_CONTESTATION_OR_FEEDBACK_MECHANISM",
+  "rollback_mechanism": "TBD_REAL_ROLLBACK_OR_STOP_MECHANISM",
+  "evidence_disclosure": "Disclose protocol, baselines, uncertainty, null/negative outcomes and software-vs-pedagogy distinction; exact participant-facing form TBD",
+  "stakeholder_representation": "TBD_HOW_STUDENTS_INSTRUCTOR_AND_BAIP_ARE_REPRESENTED_IN_PROTOCOL_DECISIONS",
+  "minority_residual_policy": "Preserve unresolved objections and dissent as explicit residuals; exact review procedure TBD",
+  "material_change_reconsultation": true,
+  "personalized_psychological_targeting": false,
+  "acceptance_rate_is_success_gate": false,
+  "outcomes_observed": false,
+  "authority_status": "NOT_AUTHORIZED_DISCUSSION_ONLY",
+  "decision_criteria": [
+    "HOLD",
+    "REVISE",
+    "NO_ACTION",
+    "PILOT_ELIGIBLE"
+  ],
+  "require_delayed_above_baseline": true,
+  "require_evaluator_separation": true,
+  "notes": "Pre-meeting candidate only. Known structure is grounded in the BAIP exchange: Human / Human+Checklist / Human+AI / Human+AI+Minimal Verification and delayed transfer without AI. Every TBD must be resolved from real institutional/pedagogical decisions before any freeze. Thresholds are provisional defaults, not preregistered claims. FROZEN would still not authorize execution."
+}
