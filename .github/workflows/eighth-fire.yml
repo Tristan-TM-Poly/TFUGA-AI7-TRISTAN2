@@ -1,0 +1,27 @@
+name: Eighth Fire court
+
+on:
+  pull_request:
+    paths:
+      - 'omega_eighth_fire_t/**'
+      - 'tests/test_omega_eighth_fire_t_r01.py'
+      - 'docs/OMEGA_EIGHTH_FIRE_T_R01.md'
+      - '.agents/skills/eighth-fire/**'
+      - '.github/workflows/eighth-fire.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'omega_eighth_fire_t/**'
+      - 'tests/test_omega_eighth_fire_t_r01.py'
+      - '.github/workflows/eighth-fire.yml'
+
+jobs:
+  court:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: R0.1 deterministic court
+        run: python -m unittest tests.test_omega_eighth_fire_t_r01 -v
