@@ -1,1 +1,0 @@
-PAIR01 baseline cohort marker. Task implementation is otherwise identical to transplant cohort. This file exists only to distinguish experiment branches and is excluded from the task diff metric by preregistered interpretation.
