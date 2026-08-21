@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omega Management Receipt",
+  "type": "object",
+  "required": ["problem", "baseline", "intervention", "observed_result", "authority", "uncertainty"],
+  "properties": {
+    "problem": {"type": "string", "minLength": 1},
+    "baseline": {"type": "object"},
+    "intervention": {"type": "object"},
+    "observed_result": {"type": "object"},
+    "authority": {"type": "string", "enum": ["NONE", "PROPOSED", "AUTHORIZED_EXTERNAL"]},
+    "uncertainty": {"type": "number", "minimum": 0},
+    "causal_claim": {"type": "boolean", "default": false}
+  },
+  "additionalProperties": true
+}
