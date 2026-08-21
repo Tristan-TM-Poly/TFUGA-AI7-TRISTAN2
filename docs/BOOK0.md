@@ -135,7 +135,30 @@ project/kernel PROJECTS_TO opaque ProjectionPath
 The graph may calculate dependency and impact surfaces but does not authorize
 publication, merge or truth promotion.
 
-## 10. Next verified mutations
+## 10. Eighth Fire minimal projection
+
+`omega_eighth_fire_t` is a local executable projection for evaluating **verified
+distributed capability** under non-compensatory constitutional gates,
+anti-capture review and mandatory n+1 probes.
+
+Its minimum dependency cone is:
+
+```text
+BOOK0_MIN(omega_eighth_fire_t)
+= docs/BOOK0.md
++ omega_capability_os_t.core
++ omega_eighth_fire_t/**
++ tests/test_omega_eighth_fire_t_r01.py
++ docs/OMEGA_EIGHTH_FIRE_T_R01.md
++ .agents/skills/eighth-fire/SKILL.md
+```
+
+The projection is Tristan's personal normative/engineering architecture; it is
+not an authoritative Indigenous doctrine or cultural proof. A Capability OS
+contract imported as a FirePacket remains `DECLARED_NOT_MEASURED` until separate
+execution and beneficiary-outcome evidence exists.
+
+## 11. Next verified mutations
 
 1. Generate a machine-readable local BOOK0 manifest from repository inventory.
 2. Link high-value kernels to explicit BOOK0_MIN dependency cones.
@@ -144,7 +167,7 @@ publication, merge or truth promotion.
 5. Keep the public repository compact by deriving views rather than copying
    global BOOK0 content.
 
-## 11. Nonclaims
+## 12. Nonclaims
 
 ```text
 README != scientific evidence
