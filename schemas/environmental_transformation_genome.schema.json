@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.invalid/schemas/environmental-transformation-genome-r01.json",
+  "title": "Ω-META-ENVIRONMENT EnvironmentalTransformationGenome R0.1",
+  "type": "object",
+  "required": [
+    "transformation_id",
+    "state_before",
+    "goal",
+    "mechanism",
+    "place",
+    "time_horizon",
+    "affected_entities",
+    "residuals",
+    "evidence",
+    "reversibility",
+    "authority_confirmed",
+    "monitoring_required",
+    "local_scope",
+    "global_scope"
+  ],
+  "properties": {
+    "transformation_id": {"type": "string", "minLength": 1},
+    "state_before": {"type": "object"},
+    "goal": {"type": "string", "minLength": 1},
+    "mechanism": {"type": "string", "minLength": 1},
+    "place": {"type": "string", "minLength": 1},
+    "time_horizon": {"type": "string", "minLength": 1},
+    "affected_entities": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "residuals": {"type": "array", "items": {"type": "object"}},
+    "evidence": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "reversibility": {"type": "number", "minimum": 0, "maximum": 1},
+    "authority_confirmed": {"type": "boolean"},
+    "monitoring_required": {"type": "boolean"},
+    "local_scope": {"type": "string", "minLength": 1},
+    "global_scope": {"type": "string", "minLength": 1},
+    "compensation_claimed_as_restoration": {"type": "boolean"},
+    "simulation_claimed_as_reality": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}
