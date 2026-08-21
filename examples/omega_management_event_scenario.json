@@ -1,0 +1,14 @@
+{
+  "scenario": "blocked_project_without_presence_proxy",
+  "observations": {
+    "hours_visible": 8,
+    "verified_outcome": 0.72,
+    "blockage_age_hours": 30,
+    "decision_uncertainty": 0.35
+  },
+  "residuals": ["blockage_age_high"],
+  "candidate_interventions": [
+    {"id": "clarify_dependency", "reversible": true, "authority": "PROPOSED"}
+  ],
+  "forbidden_inference": "hours_visible -> leadership_truth"
+}

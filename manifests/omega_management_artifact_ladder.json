@@ -1,0 +1,41 @@
+{
+  "system": "OMEGA-MANAGEMENT-T-INFINITY",
+  "release": "R0.2",
+  "ladder": {
+    "n": 3,
+    "target_2_pow_n": 8,
+    "mandatory_next_probe_n_plus_1": 4,
+    "next_target": 16
+  },
+  "artifact_classes": [
+    "claim",
+    "derivation",
+    "schema",
+    "code",
+    "tests",
+    "benchmark",
+    "data_or_figure",
+    "document",
+    "example",
+    "cli_or_api",
+    "ci",
+    "provenance",
+    "oak_receipt",
+    "negative_memory",
+    "integration_bridge",
+    "regeneration_manifest"
+  ],
+  "hard_invariants": [
+    "Generated != Proven",
+    "MoreArtifacts != MoreValue",
+    "n+1Probe != AutomaticPromotion",
+    "Recommendation != Authority",
+    "CI_PASS != ExternalTruth"
+  ],
+  "promotion": {
+    "requires_exact_head": true,
+    "requires_fresh_base": true,
+    "requires_applicable_ci": true,
+    "requires_clear_blocking_review_residue": true
+  }
+}
