@@ -1,0 +1,31 @@
+name: Meta Theory R0.6 Adversarial Repair CI
+
+on:
+  pull_request:
+    paths:
+      - 'omega_generative_closure_t/adversarial_repair.py'
+      - 'omega_generative_closure_t/cross_context.py'
+      - 'tests/test_omega_meta_theory_r06_adversarial_repair.py'
+      - 'tests/test_omega_meta_theory_r05_cross_context.py'
+      - 'tests/test_omega_meta_theory_evolution_r04.py'
+      - 'docs/OMEGA_META_THEORY_EVOLUTION_R06_ADVERSARIAL_REPAIR.md'
+      - '.github/workflows/meta-theory-r06-adversarial-repair-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m compileall -q omega_generative_closure_t
+      - run: python -m unittest tests.test_omega_meta_theory_r06_adversarial_repair -v
+      - run: python -m unittest tests.test_omega_meta_theory_r05_cross_context -v
+      - run: python -m unittest tests.test_omega_meta_theory_evolution_r04 -v
