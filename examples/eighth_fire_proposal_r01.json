@@ -1,0 +1,39 @@
+{
+  "proposal_id": "8f-demo-001",
+  "purpose": "Increase independent scientific capability",
+  "beneficiaries": ["learner"],
+  "capability": "Run and interpret a reproducible spectroscopy workflow independently",
+  "method": "Short curriculum + simulator + reproducible benchmark + exportable notes",
+  "metrics": {
+    "verified_capability_gain": 0.82,
+    "transfer": 0.88,
+    "autonomy": 0.91,
+    "regeneration": 0.72,
+    "reciprocity": 0.65,
+    "reach": 0.60,
+    "cost": 0.20,
+    "risk": 0.10,
+    "complexity": 0.15,
+    "debt": 0.08,
+    "capture": 0.05,
+    "dependency_half_life_days": 30,
+    "capability_half_life_days": 730,
+    "forkability": 0.95,
+    "local_ownership": 0.90,
+    "future_optionality": 0.85
+  },
+  "gates": {
+    "evidence": {"passed": true, "evidence": "independent task benchmark"},
+    "safety": {"passed": true, "evidence": "bounded educational fixture"},
+    "non_domination": {"passed": true, "evidence": "no exclusive control in fixture"},
+    "attribution_consent": {"passed": true, "evidence": "sources and consent tracked"},
+    "regeneration": {"passed": true, "evidence": "reusable outputs"},
+    "beneficiary_autonomy": {"passed": true, "evidence": "export and exit supported"},
+    "rollback_contestability": {"passed": true, "evidence": "reversible fixture"}
+  },
+  "provenance": ["synthetic-demo-fixture"],
+  "falsifiers": ["learner cannot reproduce the workflow after system withdrawal"],
+  "exit_path": "export all materials and continue locally",
+  "rollback": "restore prior curriculum/tool version",
+  "rights_notes": "synthetic demo only"
+}
