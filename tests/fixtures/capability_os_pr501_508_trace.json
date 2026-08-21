@@ -10,6 +10,6 @@
     {"case_id":"pr505-r08","source_pr":505,"local_pass":true,"independent_residual":true,"authority_widening":false,"observed_action":"CONTINUE"},
     {"case_id":"pr506-r09","source_pr":506,"local_pass":true,"independent_residual":true,"authority_widening":false,"observed_action":"CONTINUE"},
     {"case_id":"pr507-r10","source_pr":507,"local_pass":true,"independent_residual":false,"authority_widening":false,"observed_action":"CRYSTALLIZE"},
-    {"case_id":"pr508-transplant","source_pr":508,"local_pass":true,"independent_residual":false,"authority_widening":false,"observed_action":"CRYSTALLIZE"}
+    {"case_id":"pr508-transplant","source_pr":508,"local_pass":true,"independent_residual":true,"authority_widening":false,"observed_action":"CONTINUE"}
   ]
 }
