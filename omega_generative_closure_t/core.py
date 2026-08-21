@@ -49,18 +49,52 @@ class MaxMinVector:
     reachability: float = 0.0
     regenerability: float = 0.0
     fertility: float = 0.0
+    interoperability: float = 0.0
+    synergy: float = 0.0
+    transferability: float = 0.0
     cost: float = 0.0
     structural_debt: float = 0.0
     proof_debt: float = 0.0
     semantic_debt: float = 0.0
+    novelty_debt: float = 0.0
+    ontology_debt: float = 0.0
     uncertainty: float = 0.0
     irreversibility: float = 0.0
+    fragility: float = 0.0
+    risk: float = 0.0
+
+    def benefit_axes(self) -> tuple[float, ...]:
+        return (
+            self.verified_value,
+            self.evidence,
+            self.reuse,
+            self.reachability,
+            self.regenerability,
+            self.fertility,
+            self.interoperability,
+            self.synergy,
+            self.transferability,
+        )
+
+    def cost_axes(self) -> tuple[float, ...]:
+        return (
+            self.cost,
+            self.structural_debt,
+            self.proof_debt,
+            self.semantic_debt,
+            self.novelty_debt,
+            self.ontology_debt,
+            self.uncertainty,
+            self.irreversibility,
+            self.fragility,
+            self.risk,
+        )
 
     def numerator(self) -> float:
-        return self.verified_value + self.evidence + self.reuse + self.reachability + self.regenerability + self.fertility
+        return sum(self.benefit_axes())
 
     def denominator(self) -> float:
-        return 1.0 + self.cost + self.structural_debt + self.proof_debt + self.semantic_debt + self.uncertainty + self.irreversibility
+        return 1.0 + sum(self.cost_axes())
 
     def power_density(self) -> float:
         return self.numerator() / self.denominator()
