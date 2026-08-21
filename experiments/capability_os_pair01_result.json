@@ -1,0 +1,53 @@
+{
+  "experiment_id": "capability-os-pair01-match-key-validation",
+  "preregister_commit": "87a0dc1d47dff5cbc59fe84f9d3738417421ba0f",
+  "base_sha": "d7d41af2a3b06bb235048bcfee5ab9999c5478ef",
+  "baseline": {
+    "pr": 512,
+    "head_sha": "661c55b9ecee8540f34af325799f389fd2fb3c42",
+    "artifact_blobs": {
+      "omega_capability_os_t/matched_cohort.py": "e370ff6b7b840deba989217536982d91956a8200",
+      "tests/test_capability_os_matched_cohort_r04.py": "a41c1eee435722c32f5b6d41e2e7d88af1c1e8af"
+    },
+    "observed": {
+      "repair_iterations": 0,
+      "ci_failures": 0,
+      "persistent_changes": 2,
+      "regressions": 0,
+      "tool_calls": 14,
+      "residuals_remaining": 0,
+      "seconds_to_global_pass": 26
+    },
+    "measurement_quality": ["tool_calls_contaminated_by_accidental_non_task_branch_operations"],
+    "disposition": "closed_unmerged"
+  },
+  "transplant": {
+    "pr": 513,
+    "head_sha": "97c52f91f18ebadfde07795ab45f1fe72aff767c",
+    "artifact_blobs": {
+      "omega_capability_os_t/matched_cohort.py": "e370ff6b7b840deba989217536982d91956a8200",
+      "tests/test_capability_os_matched_cohort_r04.py": "a41c1eee435722c32f5b6d41e2e7d88af1c1e8af"
+    },
+    "observed": {
+      "repair_iterations": 0,
+      "ci_failures": 0,
+      "persistent_changes": 2,
+      "regressions": 0,
+      "tool_calls": 15,
+      "residuals_remaining": 0,
+      "seconds_to_last_action_gate": 41,
+      "seconds_to_global_pass": null
+    },
+    "measurement_quality": ["exact_timestamp_for_post_action_freshness_mergeability_review_checks_unavailable"],
+    "disposition": "merged",
+    "merge_sha": "29eb057a142083145df0f21ddd769bb43bb40da9"
+  },
+  "artifact_identity": "PASS: code and test blob SHAs are identical across cohorts",
+  "statistical_decision": "HOLD",
+  "blockers": [
+    "single_pair_below_r04_min_pairs",
+    "incomplete_transplant_seconds_to_global_pass",
+    "baseline_tool_call_measurement_contaminated"
+  ],
+  "oak_boundary": "This is a real prospective paired observation with frozen criteria, not causal evidence. The task improvement may merge independently of the policy-comparison verdict. Experimental HOLD must not be rewritten as PROMOTE."
+}
