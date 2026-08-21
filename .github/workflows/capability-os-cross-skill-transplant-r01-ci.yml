@@ -5,8 +5,10 @@ on:
     paths:
       - 'omega_capability_os_t/cross_skill_transplant.py'
       - 'omega_capability_os_t/real_trace_bench.py'
+      - 'omega_capability_os_t/prospective_measurement.py'
       - 'tests/test_capability_os_cross_skill_transplant_r01.py'
       - 'tests/test_capability_os_real_trace_bench_r02.py'
+      - 'tests/test_capability_os_prospective_measurement_r03.py'
       - 'tests/fixtures/capability_os_pr501_508_trace.json'
       - 'omega_capability_os_t/**'
       - 'omega_generative_closure_t/**'
@@ -32,6 +34,8 @@ jobs:
         run: python -m unittest tests.test_capability_os_cross_skill_transplant_r01 -v
       - name: Real-trace replay court
         run: python -m unittest tests.test_capability_os_real_trace_bench_r02 -v
+      - name: Prospective measurement court
+        run: python -m unittest tests.test_capability_os_prospective_measurement_r03 -v
       - name: R0.10 regression
         run: python -m unittest tests.test_omega_meta_theory_r10_reprovenance_replay -v
       - name: Capability OS regression
