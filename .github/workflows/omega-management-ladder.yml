@@ -30,4 +30,4 @@ jobs:
       - name: R0.1 and R0.2 tests
         run: python -m unittest tests.test_omega_management_t tests.test_omega_management_ladder
       - name: Ladder benchmark smoke
-        run: python benchmarks/omega_management_ladder_benchmark.py
+        run: PYTHONPATH=. python benchmarks/omega_management_ladder_benchmark.py
