@@ -1,0 +1,20 @@
+{
+  "name": "OMEGA-MANAGEMENT-T-INFINITY-R0.2",
+  "parent_main": "5d69800d3856f698bdd92b2725c0a61562244557",
+  "strategy": "2^n_then_mandatory_n_plus_1_probe",
+  "materialized_branch_files": 16,
+  "regenerate": [
+    "load R0.1 management kernel",
+    "apply 16 artifact classes",
+    "run compileall and management unit tests",
+    "run ladder benchmark smoke",
+    "inspect exact-head GitHub Actions",
+    "verify behind=0 and clear blocking review residue",
+    "promote only the exact qualified head"
+  ],
+  "authority": {
+    "automatic_external_action": false,
+    "automatic_personnel_decision": false,
+    "automatic_merge_without_gates": false
+  }
+}
