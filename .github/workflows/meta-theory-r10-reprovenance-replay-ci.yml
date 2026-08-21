@@ -1,0 +1,29 @@
+name: Meta Theory R0.10 Reprovenance Replay CI
+
+on:
+  pull_request:
+    paths:
+      - 'omega_generative_closure_t/**'
+      - 'tests/test_omega_meta_theory_r10_reprovenance_replay.py'
+      - 'docs/OMEGA_META_THEORY_EVOLUTION_R10_REPROVENANCE_REPLAY.md'
+      - '.github/workflows/meta-theory-r10-reprovenance-replay-ci.yml'
+
+jobs:
+  r10:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m compileall -q omega_generative_closure_t
+      - run: python -m unittest tests.test_omega_meta_theory_r10_reprovenance_replay -v
+      - run: python -m unittest tests.test_omega_meta_theory_r09_shift_calibration -v
+      - run: python -m unittest tests.test_omega_meta_theory_r08_causal_challenge -v
+      - run: python -m unittest tests.test_omega_meta_theory_r07_adversarial_authority -v
+      - run: python -m unittest tests.test_omega_meta_theory_r06_adversarial_repair -v
+      - run: python -m unittest tests.test_omega_meta_theory_r05_cross_context -v
+      - run: python -m unittest tests.test_omega_meta_theory_evolution_r04 -v
