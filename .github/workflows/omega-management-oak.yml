@@ -1,0 +1,37 @@
+name: Omega Management OAK
+
+on:
+  pull_request:
+    paths:
+      - 'omega_management_t/**'
+      - 'tests/test_omega_management_t.py'
+      - 'docs/canon/OMEGA_MANAGEMENT_T_INFINITY_R0_1.md'
+      - '.agents/skills/management-oak/**'
+      - '.github/workflows/omega-management-oak.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'omega_management_t/**'
+      - 'tests/test_omega_management_t.py'
+      - 'docs/canon/OMEGA_MANAGEMENT_T_INFINITY_R0_1.md'
+      - '.agents/skills/management-oak/**'
+      - '.github/workflows/omega-management-oak.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  management-oak:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile kernel
+        run: python -m compileall -q omega_management_t tests/test_omega_management_t.py
+      - name: Run bounded OAK court
+        run: python -m unittest tests.test_omega_management_t -v
