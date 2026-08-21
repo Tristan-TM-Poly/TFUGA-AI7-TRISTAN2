@@ -22,11 +22,14 @@ on:
       - 'tests/test_capability_os_virtual_tristan_8f_r04.py'
       - 'tests/test_capability_os_social_legitimacy_r05.py'
       - 'tests/test_capability_os_qc_pilot_preregistration_r01.py'
+      - 'tests/test_capability_os_baip_reality_anchor_r01.py'
       - '.agents/skills/eighth-fire/SKILL.md'
       - 'docs/CAPABILITY_OS_VIRTUAL_TRISTAN_8F_R04.md'
       - 'docs/CAPABILITY_OS_8F_SOCIAL_LEGITIMACY_R05.md'
       - 'docs/QC_PILOT_PREREGISTRATION_R01.md'
+      - 'docs/BAIP_REALITY_ANCHOR_R01.md'
       - 'pilots/quebec/8f_capability_transfer_preregistration.template.json'
+      - 'pilots/quebec/baip_learnverify_candidate.draft.json'
       - 'tests/fixtures/capability_os_pr501_508_trace.json'
       - 'omega_capability_os_t/**'
       - 'omega_generative_closure_t/**'
@@ -68,6 +71,8 @@ jobs:
         run: python -m unittest tests.test_capability_os_social_legitimacy_r05 -v
       - name: Québec pilot preregistration R0.1 court
         run: python -m unittest tests.test_capability_os_qc_pilot_preregistration_r01 -v
+      - name: BAIP reality anchor R0.1 HOLD court
+        run: python -m unittest tests.test_capability_os_baip_reality_anchor_r01 -v
       - name: R0.10 regression
         run: python -m unittest tests.test_omega_meta_theory_r10_reprovenance_replay -v
       - name: Capability OS regression
