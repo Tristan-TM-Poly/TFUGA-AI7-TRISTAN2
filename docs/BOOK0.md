@@ -135,37 +135,55 @@ project/kernel PROJECTS_TO opaque ProjectionPath
 The graph may calculate dependency and impact surfaces but does not authorize
 publication, merge or truth promotion.
 
-## 10. Eighth Fire minimal projection
+## 10. Eighth Fire canonical projection
 
-`omega_eighth_fire_t` is a local executable projection for evaluating **verified
-distributed capability** under non-compensatory constitutional gates,
-anti-capture review and mandatory n+1 probes.
-
-Its minimum dependency cone is:
+The preferred executable integration is the existing Capability OS projection:
 
 ```text
-BOOK0_MIN(omega_eighth_fire_t)
+Capability OS
+-> Virtual Tristan / minimum sufficient swarm when needed
+-> beneficiary-flow court
+-> explicit constitutional gates
+-> prospective proof-of-transfer
+-> OAK + real authority
+```
+
+Its minimum current dependency cone is:
+
+```text
+BOOK0_MIN(eighth_fire_capability_os)
 = docs/BOOK0.md
-+ omega_capability_os_t.core
-+ omega_eighth_fire_t/**
-+ tests/test_omega_eighth_fire_t_r01.py
-+ docs/OMEGA_EIGHTH_FIRE_T_R01.md
++ omega_capability_os_t/core.py
++ omega_capability_os_t/virtual_tristan.py
++ omega_capability_os_t/virtual_tristan_swarm.py
++ omega_capability_os_t/virtual_tristan_8f.py
++ tests/test_capability_os_virtual_tristan_8f_r03.py
++ tests/test_capability_os_virtual_tristan_8f_r04.py
++ docs/CAPABILITY_OS_VIRTUAL_TRISTAN_8F_R03.md
++ docs/CAPABILITY_OS_VIRTUAL_TRISTAN_8F_R04.md
 + .agents/skills/eighth-fire/SKILL.md
 ```
 
-The projection is Tristan's personal normative/engineering architecture; it is
-not an authoritative Indigenous doctrine or cultural proof. A Capability OS
-contract imported as a FirePacket remains `DECLARED_NOT_MEASURED` until separate
-execution and beneficiary-outcome evidence exists.
+`omega_eighth_fire_t` remains a compatibility/derivation projection introduced by
+R0.1. It is not a second source of truth and must not silently diverge from the
+Capability OS constitutional semantics. Future removal or folding is an ablation
+and compatibility decision: first prove that no verified capability, evidence
+surface, CLI contract or external user depends uniquely on it.
+
+The Eighth-Fire construction is Tristan's personal normative/engineering
+architecture; it is not authoritative Indigenous doctrine or cultural proof.
+`GatePASS != MoralTruth`, `EvidenceOfBenefit != AuthorityToAct`, and
+`PASS-Québec != ValidationElsewhere`.
 
 ## 11. Next verified mutations
 
-1. Generate a machine-readable local BOOK0 manifest from repository inventory.
-2. Link high-value kernels to explicit BOOK0_MIN dependency cones.
-3. Attach claims to tests/evidence instead of prose-only status.
-4. Detect duplicated definitions against the root/public canon.
-5. Keep the public repository compact by deriving views rather than copying
-   global BOOK0 content.
+1. Run the R0.4 constitutional-transfer court and preserve R0.3 regressions.
+2. Pre-register a bounded Québec proof-of-transfer pilot before collecting beneficiary outcomes.
+3. Ablate the standalone `omega_eighth_fire_t` projection against the Capability OS projection before any deletion/folding decision.
+4. Generate a machine-readable local BOOK0 manifest from repository inventory.
+5. Attach claims to tests/evidence instead of prose-only status.
+6. Detect duplicated definitions against the root/public canon.
+7. Keep the public repository compact by deriving views rather than copying global BOOK0 content.
 
 ## 12. Nonclaims
 
@@ -176,4 +194,6 @@ PassingTest != physical validation
 BOOK0_MIN != full theory
 ProjectionPath != truth
 LocalCanon != global completeness
+ConstitutionalGatePASS != moral truth
+TransferCourtPASS != universal beneficiary empowerment
 ```
