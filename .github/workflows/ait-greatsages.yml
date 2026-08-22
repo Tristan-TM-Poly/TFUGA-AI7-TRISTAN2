@@ -1,0 +1,164 @@
+name: AIT GreatSages Gauss R0.1-R0.3 OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "sage_tristan/greatsages.py"
+      - "sage_tristan/greatsages_time_machine.py"
+      - "sage_tristan/greatsages_bench.py"
+      - "sage_tristan/greatsages_blind.py"
+      - "sage_tristan/greatsages_polycentric.py"
+      - "sage_tristan/ait_pantheon.py"
+      - "omega_histosci_hg_t/**"
+      - "tests/test_ait_greatsages.py"
+      - "tests/test_ait_greatsages_r02.py"
+      - "tests/test_ait_greatsages_blind.py"
+      - "tests/test_ait_greatsages_polycentric.py"
+      - "docs/canon/AIT-GREATSAGES-GAUSS-R01.md"
+      - "docs/canon/AIT-GREATSAGES-TIME-MACHINE-R02.md"
+      - "docs/canon/AIT-GREATSAGES-BLIND-PACK-R02.md"
+      - "pyproject.toml"
+      - ".github/workflows/ait-greatsages.yml"
+  push:
+    branches: ["feat/ait-greatsages-gauss-r01"]
+    paths:
+      - "sage_tristan/greatsages.py"
+      - "sage_tristan/greatsages_time_machine.py"
+      - "sage_tristan/greatsages_bench.py"
+      - "sage_tristan/greatsages_blind.py"
+      - "sage_tristan/greatsages_polycentric.py"
+      - "sage_tristan/ait_pantheon.py"
+      - "omega_histosci_hg_t/**"
+      - "tests/test_ait_greatsages.py"
+      - "tests/test_ait_greatsages_r02.py"
+      - "tests/test_ait_greatsages_blind.py"
+      - "tests/test_ait_greatsages_polycentric.py"
+      - "docs/canon/AIT-GREATSAGES-GAUSS-R01.md"
+      - "docs/canon/AIT-GREATSAGES-TIME-MACHINE-R02.md"
+      - "docs/canon/AIT-GREATSAGES-BLIND-PACK-R02.md"
+      - "pyproject.toml"
+      - ".github/workflows/ait-greatsages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile
+        run: >-
+          python -m compileall -q
+          sage_tristan/greatsages.py
+          sage_tristan/greatsages_time_machine.py
+          sage_tristan/greatsages_bench.py
+          sage_tristan/greatsages_blind.py
+          sage_tristan/greatsages_polycentric.py
+          tests/test_ait_greatsages.py
+          tests/test_ait_greatsages_r02.py
+          tests/test_ait_greatsages_blind.py
+          tests/test_ait_greatsages_polycentric.py
+      - name: Targeted tests
+        run: >-
+          pytest -q
+          tests/test_ait_greatsages.py
+          tests/test_ait_greatsages_r02.py
+          tests/test_ait_greatsages_blind.py
+          tests/test_ait_greatsages_polycentric.py
+      - name: R0.1 deterministic chronological OAK gates
+        run: |
+          python -m sage_tristan.greatsages --sage gauss --year 1795 > /tmp/gauss-1795.json
+          python -m sage_tristan.greatsages --sage gauss --year 1801 --discovery gauss_1801_ceres > /tmp/gauss-1801.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          y1795 = json.loads(Path('/tmp/gauss-1795.json').read_text())['report']
+          y1801 = json.loads(Path('/tmp/gauss-1801.json').read_text())
+          assert 'gauss_1796_17gon' in y1795['snapshot']['blocked_discovery_ids']
+          assert y1795['snapshot']['leakage_free'] is True
+          assert y1801['replay']['target_withheld'] is True
+          assert y1801['report']['historical_truth_certified'] is False
+          assert y1801['report']['historical_impersonation_claimed'] is False
+          assert y1801['report']['counterfactuals_are_history'] is False
+          assert y1801['report']['histoscience_graph']['valid'] is True
+          assert len(y1801['mirrors']) == 8
+          print('PROMOTE R0.1: software chronology/mirror gates only')
+          PY
+      - name: R0.2 time-machine and provenance gates
+        run: |
+          python -m sage_tristan.greatsages_time_machine --sage gauss --year 1795 --discovery gauss_1796_17gon --twin > /tmp/gauss-r02-1795.json
+          python -m sage_tristan.greatsages_time_machine --sage gauss --year 1801 --discovery gauss_1801_ceres > /tmp/gauss-r02-1801.json
+          python -m sage_tristan.greatsages_bench --sage gauss --discovery gauss_1801_ceres > /tmp/gauss-bench.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          y1795 = json.loads(Path('/tmp/gauss-r02-1795.json').read_text())
+          y1801 = json.loads(Path('/tmp/gauss-r02-1801.json').read_text())['report']
+          bench = json.loads(Path('/tmp/gauss-bench.json').read_text())
+          snap = y1795['report']['time_machine_snapshot']
+          assert snap['leakage_free'] is True
+          assert 'cyclotomy_seed' in snap['blocked_atom_ids']
+          assert 'gauss_latent_invariant_operator' in snap['blocked_by_layer_atom_ids']
+          assert 'gauss_2026_counterfactual_tooling' in snap['blocked_by_layer_atom_ids']
+          assert y1795['digital_twin']['model_not_person'] is True
+          firewall = y1801['firewall']
+          assert firewall['target_masked'] is True
+          assert 'gauss_1809_theoria_motus' in firewall['masked_discovery_ids']
+          assert y1801['mirror_claim_class'] == 'fertile_hypothesis'
+          assert len(y1801['lineage']['lineage_hash']) == 64
+          assert y1801['historical_truth_certified'] is False
+          assert y1801['counterfactuals_are_history'] is False
+          assert bench['all_cases_promotable'] is True
+          assert len(bench['suite']) == 8
+          assert bench['historical_truth_certified'] is False
+          assert bench['novelty_claimed_for_white_space'] is False
+          print('PROMOTE R0.2: software time-machine/bench gates only')
+          PY
+      - name: Blind contestant metadata leakage gate
+        run: |
+          python -m sage_tristan.greatsages_blind --sage gauss --discovery gauss_1801_ceres > /tmp/contestant.json
+          python -m sage_tristan.greatsages_blind --sage gauss --discovery gauss_1801_ceres --evaluator > /tmp/evaluator.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          contestant_text = Path('/tmp/contestant.json').read_text()
+          contestant = json.loads(contestant_text)
+          evaluator = json.loads(Path('/tmp/evaluator.json').read_text())
+          assert contestant['metadata_leakage_detected'] is False
+          assert 'gauss_1801_ceres' not in contestant_text
+          assert 'Orbit reconstruction for Ceres' not in contestant_text
+          assert contestant['target_content_withheld'] is True
+          assert contestant['descendant_content_withheld'] is True
+          assert evaluator['target_discovery_id'] == 'gauss_1801_ceres'
+          assert contestant['tournament_id'] == evaluator['tournament_id']
+          print('PROMOTE BLIND PACK: contestant/evaluator separation gate passed')
+          PY
+      - name: R0.3 polycentric access and attribution gates
+        run: |
+          python -m sage_tristan.greatsages_polycentric --year 170 > /tmp/polycentric.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('/tmp/polycentric.json').read_text())
+          assert report['world_existence_implies_access'] is False
+          assert report['culture_or_person_ranking_performed'] is False
+          assert report['single_line_history_assumed'] is False
+          assert report['historical_truth_certified'] is False
+          decisions = {(x['actor_id'], x['atom_id']): x['decision'] for x in report['access_decisions']}
+          assert decisions[('fixture_person_a', 'fixture_atom_1')] == 'allowed'
+          assert decisions[('fixture_school_b', 'fixture_atom_1')] == 'allowed'
+          assert decisions[('fixture_person_a', 'fixture_atom_2')] == 'unknown_access'
+          print('PROMOTE R0.3 CONTRACT: explicit-access/polycentric software gates only')
+          PY

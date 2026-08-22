@@ -1,0 +1,101 @@
+name: Discovery Path IR R0.4 OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "sage_tristan/discovery_path_ir.py"
+      - "sage_tristan/discovery_path_kernel_bridge.py"
+      - "schemas/discovery_path_r04.schema.json"
+      - "tests/test_discovery_path_ir.py"
+      - "tests/test_discovery_path_kernel_bridge.py"
+      - "tests/test_discovery_path_schema.py"
+      - "tests/test_ait_greatsages_polycentric.py"
+      - "docs/canon/DISCOVERY-PATH-COMPILER-R04.md"
+      - ".github/workflows/discovery-path-r04.yml"
+  push:
+    branches: ["feat/ait-greatsages-gauss-r01"]
+    paths:
+      - "sage_tristan/discovery_path_ir.py"
+      - "sage_tristan/discovery_path_kernel_bridge.py"
+      - "schemas/discovery_path_r04.schema.json"
+      - "tests/test_discovery_path_ir.py"
+      - "tests/test_discovery_path_kernel_bridge.py"
+      - "tests/test_discovery_path_schema.py"
+      - "tests/test_ait_greatsages_polycentric.py"
+      - "docs/canon/DISCOVERY-PATH-COMPILER-R04.md"
+      - ".github/workflows/discovery-path-r04.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile R0.4
+        run: >-
+          python -m compileall -q
+          sage_tristan/discovery_path_ir.py
+          sage_tristan/discovery_path_kernel_bridge.py
+          tests/test_discovery_path_ir.py
+          tests/test_discovery_path_kernel_bridge.py
+          tests/test_discovery_path_schema.py
+      - name: Parse machine-readable schema
+        run: python -m json.tool schemas/discovery_path_r04.schema.json > /dev/null
+      - name: Targeted tests
+        run: >-
+          pytest -q
+          tests/test_ait_greatsages_polycentric.py
+          tests/test_discovery_path_ir.py
+          tests/test_discovery_path_kernel_bridge.py
+          tests/test_discovery_path_schema.py
+      - name: Discovery Path deterministic OAK gates
+        run: |
+          python -m sage_tristan.discovery_path_ir --sage gauss > /tmp/discovery-path-r04.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('/tmp/discovery-path-r04.json').read_text())
+          audit = payload['audit']
+          assert payload['release'] == 'R0.4'
+          assert audit['status'] == 'valid_software_model'
+          assert audit['continuity_valid'] is True
+          assert audit['years_monotone'] is True
+          assert audit['operators_known'] is True
+          assert audit['initial_target_withheld'] is True
+          assert audit['evidence_leakage_free'] is True
+          assert audit['terminal_contains_target'] is True
+          assert audit['historical_truth_certified'] is False
+          assert payload['path_is_historical_causation_claim'] is False
+          assert payload['operator_effectiveness_causally_proven'] is False
+          assert len(payload['lineage_hash']) == 64
+          assert 'anti_switch_stay_native' in payload['path_diff']['right_only_operator_ids']
+          print('PROMOTE R0.4: DiscoveryPath structural software model only')
+          PY
+      - name: Existing Discovery Kernel bridge gates
+        run: |
+          python - <<'PY'
+          from sage_tristan.discovery_path_ir import gauss_ceres_reconstruction
+          from sage_tristan.discovery_path_kernel_bridge import validate_bridge_events
+
+          receipt = validate_bridge_events(gauss_ceres_reconstruction())
+          assert receipt.contracts_valid is True
+          assert receipt.parentage_valid is True
+          assert receipt.validation_issues == ()
+          assert receipt.historical_causation_certified is False
+          assert receipt.event_types[-3:] == ('ExperimentSpec', 'ResultPacket', 'OAKTransition')
+          print('PROMOTE BRIDGE: Ω64 envelope compatibility only')
+          PY

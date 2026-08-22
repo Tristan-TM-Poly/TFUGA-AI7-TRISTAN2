@@ -1,0 +1,66 @@
+name: Tensor Coalition Risk R0.6.1 OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "sage_tristan/tensor_risk_gate.py"
+      - "sage_tristan/tensor_research_compiler.py"
+      - "schemas/tensor_risk_gate_r061.schema.json"
+      - "tests/test_tensor_risk_gate.py"
+      - "docs/canon/TENSOR-RISK-GATE-R061.md"
+      - ".github/workflows/tensor-risk-r061.yml"
+  push:
+    branches: ["feat/ait-greatsages-gauss-r01"]
+    paths:
+      - "sage_tristan/tensor_risk_gate.py"
+      - "sage_tristan/tensor_research_compiler.py"
+      - "schemas/tensor_risk_gate_r061.schema.json"
+      - "tests/test_tensor_risk_gate.py"
+      - "docs/canon/TENSOR-RISK-GATE-R061.md"
+      - ".github/workflows/tensor-risk-r061.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile R0.6.1
+        run: python -m compileall -q sage_tristan/tensor_risk_gate.py tests/test_tensor_risk_gate.py
+      - name: Parse R0.6.1 schema
+        run: python -m json.tool schemas/tensor_risk_gate_r061.schema.json > /dev/null
+      - name: Targeted R0.6.1 tests
+        run: pytest -q tests/test_tensor_risk_gate.py
+      - name: Cumulative-risk deterministic OAK gates
+        run: |
+          python -m sage_tristan.tensor_risk_gate --report > /tmp/r061.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('/tmp/r061.json').read_text())
+          assert report['release'] == 'R0.6.1'
+          assert report['per_agent_risk_is_coalition_risk'] is False
+          assert report['cumulative_risk_gate_present'] is True
+          assert report['risk_aggregation_model'] == 'additive_declared_proxy'
+          assert report['portfolio_risk_optimality_proven'] is False
+          assert report['risk_independence_assumed'] is False
+          assert report['real_world_safety_certified'] is False
+          constrained = report['cumulative_risk_fixture']
+          assert len(constrained['selected_person_ids']) == 1
+          assert len(constrained['uncovered_capabilities']) == 1
+          assert constrained['cumulative_risk'] <= constrained['risk_budget']
+          print('PROMOTE R0.6.1: cumulative declared-risk software gate only')
+          PY

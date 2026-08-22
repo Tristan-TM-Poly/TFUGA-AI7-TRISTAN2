@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/tfuga/discovery_path_r04.schema.json",
+  "title": "Omega Discovery Path IR R0.4",
+  "description": "Machine-readable contract for an auditable epistemic trajectory. Schema validity does not certify historical or scientific truth.",
+  "type": "object",
+  "required": [
+    "path_id",
+    "sage_id",
+    "target_discovery_id",
+    "claim_class",
+    "states",
+    "steps",
+    "source_ids",
+    "counterfactual"
+  ],
+  "properties": {
+    "path_id": {"type": "string", "minLength": 1},
+    "sage_id": {"type": "string", "minLength": 1},
+    "target_discovery_id": {"type": "string", "minLength": 1},
+    "claim_class": {
+      "type": "string",
+      "enum": ["established", "source_reported", "reconstruction", "counterfactual", "fertile_hypothesis"]
+    },
+    "states": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/epistemicState"}
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/pathStep"}
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "counterfactual": {"type": "boolean"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "epistemicState": {
+      "type": "object",
+      "required": [
+        "state_id",
+        "year",
+        "knowledge_ids",
+        "representation_ids",
+        "evidence_ids",
+        "open_problem_ids",
+        "uncertainty",
+        "epistemic_debt",
+        "provenance_ids"
+      ],
+      "properties": {
+        "state_id": {"type": "string", "minLength": 1},
+        "year": {"type": "integer"},
+        "knowledge_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "representation_ids": {"type": "array", "items": {"type": "string"}},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "open_problem_ids": {"type": "array", "items": {"type": "string"}},
+        "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+        "epistemic_debt": {"type": "number", "minimum": 0},
+        "provenance_ids": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "resourceCost": {
+      "type": "object",
+      "required": ["compute", "conceptual", "evidence", "uncertainty", "epistemic_debt", "representation_loss", "risk"],
+      "properties": {
+        "compute": {"type": "number", "minimum": 0},
+        "conceptual": {"type": "number", "minimum": 0},
+        "evidence": {"type": "number", "minimum": 0},
+        "uncertainty": {"type": "number", "minimum": 0},
+        "epistemic_debt": {"type": "number", "minimum": 0},
+        "representation_loss": {"type": "number", "minimum": 0},
+        "risk": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "residualVector": {
+      "type": "object",
+      "required": ["logical", "empirical", "representation", "provenance", "uncertainty"],
+      "properties": {
+        "logical": {"type": "number", "minimum": 0, "maximum": 1},
+        "empirical": {"type": "number", "minimum": 0, "maximum": 1},
+        "representation": {"type": "number", "minimum": 0, "maximum": 1},
+        "provenance": {"type": "number", "minimum": 0, "maximum": 1},
+        "uncertainty": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "additionalProperties": false
+    },
+    "pathStep": {
+      "type": "object",
+      "required": [
+        "step_id",
+        "operator_id",
+        "input_state_id",
+        "output_state_id",
+        "year",
+        "representation_before",
+        "representation_after",
+        "evidence_ids",
+        "produced_claim_ids",
+        "cost",
+        "residuals",
+        "uncertainty_before",
+        "uncertainty_after",
+        "note"
+      ],
+      "properties": {
+        "step_id": {"type": "string", "minLength": 1},
+        "operator_id": {"type": "string", "minLength": 1},
+        "input_state_id": {"type": "string", "minLength": 1},
+        "output_state_id": {"type": "string", "minLength": 1},
+        "year": {"type": "integer"},
+        "representation_before": {"type": "array", "items": {"type": "string"}},
+        "representation_after": {"type": "array", "items": {"type": "string"}},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "produced_claim_ids": {"type": "array", "items": {"type": "string"}},
+        "cost": {"$ref": "#/$defs/resourceCost"},
+        "residuals": {"$ref": "#/$defs/residualVector"},
+        "uncertainty_before": {"type": "number", "minimum": 0, "maximum": 1},
+        "uncertainty_after": {"type": "number", "minimum": 0, "maximum": 1},
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "x-oak-boundary": "Conformance proves only structural validity of the encoded path, not historical causation, scientific truth, novelty, authorship, safety, or IP ownership."
+}

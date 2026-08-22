@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/tfuga/representation_morphism_r05.schema.json",
+  "title": "Omega Representation Morphism R0.5",
+  "description": "Machine-readable contract for an auditable representation transformation. Structural validity does not prove a conservation law, historical cognition, or scientific superiority.",
+  "type": "object",
+  "required": [
+    "morphism_id",
+    "source",
+    "target",
+    "complexity_before",
+    "complexity_after",
+    "information_before",
+    "information_after",
+    "invariants",
+    "residual",
+    "uncertainty",
+    "risk",
+    "reversible",
+    "claim_class",
+    "metric_kind",
+    "provenance_ids",
+    "note"
+  ],
+  "properties": {
+    "morphism_id": {"type": "string", "minLength": 1},
+    "source": {"$ref": "#/$defs/bundle"},
+    "target": {"$ref": "#/$defs/bundle"},
+    "complexity_before": {"type": "number", "minimum": 0},
+    "complexity_after": {"type": "number", "minimum": 0},
+    "information_before": {"type": "number", "minimum": 0},
+    "information_after": {"type": "number", "minimum": 0},
+    "invariants": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/invariantMeasurement"}
+    },
+    "residual": {"type": "number", "minimum": 0, "maximum": 1},
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+    "risk": {"type": "number", "minimum": 0, "maximum": 1},
+    "reversible": {"type": "boolean"},
+    "claim_class": {
+      "type": "string",
+      "enum": ["established", "source_reported", "reconstruction", "counterfactual", "fertile_hypothesis"]
+    },
+    "metric_kind": {
+      "type": "string",
+      "enum": ["benchmark_proxy", "empirical_measurement", "formal_property"]
+    },
+    "provenance_ids": {"type": "array", "items": {"type": "string"}},
+    "note": {"type": "string"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "bundle": {
+      "type": "object",
+      "required": ["representation_ids"],
+      "properties": {
+        "representation_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    },
+    "invariantMeasurement": {
+      "type": "object",
+      "required": [
+        "invariant_id",
+        "source_value",
+        "target_value",
+        "scale",
+        "tolerance",
+        "weight",
+        "confidence",
+        "metric_kind",
+        "note"
+      ],
+      "properties": {
+        "invariant_id": {"type": "string", "minLength": 1},
+        "source_value": {"type": "number"},
+        "target_value": {"type": "number"},
+        "scale": {"type": "number", "exclusiveMinimum": 0},
+        "tolerance": {"type": "number", "minimum": 0},
+        "weight": {"type": "number", "minimum": 0},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "metric_kind": {
+          "type": "string",
+          "enum": ["benchmark_proxy", "empirical_measurement", "formal_property"]
+        },
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "x-oak-boundary": "Passing this schema or Noether audit establishes only declared software-contract behavior, never a physical conservation law, mathematical theorem, cognitive law, novelty claim, or causal transfer gain."
+}

@@ -1,0 +1,93 @@
+name: Tensor Research Compiler R0.6 OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "sage_tristan/tensor_research_compiler.py"
+      - "sage_tristan/discovery_path_ir.py"
+      - "sage_tristan/representation_noether_compiler.py"
+      - "schemas/tensor_research_compiler_r06.schema.json"
+      - "tests/test_tensor_research_compiler.py"
+      - "tests/test_tensor_research_schema.py"
+      - "docs/canon/TENSOR-RESEARCH-COMPILER-R06.md"
+      - ".github/workflows/tensor-research-r06.yml"
+  push:
+    branches: ["feat/ait-greatsages-gauss-r01"]
+    paths:
+      - "sage_tristan/tensor_research_compiler.py"
+      - "sage_tristan/discovery_path_ir.py"
+      - "sage_tristan/representation_noether_compiler.py"
+      - "schemas/tensor_research_compiler_r06.schema.json"
+      - "tests/test_tensor_research_compiler.py"
+      - "tests/test_tensor_research_schema.py"
+      - "docs/canon/TENSOR-RESEARCH-COMPILER-R06.md"
+      - ".github/workflows/tensor-research-r06.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile R0.6
+        run: >-
+          python -m compileall -q
+          sage_tristan/tensor_research_compiler.py
+          tests/test_tensor_research_compiler.py
+          tests/test_tensor_research_schema.py
+      - name: Parse R0.6 schema
+        run: python -m json.tool schemas/tensor_research_compiler_r06.schema.json > /dev/null
+      - name: Targeted R0.6 tests
+        run: pytest -q tests/test_tensor_research_compiler.py tests/test_tensor_research_schema.py
+      - name: Tensor Research deterministic OAK gates
+        run: |
+          python -m sage_tristan.tensor_research_compiler --report > /tmp/r06.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('/tmp/r06.json').read_text())
+          coalition = report['synthetic_coalition']
+          audit = report['program_audit']
+          bridge = report['program_path_bridge']
+          sparse = report['sparse_tensor']
+
+          assert report['release'] == 'R0.6'
+          assert coalition['selected_person_ids'] == ['person_a', 'person_b']
+          assert coalition['rejected_person_ids'] == ['person_c']
+          assert coalition['uncovered_capabilities'] == []
+          assert coalition['greedy_heuristic_not_global_optimum'] is True
+          assert coalition['full_tensor_materialized'] is False
+          assert sparse['full_tensor_materialized'] is False
+          assert sparse['materialized_shadow_count'] < sparse['coarse_theoretical_upper_bound']
+          assert audit['status'] == 'admissible_software_program'
+          assert audit['type_safe'] is True
+          assert audit['representation_gate_safe'] is True
+          assert audit['program_is_execution_trace'] is False
+          assert bridge['exact_operator_trace_match'] is True
+          assert bridge['program_is_execution_trace'] is False
+          assert bridge['discovery_path_is_runtime_trace'] is True
+          assert report['person_llmt_is_person'] is False
+          assert report['shadow_is_person'] is False
+          assert report['shadow_is_ephemeral'] is True
+          assert report['consensus_is_truth'] is False
+          assert report['synergy_is_causal_proof'] is False
+          assert report['full_tensor_expansion_required'] is False
+          assert report['routing_is_global_optimum_proven'] is False
+          assert report['r05_representation_backend_required'] is True
+          assert report['r04_runtime_trace_required'] is True
+          print('PROMOTE R0.6: tensor research software gates only')
+          PY
