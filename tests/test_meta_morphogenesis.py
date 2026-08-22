@@ -74,6 +74,30 @@ class MetaMorphogenesisTests(unittest.TestCase):
         self.assertFalse(receipt.accepted)
         self.assertTrue(any("Generator != Judge" in reason for reason in receipt.reasons))
 
+    def test_genome_permission_does_not_grant_execution_authority(self):
+        genome_claiming_write = MorphGenome(
+            id="G-permission",
+            purpose="declared capability only",
+            permissions=("write",),
+        )
+        receipt = self.engine.evaluate_transition(
+            self.before,
+            genome_claiming_write,
+            transformation="genome-does-not-authorize",
+            generator_id="generator",
+            verifier_id="verifier",
+            action="write",
+            authority_actions=(),
+            input_status=EpistemicStatus.HYPOTHESIS,
+            output_status=EpistemicStatus.HYPOTHESIS,
+            evidence_status=EpistemicStatus.HYPOTHESIS,
+            provenance=("fixture",),
+            tests=("genome-authority-separation",),
+            rollback="revert",
+        )
+        self.assertFalse(receipt.accepted)
+        self.assertTrue(any("authority does not allow action" in reason for reason in receipt.reasons))
+
     def test_epistemic_inflation_is_rejected(self):
         receipt = self.engine.evaluate_transition(
             self.before,
