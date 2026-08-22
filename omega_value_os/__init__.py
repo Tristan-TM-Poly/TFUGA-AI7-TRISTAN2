@@ -1,5 +1,13 @@
 """Ω Value OS — proof-carrying regenerative monetization kernel."""
 
+from .book0 import (
+    EconomicBOOK0,
+    RegenerationReceipt,
+    ablate_book0,
+    future_work_annihilation,
+    regeneration_passes,
+    regeneration_receipt,
+)
 from .constitution import GateResult, evaluate_hard_gates, is_sensitive_action
 from .engine import (
     automation_score,
@@ -9,6 +17,15 @@ from .engine import (
     value_objective,
 )
 from .entitlements import EntitlementEvent, EntitlementEventType, EntitlementLedger
+from .experiments import (
+    ExperimentCandidate,
+    PriceMutation,
+    TournamentResult,
+    experiment_option_value,
+    minimum_sufficient_experiment,
+    pricing_tournament,
+    standard_price_mutations,
+)
 from .media import (
     ChannelProfile,
     ContentAsset,
@@ -18,6 +35,16 @@ from .media import (
     route_channels,
 )
 from .meta import GeneratorGenome, MetaCandidate, mutate_generator, should_create_meta_layer
+from .meta_economy import (
+    EconomicGenome,
+    MetaEconomicCandidate,
+    RepresentationCandidate,
+    compile_economic_genomes,
+    meta_generation_allowed,
+    mutate_economic_genome,
+    no_action_genome,
+    representation_tournament,
+)
 from .models import (
     AutomationCandidate,
     AutomationDecision,
@@ -41,37 +68,58 @@ __all__ = [
     "ChannelProfile",
     "ContentAsset",
     "ContentProjection",
+    "EconomicBOOK0",
+    "EconomicGenome",
     "EconomicState",
     "EntitlementEvent",
     "EntitlementEventType",
     "EntitlementLedger",
+    "ExperimentCandidate",
     "GateResult",
     "GeneratorGenome",
     "MetaCandidate",
+    "MetaEconomicCandidate",
+    "PriceMutation",
     "ProofCarryingRevenueStream",
     "ProofOfBetterReceipt",
     "RegenerationLevel",
+    "RegenerationReceipt",
+    "RepresentationCandidate",
     "RevenueMode",
     "RevenueStreamMetrics",
     "Shock",
     "ShockResult",
     "StrategyGenome",
+    "TournamentResult",
     "ValueGenome",
+    "ablate_book0",
     "apply_shock",
     "automation_score",
     "channel_score",
+    "compile_economic_genomes",
     "compile_projections",
     "decide_automation",
     "evaluate_hard_gates",
+    "experiment_option_value",
+    "future_work_annihilation",
     "is_sensitive_action",
+    "meta_generation_allowed",
     "meta_stop_rule",
+    "minimum_sufficient_experiment",
+    "mutate_economic_genome",
     "mutate_generator",
+    "no_action_genome",
     "platform_concentration",
+    "pricing_tournament",
     "proof_of_better",
     "prune_candidates",
+    "regeneration_passes",
+    "regeneration_receipt",
+    "representation_tournament",
     "revenue_mode_mix",
     "route_channels",
     "shock_curriculum",
     "should_create_meta_layer",
+    "standard_price_mutations",
     "value_objective",
 ]
