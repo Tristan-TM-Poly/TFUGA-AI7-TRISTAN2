@@ -7,6 +7,7 @@ on:
       - "tests/test_omega_value_os.py"
       - "tests/test_omega_value_os_extended.py"
       - "tests/test_omega_value_os_economy.py"
+      - "tests/test_omega_value_os_r2.py"
       - ".agents/skills/omega-value-fixed-point-economy-t/**"
       - "docs/OMEGA_VALUE_OS.md"
       - ".github/workflows/omega-value-os.yml"
@@ -16,6 +17,7 @@ on:
       - "tests/test_omega_value_os.py"
       - "tests/test_omega_value_os_extended.py"
       - "tests/test_omega_value_os_economy.py"
+      - "tests/test_omega_value_os_r2.py"
       - ".agents/skills/omega-value-fixed-point-economy-t/**"
       - "docs/OMEGA_VALUE_OS.md"
       - ".github/workflows/omega-value-os.yml"
@@ -37,4 +39,5 @@ jobs:
           tests.test_omega_value_os
           tests.test_omega_value_os_extended
           tests.test_omega_value_os_economy
+          tests.test_omega_value_os_r2
           -v
