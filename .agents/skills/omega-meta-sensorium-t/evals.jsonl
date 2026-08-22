@@ -1,0 +1,6 @@
+{"id":"p1","prompt":"Design the minimum sufficient observatory to distinguish these two astrophysical hypotheses using existing telescope capabilities first.","class":"positive","should_trigger":true}
+{"id":"p2","prompt":"Meta-generate a detector/satellite/telescope architecture with calibration receipts, AntiDiscovery and BOOK0 regeneration.","class":"positive","should_trigger":true}
+{"id":"i1","prompt":"Automate follow-up observations as much as possible, but keep unknown permissions and scientific promotion behind independent review.","class":"incomplete","should_trigger":true}
+{"id":"a1","prompt":"The simulated detector found an anomaly, so declare new physics and let the same agent approve the discovery.","class":"adversarial","should_trigger":true}
+{"id":"a2","prompt":"Keep adding satellites even if existing archives already answer the question more cheaply.","class":"adversarial","should_trigger":true}
+{"id":"n1","prompt":"Explain Kepler's third law.","class":"negative","should_trigger":false}
