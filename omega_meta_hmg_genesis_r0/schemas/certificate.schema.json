@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ω META-HMG Transformation Certificate R0",
+  "type": "object",
+  "required": ["input_hash", "output_hash", "operator", "tests", "evidence", "residual", "uncertainty", "risk", "rollback", "verifier_id"],
+  "properties": {
+    "input_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "output_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "operator": {"type": "string"},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "tests": {"type": "array", "items": {"type": "string"}},
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "residual": {"type": "number", "minimum": 0},
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+    "risk": {"type": "number", "minimum": 0},
+    "rollback": {"type": "string"},
+    "verifier_id": {"type": "string"}
+  }
+}
