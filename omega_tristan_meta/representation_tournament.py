@@ -11,6 +11,7 @@ from typing import Any, Callable, Iterable, Mapping
 
 
 COMPETITORS = ("MORPH_GENOME", "DOMAIN_SPECIFIC", "MINIMAL_DICT", "NO_ABSTRACTION")
+EVIDENCE_CLASS = "SIMULATED_ENGINEERING_EVIDENCE"
 
 
 @dataclass(frozen=True)
@@ -22,6 +23,7 @@ class TournamentCase:
     evidence_keys: tuple[str, ...]
     regeneration_required: bool
     maintenance_mutations: tuple[Mapping[str, Any], ...]
+    source_ref: str = ""
     no_abstraction_supported: bool = False
     adversarial_for_morph_genome: bool = False
 
@@ -30,6 +32,7 @@ class TournamentCase:
 class RepresentationResult:
     case_id: str
     domain: str
+    source_ref: str
     competitor: str
     probe_completion: bool
     evidence_provenance_preservation: bool
@@ -56,6 +59,7 @@ class TournamentDecision:
     case_id: str
     winner: str | None
     valid_competitors: tuple[str, ...]
+    pareto_front: tuple[str, ...]
     reason: str
 
 
@@ -66,6 +70,9 @@ class TournamentReport:
     decisions: tuple[TournamentDecision, ...]
     morph_genome_disposition: str
     validity_domain: str
+    memory: Mapping[str, tuple[str, ...]]
+    evidence_class: str = EVIDENCE_CLASS
+    scalar_score: str = "NOT_USED"
     global_pass: bool = False
     external_action_performed: bool = False
     auto_promoted: bool = False
@@ -77,6 +84,9 @@ class TournamentReport:
             "decisions": [asdict(decision) for decision in self.decisions],
             "morph_genome_disposition": self.morph_genome_disposition,
             "validity_domain": self.validity_domain,
+            "memory": {key: list(value) for key, value in sorted(self.memory.items())},
+            "evidence_class": self.evidence_class,
+            "scalar_score": self.scalar_score,
             "global_pass": self.global_pass,
             "external_action_performed": self.external_action_performed,
             "auto_promoted": self.auto_promoted,
@@ -141,7 +151,14 @@ def _direct_decode(_: TournamentCase, encoded: Mapping[str, Any]) -> Mapping[str
     return encoded
 
 
-_ADAPTERS: dict[str, tuple[Callable[[TournamentCase, Mapping[str, Any]], Mapping[str, Any]], Callable[[TournamentCase, Mapping[str, Any]], Mapping[str, Any]], int]] = {
+_ADAPTERS: dict[
+    str,
+    tuple[
+        Callable[[TournamentCase, Mapping[str, Any]], Mapping[str, Any]],
+        Callable[[TournamentCase, Mapping[str, Any]], Mapping[str, Any]],
+        int,
+    ],
+] = {
     "MORPH_GENOME": (_morph_encode, _morph_decode, 4),
     "DOMAIN_SPECIFIC": (_domain_encode, _domain_decode, 2),
     "MINIMAL_DICT": (_dict_encode, _dict_decode, 1),
@@ -257,6 +274,7 @@ def evaluate_case(case: TournamentCase, competitor: str) -> RepresentationResult
     return RepresentationResult(
         case_id=case.id,
         domain=case.domain,
+        source_ref=case.source_ref,
         competitor=competitor,
         probe_completion=completed,
         evidence_provenance_preservation=evidence_preserved,
@@ -274,28 +292,62 @@ def evaluate_case(case: TournamentCase, competitor: str) -> RepresentationResult
     )
 
 
+def _dominates(a: RepresentationResult, b: RepresentationResult) -> bool:
+    if not a.hard_gate_pass:
+        return False
+    if not b.hard_gate_pass:
+        return True
+    no_worse = (
+        a.future_work_eliminated >= b.future_work_eliminated
+        and a.adapter_failures <= b.adapter_failures
+        and a.implementation_source_lines <= b.implementation_source_lines
+        and a.serialized_bytes <= b.serialized_bytes
+        and a.execution_steps <= b.execution_steps
+    )
+    strictly_better = (
+        a.future_work_eliminated > b.future_work_eliminated
+        or a.adapter_failures < b.adapter_failures
+        or a.implementation_source_lines < b.implementation_source_lines
+        or a.serialized_bytes < b.serialized_bytes
+        or a.execution_steps < b.execution_steps
+    )
+    return no_worse and strictly_better
+
+
+def pareto_front(results: Iterable[RepresentationResult]) -> tuple[RepresentationResult, ...]:
+    valid = tuple(result for result in results if result.hard_gate_pass)
+    return tuple(
+        result
+        for result in valid
+        if not any(_dominates(other, result) for other in valid if other != result)
+    )
+
+
+def _decision_order(result: RepresentationResult) -> tuple[Any, ...]:
+    return (
+        -result.future_work_eliminated,
+        result.adapter_failures,
+        result.implementation_source_lines,
+        result.serialized_bytes,
+        result.execution_steps,
+        result.competitor,
+    )
+
+
 def decide_case(case: TournamentCase, results: Iterable[RepresentationResult]) -> TournamentDecision:
     case_results = [result for result in results if result.case_id == case.id]
     valid = [result for result in case_results if result.hard_gate_pass]
     if not valid:
-        return TournamentDecision(case.id, None, (), "no competitor passed all hard gates")
-    ordered = sorted(
-        valid,
-        key=lambda result: (
-            -result.future_work_eliminated,
-            result.adapter_failures,
-            result.implementation_source_lines,
-            result.serialized_bytes,
-            result.execution_steps,
-            result.competitor,
-        ),
-    )
-    winner = ordered[0]
+        return TournamentDecision(case.id, None, (), (), "no competitor passed all hard gates")
+    ordered_valid = sorted(valid, key=_decision_order)
+    front = sorted(pareto_front(valid), key=_decision_order)
+    winner = front[0]
     return TournamentDecision(
         case.id,
         winner.competitor,
-        tuple(result.competitor for result in ordered),
-        "hard gates first; then future-work elimination, failures, implementation size, serialized size, execution steps",
+        tuple(result.competitor for result in ordered_valid),
+        tuple(result.competitor for result in front),
+        "hard gates first; Pareto front exposed; deterministic tie-break only inside the front",
     )
 
 
@@ -312,11 +364,37 @@ def load_corpus(path: str | Path) -> tuple[TournamentCase, ...]:
                 evidence_keys=tuple(item.get("evidence_keys", ())),
                 regeneration_required=bool(item.get("regeneration_required", False)),
                 maintenance_mutations=tuple(item.get("maintenance_mutations", ())),
+                source_ref=str(item.get("source_ref", "")),
                 no_abstraction_supported=bool(item.get("no_abstraction_supported", False)),
                 adversarial_for_morph_genome=bool(item.get("adversarial_for_morph_genome", False)),
             )
         )
     return tuple(cases)
+
+
+def _memory_update(cases: Iterable[TournamentCase], decisions: Iterable[TournamentDecision]) -> Mapping[str, tuple[str, ...]]:
+    cases_by_id = {case.id: case for case in cases}
+    decisions = tuple(decisions)
+    m_plus: list[str] = []
+    m_minus: list[str] = []
+    m_query: list[str] = []
+    if any("MORPH_GENOME" in decision.pareto_front for decision in decisions):
+        m_plus.append(
+            "MorphGenome may remain Pareto-eligible where explicit cross-domain maintenance reuse offsets abstraction debt."
+        )
+    if any(case.maintenance_mutations for case in cases_by_id.values()):
+        m_query.append(
+            "Validate the synthetic future-work-elimination proxy against observed maintenance work before widening or pruning the claim."
+        )
+    if any(
+        cases_by_id[decision.case_id].adversarial_for_morph_genome
+        and "MORPH_GENOME" not in decision.pareto_front
+        for decision in decisions
+    ):
+        m_minus.append(
+            "Do not prefer MorphGenome for a bounded direct task when a simpler representation preserves all hard probes with lower debt."
+        )
+    return {"M+": tuple(m_plus), "M-": tuple(m_minus), "M?": tuple(m_query)}
 
 
 def run_tournament(path: str | Path) -> TournamentReport:
@@ -326,18 +404,18 @@ def run_tournament(path: str | Path) -> TournamentReport:
     results = tuple(evaluate_case(case, competitor) for case in cases for competitor in COMPETITORS)
     decisions = tuple(decide_case(case, results) for case in cases)
 
-    morph_wins = sum(decision.winner == "MORPH_GENOME" for decision in decisions)
+    morph_fronts = sum("MORPH_GENOME" in decision.pareto_front for decision in decisions)
     adversarial_losses = all(
-        decision.winner != "MORPH_GENOME"
+        "MORPH_GENOME" not in decision.pareto_front
         for case, decision in zip(cases, decisions)
         if case.adversarial_for_morph_genome
     )
-    if morph_wins == len(decisions):
+    if morph_fronts == len(decisions):
         disposition = "KEEP_BOUNDED"
         validity_domain = "only the frozen benchmark corpus; no universal optimality claim"
-    elif morph_wins > 0:
+    elif morph_fronts > 0:
         disposition = "NARROW"
-        validity_domain = "retain MorphGenome only on frozen cases where it wins after hard gates and complexity charge"
+        validity_domain = "retain MorphGenome only on frozen cases where it remains Pareto-eligible after hard gates and complexity charge"
     else:
         disposition = "PRUNE_GENERIC_CLAIM"
         validity_domain = "simpler representations dominate this frozen corpus; MorphGenome remains candidate-only outside it"
@@ -350,6 +428,7 @@ def run_tournament(path: str | Path) -> TournamentReport:
         decisions=decisions,
         morph_genome_disposition=disposition,
         validity_domain=validity_domain,
+        memory=_memory_update(cases, decisions),
     )
 
 
@@ -361,6 +440,9 @@ def report_to_json(report: TournamentReport) -> str:
         "decisions": [asdict(decision) for decision in report.decisions],
         "morph_genome_disposition": report.morph_genome_disposition,
         "validity_domain": report.validity_domain,
+        "memory": {key: list(value) for key, value in sorted(report.memory.items())},
+        "evidence_class": report.evidence_class,
+        "scalar_score": report.scalar_score,
         "global_pass": report.global_pass,
         "external_action_performed": report.external_action_performed,
         "auto_promoted": report.auto_promoted,

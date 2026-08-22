@@ -14,6 +14,7 @@
     {
       "id": "meta-research-01",
       "domain": "meta_research_transformation",
+      "source_ref": "omega_tristan_meta/skill_civilization.py::SkillGenome",
       "record": {
         "id": "research-transform-v1",
         "purpose": "turn a bounded hypothesis into a proof-carrying candidate transformation",
@@ -36,6 +37,7 @@
     {
       "id": "education-01",
       "domain": "education_virtual_institution",
+      "source_ref": "prototypes/omega_learn_t/omega_learn_t/scheduler.py::ScheduledTask",
       "record": {
         "id": "edu-capability-v1",
         "goal": "compile a bounded retrieval practice session",
@@ -57,6 +59,7 @@
     {
       "id": "value-workflow-01",
       "domain": "value_economic_software_workflow",
+      "source_ref": "omega_value_os/models.py::ValueGenome",
       "record": {
         "id": "value-capability-v1",
         "goal": "evaluate a candidate offer without performing a financial action",
@@ -79,6 +82,7 @@
     {
       "id": "direct-checksum-adversary-01",
       "domain": "value_economic_software_workflow",
+      "source_ref": "benchmarks/meta_morph_representation_r0_2/corpus.json::direct-checksum-adversary-01",
       "record": {
         "id": "checksum-task-v1",
         "input": "abc",
