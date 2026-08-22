@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Iterable, List
 
+from omega_morphogenesis import MorphogenesisKernel
+
 from .models import GateResult, TransformationCandidate, VerificationContract
 
 
@@ -65,10 +67,16 @@ def evaluate_hard_gates(candidate: TransformationCandidate, contract: Verificati
 
 
 def meta_stop_gate(expected_savings: float, optimization_cost: float, complexity_debt: float = 0.0, risk_debt: float = 0.0, margin: float = 0.0) -> GateResult:
+    """MACT burden accounting delegated to the canonical morphogenesis MetaStop rule."""
+
     benefit = max(0.0, expected_savings)
     burden = max(0.0, optimization_cost) + max(0.0, complexity_debt) + max(0.0, risk_debt) + max(0.0, margin)
-    ok = benefit > burden
-    return GateResult("meta_stop", ok, "optimizer earns its complexity rent" if ok else "expected savings do not exceed optimization burden")
+    ok = MorphogenesisKernel.should_create_meta_level(
+        verified_out_of_sample_gain=benefit,
+        meta_complexity_cost=burden,
+        expressible_by_current_kernel=False,
+    )
+    return GateResult("meta_stop", ok, "canonical MetaStop: optimizer earns its complexity rent" if ok else "canonical MetaStop: expected savings do not exceed optimization burden")
 
 
 def all_pass(gates: Iterable[GateResult]) -> bool:
