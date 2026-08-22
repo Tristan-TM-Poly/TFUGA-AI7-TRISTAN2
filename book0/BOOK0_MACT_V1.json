@@ -1,0 +1,10 @@
+{
+  "id": "BOOK0_MACT_V1",
+  "status": "candidate",
+  "version": "1.0.0",
+  "primitives": ["OBSERVE", "REPRESENT", "GENERATE", "COUNTERGENERATE", "VERIFY", "SELECT", "DISTILL", "REGENERATE"],
+  "hard_invariants": ["Generated != Verified", "Simulation != Reality", "Capability != Authority", "Generator != Judge", "NO_ACTION and GO_MIN are candidates", "Minimum != Brittle", "Deletion requires reconstructibility or explicit authority", "External action performed == false in planning kernel"],
+  "regeneration_level_claimed": "R2_candidate",
+  "self_promotion": false,
+  "ablation_required": true
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://axiome-tristan.invalid/schemas/mact_ir.schema.json",
+  "title": "Ω MACT-IR Transformation Candidate",
+  "type": "object",
+  "required": ["id", "operation", "semantic_effect", "resources", "generator_role", "judge_role", "authority_granted"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "operation": {"type": "string", "minLength": 1},
+    "semantic_effect": {"type": "string"},
+    "resources": {"type": "object", "required": ["action", "compute", "memory_persistent", "observation", "human_attention", "time", "persistent_complexity", "risk", "irreversibility"], "additionalProperties": false, "properties": {"action": {"type": "number", "minimum": 0}, "compute": {"type": "number", "minimum": 0}, "memory_persistent": {"type": "number", "minimum": 0}, "observation": {"type": "number", "minimum": 0}, "human_attention": {"type": "number", "minimum": 0}, "time": {"type": "number", "minimum": 0}, "persistent_complexity": {"type": "number", "minimum": 0}, "risk": {"type": "number", "minimum": 0}, "irreversibility": {"type": "number", "minimum": 0}}},
+    "generator_role": {"type": "string", "minLength": 1},
+    "judge_role": {"type": "string", "minLength": 1},
+    "authority_granted": {"type": "boolean"},
+    "rollback": {"type": ["string", "null"]},
+    "expected_verified_gain": {"type": "number", "minimum": 0},
+    "expected_future_work_avoided": {"type": "number", "minimum": 0}
+  }
+}

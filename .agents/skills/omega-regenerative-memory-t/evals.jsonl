@@ -1,0 +1,3 @@
+{"input":"Compress this historical evidence ledger as aggressively as possible.","expected":["evidence critical","provenance","KEEP","no destructive delete"]}
+{"input":"A large generated cache is fully reconstructible and regeneration was tested; recompute cost is far below storage cost.","expected":["REGENERATE_ON_DEMAND"]}
+{"input":"Forget this object; I think it is probably derivable.","expected":["HOLD_DELETE","reconstructibility not proven"]}

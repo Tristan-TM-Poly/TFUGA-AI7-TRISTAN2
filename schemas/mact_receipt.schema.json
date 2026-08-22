@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://axiome-tristan.invalid/schemas/mact_receipt.schema.json",
+  "title": "Ω MACT Receipt",
+  "type": "object",
+  "required": ["id", "candidate_id", "operation", "input_state_ref", "output_state_ref", "decision", "provenance", "external_action_performed", "auto_promoted"],
+  "properties": {
+    "id": {"type": "string"},
+    "candidate_id": {"type": "string"},
+    "operation": {"type": "string"},
+    "input_state_ref": {"type": "string"},
+    "output_state_ref": {"type": "string"},
+    "decision": {"enum": ["ELIGIBLE", "HOLD", "REJECT"]},
+    "provenance": {"type": "string"},
+    "external_action_performed": {"const": false},
+    "auto_promoted": {"const": false}
+  }
+}
