@@ -29,6 +29,15 @@ from .skill_civilization import (
     regeneration_seed,
     select_minimum_sufficient_plan,
 )
+from .representation_tournament import (
+    COMPETITORS as REPRESENTATION_COMPETITORS,
+    FrozenTask,
+    RepresentationResult,
+    evaluate_representation,
+    load_corpus as load_representation_corpus,
+    pareto_front as representation_pareto_front,
+    run_tournament as run_representation_tournament,
+)
 
 __all__ = [
     "Claim", "Evidence", "Residual", "Capability", "Receipt", "SystemGenome",
@@ -42,4 +51,7 @@ __all__ = [
     "select_minimum_sufficient_plan", "generate_residual_skill_candidates",
     "ablation_report", "evaluate_meta_improvement", "meta_depth_decision",
     "crystallize_skill_plan", "regeneration_seed", "regeneration_closure",
+    "REPRESENTATION_COMPETITORS", "FrozenTask", "RepresentationResult",
+    "evaluate_representation", "load_representation_corpus",
+    "representation_pareto_front", "run_representation_tournament",
 ]
