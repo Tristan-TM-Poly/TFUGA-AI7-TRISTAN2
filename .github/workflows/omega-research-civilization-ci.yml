@@ -1,0 +1,43 @@
+name: Ω Research Civilization CI
+
+on:
+  pull_request:
+    paths:
+      - "omega_research_civilization/**"
+      - "tests/test_omega_research_civilization.py"
+      - ".agents/skills/omega-research-civilization-*/**"
+      - ".agents/skills/omega-virtual-tristan-ecology-t/**"
+      - "01_CANON/RESEARCH_CIVILIZATION_OS_V1.md"
+      - "03_ARCHITECTURE/RESEARCH_CIVILIZATION_OS_V1.md"
+      - "09_OAK/RESEARCH_CIVILIZATION_BOOK0_V1.md"
+      - "schemas/research_civilization_seed_v1.schema.json"
+      - ".github/workflows/omega-research-civilization-ci.yml"
+  push:
+    branches:
+      - "feat/omega-research-civilization-v1"
+    paths:
+      - "omega_research_civilization/**"
+      - "tests/test_omega_research_civilization.py"
+      - ".agents/skills/omega-research-civilization-*/**"
+      - ".agents/skills/omega-virtual-tristan-ecology-t/**"
+      - "01_CANON/RESEARCH_CIVILIZATION_OS_V1.md"
+      - "03_ARCHITECTURE/RESEARCH_CIVILIZATION_OS_V1.md"
+      - "09_OAK/RESEARCH_CIVILIZATION_BOOK0_V1.md"
+      - "schemas/research_civilization_seed_v1.schema.json"
+      - ".github/workflows/omega-research-civilization-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run research civilization tests
+        run: python -m unittest tests.test_omega_research_civilization -v
+      - name: Compile package and demo
+        run: python -m compileall -q omega_research_civilization scripts/omega_research_civilization_demo.py
