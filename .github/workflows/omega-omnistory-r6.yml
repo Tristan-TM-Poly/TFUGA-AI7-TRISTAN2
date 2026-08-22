@@ -1,0 +1,55 @@
+name: Omega Omnistory R6
+
+on:
+  pull_request:
+    paths:
+      - "omega_omnistory_t/**"
+      - "tests/test_omega_omnistory_t_r6.py"
+      - "schemas/omnistory-r6.schema.json"
+      - "policies/omega_omnistory_r6.json"
+      - "docs/omega_omnistory_t_r6.md"
+      - "pyproject.toml"
+      - ".github/workflows/omega-omnistory-r6.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oak-r6:
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test tooling
+        run: python -m pip install --upgrade pip pytest jsonschema
+      - name: Compile package
+        run: python -m compileall -q omega_omnistory_t
+      - name: Run focused tests
+        run: pytest -q tests/test_omega_omnistory_t_r6.py
+      - name: Validate reference StoryIR
+        run: python -m omega_omnistory_t validate-reference
+      - name: Exercise cross-media projections
+        run: |
+          python -m omega_omnistory_t projection manga
+          python -m omega_omnistory_t projection anime
+      - name: Exercise meta and regeneration loops
+        run: |
+          python -m omega_omnistory_t meta-demo
+          python -m omega_omnistory_t regenerate-demo
+      - name: Validate JSON Schema syntax and reference instance
+        run: |
+          python - <<'PY'
+          import json
+          from jsonschema import Draft202012Validator
+          from omega_omnistory_t import eighth_fire_story
+          schema = json.load(open("schemas/omnistory-r6.schema.json", encoding="utf-8"))
+          Draft202012Validator.check_schema(schema)
+          Draft202012Validator(schema).validate(eighth_fire_story().to_dict())
+          print("schema PASS")
+          PY
