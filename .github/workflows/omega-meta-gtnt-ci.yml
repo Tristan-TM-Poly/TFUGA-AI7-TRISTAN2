@@ -1,0 +1,44 @@
+name: omega-meta-gtnt-ci
+
+on:
+  pull_request:
+    paths:
+      - 'omega_meta_gtnt_t/**'
+      - 'tests/test_omega_meta_gtnt_t.py'
+      - 'docs/omega-meta-gtnt/**'
+      - 'docs/canon/OMEGA-META-GTNT-T-CANON-v0.1.md'
+      - '.github/workflows/omega-meta-gtnt-ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'omega_meta_gtnt_t/**'
+      - 'tests/test_omega_meta_gtnt_t.py'
+      - 'docs/omega-meta-gtnt/**'
+      - 'docs/canon/OMEGA-META-GTNT-T-CANON-v0.1.md'
+      - '.github/workflows/omega-meta-gtnt-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Targeted tests
+        run: pytest -q tests/test_omega_meta_gtnt_t.py
+      - name: CLI smoke test
+        run: |
+          python -m omega_meta_gtnt_t demo > /tmp/gtnt-demo.json
+          python - <<'PY'
+          import json
+          payload = json.load(open('/tmp/gtnt-demo.json', encoding='utf-8'))
+          assert payload['status'] == 'OAK_PROTOTYPE'
+          assert payload['representations']
+          assert payload['oak_boundary']
+          PY
