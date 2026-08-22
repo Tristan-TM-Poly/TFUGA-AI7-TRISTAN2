@@ -203,6 +203,22 @@ A reconstruction benchmark should measure:
 
 Evidence and claims should expose a transitive impact cone. If a foundational claim is invalidated, dependent simulations, documentation, products, decisions, and publications can be re-qualified instead of silently remaining trusted.
 
+## Tristan meta adapter integration
+
+`omega_tristan_meta` is a bounded adapter over the canonical `omega_morphogenesis` court, not a second authority or verification kernel. It adds a generic `MorphGenome`, deterministic morphogenesis receipts, explicit `M+ / M- / M?` causal memory, crystal prerequisites, review-only apoptosis, and non-destructive `FORGET+` semantics.
+
+The adapter is constrained by:
+
+```text
+Genome != Authority
+Crystal != EternalTruth
+Apoptosis != AutomaticDeletion
+FORGET+ != DestructiveForget
+GenericRepresentation != BetterRepresentation
+```
+
+A generic MorphGenome must be allowed to lose a frozen representation tournament against a simpler domain-specific model. The benchmark tracked in issue #541 is intended to test this boundary rather than assume universal usefulness.
+
 ## Validation program
 
 The theory should be tested against at least these falsifiers:
@@ -217,6 +233,8 @@ The theory should be tested against at least these falsifiers:
 8. **Meta-bloat attack:** propose a redundant meta-layer and require meta-stop.
 9. **DO_NOTHING tournament:** ensure weak changes lose to the baseline.
 10. **Blast-radius replay:** invalidate a root claim and verify transitive dependents are identified.
+11. **Genome-authority attack:** declare a permission inside a MorphGenome but omit it from the actual AuthorityEnvelope and require rejection.
+12. **Representation tournament:** require the generic MorphGenome to lose when a simpler domain representation preserves the frozen probe family at lower cost/debt.
 
 ## OAK status
 
