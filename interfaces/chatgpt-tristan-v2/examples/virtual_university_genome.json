@@ -1,0 +1,81 @@
+{
+  "version": "omega-virtual-university-genome.v0.1",
+  "institution_type": "virtual_university",
+  "id": "uni-example-genie-physique",
+  "lineage": null,
+  "name": "Université Virtuelle Tristan — Génie Physique",
+  "mission": "Former une cohorte à concevoir, simuler, tester et expliquer un capteur scientifique avec preuves reproductibles.",
+  "visibility": "invite",
+  "created_at": "2026-08-21T00:00:00Z",
+  "lifecycle": {
+    "status": "sandbox",
+    "cycle": 0,
+    "can_dissolve": true,
+    "can_fork": true,
+    "can_merge_propose": true
+  },
+  "multiplayer": {
+    "contract_status": "prototype_only",
+    "room_id": "room-example-genie-physique",
+    "max_members": 32,
+    "authenticated_members_required": true,
+    "realtime_backend_required": true,
+    "members": [
+      {
+        "principal": "local-subscriber",
+        "role": "founder",
+        "status": "local-placeholder"
+      }
+    ]
+  },
+  "agents": [
+    { "name": "Tristan-Professor", "identity": "AI agent/persona", "authority": "bounded", "status": "sandbox" },
+    { "name": "Tristan-Socratic", "identity": "AI agent/persona", "authority": "bounded", "status": "sandbox" },
+    { "name": "Tristan-Lab", "identity": "AI agent/persona", "authority": "bounded", "status": "sandbox" },
+    { "name": "Tristan-OAK", "identity": "AI agent/persona", "authority": "bounded", "status": "sandbox" }
+  ],
+  "curriculum": {
+    "strategy": "capability_geodesic",
+    "quests": ["model", "simulate", "prototype", "measure", "teach"],
+    "mastery_evidence_required": true
+  },
+  "research": {
+    "labs": ["sensor-modeling-lab"],
+    "claims": [],
+    "counterexample_search_required": true
+  },
+  "governance": {
+    "risk_tier": "medium",
+    "constitution": [
+      "Agent != Human",
+      "Capability != Authority",
+      "Reputation != Evidence",
+      "Simulation != Reality",
+      "Generated != Verified",
+      "LocalPASS != GlobalPASS"
+    ],
+    "permission_model": "capability-based + explicit approval gates",
+    "sanctions_from_single_classifier_forbidden": true
+  },
+  "economy": {
+    "mode": "internal-contribution-ledger",
+    "real_money_actions": "disabled_without_explicit_authorization"
+  },
+  "evidence": [],
+  "metrics": {
+    "verified_capability": 0,
+    "simulated_capability": 0,
+    "evidence_count": 0,
+    "coordination_debt": 0,
+    "epistemic_debt": 0
+  },
+  "oak": {
+    "status": "OAK-3 scaffold",
+    "blockers": [
+      "real authenticated multiplayer backend",
+      "persistent server-side storage",
+      "independent real-user validation"
+    ],
+    "boundary": "This example is a contract and local prototype, not proof of production multiplayer or learning outcomes."
+  }
+}

@@ -4,13 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#05070d" />
-  <title>Ω ChatGPT × Tristan OS v2</title>
+  <title>Ω ChatGPT × Tristan OS v2.4</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app">
     <aside class="rail">
-      <div class="brand"><span>Ω</span><div><small>Tristan cockpit</small><strong>ChatGPT OS v2.3</strong></div></div>
+      <div class="brand"><span>Ω</span><div><small>Tristan cockpit</small><strong>ChatGPT OS v2.4</strong></div></div>
       <button data-tab="composer" class="active">Composer</button>
       <button data-tab="oak">OAK</button>
       <button data-tab="memory">M+ / M−</button>
@@ -21,15 +21,16 @@
       <button data-tab="v21">v2.1</button>
       <button data-tab="v22">v2.2</button>
       <button data-tab="v23">v2.3</button>
+      <button data-tab="v24">Universités v2.4</button>
       <button data-tab="export">Export</button>
     </aside>
 
     <main>
       <header class="hero">
         <div>
-          <p class="eyebrow">Ω-CHATGPT-TRISTAN-OS v2.3</p>
+          <p class="eyebrow">Ω-CHATGPT-TRISTAN-OS v2.4</p>
           <h1>Interface personnelle pour transformer ChatGPT en opérateur OAK-safe de ton écosystème.</h1>
-          <p>Session → prompt compilé → artifact intent → OAK card → mémoire M+/M− → export JSON → action GitHub/publication/data.</p>
+          <p>Session → prompt compilé → artifact intent → OAK card → mémoire M+/M− → universités virtuelles sandbox → export JSON → action GitHub/publication/data.</p>
         </div>
         <div class="hero-actions">
           <button id="compileBtn" class="primary">Compiler prompt</button>
@@ -104,6 +105,35 @@ examples/iteration_execution/sample_execution_pack.json
 artifacts/response_score_history/RESPONSE_SCORE_HISTORY.md</pre></article>
       </section>
 
+      <section id="v24" class="tab grid two">
+        <article class="card stack">
+          <h2>Ω Virtual Universities / Institution Genesis</h2>
+          <p class="note">Génère et fait évoluer localement un UniversityGenome. Le vrai multijoueur entre abonnés exige un backend authentifié; cette interface ne le simule pas comme s’il existait déjà.</p>
+          <label>Nom<input id="universityName" value="Université Virtuelle Tristan — Génie Physique" /></label>
+          <label>Mission<textarea id="universityMission" rows="5">Former une cohorte à apprendre, rechercher et construire ensemble avec preuves OAK.</textarea></label>
+          <div class="row">
+            <label>Visibilité<select id="universityMode"><option>private</option><option selected>invite</option><option>community</option><option>public</option></select></label>
+            <label>Risque<select id="universityRisk"><option>low</option><option selected>medium</option><option>high</option></select></label>
+          </div>
+          <label>Capacité membres<input id="universityCapacity" type="number" min="2" max="512" value="32" /></label>
+          <label>Tristan Virtuels<div id="universityAgents" class="chips"></div></label>
+          <div class="hero-actions">
+            <button id="generateUniversity" class="primary">Générer UniversityGenome</button>
+            <button id="simulateUniversity">Simuler un cycle</button>
+            <button id="forkUniversity">Fork</button>
+          </div>
+        </article>
+        <article class="card stack">
+          <h2>Institution State / OAK</h2>
+          <div class="hero-actions">
+            <button id="buildUniversityBackendPrompt">Compiler backend multijoueur</button>
+            <button id="exportUniversity">Exporter JSON</button>
+            <button id="resetUniversity">Reset sandbox</button>
+          </div>
+          <pre id="universityReport">Aucune université locale. Génère un UniversityGenome pour commencer.</pre>
+        </article>
+      </section>
+
       <section id="export" class="tab grid two">
         <article class="card stack"><h2>Prompt compilé</h2><textarea id="prompt" rows="20" spellcheck="false"></textarea></article>
         <article class="card stack"><h2>Export center</h2><button id="saveLocal">Sauver local</button><button id="exportJson">Exporter session JSON</button><button id="exportOak">Exporter OAK card JSON</button><button id="clearLocal">Effacer local</button><div id="savedSessions" class="list"></div></article>
@@ -115,5 +145,6 @@ artifacts/response_score_history/RESPONSE_SCORE_HISTORY.md</pre></article>
   <script src="app.v21.js"></script>
   <script src="app.v22.js"></script>
   <script src="app.v23.js"></script>
+  <script src="app.v24.js"></script>
 </body>
 </html>

@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "omega-virtual-university-genome.v0.1",
+  "title": "Ω-VIRTUAL-UNIVERSITIES-T∞ UniversityGenome",
+  "type": "object",
+  "required": [
+    "version",
+    "institution_type",
+    "id",
+    "name",
+    "mission",
+    "visibility",
+    "lifecycle",
+    "multiplayer",
+    "agents",
+    "governance",
+    "evidence",
+    "metrics",
+    "oak"
+  ],
+  "properties": {
+    "version": { "const": "omega-virtual-university-genome.v0.1" },
+    "institution_type": { "const": "virtual_university" },
+    "id": { "type": "string", "minLength": 4 },
+    "lineage": {
+      "type": ["object", "null"],
+      "properties": {
+        "parent_id": { "type": "string" },
+        "operation": { "enum": ["fork", "merge", "regenerate"] },
+        "forked_at": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "mission": { "type": "string", "minLength": 1, "maxLength": 4000 },
+    "visibility": { "enum": ["private", "invite", "community", "public"] },
+    "created_at": { "type": "string" },
+    "lifecycle": {
+      "type": "object",
+      "required": ["status", "cycle", "can_dissolve", "can_fork", "can_merge_propose"],
+      "properties": {
+        "status": { "enum": ["sandbox", "shadow", "canary", "active", "dormant", "archived", "dissolved"] },
+        "cycle": { "type": "integer", "minimum": 0 },
+        "can_dissolve": { "type": "boolean" },
+        "can_fork": { "type": "boolean" },
+        "can_merge_propose": { "type": "boolean" }
+      }
+    },
+    "multiplayer": {
+      "type": "object",
+      "required": ["contract_status", "room_id", "max_members", "authenticated_members_required", "realtime_backend_required", "members"],
+      "properties": {
+        "contract_status": { "enum": ["prototype_only", "backend_connected", "production_verified"] },
+        "room_id": { "type": "string" },
+        "max_members": { "type": "integer", "minimum": 2, "maximum": 10000 },
+        "authenticated_members_required": { "const": true },
+        "realtime_backend_required": { "type": "boolean" },
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["principal", "role", "status"],
+            "properties": {
+              "principal": { "type": "string" },
+              "role": { "type": "string" },
+              "status": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "agents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "identity", "authority", "status"],
+        "properties": {
+          "name": { "type": "string" },
+          "identity": { "const": "AI agent/persona" },
+          "authority": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      }
+    },
+    "curriculum": { "type": "object" },
+    "research": { "type": "object" },
+    "governance": {
+      "type": "object",
+      "required": ["risk_tier", "constitution", "permission_model", "sanctions_from_single_classifier_forbidden"],
+      "properties": {
+        "risk_tier": { "enum": ["low", "medium", "high"] },
+        "constitution": { "type": "array", "items": { "type": "string" } },
+        "permission_model": { "type": "string" },
+        "sanctions_from_single_classifier_forbidden": { "const": true }
+      }
+    },
+    "economy": { "type": "object" },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "epistemic_type", "claim", "provenance", "promotion_allowed"],
+        "properties": {
+          "id": { "type": "string" },
+          "epistemic_type": { "enum": ["OBSERVED", "MEASURED", "DERIVED", "SIMULATED", "HEURISTIC", "CONJECTURED", "PROVEN"] },
+          "claim": { "type": "string" },
+          "provenance": { "type": "string" },
+          "promotion_allowed": { "type": "boolean" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["verified_capability", "simulated_capability", "evidence_count", "coordination_debt", "epistemic_debt"],
+      "properties": {
+        "verified_capability": { "type": "number", "minimum": 0 },
+        "simulated_capability": { "type": "number", "minimum": 0 },
+        "evidence_count": { "type": "integer", "minimum": 0 },
+        "coordination_debt": { "type": "number", "minimum": 0 },
+        "epistemic_debt": { "type": "number", "minimum": 0 }
+      }
+    },
+    "oak": {
+      "type": "object",
+      "required": ["status", "blockers", "boundary"],
+      "properties": {
+        "status": { "type": "string" },
+        "blockers": { "type": "array", "items": { "type": "string" } },
+        "boundary": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": true
+}
