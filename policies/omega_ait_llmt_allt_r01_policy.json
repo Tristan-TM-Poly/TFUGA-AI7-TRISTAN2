@@ -1,0 +1,15 @@
+{
+  "policy_id": "omega-ait-llmt-allt-r01",
+  "authority": "review_only",
+  "hard_gates": ["truth","safety","authority","provenance","independent_verification","rollback","observability"],
+  "hard_gates_are_non_compensatory": true,
+  "automatic_promotion_allowed": false,
+  "automatic_merge_allowed": false,
+  "external_action_performed_by_package": false,
+  "generator_may_judge_itself": false,
+  "capability_grants_authority": false,
+  "meta_depth_requires_verified_gain": true,
+  "ablation_required_before_promotion": true,
+  "no_zero_touch_without_observability": true,
+  "minimum_topology_candidates": ["NO_ACTION","GO_MIN","AIT","LLMT","ALLT"]
+}
