@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://axiome-tristan.com/schemas/omega_ait_llmt_allt_plan_r01.schema.json",
+  "title": "Omega AIT LLMT ALLT Plan R0.1",
+  "type": "object",
+  "required": ["schema_version","plan_id","mission_id","status","topology","representation","capability_count","required_capabilities","hard_gates","failed_gates","authority","max_meta_depth","auto_promotion","external_action_performed","rationale"],
+  "properties": {
+    "schema_version": {"const": "omega-ait-llmt-allt-plan-r01"},
+    "plan_id": {"type": "string", "minLength": 1},
+    "mission_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["BLOCKED","NO_ACTION","ABSTAIN_MORE_EVIDENCE","CANDIDATE_FOR_REVIEW"]},
+    "topology": {"enum": ["NO_ACTION","GO_MIN","AIT","LLMT","ALLT"]},
+    "representation": {"enum": ["structured_text","program_ir","evidence_graph","hypergraph","simulation"]},
+    "capability_count": {"type": "integer", "minimum": 0},
+    "required_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "hard_gates": {"type": "object", "required": ["truth","safety","authority","provenance","independent_verification","rollback","observability"], "additionalProperties": false, "properties": {"truth":{"type":"boolean"},"safety":{"type":"boolean"},"authority":{"type":"boolean"},"provenance":{"type":"boolean"},"independent_verification":{"type":"boolean"},"rollback":{"type":"boolean"},"observability":{"type":"boolean"}}},
+    "failed_gates": {"type": "array", "items": {"type": "string"}},
+    "authority": {"const": "review_only"},
+    "max_meta_depth": {"type": "integer", "minimum": 0},
+    "auto_promotion": {"const": false},
+    "external_action_performed": {"const": false},
+    "rationale": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+  },
+  "additionalProperties": false
+}
