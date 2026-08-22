@@ -1,0 +1,27 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://axiome-tristan.com/schemas/ClaimPassport.schema.json",
+  "title":"ClaimPassport",
+  "type":"object",
+  "required":["claim_id","statement","kind","domain","definitions","scope","evidence","counterevidence","uncertainty","provenance","version","status"],
+  "properties":{
+    "claim_id":{"type":"string","minLength":1},
+    "statement":{"type":"string","minLength":1},
+    "kind":{"enum":["AXIOM","FORMAL_AXIOM","POSTULATE","HYPOTHESIS","CONJECTURE","ENGINEERING_PRINCIPLE","INVARIANT","OPERATIONAL_RULE"]},
+    "domain":{"type":"string","minLength":1},
+    "definitions":{"type":"array","items":{"type":"string","minLength":1}},
+    "scope":{"type":"array","items":{"type":"string","minLength":1}},
+    "assumptions":{"type":"array","items":{"type":"string"}},
+    "dependencies":{"type":"array","items":{"type":"string"}},
+    "evidence":{"type":"array","items":{"$ref":"#/$defs/evidence"}},
+    "counterevidence":{"type":"array","items":{"$ref":"#/$defs/evidence"}},
+    "uncertainty":{"type":"object","additionalProperties":{"type":"number","minimum":0,"maximum":1}},
+    "falsifiers":{"type":"array","items":{"type":"string"}},
+    "proof_obligations":{"type":"array","items":{"type":"string"}},
+    "provenance":{"type":"array","items":{"type":"string","minLength":1}},
+    "version":{"type":"string","minLength":1},
+    "status":{"enum":["IDEA","CONJECTURE","FORMALIZED","TESTABLE","TESTED","CORROBORATED","REPLICATED","FORMALLY_VERIFIED","REFUTED","BOUNDED"]},
+    "generator_id":{"type":"string"},"judge_id":{"type":"string"},"revenue_score":{"type":["number","null"]}
+  },
+  "$defs":{"evidence":{"type":"object","required":["evidence_id","evidence_type","source","supports_scope","independent","strength"],"properties":{"evidence_id":{"type":"string","minLength":1},"evidence_type":{"enum":["OBSERVATION","EXPERIMENT","REPLICATION","FORMAL_PROOF","SIMULATION","BENCHMARK","DERIVATION"]},"source":{"type":"string","minLength":1},"supports_scope":{"type":"array","items":{"type":"string"}},"independent":{"type":"boolean"},"strength":{"type":"number","minimum":0,"maximum":1},"notes":{"type":"string"}}}}
+}
