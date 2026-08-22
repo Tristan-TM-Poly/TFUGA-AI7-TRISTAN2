@@ -1,12 +1,6 @@
 ---
 name: omega-value-fixed-point-economy-t
-description: >-
-  Compile paid accounts, media, social channels, YouTube, active/passive/mixed
-  monetization, products, subscriptions and venture hypotheses into a bounded,
-  proof-carrying regenerative value system. Use when designing, comparing,
-  automating, regenerating or auditing monetization strategies. Generated
-  strategies are proposals only; financial, contractual, tax, legal, sensitive
-  publication and authority-changing actions require explicit human authority.
+description: Compile paid accounts, media, social channels, YouTube, active/passive/mixed monetization, products, subscriptions and venture hypotheses into a bounded proof-carrying regenerative value system; use for designing, comparing, automating, regenerating or auditing monetization strategies while keeping financial, contractual, tax, legal, sensitive-publication and authority-changing actions under explicit human authority.
 ---
 
 # Ω Value Fixed-Point Economy T
@@ -18,7 +12,7 @@ revenue maximization. The skill integrates Capability OS semantics, OAK hard
 gates, generator/evaluator separation, proof-of-better receipts and bounded
 regeneration.
 
-## Core invariants
+## Invariants
 
 - Revenue != truth.
 - Revenue growth != value growth.
