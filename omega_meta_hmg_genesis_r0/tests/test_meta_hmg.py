@@ -1,7 +1,10 @@
 import unittest
 
+from omega_capability_os_t.cross_skill_transplant import SkillContext, evaluate_capability_transplant
+from omega_generative_closure_t.reprovenance_replay import FrozenSlice
 from omega_meta_hmg import (
-    GeneratorGenome, MetaHMGEngine, Residual, FrozenBenchmark, VerificationStatus
+    GeneratorGenome, MetaHMGEngine, Residual, FrozenBenchmark, VerificationStatus,
+    hmg_representation_research_capability,
 )
 
 
@@ -68,6 +71,33 @@ class MetaHMGTests(unittest.TestCase):
         cs = self.engine.generate_candidates(self.genome, self.residuals)
         self.engine.tournament(cs, strict, self.engine.residualize(self.residuals))
         self.assertEqual(len(self.engine.negative_memory), 1)
+
+    def test_hmg_specific_capability_transplants_through_capability_os(self):
+        capability = hmg_representation_research_capability()
+        self.assertEqual(capability.authority, "read")
+        contexts = (
+            SkillContext.make("hmg-representation", "representation-search", ["residuals", "representation_candidates"], ["tournament_report", "residual"], "read"),
+            SkillContext.make("hmg-provenance", "provenance", ["evidence"], ["provenance_manifest"], "read"),
+        )
+        report = evaluate_capability_transplant(
+            capability,
+            contexts,
+            frozen_slices=(
+                FrozenSlice.make("hmg-representation", ["src-hmg-representation"], ["bench-hmg-representation"]),
+                FrozenSlice.make("hmg-provenance", ["src-hmg-provenance"], ["bench-hmg-provenance"]),
+            ),
+            training_provenance_ids=("train-hmg",),
+            runs={
+                "run-a": {"representation": "PASS", "provenance": "PASS"},
+                "run-b": {"representation": "PASS", "provenance": "PASS"},
+            },
+            historical_expected={"representation": "PASS", "provenance": "PASS"},
+            historical_candidate={"representation": "PASS", "provenance": "PASS"},
+            counterfactual_observations=((0.4, 0.6), (0.5, 0.7), (0.7, 0.7)),
+        )
+        self.assertEqual(report.decision, "PROMOTE")
+        self.assertEqual(report.transfer_ratio, 1.0)
+        self.assertEqual(report.blockers, ())
 
 
 class MetaControllerTests(unittest.TestCase):
