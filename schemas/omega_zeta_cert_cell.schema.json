@@ -1,0 +1,61 @@
+{
+  "$id": "https://example.invalid/schemas/omega_zeta_cert_cell.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cell_id": {
+      "pattern": "^zeta-cert-[0-9a-f]{20}$",
+      "type": "string"
+    },
+    "front": {
+      "enum": [
+        "barrier",
+        "representation",
+        "support-debt",
+        "theorem-debt",
+        "countermodel",
+        "verification-fixture",
+        "formal-obligation",
+        "research-route",
+        "m-minus"
+      ]
+    },
+    "method": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "problem_id": {
+      "const": "riemann"
+    },
+    "schema": {
+      "const": "omega-problem-stream-cell/10"
+    },
+    "source_ref": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "target_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "cell_id",
+    "problem_id",
+    "target_id",
+    "front",
+    "method",
+    "priority",
+    "source_ref",
+    "payload"
+  ],
+  "title": "Omega Zeta Certificate Problem Cell R0.2",
+  "type": "object"
+}
