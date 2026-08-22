@@ -27,9 +27,9 @@ class SensoriumTests(unittest.TestCase):
             SensorCapability("S3", ("O1", "O2"), 0.9, 0.9, 0.90, 5.0, provenance=("p",)),
         )
 
-    def test_science_to_sensor_prefers_minimum_sensor_count_then_cost(self):
+    def test_science_to_sensor_prefers_least_cost_sufficient_set(self):
         genome = ScienceToSensorCompiler().compile(self.question, self.observables, self.sensors)
-        self.assertEqual(genome.sensor_ids, ("S3",))
+        self.assertEqual(genome.sensor_ids, ("S1", "S2"))
 
     def test_no_feasible_sensor_returns_none(self):
         impossible = (Observable("OX", "x", "gamma", 10, 10, 1),)
