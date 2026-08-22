@@ -1,8 +1,9 @@
+---
+name: omega-meta-morphogenesis-t
+description: Meta-generalize, meta-generate, meta-automate, meta-regenerate, improve, ablate, crystallize, compress, and reconstruct Tristan systems through the existing proof-carrying morphogenesis kernel. Use for recursive cross-domain architecture requests that need MetaStop, independent verification, M+/M-/M?, regeneration, FORGET+, apoptosis review, or capability crystallization.
+---
+
 # Ω Meta Morphogenesis T
-
-Use this skill when the user asks to meta-generalize, meta-generate, meta-automate, meta-regenerate, self-improve, crystallize, compress, prune, ablate, or reconstruct Tristan systems across multiple domains.
-
-## Objective
 
 Reuse the existing Ω Tristan Meta-Compiler and `omega_morphogenesis` kernel to convert broad recursive requests into bounded proof-carrying transformations instead of adding unearned meta-layers.
 
@@ -21,32 +22,40 @@ REALITY
 → ABLATE / REGENERATE
 ```
 
-## Required behavior
+## Workflow
 
 1. Search and reuse existing kernels, schemas, skills, tests and BOOK0 seeds before creating a new runtime.
-2. Treat theory/agent/workflow/institution/business/compiler genomes as domain projections of `MorphGenome` only when their domain-specific constraints remain explicit.
-3. Preserve `Generator != Judge`, `Capability != Authority`, `Generated != Verified`, and `Simulation != Reality` as non-compensatory boundaries.
-4. Use MetaStop: do not create META^(n+1) when the current kernel can express the residual, or when verified out-of-sample gain does not exceed added complexity/risk/debt.
-5. Carry evidence, tests, provenance, uncertainty, before/after hashes and rollback in every promoted morphogenesis receipt.
-6. Separate M+, M-, and M?; unresolved uncertainty must remain unresolved when evidence is insufficient.
-7. Crystallize only accepted candidates that pay complexity rent and have evidence plus tests.
-8. Treat crystals as challengeable/versioned, never eternal truths.
-9. Apoptosis is review-only. Never automatically delete a component from a low survival score.
-10. FORGET+ means `REGENERATE_ON_DEMAND` only when regeneration closure plus evidence/provenance preservation are verified.
-11. New evidence invalidation must propagate through a dependency blast-radius review.
-12. Prefer a smaller persistent seed with larger verified regenerative closure over a larger static architecture.
+2. Compile the request into the smallest useful `MorphGenome` while preserving domain-specific constraints.
+3. Generate candidate transformations and an independent verification path; never let the generator be the sole judge.
+4. Apply MetaStop before creating a new meta-level. If the current kernel expresses the residual, stop recursion.
+5. Convert candidates into proof-carrying transitions with evidence, tests, provenance, uncertainty, before/after hashes, authority envelope and rollback.
+6. Run non-compensatory OAK gates before any persistence or promotion decision.
+7. Record outcomes as M+, M-, or M? without forcing unresolved evidence into PASS/FAIL.
+8. Crystallize only accepted candidates that pay complexity rent and carry evidence plus tests.
+9. Propagate invalidated evidence through the dependency blast radius and challenge affected crystals.
+10. Run ablation/apoptosis only as review eligibility; never perform automatic destructive deletion.
+11. Use FORGET+ only as `REGENERATE_ON_DEMAND` when regeneration closure plus evidence/provenance preservation are verified.
+12. Prefer the smallest persistent seed that preserves the required verified regenerative closure.
+
+## OAK invariants
+
+- `Generated != Verified`.
+- `Simulation != Reality`.
+- `Generator != Judge`.
+- `Capability != Authority`.
+- `Genome != Authority`.
+- `MetaGeneration != Progress`.
+- `SelfModification != SelfApproval`.
+- `Crystal != EternalTruth`.
+- `Apoptosis != AutomaticDeletion`.
+- `FORGET+ != DestructiveForget`.
+- `PersistentStructure <= VerifiedNecessaryStructure`.
+- Promotion from simulation to observation requires observed evidence.
+- Regeneration depth is a tested capability claim, not a label.
 
 ## Hard anti-patterns
 
-Reject or HOLD requests that imply:
-
-- self-approval by the generator;
-- permission escalation from generated capability;
-- automatic destructive deletion;
-- promotion from simulation to observation without observed evidence;
-- infinite meta-recursion without measured gain;
-- treating benchmark superiority as universal truth;
-- claiming regeneration depth without an actual reconstruction test.
+Reject or HOLD requests that imply self-approval by the generator, permission escalation from generated capability, automatic destructive deletion, promotion from simulation to observation without observed evidence, infinite meta-recursion without measured gain, benchmark superiority as universal truth, or regeneration depth without reconstruction tests.
 
 ## Output discipline
 
