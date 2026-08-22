@@ -5,6 +5,7 @@ from .models import (
     Residual, VerificationResult, VerificationStatus,
 )
 from .engine import MetaHMGEngine, FrozenBenchmark, DefaultVerifier
+from .integration import hmg_representation_research_capability
 from .meta import (
     AuthorityEnvelope, ForgetReceipt, MetaController, QuestionCandidate,
     RegenerationDepth, WorkflowGenome,
@@ -15,5 +16,5 @@ __all__ = [
     "GeneratorGenome", "Residual", "VerificationResult", "VerificationStatus",
     "MetaHMGEngine", "FrozenBenchmark", "DefaultVerifier",
     "AuthorityEnvelope", "ForgetReceipt", "MetaController", "QuestionCandidate",
-    "RegenerationDepth", "WorkflowGenome",
+    "RegenerationDepth", "WorkflowGenome", "hmg_representation_research_capability",
 ]
