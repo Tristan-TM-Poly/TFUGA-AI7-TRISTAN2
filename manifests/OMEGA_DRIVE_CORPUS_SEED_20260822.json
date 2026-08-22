@@ -1,0 +1,23 @@
+{
+  "status": "CANDIDATE_NEEDS_CANON_CONFIRMATION",
+  "source": "Google Drive metadata discovery 2026-08-22",
+  "note": "Metadata only. The automation should deduplicate by content hash before treating titles as distinct documents.",
+  "candidates": [
+    {"title":"0-Tristan.pdf","id":"1cQSBfR8FQaGjl4BCG-gd16tnh3jCC6LX"},
+    {"title":"Presse-papier V01.pdf","id":"1_MLE0E-gtd6uyp0XzNmKVIrxsly46QOd"},
+    {"title":"Presse-papier V02.pdf","id":"1IOepAtVjBRe7OGzdZaZWgSMQvh001mF8"},
+    {"title":"Presse-papier V03.pdf","id":"1tfSRc4mPqnCYGRDBrY5FGA6Z8G9SKnFr"},
+    {"title":"Presse-papier V04.pdf","id":"1aaYRVm1Y9z735WobiiKJkZ72E6E3xr6r"},
+    {"title":"TTM.pdf","id":"1poOQ2CznZpguBp1mU68zHPPWh8c3hT6N"},
+    {"title":"TM.pdf","id":"12SXt6TUEHhhKf5ghCUfpqzk2oUBNT4lq"},
+    {"title":"TFUGA.pdf","id":"1bg8vyJUbEVWwN6cCF4lwAZpK628JI1_2"},
+    {"title":"TFU.pdf","id":"118l8iSn1DjZy_gKfrcWR2w8456OowGH2"},
+    {"title":"AI-BIGBOOK-0.0.1.pdf","id":"1fTiH9yGAjeaMcntvzMwztmheLPHKTeZk"},
+    {"title":"Document sans titre.pdf","id":"1v9Av8XFne1ZrpL0pjC-1i1pLquuvZzmJ"},
+    {"title":"Document sans titre 1.pdf","id":"1ps-t3V7fd9BYu7vcGL1_YTWis6b_0ifH"},
+    {"title":"Document sans titre 2.pdf","id":"1a_NNjJxYWK4exqFyYe7e0oVShffbjpKp"},
+    {"title":"Voici la synthèse propre, compressée et canonique.pdf","id":"1BIYIyrVSXiU5LXhXl2d1Ndc4Zf4tPQuD"},
+    {"title":"GO MAX PLUS ULTRA(1).pdf","id":"1DLZoOxEy4RNj68HTUFL-gMTs33Dr9MlB"},
+    {"title":"Projet Tristan .pdf","id":"1xhbZH-VDvjZm478XOzFuYviltq9ouDJ5"}
+  ]
+}
