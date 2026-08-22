@@ -1,0 +1,50 @@
+{
+  "id": "BOOK0_OMEGA_META_SENSORIUM_V1",
+  "status": "candidate_regenerative_vertical",
+  "parent_kernel": "omega_morphogenesis",
+  "doctrine": "Maximize verified scientific information while minimizing persistent physical and computational structure.",
+  "primitives": [
+    "ScienceQuestion",
+    "Observable",
+    "SensorCapability",
+    "DetectorGenome",
+    "ObservationCandidate",
+    "ObservatoryGenome",
+    "ObservationReceipt"
+  ],
+  "engines": [
+    "ScienceToSensorCompiler",
+    "MinimalWitnessCompiler",
+    "ActiveObservationEngine",
+    "ObservationCourt"
+  ],
+  "invariants": [
+    "Generator != Judge",
+    "Generated != Verified",
+    "Simulation != Observation",
+    "ClaimScope <= EvidenceScope",
+    "NO_ACTION is valid",
+    "ExistingCapabilityBeforeNewHardware",
+    "CalibrationRequiredForEvidence",
+    "MetaDepth <= VerifiedGain"
+  ],
+  "source_files": [
+    "omega_sensorium/models.py",
+    "omega_sensorium/compiler.py",
+    "tests/test_omega_sensorium.py",
+    "schemas/observatory_genome.schema.json",
+    ".agents/skills/omega-meta-sensorium-t/SKILL.md"
+  ],
+  "rebuild": "Restore source_files, run python -m unittest discover -s tests -p 'test_omega_sensorium.py' -v, then run python -m omega_sensorium.cli.",
+  "falsifiers": [
+    "If an existing repository primitive expresses a Sensorium primitive without loss, merge rather than retain duplication.",
+    "If a simpler capability search preserves the same frozen tests and decisions, prefer the simpler implementation.",
+    "Simulation outputs cannot promote astrophysical or hardware claims beyond their evidence class."
+  ],
+  "negative_space": [
+    "No autonomous hardware deployment",
+    "No claim that generated detector designs are physically realizable",
+    "No irreversible raw-data discard policy",
+    "No self-approval of new meta-policy"
+  ]
+}

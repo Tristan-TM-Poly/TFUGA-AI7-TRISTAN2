@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.local/schemas/observatory_genome.schema.json",
+  "title": "Omega ObservatoryGenome v1",
+  "type": "object",
+  "required": ["genome_id", "question_id", "hypothesis_ids", "observable_ids", "sensor_ids", "invariants"],
+  "properties": {
+    "genome_id": {"type": "string", "minLength": 1},
+    "question_id": {"type": "string", "minLength": 1},
+    "hypothesis_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "observable_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "sensor_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "platform_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "network_mode": {"type": "string"},
+    "permissions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "provenance": {"type": "array", "items": {"type": "string"}},
+    "invariants": {
+      "type": "array",
+      "items": {"type": "string"},
+      "contains": {"const": "Generator != Judge"}
+    }
+  },
+  "additionalProperties": false
+}

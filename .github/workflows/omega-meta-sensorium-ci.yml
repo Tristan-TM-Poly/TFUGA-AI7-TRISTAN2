@@ -1,0 +1,40 @@
+name: omega-meta-sensorium
+
+on:
+  push:
+    paths:
+      - "omega_sensorium/**"
+      - "tests/test_omega_sensorium.py"
+      - "schemas/observatory_genome.schema.json"
+      - "book0/BOOK0_OMEGA_META_SENSORIUM_V1.json"
+      - ".agents/skills/omega-meta-sensorium-t/**"
+      - "docs/OMEGA_META_SENSORIUM.md"
+      - ".github/workflows/omega-meta-sensorium-ci.yml"
+  pull_request:
+    paths:
+      - "omega_sensorium/**"
+      - "tests/test_omega_sensorium.py"
+      - "schemas/observatory_genome.schema.json"
+      - "book0/BOOK0_OMEGA_META_SENSORIUM_V1.json"
+      - ".agents/skills/omega-meta-sensorium-t/**"
+      - "docs/OMEGA_META_SENSORIUM.md"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Ω Sensorium tests
+        run: python -m unittest discover -s tests -p "test_omega_sensorium.py" -v
+      - name: Re-run parent morphogenesis kernel tests
+        run: python -m unittest discover -s tests -p "test_omega_morphogenesis.py" -v
+      - name: Validate JSON artifacts
+        run: python -c "import json; json.load(open('schemas/observatory_genome.schema.json')); json.load(open('book0/BOOK0_OMEGA_META_SENSORIUM_V1.json'))"
+      - name: Run executable example
+        run: python -m omega_sensorium.cli
