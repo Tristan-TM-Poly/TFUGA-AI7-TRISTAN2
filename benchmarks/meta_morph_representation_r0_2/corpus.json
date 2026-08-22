@@ -1,0 +1,101 @@
+{
+  "benchmark": "MorphGenome representation tournament R0.2",
+  "issue": 541,
+  "epistemic_status": "SIMULATED_ENGINEERING_EVIDENCE",
+  "constitution": [
+    "Generated != Verified",
+    "GenericRepresentation != BetterRepresentation",
+    "Generator != Judge",
+    "Capability != Authority",
+    "Simulation != Reality",
+    "LocalPASS != GlobalPASS"
+  ],
+  "cases": [
+    {
+      "id": "meta-research-01",
+      "domain": "meta_research_transformation",
+      "source_ref": "omega_tristan_meta/skill_civilization.py::SkillGenome",
+      "record": {
+        "id": "research-transform-v1",
+        "purpose": "turn a bounded hypothesis into a proof-carrying candidate transformation",
+        "operators": ["OBSERVE", "RESIDUALIZE", "GENERATE", "VERIFY"],
+        "constraints": ["Generator != Judge", "Simulation != Reality"],
+        "evidence_contracts": ["independent verifier", "frozen probe family"],
+        "permissions": ["read", "sandbox"],
+        "regeneration_rules": ["rebuild from BOOK0 candidate"],
+        "provenance": ["issue:541", "fixture:meta-research-01"],
+        "evidence": ["synthetic:fixture-only"]
+      },
+      "required_keys": ["id", "purpose", "operators", "evidence_contracts", "provenance", "evidence", "regeneration_rules"],
+      "evidence_keys": ["provenance", "evidence"],
+      "regeneration_required": true,
+      "maintenance_mutations": [
+        {"version": "0.2.0"},
+        {"memory_refs": ["M?:representation-claim"]}
+      ]
+    },
+    {
+      "id": "education-01",
+      "domain": "education_virtual_institution",
+      "source_ref": "prototypes/omega_learn_t/omega_learn_t/scheduler.py::ScheduledTask",
+      "record": {
+        "id": "edu-capability-v1",
+        "goal": "compile a bounded retrieval practice session",
+        "roles": ["learner", "verifier"],
+        "actions": ["RETRIEVE", "FEEDBACK", "TRANSFER"],
+        "mastery_evidence": ["fixture:recall", "fixture:transfer"],
+        "regeneration_rules": ["rebuild lesson from goal plus evidence contract"],
+        "provenance": ["fixture:education-01"],
+        "evidence": ["synthetic:fixture-only"]
+      },
+      "required_keys": ["id", "goal", "roles", "actions", "mastery_evidence", "provenance", "evidence", "regeneration_rules"],
+      "evidence_keys": ["mastery_evidence", "provenance", "evidence"],
+      "regeneration_required": true,
+      "maintenance_mutations": [
+        {"locale": "fr-CA"},
+        {"challenge_budget": 3}
+      ]
+    },
+    {
+      "id": "value-workflow-01",
+      "domain": "value_economic_software_workflow",
+      "source_ref": "omega_value_os/models.py::ValueGenome",
+      "record": {
+        "id": "value-capability-v1",
+        "goal": "evaluate a candidate offer without performing a financial action",
+        "actions": ["OBSERVE", "COMPARE", "PROPOSE"],
+        "authority": ["read", "propose"],
+        "evidence_contracts": ["no payment implies no market proof"],
+        "regeneration_rules": ["rebuild decision from frozen evidence ledger"],
+        "provenance": ["fixture:value-workflow-01"],
+        "evidence": ["synthetic:fixture-only"],
+        "external_action_performed": false
+      },
+      "required_keys": ["id", "goal", "actions", "authority", "evidence_contracts", "provenance", "evidence", "regeneration_rules", "external_action_performed"],
+      "evidence_keys": ["provenance", "evidence", "external_action_performed"],
+      "regeneration_required": true,
+      "maintenance_mutations": [
+        {"cost_budget": 0},
+        {"risk_ceiling": 0.1}
+      ]
+    },
+    {
+      "id": "direct-checksum-adversary-01",
+      "domain": "value_economic_software_workflow",
+      "source_ref": "benchmarks/meta_morph_representation_r0_2/corpus.json::direct-checksum-adversary-01",
+      "record": {
+        "id": "checksum-task-v1",
+        "input": "abc",
+        "expected": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+        "provenance": ["fixture:direct-checksum-adversary-01"],
+        "evidence": ["deterministic:test-vector"]
+      },
+      "required_keys": ["id", "input", "expected", "provenance", "evidence"],
+      "evidence_keys": ["provenance", "evidence"],
+      "regeneration_required": false,
+      "maintenance_mutations": [],
+      "no_abstraction_supported": true,
+      "adversarial_for_morph_genome": true
+    }
+  ]
+}
