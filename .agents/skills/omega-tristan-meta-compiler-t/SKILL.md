@@ -59,3 +59,44 @@ A0 manual; A1 suggest; A2 human-approved execution; A3 bounded sandbox autonomy;
 Produce the minimum necessary combination of TristanIR objects, candidate transformations, baseline/countercandidate, OAK gate results, minimal experiment, universal receipt, M+/M- update, prune/merge/derive decision, BOOK0 delta, residuals and unresolved permissions.
 
 Never present a generated architecture as proven optimal or a simulation as evidence from reality.
+
+## Meta-skill civilization bridge
+
+When the target is a skill ecology, do not create a second skill orchestrator. Reuse
+`omega_skillgen_t` for SkillSpec generation/evals/trust/evolution and compile the
+meta-level decision through `omega_tristan_meta.skill_civilization`.
+
+Required counterfactuals:
+
+```text
+NO_ACTION
+REUSE
+COMPOSE
+GENERATE_RESIDUAL
+```
+
+Select only an evidence-bearing verified sufficient plan. Generated residual skills stay
+`CANDIDATE` with `auto_promote=false`.
+
+For multi-skill plans, run ablation before crystallization. A removable skill becomes an
+ablation candidate, never an automatic deletion.
+
+Meta-improvement requires:
+
+```text
+Generator != Judge
+independent evidence
+VerifiedGain > ComplexityDebt + RiskDebt + MetaDebt
+```
+
+Crystallization requires verified sufficiency, evidence refs, tests and independent
+judging. Emit only a candidate crystal and deterministic regeneration seed. A digest is
+an identity/provenance aid, not proof of semantic equivalence.
+
+Candidate BOOK0: `book0/BOOK0_META_SKILL_CIVILIZATION_R01.json`.
+
+CLI smoke:
+
+```bash
+python -m omega_tristan_meta.cli skill-example
+```

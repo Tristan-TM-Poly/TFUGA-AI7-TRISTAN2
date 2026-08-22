@@ -8,17 +8,20 @@ on:
       - 'tests/test_omega_morphogenesis.py'
       - 'tests/test_meta_compiler.py'
       - 'tests/test_meta_morphogenesis.py'
+      - 'tests/test_meta_skill_civilization.py'
       - 'schemas/proof_carrying_transformation.schema.json'
       - 'schemas/tristan_ir.schema.json'
       - 'schemas/receipt.schema.json'
       - 'schemas/morph_genome.schema.json'
       - 'book0/BOOK0_TRISTAN_META_COMPILER_V1.json'
       - 'book0/BOOK0_META_MORPHOGENESIS_V1.json'
+      - 'book0/BOOK0_META_SKILL_CIVILIZATION_R01.json'
       - '.agents/skills/omega-meta-morphogenesis-fixed-point-t/**'
       - '.agents/skills/omega-tristan-meta-compiler-t/**'
       - 'docs/OMEGA_META_MORPHOGENESIS_FIXED_POINT.md'
       - 'docs/OMEGA_META_MORPHOGENESIS_V1.md'
       - 'docs/OMEGA_TRISTAN_META_COMPILER.md'
+      - 'docs/OMEGA_META_SKILL_CIVILIZATION_R01.md'
       - '.github/workflows/omega-meta-morphogenesis-ci.yml'
   push:
     paths:
@@ -27,17 +30,20 @@ on:
       - 'tests/test_omega_morphogenesis.py'
       - 'tests/test_meta_compiler.py'
       - 'tests/test_meta_morphogenesis.py'
+      - 'tests/test_meta_skill_civilization.py'
       - 'schemas/proof_carrying_transformation.schema.json'
       - 'schemas/tristan_ir.schema.json'
       - 'schemas/receipt.schema.json'
       - 'schemas/morph_genome.schema.json'
       - 'book0/BOOK0_TRISTAN_META_COMPILER_V1.json'
       - 'book0/BOOK0_META_MORPHOGENESIS_V1.json'
+      - 'book0/BOOK0_META_SKILL_CIVILIZATION_R01.json'
       - '.agents/skills/omega-meta-morphogenesis-fixed-point-t/**'
       - '.agents/skills/omega-tristan-meta-compiler-t/**'
       - 'docs/OMEGA_META_MORPHOGENESIS_FIXED_POINT.md'
       - 'docs/OMEGA_META_MORPHOGENESIS_V1.md'
       - 'docs/OMEGA_TRISTAN_META_COMPILER.md'
+      - 'docs/OMEGA_META_SKILL_CIVILIZATION_R01.md'
       - '.github/workflows/omega-meta-morphogenesis-ci.yml'
 
 permissions:
@@ -57,7 +63,7 @@ jobs:
       - name: Run canonical morphogenesis tests
         run: python -m unittest tests.test_omega_morphogenesis -v
       - name: Run Tristan meta adapter tests
-        run: python -m unittest tests.test_meta_compiler tests.test_meta_morphogenesis -v
+        run: python -m unittest tests.test_meta_compiler tests.test_meta_morphogenesis tests.test_meta_skill_civilization -v
       - name: Compile meta packages
         run: python -m compileall -q omega_morphogenesis omega_tristan_meta
       - name: Validate JSON artifacts
@@ -71,9 +77,12 @@ jobs:
               Path('schemas/morph_genome.schema.json'),
               Path('book0/BOOK0_TRISTAN_META_COMPILER_V1.json'),
               Path('book0/BOOK0_META_MORPHOGENESIS_V1.json'),
+              Path('book0/BOOK0_META_SKILL_CIVILIZATION_R01.json'),
           ]:
               json.loads(path.read_text(encoding='utf-8'))
               print('OK', path)
           PY
-      - name: Run Tristan meta CLI example
-        run: python -m omega_tristan_meta.cli example
+      - name: Run Tristan meta CLI examples
+        run: |
+          python -m omega_tristan_meta.cli example
+          python -m omega_tristan_meta.cli skill-example
