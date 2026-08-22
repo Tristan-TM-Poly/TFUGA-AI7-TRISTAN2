@@ -38,26 +38,14 @@ class ResourceVector:
                 raise ValueError(f"{name} must be non-negative")
 
     def as_dict(self) -> Dict[str, float]:
-        return {
-            "action": self.action,
-            "compute": self.compute,
-            "memory_persistent": self.memory_persistent,
-            "observation": self.observation,
-            "human_attention": self.human_attention,
-            "time": self.time,
-            "persistent_complexity": self.persistent_complexity,
-            "risk": self.risk,
-            "irreversibility": self.irreversibility,
-        }
+        return {"action": self.action, "compute": self.compute, "memory_persistent": self.memory_persistent, "observation": self.observation, "human_attention": self.human_attention, "time": self.time, "persistent_complexity": self.persistent_complexity, "risk": self.risk, "irreversibility": self.irreversibility}
 
     def weighted_cost(self, weights: Dict[str, float]) -> float:
         return sum(weights.get(key, 1.0) * value for key, value in self.as_dict().items())
 
     def dominates(self, other: "ResourceVector") -> bool:
         mine, theirs = self.as_dict(), other.as_dict()
-        no_worse = all(mine[k] <= theirs[k] for k in mine)
-        strictly_better = any(mine[k] < theirs[k] for k in mine)
-        return no_worse and strictly_better
+        return all(mine[k] <= theirs[k] for k in mine) and any(mine[k] < theirs[k] for k in mine)
 
 
 @dataclass(frozen=True)
@@ -71,6 +59,7 @@ class EvidenceRef:
 @dataclass(frozen=True)
 class VerificationContract:
     required_scope: str
+    required_semantic_effect: Optional[str] = None
     min_evidence_count: int = 1
     require_independent_verification: bool = True
     require_rollback_if_reversible: bool = True

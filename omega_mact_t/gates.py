@@ -8,6 +8,12 @@ from .models import GateResult, TransformationCandidate, VerificationContract
 EXTERNAL_ACTIONS = {"ACT", "DEPLOY", "PURCHASE", "PUBLISH", "TRANSFER", "DELETE_EXTERNAL"}
 
 
+def semantic_goal_gate(candidate: TransformationCandidate, contract: VerificationContract) -> GateResult:
+    required = contract.required_semantic_effect
+    ok = required is None or candidate.semantic_effect == required
+    return GateResult("semantic_goal", ok, "target semantics satisfied" if ok else "candidate does not satisfy required semantic effect")
+
+
 def role_separation_gate(candidate: TransformationCandidate) -> GateResult:
     ok = candidate.generator_role != candidate.judge_role
     return GateResult("generator_judge_separation", ok, "roles separated" if ok else "Generator == Judge")
@@ -55,15 +61,14 @@ def no_epistemic_inflation_gate(candidate: TransformationCandidate) -> GateResul
 
 
 def evaluate_hard_gates(candidate: TransformationCandidate, contract: VerificationContract) -> List[GateResult]:
-    return [
-        role_separation_gate(candidate),
-        authority_gate(candidate),
-        evidence_gate(candidate, contract),
-        risk_gate(candidate, contract),
-        irreversibility_gate(candidate, contract),
-        rollback_gate(candidate, contract),
-        no_epistemic_inflation_gate(candidate),
-    ]
+    return [semantic_goal_gate(candidate, contract), role_separation_gate(candidate), authority_gate(candidate), evidence_gate(candidate, contract), risk_gate(candidate, contract), irreversibility_gate(candidate, contract), rollback_gate(candidate, contract), no_epistemic_inflation_gate(candidate)]
+
+
+def meta_stop_gate(expected_savings: float, optimization_cost: float, complexity_debt: float = 0.0, risk_debt: float = 0.0, margin: float = 0.0) -> GateResult:
+    benefit = max(0.0, expected_savings)
+    burden = max(0.0, optimization_cost) + max(0.0, complexity_debt) + max(0.0, risk_debt) + max(0.0, margin)
+    ok = benefit > burden
+    return GateResult("meta_stop", ok, "optimizer earns its complexity rent" if ok else "expected savings do not exceed optimization burden")
 
 
 def all_pass(gates: Iterable[GateResult]) -> bool:

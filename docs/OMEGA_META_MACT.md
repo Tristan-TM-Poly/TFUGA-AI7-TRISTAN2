@@ -6,66 +6,44 @@ Engineering research kernel. This implementation does not establish a new law of
 
 ## Thesis
 
-For a verified target state, search the finite candidate set for the least irreducible transformation on a multi-resource Pareto frontier. Treat action, compute, persistent memory, observation, human attention, time, persistent complexity, risk, and irreversibility as explicit costs rather than hidden overhead.
+For a verified target state, search the finite candidate set for the least irreducible transformation on a multi-resource Pareto frontier. The target contract is explicit: a zero-cost `NO_ACTION` candidate is invalid when it does not satisfy the required semantic effect.
 
-The kernel is deliberately anti-maximalist:
-
-- `NO_ACTION`, `WAIT`, and `REUSE` must be evaluated.
-- generated candidates do not self-validate;
-- external authority is separate from capability;
-- simulations do not become observations;
-- deletion requires reconstructibility/evidence preservation or separate authority;
-- Pareto comparison happens before scalar ranking;
-- meta-layers must earn their complexity rent.
-
-## MACT-IR
-
-A transformation candidate carries:
-
-`operation, semantic_effect, ResourceVector, evidence, generator_role, judge_role, authority, rollback, expected_verified_gain, expected_future_work_avoided`.
-
-The resource vector is:
-
-`(action, compute, memory_persistent, observation, human_attention, time, persistent_complexity, risk, irreversibility)`.
+The resource vector is `(action, compute, memory_persistent, observation, human_attention, time, persistent_complexity, risk, irreversibility)`.
 
 ## Selection contract
 
 1. Enumerate a bounded candidate set.
-2. Inject/require anti-candidates (`NO_ACTION`, `WAIT`, `REUSE`).
-3. Evaluate non-compensatory gates.
-4. Reject or HOLD gated candidates.
-5. Compute the resource Pareto front.
-6. Rank only eligible non-dominated candidates by a declared context weight vector and future-work leverage.
-7. Emit a proof-carrying receipt.
-8. Never execute external actions from this planning kernel.
+2. Require `NO_ACTION`, `WAIT`, `REUSE`.
+3. Attach target semantics, evidence, authority and rollback.
+4. Run non-compensatory hard gates **before** optimization.
+5. Invalid/HOLD candidates cannot Pareto-dominate valid candidates.
+6. Compute the Pareto front only among eligible candidates.
+7. Rank eligible non-dominated candidates with declared weights and future-work leverage.
+8. Emit a proof-carrying receipt.
+9. Never execute external actions from this planning kernel.
 
-`weighted cost` is an engineering ranking heuristic, not a proof that one real-world trajectory is globally minimal.
+This ordering was added after adversarial review exposed two failure modes: minimizing without a semantic target selected `NO_ACTION` even when the goal was unmet, and Pareto filtering before hard gates allowed an invalid low-cost candidate to erase valid alternatives.
 
-## Meta-generalization
+## Meta-stop
 
-Action, compute, memory and observation are treated as convertible planning resources, but there is no asserted universal conservation law among them. Resource conversion claims must be demonstrated per domain.
+Optimization itself has a cost. `meta_stop_gate` allows a new optimization/meta layer only when expected savings exceed optimization cost + complexity debt + risk debt + margin. This is an engineering gate, not a universal optimality proof.
 
 ## Regenerative memory
 
-Persistent memory is classified by evidence/provenance criticality, downstream causal dependents, reconstructibility, regeneration verification, storage cost and recomputation cost.
+Memory decisions are `KEEP`, `COMPRESS`, `REGENERATE_ON_DEMAND`, `ARCHIVE`, `HOLD_DELETE`. Evidence/provenance and non-reconstructible state are fail-closed. There is no automatic destructive delete.
 
-Decisions include `KEEP`, `COMPRESS`, `REGENERATE_ON_DEMAND`, `ARCHIVE`, `HOLD_DELETE`. There is intentionally no automatic destructive delete in the kernel.
+## OAKBench-MACT v1 toy benchmark
 
-## Regeneration
+The deterministic toy court includes:
 
-`BOOK0_MACT_V1` stores a small primitive set, hard invariants and declared default weights. The system can generate ablated BOOK0 candidates, but an ablated kernel cannot self-promote. Equivalence must be tested against a frozen probe family.
+- reuse vs recompute at matched declared semantics;
+- verified regeneration/reuse vs persistent storage at matched declared semantics.
 
-## Falsifiable claims for OAKBench-MACT
+Local pre-publication results after the adversarial fixes: **14/14 focused tests PASS**, benchmark **2/2 cases PASS**. These are software-fixture results only.
 
-The engineering hypothesis survives only if it can demonstrate some of the following against explicit baselines on the same tasks: lower compute at matched task quality; lower persistent memory with verified reconstruction; lower human attention at unchanged authority/safety; lower persistent architecture complexity; comparable or lower risk and irreversibility; greater future work avoided; no increase in unsupported claims.
+## Falsifiable frontier
 
-## Priority experiments
-
-1. Store vs recompute.
-2. Representation arbitrage.
-3. Adaptive fidelity.
-4. Verification compression.
-5. Meta-stop.
+The engineering hypothesis survives only if explicit baselines show lower compute, persistent memory, attention or persistent complexity at matched target/evidence quality without increasing unsupported claims, risk or irreversibility. Future work should add real representation-arbitrage, adaptive-fidelity, verification-compression and meta-stop benchmarks.
 
 ## Permanent boundaries
 

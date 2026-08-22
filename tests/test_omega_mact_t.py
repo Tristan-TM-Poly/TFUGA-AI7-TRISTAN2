@@ -1,6 +1,7 @@
 import unittest
 
-from omega_mact_t import Decision, EpistemicType, EvidenceRef, MactCompiler, MemoryDecision, MemoryObject, ResourceVector, TransformationCandidate, VerificationContract, classify_memory, pareto_front
+from omega_mact_t import Decision, EpistemicType, EvidenceRef, MactCompiler, MemoryDecision, MemoryObject, ResourceVector, TransformationCandidate, VerificationContract, classify_memory, meta_stop_gate, pareto_front
+from omega_mact_t.benchmark import run_benchmark
 
 
 def evidence(scope="demo", independent=True):
@@ -28,6 +29,13 @@ class MactTests(unittest.TestCase):
         self.assertIsNotNone(selected)
         self.assertEqual(selected.operation, "NO_ACTION")
 
+    def test_no_action_rejected_when_target_not_met(self):
+        contract = VerificationContract(required_scope="demo", required_semantic_effect="result")
+        candidates = [TransformationCandidate("none", "NO_ACTION", "unchanged", ResourceVector(), evidence=evidence()), TransformationCandidate("wait", "WAIT", "unchanged", ResourceVector(time=.1), evidence=evidence()), TransformationCandidate("reuse", "REUSE", "result", ResourceVector(compute=.1), evidence=evidence(), rollback="drop cache")]
+        selected = MactCompiler().select(candidates, contract)
+        self.assertIsNotNone(selected)
+        self.assertEqual(selected.id, "reuse")
+
     def test_external_action_without_authority_is_hold(self):
         candidates = self.core_candidates() + [TransformationCandidate("act", "ACT", "external-change", ResourceVector(action=0.1, irreversibility=0.2), evidence=evidence(), authority_granted=False, rollback="undo")]
         act_eval = next(x for x in MactCompiler().evaluate(candidates, self.contract) if x.candidate_id == "act")
@@ -43,17 +51,30 @@ class MactTests(unittest.TestCase):
         candidates = [TransformationCandidate("none", "NO_ACTION", "same", ResourceVector(), evidence=bad_ev), TransformationCandidate("wait", "WAIT", "later", ResourceVector(time=.1), evidence=bad_ev), TransformationCandidate("reuse", "REUSE", "same", ResourceVector(compute=.1), evidence=bad_ev, rollback="discard")]
         self.assertTrue(all(x.decision == Decision.HOLD for x in MactCompiler().evaluate(candidates, self.contract)))
 
+    def test_ineligible_candidate_cannot_pareto_dominate_valid_candidate(self):
+        candidates = self.core_candidates() + [TransformationCandidate("unauthorized", "ACT", "external", ResourceVector(), evidence=evidence(), authority_granted=False)]
+        selected = MactCompiler().select(candidates, self.contract)
+        self.assertIsNotNone(selected)
+        self.assertEqual(selected.operation, "NO_ACTION")
+
+    def test_meta_stop_requires_net_positive_savings(self):
+        self.assertFalse(meta_stop_gate(1.0, 1.0).passed)
+        self.assertFalse(meta_stop_gate(2.0, 1.0, complexity_debt=1.1).passed)
+        self.assertTrue(meta_stop_gate(3.0, 1.0, complexity_debt=0.5, risk_debt=0.5).passed)
+
+    def test_oakbench_mact_toy_cases(self):
+        results = run_benchmark()
+        self.assertEqual(len(results), 2)
+        self.assertTrue(all(r.passed for r in results))
+
     def test_memory_keeps_provenance(self):
-        verdict = classify_memory(MemoryObject("m", 100, 1, reconstructible=True, regeneration_verified=True, provenance_critical=True))
-        self.assertEqual(verdict.decision, MemoryDecision.KEEP)
+        self.assertEqual(classify_memory(MemoryObject("m", 100, 1, reconstructible=True, regeneration_verified=True, provenance_critical=True)).decision, MemoryDecision.KEEP)
 
     def test_memory_regenerates_when_cheaper(self):
-        verdict = classify_memory(MemoryObject("m", 10, 1, reconstructible=True, regeneration_verified=True))
-        self.assertEqual(verdict.decision, MemoryDecision.REGENERATE_ON_DEMAND)
+        self.assertEqual(classify_memory(MemoryObject("m", 10, 1, reconstructible=True, regeneration_verified=True)).decision, MemoryDecision.REGENERATE_ON_DEMAND)
 
     def test_unverified_deletion_is_held(self):
-        verdict = classify_memory(MemoryObject("m", 10, 1, reconstructible=False, regeneration_verified=False))
-        self.assertEqual(verdict.decision, MemoryDecision.HOLD_DELETE)
+        self.assertEqual(classify_memory(MemoryObject("m", 10, 1, reconstructible=False, regeneration_verified=False)).decision, MemoryDecision.HOLD_DELETE)
 
     def test_receipt_never_claims_execution_or_auto_promotion(self):
         compiler = MactCompiler()

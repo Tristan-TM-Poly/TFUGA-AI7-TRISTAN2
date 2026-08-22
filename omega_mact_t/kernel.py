@@ -8,17 +8,7 @@ from .gates import all_pass, evaluate_hard_gates
 from .models import Decision, Evaluation, MactReceipt, TransformationCandidate, VerificationContract
 
 
-DEFAULT_WEIGHTS: Dict[str, float] = {
-    "action": 1.0,
-    "compute": 1.0,
-    "memory_persistent": 1.0,
-    "observation": 1.0,
-    "human_attention": 2.0,
-    "time": 1.0,
-    "persistent_complexity": 2.0,
-    "risk": 4.0,
-    "irreversibility": 5.0,
-}
+DEFAULT_WEIGHTS: Dict[str, float] = {"action": 1.0, "compute": 1.0, "memory_persistent": 1.0, "observation": 1.0, "human_attention": 2.0, "time": 1.0, "persistent_complexity": 2.0, "risk": 4.0, "irreversibility": 5.0}
 
 
 def pareto_front(candidates: Sequence[TransformationCandidate]) -> List[TransformationCandidate]:
@@ -38,11 +28,7 @@ def future_adjusted_cost(candidate: TransformationCandidate, weights: Dict[str, 
 
 
 class MactCompiler:
-    """Bounded least-transformation compiler.
-
-    The compiler ranks only candidates that first satisfy non-compensatory gates.
-    It does not execute external actions and never auto-promotes generated plans.
-    """
+    """Bounded least-transformation compiler; planning only, never external execution."""
 
     mandatory_candidates: Tuple[str, ...] = ("NO_ACTION", "WAIT", "REUSE")
 
@@ -57,18 +43,25 @@ class MactCompiler:
 
     def evaluate(self, candidates: Sequence[TransformationCandidate], contract: VerificationContract) -> List[Evaluation]:
         self.ensure_anti_candidates(candidates)
-        front_ids = {c.id for c in pareto_front(candidates)}
-        out: List[Evaluation] = []
+        preliminary = []
+        eligible_candidates: List[TransformationCandidate] = []
         for candidate in candidates:
             gates = evaluate_hard_gates(candidate, contract)
             hard_pass = all_pass(gates)
             if hard_pass:
                 decision = Decision.ELIGIBLE
+                eligible_candidates.append(candidate)
             elif any(g.name in {"authority", "evidence", "rollback"} and not g.passed for g in gates):
                 decision = Decision.HOLD
             else:
                 decision = Decision.REJECT
-            out.append(Evaluation(candidate_id=candidate.id, decision=decision, gates=gates, scalar_cost=future_adjusted_cost(candidate, self.weights), pareto_dominated=candidate.id not in front_ids))
+            preliminary.append((candidate, gates, decision))
+
+        # Gate first, optimize second: invalid/HOLD candidates cannot Pareto-dominate valid ones.
+        front_ids = {c.id for c in pareto_front(eligible_candidates)}
+        out: List[Evaluation] = []
+        for candidate, gates, decision in preliminary:
+            out.append(Evaluation(candidate_id=candidate.id, decision=decision, gates=gates, scalar_cost=future_adjusted_cost(candidate, self.weights), pareto_dominated=(decision == Decision.ELIGIBLE and candidate.id not in front_ids)))
         return sorted(out, key=lambda e: (e.decision != Decision.ELIGIBLE, e.pareto_dominated, e.scalar_cost, e.candidate_id))
 
     def select(self, candidates: Sequence[TransformationCandidate], contract: VerificationContract) -> TransformationCandidate | None:

@@ -38,3 +38,5 @@ jobs:
         run: python -m unittest -v tests.test_omega_mact_t
       - name: Deterministic demo
         run: python -m omega_mact_t.demo
+      - name: OAKBench-MACT toy benchmark
+        run: python -m omega_mact_t.benchmark
