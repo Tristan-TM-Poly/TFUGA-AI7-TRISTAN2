@@ -1,0 +1,51 @@
+name: omega-omni-ingest-oak
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "omega_omni_ingest_oak.py"
+      - "tests/test_omega_omni_ingest_oak.py"
+      - "docs/OMEGA_OMNI_INGEST_OAK_V0_4.md"
+      - "manifests/OMEGA_DRIVE_CORPUS_SEED_20260822.json"
+      - ".github/workflows/omega-omni-ingest-oak.yml"
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile compact OAK ingest core
+        run: python -m py_compile omega_omni_ingest_oak.py
+      - name: Test OAK safety invariants
+        run: python -m unittest tests.test_omega_omni_ingest_oak -v
+      - name: Bounded arXiv source-capture scout
+        continue-on-error: true
+        run: |
+          mkdir -p run_artifacts
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import omega_omni_ingest_oak as omni
+          req = omni.arxiv_query("Raman spectroscopy", 3)
+          policy = omni.NetworkPolicy(allowed_domains=("export.arxiv.org",), max_bytes=2_000_000)
+          fetcher = omni.PoliteFetcher(Path("run_artifacts/oak_vault"), policy=policy, min_interval_s=3.1)
+          result = fetcher.fetch(req.url, access_basis=req.access_basis, obey_robots=req.obey_robots)
+          Path("run_artifacts/scout_receipt.json").write_text(json.dumps(result.receipt.to_dict(), indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: omega-omni-ingest-receipts
+          path: run_artifacts/
+          if-no-files-found: ignore
+          retention-days: 14
