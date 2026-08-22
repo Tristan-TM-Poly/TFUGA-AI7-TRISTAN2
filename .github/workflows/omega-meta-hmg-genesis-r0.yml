@@ -1,0 +1,35 @@
+name: Ω META-HMG Genesis R0
+
+on:
+  pull_request:
+    paths:
+      - 'omega_meta_hmg_genesis_r0/**'
+      - '.github/workflows/omega-meta-hmg-genesis-r0.yml'
+  push:
+    branches:
+      - 'feat/omega-meta-hmg-genesis-r0'
+    paths:
+      - 'omega_meta_hmg_genesis_r0/**'
+      - '.github/workflows/omega-meta-hmg-genesis-r0.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: omega_meta_hmg_genesis_r0
+    env:
+      PYTHONPATH: .:..
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run R0 unit tests and canonical Capability OS transplant court
+        run: python -m unittest discover -s tests -v
+      - name: Run R0 demo
+        run: python examples/demo.py
