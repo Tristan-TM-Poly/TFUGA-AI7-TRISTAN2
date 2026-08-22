@@ -21,8 +21,6 @@ on:
       - 'docs/OMEGA_TRISTAN_META_COMPILER.md'
       - '.github/workflows/omega-meta-morphogenesis-ci.yml'
   push:
-    branches:
-      - main
     paths:
       - 'omega_morphogenesis/**'
       - 'omega_tristan_meta/**'
@@ -35,6 +33,12 @@ on:
       - 'schemas/morph_genome.schema.json'
       - 'book0/BOOK0_TRISTAN_META_COMPILER_V1.json'
       - 'book0/BOOK0_META_MORPHOGENESIS_V1.json'
+      - '.agents/skills/omega-meta-morphogenesis-fixed-point-t/**'
+      - '.agents/skills/omega-tristan-meta-compiler-t/**'
+      - 'docs/OMEGA_META_MORPHOGENESIS_FIXED_POINT.md'
+      - 'docs/OMEGA_META_MORPHOGENESIS_V1.md'
+      - 'docs/OMEGA_TRISTAN_META_COMPILER.md'
+      - '.github/workflows/omega-meta-morphogenesis-ci.yml'
 
 permissions:
   contents: read
