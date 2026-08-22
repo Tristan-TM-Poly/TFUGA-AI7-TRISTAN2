@@ -1,6 +1,6 @@
+from .canonical import MetaTimeEngine
 from .core import (
     CapabilityDelta,
-    MetaTimeEngine,
     StrategyGenome,
     StudentBaselineTwin,
     TemporalCounters,
