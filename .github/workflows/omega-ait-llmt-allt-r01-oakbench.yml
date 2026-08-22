@@ -98,8 +98,13 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import re
-          text = Path('.github/workflows/omega-ait-llmt-allt-r01-oakbench.yml').read_text()
-          refs = re.findall(r'uses:\s*([^\s#]+)', text)
-          moving = [ref for ref in refs if not re.search(r'@[0-9a-f]{40}$', ref)]
+          lines = Path('.github/workflows/omega-ait-llmt-allt-r01-oakbench.yml').read_text().splitlines()
+          refs = []
+          for line in lines:
+              stripped = line.strip()
+              if stripped.startswith('uses: '):
+                  refs.append(stripped.split('uses:', 1)[1].strip().split()[0])
+          assert refs, 'expected pinned action refs'
+          moving = [ref for ref in refs if not re.fullmatch(r'[^@]+@[0-9a-f]{40}', ref)]
           assert not moving, moving
           PY
