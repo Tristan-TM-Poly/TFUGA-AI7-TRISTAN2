@@ -1,0 +1,109 @@
+{
+  "schema_version": "repo-physicalization-manifest/v0.2",
+  "source_repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "source_sha": "a57e297bf675d85420f92e8b565eaf893ebe87fc",
+  "issue": 462,
+  "repositories": [
+    {
+      "name": "omega-protocol",
+      "visibility": "public",
+      "dependencies": [],
+      "source_bindings": [
+        {
+          "capability": "capability.ir",
+          "state": "CANON_MAIN",
+          "source_path": "omega_capability_os_t/core.py",
+          "source_symbol": "Capability",
+          "source_sha": "a57e297bf675d85420f92e8b565eaf893ebe87fc",
+          "materialize": true
+        },
+        {
+          "capability": "workunit.schema",
+          "state": "CANON_MAIN",
+          "source_path": "omega_intent_t/models.py",
+          "source_symbol": "WorkUnit",
+          "source_sha": "a57e297bf675d85420f92e8b565eaf893ebe87fc",
+          "materialize": true
+        },
+        {
+          "capability": "repo.genome",
+          "state": "CANON_MAIN",
+          "source_path": "omega_repo_genesis_t/plan.py",
+          "source_symbol": "bootstrap_files",
+          "source_sha": "a57e297bf675d85420f92e8b565eaf893ebe87fc",
+          "materialize": true
+        },
+        {
+          "capability": "research.abi",
+          "state": "HOLD_UPSTREAM",
+          "source_pr": 448,
+          "reason": "Universal Research ABI is not yet canonically reconstructed on main",
+          "materialize": false
+        },
+        {
+          "capability": "transformation.receipt",
+          "state": "HOLD_UPSTREAM",
+          "source_pr": 448,
+          "reason": "TransformationReceipt exists in historical PR lineage but not current main",
+          "materialize": false
+        },
+        {
+          "capability": "evidence.receipt",
+          "state": "HOLD_UPSTREAM",
+          "source_pr": 448,
+          "reason": "Shared evidence receipt ABI is not yet canonical on main",
+          "materialize": false
+        },
+        {
+          "capability": "artifact.ref",
+          "state": "HOLD_UPSTREAM",
+          "source_pr": 448,
+          "reason": "Shared ArtifactRef contract must be reconstructed before public extraction",
+          "materialize": false
+        }
+      ]
+    },
+    {
+      "name": "tristan-observatory",
+      "visibility": "private",
+      "dependencies": ["omega-protocol"],
+      "source_bindings": [
+        {
+          "capability": "snapshot.publish",
+          "state": "HOLD_UPSTREAM",
+          "source_pr": 452,
+          "reason": "observe-once snapshot runtime is not canonical on current main",
+          "materialize": false
+        },
+        {
+          "capability": "snapshot.delta",
+          "state": "HOLD_UPSTREAM",
+          "source_pr": 452,
+          "reason": "bounded historical delta runtime remains in stacked PR lineage",
+          "materialize": false
+        },
+        {
+          "capability": "repo.archaeology",
+          "state": "HOLD_UPSTREAM",
+          "source_pr": 450,
+          "reason": "HistoryArchaeologist is not present on current main",
+          "materialize": false
+        },
+        {
+          "capability": "temporal.repo.graph",
+          "state": "HOLD_UPSTREAM",
+          "source_pr": 330,
+          "reason": "thin multi-repo temporal HGFM must be reconstructed against current protocol",
+          "materialize": false
+        },
+        {
+          "capability": "code.phylogeny",
+          "state": "HOLD_UPSTREAM",
+          "source_pr": 330,
+          "reason": "code phylogeny remains a historical capability candidate, not a canonical main implementation",
+          "materialize": false
+        }
+      ]
+    }
+  ]
+}
