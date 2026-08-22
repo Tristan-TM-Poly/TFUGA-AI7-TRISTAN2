@@ -1,0 +1,46 @@
+id: omega-det-adj-kramer-compiler-t-r0.2
+name: "Ω-DET-ADJ-KRAMER-COMPILER-T∞ R0.2"
+repo_path: "scripts/omega_kramer_tristan_r02.py"
+status: D
+definition: >-
+  Exact stdlib-only matrix-expression research compiler adding a hash-consed
+  division-free determinant circuit IR, reverse-AD adjugate extraction,
+  directional determinantal jets, generalized higher cofactors, singularity
+  ladders, bipartite structural profiling, guarded polynomial simplification,
+  and deterministic backend-routing evidence on top of R0.1.
+hypotheses:
+  - >-
+    Shared arithmetic circuits plus reverse differentiation can reduce duplicated
+    symbolic work for determinant-derived matrix objects on selected families.
+  - >-
+    Higher complementary minors provide a useful executable stratification when
+    det(A) and the ordinary adjugate vanish.
+  - >-
+    Structure-aware routing and proof-carrying domain preservation can improve
+    reliability and expression quality relative to representation-blind symbolic expansion.
+equation_or_model: >-
+  G_A(X)=det(A+X); grad_A det(A)=cofactor(A); adj(A)=cofactor(A)^T;
+  C_{I,J}=(-1)^(sum(I)+sum(J)) det(A[I^c,J^c]);
+  first_nonzero_higher_cofactor_order=n-rank(A);
+  det(A+tH)=sum_k c_k t^k with D^k det(A)[H,...,H]=k! c_k.
+code_or_calculation: "scripts/omega_kramer_tristan_r02.py"
+test_path: "tests/test_omega_kramer_tristan_r02.py"
+proof_path: null
+risk_boundary:
+  - "The R0.2 generic arithmetic circuit still uses an exponential subset recurrence."
+  - "Combinatorial compression ratios are not runtime speedups or lower bounds."
+  - "The backend router is heuristic and not an optimality theorem."
+  - "The current determinantal jet is directional, not the full multilinear derivative tensor."
+  - "Classical determinant, adjugate, compound, rank and polynomial identities are not claimed as new mathematics."
+m_minus:
+  - "Never reintroduce cancelled denominator zeros into the valid domain."
+  - "Never infer exact rank from structural rank alone."
+  - "Never route a singular system to Cramer division merely because its support pattern has full structural rank."
+  - "Never label the subset arithmetic circuit polynomial-time."
+  - "Never promote deterministic node-count improvements into wall-clock superiority without benchmark evidence."
+next_experiment: >-
+  Add a polynomial-time division-free determinant backend, full multilinear
+  determinantal jets/mixed-discriminant probes, certified block/Schur/low-rank/
+  Kronecker rewrites, multivariate Domain Ledger, equality saturation, CVCD
+  backend agreement campaigns, and ROOTFLOW integration through det(lambda I-A(theta)).
+promotion_decision: prototype
