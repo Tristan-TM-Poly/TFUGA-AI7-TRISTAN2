@@ -1,5 +1,7 @@
 from dataclasses import dataclass, asdict
 from typing import Iterable, Sequence
+
+from omega_morphogenesis import MorphogenesisKernel
 from .models import Claim, Evidence
 
 @dataclass(frozen=True)
@@ -23,10 +25,15 @@ def role_separation_gate(generator_role: str, judge_role: str) -> GateResult:
     passed = generator_role != judge_role
     return GateResult("generator_judge_separation", passed, "Generator and Judge are distinct" if passed else "Generator cannot be its own Judge")
 
-def meta_stop_gate(verified_gain: float, complexity_debt: float, risk_debt: float = 0.0, compute_debt: float = 0.0) -> GateResult:
+def meta_stop_gate(verified_gain: float, complexity_debt: float, risk_debt: float = 0.0, compute_debt: float = 0.0, expressible_by_current_kernel: bool = False) -> GateResult:
     debt = complexity_debt + risk_debt + compute_debt
-    passed = verified_gain > debt
-    return GateResult("meta_stop", passed, f"verified_gain={verified_gain:.3f}; debt={debt:.3f}")
+    passed = MorphogenesisKernel.should_create_meta_level(
+        verified_out_of_sample_gain=verified_gain,
+        meta_complexity_cost=debt,
+        expressible_by_current_kernel=expressible_by_current_kernel,
+    )
+    reason = f"verified_gain={verified_gain:.3f}; debt={debt:.3f}; expressible={expressible_by_current_kernel}"
+    return GateResult("meta_stop", passed, reason)
 
 def persistent_structure_gate(persistent_structure: float, verified_necessary_structure: float) -> GateResult:
     passed = persistent_structure <= verified_necessary_structure
