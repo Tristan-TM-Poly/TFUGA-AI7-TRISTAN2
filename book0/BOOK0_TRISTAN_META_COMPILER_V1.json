@@ -1,0 +1,27 @@
+{
+  "id": "BOOK0_TRISTAN_META_COMPILER_V1",
+  "status": "candidate_minimum_regenerative_kernel",
+  "kernel": ["OBSERVE", "REPRESENT", "GENERATE", "CONTRAST", "PROBE", "VERIFY", "GOVERN", "TRANSFORM", "REMEMBER", "REGENERATE"],
+  "invariants": [
+    "ClaimScope <= EvidenceScope",
+    "Generator != Judge",
+    "Generated != Verified",
+    "Simulation != Reality",
+    "Capability != Authority",
+    "MetaDepth <= VerifiedGain",
+    "PersistentStructure <= VerifiedNecessaryStructure",
+    "NO_ACTION is valid"
+  ],
+  "source_files": [
+    "omega_tristan_meta/models.py",
+    "omega_tristan_meta/gates.py",
+    "omega_tristan_meta/compiler.py",
+    "omega_tristan_meta/regeneration.py",
+    "omega_tristan_meta/mutation.py",
+    "tests/test_meta_compiler.py",
+    "schemas/tristan_ir.schema.json",
+    "schemas/receipt.schema.json"
+  ],
+  "rebuild": "Restore source_files, run unittest discovery, verify invariant mutation probes.",
+  "falsifier": "If a smaller kernel preserves the same frozen probe family, this BOOK0 is not minimal."
+}

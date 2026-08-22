@@ -1,0 +1,53 @@
+{
+  "id": "BOOK0_META_SKILL_CIVILIZATION_R01",
+  "status": "candidate_crystal",
+  "version": "0.1.0",
+  "purpose": "Regenerate the minimum proof-carrying meta-skill civilization bridge without granting authority or auto-promotion.",
+  "kernel_ops": [
+    "INTENT",
+    "RESIDUALIZE",
+    "SEARCH",
+    "COUNTERFACTUALIZE",
+    "REUSE",
+    "COMPOSE",
+    "GENERATE_RESIDUAL",
+    "VERIFY",
+    "ABLATE",
+    "CRYSTALLIZE",
+    "REGENERATE"
+  ],
+  "counterfactual_baselines": [
+    "NO_ACTION",
+    "REUSE",
+    "COMPOSE",
+    "GENERATE_RESIDUAL"
+  ],
+  "constitution": [
+    "Generated != Verified",
+    "Generator != Judge",
+    "SelfModification != SelfApproval",
+    "ToolAvailable != ToolNecessary",
+    "Capability != Authority",
+    "MoreSkills != MoreCapability",
+    "MoreMeta != Better",
+    "PersistentStructure <= VerifiedNecessaryStructure"
+  ],
+  "promotion": {
+    "auto_promote": false,
+    "independent_evidence_required": true,
+    "tests_required": true,
+    "meta_complexity_rent_required": true
+  },
+  "destructive_actions": {
+    "automatic_deletion_authorized": false,
+    "automatic_merge_authorized": false,
+    "external_action_authorized": false
+  },
+  "closure_metric": "required_capabilities_intersection_regenerated / required_capabilities",
+  "non_claims": [
+    "candidate BOOK0 != minimality proof",
+    "deterministic digest != semantic equivalence",
+    "software tests != scientific truth",
+    "regeneration fixture != safe destructive deletion"
+  ]
+}

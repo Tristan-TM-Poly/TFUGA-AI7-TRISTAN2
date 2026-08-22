@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TristanIR",
+  "type": "object",
+  "required": ["kind", "id", "version", "provenance"],
+  "properties": {
+    "kind": {"enum": ["Claim", "Evidence", "Model", "Capability", "Actor", "Resource", "Experiment", "World", "Policy", "Receipt", "Residual"]},
+    "id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "minLength": 1},
+    "provenance": {"type": "string"},
+    "payload": {"type": "object"}
+  },
+  "additionalProperties": false
+}

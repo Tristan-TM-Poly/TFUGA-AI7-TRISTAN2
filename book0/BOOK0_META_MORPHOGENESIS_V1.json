@@ -1,0 +1,66 @@
+{
+  "name": "BOOK0_META_MORPHOGENESIS_V1",
+  "status": "CANDIDATE",
+  "purpose": "Minimal seed for proof-carrying meta-generation, regeneration, improvement, apoptosis and crystallization.",
+  "kernel_reuse": [
+    "omega_morphogenesis.MorphogenesisKernel",
+    "omega_morphogenesis.ProofCarryingTransformation",
+    "omega_morphogenesis.TransformationMetrics",
+    "omega_morphogenesis.CapabilityCrystal"
+  ],
+  "required_components": [
+    "omega_tristan_meta/models.py",
+    "omega_tristan_meta/gates.py",
+    "omega_tristan_meta/morphogenesis.py",
+    "schemas/morph_genome.schema.json",
+    "tests/test_meta_compiler.py",
+    "tests/test_meta_morphogenesis.py"
+  ],
+  "invariants": [
+    "Generated != Verified",
+    "Simulation != Reality",
+    "Generator != Judge",
+    "Capability != Authority",
+    "MetaGeneration != Progress",
+    "SelfModification != SelfApproval",
+    "Crystal != EternalTruth",
+    "Apoptosis != AutomaticDeletion",
+    "FORGET+ != DestructiveForget",
+    "PersistentStructure <= VerifiedNecessaryStructure"
+  ],
+  "memory_classes": ["M+", "M-", "M?"],
+  "promotion_contract": {
+    "requires_independent_verification": true,
+    "requires_evidence": true,
+    "requires_tests": true,
+    "requires_complexity_rent": true,
+    "auto_promotion": false,
+    "external_action_performed": false
+  },
+  "regeneration_levels": [
+    "R0 artifact",
+    "R1 component",
+    "R2 system",
+    "R3 capability",
+    "R4 compiler",
+    "R5 ecology",
+    "R6 constitution-aware",
+    "R7 minimal seed candidate"
+  ],
+  "apoptosis_contract": {
+    "automatic_delete": false,
+    "requires_full_regeneration_closure": true,
+    "requires_evidence_preservation": true,
+    "requires_provenance_preservation": true,
+    "disposition": "ELIGIBLE_FOR_REVIEW"
+  },
+  "regeneration_order": [
+    "load canonical omega_morphogenesis kernel",
+    "load TristanIR and hard gates",
+    "load MorphGenome contract",
+    "run invariant mutation probes",
+    "run meta compiler tests",
+    "run meta morphogenesis tests",
+    "emit candidate capability crystals only after gates pass"
+  ]
+}
