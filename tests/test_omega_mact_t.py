@@ -1,6 +1,8 @@
 import unittest
 
-from omega_mact_t import Decision, EpistemicType, EvidenceRef, MactCompiler, MemoryDecision, MemoryObject, ResourceVector, TransformationCandidate, VerificationContract, classify_memory, meta_stop_gate, pareto_front
+from omega_capability_os_t.cross_skill_transplant import SkillContext, evaluate_capability_transplant
+from omega_generative_closure_t.reprovenance_replay import FrozenSlice
+from omega_mact_t import Decision, EpistemicType, EvidenceRef, MactCompiler, MemoryDecision, MemoryObject, ResourceVector, TransformationCandidate, VerificationContract, classify_memory, meta_stop_gate, pareto_front, resource_arbitration_capability
 from omega_mact_t.benchmark import run_benchmark
 
 
@@ -85,6 +87,33 @@ class MactTests(unittest.TestCase):
         receipt = compiler.receipt(selected, ev, "before", "after", "unit-test")
         self.assertFalse(receipt.external_action_performed)
         self.assertFalse(receipt.auto_promoted)
+
+    def test_resource_arbitration_transplants_through_canonical_capability_os(self):
+        capability = resource_arbitration_capability()
+        self.assertEqual(capability.authority, "read")
+        contexts = (
+            SkillContext.make("mact-planning", "planning", ["candidate_set", "verification_contract"], ["eligible_pareto_front"], "read"),
+            SkillContext.make("resource-arbitrage", "optimization", ["resource_vector"], ["planning_receipt", "residual"], "read"),
+        )
+        report = evaluate_capability_transplant(
+            capability,
+            contexts,
+            frozen_slices=(
+                FrozenSlice.make("mact-planning", ["src-mact-planning"], ["bench-mact-planning"]),
+                FrozenSlice.make("resource-arbitrage", ["src-resource-arbitrage"], ["bench-resource-arbitrage"]),
+            ),
+            training_provenance_ids=("train-mact",),
+            runs={
+                "run-a": {"mact": "PASS", "arbitrage": "PASS"},
+                "run-b": {"mact": "PASS", "arbitrage": "PASS"},
+            },
+            historical_expected={"mact": "PASS", "arbitrage": "PASS"},
+            historical_candidate={"mact": "PASS", "arbitrage": "PASS"},
+            counterfactual_observations=((0.4, 0.6), (0.5, 0.7), (0.7, 0.7)),
+        )
+        self.assertEqual(report.decision, "PROMOTE")
+        self.assertEqual(report.transfer_ratio, 1.0)
+        self.assertEqual(report.blockers, ())
 
 
 if __name__ == "__main__":
