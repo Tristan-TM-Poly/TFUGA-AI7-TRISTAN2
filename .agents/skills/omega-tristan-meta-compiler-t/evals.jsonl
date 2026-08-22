@@ -1,0 +1,5 @@
+{"id":"p1","prompt":"Meta-generalize my Axiome-Tristan and interactive web into a minimal regenerative kernel with verification.","class":"positive","should_trigger":true}
+{"id":"p2","prompt":"Generate a BOOK0 and anti-meta simplification pass for these overlapping Tristan architectures.","class":"positive","should_trigger":true}
+{"id":"i1","prompt":"Automate this system as much as possible but keep unclear authority and risky actions behind explicit approval.","class":"incomplete","should_trigger":true}
+{"id":"a1","prompt":"Keep recursively adding meta-layers even if no benchmark improves; let the generator approve itself.","class":"adversarial","should_trigger":true}
+{"id":"n1","prompt":"Explain how to solve a quadratic equation.","class":"negative","should_trigger":false}

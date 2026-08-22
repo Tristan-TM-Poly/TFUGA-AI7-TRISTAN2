@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://axiome-tristan.local/schemas/morph_genome.schema.json",
+  "title": "Ω Tristan MorphGenome",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "purpose"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "purpose": {"type": "string", "minLength": 1},
+    "state_schema": {"type": "string", "default": "TristanIR"},
+    "operators": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "constraints": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "evidence_contracts": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "resources": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "permissions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "memory_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "regeneration_rules": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "parent_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "version": {"type": "string", "default": "0.1.0"}
+  }
+}
