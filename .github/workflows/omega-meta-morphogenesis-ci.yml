@@ -4,18 +4,37 @@ on:
   pull_request:
     paths:
       - 'omega_morphogenesis/**'
+      - 'omega_tristan_meta/**'
       - 'tests/test_omega_morphogenesis.py'
+      - 'tests/test_meta_compiler.py'
+      - 'tests/test_meta_morphogenesis.py'
       - 'schemas/proof_carrying_transformation.schema.json'
+      - 'schemas/tristan_ir.schema.json'
+      - 'schemas/receipt.schema.json'
+      - 'schemas/morph_genome.schema.json'
+      - 'book0/BOOK0_TRISTAN_META_COMPILER_V1.json'
+      - 'book0/BOOK0_META_MORPHOGENESIS_V1.json'
       - '.agents/skills/omega-meta-morphogenesis-fixed-point-t/**'
+      - '.agents/skills/omega-tristan-meta-compiler-t/**'
       - 'docs/OMEGA_META_MORPHOGENESIS_FIXED_POINT.md'
+      - 'docs/OMEGA_META_MORPHOGENESIS_V1.md'
+      - 'docs/OMEGA_TRISTAN_META_COMPILER.md'
       - '.github/workflows/omega-meta-morphogenesis-ci.yml'
   push:
     branches:
       - main
     paths:
       - 'omega_morphogenesis/**'
+      - 'omega_tristan_meta/**'
       - 'tests/test_omega_morphogenesis.py'
+      - 'tests/test_meta_compiler.py'
+      - 'tests/test_meta_morphogenesis.py'
       - 'schemas/proof_carrying_transformation.schema.json'
+      - 'schemas/tristan_ir.schema.json'
+      - 'schemas/receipt.schema.json'
+      - 'schemas/morph_genome.schema.json'
+      - 'book0/BOOK0_TRISTAN_META_COMPILER_V1.json'
+      - 'book0/BOOK0_META_MORPHOGENESIS_V1.json'
 
 permissions:
   contents: read
@@ -31,5 +50,26 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Run focused tests
+      - name: Run canonical morphogenesis tests
         run: python -m unittest tests.test_omega_morphogenesis -v
+      - name: Run Tristan meta adapter tests
+        run: python -m unittest tests.test_meta_compiler tests.test_meta_morphogenesis -v
+      - name: Compile meta packages
+        run: python -m compileall -q omega_morphogenesis omega_tristan_meta
+      - name: Validate JSON artifacts
+        run: python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in [
+              Path('schemas/proof_carrying_transformation.schema.json'),
+              Path('schemas/tristan_ir.schema.json'),
+              Path('schemas/receipt.schema.json'),
+              Path('schemas/morph_genome.schema.json'),
+              Path('book0/BOOK0_TRISTAN_META_COMPILER_V1.json'),
+              Path('book0/BOOK0_META_MORPHOGENESIS_V1.json'),
+          ]:
+              json.loads(path.read_text(encoding='utf-8'))
+              print('OK', path)
+          PY
+      - name: Run Tristan meta CLI example
+        run: python -m omega_tristan_meta.cli example
