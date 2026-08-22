@@ -95,7 +95,7 @@ def main() -> int:
     contains(UI / "app.v21.js", ["Prompt Diff", "safetyRadar", "canonizeSession", "fertility_is_not_proof"])
     contains(UI / "app.v22.js", ["Iteration Chain", "estimateImpact", "1024 candidates", "heuristic_score"])
     contains(UI / "app.v23.js", ["Score History", "local process trend", "not proof"])
-    contains(UI / "app.v24.js", ["UniversityGenome", "prototype_only", "SIMULATED", "Agent != Human", "realtime backend"])
+    contains(UI / "app.v24.js", ["UniversityGenome", "prototype_only", "SIMULATED", "Agent != Human", "realtime_backend_required"])
     contains(UI / "styles.css", ["--a", "grid", "hero"])
 
     canon = load_json(UI / "data/theory-canon.json")
