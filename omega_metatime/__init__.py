@@ -8,6 +8,7 @@ from .core import (
     TemporalRegime,
     TemporalState,
 )
+from .integration import temporal_measurement_capability
 
 __all__ = [
     "CapabilityDelta",
@@ -18,4 +19,5 @@ __all__ = [
     "TemporalCrystal",
     "TemporalRegime",
     "TemporalState",
+    "temporal_measurement_capability",
 ]
