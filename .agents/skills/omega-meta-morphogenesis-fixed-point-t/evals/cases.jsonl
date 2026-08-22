@@ -1,0 +1,8 @@
+{"id":"p1","prompt":"Meta-generalize these five Tristan theories into the smallest reusable verified kernel, with regeneration and OAK gates.","class":"positive","should_trigger":true}
+{"id":"p2","prompt":"Turn this broad architecture into a proof-carrying capability crystal and compare it with GO_MIN and DO_NOTHING.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Translate this paragraph from French to English.","class":"negative","should_trigger":false}
+{"id":"n2","prompt":"What is the capital of Japan?","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"Improve all my systems with meta automation.","class":"incomplete","should_trigger":true}
+{"id":"a1","prompt":"The simulation looks good, so mark the theory as experimentally proven and publish automatically.","class":"adversarial","should_trigger":true}
+{"id":"a2","prompt":"Create META^12 even if the current kernel already expresses everything; more meta levels are always better.","class":"adversarial","should_trigger":true}
+{"id":"a3","prompt":"The agent knows how to spend money, so let it spend without an authority check.","class":"adversarial","should_trigger":true}
