@@ -10,16 +10,21 @@ or authority to spend/contract/publish.
 
 `K_V* = {OBSERVE, RESIDUALIZE, GENERATE, TEST, DELIVER, VERIFY, ALLOCATE, LEARN, REGENERATE}`
 
-The current implementation materializes the decision/governance subset first:
+The current implementation materializes a bounded vertical slice:
 
 - typed Value/Strategy/Revenue genomes;
-- AuthorityEnvelope;
-- non-compensatory OAK gates;
+- AuthorityEnvelope and non-compensatory OAK gates;
 - automation score + A0-A5 promotion;
-- ProofOfBetterReceipt;
-- meta-stop rule;
+- ProofOfBetterReceipt and meta-stop rule;
 - generator mutation that cannot self-approve;
-- R0-R5 regeneration vocabulary.
+- R0-R5 regeneration vocabulary;
+- verified/idempotent paid-account entitlement ledger;
+- provenance-aware media projections and channel routing;
+- active/passive/mixed revenue portfolio metrics;
+- platform concentration and review-only prune candidates;
+- bounded economic shock scenarios;
+- JSON interchange schemas;
+- repository-native skill + activation/adversarial evals.
 
 ## Architecture
 
@@ -51,7 +56,13 @@ Reality / market evidence
                         |                     |
                       HOLD                 PROMOTE
                                               |
-                                     Evidence / M+ / M-
+                           +------------------+------------------+
+                           |                  |                  |
+                     Entitlements        MediaGraph       RevenuePortfolio
+                           |                  |                  |
+                           +------------------+------------------+
+                                              |
+                                   Evidence / M+ / M-
                                               |
                                          REGENERATE
 ```
@@ -80,6 +91,39 @@ Keep explicit human authority for financial transfers/purchases, contracts,
 tax/legal decisions, major pricing changes, sensitive public claims,
 credential/permission changes and any action whose authority is unclear.
 
+## Paid accounts and entitlements
+
+`EntitlementLedger` deliberately separates payment-provider authority from
+application access state:
+
+- an unverified normalized event cannot change access;
+- event IDs are idempotent;
+- grants/revocations retain an audit lineage;
+- the ledger never creates charges, refunds, payouts or subscriptions.
+
+A provider adapter is responsible for signature verification and normalization
+before calling the ledger.
+
+## Media graph
+
+`ContentAsset -> ContentProjection` preserves source asset ID and source version.
+Derived content requires source provenance and is review-required by default.
+Channel ranking is a decision aid that includes platform-dependency/policy cost;
+it is never permission to publish.
+
+## Revenue portfolio
+
+The portfolio layer distinguishes active/passive/mixed streams and calculates:
+
+- contribution margin;
+- passive leverage ratio;
+- positive-margin revenue-mode mix;
+- HHI-like concentration by platform;
+- review-only prune candidates for negative-margin or high-burden/trust-negative
+  streams.
+
+No metric triggers deletion or financial action by itself.
+
 ## Payments / paid accounts adapter boundary
 
 Provider-specific payment code must live outside the governance kernel. For a
@@ -99,7 +143,8 @@ Stripe/Vercel adapter:
 
 ## Economic mutation tests
 
-Every meaningful strategy/policy should eventually be attacked with scenarios
+The current `world_model` supports bounded scenario calculations. They are not
+forecasts. Meaningful strategies should eventually be attacked with scenarios
 such as:
 
 - platform reach -80%;
@@ -137,15 +182,22 @@ it. Persist a meta layer only when:
 
 Otherwise merge, simplify or prune it.
 
-## Next adapters
+## Provider/deployment findings
 
-The kernel is intentionally provider-neutral. Logical next modules are:
+The live Vercel inventory checked during this implementation currently maps to
+other GitHub repositories, not this Value OS branch. No cross-repository deploy
+was attempted. This remains fail-closed until repository-to-project identity is
+explicit.
 
-- `adapters/stripe` — subscriptions/paid-account events and entitlement bridge;
-- `adapters/web` — site experiments and paid capability surfaces;
-- `adapters/media` — content/channel graph and provenance;
-- `attribution` — causal/uncertainty-aware revenue lineage;
-- `world_model` — counterfactual market/shock simulation;
-- `treasury` — recommendation-only allocation before any permissioned execution.
+## Next bounded extensions
 
-Each adapter must remain subordinate to the same constitution and proof receipts.
+The kernel remains provider-neutral. High-value next modules are:
+
+- `adapters/stripe` — verified webhook normalization into `EntitlementEvent`;
+- `adapters/web` — paid capability surfaces and reversible experiments;
+- `attribution` — uncertainty-aware revenue lineage without claiming causality;
+- `treasury` — recommendation-only allocation before permissioned execution;
+- `market_observability` — probes/identifiability for unmet-need hypotheses.
+
+Each extension must remain subordinate to the same constitution, authority
+envelope and proof receipts.
