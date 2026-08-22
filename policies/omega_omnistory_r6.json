@@ -1,0 +1,30 @@
+{
+  "system": "Ω-OMNISTORY-T∞ R6",
+  "status": "FORMALIZED",
+  "publication": "private-draft",
+  "invariants": [
+    "Generated != Verified",
+    "Generated != Canon",
+    "Generator != Judge",
+    "SameCanon != SamePresentation",
+    "AudienceModel != Audience",
+    "MoreMeta != Better",
+    "MoreContent != MoreValue"
+  ],
+  "promotion": {
+    "requires": ["frozen benchmark", "positive verified gain", "rollback", "no known regression"],
+    "automatic_publication": false,
+    "automatic_merge": false,
+    "human_review_required": true
+  },
+  "rights": {
+    "living_artist_style_imitation": "reject targeted imitation; prefer original visual grammar",
+    "real_person_identity": "authorization required",
+    "voice_clone": "authorization required",
+    "external_assets": "provenance and license required before promotion"
+  },
+  "meta_depth": {
+    "rule": "verified_gain > added_complexity + added_risk",
+    "failure_action": "PRUNE"
+  }
+}
