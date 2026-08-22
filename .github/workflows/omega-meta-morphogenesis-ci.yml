@@ -5,12 +5,10 @@ on:
     paths:
       - 'omega_morphogenesis/**'
       - 'omega_tristan_meta/**'
-      - 'benchmarks/meta_representation_r02.json'
       - 'tests/test_omega_morphogenesis.py'
       - 'tests/test_meta_compiler.py'
       - 'tests/test_meta_morphogenesis.py'
       - 'tests/test_meta_skill_civilization.py'
-      - 'tests/test_meta_representation_tournament.py'
       - 'schemas/proof_carrying_transformation.schema.json'
       - 'schemas/tristan_ir.schema.json'
       - 'schemas/receipt.schema.json'
@@ -24,18 +22,15 @@ on:
       - 'docs/OMEGA_META_MORPHOGENESIS_V1.md'
       - 'docs/OMEGA_TRISTAN_META_COMPILER.md'
       - 'docs/OMEGA_META_SKILL_CIVILIZATION_R01.md'
-      - 'docs/OMEGA_META_REPRESENTATION_TOURNAMENT_R02.md'
       - '.github/workflows/omega-meta-morphogenesis-ci.yml'
   push:
     paths:
       - 'omega_morphogenesis/**'
       - 'omega_tristan_meta/**'
-      - 'benchmarks/meta_representation_r02.json'
       - 'tests/test_omega_morphogenesis.py'
       - 'tests/test_meta_compiler.py'
       - 'tests/test_meta_morphogenesis.py'
       - 'tests/test_meta_skill_civilization.py'
-      - 'tests/test_meta_representation_tournament.py'
       - 'schemas/proof_carrying_transformation.schema.json'
       - 'schemas/tristan_ir.schema.json'
       - 'schemas/receipt.schema.json'
@@ -49,7 +44,6 @@ on:
       - 'docs/OMEGA_META_MORPHOGENESIS_V1.md'
       - 'docs/OMEGA_TRISTAN_META_COMPILER.md'
       - 'docs/OMEGA_META_SKILL_CIVILIZATION_R01.md'
-      - 'docs/OMEGA_META_REPRESENTATION_TOURNAMENT_R02.md'
       - '.github/workflows/omega-meta-morphogenesis-ci.yml'
 
 permissions:
@@ -69,7 +63,7 @@ jobs:
       - name: Run canonical morphogenesis tests
         run: python -m unittest tests.test_omega_morphogenesis -v
       - name: Run Tristan meta adapter tests
-        run: python -m unittest tests.test_meta_compiler tests.test_meta_morphogenesis tests.test_meta_skill_civilization tests.test_meta_representation_tournament -v
+        run: python -m unittest tests.test_meta_compiler tests.test_meta_morphogenesis tests.test_meta_skill_civilization -v
       - name: Compile meta packages
         run: python -m compileall -q omega_morphogenesis omega_tristan_meta
       - name: Validate JSON artifacts
@@ -84,7 +78,6 @@ jobs:
               Path('book0/BOOK0_TRISTAN_META_COMPILER_V1.json'),
               Path('book0/BOOK0_META_MORPHOGENESIS_V1.json'),
               Path('book0/BOOK0_META_SKILL_CIVILIZATION_R01.json'),
-              Path('benchmarks/meta_representation_r02.json'),
           ]:
               json.loads(path.read_text(encoding='utf-8'))
               print('OK', path)
@@ -93,7 +86,3 @@ jobs:
         run: |
           python -m omega_tristan_meta.cli example
           python -m omega_tristan_meta.cli skill-example
-      - name: Run frozen representation tournament
-        run: |
-          python -m omega_tristan_meta.representation_tournament benchmarks/meta_representation_r02.json --out /tmp/meta-representation-r02.json
-          python -m json.tool /tmp/meta-representation-r02.json >/dev/null
