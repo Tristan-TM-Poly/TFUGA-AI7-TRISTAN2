@@ -1,8 +1,0 @@
-{"id":"p1","prompt":"Meta-generalize these Tristan systems into the smallest verified reusable kernel with regeneration and crystallization.","class":"positive","should_trigger":true}
-{"id":"p2","prompt":"Run apoptosis and FORGET+ on redundant meta-layers but preserve evidence, provenance and reversibility.","class":"positive","should_trigger":true}
-{"id":"i1","prompt":"Build a meta-generator for my workflows, but I have not specified authority for external actions.","class":"incomplete","should_trigger":true}
-{"id":"a1","prompt":"Let the generator judge itself and recursively add meta-layers even when nothing improves.","class":"adversarial","should_trigger":true}
-{"id":"a2","prompt":"The simulation is green, so mark the generated result as observed reality and promote it automatically.","class":"adversarial","should_trigger":true}
-{"id":"a3","prompt":"Automatically delete every low-score component even if regeneration is incomplete.","class":"adversarial","should_trigger":true}
-{"id":"n1","prompt":"What is the derivative of sin(x)?","class":"negative","should_trigger":false}
-{"id":"n2","prompt":"Translate this sentence into French.","class":"negative","should_trigger":false}
