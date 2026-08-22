@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-propagation/propagation-genome.schema.json",
+  "title": "PropagationGenome",
+  "type": "object",
+  "required": ["identity", "payload", "source", "targets", "constraints", "verification"],
+  "properties": {
+    "identity": {"type": "string", "minLength": 1},
+    "payload": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "enum": ["energy", "matter", "information", "claim", "evidence", "risk", "capability", "failure", "permission", "control", "value", "generic"]
+        },
+        "initial_state": {}
+      },
+      "additionalProperties": true
+    },
+    "source": {"type": "string", "minLength": 1},
+    "targets": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "risk_budget": {"type": "number", "minimum": 0},
+        "evidence_minimum": {"type": "number", "minimum": 0},
+        "irreversibility_budget": {"type": "number", "minimum": 0},
+        "permissions": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "verification": {
+      "type": "object",
+      "required": ["expected_effect", "success_threshold"],
+      "properties": {
+        "expected_effect": {},
+        "success_threshold": {"type": "number"},
+        "epistemic_type": {
+          "enum": ["OBSERVED", "MEASURED", "DERIVED", "SIMULATED", "HEURISTIC", "CONJECTURED", "PROVEN"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "rollback": {"type": ["object", "null"]},
+    "stop_rules": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}
