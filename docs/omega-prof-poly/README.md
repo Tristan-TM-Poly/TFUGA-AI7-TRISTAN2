@@ -31,6 +31,7 @@ Zero-touch is the default; manual verification is not a normal workflow step.
 - `ProfessorGraph-Poly`: graph of professors, courses, expertise, labs, equipment, students, partners, publications, patents, and projects.
 - `CourseCVCD`: course compression into concepts, prerequisites, errors, exercises, labs, rubrics, AI-use rules, and project seeds.
 - `StudentSkillTensor`: ethical skill tensor for team formation and support, never hidden automated ranking.
+- `Ω-POLYSPECIALIST-T`: student-side multi-specialization compiler maximizing degree progress, specialization-axis coverage, and multi-axis bridge density under prerequisites, workload, credit budgets, and OAK evidence freshness. See `POLYSPECIALIST_T.md`.
 - `LabOAKBench`: lab protocol, uncertainty, error modes, reproducibility tests, and safety gates.
 - `ResearchRosette`: paper-to-equations/code/claims/evidence/prototype/reproduction pipeline.
 - `GrantWriter-OAK`: grant packet generator with feasibility, budget, risk, EDI, and impact checks.
@@ -45,7 +46,8 @@ This branch includes a dependency-free Python core:
 
 ```bash
 python examples/omega_prof_poly_demo.py
-python -m pytest tests/test_omega_prof_poly_t.py
+python examples/omega_prof_poly_polyspecialist_demo.py
+python -m pytest tests/test_omega_prof_poly_t.py tests/test_omega_prof_poly_student_polyspecialist.py
 ```
 
 The MVP ranks professor-facing opportunities by a transparent score:
