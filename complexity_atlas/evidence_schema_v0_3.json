@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-compute-physics/evidence-v0.3.schema.json",
+  "title": "Omega Compute Physics Evidence v0.3",
+  "type": "object",
+  "required": [
+    "schema",
+    "kind"
+  ],
+  "properties": {
+    "schema": {
+      "const": "omega-compute-physics-evidence/v0.3"
+    },
+    "kind": {
+      "enum": [
+        "active-benchmark-plan",
+        "budget-compile",
+        "pareto-front"
+      ]
+    },
+    "target": {
+      "type": "string"
+    },
+    "candidate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "selected": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "report": {
+      "type": "object"
+    },
+    "objectives": {
+      "type": "object",
+      "additionalProperties": {
+        "enum": [
+          "minimize",
+          "maximize"
+        ]
+      }
+    },
+    "front": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "oak_warning": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "active-benchmark-plan"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "target",
+          "candidate_count",
+          "selected",
+          "oak_warning"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "budget-compile"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "report"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "pareto-front"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "objectives",
+          "candidate_count",
+          "front",
+          "oak_warning"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

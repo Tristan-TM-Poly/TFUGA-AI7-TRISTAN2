@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omega-compute-physics/atlas-v0.1.schema.json",
+  "title": "Omega Compute Physics Complexity Atlas v0.1",
+  "type": "object",
+  "required": ["schema", "name", "machine", "software", "samples", "models"],
+  "properties": {
+    "schema": {
+      "const": "omega-compute-physics-atlas/v0.1"
+    },
+    "name": {
+      "type": "string"
+    },
+    "machine": {
+      "type": "object"
+    },
+    "software": {
+      "type": "object"
+    },
+    "samples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["variables", "resources", "metadata"],
+        "properties": {
+          "variables": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {"type": "number"}
+          },
+          "resources": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {"type": "number"}
+          },
+          "metadata": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "models": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "target",
+          "status",
+          "epistemic_level",
+          "equation",
+          "variables",
+          "domain",
+          "n_samples",
+          "rmse",
+          "r2",
+          "ridge",
+          "oak_warning",
+          "features",
+          "coefficients"
+        ],
+        "properties": {
+          "target": {"type": "string"},
+          "status": {"const": "empirical-fit"},
+          "epistemic_level": {"type": "string"},
+          "equation": {"type": "string"},
+          "variables": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "domain": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "prefixItems": [{"type": "number"}, {"type": "number"}],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "n_samples": {"type": "integer", "minimum": 2},
+          "rmse": {"type": "number", "minimum": 0},
+          "r2": {"type": "number"},
+          "ridge": {"type": "number", "minimum": 0},
+          "oak_warning": {"type": "string"},
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "variables", "powers", "label"],
+              "properties": {
+                "kind": {"enum": ["constant", "monomial", "log", "xlogx"]},
+                "variables": {"type": "array", "items": {"type": "string"}},
+                "powers": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+                "label": {"type": "string"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "coefficients": {
+            "type": "array",
+            "items": {"type": "number"}
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

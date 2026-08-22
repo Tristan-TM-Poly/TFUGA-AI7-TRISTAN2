@@ -1,0 +1,66 @@
+{
+  "schema": "omega-meta-compute/fleet-rollout/v0.2",
+  "generated_date": "2026-08-12",
+  "owner": "Tristan-TM-Poly",
+  "status": "stage-a-pinned",
+  "policy": {
+    "stage_a": "zero-execution static scan of pinned local checkouts",
+    "dynamic_execution": "requires typed BenchmarkContract, trusted checkout and bounded fixture",
+    "network_or_credentials": "blocked by default; explicit higher-level reviewed adapter required",
+    "destructive_io": "blocked by default",
+    "subprocess_timeout": "resource bound only; never described as a security sandbox",
+    "empirical_to_proof_promotion": "forbidden",
+    "cross_repo_transfer": "prior only; held-out validation required in destination repo"
+  },
+  "repositories": [
+    {
+      "repository": "Tristan-TM-Poly/PEFA-FractalEnergySystem",
+      "default_branch": "main",
+      "pinned_commit": "69801e329f35f5cdbdaa3347df398c386ef7a90d",
+      "visibility": "private",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+      "default_branch": "main",
+      "pinned_commit": "0fcd05a33c7a399a13dff283a75c4627f03d0471",
+      "visibility": "public",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUGAG",
+      "default_branch": "main",
+      "pinned_commit": "96c92584a331ca7339f6d4aa155abc9e191f48a8",
+      "visibility": "public",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/TFACC",
+      "default_branch": "main",
+      "pinned_commit": "ce6ca0ac9e63adfb469d3dae11fc5ebeadd9431d",
+      "visibility": "private",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+      "default_branch": "main",
+      "pinned_commit": "268bebdfe0b54406b4d782a5a7edaa08a5f2142d",
+      "visibility": "public",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources at pinned commit"
+    },
+    {
+      "repository": "Tristan-TM-Poly/TTM-TFUGA-AI7-TRISTAN2",
+      "default_branch": "main",
+      "pinned_commit": "9ce84f62e4ae00319db8d132c856c0ffce96e01e",
+      "visibility": "public",
+      "code_search_indexed": true,
+      "scan_target": "all Python sources at pinned commit"
+    }
+  ],
+  "next_gate": "Materialize/read-only checkout each pinned commit, run Stage A scanner, merge Repository Genomes into Fleet Atlas, then generate benchmark contracts only for deterministic low-risk priority functions."
+}

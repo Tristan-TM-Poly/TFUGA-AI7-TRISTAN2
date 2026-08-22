@@ -1,6 +1,6 @@
 # MASTER SYSTEM INDEX — TFUGA-AI7-TRISTAN2
 
-Date: 2026-08-10  
+Date: 2026-08-12  
 Status: OAK-safe navigation layer. This file is an index, not a proof, legal opinion, revenue guarantee, or scientific certification.
 
 ## Purpose
@@ -14,7 +14,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 ## OAK status ladder
 
 | Status | Meaning | Promotion requirement |
-|---|---|---|
+|---:|---|---|
 | S | speculative | definition and risk boundary |
 | E | exploratory | minimal DCT-Ω packet |
 | X | crystallizable | examples, assumptions, tests or proof path |
@@ -42,6 +42,7 @@ massive creation -> DCT-Ω packet -> OAK gate -> test/proof/prototype -> trace -
 | 14 | TFACC | `TFACC` | X | Formal/categorical/fractal field-theory scaffold. | Add theorem index and counterexample register. |
 | 15 | Ω-NEURO-CELL-SYN-NET-T∞ | `omega_neuro_t/`, `docs/omega-neuro/` | X/D-MVP | Turns neuron→dendrite→synapse→hypernetwork ideas into typed executable models with falsifiable P1–P7 hypotheses, synthetic evidence harnesses, provenance gates and complexity-aware OAKBench. | Connect provenance-reviewed empirical datasets and rerun P1–P3 baseline, ablation and negative-control campaigns while keeping biological promotion explicitly gated. |
 | 16 | Ω-INVERSE-T∞ | `scripts/omega_inverse_compiler.py`, `scripts/omega_inverse_lagrange.py`, `docs/omega-inverse/` | X/D candidate | Turns local Taylor jets into inverse jets with three exact finite-order reversion oracles, two-sided formal validation, critical/Puiseux routing, Padé and conservative reconstruction candidates. | Benchmark high-order scaling, then add Bell/Faà di Bruno, certified branch continuation and multivariate inverse jets without promoting finite pattern matches to global proof. |
+| 17 | Ω-META-COMPUTE-PHYSICS-T∞ / Ω-COMPLEXITY-ATLAS-T∞ | `omega_compute_physics_t/`, `docs/OMEGA_COMPUTE_PHYSICS_T_R01.md`, `docs/OMEGA_COMPUTE_PHYSICS_T_R02_R03.md`, `docs/OMEGA_META_COMPUTE_PHYSICS_T_R04.md`, `docs/OMEGA_META_COMPUTE_PHYSICS_T_R05.md`, `docs/OMEGA_META_COMPUTE_PHYSICS_T_R06.md` | D-MVP candidate / R0.6 | Commit-addressed computational fleet intelligence: snapshots, multi-language source genomes, Python Complexity-IR/call graphs, static risk preflight, deterministic fixture metadata, contract planning, finite-domain regression ledgers, snapshot→caller impact cones, benchmark half-life/confidence debt and evidence-discounted Optimization ROI. Universal Fleet Scan remains static and does not execute target code. | Keep R0.1–R0.6 green; ingest complete pinned trees for all six repos, upgrade valuable language adapters, resolve qualified inter-module calls, learn workload-specific half-lives, then connect a separately authorized sandbox for deterministic Stage B kernels and calibrate ROI predictions against measured savings. |
 
 ## Merge and promotion rules
 
