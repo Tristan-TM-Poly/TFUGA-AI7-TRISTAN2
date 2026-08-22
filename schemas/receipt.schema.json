@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Universal Tristan Receipt",
+  "type": "object",
+  "required": ["id", "input_refs", "transformation", "output_refs", "evidence_refs", "uncertainty", "authority", "provenance", "rollback", "version"],
+  "properties": {
+    "id": {"type": "string"},
+    "input_refs": {"type": "array", "items": {"type": "string"}},
+    "transformation": {"type": "string"},
+    "output_refs": {"type": "array", "items": {"type": "string"}},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+    "authority": {"type": "string"},
+    "provenance": {"type": "string"},
+    "rollback": {"type": "string"},
+    "version": {"type": "string"}
+  },
+  "additionalProperties": false
+}
