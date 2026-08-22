@@ -56,6 +56,7 @@ OBSERVE
 15. Track dependency blast radius for claims, models, code, publications, simulations, products, decisions, and capability crystals.
 16. Distill the smallest regenerative core (`BOOK0_MIN`) and test reconstruction closure.
 17. Emit an Evolution/Transformation Receipt with before/after identity, evidence, tests, permissions, risk, rollback/compensation, and unresolved residuals.
+18. Run a representation tournament when a generic MorphGenome competes with a simpler domain-specific representation; keep the simpler representation when it preserves the frozen capability/probe family at lower cost or debt.
 
 ## Generator ecology
 
@@ -170,6 +171,7 @@ Apoptosis is review-only. A component may become `ELIGIBLE_FOR_REVIEW` only when
 - Crystal != EternalTruth.
 - Apoptosis != AutomaticDeletion.
 - FORGET+ != DestructiveForget.
+- GenericRepresentation != BetterRepresentation.
 - PersistentComplexity <= VerifiedNecessaryComplexity.
 
 ## Output contract
@@ -186,7 +188,8 @@ Prefer outputs that contain:
 8. M+/M-/M? updates;
 9. complexity/apoptosis/FORGET+ decision;
 10. regeneration recipe;
-11. remaining residual frontier.
+11. representation-tournament result when relevant;
+12. remaining residual frontier.
 
 ## Reference implementation
 
