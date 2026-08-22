@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE = "tristan-web-os-r04-marketplace-v1";
+const CACHE = "tristan-web-os-r05-omnistory-v1";
 const SHELL = [
   "./",
   "./index.html",
@@ -12,6 +12,7 @@ const SHELL = [
   "./public-media.css",
   "./knowledge-worlds.css",
   "./marketplace.css",
+  "./story-studio.css",
   "./app.js",
   "./app.webmanifest",
   "./src/application.js",
@@ -22,6 +23,7 @@ const SHELL = [
   "./src/public-media-kernel.js",
   "./src/knowledge-world-kernel.js",
   "./src/marketplace-kernel.js",
+  "./src/story-studio-kernel.js",
   "./src/oak-engine.js",
   "./src/preferences.js",
   "./src/router.js",
@@ -37,6 +39,7 @@ const SHELL = [
   "./src/views/knowledge-worlds.js",
   "./src/views/marketplace.js",
   "./src/views/public-media.js",
+  "./src/views/story-studio.js",
   "./src/views/mminus.js",
   "./src/views/oakgate.js",
   "./src/views/provenance.js",
