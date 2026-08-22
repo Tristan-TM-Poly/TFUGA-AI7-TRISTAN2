@@ -2,6 +2,8 @@ from dataclasses import dataclass, field, asdict
 from typing import Any, Dict, List
 import json
 
+from omega_morphogenesis import Residual
+
 @dataclass(frozen=True)
 class Evidence:
     id: str
@@ -34,19 +36,6 @@ class Claim:
             raise ValueError("claim scope must be in [0,1]")
 
 @dataclass(frozen=True)
-class Residual:
-    id: str
-    question: str
-    importance: float
-    uncertainty: float
-    downstream_leverage: float
-    cost: float = 1.0
-    risk: float = 0.0
-
-    def value_of_experiment(self) -> float:
-        return (self.uncertainty * self.downstream_leverage) / max(1e-12, self.cost + self.risk)
-
-@dataclass(frozen=True)
 class Capability:
     id: str
     name: str
@@ -56,6 +45,7 @@ class Capability:
 
 @dataclass(frozen=True)
 class Receipt:
+    """Interchange receipt; execution governance remains in omega_morphogenesis."""
     id: str
     input_refs: List[str]
     transformation: str
