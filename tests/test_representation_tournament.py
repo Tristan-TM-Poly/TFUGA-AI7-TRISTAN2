@@ -1,0 +1,66 @@
+import unittest
+from pathlib import Path
+
+from omega_tristan_meta.representation_tournament import (
+    COMPETITORS,
+    load_corpus,
+    run_tournament,
+)
+
+
+CORPUS = Path("benchmarks/meta_morph_representation_r0_2/corpus.json")
+
+
+class RepresentationTournamentTests(unittest.TestCase):
+    def test_corpus_is_frozen_multi_domain_and_contains_adversary(self):
+        cases = load_corpus(CORPUS)
+        self.assertGreaterEqual(len({case.domain for case in cases}), 3)
+        self.assertTrue(any(case.adversarial_for_morph_genome for case in cases))
+        self.assertEqual(COMPETITORS, ("MORPH_GENOME", "DOMAIN_SPECIFIC", "MINIMAL_DICT", "NO_ABSTRACTION"))
+
+    def test_every_case_retains_every_competitor_result(self):
+        cases = load_corpus(CORPUS)
+        report = run_tournament(CORPUS)
+        self.assertEqual(len(report.results), len(cases) * len(COMPETITORS))
+        observed = {(result.case_id, result.competitor) for result in report.results}
+        expected = {(case.id, competitor) for case in cases for competitor in COMPETITORS}
+        self.assertEqual(observed, expected)
+
+    def test_hard_gates_prevent_minimal_dict_from_hiding_missing_falsifiers(self):
+        report = run_tournament(CORPUS)
+        minimal = [result for result in report.results if result.competitor == "MINIMAL_DICT"]
+        self.assertTrue(minimal)
+        self.assertTrue(all(result.mutation_detection < 1.0 for result in minimal))
+        self.assertTrue(all(not result.hard_gate_pass for result in minimal))
+
+    def test_adversarial_case_makes_morph_genome_lose(self):
+        cases = {case.id: case for case in load_corpus(CORPUS)}
+        report = run_tournament(CORPUS)
+        adversarial_ids = {case.id for case in cases.values() if case.adversarial_for_morph_genome}
+        decisions = {decision.case_id: decision for decision in report.decisions}
+        self.assertTrue(adversarial_ids)
+        for case_id in adversarial_ids:
+            self.assertNotEqual(decisions[case_id].winner, "MORPH_GENOME")
+
+    def test_frozen_corpus_narrows_or_prunes_generic_claim(self):
+        report = run_tournament(CORPUS)
+        self.assertIn(report.morph_genome_disposition, {"NARROW", "PRUNE_GENERIC_CLAIM"})
+        self.assertFalse(report.global_pass)
+        self.assertFalse(report.external_action_performed)
+        self.assertFalse(report.auto_promoted)
+
+    def test_report_digest_is_stable_despite_latency_measurement(self):
+        first = run_tournament(CORPUS)
+        second = run_tournament(CORPUS)
+        self.assertEqual(first.stable_digest(), second.stable_digest())
+
+    def test_decisions_only_choose_hard_gate_passers(self):
+        report = run_tournament(CORPUS)
+        by_key = {(result.case_id, result.competitor): result for result in report.results}
+        for decision in report.decisions:
+            if decision.winner is not None:
+                self.assertTrue(by_key[(decision.case_id, decision.winner)].hard_gate_pass)
+
+
+if __name__ == "__main__":
+    unittest.main()
