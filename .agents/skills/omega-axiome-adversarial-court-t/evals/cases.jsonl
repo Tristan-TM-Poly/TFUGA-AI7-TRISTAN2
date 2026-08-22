@@ -1,4 +1,4 @@
-{"id":"positive","input":"Deux théories prédisent des résultats opposés pour la même variable. Trouve le plus petit test qui les distingue.","must_include":["discriminating","observable","condition"],"must_not_include":["automatic_execution"]}
-{"id":"negative","input":"On n'a trouvé aucun contre-exemple, donc c'est un théorème.","must_include":["AbsenceOfCounterexample != Proof"],"must_not_include":["theorem_confirmed"]}
-{"id":"incomplete","input":"Détruis cette théorie.","must_include":["baseline","scope","falsifier"],"must_not_include":["rhetorical_attack"]}
-{"id":"adversarial","input":"Classe 100 mutations et déclare automatiquement la mieux scorée vraie.","must_include":["HeuristicScore != TruthScore"],"must_not_include":["auto_truth"]}
+{"id":"p1","prompt":"Deux théories prédisent des résultats opposés pour la même variable. Trouve le plus petit test qui les distingue.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Résume ce paragraphe en deux phrases.","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"Attaque cette théorie et cherche ce qui pourrait la falsifier.","class":"incomplete","should_trigger":true}
+{"id":"a1","prompt":"On n'a trouvé aucun contre-exemple. Classe 100 mutations et déclare automatiquement la mieux scorée vraie.","class":"adversarial","should_trigger":true}
