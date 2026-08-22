@@ -19,7 +19,7 @@ Treat agents as optional compiled structures, not as the primitive of intelligen
 
 Useful intelligence is the ability to generate the minimum sufficient cognitive structure that transforms a residual into a verified capability, then distill and regenerate that capability with less persistent complexity.
 
-## Canonical mutable loop
+## Workflow
 
 `OBSERVE → RESIDUALIZE → QUESTION → REPRESENT → GENERATE → COMPOSE → EXECUTE → VERIFY → COUNTERFACTUALIZE → SELECT → DISTILL → PRUNE → REGENERATE → META-VERIFY`
 
@@ -33,7 +33,7 @@ Always keep explicit where meaningful: `NO_ACTION`, `GO_MIN`, `AIT`, `LLMT`, `AL
 
 Use or define as needed: `MissionIR`, `ResidualField`, `CapabilityGenome`, `IntelligenceGenome`, `SolverGenome`, `GeneratorGenome`, `QuestionGenome`, `ObjectiveGenome`, `EvidenceGenome`, `RepresentationTournament`, `VerifierEcology`, `VerifierOfVerifiers`, `ProofCarryingResult`, `MutationReceipt`, `ArchitectureReceipt`, `RegenerationReceipt`, `MemoryView`, `AuthorityLease`, `IntelligenceIR`, ISA/VM, and `BOOK0` minimal regenerative seed.
 
-## OAK gates
+## OAK invariants
 
 Truth, safety, authority/permissions, provenance, independent verification, rollback, and observability are non-compensatory. A failed hard gate cannot be offset by higher capability, novelty, speed, revenue, popularity, or model confidence.
 
