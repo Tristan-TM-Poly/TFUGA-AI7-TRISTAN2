@@ -1,0 +1,31 @@
+name: omega-value-os
+
+on:
+  push:
+    paths:
+      - "omega_value_os/**"
+      - "tests/test_omega_value_os.py"
+      - ".agents/skills/omega-value-fixed-point-economy-t/**"
+      - "docs/OMEGA_VALUE_OS.md"
+      - ".github/workflows/omega-value-os.yml"
+  pull_request:
+    paths:
+      - "omega_value_os/**"
+      - "tests/test_omega_value_os.py"
+      - ".agents/skills/omega-value-fixed-point-economy-t/**"
+      - "docs/OMEGA_VALUE_OS.md"
+      - ".github/workflows/omega-value-os.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Ω Value OS tests
+        run: python -m unittest tests.test_omega_value_os -v
