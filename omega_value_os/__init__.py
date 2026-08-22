@@ -30,6 +30,8 @@ from .models import (
     StrategyGenome,
     ValueGenome,
 )
+from .portfolio import RevenueStreamMetrics, platform_concentration, prune_candidates, revenue_mode_mix
+from .world_model import EconomicState, Shock, ShockResult, apply_shock, shock_curriculum
 
 __all__ = [
     "AutomationCandidate",
@@ -39,6 +41,7 @@ __all__ = [
     "ChannelProfile",
     "ContentAsset",
     "ContentProjection",
+    "EconomicState",
     "EntitlementEvent",
     "EntitlementEventType",
     "EntitlementLedger",
@@ -49,8 +52,12 @@ __all__ = [
     "ProofOfBetterReceipt",
     "RegenerationLevel",
     "RevenueMode",
+    "RevenueStreamMetrics",
+    "Shock",
+    "ShockResult",
     "StrategyGenome",
     "ValueGenome",
+    "apply_shock",
     "automation_score",
     "channel_score",
     "compile_projections",
@@ -59,8 +66,12 @@ __all__ = [
     "is_sensitive_action",
     "meta_stop_rule",
     "mutate_generator",
+    "platform_concentration",
     "proof_of_better",
+    "prune_candidates",
+    "revenue_mode_mix",
     "route_channels",
+    "shock_curriculum",
     "should_create_meta_layer",
     "value_objective",
 ]
