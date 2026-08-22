@@ -2,22 +2,22 @@
   "schema_version": "0.3.0",
   "generated_from": "2026-08-02T18:12:00-04:00",
   "algorithm": "sha256(path\\0sha256\\0size\\n)",
-  "root_sha256": "c984f1a6eb6dd4bad6127cdefd87754c0f9239da232fe2ebf25e8648ff87c63a",
+  "root_sha256": "ace3d1f48652d03e6859f854230a91f0ecf84c20ba7937a26cafca5770fd3c84",
   "metrics": {
-    "files": 38,
-    "bytes": 670638,
+    "files": 47,
+    "bytes": 747250,
     "roles": {
       "document-shell": 1,
       "documentation": 1,
-      "javascript-module": 25,
+      "javascript-module": 31,
       "public-data": 5,
-      "stylesheet": 5,
+      "stylesheet": 8,
       "web-manifest": 1
     },
     "extensions": {
-      ".css": 5,
+      ".css": 8,
       ".html": 1,
-      ".js": 25,
+      ".js": 31,
       ".json": 5,
       ".md": 1,
       ".webmanifest": 1
@@ -90,8 +90,22 @@
     {
       "path": "index.html",
       "role": "document-shell",
-      "size_bytes": 4833,
-      "sha256": "f140fb7af38f345fb5870dc28757cda0b32f931631d69f9153e18c47026264e4",
+      "size_bytes": 5353,
+      "sha256": "340f1a0017afb11c5527c6674e24d3a30a6cb15f09f2e35323a00f1cbe082896",
+      "cache_candidate": true
+    },
+    {
+      "path": "knowledge-worlds.css",
+      "role": "stylesheet",
+      "size_bytes": 2609,
+      "sha256": "e3defa5a466d1aa133f1a5899f90f4f07c2e19b15c4c349a6f757c6293634b50",
+      "cache_candidate": true
+    },
+    {
+      "path": "marketplace.css",
+      "role": "stylesheet",
+      "size_bytes": 1985,
+      "sha256": "63bb40ac72b182d156a96b8722242739ba7ada16b525288680916636f8505997",
       "cache_candidate": true
     },
     {
@@ -109,6 +123,13 @@
       "cache_candidate": false
     },
     {
+      "path": "public-media.css",
+      "role": "stylesheet",
+      "size_bytes": 2441,
+      "sha256": "2f618ee065cb17d3ecb07ecee0c6eaf11888af12cb4207b0deade55d0edc4067",
+      "cache_candidate": true
+    },
+    {
       "path": "r03.css",
       "role": "stylesheet",
       "size_bytes": 17600,
@@ -118,8 +139,8 @@
     {
       "path": "src/application.js",
       "role": "javascript-module",
-      "size_bytes": 6602,
-      "sha256": "f51bc45f71f78b250a7f56887e5c66c2c9b1a12494193c288457d6b388b5ecd8",
+      "size_bytes": 6905,
+      "sha256": "1dc66d7da9e4662d027b57ab311105eb7405bea6786547503a4e005fee131da8",
       "cache_candidate": true
     },
     {
@@ -151,6 +172,20 @@
       "cache_candidate": true
     },
     {
+      "path": "src/knowledge-world-kernel.js",
+      "role": "javascript-module",
+      "size_bytes": 15022,
+      "sha256": "a364b439c511ce6038f964038a2f3ad53de0568b9c975fa2f1d30dd279d99878",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/marketplace-kernel.js",
+      "role": "javascript-module",
+      "size_bytes": 12194,
+      "sha256": "cd2676aab3c875b6643bee2b7526f7f78af47b4583347b5baf3c71b91b61991b",
+      "cache_candidate": true
+    },
+    {
       "path": "src/morphogenetic-field.js",
       "role": "javascript-module",
       "size_bytes": 7537,
@@ -169,6 +204,13 @@
       "role": "javascript-module",
       "size_bytes": 1366,
       "sha256": "13e83fa8768fd0f31d64c9785447a9335ac326cd3bbae44f2a4e2b474b19d937",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/public-media-kernel.js",
+      "role": "javascript-module",
+      "size_bytes": 8559,
+      "sha256": "8ff31f58c99815ad35e2c2995055eb1b6a099fe10c512b5fa87939912f3513d0",
       "cache_candidate": true
     },
     {
@@ -242,6 +284,20 @@
       "cache_candidate": true
     },
     {
+      "path": "src/views/knowledge-worlds.js",
+      "role": "javascript-module",
+      "size_bytes": 12215,
+      "sha256": "8c71d8148eeb612f6ab9d573041de1d56bfe3d5fb3a7b4a934ecba3d7a167b6f",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/marketplace.js",
+      "role": "javascript-module",
+      "size_bytes": 12536,
+      "sha256": "b69dd049ae294a5d8037a5d82598235852fc79878f0fab28e73a6a72d88fe3db",
+      "cache_candidate": true
+    },
+    {
       "path": "src/views/mminus.js",
       "role": "javascript-module",
       "size_bytes": 3442,
@@ -260,6 +316,13 @@
       "role": "javascript-module",
       "size_bytes": 6922,
       "sha256": "4b0bed21d75660c056844ccb9bfd71d5b894abcbf038792132ab9e3eb7fe0114",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/views/public-media.js",
+      "role": "javascript-module",
+      "size_bytes": 7935,
+      "sha256": "648f1e7dc70cd0f72056be9a3359ccd3a7f8d40082464f27f6faa2ea9034aa02",
       "cache_candidate": true
     },
     {
@@ -286,8 +349,8 @@
     {
       "path": "sw.js",
       "role": "javascript-module",
-      "size_bytes": 2195,
-      "sha256": "5dba38de462bd9974e8adeed7958e31713f52195e94e48a6ff13e8c99ca6beac",
+      "size_bytes": 2488,
+      "sha256": "e3c860eb141d56d1210c778b20ed8be543626c5218b6ac0964cc8ece6928893e",
       "cache_candidate": true
     }
   ],
