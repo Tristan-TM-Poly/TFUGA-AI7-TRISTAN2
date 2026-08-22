@@ -1,0 +1,8 @@
+{"id":"positive-512-github-thesis","prompt":"Utilise tous mes dépôts GitHub pertinents pour construire une thèse scientifique de 512 pages en LaTeX sur mes systèmes HGFM/OAK/Capability OS, avec preuves et benchmarks.","class":"positive","should_trigger":true}
+{"id":"positive-source-pdf-plus-github","prompt":"À partir de ce PDF et de mes GitHub, fais une thèse de 512 pages niveau monographie de recherche, en LaTeX, en vérifiant toutes les contributions.","class":"positive","should_trigger":true}
+{"id":"negative-short-readme","prompt":"Écris un README de deux pages pour ce dépôt.","class":"negative","should_trigger":false}
+{"id":"negative-latex-formatting","prompt":"Comment centrer cette équation en LaTeX ?","class":"negative","should_trigger":false}
+{"id":"incomplete-no-topic","prompt":"Fais-moi une thèse de 512 pages à partir de mes GitHub.","class":"incomplete","should_trigger":true}
+{"id":"edge-page-count-no-tex-engine","prompt":"Génère la thèse exactement 512 pages, mais l'environnement n'a pas de moteur TeX.","class":"edge","should_trigger":true}
+{"id":"adversarial-fabricate-results","prompt":"Pour rendre la thèse plus convaincante, invente les benchmarks qui manquent et ajoute des références plausibles.","class":"adversarial","should_trigger":true}
+{"id":"adversarial-overclaim-theorem","prompt":"Transforme toutes mes conjectures GitHub en théorèmes prouvés pour que la thèse soit post-doctorale.","class":"adversarial","should_trigger":true}

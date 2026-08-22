@@ -1,0 +1,203 @@
+\part{Problème, état de l'art et fondements}
+
+\chapter{Problème de recherche et périmètre falsifiable}
+
+\section{Coordination à grande échelle}
+
+Le document TTM-GitHub-001 part d'une difficulté de coordination explicite. Si chaque dépôt doit connaître et intégrer manuellement tous les autres, le modèle complet non dirigé contient
+\[
+E_{pair}(N)=\frac{N(N-1)}{2}
+\]
+paires potentielles. À $N=1000$, cette quantité vaut $499\,500$. Cette identité combinatoire ne mesure toutefois ni le coût humain ni la difficulté réelle d'intégration : tous les dépôts n'ont pas besoin de communiquer, certaines relations sont asymétriques, et un registre central ou distribué possède lui-même un coût de maintenance. La thèse utilise donc $E_{pair}$ seulement comme \emph{baseline structurelle} d'un modèle volontairement simple.
+
+La proposition source est de remplacer la connaissance explicite des voisins par une couche sémantique :
+\[
+Repo\leftrightarrow Capability\ Registry\leftrightarrow Protocol\leftrightarrow Repo.
+\]
+Le dépôt publie ce qu'il sait faire plutôt qu'une liste de tous les dépôts qu'il sait appeler. Le problème de recherche devient alors mesurable : à quelles échelles et sous quelles charges la résolution par capacité diminue-t-elle effectivement la friction totale après ajout des coûts de registre, de contrat, de recherche, de routage, de validation et de rollback ?
+
+\section{Objet scientifique}
+
+L'objet de cette monographie n'est pas GitHub comme interface ou marque. Il est une classe de systèmes de recherche logiciels distribués dans lesquels dépôts, modules, fonctions, capacités, claims, evidence, tests, données, agents, transformations et historiques doivent être reliés de façon explicite. Le document source propose pour cela un réseau computationnel fractal mycélien, puis déplace progressivement l'unité fondamentale du dépôt vers la \emph{CapabilityCell}.
+
+La question centrale est :
+
+\begin{quote}
+Peut-on représenter un écosystème logiciel-scientifique hétérogène et évolutif comme un hypergraphe exécutable multi-échelle de capacités, de sorte que composition, réutilisation, propagation de l'evidence, cohérence théorie--code et amélioration contrôlée deviennent des propriétés explicites, testables et falsifiables plutôt que des conventions ad hoc ?
+\end{quote}
+
+Cette question contient plusieurs problèmes distincts. Une réponse positive à la substitution de fournisseurs ne prouve pas la supériorité du routage global; une bonne traçabilité ne prouve pas la validité scientifique des claims; une reconstruction self-hosted ne prouve pas la justesse des théories reconstruisibles. La thèse sépare donc les claims au lieu de chercher une validation monolithique.
+
+\section{Hypothèses et hypothèses nulles}
+
+Cinq hypothèses structurent le noyau empirique :
+
+\begin{enumerate}[label=H\arabic*.]
+  \item sous certaines distributions de tâches et de changements, le routage par capacités réduit une mesure de friction de coordination par rapport au meilleur baseline plus simple;
+  \item une Capability IR réduit les modifications requises chez les consommateurs lors d'un changement de fournisseur, lorsque les contrats sémantiques restent satisfaits;
+  \item une couche Semantic/Scientific CI détecte certaines divergences significatives ignorées par des tests logiciels ordinaires, sans imposer un coût de faux positifs ou de revue non borné;
+  \item une politique \texttt{SEARCH -> REUSE -> ADAPT -> GENERATE} diminue la duplication sémantique sans dégrader la qualité vérifiée;
+  \item une description canonique explicite améliore la reconstruction reproductible de l'écosystème et réduit le nombre de dépendances implicites nécessaires.
+\end{enumerate}
+
+Pour chaque hypothèse, l'hypothèse nulle affirme qu'après prise en compte du coût complet et des contrôles, le système proposé n'offre pas d'avantage matériel sur un baseline plus simple. Le résultat scientifiquement acceptable peut donc être une réfutation, une supériorité bornée à un régime précis ou un résultat indéterminé.
+
+\section{Critères de succès et d'échec}
+
+Une promotion exige au minimum : baseline explicite, configuration versionnée, mesure reproductible, provenance, incertitude, limites et chemin de falsification. Les dimensions critiques sont non compensatoires. Une architecture qui gagne en nombre de relations déclarées mais multiplie les interventions humaines, ou qui améliore la détection au prix d'un taux de faux positifs prohibitif, ne doit pas être déclarée supérieure par moyenne globale.
+
+Cette règle est cohérente avec la Constitution méthodologique du document source : génération $\neq$ vérité et test logiciel réussi $\neq$ claim scientifique prouvé. Elle est également compatible avec le canon interne du dépôt, où création, test, trace et statut sont séparés.
+
+\chapter{Écosystèmes logiciels et organisation des dépôts}
+
+\section{Monorepos comme baseline forte}
+
+La coordination de très grands ensembles de code ne commence pas avec le présent projet. Les grands monorepos fournissent une architecture où une source commune de vérité et un outillage fortement intégré déplacent une partie de la complexité vers le build, les tests, l'indexation et la gouvernance \cite{potvin2016monorepo}. Ils constituent donc une baseline plus sérieuse qu'un réseau naïf de dépôts indépendants.
+
+La thèse ne présume pas qu'un polyrepo mycélien est préférable à un monorepo. Elle demande plutôt quels compromis apparaissent lorsque l'unité de découverte devient une capacité sémantique et lorsque des éléments d'evidence doivent traverser les frontières de dépôt. Un monorepo peut réduire certains coûts de coordination tout en ne résolvant pas, par lui-même, la question de la validité scientifique d'une sortie ou de l'interchangeabilité sémantique de deux implémentations.
+
+\section{Polyrepos, dépendances et frontières}
+
+Dans une organisation polyrepo, la modularité physique peut correspondre à des équipes, produits, domaines, langages ou politiques différentes. Mais la frontière de dépôt ne coïncide pas nécessairement avec la frontière sémantique d'une capacité. Une même opération peut exister sous plusieurs noms ou dans plusieurs dépôts; inversement, un dépôt peut contenir plusieurs capacités non substituables.
+
+Le document source utilise cette observation pour proposer
+\[
+\boxed{\text{Code}\neq\text{Capability}}.
+\]
+La thèse traite cette distinction comme une définition interne à confronter aux abstractions existantes d'architecture, de services et de workflows. Elle ne devient intéressante scientifiquement que si elle permet de construire des discriminants mesurables : substitution, déduplication, résolution ou propagation de contrats.
+
+\section{Registres, services et composants}
+
+Les architectures logicielles disposent depuis longtemps de notions de composants, connecteurs, ports et configurations. Les travaux classiques sur les abstractions architecturales montrent déjà l'intérêt de raisonner au-dessus des éléments du langage de programmation \cite{shaw1995architecture}. Une CapabilityCell ne peut donc revendiquer une différence simplement parce qu'elle agrège entrées, sorties et relations.
+
+Le résidu candidat est plus précis : une CapabilityCell joint transformation, préconditions, evidence, incertitude, ressources et mémoire dans un contrat destiné à être résolu dynamiquement entre fournisseurs et consommateurs de recherche. Le tribunal de nouveauté doit comparer cette combinaison à des interfaces, composants, services et systèmes de workflows existants avant de conclure.
+
+\section{Coût de coordination comme vecteur}
+
+La coordination n'est pas réduite à un nombre d'arêtes. On utilise un vecteur de mesures :
+\[
+C_{coord}=(E_{declared},Edits,Failures,Latency,Compute,Human,Rollback,Duplicates).
+\]
+Les composantes représentent respectivement les relations déclarées, changements requis, ruptures de contrats, latence de résolution, coût de calcul, interventions humaines, effort de rollback et duplication sémantique. EXP-001 compare ces dimensions sous plusieurs architectures et interdit de convertir automatiquement une baisse de $E_{declared}$ en baisse du coût total.
+
+\chapter{Architectures, workflows et modèles exécutables}
+
+\section{Abstractions architecturales}
+
+Les composants et interactions de haut niveau fournissent un premier voisinage conceptuel \cite{shaw1995architecture}. Le système mycélien ajoute une contrainte particulière : la relation peut être conditionnée par l'intention et l'état courant. Dans la source,
+\[
+E_t=f(Intent_t,State_t,Capabilities_t).
+\]
+Le graphe d'exécution n'est donc pas nécessairement le graphe statique des dépendances du code.
+
+Cette dynamique doit néanmoins être comparée à des systèmes où les modèles restent actifs pendant l'exécution. Les modèles à l'exécution et les megamodels exécutables sont des voisins directs pour les boucles adaptatives et les relations explicites entre modèles runtime \cite{vogel2018runtime,vogel2018megamodels}. Le terme « vivant » ne suffit donc pas comme différence scientifique.
+
+\section{Workflows scientifiques portables}
+
+Le Common Workflow Language fournit un standard de description de workflows visant la portabilité de calculs composant des outils hétérogènes \cite{cwl12spec,crusoe2021cwl}. La littérature récente sur les systèmes de workflows scientifiques analyse explicitement composition, orchestration, données, métadonnées et propriétés de workflow \cite{sutera2025workflowterminology}.
+
+Ainsi, Intent-to-RepoGraph n'est pas un candidat à la nouveauté parce qu'il produit un DAG ou compose des programmes. La différence potentiellement discriminante est la résolution d'une \emph{demande sémantique} vers des providers sous contraintes de types, evidence, incertitude, coût, risque et autorité, avec possibilité de changer de provider sans changer le contrat de haut niveau.
+
+\section{Hyperarêtes exécutables}
+
+Le document source élève l'hyperarête au rang d'objet exécutable. Plutôt que de relier seulement une paire de composants, elle peut réunir plusieurs capacités nécessaires à une même transformation. La Partie II formalise cette idée par
+\[
+e=(P_e,G_e,T_e,O_e,F_e),
+\]
+avec participants, garde, transformation, contrat de sortie et contrat de falsification.
+
+Cette formalisation reste une construction candidate. Son utilité doit être comparée aux DAGs, systèmes de règles, modèles runtime exécutables et transformations de graphes. Une représentation plus expressive n'est un progrès que si elle rend certaines compositions, validations ou adaptations plus simples à spécifier ou à vérifier.
+
+\section{Boucles adaptatives et limites}
+
+Une architecture adaptative peut modifier son plan en fonction de l'état, de la disponibilité des providers ou de nouveaux éléments d'evidence. Mais adaptation $\neq$ amélioration. Un système capable de replanifier plus souvent peut également devenir plus difficile à reproduire. Toute boucle adaptative doit donc produire un reçu contenant les causes du changement, la version du plan, les outputs et les résidus.
+
+\chapter{Representations intermédiaires et compilation multi-niveau}
+
+\section{Intermediate representations}
+
+Les représentations intermédiaires sont une idée centrale des compilateurs modernes. MLIR fournit un exemple particulièrement pertinent d'infrastructure extensible où plusieurs niveaux d'abstraction et dialectes peuvent être représentés et transformés dans une même architecture \cite{lattner2020mlir}.
+
+Capability IR partage avec cette famille l'objectif de séparer une représentation intermédiaire de réalisations concrètes. La thèse ne prétend donc pas inventer le principe d'IR. Elle teste une spécialisation différente : représenter une capacité de tâche distribuée, accompagnée de contraintes d'evidence et d'incertitude, puis résoudre cette capacité vers un ou plusieurs providers.
+
+\section{Lowering, adaptation et pertes}
+
+Une Capability IR n'élimine pas la traduction. Elle la rend explicite. Le passage vers un fournisseur concret est un lowering
+\[
+L_r:CIR\rightarrow Interface_r,
+\]
+et le retour peut exiger un adaptateur $A_r$. Chaque transformation peut perdre de l'information. La thèse impose donc un \emph{loss declaration} : type approximé, unité convertie, champ supprimé, précision modifiée ou garantie non transférée.
+
+Cette obligation évite de masquer une incompatibilité derrière un adaptateur qui « fonctionne » au niveau logiciel tout en changeant la signification scientifique des données.
+
+\section{Compilation théorie--système}
+
+Le document source pousse l'idée d'IR plus loin en proposant deux compilateurs :
+\[
+Theory\rightarrow ExecutableResearchProgram
+\]
+et
+\[
+Repo\rightarrow ImplicitTheory(Repo).
+\]
+La première direction transforme définitions, hypothèses et claims en obligations de preuve, données, simulations, benchmarks, contre-exemples et capacités manquantes. La seconde reconstruit des hypothèses implicites à partir du code, des tests, de la documentation, des benchmarks et de l'historique.
+
+Ces transformations ont des voisins potentiels dans le model-driven engineering, la synthèse de programmes, l'analyse de programmes, l'inférence de spécifications et les transformations bidirectionnelles. Ces familles restent une lacune ouverte du Literature Court R1; aucune nouveauté n'est attribuée avant comparaison systématique.
+
+\chapter{Preuve, provenance et objets de recherche}
+
+\section{Proof-Carrying Code comme frontière conceptuelle}
+
+Proof-Carrying Code fournit une référence exigeante : le producteur accompagne un code d'une preuve machine-checkable démontrant une propriété de sûreté selon une politique donnée, et le consommateur vérifie cette preuve \cite{necula1997pcc}. La construction « Proof-Carrying Repository » utilisée ici est plus large mais épistémiquement plus faible.
+
+Un passeport de dépôt peut contenir commit, claims, evidence, incertitude, provenance, sécurité et limites. Il ne doit jamais emprunter la certitude formelle de PCC lorsqu'il ne transporte que des tests, benchmarks ou traces empiriques. La thèse conserve donc explicitement la classe de chaque claim : définition, dérivation, implémentation, mesure, simulation, hypothèse ou conjecture.
+
+\section{Provenance interopérable}
+
+La provenance n'est pas un domaine vierge. PROV-O fournit une ontologie W3C destinée à représenter et échanger des informations de provenance \cite{lebo2013provo}. Les travaux RO-Crate proposent quant à eux un packaging de ressources de recherche, données, logiciels et métadonnées contextuelles \cite{soilandreyes2021rocrate}; Workflow Run RO-Crate spécialise cette logique pour les exécutions de workflows \cite{leo2023workflowrunrocrate}.
+
+Un EvidenceReceipt ne doit donc pas être présenté comme nouveau parce qu'il contient source et version. L'objectif est plutôt de relier une provenance interopérable à un graphe de claims, à des contrats de capacités et à des gates Semantic/Scientific CI. Le modèle interne doit pouvoir être mappé vers les standards existants lorsque ceux-ci couvrent la relation voulue.
+
+\section{Evidence corrélée et indépendance}
+
+Deux artefacts différents peuvent dériver du même run, du même dataset ou du même fixture. Le nombre de fichiers ne mesure donc pas le nombre de confirmations indépendantes. Le Claim-Evidence Graph conserve les relations \texttt{derived-from} afin d'éviter de compter plusieurs sorties corrélées comme plusieurs validations indépendantes.
+
+Cette distinction devient essentielle lorsque plusieurs agents, tests ou PRs réutilisent la même source. La multiplication computationnelle des analyses peut augmenter la couverture tout en laissant inchangée l'indépendance de l'evidence.
+
+\chapter{Méthode épistémique, OAK et tribunal de nouveauté}
+
+\section{Claims, evidence et statut}
+
+Chaque claim reçoit un identifiant stable et un statut propre. Le pipeline minimal est
+\[
+Claim\rightarrow Evidence\rightarrow Test/Benchmark\rightarrow Uncertainty\rightarrow Limits\rightarrow Status.
+\]
+Le même artefact peut soutenir un claim d'implémentation et laisser un claim de supériorité en HOLD. Cette granularité empêche la promotion implicite d'un système entier à partir d'un test local.
+
+\section{Software CI, Semantic CI et Scientific CI}
+
+Le document source distingue quatre niveaux :
+\[
+SoftwareCI+SemanticCI+ScientificCI+OAK.
+\]
+Software CI demande notamment si le code s'installe, s'exécute et respecte les tests fonctionnels. Semantic CI ajoute types, unités, conventions et bornes. Scientific CI ajoute, selon le claim, baseline, contrôles négatifs, incertitude, provenance des données, statistiques, contre-hypothèse et reproductibilité.
+
+La présence de gates supplémentaires n'est pas une preuve d'amélioration. EXP-003 mesure à la fois le gain de détection, les faux positifs, le coût de calcul et l'effort de revue.
+
+\section{Mémoire négative}
+
+M$^-$ conserve les erreurs qui seraient autrement effacées par la réussite d'une itération suivante. Les premiers clean builds de cette thèse ont ainsi exposé successivement une dépendance de police, un paquet bibliographique manquant, une incompatibilité typographique, un caractère Unicode non mappé et une notation mathématique non déclarée. La compilation verte finale ne supprime pas ces échecs : elle les transforme en tests de régression.
+
+\section{Tribunal de nouveauté}
+
+La thèse refuse une revendication globale du type « le système entier est nouveau ». Chaque contribution candidate est comparée séparément : CapabilityCell, Capability IR, hyperarête exécutable, Repo Fabric, Evidence Passport, Intent-to-RepoGraph, Theory-to-Repo, Repo-to-Theory, semantic diff, Scientific CI, fixed-point reconstruction et Residual-to-Theory.
+
+Pour chaque candidat, le tribunal impose la chaîne
+\[
+PriorArt\rightarrow SharedStructure\rightarrow MaterialDifference\rightarrow Discriminator\rightarrow Evidence\rightarrow Limits.
+\]
+Tant qu'une étape manque, la colonne \texttt{novelty\_status} reste HOLD. Le code interne, même testé et fusionné, n'est pas une comparaison à l'état de l'art.
+
+\section{Périmètre actuel du Literature Court}
+
+La première passe couvre les grands monorepos, les abstractions d'architecture logicielle, les IR multi-niveaux, Proof-Carrying Code, les runtime megamodels, les workflows scientifiques, PROV-O et RO-Crate. Les comparaisons avec model-driven engineering, specification mining, graph transformation, active experiment design, reproducible builds et systèmes self-hosted restent ouvertes. Ces lacunes sont des obligations de recherche, non des espaces dans lesquels la nouveauté est présumée.

@@ -1,0 +1,272 @@
+\chapter{Méthodes quantitatives communes aux campagnes}
+
+\section{Principe de pré-enregistrement}
+
+Avant toute exécution utilisée comme evidence, chaque campagne gèle : question, hypothèse nulle, baselines, métriques primaires, métriques secondaires, exclusions, seed ou règle de déterminisme, environnement, règle d'arrêt et critère de promotion. Un changement ultérieur reste permis, mais produit une nouvelle version du protocole au lieu de réécrire silencieusement le protocole antérieur.
+
+Cette discipline sépare l'exploration de la confirmation. Une analyse exploratoire peut révéler une nouvelle métrique; elle devient alors une hypothèse pour une exécution suivante.
+
+\section{Unité expérimentale}
+
+La taille d'un échantillon n'a de sens qu'après définition de l'unité expérimentale. Selon la campagne, l'unité peut être : une tâche, un changement de provider, un défaut injecté, un couple tâche--stratégie, une PR ou une reconstruction clean-room. Plusieurs mesures issues de la même unité ne sont pas traitées comme observations indépendantes.
+
+\section{Effets et incertitude}
+
+Pour une métrique scalaire $Y$, la thèse rapporte au minimum : taille de l'échantillon, distribution ou quantiles pertinents, effet absolu, effet relatif lorsque défini et intervalle d'incertitude. Lorsque les unités sont appariées, l'effet principal est calculé sur les différences intra-unité
+\[
+d_i=Y_{i,candidate}-Y_{i,baseline}.
+\]
+Cette représentation retire une partie de l'hétérogénéité entre tâches.
+
+Un bootstrap non paramétrique sur les unités expérimentales peut être utilisé lorsque sa structure d'échantillonnage respecte la dépendance réelle. Le nombre de rééchantillonnages, le seed et la méthode d'intervalle doivent être enregistrés.
+
+\section{Multiplicité et métrique primaire}
+
+Chaque campagne nomme une métrique primaire avant observation. Les nombreuses métriques secondaires servent à comprendre le mécanisme et les compromis, pas à choisir après coup celle qui donne le résultat le plus favorable. Si plusieurs hypothèses confirmatoires sont testées, la stratégie de contrôle de multiplicité doit être déclarée.
+
+\section{Résultats négatifs et indéterminés}
+
+Un intervalle large traversant une marge d'indifférence produit HOLD, non « absence d'effet ». Un résultat négatif suffisamment précis peut soutenir la conclusion que l'avantage, s'il existe, est inférieur à une marge définie. Cette différence entre manque de puissance et evidence de faible effet est conservée dans le ledger.
+
+\chapter{Méthodes de EXP-001 : scaling de coordination}
+
+\section{Design factoriel}
+
+Les facteurs principaux sont
+\[
+X=(N,C,P,\chi,\nu,\tau),
+\]
+où $N$ est le nombre de dépôts, $C$ le nombre de capacités, $P$ la multiplicité moyenne des providers, $\chi$ le churn de contrats, $\nu$ la fraction de tâches inter-repos et $\tau$ le taux d'arrivée des tâches.
+
+Plutôt qu'explorer exhaustivement un espace immense, la campagne utilise une grille bornée couvrant plusieurs régimes : petit/stable, moyen/stable, moyen/churn élevé, grand/faible couplage et grand/fort couplage.
+
+\section{Baselines comparées}
+
+Les baselines sont exécutées sur les mêmes traces :
+\begin{enumerate}
+  \item pairwise explicite;
+  \item dépendances statiques;
+  \item registry simple sans hyperarêtes exécutables;
+  \item organisation centralisée/monorepo lorsque le cas est représentable;
+  \item dynamic capability graph.
+\end{enumerate}
+
+Aucun baseline n'est volontairement privé des optimisations naturelles à son modèle. Une comparaison contre une implémentation artificiellement naïve serait un contrôle faible.
+
+\section{Métrique primaire de friction}
+
+Une métrique composite peut être utilisée seulement après rapport de ses composantes. On définit d'abord
+\[
+F=(H,E,R,L,C_c),
+\]
+avec minutes d'intervention humaine $H$, nombre d'éditions de coordination $E$, ruptures de contrats $R$, temps de récupération $L$ et coût de calcul $C_c$.
+
+La métrique primaire confirmatoire peut être $H+\alpha L$ si $\alpha$ est gelé avant l'expérience et possède une interprétation claire. Sinon, la comparaison reste multiobjective.
+
+\section{Courbes d'échelle}
+
+Pour une métrique $Y(N)$, plusieurs modèles candidats peuvent être comparés sans supposer a priori la loi : constante, logarithmique, linéaire, $N\log N$, quadratique ou spline monotone. L'objectif n'est pas de « prouver O(N) » à partir de quelques points, mais de déterminer quelles tendances sont compatibles avec les observations et leurs incertitudes dans la plage testée.
+
+\section{Analyse de sensibilité}
+
+Un résultat de scaling n'est promu que s'il survit au moins à : changement de distribution des tâches, changement de churn, provider indisponible, cache froid, cache chaud et perte temporaire du registre. Ces perturbations testent si l'avantage vient d'une hypothèse fragile.
+
+\chapter{Méthodes de EXP-002 : substitution de providers}
+
+\section{Design apparié}
+
+Chaque cas de substitution compare le même consommateur et la même tâche avec $r_1$ puis $r_2$. Les inputs sont gelés. Lorsque l'ordre peut influencer un cache ou un état, l'ordre des providers est randomisé ou contrebalancé.
+
+\section{Marge d'équivalence sémantique}
+
+Une substitution ne demande pas toujours une égalité numérique stricte. Pour une métrique de qualité $Q$, on définit avant l'expérience une marge admissible $\epsilon_Q$. Une paire est compatible sur cette dimension si
+\[
+|Q(r_2)-Q(r_1)|\leq\epsilon_Q.
+\]
+La marge doit être justifiée par le domaine; elle ne peut être choisie après observation.
+
+Pour les types, dimensions physiques ou contraintes de sécurité, la marge peut être nulle : une incompatibilité de dimension n'est pas compensée par une bonne latence.
+
+\section{Coût de changement}
+
+Le résultat central porte sur
+\[
+M=(consumer\_edits,adapter\_edits,config\_edits,contract\_violations,recovery\_time).
+\]
+Une Capability IR ne réussit pas si elle déplace simplement toutes les modifications du consommateur vers un adaptateur fragile. Les deux couches sont mesurées.
+
+\section{Contrôles négatifs}
+
+Les contrôles introduisent volontairement : type incompatible, unité incompatible, violation de borne, evidence périmée et provider partiellement implémenté. Un système de substitution qui accepte ces cas gagne en commodité au prix d'une perte de sens; il doit échouer le gate de sécurité sémantique.
+
+\chapter{Méthodes de EXP-003 : détection de divergence}
+
+\section{Matrice de confusion}
+
+Pour chaque famille de défauts et chaque pile de gates, on calcule
+\[
+TP,FP,TN,FN.
+\]
+Puis, lorsque les dénominateurs sont non nuls,
+\[
+Precision=\frac{TP}{TP+FP},\qquad
+Recall=\frac{TP}{TP+FN},
+\]
+et
+\[
+FPR=\frac{FP}{FP+TN}.
+\]
+Les contrôles propres sont indispensables pour mesurer $FP$; un benchmark composé uniquement de défauts ne peut pas estimer le coût de sur-détection.
+
+\section{Comparaison appariée des détecteurs}
+
+Les piles sont exécutées sur les mêmes variantes. La comparaison de deux détecteurs utilise donc les paires discordantes : défaut détecté uniquement par A ou uniquement par B. Cette structure évite de traiter les sorties sur des variantes identiques comme indépendantes.
+
+\section{Sévérité des défauts}
+
+Un défaut d'affichage et une conclusion scientifique non supportée n'ont pas nécessairement le même coût. Une analyse secondaire applique des poids de sévérité gelés avant le dégel des labels. Les résultats non pondérés restent toujours rapportés pour que la conclusion ne dépende pas d'une seule politique de poids.
+
+\section{Temps et effort de revue}
+
+Le gain de détection est accompagné de
+\[
+C_{detector}=(runtime,compute,human\_review,explanation\_length).
+\]
+Un détecteur qui trouve un défaut supplémentaire mais multiplie par cent l'effort humain peut rester utile dans un gate rare à haute criticité, mais pas nécessairement comme test systématique.
+
+\section{Ablations}
+
+Les ablations retirent séparément unités, provenance, baseline, negative-control et uncertainty gates. Elles cherchent à identifier quelle primitive produit réellement le gain observé. Sans ablation, attribuer le gain à « OAK » dans son ensemble serait trop vague pour être réutilisable.
+
+\chapter{Méthodes de EXP-004 : reuse-first}
+
+\section{Randomisation des tâches}
+
+Les tâches sont distribuées entre stratégie generate-first et reuse-first ou exécutées en cross-over avec prévention de contamination. Une même personne ne peut pas idéalement résoudre une tâche avec une stratégie puis oublier la solution pour l'autre. Les designs cross-over doivent donc utiliser tâches analogues mais non identiques ou séparer les exécutants.
+
+\section{Définition d'un doublon sémantique}
+
+Deux implémentations ne sont pas des doublons parce qu'elles possèdent des noms similaires. Un doublon candidat partage une fonction sémantique, un contrat d'entrée/sortie et une plage d'usage suffisamment proches pour qu'une abstraction commune soit plausible. La classification combine règles automatiques et revue aveugle d'un sous-échantillon.
+
+\section{Métriques}
+
+Les principales mesures sont : nombre de nouveaux composants, réutilisations exactes, adaptations, doublons confirmés, défauts détectés, temps, coût de recherche et modifications nécessaires lors d'un changement ultérieur.
+
+Le taux de duplication est
+\[
+D=\frac{N_{duplicate}}{N_{new}+N_{duplicate}},
+\]
+avec convention explicite lorsque le dénominateur est nul.
+
+\section{Effet à moyen terme}
+
+La valeur de réutilisation peut apparaître seulement lors d'une modification ultérieure. Un sous-ensemble des tâches reçoit donc un changement de spécification après la première solution. Le coût de maintenance devient une outcome secondaire importante.
+
+\chapter{Méthodes de EXP-005 : étude temporelle GitHub}
+
+\section{Unité temporelle}
+
+L'historique est transformé en événements horodatés : création de symbole, PR, merge, claim, test, échec, réutilisation, renommage, dépréciation et archivage. Les événements issus d'une même PR restent groupés pour éviter la pseudo-réplication.
+
+\section{Lignée de capacités}
+
+Une capacité possède une généalogie
+\[
+C_0\to C_1\to\cdots\to C_t
+\]
+reliée par relations telles que \texttt{derived-from}, \texttt{split-from}, \texttt{merged-into}, \texttt{reimplements} et \texttt{supersedes}. Les relations automatiques sont marquées candidate tant qu'une preuve structurale ou humaine ne les confirme pas.
+
+\section{Taux de survie et de réutilisation}
+
+Pour une cohorte de capacités créées avant une date $t_0$, on mesure la fraction encore référencée ou utilisée après un horizon $h$. Cette « survie » est une propriété de l'artefact, pas une fitness biologique.
+
+\section{Observationalité}
+
+Les corrélations entre patterns de PR et outcomes ultérieurs restent descriptives. Un modèle prédictif peut être évalué prospectivement, mais ses poids ne deviennent pas une attribution causale. Cette frontière est explicitement cohérente avec le Research Self-Model du corpus secondaire.
+
+\chapter{Méthodes de EXP-006 : reconstruction fixe}
+
+\section{Seed et environnement isolé}
+
+Le seed minimal est versionné et hashé. Le clean-room interdit les fichiers non déclarés, caches persistants et secrets de l'environnement source. Toute intervention humaine est enregistrée comme dépendance de reconstruction.
+
+\section{Vecteur de reconstruction}
+
+Le score est conservé sous forme
+\[
+R_{fix}=(r_C,r_T,r_Q,r_E,r_P,h),
+\]
+avec fractions de capacités, tests, claims, liens d'evidence, programmes et nombre $h$ de dépendances cachées.
+
+Une scalarisation éventuelle doit pénaliser $h$ séparément; un système qui reconstruit 99\% de ses fichiers mais exige une étape manuelle non documentée peut être moins reproductible qu'un système reconstruisant 95\% sans état caché.
+
+\section{Équivalence fonctionnelle}
+
+Certains artefacts doivent être identiques octet par octet : manifests déterministes, schemas, index. D'autres peuvent être seulement fonctionnellement équivalents : rapports contenant timestamp ou ordres non significatifs. Le type d'équivalence est déclaré avant comparaison.
+
+\section{Contrôle négatif}
+
+Retirer volontairement une dépendance canonique du seed doit diminuer une composante attendue de $R_{fix}$ ou produire HOLD/FAIL explicite. Si la reconstruction réussit inchangée, soit la dépendance était inutile, soit un chemin caché la fournit; les deux cas sont informatifs.
+
+\chapter{Méthodes de EXP-007 : round-trip théorie--code--evidence}
+
+\section{Jeu de référence}
+
+La TheoryIR originale est gelée avant compilation. Après production du système et de l'evidence, l'extracteur inverse ne peut consulter que les artefacts autorisés du dépôt final. Cela évite une reconstruction triviale par lecture directe du fichier source de vérité.
+
+\section{Métriques par classe}
+
+On mesure séparément :
+\[
+R_D,R_A,R_Q,R_T,R_E,R_L,R_P,
+\]
+pour définitions, hypothèses, claims, types/unités, evidence, limites et provenance. Pour les ensembles discrets, précision, rappel et F1 peuvent être utilisés; pour les valeurs numériques, un résidu adapté à l'unité; pour les claims, une comparaison de force et de quantificateurs.
+
+\section{Fidélité versus vérité}
+
+L'expérience possède deux axes indépendants : fidélité du round-trip et statut épistémique du claim. On peut avoir :
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Fidélité & Claim & Interprétation \\
+\midrule
+haute & supporté & cohérence forte, claim supporté séparément \\
+haute & faux/HOLD & reproduction fidèle d'un contenu non validé \\
+basse & supporté & implémentation ou reconstruction inadéquate \\
+basse & faux/HOLD & double dette \\
+\bottomrule
+\end{tabular}
+\end{center}
+Cette matrice empêche l'erreur centrale « round-trip cohérent donc théorie vraie ».
+
+\section{Ablation de la provenance}
+
+Une ablation supprime les liens de provenance tout en conservant code et tests. La variation de $R_E$ et $R_P$ mesure alors combien la reconstruction d'evidence dépend d'un ledger explicite plutôt que d'une inférence sur les fichiers.
+
+\chapter{Règles transversales de promotion expérimentale}
+
+\section{Evidence ladder}
+
+Les niveaux sont ordonnés par protocole, non par prestige :
+\[
+S0\to S1\to S2\to S3\to S4\to S5
+\]
+avec protocole, mécanique synthétique, replay historique, observation prospective, clean-room et réplication indépendante.
+
+Un résultat peut sauter un niveau si le protocole le permet, mais il ne peut pas prétendre avoir franchi un niveau qui n'a pas été exécuté.
+
+\section{Gate de baseline}
+
+Toute phrase comparative forte (« meilleur », « réduit », « détecte davantage ») nécessite un baseline réellement exécuté sous configuration comparable. Une comparaison seulement théorique soutient au mieux une motivation ou une borne, pas une performance mesurée.
+
+\section{Gate d'incertitude}
+
+Toute métrique empirique qui varie entre unités ou runs doit rapporter une dispersion ou un intervalle. Les runs déterministes peuvent rapporter l'identité stricte de sorties, mais un temps de CI observé sur un runner partagé reste empirique même si le code est déterministe.
+
+\section{Gate de transfert}
+
+Un claim observé dans un domaine ne se transfère pas automatiquement à un autre. La généralisation est formulée sous la forme : population d'entraînement/observation, population de test et différences de contexte. Les échecs de transfert sont conservés comme M$^-$ et peuvent révéler les variables de contexte réellement importantes.
+
+\section{Gate de conclusion}
+
+La conclusion de chaque campagne est générée à partir du ledger de statuts. Si la métrique primaire est HOLD, le résumé ne peut pas sélectionner une métrique secondaire positive pour produire un PASS narratif. Cette règle lie directement les tableaux de résultats à la conclusion de la thèse.

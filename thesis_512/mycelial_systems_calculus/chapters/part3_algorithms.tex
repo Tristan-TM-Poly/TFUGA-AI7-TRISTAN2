@@ -1,0 +1,312 @@
+\chapter{Algorithmes du compilateur de capacités}
+
+\section{Compilation bornée d'une intention}
+
+Le compilateur d'intention doit séparer compréhension, décomposition, résolution et planification. Une version abstraite est donnée par l'algorithme suivant.
+
+\begin{algorithm}
+\caption{Intent-to-RepoGraph borné}
+\begin{algorithmic}[1]
+\Require IntentSpec $J$, registre de capacités $\mathcal C$, politiques $\mathcal P$
+\Ensure Plan $P$ ou reçu HOLD/FAIL
+\State $S\gets ParseIntent(J)$
+\State $W\gets DecomposeIntoWorkUnits(S)$
+\ForAll{$w\in W$}
+  \State $K_w\gets SearchCompatibleCapabilities(w,\mathcal C)$
+  \If{$K_w=\emptyset$}
+    \State \Return HOLD avec besoin de capacité non résolu
+  \EndIf
+  \State $K_w\gets ApplyTypeEvidenceRiskAuthorityGates(K_w,w,\mathcal P)$
+  \If{$K_w=\emptyset$}
+    \State \Return HOLD avec causes de rejet
+  \EndIf
+  \State $c_w\gets RankWithoutBypassingHardGates(K_w)$
+\EndFor
+\State $G\gets BuildExecutableHypergraph(\{c_w\})$
+\State $P\gets AttachContractsEvidenceRollback(G)$
+\State \Return $P$
+\end{algorithmic}
+\end{algorithm}
+
+Le point méthodologique essentiel est la différence entre \texttt{SearchCompatibleCapabilities} et \texttt{RankWithoutBypassingHardGates}. Un score élevé ne réintroduit jamais un candidat éliminé pour incompatibilité de type, evidence obligatoire absente ou autorité insuffisante.
+
+\section{Résolution comme problème contraint}
+
+Soit $K_w$ l'ensemble des providers candidats pour un WorkUnit $w$. Pour chaque candidat $c$, on conserve un vecteur
+\[
+v(c)=(quality,latency,cost,risk,uncertainty,evidence,freshness).
+\]
+Les dimensions n'ont pas nécessairement la même unité. On définit un ensemble admissible
+\[
+A_w=\{c\in K_w:\;g_j(c,w)=1\;\forall j\in H_w\},
+\]
+où $H_w$ est l'ensemble des gates durs. La scalarisation, si nécessaire, n'intervient qu'après construction de $A_w$.
+
+\begin{proposition}[Non-compensation des gates durs]
+Si $c\notin A_w$, aucune modification d'une fonction de score définie uniquement sur $A_w$ ne peut rendre $c$ sélectionnable sans modifier explicitement le contrat des gates.
+\end{proposition}
+
+\begin{proof}
+Par définition, la fonction de sélection opère sur $A_w$. Un élément extérieur à son domaine ne peut être retourné par optimisation sur ce domaine.
+\end{proof}
+
+\section{Complexité du scan naïf}
+
+Supposons $m$ WorkUnits et $C$ capacités enregistrées. Un scan exhaustif qui teste chaque capacité pour chaque WorkUnit effectue au plus $mC$ tests de compatibilité. Si chaque test est borné par $T_c$, le coût est
+\[
+O(mCT_c).
+\]
+Cette borne ne constitue pas un résultat sur l'implémentation réelle. Elle fournit un baseline algorithmique auquel comparer indexation par type, filtrage hiérarchique et caches.
+
+Si une indexation réduit le nombre moyen de candidats visités à $k\ll C$, le coût de résolution après indexation devient approximativement $O(mkT_c)$, auquel il faut ajouter le coût de construction et de maintien de l'index. EXP-001 doit mesurer ce coût sous churn de capacités.
+
+\chapter{Transactions de claims et d'evidence}
+
+\section{Receipt minimal}
+
+Une transformation qui produit un claim ou modifie son statut doit émettre un reçu
+\[
+R=(id,inputs,outputs,method,version,evidence,U,limits,status).
+\]
+Le reçu est une unité de traçabilité, non une unité de vérité.
+
+\begin{algorithm}
+\caption{Promotion locale d'un claim}
+\begin{algorithmic}[1]
+\Require Claim $q$, EvidenceSet $E$, GateSet $G(q)$
+\Ensure statut $s$ et PromotionReceipt $R$
+\ForAll{$g\in G(q)$}
+  \State $r_g\gets Evaluate(g,q,E)$
+  \If{$r_g=FAIL$}
+    \State \Return FAIL avec gate et evidence fautive
+  \ElsIf{$r_g=HOLD$}
+    \State \Return HOLD avec obligation manquante
+  \EndIf
+\EndFor
+\State $s\gets SUPPORTED$
+\State \Return Receipt$(q,E,G(q),s)$
+\end{algorithmic}
+\end{algorithm}
+
+Cette procédure volontairement conservatrice ne cherche pas à fusionner plusieurs défauts dans un score moyen. Elle est adaptée aux obligations critiques telles que provenance, unité ou présence d'un contrôle obligatoire.
+
+\section{Invalidation et descendants}
+
+Une evidence $e$ peut être invalidée après correction d'un dataset, découverte d'un bug ou changement de version. Soit
+\[
+Desc(e)=\{q:\; q\text{ dépend transitivement de }e\}.
+\]
+Une invalidation déclenche un recalcul des statuts pour $Desc(e)$, mais ne suppose pas que tous les claims deviennent automatiquement faux. Certains peuvent conserver un support indépendant.
+
+\begin{algorithm}
+\caption{Propagation d'une invalidation}
+\begin{algorithmic}[1]
+\Require Evidence $e$, Claim-Evidence Graph $G_{CE}$
+\State Mark $e$ as INVALIDATED
+\State $Q\gets Desc(e)$
+\ForAll{$q\in Q$ en ordre topologique lorsque possible}
+  \State $E_q\gets CurrentEvidence(q)$
+  \State $status(q)\gets Reevaluate(q,E_q)$
+  \State RecordStatusTransition$(q)$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\section{Evidence indépendante et evidence partagée}
+
+Deux receipts $e_1,e_2$ sont dits provenance-indépendants relativement à une racine $r$ si leurs cônes de dépendance ne partagent pas $r$ ni un ancêtre matériel déclaré. Cette définition est volontairement relationnelle : deux fichiers différents produits par le même benchmark ne sont pas deux réplications indépendantes.
+
+Un score de nombre de confirmations peut donc être remplacé par un nombre de composantes de provenance indépendantes sous une granularité déclarée. Le choix de granularité -- dataset, laboratoire, implémentation ou méthode -- doit être explicite.
+
+\chapter{Semantic Diff Compiler}
+
+\section{Décomposition du résidu}
+
+Le résidu théorie--système est représenté par
+\[
+\Delta_T=(\Delta_D,\Delta_A,\Delta_Q,\Delta_{types},\Delta_E,\Delta_L,\Delta_P).
+\]
+Chaque composante possède une méthode différente : comparaison de définitions, hypothèses, claims, types/unités, evidence, limites et provenance.
+
+\begin{algorithm}
+\caption{Semantic diff claim-par-claim}
+\begin{algorithmic}[1]
+\Require Théorie $\Theta$, théorie reconstruite $\widehat\Theta$
+\Ensure ResidualLedger $\Delta_T$
+\State $M\gets MatchEntities(\Theta,\widehat\Theta)$
+\ForAll{$(x,\hat x)\in M$}
+  \State Compare definitions and assumptions
+  \State Compare semantic types, units and conventions
+  \State Compare claim strength and qualifiers
+  \State Compare evidence references and freshness
+  \State Compare limitations and provenance
+  \State Emit typed residuals, never only a text-similarity score
+\EndFor
+\State Emit unmatched source and reconstructed entities
+\State \Return ResidualLedger
+\end{algorithmic}
+\end{algorithm}
+
+\section{Matching n'est pas équivalence}
+
+La première difficulté est l'alignement d'entités. Deux symboles identiques peuvent désigner des concepts différents; deux noms différents peuvent désigner le même objet. Le matching peut utiliser identifiants stables, types, signatures, liens explicites et similarité comme heuristique, mais toute correspondance incertaine reçoit un statut HOLD.
+
+\section{Résidu d'unités}
+
+Pour une grandeur physique ou scientifique, une égalité numérique sans unité ne suffit pas. Si deux champs représentent $x$ et $\hat x$, le résidu d'unité est nul seulement si les unités sont identiques ou reliées par une conversion explicitement connue et appliquée.
+
+Par exemple, comparer $1\,\mathrm{m}$ et $100\,\mathrm{cm}$ exige une normalisation; comparer $1\,\mathrm{m}$ et $1\,\mathrm{s}$ est une incompatibilité de dimension, pas une grande erreur numérique.
+
+\section{Résidu de force de claim}
+
+Les phrases « améliore », « peut améliorer » et « a amélioré sur ce benchmark » ne portent pas le même niveau de généralité. Le semantic diff doit donc encoder quantificateurs, conditions et population de référence. Une conclusion plus forte que le corps d'evidence produit un résidu même si les mots clés principaux sont identiques.
+
+\chapter{Theory-to-Repo : compilation des obligations}
+
+\section{IR de théorie}
+
+Une théorie candidate est représentée par
+\[
+\Theta=(D,A,Q,F,M,B),
+\]
+avec définitions, hypothèses, claims, objets formels, méthodes et frontières. Chaque claim $q$ est compilé vers une famille d'obligations.
+
+\begin{algorithm}
+\caption{Compilation d'un claim scientifique}
+\begin{algorithmic}[1]
+\Require Claim $q$, TheoryIR $\Theta$
+\Ensure ObligationGraph $O_q$
+\State Classify $q$ as definition/derived/implemented/measured/simulated/hypothesis/conjecture
+\State Add provenance obligation for $q$
+\If{$q$ is empirical}
+  \State Add baseline, data provenance, uncertainty and negative-control obligations
+\EndIf
+\If{$q$ is formal}
+  \State Add proof or explicit proof-status obligation
+\EndIf
+\If{$q$ compares methods}
+  \State Add matched configuration and comparison-metric obligations
+\EndIf
+\State Add falsifier and limitation obligations
+\State \Return $O_q$
+\end{algorithmic}
+\end{algorithm}
+
+L'algorithme ne produit aucun résultat expérimental. Il transforme le langage d'un claim en une liste explicite de dettes à satisfaire.
+
+\section{Capacité manquante comme sortie légitime}
+
+Si aucune CapabilityCell du registre ne peut satisfaire une obligation, le compilateur doit retourner
+\[
+MissingCapability(o_i)
+\]
+plutôt que simuler un succès. Ce résultat peut générer une tâche de développement, une recherche documentaire ou un besoin d'expérience, selon la nature de l'obligation.
+
+\section{Minimalité du programme de recherche}
+
+Plusieurs graphes d'obligations peuvent supporter un même claim. La thèse privilégie le plus petit programme qui discrimine suffisamment les hypothèses pertinentes. Une expérience plus coûteuse n'est pas meilleure par défaut; elle doit apporter une valeur d'information ou une robustesse additionnelle.
+
+\chapter{Repo-to-Theory : reconstruction contrôlée}
+
+\section{Sources d'inférence}
+
+Le compilateur inverse observe code, schemas, tests, documentation, benchmarks, workflows et historique. Chaque source possède un niveau différent : un test peut encoder une propriété exécutée; un commentaire peut seulement déclarer une intention; un benchmark peut observer une performance sous une configuration précise.
+
+\begin{algorithm}
+\caption{Reconstruction d'une théorie implicite candidate}
+\begin{algorithmic}[1]
+\Require Snapshot de dépôt $R$
+\Ensure Théorie reconstruite $\widehat\Theta_R$ et provenance
+\State Extract typed interfaces and schemas
+\State Extract tested properties and test domains
+\State Extract documented claims and qualifiers
+\State Extract benchmark metrics, configurations and baselines
+\State Extract version/provenance links
+\State Infer candidate assumptions required to connect artifacts
+\State Mark every inferred-but-not-declared assumption as CANDIDATE
+\State Attach negative evidence and known failures
+\State \Return $\widehat\Theta_R$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Principe de non-mentalisation}
+
+$\widehat\Theta_R$ n'est jamais présenté comme « ce que pensait l'auteur ». Il est une reconstruction à partir des artefacts disponibles. Cette distinction protège contre une erreur fréquente d'analyse de code : attribuer une intention non observée à partir d'une structure logicielle.
+
+\section{Benchmark de reconstruction}
+
+EXP-007 exige des cas où une TheoryIR de référence est gelée avant compilation. Le système inverse peut alors être comparé à cette référence après exécution. Les métriques sont calculées par classe d'objet : précision/rappel d'hypothèses, préservation des types, conservation des limites et exactitude des liens d'evidence.
+
+\chapter{Routage, fallbacks et résilience}
+
+\section{Plan primaire et plan de repli}
+
+Un plan de routage peut associer à chaque WorkUnit une liste ordonnée
+\[
+R(w)=(c_1,c_2,\ldots,c_k).
+\]
+Un fallback $c_{j+1}$ n'est admissible que s'il respecte les mêmes sorties obligatoires et une autorité inférieure ou égale à la borne du WorkUnit, sauf renégociation explicite du contrat.
+
+\begin{algorithm}
+\caption{Exécution avec fallback borné}
+\begin{algorithmic}[1]
+\Require WorkUnit $w$, providers $(c_1,\dots,c_k)$
+\For{$j=1$ to $k$}
+  \State $r\gets Execute(c_j,w)$
+  \If{$r.status=PASS$ and OutputsMatchContract(r,w)$}
+    \State \Return $r$
+  \EndIf
+  \State Record failure as M$^-$ candidate
+  \If{$r$ indicates non-recoverable or authority violation}
+    \State \Return FAIL
+  \EndIf
+\EndFor
+\State \Return HOLD with exhausted providers
+\end{algorithmic}
+\end{algorithm}
+
+\section{Freshness avant reprise}
+
+Un échec peut survenir parce que l'état distant a changé. Avant de reprendre une action dépendante d'un commit ou d'une version, le runtime doit rafraîchir l'identifiant mutable pertinent et réévaluer les préconditions. Réutiliser automatiquement un ancien PASS comme preuve fraîche crée une incohérence temporelle.
+
+\section{Résilience n'est pas invisibilité des erreurs}
+
+Un fallback réussi ne doit pas effacer l'échec du provider primaire. Celui-ci reste utile pour la réputation locale, la maintenance et le design du système. La résilience est donc compatible avec M$^-$ : elle permet de poursuivre un travail sans perdre l'information sur la panne.
+
+\chapter{Scientific CI comme compilateur de défauts}
+
+\section{Classes de défauts}
+
+Les défauts sont classés en au moins quatre familles :
+\[
+D=D_{software}\cup D_{semantic}\cup D_{scientific}\cup D_{governance}.
+\]
+Une erreur de syntaxe appartient à la première; un changement d'unité à la seconde; une baseline absente à la troisième; une evidence périmée ou une conclusion plus forte que son support peut appartenir à la quatrième.
+
+\section{Ablation des gates}
+
+EXP-003 compare plusieurs compositions :
+\[
+S,\quad S+Sem,\quad S+Sci,\quad S+Sem+Sci,\quad S+Sem+Sci+OAK.
+\]
+La comparaison porte sur la matrice de confusion par famille de défaut, le temps, le coût et l'effort humain.
+
+\section{Localisation du défaut}
+
+Une détection binaire « échec » est moins utile qu'une localisation expliquant quel contrat a été violé et quelle evidence le montre. La métrique de qualité d'explication doit cependant rester indépendante du fait que le détecteur a correctement classé le défaut; une explication éloquente d'un faux positif reste un faux positif.
+
+\section{Graphe de recomputation}
+
+Lorsqu'un artefact $a$ change, seuls les descendants dépendants de $a$ dans le Scientific Build Graph devraient être invalidés, sauf changement d'un invariant global. Cette propriété permet d'éviter un rebuild complet tout en conservant une logique de fraîcheur.
+
+\begin{proposition}[Recalcul local sous dépendances complètes]
+Si le graphe de dépendances encode toutes les dépendances sémantiques pertinentes et si un changement ne touche qu'un nœud $a$, alors tout nœud hors du cône descendant de $a$ conserve les mêmes entrées déclarées.
+\end{proposition}
+
+\begin{proof}
+Par définition d'un graphe de dépendances complet, toute influence de $a$ sur un autre nœud doit suivre un chemin dirigé depuis $a$. Un nœud sans tel chemin ne dépend pas de $a$ selon le modèle et conserve donc ses entrées déclarées.
+\end{proof}
+
+\begin{limitation}
+La complétude du graphe est une hypothèse forte. Une dépendance implicite non déclarée est précisément un défaut que le fixed-point reconstruction court cherche à détecter.
+\end{limitation}

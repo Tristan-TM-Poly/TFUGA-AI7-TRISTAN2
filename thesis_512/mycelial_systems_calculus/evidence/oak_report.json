@@ -1,0 +1,45 @@
+{
+  "status": "HOLD",
+  "gates": {
+    "G0_latex_structural_compile": "PASS",
+    "G1_reference_integrity": "PARTIAL",
+    "G2_bibliography_integrity": "PASS",
+    "G3_claim_evidence_coverage": "PARTIAL",
+    "G4_github_provenance_sha": "PARTIAL",
+    "G5_theory_code_consistency": "PARTIAL",
+    "G6_experiment_reproducibility": "HOLD",
+    "G7_uncertainty_statistics": "PARTIAL",
+    "G8_novelty_prior_art": "HOLD",
+    "G9_negative_results_limits": "PASS",
+    "G10_no_unsupported_theorem_language": "PASS",
+    "G11_compiled_page_count_512": "HOLD",
+    "G12_artifact_hash_manifest": "PARTIAL"
+  },
+  "structural_facts": {
+    "page_tree_target": 512,
+    "page_tree_depth": 9,
+    "log_exp_dyads": 256,
+    "source_pdf_pages": 230,
+    "experiment_courts": 7
+  },
+  "build_state": {
+    "workflow_run_id": 31709503781,
+    "head_sha": "75a47ad067641f4142248cc4cc95ecfe2f8755e1",
+    "artifact_id": 9184653353,
+    "artifact_digest": "sha256:7bdb82c07ee3b828790ddb559176d3242230a125439ad16940d4474447364dc9",
+    "page_budget_receipt": "evidence/page_budget_r20.json",
+    "clean_compile_observed": true,
+    "page_measurement_observed": true,
+    "measured_pdf_pages": 133,
+    "target_pdf_pages": 512,
+    "page_delta": 379,
+    "page_status": "HOLD",
+    "bibliography_compiled": true,
+    "biber_found_citekeys": 12,
+    "bibliography_pdf_pages": 2,
+    "undefined_citation_warning_observed": false
+  },
+  "promotion": "BLOCKED_UNTIL_MUST_PASS_GATES",
+  "scientific_truth_implied": false,
+  "compiled_512_pages_claimed": false
+}

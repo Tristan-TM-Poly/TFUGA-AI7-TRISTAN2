@@ -1,0 +1,21 @@
+{"claim_id":"CLM-ARCH-002","chapter":"part2:CapabilityCell","source":"SRC-PDF-001","implementation_status":"definition_only","next_test":"contract examples and counterexamples"}
+{"claim_id":"CLM-ARCH-003","chapter":"part2:Capability IR","source":"SRC-PDF-002","experiment":"EXP-002","implementation_status":"partial_cross_repo_analogues"}
+{"claim_id":"CLM-ARCH-004","chapter":"part3:Intent-to-RepoGraph Compiler","source":"SRC-PDF-003","github_anchor":"SRC-GH-007","implementation_status":"structured-intent compiler exists in related runtime; unrestricted NL claim not established"}
+{"claim_id":"CLM-ARCH-005","chapter":"part2:Executable Hypergraphs","source":"SRC-PDF-004","implementation_status":"formalization_candidate","next_test":"workflow/runtime-model comparison"}
+{"claim_id":"CLM-EVID-001","chapter":"part3:Proof-Carrying Repositories","source":"SRC-PDF-005","literature":["necula1997pcc","lebo2013provo","soilandreyes2021rocrate"],"next_test":"PROV/RO-Crate mapping court"}
+{"claim_id":"CLM-EVID-002","chapter":"part3:Scientific Build Graph","source":"SRC-PDF-006","experiment":"EXP-003","implementation_status":"OAK/CI components exist across corpus; integrated detector benchmark pending"}
+{"claim_id":"CLM-COMP-001","chapter":"part3:Theory-to-Repo + Repo-to-Theory","source":"SRC-PDF-007","experiment":"EXP-007","implementation_status":"candidate architecture"}
+{"claim_id":"CLM-COMP-002","chapter":"part3:Bidirectional Compilation","source":"SRC-PDF-008","experiment":"EXP-003","implementation_status":"semantic residual formalization candidate"}
+{"claim_id":"CLM-GOV-001","chapter":"part4:OAK and Meta-OAK","source":"SRC-PDF-009","github_anchors":["SRC-GH-002","SRC-GH-008","SRC-GH-009"],"implementation_status":"governance rules recur across corpus"}
+{"claim_id":"CLM-SELF-001","chapter":"part5:Self-hosting","source":"SRC-PDF-010","experiment":"EXP-006","implementation_status":"HOLD until reconstruction measurement"}
+{"claim_id":"CLM-DISC-001","chapter":"part5:Residual Intelligence","source":"SRC-PDF-011","implementation_status":"proposal only","next_test":"residual-to-competing-hypotheses case study"}
+{"claim_id":"CLM-COMP-003","chapter":"part3:Round Trip","source":"SRC-PDF-012","experiment":"EXP-007","implementation_status":"HOLD beyond source proposal"}
+{"claim_id":"CLM-FORMAL-001","chapter":"thesis architecture","path":"omega_thesis_factory_t/core.py","test":"tests/test_omega_thesis_monograph512.py","status":"SUPPORTED"}
+{"claim_id":"CLM-FORMAL-002","chapter":"thesis architecture","path":"omega_thesis_factory_t/monograph512.py","test":"tests/test_omega_thesis_monograph512.py","status":"SUPPORTED"}
+{"claim_id":"CLM-FORMAL-003","chapter":"thesis architecture","path":"omega_thesis_factory_t/monograph512.py","test":"tests/test_omega_thesis_monograph512.py","status":"SUPPORTED"}
+{"claim_id":"CLM-SCALE-001","chapter":"part6:EXP-001","experiment":"EXP-001","status":"HOLD"}
+{"claim_id":"CLM-SUBST-001","chapter":"part6:EXP-002","experiment":"EXP-002","status":"HOLD"}
+{"claim_id":"CLM-SEMCI-001","chapter":"part6:EXP-003","experiment":"EXP-003","status":"HOLD"}
+{"claim_id":"CLM-REUSE-001","chapter":"part6:EXP-004","experiment":"EXP-004","status":"HOLD"}
+{"claim_id":"CLM-LEARN-001","chapter":"part5:Research Process Learning","github_anchor":"SRC-GH-009","status":"SUPPORTED_AS_BOUNDARY"}
+{"claim_id":"CLM-NOVEL-001","chapter":"part1:Literature Court","novelty_matrix":"evidence/novelty_matrix.csv","prior_art_map":"evidence/prior_art_map.md","status":"HOLD"}

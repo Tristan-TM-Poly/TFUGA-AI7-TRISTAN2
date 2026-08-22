@@ -1,0 +1,78 @@
+name: Omega Thesis 512 CI
+
+on:
+  pull_request:
+    paths:
+      - "thesis_512/**"
+      - "omega_thesis_factory_t/monograph512.py"
+      - "tests/test_omega_thesis_monograph512.py"
+      - ".github/workflows/omega-thesis-512-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate 512 planning structure
+        run: python -m unittest tests.test_omega_thesis_monograph512 -v
+
+      - name: Install PDF page counter
+        run: python -m pip install --disable-pip-version-check pypdf
+
+      - name: Install LaTeX toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            latexmk biber \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-science texlive-lang-french \
+            texlive-bibtex-extra
+
+      - name: Compile thesis scaffold
+        id: latex
+        working-directory: thesis_512/mycelial_systems_calculus
+        shell: bash
+        run: |
+          set +e
+          latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex 2>&1 | tee latex-build.log
+          status=${PIPESTATUS[0]}
+          echo "latex_exit_code=$status" >> "$GITHUB_OUTPUT"
+          if [[ -f main.log ]]; then
+            echo "===== main.log tail ====="
+            tail -n 120 main.log
+          fi
+          exit "$status"
+
+      - name: Measure compiled page count
+        if: success()
+        working-directory: thesis_512/mycelial_systems_calculus
+        run: python scripts/page_controller.py main.pdf
+
+      - name: Display page receipt
+        if: success()
+        working-directory: thesis_512/mycelial_systems_calculus
+        run: cat page_count_receipt.json
+
+      - name: Upload thesis build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-thesis-512-build-diagnostics
+          path: |
+            thesis_512/mycelial_systems_calculus/latex-build.log
+            thesis_512/mycelial_systems_calculus/main.log
+            thesis_512/mycelial_systems_calculus/main.blg
+            thesis_512/mycelial_systems_calculus/main.pdf
+            thesis_512/mycelial_systems_calculus/page_count_receipt.json
+          if-no-files-found: warn
+          retention-days: 14

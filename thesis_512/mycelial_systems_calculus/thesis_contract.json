@@ -1,0 +1,40 @@
+{
+  "id": "OMEGA_MYCELIAL_SYSTEMS_CALCULUS_T_512",
+  "status": "CANDIDATE",
+  "language": "fr",
+  "target_pages": 512,
+  "page_tree_depth": 9,
+  "page_tree_identity": "512 = 2^9",
+  "research_dyads": 256,
+  "compiled_pdf_is_page_source_of_truth": true,
+  "title": "Calcul mycelien des ecosystemes logiciels et scientifiques distribues",
+  "source_attachment": "TTM-GitHub-001.pdf",
+  "source_attachment_pages": 230,
+  "source_role": "internal architecture/source corpus, not external validation",
+  "primary_repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "current_measured_baseline": {
+    "measurement_id": "PAGE-R11",
+    "workflow_run_id": 31708040332,
+    "head_sha": "d8bd352cf8a0b0efc9c61a9f3d3dd7f69f070140",
+    "actual_pages": 127,
+    "remaining_pages": 385,
+    "status": "HOLD"
+  },
+  "required_outputs": [
+    "latex_source",
+    "bibliography",
+    "corpus_manifest",
+    "claims_ledger",
+    "traceability_matrix",
+    "novelty_matrix",
+    "experiment_program",
+    "page_count_receipt"
+  ],
+  "method": "SEARCH_REUSE_ADAPT_GENERATE",
+  "negative_memory_required": true,
+  "required_external_literature": true,
+  "novelty_default": "HOLD",
+  "scientific_result_fabrication_allowed": false,
+  "page_padding_allowed": false,
+  "promotion_rule": "All must-pass OAK gates must pass; G11 requires an actually compiled 512-page PDF."
+}

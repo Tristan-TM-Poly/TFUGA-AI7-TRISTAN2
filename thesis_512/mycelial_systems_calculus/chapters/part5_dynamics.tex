@@ -1,0 +1,167 @@
+\chapter{Dynamique finie de reconstruction}
+
+\section{Compilateur comme application d'état}
+
+Considérons un ensemble fini $\mathcal S$ d'états architecturaux canonisés et une application déterministe
+\[
+F:\mathcal S\to\mathcal S.
+\]
+Une itération de reconstruction produit
+\[
+S_{t+1}=F(S_t).
+\]
+Cette abstraction est volontairement minimale : $F$ peut être un simple compilateur déterministe et ne porte aucune hypothèse d'intelligence.
+
+\begin{proposition}[Périodicité éventuelle]
+Toute trajectoire $(S_t)_{t\geq0}$ engendrée par une application déterministe sur un ensemble fini entre éventuellement dans un cycle.
+\end{proposition}
+
+\begin{proof}
+Comme $\mathcal S$ est fini, la suite infinie $S_0,S_1,\ldots$ répète un état : il existe $i<j$ tels que $S_i=S_j$. Le déterminisme implique alors $S_{i+k}=S_{j+k}$ pour tout $k\geq0$. La trajectoire est périodique à partir de $i$.
+\end{proof}
+
+\begin{corollary}
+Un fixed point est un cycle de longueur un : $F(S^*)=S^*$.
+\end{corollary}
+
+\begin{observation}
+L'itération répétée ne garantit donc pas la convergence. Une reconstruction récursive peut osciller entre plusieurs états. Le tribunal doit mesurer les cycles ou imposer une condition de stabilisation au lieu de supposer que la récursion implique un fixed point.
+\end{observation}
+
+\section{Résidu de reconstruction}
+
+Lorsque les états ne sont pas comparés par égalité exacte, on définit
+\[
+r_{fix}(S)=D(F(S),S).
+\]
+Un résidu nul signifie fixed point relativement à l'équivalence encodée par $D$. Avec une pseudo-distance, des états non identiques peuvent avoir résidu nul.
+
+\section{Cycle comme M-moins}
+
+Si l'objectif déclaré est la stabilisation, un cycle de longueur $p>1$ constitue une evidence négative pertinente. Le ledger doit conserver les $p$ états et transitions plutôt qu'un simple message « convergence échouée ».
+
+\chapter{Compression et reconstructibilité}
+
+\section{Seed canonique}
+
+Soit $B$ la taille descriptive d'un bundle complet et $b$ celle du seed canonique suffisant pour sa reconstruction. Un ratio descriptif est
+\[
+R_c=\frac{b}{B}.
+\]
+Un faible $R_c$ n'est intéressant que si la reconstruction n'utilise pas de dépendances cachées déplacées vers un cache ou un service non déclaré.
+
+\section{Coût total}
+
+On complète le ratio par
+\[
+C_{rebuild}=(bytes,compute,time,human,external\_dependencies).
+\]
+Deux seeds de même taille peuvent ainsi avoir des coûts de reconstruction très différents.
+
+\section{Reconstruction épistémique}
+
+Une reconstruction logicielle qui récupère tout le code mais perd claims, evidence et limites est incomplète du point de vue de la thèse. Le vecteur $R_{fix}$ sépare donc capacités, tests, claims, evidence, programmes et dépendances implicites.
+
+\chapter{Valeur du calcul et règle d'arrêt}
+
+\section{Value of Computation}
+
+Pour une computation candidate $a$, une forme décisionnelle est
+\[
+VoC(a)=\mathbb E[V(D\mid Result(a))]-V(D\mid Current)-Cost(a).
+\]
+La formule rend explicite qu'un calcul supplémentaire est utile par l'information qu'il apporte à une décision, moins son coût.
+
+\section{Arrêt}
+
+Une règle idéale serait
+\[
+\max_{a\in A_{next}}VoC(a)\leq0.
+\]
+En pratique, VoC est lui-même incertain. Le système peut donc utiliser des bornes ou retourner HOLD lorsque la valeur d'une computation supplémentaire ne peut pas être justifiée.
+
+\section{Coût d'opportunité}
+
+Sous budget fini, explorer une branche empêche d'en explorer une autre. Les prix d'ombre peuvent être interprétés comme coûts marginaux de ressources rares. Ils servent à l'allocation, pas à la validation scientifique d'un claim.
+
+\chapter{Dette de recherche}
+
+\section{Vecteur de dettes}
+
+On associe à une branche
+\[
+D=(D_{proof},D_{data},D_{benchmark},D_{repro},D_{literature},D_{integration},D_{risk}).
+\]
+Ces composantes ne sont pas additionnées par défaut.
+
+\section{Dette dominante}
+
+Une dette est dominante lorsqu'elle bloque une promotion indépendamment des autres progrès. Par exemple, un claim de nouveauté avec un Literature Court incomplet conserve une dette dominante même si le logiciel est robuste.
+
+\section{Cristallisation}
+
+Une branche est cristallisée relativement à un objectif lorsqu'elle possède un artefact fini, un statut, un falsificateur ou test, une trace de provenance et une prochaine action. La cristallisation n'implique ni canonisation ni succès externe.
+
+\chapter{Attribution causale des méthodes de recherche}
+
+\section{Résultats potentiels}
+
+Pour une tâche $i$, soit $Y_i(1)$ le résultat sous une stratégie contenant un opérateur $A$ et $Y_i(0)$ celui sous contrôle. L'effet individuel
+\[
+\tau_i=Y_i(1)-Y_i(0)
+\]
+n'est généralement pas observable simultanément.
+
+Cette impossibilité explique la frontière du Research Self-Model : l'historique montre la trajectoire observée, pas le contrefactuel exact.
+
+\section{Randomisation}
+
+Lorsque possible, des tâches comparables peuvent être assignées à une stratégie candidate et une baseline. Une différence moyenne devient alors plus informative qu'une corrélation historique non contrôlée, sous réserve du protocole et de la population testée.
+
+\section{Appariement}
+
+Lorsque la randomisation est impossible, des tâches peuvent être appariées selon domaine, taille, maturité et complexité initiale. Cette procédure réduit certains déséquilibres observés sans éliminer les confondeurs non observés.
+
+\section{Qualification prospective}
+
+Une politique peut aussi être évaluée comme prédicteur : avant observation d'une tâche future, elle annonce quelle stratégie sera utile et avec quelle confiance. Calibration et erreur sur tâches futures fournissent alors une evidence prospective sans prétendre identifier immédiatement une cause.
+
+\chapter{Synergie versus co-occurrence}
+
+\section{Interaction factorielle}
+
+Pour deux opérateurs $A,B$, une interaction peut être définie par
+\[
+\gamma=\mathbb E[Y_{11}-Y_{10}-Y_{01}+Y_{00}].
+\]
+Un $\gamma>0$ observé soutient une interaction positive dans la population testée. La co-occurrence de $A$ et $B$ dans les mêmes PRs n'établit pas ce résultat.
+
+\section{Ablations}
+
+Une synergie candidate est comparée à $A$ seul, $B$ seul et à la baseline sans les deux. Sans ces ablations, une amélioration peut provenir d'un seul composant.
+
+\section{Interaction nette}
+
+La valeur d'une composition doit inclure son coût additionnel :
+\[
+\gamma_{net}=\gamma-\Delta Cost-\Delta Risk-\Delta Human.
+\]
+Une interaction brute positive peut ainsi devenir peu attractive si elle exige une infrastructure disproportionnée.
+
+\chapter{Bornes d'une politique auto-évaluée}
+
+\section{Gel de version}
+
+Une politique candidate est versionnée avant une campagne prospective. Toute modification crée une nouvelle version et ne réécrit pas les décisions antérieures.
+
+\section{Évaluation séparée}
+
+Un composant qui propose une nouvelle politique ne suffit pas à la certifier. L'évaluation doit utiliser des tests de régression, des cas adversariaux et des observations dont le statut ne dépend pas uniquement de la candidate évaluée.
+
+\section{Réversibilité}
+
+Lorsqu'une transformation est réversible par nature, l'état antérieur doit rester récupérable jusqu'à promotion. Pour les actions intrinsèquement irréversibles, la capacité de rollback logiciel ne doit pas être présentée comme restauration du monde externe.
+
+\section{Critère de progrès}
+
+Une version plus grande ou plus complexe n'est pas meilleure par définition. Le progrès exige un gain observé sur une métrique déclarée sans régression critique, avec conservation de la provenance et des limites.

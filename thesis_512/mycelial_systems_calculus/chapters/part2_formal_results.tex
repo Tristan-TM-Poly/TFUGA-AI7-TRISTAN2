@@ -1,0 +1,380 @@
+\chapter{Résultats structurels et obligations de preuve}
+
+Ce chapitre isole les énoncés qui peuvent être démontrés à partir des définitions de la monographie. Ils ne constituent pas des preuves de supériorité empirique. Une proposition sur un graphe ou un contrat ne devient pas, par changement de vocabulaire, une loi sur le coût humain, la qualité scientifique ou la nouveauté.
+
+\section{Comptage des relations dans des architectures idéalisées}
+
+\begin{proposition}[Nombre de relations pair-à-pair]
+Pour $N$ participants distincts, un graphe simple non dirigé complet contient exactement
+\[
+E_{pair}(N)=\binom{N}{2}=\frac{N(N-1)}{2}
+\]
+arêtes.
+\end{proposition}
+
+\begin{proof}
+Une arête non dirigée relie une paire non ordonnée de participants distincts. Le nombre de telles paires est $\binom{N}{2}$. L'identité fermée suit de la formule du coefficient binomial.
+\end{proof}
+
+\begin{proposition}[Enregistrement auprès d'un hub idéal]
+Sous le modèle où chacun des $N$ participants maintient exactement une relation d'enregistrement avec un registre unique et où aucune autre relation n'est comptée, le nombre de relations déclarées est
+\[
+E_{hub}(N)=N.
+\]
+Pour $N>3$, $E_{pair}(N)>E_{hub}(N)$.
+\end{proposition}
+
+\begin{proof}
+La première égalité suit immédiatement d'une relation par participant. Ensuite
+\[
+E_{pair}(N)-E_{hub}(N)
+=\frac{N(N-1)}2-N
+=\frac{N(N-3)}2,
+\]
+qui est strictement positif pour $N>3$.
+\end{proof}
+
+\begin{limitation}
+Cette proposition porte sur un nombre de relations dans deux graphes idéalisés. Elle ne démontre pas que le hub demande moins de maintenance. Un registre peut introduire des coûts de résolution, de cohérence, de disponibilité, de migration, de gouvernance et de sécurité qui ne sont pas représentés par $E_{hub}$.
+\end{limitation}
+
+\section{Composition typée de capacités}
+
+\begin{definition}[Compatibilité forte]
+Deux capacités $A$ et $B$ sont fortement compatibles, noté $A\Rightarrow B$, si :
+\begin{enumerate}
+  \item le type sémantique de $\mathrm{Out}(A)$ est accepté par $\mathrm{In}(B)$;
+  \item les unités et conventions requises sont identiques ou reliées par un adaptateur explicitement déclaré;
+  \item les préconditions de $B$ sont garanties après une exécution admissible de $A$;
+  \item les obligations d'autorité de $B$ ne dépassent pas l'autorité disponible;
+  \item toute perte introduite par adaptation est présente dans le contrat composé.
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Existence d'une composition contractuelle]
+Si $A\Rightarrow B$, alors il existe un contrat composé $B\circ A$ dont le domaine est le sous-ensemble des entrées admissibles de $A$ pour lesquelles les préconditions déclarées ci-dessus restent satisfaites.
+\end{proposition}
+
+\begin{proof}
+Par hypothèse, la sortie de $A$ peut être transformée, éventuellement par un adaptateur déclaré, en une entrée admissible de $B$. Les préconditions, unités et bornes d'autorité sont également satisfaites. On peut donc définir $B\circ A$ sur l'intersection du domaine admissible de $A$ et des entrées pour lesquelles ces obligations subsistent. Le contrat composé hérite des pertes et limitations déclarées.
+\end{proof}
+
+\begin{observation}
+La proposition garantit seulement l'existence d'un contrat de composition. Elle ne garantit ni correction de l'implémentation, ni absence de défaut runtime, ni conservation d'un claim scientifique.
+\end{observation}
+
+\begin{proposition}[Associativité du noyau fonctionnel pur]
+Soient trois transformations totales et pures
+\[
+f:X\to Y,\qquad g:Y\to Z,\qquad h:Z\to W.
+\]
+Alors
+\[
+(h\circ g)\circ f=h\circ(g\circ f).
+\]
+\end{proposition}
+
+\begin{proof}
+Pour tout $x\in X$,
+\[
+((h\circ g)\circ f)(x)=h(g(f(x)))=(h\circ(g\circ f))(x).
+\]
+Les deux fonctions coïncident donc sur tout $X$.
+\end{proof}
+
+\begin{limitation}[Pourquoi cela ne prouve pas l'associativité de Repo Algebra]
+Une composition de systèmes peut inclure sélection dynamique de provider, agrégation de confiance, consommation de budget, permissions, adaptation avec perte et mise à jour d'evidence. Ces opérations ne sont pas réductibles au noyau fonctionnel pur sans hypothèses supplémentaires. L'associativité de $\circ$ pour des fonctions ne peut donc pas être transférée automatiquement à tous les opérateurs de Repo Algebra.
+\end{limitation}
+
+\section{Contre-exemple d'agrégation non associative}
+
+Considérons un opérateur d'agrégation naïf de scores
+\[
+a\star b=\frac{a+b}{2}.
+\]
+Alors
+\[
+(a\star b)\star c=\frac{a+b+2c}{4},
+\qquad
+a\star(b\star c)=\frac{2a+b+c}{4}.
+\]
+Pour $a\neq c$, les deux résultats diffèrent.
+
+\begin{proposition}
+L'opérateur $\star$ défini ci-dessus n'est pas associatif.
+\end{proposition}
+
+\begin{proof}
+Choisir par exemple $(a,b,c)=(0,0,1)$. Alors
+\[
+(0\star0)\star1=\frac12,
+\qquad
+0\star(0\star1)=\frac14.
+\]
+\end{proof}
+
+\begin{observation}
+Ce contre-exemple ne dit pas qu'il faut utiliser cet agrégateur. Il montre pourquoi une réputation ou confiance composite ne doit jamais être supposée indépendante de l'ordre tant que son opérateur n'a pas été spécifié et audité.
+\end{observation}
+
+\chapter{Invariants de substitution et de routage}
+
+\section{Résidu de substitution}
+
+Pour deux providers $r_1,r_2$ d'une même capacité, on enrichit le résidu précédent :
+\[
+\Delta_{sub}=
+(\Delta_{type},\Delta_{unit},\Delta_{sem},\Delta_{qual},
+\Delta_{cost},\Delta_{latency},\Delta_{consumer},\Delta_{adapter}).
+\]
+Les deux dernières composantes mesurent respectivement les modifications imposées aux consommateurs et aux adaptateurs.
+
+\begin{proposition}[Transparence relative au contrat]
+Supposons qu'un consommateur $K$ ne dépende que des champs observables couverts par un contrat $C$. Si $r_1$ et $r_2$ satisfont exactement $C$ sur ces champs et si
+\[
+\Delta_{type}=\Delta_{unit}=\Delta_{sem}=0,
+\]
+alors le changement $r_1\mapsto r_2$ ne nécessite aucune modification \emph{sémantique} de $K$ relative aux champs couverts par $C$.
+\end{proposition}
+
+\begin{proof}
+Par hypothèse, toutes les observations de $K$ pertinentes au contrat possèdent le même type sémantique, la même convention et les mêmes unités après substitution. Toute logique de $K$ exprimée exclusivement sur ces observables demeure donc bien typée et conserve son interprétation contractuelle.
+\end{proof}
+
+\begin{limitation}
+Une modification technique peut encore être nécessaire : configuration, authentification, endpoint, format de sérialisation ou adaptateur. C'est précisément pourquoi $\Delta_{consumer}$ et $\Delta_{adapter}$ sont mesurés séparément dans EXP-002.
+\end{limitation}
+
+\section{Le graphe statique comme cas particulier}
+
+\begin{proposition}[Réduction au graphe statique]
+Soit
+\[
+E_t=f(Intent_t,State_t,Capabilities_t).
+\]
+Si $f$ est constante sur l'ensemble des états et intentions considérés, alors $E_t=E$ pour tout $t$ et le graphe dynamique se réduit à un graphe statique.
+\end{proposition}
+
+\begin{proof}
+La constance de $f$ implique directement l'existence d'un ensemble $E$ tel que $f(\cdot)=E$ sur le domaine considéré. Ainsi $E_t=E$ pour tout $t$.
+\end{proof}
+
+\begin{observation}
+Cette réduction est utile pour les benchmarks : un routeur dynamique doit battre ou égaler un baseline statique sur des charges où l'adaptation apporte théoriquement peu de valeur, faute de quoi son overhead devient un coût net.
+\end{observation}
+
+\section{Borne triviale de couverture}
+
+Soit une demande $J$ décomposée en $m$ obligations de capacité $\{c_1,\dots,c_m\}$. Si un plan résout $k$ obligations avec un provider admissible, on définit
+\[
+Coverage(J)=\frac{k}{m}.
+\]
+
+\begin{proposition}
+Pour toute demande finie non vide, $0\leq Coverage(J)\leq1$.
+\end{proposition}
+
+\begin{proof}
+Par définition, $0\leq k\leq m$ et $m>0$. La division par $m$ conserve donc les bornes.
+\end{proof}
+
+\begin{limitation}
+Une couverture de 1 ne signifie pas qu'un plan est correct. Elle signifie seulement qu'un provider candidat existe pour chaque obligation. Les contrats, tests, evidence et politiques peuvent encore faire échouer l'exécution.
+\end{limitation}
+
+\chapter{Projections multi-échelles et pertes}
+
+\section{Projection canonique}
+
+\begin{definition}[Projection canonique]
+Une projection d'échelle $\pi: \mathcal G_k\to\mathcal G_\ell$ est dite canonique sur son image si, pour tout $H\in\mathrm{Im}(\pi)$,
+\[
+\pi(H)=H.
+\]
+\end{definition}
+
+\begin{proposition}[Idempotence]
+Toute projection canonique sur son image est idempotente :
+\[
+\pi\circ\pi=\pi.
+\]
+\end{proposition}
+
+\begin{proof}
+Pour tout $G$, $\pi(G)\in\mathrm{Im}(\pi)$. Par canonicité, $\pi(\pi(G))=\pi(G)$.
+\end{proof}
+
+\begin{observation}
+L'idempotence est une propriété souhaitable d'un dézoom canonique : appliquer deux fois la même compression ne doit pas continuer à modifier l'objet déjà canonisé. Elle n'implique pas que l'expansion inverse récupère toutes les informations perdues.
+\end{observation}
+
+\section{Résidu de reconstruction}
+
+Soit $D$ une mesure ou pseudo-mesure adaptée au type d'objet considéré. Le résidu
+\[
+\Delta_{zoom}(G)=D\bigl(G,\mathrm{EXP}(\pi(G))\bigr)
+\]
+quantifie une perte de round-trip sous la paire projection/expansion.
+
+\begin{proposition}[Résidu nul sous inverse exact]
+Si $\mathrm{EXP}$ est un inverse à droite exact de $\pi$ sur $G$, alors
+\[
+\Delta_{zoom}(G)=0
+\]
+pour toute distance $D$ satisfaisant $D(x,x)=0$.
+\end{proposition}
+
+\begin{proof}
+L'hypothèse donne $\mathrm{EXP}(\pi(G))=G$. La conclusion suit de $D(G,G)=0$.
+\end{proof}
+
+\begin{limitation}
+Le sens réciproque exige que $D(x,y)=0\Rightarrow x=y$. Une pseudo-distance peut identifier plusieurs représentations fonctionnellement équivalentes. La métrique doit donc déclarer la notion d'équivalence qu'elle encode.
+\end{limitation}
+
+\section{Portefeuille d'invariants}
+
+Un dézoom peut préserver un sous-ensemble d'invariants
+\[
+\mathcal I^*\subseteq\mathcal I(G).
+\]
+Plutôt que d'exiger une reconstruction octet-par-octet, on peut mesurer un vecteur de conservation
+\[
+R_I=(r_{types},r_{claims},r_{evidence},r_{units},r_{authority},r_{limits}).
+\]
+Cette représentation rend explicite le fait qu'une bonne compression pour la navigation peut être inadéquate pour la reproduction expérimentale.
+
+\chapter{Épistémologie formelle minimale}
+
+\section{Prédicat de support}
+
+Soit $Support(q,E)$ un prédicat indiquant que l'ensemble d'evidence $E$ satisfait le contrat minimal de support d'un claim $q$.
+
+\begin{definition}[Monotonie positive conditionnelle]
+Un prédicat de support est monotone sur une classe d'evidence compatible si
+\[
+Support(q,E)\land E\subseteq E'\land Compatible(E',q)
+\Rightarrow Support(q,E').
+\]
+\end{definition}
+
+\begin{observation}
+Cette propriété n'est pas imposée à tous les claims. Une nouvelle evidence contradictoire peut légitimement faire passer un claim de SUPPORTED à PARTIAL, HOLD ou FALSIFIED. Le mot \emph{compatible} est donc essentiel.
+\end{observation}
+
+\section{Intégrité et vérité}
+
+\begin{proposition}[Non-implication de la vérité par l'intégrité]
+L'existence d'un graphe de provenance complet et cryptographiquement intègre n'implique pas la vérité de tous les claims qu'il contient.
+\end{proposition}
+
+\begin{proof}
+Considérons un artefact contenant un claim faux $q$ accompagné d'une provenance exacte indiquant qui l'a produit, quand et à partir de quelles données. L'intégrité peut garantir que le dossier n'a pas été altéré et que la chaîne de provenance est authentique, mais elle ne change pas la valeur de vérité de $q$. L'implication est donc fausse par contre-exemple.
+\end{proof}
+
+\begin{proposition}[Non-implication par cohérence interne]
+Un résidu théorie--code--evidence nul n'implique pas la vérité externe de la théorie.
+\end{proposition}
+
+\begin{proof}
+Choisir une théorie fausse $\Theta$ et construire volontairement un programme qui implémente fidèlement ses règles, puis enregistrer uniquement des fixtures synthétiques conformes à ces mêmes règles. Le compilateur inverse peut reconstruire exactement $\Theta$, produisant un résidu interne nul. Pourtant la prémisse stipule que $\Theta$ est fausse dans le domaine externe. La cohérence interne ne suffit donc pas.
+\end{proof}
+
+\section{HOLD comme troisième valeur opérationnelle}
+
+Les états PASS et FAIL sont insuffisants lorsqu'une obligation est non résolue. On définit une logique de décision opérationnelle
+\[
+\mathbb D=\{PASS,HOLD,FAIL\}.
+\]
+
+\begin{proposition}[Conservatisme de HOLD]
+Si une promotion exige la satisfaction de tous les gates critiques et qu'au moins un gate critique vaut HOLD, alors la promotion ne peut pas être PASS.
+\end{proposition}
+
+\begin{proof}
+Par définition de la règle non compensatoire, PASS requiert que tous les gates critiques soient satisfaits. HOLD n'est pas une satisfaction. Une seule occurrence suffit donc à bloquer PASS.
+\end{proof}
+
+\chapter{Géométrie des trajectoires de recherche}
+
+\section{Trajectoire et coût cumulatif}
+
+Pour une trajectoire
+\[
+\Gamma=(G_0\to G_1\to\cdots\to G_T),
+\]
+on définit un coût vectoriel cumulé
+\[
+C(\Gamma)=\sum_{t=0}^{T-1}
+(Cost_t,Risk_t,Human_t,Compute_t,Debt_t).
+\]
+La somme est composante par composante; aucune unité hétérogène n'est additionnée en un scalaire sans normalisation justifiée.
+
+\section{Dominance de Pareto}
+
+\begin{definition}[Dominance]
+Une trajectoire $\Gamma_1$ domine $\Gamma_2$ relativement à un vecteur de coûts à minimiser si chaque composante de $C(\Gamma_1)$ est inférieure ou égale à celle de $C(\Gamma_2)$ et au moins une est strictement inférieure.
+\end{definition}
+
+\begin{proposition}
+La dominance ainsi définie est transitive.
+\end{proposition}
+
+\begin{proof}
+Si $C(\Gamma_1)\leq C(\Gamma_2)$ composante par composante et $C(\Gamma_2)\leq C(\Gamma_3)$, alors $C(\Gamma_1)\leq C(\Gamma_3)$. Si les deux relations de dominance comportent au moins une amélioration stricte, au moins une composante de la chaîne produit une différence stricte entre les extrêmes, sauf égalisation impossible sous deux inégalités orientées dans le même sens. Ainsi $\Gamma_1$ domine $\Gamma_3$.
+\end{proof}
+
+\section{Frontière plutôt que score unique}
+
+La géométrie de Pareto fournit une raison formelle de conserver plusieurs dimensions. Deux architectures peuvent être incomparables : l'une utilise moins de calcul mais davantage d'interventions humaines, l'autre l'inverse. Une scalarisation n'est légitime qu'après déclaration explicite des poids ou prix d'ombre.
+
+\chapter{Le PageTree comme cas de système fractal fini}
+
+\section{Cardinalité du niveau}
+
+Le moteur réutilisé engendre deux enfants LOG et EXP par nœud à chaque profondeur.
+
+\begin{proposition}[Cardinalité de la frontière]
+À profondeur $n\geq0$, la frontière contient exactement $2^n$ nœuds.
+\end{proposition}
+
+\begin{proof}
+Par induction. À $n=0$, la frontière contient la racine, soit $1=2^0$ nœud. Supposons la propriété vraie à profondeur $n$. Chaque nœud de frontière produit exactement deux enfants à l'étape suivante; la nouvelle frontière contient donc $2\cdot2^n=2^{n+1}$ nœuds.
+\end{proof}
+
+\begin{proposition}[Cardinalité totale]
+Le nombre total de nœuds d'un PageTree complet jusqu'à profondeur $n$ vaut
+\[
+1+2+\cdots+2^n=2^{n+1}-1.
+\]
+\end{proposition}
+
+\begin{proof}
+Il s'agit de la somme géométrique de raison 2.
+\end{proof}
+
+\section{Dyades LOG/EXP}
+
+Pour $n\geq1$, chaque parent de profondeur $n-1$ possède exactement un enfant LOG et un enfant EXP.
+
+\begin{proposition}[Nombre de dyades]
+La frontière de profondeur $n\geq1$ se partitionne en exactement $2^{n-1}$ dyades fraternelles LOG/EXP.
+\end{proposition}
+
+\begin{proof}
+La profondeur $n-1$ contient $2^{n-1}$ parents. Chacun produit une et une seule paire LOG/EXP disjointe des paires des autres parents.
+\end{proof}
+
+À $n=9$, cette proposition donne
+\[
+512=2^9=256\times2.
+\]
+La structure fournit donc 256 unités de recherche couplées, chacune opposant une opération de compression/formalisation à une opération d'expansion/falsification. Cette interprétation est une discipline de planification, non une garantie qu'une page doit être consacrée à chaque nœud.
+
+\section{Dette d'expansion}
+
+Le premier build propre du manuscrit fournit une observation complémentaire : la structure PageTree était déjà exactement 512 alors que le PDF compilé ne contenait que 127 pages. La différence empirique démontre dans ce projet que
+\[
+FrontierNodes\neq PDFPages.
+\]
+Le contrôleur de pages est donc nécessaire comme mesure indépendante de la structure de planification.

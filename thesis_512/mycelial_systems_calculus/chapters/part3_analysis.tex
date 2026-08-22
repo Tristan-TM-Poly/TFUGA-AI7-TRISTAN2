@@ -1,0 +1,228 @@
+\chapter{Analyse des contrats d'architecture}
+
+\section{Matrice provider--capability}
+
+Soient $R=\{r_1,\ldots,r_n\}$ les providers et $C=\{c_1,\ldots,c_m\}$ les capacités. On définit une matrice d'admissibilité
+\[
+A\in\{0,1,H\}^{n\times m},
+\]
+où $A_{ij}=1$ si $r_i$ satisfait le contrat de $c_j$ dans le contexte évalué, $0$ s'il échoue un gate, et $H$ si l'evidence est insuffisante.
+
+Cette matrice sépare trois questions qui sont souvent confondues : une implémentation existe-t-elle, est-elle compatible avec un contrat donné, et possède-t-on assez d'evidence pour la sélectionner ?
+
+\section{Couverture et redondance}
+
+Pour une capacité $c_j$, le nombre de providers admissibles est
+\[
+d_j=\sum_i \mathbf 1[A_{ij}=1].
+\]
+Une capacité avec $d_j=0$ est un gap; $d_j=1$ crée un point de dépendance unique; $d_j>1$ permet une substitution potentielle mais n'implique pas l'équivalence des providers.
+
+On définit la redondance admissible moyenne
+\[
+\bar d=\frac1m\sum_{j=1}^m d_j.
+\]
+Cette quantité est descriptive. Une forte redondance peut améliorer la résilience tout en augmentant le coût de qualification et de maintenance des providers.
+
+\section{Matrice consumer--capability}
+
+Pour des consommateurs $K=\{k_1,\ldots,k_p\}$, une matrice
+\[
+B\in\{0,1\}^{p\times m}
+\]
+encode les capacités demandées. Le produit booléen $BA^\top$ fournit une vue de la couverture potentielle consumer--provider, sous réserve des gates contextuels non représentés dans la matrice binaire.
+
+Cette représentation permet de distinguer la topologie des besoins de la topologie physique des dépôts. Deux consommateurs peuvent dépendre de la même capacité sans connaître le même provider concret.
+
+\chapter{Contrats sémantiques et compatibilité}
+
+\section{Signature minimale}
+
+Une signature de capacité est
+\[
+\sigma(c)=(I_s,O_s,U_s,K_s,Q_s),
+\]
+avec types sémantiques d'entrée/sortie, unités ou dimensions, contraintes et obligations de qualité/evidence.
+
+Deux providers sont contractuellement comparables seulement s'ils exposent une signature commune ou un mapping déclaré vers celle-ci.
+
+\section{Compatibilité de types}
+
+On distingue :
+\begin{enumerate}
+  \item égalité de type logiciel;
+  \item compatibilité de structure;
+  \item compatibilité sémantique;
+  \item compatibilité dimensionnelle/unitaire;
+  \item compatibilité de scope scientifique.
+\end{enumerate}
+
+Une correspondance au niveau 1 ne garantit aucun des niveaux suivants. Par exemple, deux tableaux de nombres réels peuvent encoder température et pression avec la même structure logicielle.
+
+\section{Adaptation déclarée}
+
+Un adaptateur $a$ est représenté par
+\[
+a:(O_r,\sigma_r)\to(O_c,\sigma_c,\ell_a),
+\]
+où $\ell_a$ contient les pertes déclarées : précision, champs supprimés, approximation, changement de convention ou incertitude ajoutée.
+
+La présence de $\ell_a$ transforme un adaptateur d'une simple conversion syntaxique en objet auditable du semantic diff.
+
+\chapter{Automate de statut d'une capacité}
+
+\section{États}
+
+Une capacité peut suivre
+\[
+Candidate\to Qualified\to Active\to Degraded\to Dormant\to Archived,
+\]
+avec transitions vers HOLD ou FAIL selon les evidence et policies.
+
+L'automate n'est pas destiné à reproduire un cycle biologique. Il encode des décisions logicielles et épistémiques versionnées.
+
+\section{Qualification}
+
+La transition Candidate$\to$Qualified exige un contrat de types, au moins un provider, un test de sortie et un statut d'evidence suffisant pour le scope déclaré. L'activation ajoute des conditions runtime telles que disponibilité et autorité.
+
+\section{Dégradation}
+
+Une capacité peut devenir Degraded si un provider échoue, si une evidence devient stale ou si un contrat est partiellement violé sans rendre l'ensemble inutilisable. Degraded n'est pas un synonyme de FAIL : le système peut continuer dans un mode borné tout en signalant la dette.
+
+\section{Dormance}
+
+Dormant conserve le contrat et la provenance mais retire la capacité du routage normal. Une condition de réactivation explicite évite de perdre des pistes qui deviennent pertinentes après changement d'environnement.
+
+\chapter{Transactions inter-capacités}
+
+\section{Préconditions et postconditions}
+
+Une transaction logique entre capacités $c_1,\ldots,c_k$ est décrite par
+\[
+T=(Pre,Steps,Post,Evidence,Rollback,Authority).
+\]
+Le système doit pouvoir distinguer un plan valide d'une transaction réellement exécutée. Un objet de planification n'est pas une preuve d'action.
+
+\section{Atomicité logique}
+
+Certaines transactions peuvent viser une propriété d'atomicité logique : aucun état intermédiaire n'est promu comme résultat final tant que toutes les postconditions obligatoires ne sont pas satisfaites. Cela n'implique pas une atomicité distribuée parfaite au niveau des fournisseurs externes.
+
+\section{Rollback}
+
+Un rollback est une transformation compensatrice déclarée. Il peut restaurer un artefact logiciel sans restaurer le monde externe : un message envoyé, une publication ou une observation physique ne sont pas toujours réversibles. La réversibilité doit donc être décrite par classe d'action.
+
+\chapter{Complexité de résolution}
+
+\section{Scan exhaustif}
+
+Pour $q$ obligations et $m$ capacités, un scan naïf teste au plus $qm$ couples obligation--capacité. Si le coût d'un test est $T_c$, la borne est
+\[
+O(qmT_c).
+\]
+Cette borne concerne le matching; elle exclut le coût de validation détaillée des providers.
+
+\section{Indexation}
+
+Un index par type sémantique réduit le nombre de candidats visités lorsque la distribution des types est sélective. Avec $k$ candidats moyens après indexation, le coût devient approximativement $O(qkT_c)$ plus le coût de maintenance de l'index.
+
+Sous churn élevé, un index peut devenir coûteux à maintenir. EXP-001 doit donc mesurer à la fois coût de lookup et coût de mise à jour.
+
+\section{Cache}
+
+Un cache de résolution peut réduire le coût moyen si les intentions se répètent, mais introduit une dette de fraîcheur. Une clé de cache doit inclure les dimensions qui affectent l'admissibilité : version de contrat, provider, policy et état pertinent.
+
+\section{Coût du semantic diff}
+
+Si une théorie contient $n$ entités et une reconstruction $m$ entités, un matching naïf pair-à-pair est $O(nm)$ avant comparaison détaillée. Des identifiants stables ou index de signatures peuvent réduire le nombre de comparaisons candidates.
+
+La similarité textuelle ne doit pas devenir l'unique index car elle peut manquer des renommages ou confondre des homonymes.
+
+\chapter{Compilation bidirectionnelle comme problème de conservation}
+
+\section{Objets conservés}
+
+Le round-trip
+\[
+\Theta\xrightarrow{F}R\xrightarrow{G}\widehat\Theta
+\]
+est évalué sur un portefeuille d'objets : définitions, hypothèses, claims, types, evidence, limites et provenance.
+
+On note $I_j$ un invariant de représentation et
+\[
+r_j=\mathbf 1[I_j(\Theta)=I_j(\widehat\Theta)]
+\]
+pour les invariants discrets exacts. Pour les objets continus ou structurés, $r_j$ est remplacé par une mesure adaptée.
+
+\section{Conservation partielle}
+
+Un compilateur peut préserver parfaitement types et définitions tout en perdant limitations et provenance. Le score de round-trip doit donc rester vectoriel avant toute synthèse.
+
+\section{Perte intentionnelle}
+
+Certaines pertes peuvent être voulues : commentaires non normatifs, ordre de présentation ou détails d'optimisation. Une loss declaration distingue ces pertes prévues des divergences inattendues.
+
+\section{Erreur de sur-reconstruction}
+
+Le compilateur inverse peut produire des hypothèses qui n'étaient pas déclarées mais sont nécessaires pour expliquer les artefacts. Ces hypothèses portent le statut CANDIDATE. Les présenter comme propriétés certaines du système constituerait une hallucination de spécification.
+
+\chapter{Scientific Build Graph comme système de dépendances}
+
+\section{Cône d'invalidation}
+
+Pour un artefact modifié $a$, le cône descendant
+\[
+Desc(a)=\{v:\exists\text{ un chemin }a\leadsto v\}
+\]
+donne les nœuds potentiellement affectés si le graphe de dépendances est complet.
+
+\begin{proposition}
+Sous l'hypothèse de complétude des dépendances, un nœud $v\notin Desc(a)$ conserve toutes ses entrées déclarées lorsque seul $a$ change.
+\end{proposition}
+
+\begin{proof}
+Toute influence déclarée de $a$ vers $v$ devrait correspondre à un chemin. L'absence de chemin exclut une telle dépendance dans le modèle.
+\end{proof}
+
+\begin{limitation}
+Une dépendance cachée rend l'hypothèse fausse. Le fixed-point reconstruction court cherche précisément ces dépendances implicites.
+\end{limitation}
+
+\section{Rebuild scientifique}
+
+Le rebuild d'un claim peut inclure plus que du code : retraitement de données, simulation, statistique, vérification de provenance et reconstruction de figures. La granularité des nœuds doit être assez fine pour éviter un rebuild total, mais assez riche pour capturer les dépendances sémantiques.
+
+\chapter{Cas de substitution}
+
+\section{Provider équivalent}
+
+Cas A : deux providers possèdent mêmes types sémantiques, mêmes unités, mêmes bornes de qualité et des différences de latence seulement. La substitution teste principalement routing, configuration et performance.
+
+\section{Provider convertible}
+
+Cas B : les unités diffèrent mais un adaptateur exact et déclaré existe. Le contrat composé doit incorporer la conversion et ses tests.
+
+\section{Provider approximatif}
+
+Cas C : la sortie a la même forme mais une méthode approximative introduit une erreur bornée. Le provider peut être admissible pour un WorkUnit tolérant cette erreur et inadmissible pour un autre.
+
+\section{Provider faux ami}
+
+Cas D : les types logiciels sont identiques mais la sémantique diffère. Ce cas est un contrôle négatif central pour démontrer que la Capability IR ne se réduit pas au type système du langage.
+
+\chapter{Critères de maturité architecturale}
+
+\section{Maturité d'un contrat}
+
+On décrit une capacité par
+\[
+M_c=(definition,provider,test,evidence,substitution,reproduction).
+\]
+Chaque composante possède son propre statut. Un provider testé localement n'implique pas qu'une substitution ou reproduction indépendante ait été réalisée.
+
+\section{Maturité d'un compilateur}
+
+Un compiler atteint des niveaux successifs : parsing correct sur fixtures, préservation de types, round-trip sur cas jouets, round-trip sur corpus réel, détection de divergences injectées, reproduction indépendante.
+
+\section{Maturité du système global}
+
+Le système complet ne reçoit pas automatiquement la maturité maximale d'un de ses composants. Les claims globaux dépendent des interfaces entre composants et des expériences intégrées.
