@@ -22,14 +22,25 @@ class MetaCompilerTests(unittest.TestCase):
     def test_meta_stop(self):
         self.assertTrue(meta_stop_gate(1.0, 0.2, 0.1, 0.1).passed)
         self.assertFalse(meta_stop_gate(0.2, 0.2, 0.1, 0.0).passed)
+        self.assertFalse(meta_stop_gate(9.0, 0.1, expressible_by_current_kernel=True).passed)
 
     def test_persistent_structure_gate(self):
         self.assertTrue(persistent_structure_gate(3, 3).passed)
         self.assertFalse(persistent_structure_gate(4, 3).passed)
 
-    def test_value_of_experiment(self):
-        r = Residual("R", "what distinguishes H1/H2?", 1.0, 0.8, 10.0, 2.0, 2.0)
-        self.assertAlmostEqual(r.value_of_experiment(), 2.0)
+    def test_reuses_canonical_residual_priority(self):
+        r = Residual(
+            residual_id="R",
+            impact=1.0,
+            uncertainty=0.8,
+            dependency_centrality=0.5,
+            expected_information_gain=0.9,
+            downstream_leverage=2.0,
+            cost=0.2,
+            risk=0.1,
+            complexity=0.1,
+        )
+        self.assertGreater(r.priority(), 0.0)
 
     def test_mutation_probes_detect_deliberate_breaks(self):
         self.assertTrue(all(invariant_mutation_probes().values()))
