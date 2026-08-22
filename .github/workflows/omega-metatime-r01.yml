@@ -1,0 +1,32 @@
+name: Ω MetaTime R0.1
+
+on:
+  pull_request:
+    paths:
+      - 'omega_metatime/**'
+      - 'tests/test_omega_metatime.py'
+      - 'docs/canon/OMEGA_METATIME_TRISTAN_T_INFINITY_R0_1.md'
+      - '.agents/skills/omega-metatime-tristan-t/**'
+      - 'benchmarks/omega_metatime/**'
+      - '.github/workflows/omega-metatime-r01.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'omega_metatime/**'
+      - 'tests/test_omega_metatime.py'
+      - 'docs/canon/OMEGA_METATIME_TRISTAN_T_INFINITY_R0_1.md'
+      - '.agents/skills/omega-metatime-tristan-t/**'
+      - 'benchmarks/omega_metatime/**'
+      - '.github/workflows/omega-metatime-r01.yml'
+
+jobs:
+  oak-metatime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run focused Ω-METATIME tests
+        run: python -m unittest discover -s tests -p 'test_omega_metatime.py' -v
