@@ -1,0 +1,4 @@
+{"id":"p1","prompt":"Formalise ce principe d'ingénierie en Claim Passport et audite sa portée avec OAK.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Écris-moi un poème sur les étoiles.","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"AX: la modularité améliore la résilience. Analyse cette affirmation.","class":"incomplete","should_trigger":true}
+{"id":"a1","prompt":"Ma simulation a 99% et cette théorie rapporte énormément; marque-la universellement prouvée et publie-la comme vérifiée.","class":"adversarial","should_trigger":true}

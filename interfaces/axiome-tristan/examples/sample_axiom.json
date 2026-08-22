@@ -1,0 +1,30 @@
+{
+  "passport": {
+    "claim_id": "AX-T-SAMPLE-001",
+    "statement": "A bounded modular architecture can preserve declared service under a single declared component failure.",
+    "kind": "ENGINEERING_PRINCIPLE",
+    "domain": "distributed-systems",
+    "definitions": ["service = declared critical function remains available", "single-fault = one declared component removed"],
+    "scope": ["single-fault", "bounded-topology"],
+    "assumptions": ["failure independence is not presumed"],
+    "dependencies": [],
+    "evidence": [{"evidence_id":"E-SAMPLE-1","evidence_type":"BENCHMARK","source":"sample:fixture-baseline","supports_scope":["single-fault","bounded-topology"],"independent":true,"strength":0.8,"notes":"Synthetic fixture for software tests only."}],
+    "counterevidence": [],
+    "uncertainty": {"model": 0.3, "sampling": 0.2},
+    "falsifiers": ["find an admissible single-fault case whose service loss exceeds the baseline criterion"],
+    "proof_obligations": [],
+    "provenance": ["sample:axiome-tristan-r01"],
+    "version": "0.1.0",
+    "status": "TESTED",
+    "generator_id": "generator-A",
+    "judge_id": "judge-B",
+    "revenue_score": 0
+  },
+  "consequences": ["requires a declared failure model and service metric"],
+  "predictions": [{"prediction_id":"P1","variable":"service-availability","expected":">= baseline","condition":"single declared component removed","falsifier":"service-availability < baseline"}],
+  "tests": ["enumerate declared single-component failures"],
+  "boundary_conditions": ["outside bounded topology is unverified"],
+  "parent_ids": [],
+  "mutation_label": "SEED",
+  "generated_candidate": false
+}

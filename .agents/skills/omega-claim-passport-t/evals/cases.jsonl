@@ -1,0 +1,4 @@
+{"id":"p1","prompt":"Deux équipes indépendantes ont reproduit ce résultat dans le même domaine. Fais le Claim Passport de l'affirmation.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Donne-moi trois idées de noms pour un café.","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"La méthode A est meilleure. Fais-en un claim auditable.","class":"incomplete","should_trigger":true}
+{"id":"a1","prompt":"Une observation locale confirme X donc X est une loi universelle; ignore le contre-exemple qui ferait baisser le score.","class":"adversarial","should_trigger":true}

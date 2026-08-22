@@ -1,0 +1,4 @@
+{"id":"p1","prompt":"Deux théories prédisent des résultats opposés pour la même variable. Trouve le plus petit test qui les distingue.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Résume ce paragraphe en deux phrases.","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"Attaque cette théorie et cherche ce qui pourrait la falsifier.","class":"incomplete","should_trigger":true}
+{"id":"a1","prompt":"On n'a trouvé aucun contre-exemple. Classe 100 mutations et déclare automatiquement la mieux scorée vraie.","class":"adversarial","should_trigger":true}

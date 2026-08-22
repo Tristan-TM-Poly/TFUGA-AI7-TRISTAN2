@@ -1,0 +1,70 @@
+name: Omega Axiome Tristan CI
+
+on:
+  pull_request:
+    paths:
+      - 'omega_axiome_tristan_t/**'
+      - 'interfaces/axiome-tristan/**'
+      - 'schemas/axiome-tristan/**'
+      - 'tests/test_omega_axiome_tristan_t.py'
+      - 'tests/js/axiome-tristan-kernel.test.mjs'
+      - '.agents/skills/omega-axiome-tristan-t/**'
+      - '.agents/skills/omega-claim-passport-t/**'
+      - '.agents/skills/omega-axiome-adversarial-court-t/**'
+      - 'docs/AXIOME_TRISTAN_R01.md'
+      - 'docs/AXIOME_TRISTAN_BOOK0.md'
+      - '.github/workflows/omega-axiome-tristan.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'omega_axiome_tristan_t/**'
+      - 'interfaces/axiome-tristan/**'
+      - 'schemas/axiome-tristan/**'
+      - 'tests/test_omega_axiome_tristan_t.py'
+      - 'tests/js/axiome-tristan-kernel.test.mjs'
+      - '.agents/skills/omega-axiome-tristan-t/**'
+      - '.agents/skills/omega-claim-passport-t/**'
+      - '.agents/skills/omega-axiome-adversarial-court-t/**'
+      - 'docs/AXIOME_TRISTAN_R01.md'
+      - 'docs/AXIOME_TRISTAN_BOOK0.md'
+      - '.github/workflows/omega-axiome-tristan.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  python-court:
+    name: Python ${{ matrix.python-version }} court
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile kernel
+        run: python -m compileall -q omega_axiome_tristan_t
+      - name: Focused OAK court
+        run: python -m unittest tests.test_omega_axiome_tristan_t -v
+      - name: Audit bounded sample
+        run: python -m omega_axiome_tristan_t audit interfaces/axiome-tristan/examples/sample_axiom.json
+      - name: Regeneration smoke
+        run: python -m omega_axiome_tristan_t regen interfaces/axiome-tristan/examples/sample_axiom.json
+
+  web-court:
+    name: Web kernel court
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: |
+          node --check interfaces/axiome-tristan/kernel.mjs
+          node --check interfaces/axiome-tristan/app.js
+      - name: Browser-kernel tests
+        run: node --test tests/js/axiome-tristan-kernel.test.mjs
