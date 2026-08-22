@@ -12,6 +12,7 @@ import { renderEvidence } from "./views/evidence.js";
 import { renderGraph } from "./views/graph.js";
 import { renderHyperMeta } from "./views/hypermeta.js";
 import { renderKnowledgeWorlds } from "./views/knowledge-worlds.js";
+import { renderMarketplace } from "./views/marketplace.js";
 import { renderMminus } from "./views/mminus.js";
 import { renderOakGate } from "./views/oakgate.js";
 import { renderProvenance } from "./views/provenance.js";
@@ -29,6 +30,7 @@ const ROUTES = Object.freeze({
   hypermeta: renderHyperMeta,
   worlds: renderKnowledgeWorlds,
   publicmedia: renderPublicMedia,
+  marketplace: renderMarketplace,
   evidence: renderEvidence,
   provenance: renderProvenance,
   oakgate: renderOakGate,
@@ -145,7 +147,7 @@ export async function startApplication() {
     errorBox?.remove();
     router.start();
     registerServiceWorker();
-    window.TristanWebOS = Object.freeze({ store, router, preferences, version: "0.3.2" });
+    window.TristanWebOS = Object.freeze({ store, router, preferences, version: "0.4.0-marketplace" });
   } catch (error) {
     console.error(error);
     loading?.remove();
