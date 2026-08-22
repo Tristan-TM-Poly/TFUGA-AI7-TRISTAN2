@@ -1,0 +1,44 @@
+name: omega-eigenmath-t
+
+on:
+  pull_request:
+    paths:
+      - "omega_eigenmath_t/**"
+      - "tests/test_omega_eigenmath_t.py"
+      - "docs/omega-eigenmath-t/**"
+      - "schemas/eigenmath_proof_obligation.schema.json"
+      - ".agents/skills/omega-eigenmath-t/**"
+      - ".github/workflows/omega-eigenmath-t.yml"
+  push:
+    branches: [main]
+    paths:
+      - "omega_eigenmath_t/**"
+      - "tests/test_omega_eigenmath_t.py"
+      - "docs/omega-eigenmath-t/**"
+      - "schemas/eigenmath_proof_obligation.schema.json"
+      - ".agents/skills/omega-eigenmath-t/**"
+      - ".github/workflows/omega-eigenmath-t.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  eigenmath-r01:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile package
+        run: python -m compileall -q omega_eigenmath_t
+      - name: Run focused courts
+        run: python -m unittest -v tests.test_omega_eigenmath_t
+      - name: Run deterministic OAK bench
+        run: python -m omega_eigenmath_t
+      - name: Validate JSON schema syntax
+        run: python -m json.tool schemas/eigenmath_proof_obligation.schema.json > /dev/null
