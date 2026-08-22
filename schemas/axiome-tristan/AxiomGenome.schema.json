@@ -1,0 +1,16 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://axiome-tristan.com/schemas/AxiomGenome.schema.json",
+  "title":"AxiomGenome","type":"object",
+  "required":["passport","consequences","predictions","tests","boundary_conditions","parent_ids","mutation_label","generated_candidate"],
+  "properties":{
+    "passport":{"$ref":"./ClaimPassport.schema.json"},
+    "consequences":{"type":"array","items":{"type":"string"}},
+    "predictions":{"type":"array","items":{"type":"object","required":["prediction_id","variable","expected"],"properties":{"prediction_id":{"type":"string"},"variable":{"type":"string"},"expected":{"type":"string"},"condition":{"type":"string"},"falsifier":{"type":"string"}}}},
+    "tests":{"type":"array","items":{"type":"string"}},
+    "boundary_conditions":{"type":"array","items":{"type":"string"}},
+    "parent_ids":{"type":"array","items":{"type":"string"}},
+    "mutation_label":{"type":"string"},
+    "generated_candidate":{"type":"boolean"}
+  }
+}
