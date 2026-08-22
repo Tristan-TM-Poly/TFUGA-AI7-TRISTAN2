@@ -1,0 +1,54 @@
+{
+  "route_cases": [
+    {
+      "id": "fidelity-over-speed",
+      "source": "S",
+      "target": "T",
+      "amount": 1.0,
+      "weights": {
+        "fidelity_weight": 10.0,
+        "latency_weight": 0.1,
+        "risk_weight": 1.0
+      },
+      "edges": [
+        {"source": "S", "target": "FAST", "latency": 1, "fidelity": 0.55, "risk": 0.1},
+        {"source": "FAST", "target": "T", "latency": 1, "fidelity": 1.0, "risk": 0.1},
+        {"source": "S", "target": "SAFE", "latency": 2, "fidelity": 0.99, "risk": 0.1},
+        {"source": "SAFE", "target": "T", "latency": 2, "fidelity": 0.99, "risk": 0.1}
+      ],
+      "expected_path": ["S", "SAFE", "T"]
+    },
+    {
+      "id": "risk-aware-route",
+      "source": "S",
+      "target": "T",
+      "amount": 1.0,
+      "weights": {
+        "fidelity_weight": 1.0,
+        "latency_weight": 0.1,
+        "risk_weight": 10.0
+      },
+      "edges": [
+        {"source": "S", "target": "RISKY", "latency": 1, "fidelity": 1.0, "risk": 0.8},
+        {"source": "RISKY", "target": "T", "latency": 1, "fidelity": 1.0, "risk": 0.8},
+        {"source": "S", "target": "LOWRISK", "latency": 3, "fidelity": 0.98, "risk": 0.05},
+        {"source": "LOWRISK", "target": "T", "latency": 3, "fidelity": 0.98, "risk": 0.05}
+      ],
+      "expected_path": ["S", "LOWRISK", "T"]
+    }
+  ],
+  "meta_level_case": {
+    "id": "meta-depth-stop",
+    "inputs": {
+      "verified_capability_gain": 1.0,
+      "regenerability_gain": 0.0,
+      "transfer_gain": 0.2,
+      "future_option_gain": 0.1,
+      "complexity_cost": 0.8,
+      "risk_cost": 0.4,
+      "debt_cost": 0.2,
+      "compute_cost": 0.2
+    },
+    "expected_justified": false
+  }
+}

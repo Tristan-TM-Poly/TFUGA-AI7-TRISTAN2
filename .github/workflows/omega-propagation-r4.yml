@@ -1,0 +1,33 @@
+name: omega-propagation-r4
+
+on:
+  pull_request:
+    paths:
+      - "prototypes/omega_propagation_t/**"
+      - "docs/theories/OMEGA_META_PROPAGATION_GENESIS_R4.md"
+      - ".github/workflows/omega-propagation-r4.yml"
+  push:
+    branches:
+      - omega-propagation-r4
+    paths:
+      - "prototypes/omega_propagation_t/**"
+      - "docs/theories/OMEGA_META_PROPAGATION_GENESIS_R4.md"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: prototypes/omega_propagation_t
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: OAK toy benchmark
+        run: python run_benchmark.py
