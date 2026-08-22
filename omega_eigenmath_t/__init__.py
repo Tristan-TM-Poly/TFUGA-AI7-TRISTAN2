@@ -1,0 +1,41 @@
+"""Ω-EIGENMATH-T∞ — proof-carrying mathematical discovery research kernel R0.1."""
+
+from .core import (
+    AttackEngine,
+    FailureCrystal,
+    FormalizationReceipt,
+    MathClaimStatus,
+    MathematicalResidual,
+    MetaImprovementReceipt,
+    NoveltyStatus,
+    ProblemGenome,
+    ProofCourt,
+    ProofCrystal,
+    ProofDebtLedger,
+    ProofObligation,
+    RegenerationEngine,
+    RegenerationSeed,
+    ResidualEngine,
+    millennium_problem_genomes,
+    to_morphogenesis_residual,
+)
+
+__all__ = [
+    "AttackEngine",
+    "FailureCrystal",
+    "FormalizationReceipt",
+    "MathClaimStatus",
+    "MathematicalResidual",
+    "MetaImprovementReceipt",
+    "NoveltyStatus",
+    "ProblemGenome",
+    "ProofCourt",
+    "ProofCrystal",
+    "ProofDebtLedger",
+    "ProofObligation",
+    "RegenerationEngine",
+    "RegenerationSeed",
+    "ResidualEngine",
+    "millennium_problem_genomes",
+    "to_morphogenesis_residual",
+]
