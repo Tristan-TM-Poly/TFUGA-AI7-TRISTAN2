@@ -23,10 +23,11 @@ class ReceiptGateResult:
 
 
 class ScienceToSensorCompiler:
-    """Compile a question into the smallest existing sensor set that covers its required observables.
+    """Compile a question into the least-cost existing sensor set that covers required observables.
 
-    This is a bounded reference implementation. It searches existing capabilities first; it does not
-    claim to synthesize physically realizable hardware from first principles.
+    This bounded reference implementation searches existing capabilities first. Cardinality only
+    breaks equal-cost ties; fewer devices are not automatically better than a cheaper combination.
+    It does not claim to synthesize physically realizable hardware from first principles.
     """
 
     def compile(
@@ -52,17 +53,15 @@ class ScienceToSensorCompiler:
 
         feasible = [s for s in sensors if any(s.supports(o) for o in required)]
         best: tuple[SensorCapability, ...] | None = None
-        best_cost = float("inf")
+        best_key: tuple[float, int, tuple[str, ...]] | None = None
         for n in range(1, len(feasible) + 1):
-            found_at_size = False
             for subset in combinations(feasible, n):
                 if all(any(sensor.supports(obs) for sensor in subset) for obs in required):
-                    found_at_size = True
                     cost = sum(max(sensor.resource_cost, 0.0) for sensor in subset)
-                    if cost < best_cost:
-                        best, best_cost = subset, cost
-            if found_at_size:
-                break
+                    ids = tuple(sorted(sensor.sensor_id for sensor in subset))
+                    key = (cost, n, ids)
+                    if best_key is None or key < best_key:
+                        best, best_key = subset, key
 
         if best is None:
             return None
