@@ -1,0 +1,21 @@
+{
+  "boundary": "PASS is a deterministic local software-contract result, not a truth certificate",
+  "operational_status": "PASS",
+  "optimization_certificate_status": "PASS",
+  "optimization_event_count": 0,
+  "optimized_program_fingerprint": "94138fbcc28186e85feb9a04e5bfaf13e1471f782b2fc94314745e33b4e52595",
+  "request_fingerprint": "72c31004400f0b15d132a86c5dcc10f43cfd4c0ec7bfedda83709f8d7a648088",
+  "semantic_equivalence_proven": false,
+  "source_program_fingerprint": "94138fbcc28186e85feb9a04e5bfaf13e1471f782b2fc94314745e33b4e52595",
+  "status": "PASS",
+  "unresolved_obligations": [
+    "search_result_not_execution_evidence",
+    "execution_receipt_required",
+    "measurement_evidence_required",
+    "falsification_result_required",
+    "formal_proof_receipt_required",
+    "oak_gate_evidence_required",
+    "macro_promotion_benchmark_required",
+    "goartifact_validation_required"
+  ]
+}
