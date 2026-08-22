@@ -1,5 +1,11 @@
 import unittest
 
+from omega_capability_os_t.core import Capability
+from omega_capability_os_t.cross_skill_transplant import (
+    SkillContext,
+    evaluate_capability_transplant,
+)
+from omega_generative_closure_t.reprovenance_replay import FrozenSlice
 from omega_sensorium import (
     ActiveObservationEngine,
     MetaSensorium,
@@ -83,6 +89,58 @@ class SensoriumTests(unittest.TestCase):
             meta_complexity_cost=0.1,
             expressible_by_current_kernel=True,
         ))
+
+    def test_sensorium_transplants_through_canonical_capability_os_contract(self):
+        capability = Capability(
+            capability_id="sensorium-observation-planning",
+            domains=("science", "research"),
+            consumes=("science_question", "observable_requirement"),
+            produces=("observatory_genome", "observation_receipt"),
+            authority="read",
+            quality=0.9,
+            information_gain=0.9,
+            verifiability=0.9,
+            reuse=0.9,
+            cost=0.2,
+            latency=0.2,
+            risk=0.1,
+        )
+        contexts = (
+            SkillContext.make(
+                "omega-meta-sensorium-t",
+                "science",
+                ["science_question"],
+                ["observatory_genome"],
+                "read",
+            ),
+            SkillContext.make(
+                "research-observation",
+                "research",
+                ["observable_requirement"],
+                ["observation_receipt"],
+                "read",
+            ),
+        )
+        report = evaluate_capability_transplant(
+            capability,
+            contexts,
+            frozen_slices=(
+                FrozenSlice.make("science", ["sensorium-src"], ["sensorium-bench"]),
+                FrozenSlice.make("research", ["research-src"], ["research-bench"]),
+            ),
+            training_provenance_ids=("training-src",),
+            runs={
+                "run-a": {"science": "PASS", "research": "PASS"},
+                "run-b": {"science": "PASS", "research": "PASS"},
+            },
+            historical_expected={"science": "PASS", "research": "PASS"},
+            historical_candidate={"science": "PASS", "research": "PASS"},
+            counterfactual_observations=((0.4, 0.6), (0.5, 0.7), (0.7, 0.7)),
+        )
+        self.assertEqual(report.decision, "PROMOTE")
+        self.assertEqual(report.transfer_ratio, 1.0)
+        self.assertEqual(report.blockers, ())
+        self.assertTrue(all(context.authority_compatible for context in report.contexts))
 
 
 if __name__ == "__main__":
