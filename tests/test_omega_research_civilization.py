@@ -162,6 +162,95 @@ class ResearchCivilizationKernelTests(unittest.TestCase):
         seed = self.kernel.distill(plan, [claim])
         self.assertEqual(seed.verified_claims, ())
 
+    def test_low_value_residual_keeps_solver_lazy(self):
+        residual = Residual("low", 0.01, 0.01, 0.01, 0.01)
+        plan = self.kernel.compile("Low value residual", [residual])
+        solver = next(unit for unit in plan.units if unit.unit_id == "ait-solver")
+        self.assertFalse(solver.materialized)
+
+    def test_lazy_candidates_are_excluded_from_book0(self):
+        plan = self.kernel.compile("Hard coupled problem", complexity_signal=0.95)
+        seed = self.kernel.distill(plan, [])
+        seed_ids = {item[0] for item in seed.unit_blueprints}
+        self.assertNotIn("virtual-university-1", seed_ids)
+        self.assertNotIn("simulation-lab-1", seed_ids)
+
+    def test_verified_claim_receipt_preserves_independent_roles_and_tests(self):
+        plan = self.kernel.compile("Audit claim")
+        claim = ClaimRecord(
+            "receipt-1",
+            "observed claim",
+            producer_id="vt-generator",
+            falsifier_id="vt-falsifier",
+            verifier_id="independent-verifier",
+            output_status=EpistemicStatus.OBSERVED,
+            evidence_status=EpistemicStatus.OBSERVED,
+            provenance=("dataset:receipt",),
+            tests=("protocol:receipt",),
+        )
+        receipt = self.kernel.distill(plan, [claim]).verified_claims[0]
+        self.assertEqual(receipt[4:7], ("vt-generator", "vt-falsifier", "independent-verifier"))
+        self.assertEqual(receipt[7], ("dataset:receipt",))
+        self.assertEqual(receipt[8], ("protocol:receipt",))
+
+    def test_regenerate_rejects_missing_control_role(self):
+        plan = self.kernel.compile("Mutation test")
+        seed = self.kernel.distill(plan, [])
+        mutated = seed.__class__(
+            question=seed.question,
+            residual_ids=seed.residual_ids,
+            unit_blueprints=tuple(b for b in seed.unit_blueprints if b[2] != "verifier"),
+            verified_claims=seed.verified_claims,
+            policy=seed.policy,
+            source_plan_hash=seed.source_plan_hash,
+            version=seed.version,
+        )
+        with self.assertRaises(ValueError):
+            self.kernel.regenerate(mutated)
+
+    def test_regenerate_rejects_missing_parent(self):
+        plan = self.kernel.compile("Parent test")
+        seed = self.kernel.distill(plan, [])
+        child = (
+            "child",
+            ResearchUnitKind.AIT.value,
+            "solver",
+            1,
+            ("solve",),
+            "missing-parent",
+        )
+        mutated = seed.__class__(
+            question=seed.question,
+            residual_ids=seed.residual_ids,
+            unit_blueprints=seed.unit_blueprints + (child,),
+            verified_claims=seed.verified_claims,
+            policy=seed.policy,
+            source_plan_hash=seed.source_plan_hash,
+            version=seed.version,
+        )
+        with self.assertRaises(ValueError):
+            self.kernel.regenerate(mutated)
+
+    def test_regenerate_rejects_depth_above_policy(self):
+        policy = CompilationPolicy(max_depth=0)
+        plan = self.kernel.compile("Depth seed", policy=policy)
+        seed = self.kernel.distill(plan, [])
+        mutated_blueprints = list(seed.unit_blueprints)
+        first = list(mutated_blueprints[0])
+        first[3] = 1
+        mutated_blueprints[0] = tuple(first)
+        mutated = seed.__class__(
+            question=seed.question,
+            residual_ids=seed.residual_ids,
+            unit_blueprints=tuple(mutated_blueprints),
+            verified_claims=seed.verified_claims,
+            policy=seed.policy,
+            source_plan_hash=seed.source_plan_hash,
+            version=seed.version,
+        )
+        with self.assertRaises(ValueError):
+            self.kernel.regenerate(mutated)
+
 
 if __name__ == "__main__":
     unittest.main()

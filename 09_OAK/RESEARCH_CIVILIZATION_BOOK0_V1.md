@@ -9,7 +9,7 @@ A valid research seed must be sufficient to rebuild every materialized unit need
 - question;
 - residual IDs;
 - materialized unit blueprints;
-- verified claim tuples;
+- verified claim receipts (status, independent identities, provenance, tests);
 - finite compilation policy;
 - source plan hash;
 - semantic version.

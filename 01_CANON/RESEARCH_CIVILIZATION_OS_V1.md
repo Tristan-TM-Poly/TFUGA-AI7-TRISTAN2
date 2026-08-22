@@ -81,7 +81,7 @@ Non-control units whose measured or estimated utility is below `minimum_unit_uti
 
 - question and residual identifiers;
 - materialized unit blueprints;
-- independently verified claims with provenance;
+- independently verified claim receipts with producer/falsifier/verifier identities, evidence status, provenance, and tests;
 - finite compilation policy;
 - source plan hash and version.
 

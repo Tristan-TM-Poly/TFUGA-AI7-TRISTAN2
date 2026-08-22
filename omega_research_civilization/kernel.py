@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from enum import Enum
 from hashlib import sha256
 import json
@@ -74,10 +74,7 @@ class CivilizationPlan:
             "question": self.question,
             "residual_ids": self.residual_ids,
             "units": [
-                {
-                    **asdict(unit),
-                    "kind": unit.kind.value,
-                }
+                {**asdict(unit), "kind": unit.kind.value}
                 for unit in self.units
             ],
             "policy": asdict(self.policy),
@@ -114,7 +111,9 @@ class ResearchSeed:
     question: str
     residual_ids: tuple[str, ...]
     unit_blueprints: tuple[tuple[str, str, str, int, tuple[str, ...], str | None], ...]
-    verified_claims: tuple[tuple[str, str, int, tuple[str, ...]], ...]
+    verified_claims: tuple[
+        tuple[str, str, int, int, str, str, str, tuple[str, ...], tuple[str, ...]], ...
+    ]
     policy: CompilationPolicy
     source_plan_hash: str
     version: str = "0.1.0"
@@ -203,6 +202,13 @@ class ResearchCivilizationKernel:
         if ranked:
             top = ranked[0]
             gain = min(1.5, max(top.priority(), 0.0))
+            materialized = self.should_spawn_subcivilization(
+                expected_verified_gain=gain,
+                complexity_rent=0.10,
+                compute_cost=0.05,
+                depth=0,
+                policy=policy,
+            )
             units.append(
                 ResearchUnit(
                     "ait-solver",
@@ -213,6 +219,7 @@ class ResearchCivilizationKernel:
                     expected_verified_gain=gain,
                     complexity_rent=0.10,
                     compute_cost=0.05,
+                    materialized=materialized,
                 )
             )
 
@@ -332,12 +339,24 @@ class ResearchCivilizationKernel:
         return CivilizationPlan(plan.question, plan.residual_ids, tuple(kept), plan.policy, plan.version)
 
     def distill(self, plan: CivilizationPlan, claims: Sequence[ClaimRecord]) -> ResearchSeed:
-        verified: list[tuple[str, str, int, tuple[str, ...]]] = []
+        verified: list[
+            tuple[str, str, int, int, str, str, str, tuple[str, ...], tuple[str, ...]]
+        ] = []
         for claim in claims:
             decision = self.judge_claim(claim)
             if decision.verified:
                 verified.append(
-                    (claim.claim_id, claim.statement, int(claim.evidence_status), tuple(claim.provenance))
+                    (
+                        claim.claim_id,
+                        claim.statement,
+                        int(claim.output_status),
+                        int(claim.evidence_status),
+                        claim.producer_id,
+                        claim.falsifier_id,
+                        claim.verifier_id,
+                        tuple(claim.provenance),
+                        tuple(claim.tests),
+                    )
                 )
         blueprints = tuple(
             (
