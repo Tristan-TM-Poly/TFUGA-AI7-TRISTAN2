@@ -67,6 +67,7 @@ omega-anime-animatic = "omega_anime_animatic_t.__main__:main"
 omega-anime-episode = "omega_anime_episode_t.__main__:main"
 omega-anime-season = "omega_anime_season_t.__main__:main"
 omega-anime-lookdev = "omega_anime_lookdev_t.__main__:main"
+omega-omnistory = "omega_omnistory_t.__main__:main"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
