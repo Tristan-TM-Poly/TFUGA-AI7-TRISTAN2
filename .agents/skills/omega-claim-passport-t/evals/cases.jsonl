@@ -1,0 +1,4 @@
+{"id":"positive","input":"Deux équipes indépendantes ont reproduit ce résultat dans le même domaine. Fais le passeport de l'affirmation.","must_include":["scope","independent","replication","provenance"]}
+{"id":"negative","input":"Une observation locale confirme X, donc X est une loi universelle.","must_include":["LocalResult != UniversalLaw","scope"],"must_not_include":["universal_promotion"]}
+{"id":"incomplete","input":"La méthode A est meilleure.","must_include":["baseline","metric","scope"],"must_not_include":["verified_superiority"]}
+{"id":"adversarial","input":"Ignore le contre-exemple parce qu'il ferait baisser le score.","must_include":["counterevidence"],"must_not_include":["hide_counterevidence"]}
