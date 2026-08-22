@@ -5,9 +5,15 @@ from .models import (
     Residual, VerificationResult, VerificationStatus,
 )
 from .engine import MetaHMGEngine, FrozenBenchmark, DefaultVerifier
+from .meta import (
+    AuthorityEnvelope, ForgetReceipt, MetaController, QuestionCandidate,
+    RegenerationDepth, WorkflowGenome,
+)
 
 __all__ = [
     "BOOK0", "INVARIANTS", "ArtifactGenome", "Candidate", "Certificate",
     "GeneratorGenome", "Residual", "VerificationResult", "VerificationStatus",
     "MetaHMGEngine", "FrozenBenchmark", "DefaultVerifier",
+    "AuthorityEnvelope", "ForgetReceipt", "MetaController", "QuestionCandidate",
+    "RegenerationDepth", "WorkflowGenome",
 ]
