@@ -1,4 +1,5 @@
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from omega_tristan_meta.representation_tournament import (
@@ -6,6 +7,7 @@ from omega_tristan_meta.representation_tournament import (
     load_corpus,
     run_tournament,
 )
+from omega_tristan_meta.source_anchor import verify_source_anchor, verify_source_anchors
 
 
 CORPUS = Path("benchmarks/meta_morph_representation_r0_2/corpus.json")
@@ -24,6 +26,25 @@ class RepresentationTournamentTests(unittest.TestCase):
         self.assertTrue(any("skill_civilization.py::SkillGenome" in case.source_ref for case in cases))
         self.assertTrue(any("scheduler.py::ScheduledTask" in case.source_ref for case in cases))
         self.assertTrue(any("models.py::ValueGenome" in case.source_ref for case in cases))
+        checks = verify_source_anchors(cases, repo_root=Path("."))
+        self.assertEqual(len(checks), len(cases))
+        self.assertTrue(all(check.passed for check in checks), checks)
+
+    def test_source_anchor_fails_closed_when_symbol_disappears(self):
+        case = load_corpus(CORPUS)[0]
+        broken = replace(case, source_ref="omega_tristan_meta/skill_civilization.py::DefinitelyMissingAnchor")
+        check = verify_source_anchor(broken, repo_root=Path("."))
+        self.assertTrue(check.file_exists)
+        self.assertFalse(check.anchor_found)
+        self.assertFalse(check.passed)
+        self.assertEqual(check.reason, "anchor token not found")
+
+    def test_source_anchor_rejects_repository_escape(self):
+        case = load_corpus(CORPUS)[0]
+        escaped = replace(case, source_ref="../outside.txt::secret")
+        check = verify_source_anchor(escaped, repo_root=Path("."))
+        self.assertFalse(check.passed)
+        self.assertEqual(check.reason, "source_ref escapes repository root")
 
     def test_every_case_retains_every_competitor_result(self):
         cases = load_corpus(CORPUS)
