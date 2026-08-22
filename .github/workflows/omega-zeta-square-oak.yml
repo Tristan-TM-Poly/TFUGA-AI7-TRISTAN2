@@ -1,0 +1,187 @@
+name: Omega Zeta Square OAKBench
+
+on:
+  pull_request:
+    paths:
+      - "omega_zeta_square_t/**"
+      - "tests/test_omega_zeta_square*.py"
+      - "specs/omega_zeta_square_t/**"
+      - "docs/omega_zeta_square_t/**"
+      - "docs/omega_millennium_t/r02/problems/riemann.md"
+      - ".github/workflows/omega-zeta-square-oak.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "omega_zeta_square_t/**"
+      - "tests/test_omega_zeta_square*.py"
+      - "specs/omega_zeta_square_t/**"
+      - ".github/workflows/omega-zeta-square-oak.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  oakbench:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile package and zeta-square tests
+        run: python -m compileall -q omega_zeta_square_t tests
+      - name: Validate all machine-readable specs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          paths = sorted(Path("specs/omega_zeta_square_t").glob("*.json"))
+          assert paths
+          for path in paths:
+              json.loads(path.read_text(encoding="utf-8"))
+              print("valid-json", path)
+          PY
+      - name: Validate HGFM bibliography and R10 status semantics
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from omega_zeta_square_t import load_and_validate_proof_graph, validate_bibliography_ledger
+          graph_path = Path("specs/omega_zeta_square_t/proof_graph.json")
+          graph = json.loads(graph_path.read_text(encoding="utf-8"))
+          errors = load_and_validate_proof_graph(graph_path)
+          assert not errors, "\n".join(errors)
+          ledger = json.loads(Path("specs/omega_zeta_square_t/bibliography_ledger.json").read_text(encoding="utf-8"))
+          bib_errors = validate_bibliography_ledger(graph, ledger)
+          assert not bib_errors, "\n".join(bib_errors)
+          theorem = json.loads(Path("specs/omega_zeta_square_t/r10_theorem.json").read_text(encoding="utf-8"))
+          nodes = {n["id"]: n for n in graph["nodes"]}
+          assert theorem["status"] == "PROVED_DERIVED_EQUIVALENCE"
+          assert theorem["solution_claimed"] is False
+          assert theorem["novelty_claimed"] is False
+          assert nodes["r7_stieltjes_rh_bridge"]["status"] == "PROVED"
+          assert nodes["off_line_finite_certificate"]["status"] == "PROVED"
+          assert nodes["rh"]["status"] == "OPEN"
+          print("proof-graph-oak: PROMOTE")
+          print("bibliography-oak: PROMOTE")
+          print("R10-derived-equivalence-oak: PROMOTE_WITHOUT_RH_SOLUTION")
+          PY
+      - name: Run full zeta-square unit-test family
+        run: python -m unittest discover -s tests -p 'test_omega_zeta_square*.py'
+      - name: R4 provenance CVCD obligation smoke
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from fractions import Fraction
+          from omega_zeta_square_t import (
+              EvidenceKind, IntervalEvidence, RationalInterval,
+              cvcd_support_report, export_obligation_bundle,
+              obligations_from_proof_graph, validate_interval_evidence,
+          )
+          graph = json.loads(Path("specs/omega_zeta_square_t/proof_graph.json").read_text())
+          cvcd = cvcd_support_report(graph, "rh")
+          assert cvcd["proves_target"] is False
+          obligations = export_obligation_bundle(obligations_from_proof_graph(graph))
+          assert obligations["solution_claimed"] is False
+          ids = {item["obligation_id"] for item in obligations["obligations"]}
+          assert "obl.r7_stieltjes_rh_bridge" not in ids
+          assert "obl.off_line_finite_certificate" not in ids
+          assert "obl.rh" in ids
+          evidence = IntervalEvidence(
+              "xi(1/2)", RationalInterval(Fraction(49,100), Fraction(51,100)), EvidenceKind.SUPPLIED
+          )
+          verdict = validate_interval_evidence([evidence])
+          assert verdict.analytically_certified_inputs is False
+          assert verdict.proves_rh is False
+          PY
+      - name: R5 R6 R8 R9 exact finite and tail smoke
+        run: |
+          python - <<'PY'
+          from fractions import Fraction
+          from omega_zeta_square_t import (
+              centered_pair_hankel2_determinant,
+              conjugate_pair_inverse_moments,
+              finite_atomic_inertia_certificate,
+              first_exact_stieltjes_violation,
+              mixed_inverse_moments,
+              one_pair_full_hankel_certificate,
+              tail_stability_certificate,
+          )
+          assert centered_pair_hankel2_determinant(Fraction(3,5), 2) < 0
+          pure = conjugate_pair_inverse_moments(1, 1, 6)
+          assert first_exact_stieltjes_violation(pure, 3).first_hankel_size == 2
+          masked = mixed_inverse_moments([5], 1, 1, 6)
+          assert first_exact_stieltjes_violation(masked, 3).first_hankel_size == 3
+          full = one_pair_full_hankel_certificate([5], 1, 1)
+          assert full.determinant == -11560 and full.guaranteed_negative
+          inertia = finite_atomic_inertia_certificate(3, 2)
+          assert (inertia.positive_directions, inertia.negative_directions) == (5, 2)
+          tail = tail_stability_certificate([[2,0],[0,-4]],[0,1],tail_radius_upper=Fraction(1,10),tail_abs_mass_upper=Fraction(1,20))
+          assert tail.certified_indefinite_after_tail
+          assert tail.proves_rh is False
+          PY
+      - name: CLI structural and materialization OAK smoke tests
+        run: |
+          python -m omega_zeta_square_t cvcd rh > /tmp/zeta-square-cvcd.json
+          python -m omega_zeta_square_t obligations > /tmp/zeta-square-obligations.json
+          python -m omega_zeta_square_t bibliography-check > /tmp/zeta-square-bibliography.json
+          python -m omega_zeta_square_t materialize /tmp/zeta-square-bundle > /tmp/zeta-square-materialize.json
+          python - <<'PY'
+          import json
+          cvcd = json.load(open("/tmp/zeta-square-cvcd.json", encoding="utf-8"))
+          obligations = json.load(open("/tmp/zeta-square-obligations.json", encoding="utf-8"))
+          bibliography = json.load(open("/tmp/zeta-square-bibliography.json", encoding="utf-8"))
+          materialize = json.load(open("/tmp/zeta-square-materialize.json", encoding="utf-8"))
+          oak = json.load(open("/tmp/zeta-square-bundle/oak_receipt.json", encoding="utf-8"))
+          assert cvcd["proves_target"] is False
+          assert obligations["solution_claimed"] is False
+          assert bibliography["promotion"] == "PROMOTE"
+          assert bibliography["proves_rh"] is False
+          assert materialize["proves_rh"] is False
+          assert oak["promotion"] == "RESEARCH_BUNDLE_VALID"
+          PY
+      - name: CLI geometry OAK smoke test
+        run: |
+          python -m omega_zeta_square_t geometry 0.5 14.134725141734693 > /tmp/zeta-square-geometry.json
+          python - <<'PY'
+          import json
+          p = json.load(open("/tmp/zeta-square-geometry.json", encoding="utf-8"))
+          assert p["proves_rh"] is False
+          assert abs(p["D_RH"]) < 1e-12
+          assert p["u"]["real"] < 0
+          PY
+      - name: CLI finite-moment OAK smoke test
+        run: |
+          python -m omega_zeta_square_t moments --hankel-size 2 14.134725141734693 21.022039638771555 25.01085758014569 > /tmp/zeta-square-moments.json
+          python - <<'PY'
+          import json
+          p = json.load(open("/tmp/zeta-square-moments.json", encoding="utf-8"))
+          assert p["proves_rh"] is False
+          assert p["epistemic_status"] == "NUMERICALLY_VERIFIED_FINITE_ONLY"
+          assert p["hankel0_psd"] is True and p["hankel1_psd"] is True
+          assert p["oak"]["promotion"] == "FINITE_EVIDENCE_ONLY"
+          PY
+      - name: CLI exact reconstruction OAK smoke tests
+        run: |
+          P="13/36 97/1296 793/46656 6817/1679616"
+          python -m omega_zeta_square_t exact-cert --hankel-size 2 $P > /tmp/zeta-square-exact.json
+          python -m omega_zeta_square_t pade --order 2 $P > /tmp/zeta-square-pade.json
+          python -m omega_zeta_square_t jacobi --size 2 $P > /tmp/zeta-square-jacobi.json
+          python - <<'PY'
+          import json
+          exact = json.load(open("/tmp/zeta-square-exact.json", encoding="utf-8"))
+          pade = json.load(open("/tmp/zeta-square-pade.json", encoding="utf-8"))
+          jacobi = json.load(open("/tmp/zeta-square-jacobi.json", encoding="utf-8"))
+          assert exact["proves_rh"] is False
+          assert exact["certificate"]["finite_positive"] is True
+          assert pade["proves_rh"] is False
+          assert pade["approximant"]["denominator"][2]["exact"] == "1/36"
+          assert jacobi["proves_rh"] is False
+          assert jacobi["characteristic_polynomial"][0]["exact"] == "1/36"
+          PY

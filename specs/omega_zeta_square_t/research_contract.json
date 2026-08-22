@@ -1,0 +1,176 @@
+{
+  "schema": "omega-zeta-square-research-contract/7",
+  "system": "Omega-ZETA-SQUARE-T-infinity",
+  "proof_os": "Omega-RH-PROOF-OS-T-infinity",
+  "parent_problem": "riemann",
+  "status": "research-toolkit",
+  "solution_claimed": false,
+  "canonical_coordinate": {
+    "center": "1/2",
+    "w": "s-1/2",
+    "u": "w^2",
+    "reciprocal_spectral_coordinate": "lambda=-1/u"
+  },
+  "exact_identities": [
+    "u=(beta-1/2)^2-gamma^2+2i(beta-1/2)gamma",
+    "D_RH(u)=(|u|+Re(u))/2=(beta-1/2)^2",
+    "H(u)=(|u|-Re(u))/2=gamma^2",
+    "critical_strip_image: Re(u)<=1/4-Im(u)^2",
+    "trivial_zero_image(n)=(2n+1/2)^2",
+    "isolated_conjugate_pair_H2_det=-4*b^2*(a^2+b^2)",
+    "centered_isolated_pair_H2_det=-16*delta^2*gamma^2/(delta^2+gamma^2)^6"
+  ],
+  "proved_results": [
+    {
+      "id": "r5.isolated_pair_hankel",
+      "statement": "an isolated non-real reciprocal conjugate pair forces a negative size-2 Hankel determinant",
+      "scope": "isolated finite pair"
+    },
+    {
+      "id": "r6.one_pair_vandermonde",
+      "statement": "q distinct positive real reciprocal atoms plus one non-real conjugate pair force a negative full-support Hankel determinant at size q+2 for every nonnegative shift",
+      "scope": "finite atomic support with one non-real pair"
+    },
+    {
+      "id": "r8.finite_atomic_inertia",
+      "statement": "q positive real atoms and m non-real conjugate pairs yield full-support inertia (q+m,m,0)",
+      "scope": "finite distinct atomic support"
+    },
+    {
+      "id": "r9.tail_stability",
+      "statement": "a finite negative polynomial witness survives an arbitrary conjugation-symmetric tail when M*(sum |v_i|R^i)^2 is smaller than its negative margin",
+      "scope": "rigorous conditional theorem requiring certified tail radius R and absolute mass M"
+    },
+    {
+      "id": "r10.stieltjes_hankel_equivalence",
+      "statement": "RH iff the reciprocal centered-square zero moments form a Stieltjes moment sequence iff every basic and shifted Hankel matrix is PSD",
+      "scope": "derived equivalence using order<1 Hadamard factorization, the Theta criterion, and the classical Stieltjes moment theorem",
+      "novelty_claimed": false,
+      "prior_art_status": "CLOSE_2026_PREPRINT_PRIOR_ART_FOUND"
+    },
+    {
+      "id": "r10.finite_failure_corollary",
+      "statement": "if RH is false, some finite basic or shifted Hankel matrix is not PSD",
+      "scope": "existential finite certificate; no explicit universal first-failure order"
+    }
+  ],
+  "known_results_with_primary_bindings": [
+    {"graph_node": "hadamard_factorization", "claim": "Hadamard factorization for finite-order entire functions; order below one yields genus-zero product in the present application"},
+    {"graph_node": "theta_entire", "claim": "Theta(u)=xi(1/2+sqrt(u)) is entire of order 1/2"},
+    {"graph_node": "theta_negative_zeros", "claim": "RH is equivalent to all zeros of Theta being negative real"},
+    {"graph_node": "stieltjes_moment_theorem", "claim": "all-orders basic and shifted Hankel positivity characterizes Stieltjes moment sequences"}
+  ],
+  "open_high_value_targets": [
+    {
+      "id": "explicit.detection.order",
+      "goal": "derive an explicit or computable upper bound on the first failing Hankel order under a specified off-line zero defect",
+      "status": "OPEN"
+    },
+    {
+      "id": "tail.analytic.bounds",
+      "goal": "derive unconditional explicit upper bounds for reciprocal-zero tail radius and sum of absolute reciprocal masses for quantitative R9 certificates",
+      "status": "OPEN_ANALYTIC_BOUND_GOAL"
+    },
+    {
+      "id": "analytic.xi.intervals",
+      "goal": "produce independently certified enclosures for central xi derivatives and propagate them to moment/Hankel signs",
+      "status": "OPEN"
+    },
+    {
+      "id": "r10.prior_art",
+      "goal": "perform full-text comparison with Polson 2026 and older secondary-zeta/Hankel literature before any novelty or attribution claim",
+      "status": "MANDATORY_BEFORE_NOVELTY_CLAIM"
+    },
+    {
+      "id": "formal.r10",
+      "goal": "translate R10 into typed Lean theorem statements and verify the entire-function/moment-theorem dependency chain",
+      "status": "OPEN"
+    }
+  ],
+  "tristan_system_integrations": [
+    "HGFM proof/criterion graph",
+    "CVCD minimal structural support compression",
+    "LOG/EXP zero-moment-operator translations",
+    "TensorProdLift polynomial positivity constraints",
+    "Bayes-Tristan research-path ranking",
+    "UNC2 uncertainty/provenance tracking",
+    "M-minus adversarial false-proof memory",
+    "AIT/SAGE bounded proof-obligation synthesis",
+    "OAK epistemic promotion gates"
+  ],
+  "forbidden_promotions": [
+    "r10_equivalence_to_rh_solution",
+    "finite_to_all_orders_positivity",
+    "numeric_to_exact",
+    "supplied_rational_to_true_xi_value",
+    "supplied_interval_to_certified_analytic_xi_interval",
+    "leading_principal_minors_to_psd",
+    "finite_atomic_vandermonde_to_infinite_riemann_spectrum",
+    "finite_inertia_to_infinite_inertia_without_tail_control",
+    "conditional_tail_bound_with_uncertified_inputs_to_unconditional_result",
+    "structural_cvcd_support_to_proof",
+    "lean_comment_stub_to_formal_proof",
+    "known_zeros_to_independent_operator",
+    "pattern_to_theorem",
+    "conjectural_leaf_to_proved_claim",
+    "branch_numerics_to_analytic_continuation",
+    "novelty_claim_before_prior_art_comparison"
+  ],
+  "proof_grade_leaf_statuses": ["PROVED", "KNOWN_THEOREM"],
+  "machine_gates": [
+    "proof_graph_semantic_validation",
+    "known_theorem_primary_source_binding",
+    "recent_prior_art_novelty_block",
+    "interval_input_provenance",
+    "finite_vs_all_orders_promotion_boundary",
+    "tail_bound_provenance",
+    "deterministic_bundle_hashing"
+  ],
+  "executable_surfaces": [
+    "geometry",
+    "moments",
+    "exact-cert",
+    "pade",
+    "jacobi",
+    "cvcd",
+    "obligations",
+    "bibliography-check",
+    "materialize"
+  ],
+  "research_axes": [
+    {"id": "square.axis.geometry", "priority": 1},
+    {"id": "square.axis.stieltjes", "priority": 1},
+    {"id": "square.axis.moments", "priority": 1},
+    {"id": "square.axis.hankel", "priority": 1},
+    {"id": "square.axis.r10-equivalence", "priority": 1},
+    {"id": "square.axis.explicit-detection-order", "priority": 1},
+    {"id": "square.axis.finite-vandermonde", "priority": 1},
+    {"id": "square.axis.finite-inertia", "priority": 1},
+    {"id": "square.axis.tail-stability", "priority": 1},
+    {"id": "square.axis.certified-xi-intervals", "priority": 1},
+    {"id": "square.axis.jacobi", "priority": 2},
+    {"id": "square.axis.operator", "priority": 2},
+    {"id": "square.axis.cvcd", "priority": 1},
+    {"id": "square.axis.mminus", "priority": 1}
+  ],
+  "success_conditions": {
+    "research_increment": [
+      "new exact identity with checked proof",
+      "new equivalence with both directions discharged",
+      "new finite certificate theorem",
+      "new explicit detection-order bound",
+      "new certified analytic enclosure or tail bound",
+      "new independently constructed spectral object with proved determinant relation",
+      "refutation of a plausible pathway with reusable M-minus evidence"
+    ],
+    "rh_solution": [
+      "all-orders Hankel/Stieltjes positivity itself established unconditionally or an equivalent non-circular condition proved",
+      "all universal quantifiers discharged",
+      "all proof leaves proof-grade",
+      "all known dependencies source-bound",
+      "all conditional analytic inputs certified independently",
+      "no circular use of RH or preloaded zero reality",
+      "formal or independent expert verification"
+    ]
+  }
+}

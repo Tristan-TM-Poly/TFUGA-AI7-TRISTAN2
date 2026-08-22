@@ -1,0 +1,84 @@
+{
+  "schema": "omega-zeta-square-theorem-spec/1",
+  "id": "R10_STIELTJES_HANKEL_EQUIVALENCE",
+  "status": "PROVED_DERIVED_EQUIVALENCE",
+  "solution_claimed": false,
+  "novelty_claimed": false,
+  "statement": "RH iff the reciprocal centered-square zero moments form a Stieltjes moment sequence iff all basic and shifted Hankel matrices are positive semidefinite.",
+  "definitions": {
+    "Theta": "Theta(u)=xi(1/2+sqrt(u))",
+    "zero_images": "Theta(u_n)=0",
+    "lambda_n": "lambda_n=-1/u_n",
+    "moments": "m_k=sum_n lambda_n^(k+1)",
+    "H0_N": "(m_(i+j)) for i,j=0..N-1",
+    "H1_N": "(m_(i+j+1)) for i,j=0..N-1"
+  },
+  "known_dependencies": [
+    {
+      "node": "hadamard_factorization",
+      "required_fact": "order<1 entire function with F(0)!=0 has genus-zero zero product and summable reciprocal zeros"
+    },
+    {
+      "node": "theta_entire",
+      "required_fact": "Theta is real entire of order 1/2 and Theta(0)!=0"
+    },
+    {
+      "node": "theta_negative_zeros",
+      "required_fact": "RH iff every zero of Theta is negative real"
+    },
+    {
+      "node": "stieltjes_moment_theorem",
+      "required_fact": "sequence is Stieltjes iff all basic and shifted Hankel matrices are PSD"
+    }
+  ],
+  "derived_lemmas": [
+    {
+      "id": "r10.genus_zero",
+      "statement": "Theta(u)/Theta(0)=product_n(1+lambda_n u), sum |lambda_n|<infinity, Lambda=sup|lambda_n|<infinity"
+    },
+    {
+      "id": "r10.log_derivative",
+      "statement": "Theta'(u)/Theta(u)=sum_n lambda_n/(1+lambda_n u) and near zero equals sum_k (-1)^k m_k u^k"
+    },
+    {
+      "id": "r10.real_moments",
+      "statement": "all m_k are real because the zero set is conjugation invariant"
+    },
+    {
+      "id": "r10.compact_support",
+      "statement": "any positive Stieltjes representing measure for m_k is supported in [0,Lambda] because 0<=m_k<=S Lambda^k"
+    },
+    {
+      "id": "r10.pole_exclusion",
+      "statement": "the compact-support Stieltjes transform agreeing with Theta'/Theta near zero excludes every logarithmic-derivative pole outside the negative real slit"
+    }
+  ],
+  "directions": [
+    {
+      "id": "RH_to_Hankel",
+      "status": "PROVED",
+      "route": "RH -> u_n<0 -> lambda_n>0 -> mu=sum lambda_n delta_lambda_n -> Stieltjes moments -> H0,H1 PSD"
+    },
+    {
+      "id": "Hankel_to_RH",
+      "status": "PROVED",
+      "route": "H0,H1 PSD all orders -> positive Stieltjes measure -> compact support -> Stieltjes transform analytic off negative slit -> no nonnegative/nonreal poles of Theta'/Theta -> zeros Theta negative -> RH"
+    }
+  ],
+  "corollaries": [
+    {
+      "id": "finite_failure_existence",
+      "status": "PROVED",
+      "statement": "RH false implies there exists finite N for which H0_N or H1_N is not PSD",
+      "explicit_first_failure_bound": false
+    }
+  ],
+  "oak_nonclaims": [
+    "R10 does not establish all-orders Hankel positivity",
+    "R10 is an equivalent criterion, not a proof of RH",
+    "finite numerical checks do not verify all orders",
+    "novelty is blocked pending full comparison with close 2026 prior art",
+    "R9 remains useful for quantitative explicit witness certification even though R10 gives existential finite failure"
+  ],
+  "canonical_proof_document": "docs/omega_zeta_square_t/R10_STIELTJES_HANKEL_EQUIVALENCE.md"
+}

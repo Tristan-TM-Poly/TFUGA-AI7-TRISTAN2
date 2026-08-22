@@ -1,0 +1,25 @@
+{
+  "schema": "omega-zeta-square-theorem-spec/1",
+  "id": "R13_ZERO_COUNT_TO_RECIPROCAL_TAIL",
+  "status": "PROVED_CONDITIONAL_TRANSFORM",
+  "solution_claimed": false,
+  "novelty_claimed": false,
+  "statement": "Any certified envelope N(t)<=a t log t+b t+c log t+d for t>=T0 yields R9-compatible bounds R(T)<=T^-2 and M(T)<=[2a(log T+1)+2b]/T+[c(log T+1/2)+d]/T^2 for the reciprocal centered-square zero tail.",
+  "exact_inputs": {
+    "lambda_magnitude": "|lambda_rho|=1/((beta-1/2)^2+gamma^2)<=gamma^-2",
+    "count_envelope": "N(t)<=a t log t+b t+c log t+d"
+  },
+  "derived_outputs": {
+    "radius": "R(T)=T^-2",
+    "absolute_mass": "M(T)<=[2a(log T+1)+2b]/T+[c(log T+1/2)+d]/T^2"
+  },
+  "proof_method": "Stieltjes integration / summation by parts plus elementary improper integrals",
+  "composition": "R13 outputs feed R9 tail_stability_certificate",
+  "oak_nonclaims": [
+    "R13 does not certify a remembered or user-supplied zero-count theorem constant",
+    "a source envelope with certified=false produces conditional exploratory output only",
+    "source-specific constants and validity thresholds must be checked against primary literature",
+    "R13 does not solve RH"
+  ],
+  "canonical_proof_document": "docs/omega_zeta_square_t/R13_ZERO_COUNT_TAIL_COMPILER.md"
+}
