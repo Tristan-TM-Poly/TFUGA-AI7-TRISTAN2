@@ -9,7 +9,7 @@ on:
       - "book0/BOOK0_TRISTAN_META_COMPILER_V1.json"
       - "book0/BOOK0_META_MORPHOGENESIS_V1.json"
       - ".agents/skills/omega-tristan-meta-compiler-t/**"
-      - ".agents/skills/omega-meta-morphogenesis-t/**"
+      - ".agents/skills/omega-meta-morphogenesis-fixed-point-t/**"
       - "docs/OMEGA_TRISTAN_META_COMPILER.md"
       - "docs/OMEGA_META_MORPHOGENESIS_V1.md"
       - ".github/workflows/omega-tristan-meta-compiler.yml"
@@ -21,7 +21,7 @@ on:
       - "book0/BOOK0_TRISTAN_META_COMPILER_V1.json"
       - "book0/BOOK0_META_MORPHOGENESIS_V1.json"
       - ".agents/skills/omega-tristan-meta-compiler-t/**"
-      - ".agents/skills/omega-meta-morphogenesis-t/**"
+      - ".agents/skills/omega-meta-morphogenesis-fixed-point-t/**"
       - "docs/OMEGA_TRISTAN_META_COMPILER.md"
       - "docs/OMEGA_META_MORPHOGENESIS_V1.md"
 
