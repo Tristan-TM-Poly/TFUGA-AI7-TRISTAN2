@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tristan.example/schemas/monetization_receipt.schema.json",
+  "title": "Omega MonetizationReceipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "hypothesis", "baseline", "evidence", "authority", "rollback", "decision"],
+  "properties": {
+    "action": {"type": "string", "minLength": 1},
+    "hypothesis": {"type": "string", "minLength": 1},
+    "baseline": {"type": "string", "minLength": 1},
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "authority": {
+      "type": "object",
+      "required": ["scope", "human_approval_required"],
+      "properties": {
+        "scope": {"type": "string"},
+        "max_budget": {"type": "number", "minimum": 0},
+        "human_approval_required": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": {"type": "number"}
+    },
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+    "rollback": {"type": "string", "minLength": 1},
+    "decision": {"enum": ["promote", "hold", "prune", "no_action"]}
+  }
+}
