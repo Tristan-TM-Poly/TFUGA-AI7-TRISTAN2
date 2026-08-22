@@ -1,0 +1,110 @@
+name: Omega AIT LLMT ALLT R0.1 OAKBench
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/omega-ait-llmt-allt-r01]
+    paths:
+      - 'omega_ait_llmt_allt_t/**'
+      - 'tests/test_omega_ait_llmt_allt_t.py'
+      - 'schemas/omega_ait_llmt_allt_plan_r01.schema.json'
+      - 'policies/omega_ait_llmt_allt_r01_policy.json'
+      - 'docs/canon/OMEGA_AIT_LLMT_ALLT_META_MORPHOGENESIS_T_INFINITY_R0_1.md'
+      - '.agents/skills/omega-ait-llmt-allt-meta-morphogenesis-t/**'
+      - '.github/workflows/omega-ait-llmt-allt-r01-oakbench.yml'
+  pull_request:
+    paths:
+      - 'omega_ait_llmt_allt_t/**'
+      - 'tests/test_omega_ait_llmt_allt_t.py'
+      - 'schemas/omega_ait_llmt_allt_plan_r01.schema.json'
+      - 'policies/omega_ait_llmt_allt_r01_policy.json'
+      - 'docs/canon/OMEGA_AIT_LLMT_ALLT_META_MORPHOGENESIS_T_INFINITY_R0_1.md'
+      - '.agents/skills/omega-ait-llmt-allt-meta-morphogenesis-t/**'
+      - '.github/workflows/omega-ait-llmt-allt-r01-oakbench.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: omega-ait-llmt-allt-r01-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  judiciary:
+    name: Judiciary / Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+    steps:
+      - name: Checkout exact proposed head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install focused validators
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Compile package
+        run: python -m compileall -q omega_ait_llmt_allt_t tests/test_omega_ait_llmt_allt_t.py
+      - name: Run focused court
+        run: python -m pytest -q tests/test_omega_ait_llmt_allt_t.py
+      - name: Validate skill through Omega SkillGen
+        run: |
+          python scripts/omega-skillgen lint .agents/skills/omega-ait-llmt-allt-meta-morphogenesis-t
+          python scripts/omega-skillgen eval .agents/skills/omega-ait-llmt-allt-meta-morphogenesis-t
+          python scripts/omega-skillgen trust .agents/skills/omega-ait-llmt-allt-meta-morphogenesis-t
+      - name: Generate deterministic evidence twice
+        run: |
+          python -m omega_ait_llmt_allt_t demo --output /tmp/ait-a.json
+          python -m omega_ait_llmt_allt_t demo --output /tmp/ait-b.json
+          python -m omega_ait_llmt_allt_t constitution --output /tmp/ait-constitution.json
+          python -m omega_ait_llmt_allt_t regeneration --output /tmp/ait-regeneration.json
+          cmp /tmp/ait-a.json /tmp/ait-b.json
+      - name: Validate schema and constitutional policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          schema = json.loads(Path('schemas/omega_ait_llmt_allt_plan_r01.schema.json').read_text())
+          policy = json.loads(Path('policies/omega_ait_llmt_allt_r01_policy.json').read_text())
+          bundle = json.loads(Path('/tmp/ait-a.json').read_text())
+          constitution = json.loads(Path('/tmp/ait-constitution.json').read_text())
+          validator = Draft202012Validator(schema)
+          for report in bundle['reports']:
+              validator.validate(report)
+          reports = {x['mission_id']: x for x in bundle['reports']}
+          assert reports['simple.min']['topology'] == 'GO_MIN'
+          assert reports['research.fertile']['status'] == 'ABSTAIN_MORE_EVIDENCE'
+          assert reports['crossdomain.complex']['topology'] == 'ALLT'
+          assert reports['authority.blocked']['status'] == 'BLOCKED'
+          assert reports['authority.blocked']['failed_gates'] == ['authority']
+          assert policy['hard_gates_are_non_compensatory'] is True
+          assert policy['automatic_promotion_allowed'] is False
+          assert policy['external_action_performed_by_package'] is False
+          assert constitution['generator_is_judge'] is False
+          assert constitution['capability_implies_authority'] is False
+          assert constitution['external_action_surface'] is False
+          assert bundle['mutation']['auto_promotion'] is False
+          PY
+      - name: Audit immutable action refs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          lines = Path('.github/workflows/omega-ait-llmt-allt-r01-oakbench.yml').read_text().splitlines()
+          refs = []
+          for line in lines:
+              stripped = line.strip()
+              if stripped.startswith('uses: '):
+                  refs.append(stripped.split('uses:', 1)[1].strip().split()[0])
+          assert refs, 'expected pinned action refs'
+          moving = [ref for ref in refs if not re.fullmatch(r'[^@]+@[0-9a-f]{40}', ref)]
+          assert not moving, moving
+          PY
