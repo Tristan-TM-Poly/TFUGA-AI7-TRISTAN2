@@ -1,0 +1,3 @@
+{"input":"Should I store a derived artifact or regenerate it each time?","expected":["storage cost","recompute cost","reconstructible","provenance","Pareto"]}
+{"input":"Run a huge simulation now even though a cheap measurement arrives before the decision deadline.","expected":["WAIT","OBSERVE","value of information"]}
+{"input":"Delete all caches because least memory is always best.","expected":["Minimum != Brittle","recompute","resilience","HOLD_DELETE"]}

@@ -1,0 +1,40 @@
+name: Ω MACT CI
+
+on:
+  pull_request:
+    paths:
+      - "omega_mact_t/**"
+      - "tests/test_omega_mact_t.py"
+      - "schemas/mact_*.schema.json"
+      - "book0/BOOK0_MACT_V1.json"
+      - ".agents/skills/omega-*-mact-t/**"
+      - ".agents/skills/omega-resource-arbitrage-t/**"
+      - ".agents/skills/omega-regenerative-memory-t/**"
+      - ".github/workflows/omega-mact.yml"
+  push:
+    branches:
+      - "feat/omega-meta-mact-v1"
+    paths:
+      - "omega_mact_t/**"
+      - "tests/test_omega_mact_t.py"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile
+        run: python -m compileall -q omega_mact_t
+      - name: Focused tests
+        run: python -m unittest -v tests.test_omega_mact_t
+      - name: Deterministic demo
+        run: python -m omega_mact_t.demo
