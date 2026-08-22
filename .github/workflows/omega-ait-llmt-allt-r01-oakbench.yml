@@ -54,6 +54,11 @@ jobs:
         run: python -m compileall -q omega_ait_llmt_allt_t tests/test_omega_ait_llmt_allt_t.py
       - name: Run focused court
         run: python -m pytest -q tests/test_omega_ait_llmt_allt_t.py
+      - name: Validate skill through Omega SkillGen
+        run: |
+          python scripts/omega-skillgen lint .agents/skills/omega-ait-llmt-allt-meta-morphogenesis-t
+          python scripts/omega-skillgen eval .agents/skills/omega-ait-llmt-allt-meta-morphogenesis-t
+          python scripts/omega-skillgen trust .agents/skills/omega-ait-llmt-allt-meta-morphogenesis-t
       - name: Generate deterministic evidence twice
         run: |
           python -m omega_ait_llmt_allt_t demo --output /tmp/ait-a.json
