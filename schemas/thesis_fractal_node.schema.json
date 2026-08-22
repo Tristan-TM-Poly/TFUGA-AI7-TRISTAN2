@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/thesis-fractal-node.schema.json",
+  "title": "Omega Thesis Fractal Node R0.1",
+  "type": "object",
+  "required": ["id", "order", "address", "title", "focus", "research_question", "status", "uncertainty"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^OMEGAT://"},
+    "order": {"type": "integer", "minimum": 0},
+    "address": {
+      "type": "object",
+      "required": ["root", "path"],
+      "properties": {
+        "root": {"type": "string"},
+        "path": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "title": {"type": "string", "minLength": 1},
+    "focus": {"type": "string", "minLength": 1},
+    "research_question": {"type": "string", "minLength": 1},
+    "status": {"enum": ["A", "B", "C", "D", "E", "F", "G"]},
+    "parent_id": {"type": ["string", "null"]},
+    "local_claims": {"type": "array", "items": {"type": "string"}},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "baselines": {"type": "array", "items": {"type": "string"}},
+    "falsifiers": {"type": "array", "items": {"type": "string"}},
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1}
+  },
+  "additionalProperties": false
+}
