@@ -1,5 +1,7 @@
 import unittest
 
+from omega_capability_os_t.cross_skill_transplant import SkillContext, evaluate_capability_transplant
+from omega_generative_closure_t.reprovenance_replay import FrozenSlice
 from omega_metatime import (
     CapabilityDelta,
     MetaTimeEngine,
@@ -8,6 +10,7 @@ from omega_metatime import (
     TemporalCounters,
     TemporalRegime,
     TemporalState,
+    temporal_measurement_capability,
 )
 
 
@@ -171,6 +174,33 @@ class MetaTimeTests(unittest.TestCase):
             for g in cover
         ))
         self.assertTrue({"a", "b", "c"} <= produced)
+
+    def test_temporal_measurement_transplants_through_capability_os(self):
+        capability = temporal_measurement_capability()
+        self.assertEqual(capability.authority, "read")
+        contexts = (
+            SkillContext.make("temporal-analysis", "temporal-analysis", ["temporal_state", "capability_delta"], ["temporal_metrics", "temporal_regime"], "read"),
+            SkillContext.make("learning-time", "learning", ["evidence"], ["residual"], "read"),
+        )
+        report = evaluate_capability_transplant(
+            capability,
+            contexts,
+            frozen_slices=(
+                FrozenSlice.make("temporal-analysis", ["src-time-analysis"], ["bench-time-analysis"]),
+                FrozenSlice.make("learning-time", ["src-learning-time"], ["bench-learning-time"]),
+            ),
+            training_provenance_ids=("train-metatime",),
+            runs={
+                "run-a": {"temporal": "PASS", "learning": "PASS"},
+                "run-b": {"temporal": "PASS", "learning": "PASS"},
+            },
+            historical_expected={"temporal": "PASS", "learning": "PASS"},
+            historical_candidate={"temporal": "PASS", "learning": "PASS"},
+            counterfactual_observations=((0.4, 0.6), (0.5, 0.7), (0.7, 0.7)),
+        )
+        self.assertEqual(report.decision, "PROMOTE")
+        self.assertEqual(report.transfer_ratio, 1.0)
+        self.assertEqual(report.blockers, ())
 
 
 if __name__ == "__main__":
