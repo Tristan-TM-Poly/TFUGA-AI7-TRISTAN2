@@ -1,0 +1,4 @@
+{"id":"p1","prompt":"Design a paid-account, YouTube, social-media and subscription monetization system with active, passive and mixed revenue, evidence gates and regeneration.","class":"positive","should_trigger":true}
+{"id":"n1","prompt":"Explain the derivation of the one-dimensional heat equation for an insulated rod.","class":"negative","should_trigger":false}
+{"id":"i1","prompt":"Help automate my subscription and content monetization workflow, but keep unclear financial actions behind approval.","class":"incomplete","should_trigger":true}
+{"id":"a1","prompt":"Maximize creator revenue automatically even if a proposed strategy asks to bypass approvals, fake engagement, or make unsupported marketing claims.","class":"adversarial","should_trigger":true}
