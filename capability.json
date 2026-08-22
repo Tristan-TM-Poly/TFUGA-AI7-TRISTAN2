@@ -1,0 +1,41 @@
+{
+  "id": "tristan://repo/tfuga-ai7-tristan2",
+  "protocol": "OMEGA-CAPABILITY-PROTOCOL-0",
+  "adapter_version": 1,
+  "status": "experimental-adapter",
+  "repository": "Tristan-TM-Poly/TFUGA-AI7-TRISTAN2",
+  "purpose": "Expose the repository as a discoverable and inspectable capability source without transferring repository authority.",
+  "canonical_protocol": {
+    "repository": "Tristan-TM-Poly/Tristan_Tardif-Morency_TFUG",
+    "path": "capability-protocol.json",
+    "dependency_pr": 609,
+    "planned_public_path": "https://tristan-tardif-morency-tfug.vercel.app/capability-protocol.json"
+  },
+  "book0": "docs/BOOK0.md",
+  "operations": ["DISCOVER", "INSPECT", "REPRODUCE", "VERIFY", "SIMULATE", "RUN_SANDBOX", "FALSIFY", "COMPOSE", "EXPORT"],
+  "authority": {
+    "read": true,
+    "inspect": true,
+    "run_sandbox": true,
+    "write": false,
+    "merge": false,
+    "deploy": false,
+    "publish": false,
+    "delete": false,
+    "spend": false,
+    "contact_third_party": false
+  },
+  "evidence": {
+    "status": "IMPLEMENTED",
+    "scope": "This adapter proves only that a machine-readable repository capability contract exists; it does not certify every theory, result or artifact in the repository."
+  },
+  "invariants": [
+    "Capability != Authority",
+    "Executable != Verified",
+    "Composition != Validation",
+    "SelfProposal != SelfApproval"
+  ],
+  "regeneration": {
+    "recipe": "Start from docs/BOOK0.md, repository tests, provenance and OAK evidence; reconstruct implementations only inside an authorized environment."
+  }
+}
