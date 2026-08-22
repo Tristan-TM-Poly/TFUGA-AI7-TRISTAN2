@@ -2,22 +2,22 @@
   "schema_version": "0.3.0",
   "generated_from": "2026-08-02T18:12:00-04:00",
   "algorithm": "sha256(path\\0sha256\\0size\\n)",
-  "root_sha256": "ace3d1f48652d03e6859f854230a91f0ecf84c20ba7937a26cafca5770fd3c84",
+  "root_sha256": "417e0a0cfb7b2b2198f50e6ee00efdeb32ccf56354805490e57373821ab03a31",
   "metrics": {
-    "files": 47,
-    "bytes": 747250,
+    "files": 50,
+    "bytes": 788422,
     "roles": {
       "document-shell": 1,
       "documentation": 1,
-      "javascript-module": 31,
+      "javascript-module": 33,
       "public-data": 5,
-      "stylesheet": 8,
+      "stylesheet": 9,
       "web-manifest": 1
     },
     "extensions": {
-      ".css": 8,
+      ".css": 9,
       ".html": 1,
-      ".js": 31,
+      ".js": 33,
       ".json": 5,
       ".md": 1,
       ".webmanifest": 1
@@ -90,8 +90,8 @@
     {
       "path": "index.html",
       "role": "document-shell",
-      "size_bytes": 5353,
-      "sha256": "340f1a0017afb11c5527c6674e24d3a30a6cb15f09f2e35323a00f1cbe082896",
+      "size_bytes": 5528,
+      "sha256": "e286fd5d4f405a636b9163bfb21b3d9ed9e5c4a5085561eb0770d0c30b22c05a",
       "cache_candidate": true
     },
     {
@@ -139,8 +139,8 @@
     {
       "path": "src/application.js",
       "role": "javascript-module",
-      "size_bytes": 6905,
-      "sha256": "1dc66d7da9e4662d027b57ab311105eb7405bea6786547503a4e005fee131da8",
+      "size_bytes": 6997,
+      "sha256": "1b9a8342cdd25c7ee263e433a69e03d8e555154c65693e4d5456d18637af9156",
       "cache_candidate": true
     },
     {
@@ -225,6 +225,13 @@
       "role": "javascript-module",
       "size_bytes": 2263,
       "sha256": "a646fc65b96a02d5e07a4093f752b5beee679d4bcaa9f32574c920ac8c632873",
+      "cache_candidate": true
+    },
+    {
+      "path": "src/story-studio-kernel.js",
+      "role": "javascript-module",
+      "size_bytes": 23068,
+      "sha256": "02bd357cca55c85bb0cbcaf8ad4cf01e2fec2a6d2987b754f359d3f8e02e1ad1",
       "cache_candidate": true
     },
     {
@@ -333,10 +340,24 @@
       "cache_candidate": true
     },
     {
+      "path": "src/views/story-studio.js",
+      "role": "javascript-module",
+      "size_bytes": 10870,
+      "sha256": "79f60e65c4e5b0f4475aca80ba73a01508a2d454f9e1ceeea0ef92f339b9879e",
+      "cache_candidate": true
+    },
+    {
       "path": "src/views/theory.js",
       "role": "javascript-module",
       "size_bytes": 4745,
       "sha256": "a604dd86eca22f435e3c89ef7082f29ed74350c4d30249f44c1c27a0dda2a178",
+      "cache_candidate": true
+    },
+    {
+      "path": "story-studio.css",
+      "role": "stylesheet",
+      "size_bytes": 6878,
+      "sha256": "b3ad71dd3c5b12bef1056a2086231f6c1e904b95a97f4b988e9f69c7345593c6",
       "cache_candidate": true
     },
     {
@@ -349,8 +370,8 @@
     {
       "path": "sw.js",
       "role": "javascript-module",
-      "size_bytes": 2488,
-      "sha256": "e3c860eb141d56d1210c778b20ed8be543626c5218b6ac0964cc8ece6928893e",
+      "size_bytes": 2577,
+      "sha256": "bededd58fb2f48520370f101dc6ed39db9bb5dd9eb46c166dbe8e0755575fa6c",
       "cache_candidate": true
     }
   ],
